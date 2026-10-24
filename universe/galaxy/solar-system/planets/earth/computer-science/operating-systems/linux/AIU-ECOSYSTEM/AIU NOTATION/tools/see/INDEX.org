@@ -1,0 +1,26 @@
+#+TITLE: INDEX — tools/see/
+# One job: show a .aiu file in the terminal as a formatted page.
+
+* What it is
+see.rkt reads a .aiu file and prints it as a page: the file title, numbered
+sections, wrapped paragraphs and framed code. The start and end lines and the
+declaration lines are not shown. The file itself is never changed.
+
+* Use
+  see FILE.aiu            colors, wrapped to the terminal width
+  see FILE.aiu --plain    no colors
+
+* What it shows
+- the first top-level title block: big, underlined, tags below it
+- section blocks: numbered 1, 1.1, 1.1.1 by nesting depth, never typed
+- paragraph blocks: wrapped; a blank line inside starts a new paragraph
+- code blocks: framed, kept exactly as written
+- style: and color: lines under a start line: bold, dim, italic, underline
+  and red, green, yellow, blue, magenta, cyan, white, gray
+- comment blocks are hidden; their count is printed at the end
+
+* Limits
+- it is a viewer, not the checker: it lists problems at the end; the real check is: aiu check FILE
+- font, theme and format lines are hints and are ignored here
+- an older flat heading block is still shown, without numbers
+- width is counted in characters; wide characters can wrap early

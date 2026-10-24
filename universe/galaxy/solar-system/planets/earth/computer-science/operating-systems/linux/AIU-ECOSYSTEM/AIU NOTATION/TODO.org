@@ -70,3 +70,9 @@
 - render drops marker-looking lines inside a code block (see the BUG above).
 - tools/aiu.nu parses the machine document twice (false stray-text and missing-title) and does not set the locale or the binary path itself. The aiu command in the Nushell config is the working route for now.
 - The project folder name contains a non-ASCII character, which broke path handling once.
+
+* Section (2026-10-24): section is registered in the Rust name list and the Racket table (elements/register.rkt). Still open: loose text directly inside a section must be a stray-text error (the Rust parser lets it through); a section must start with a title; an empty section is an error; section numbering in model/numbering.rkt (only heading is numbered there).
+
+- DONE 2026-10-24: loose text directly inside a section is now a stray-text error (parser.rs, in_section). Still open: a section must start with a title; an empty section is an error; section numbering in model/numbering.rkt.
+
+- DONE 2026-10-24: a section must start with a title block (parser.rs check_sections, reuses missing-title). Still open: numbering of sections in model/numbering.rkt (only heading is numbered there); error wording (parser-recovery, column unknown); empty section that has a title.

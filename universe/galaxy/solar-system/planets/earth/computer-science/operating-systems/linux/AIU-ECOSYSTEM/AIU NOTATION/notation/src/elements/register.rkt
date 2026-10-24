@@ -25,6 +25,8 @@
    (element 'paragraph "ordinary prose, the everyday case" #f)
    (element 'code "text the parser does not read as notation" #t)
    (element 'heading "a numbered section heading" #f)
+     ;; owner decision 2026-10-24: a section holds its own title first, then text, code and sub-sections.
+     (element 'section "a block that holds its own title, text and sub-sections" #f)
    (element 'comment "a block of text the reader drops" #f)))
 
 ;; known-name? answers whether a name is registered. It is the only question a

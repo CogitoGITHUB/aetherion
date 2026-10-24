@@ -39,7 +39,8 @@ use crate::buffer::Buffer;
 use crate::positions::{line_col_to_offset, offset_to_line_col, LineCol};
 
 /// The Tier 1 block names (rule A). Anything else on a block line is an error.
-pub const BLOCK_NAMES: [&str; 8] = [
+pub const BLOCK_NAMES: [&str; 9] = [
+"section",
     "title", "paragraph", "code", "heading", "table", "header", "row",
     "comment",
 ];
@@ -394,7 +395,16 @@ pub fn parse(buffer: &Buffer) -> Tree {
                 // Inside a block a line is content, whatever it looks like.
                 // Outside a block there is no block to be content of, so the
                 // line is stray text and stays exactly where it is (rule b).
-                if open.is_empty() {
+                  // A line directly inside a section is stray text too: a section holds
+                  // blocks, never loose text. Its own declaration lines are not stray.
+                  let in_section = match open.last() {
+                      Some(b) => {
+                          b.name == "section"
+                              && !b.declarations.iter().any(|d| d.span.start == span.start)
+                      }
+                      None => false,
+                  };
+                  if open.is_empty() || in_section {
                     push_error(&mut open, &mut top, stray(span, line));
                 }
             }
@@ -443,6 +453,8 @@ pub fn parse(buffer: &Buffer) -> Tree {
     }
 
     top.sort_by_key(|n| n.span().start);
+    // every section must start with its own title block
+    check_sections(&mut top);
     Tree { nodes: top, len: buffer.len() }
 }
 
@@ -791,5 +803,36 @@ code end
         assert!(closes_block("code end   ", "code"));
         assert!(!closes_block("code end because", "code"));
         assert!(!opens_block("code end", "code"));
+    }
+}
+
+// check_sections walks the tree and, for every section whose first block is
+// not a title, adds a missing-title error inside that section. The error has
+// an empty span, so the file still prints back byte for byte.
+fn check_sections(nodes: &mut Vec<Node>) {
+    for node in nodes.iter_mut() {
+        if let Node::Block(block) = node {
+            check_sections(&mut block.children);
+            if block.name == "section" {
+                let first = block.children.iter().find_map(|n| match n {
+                    Node::Block(b) => Some(b.name.clone()),
+                    _ => None,
+                });
+                if first.as_deref() != Some("title") {
+                    let opened = block.line;
+                    block.children.insert(
+                        0,
+                        Node::Error(ErrorNode {
+                            kind: ErrorKind::MissingTitle,
+                            span: Span::empty(block.span.start),
+                            line: opened,
+                            opener_line: Some(opened),
+                            what: format!("the section opened at line {} does not start with a title block", opened),
+                            what_to_do: "start the section with \"title start\" and \"title end\"".to_string(),
+                        }),
+                    );
+                }
+            }
+        }
     }
 }
