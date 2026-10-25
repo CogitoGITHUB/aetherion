@@ -37,25 +37,46 @@ const STAGES = [
 ]
 
 # run-one stage returns what happened, and never raises: a stage that fails is
-# a result to print, not an error that stops the dispatcher.
+# a result to print, not an error that stops the dispatcher. The stderr is
+# kept, because a stage that fails silently is a lie about what failed.
 def run-one [stage] {
     if $stage.kind == "racket" {
         let files = (rkt_files)
         if ($files | is-empty) {
-            {name: $stage.name, code: 0, out: "NOTHING-TO-CHECK paren-check: no Racket files exist yet"}
+            {name: $stage.name, code: 0, out: "NOTHING-TO-CHECK paren-check: no Racket files exist yet", err: ""}
         } else {
             let r = (try { run-external (racket_bin) $"($gate_dir)/($stage.script)" ...$files | complete }
-                     catch {|e| {stdout: $"(racket_bin) could not run: ($e)", exit_code: 3} })
-            {name: $stage.name, code: $r.exit_code, out: ($r.stdout | str trim)}
+                     catch {|e| {stdout: $"(racket_bin) could not run: ($e)", stderr: "", exit_code: 3} })
+            {name: $stage.name, code: $r.exit_code, out: ($r.stdout | str trim), err: ($r.stderr | str trim)}
         }
     } else if $stage.kind == "racket-plain" {
         let r = (try { run-external (racket_bin) $"($gate_dir)/($stage.script)" | complete }
-                 catch {|e| {stdout: $"(racket_bin) could not run: ($e)", exit_code: 3} })
-        {name: $stage.name, code: $r.exit_code, out: ($r.stdout | str trim)}
+                 catch {|e| {stdout: $"(racket_bin) could not run: ($e)", stderr: "", exit_code: 3} })
+        {name: $stage.name, code: $r.exit_code, out: ($r.stdout | str trim), err: ($r.stderr | str trim)}
     } else {
         let r = (try { run-external nu $"($gate_dir)/($stage.script)" | complete }
-                 catch {|e| {stdout: $"(nu) could not run ($stage.script): ($e)", exit_code: 3} })
-        {name: $stage.name, code: $r.exit_code, out: ($r.stdout | str trim)}
+                 catch {|e| {stdout: $"(nu) could not run ($stage.script): ($e)", stderr: "", exit_code: 3} })
+        {name: $stage.name, code: $r.exit_code, out: ($r.stdout | str trim), err: ($r.stderr | str trim)}
+    }
+}
+
+# locale-is-utf8 answers whether a locale name says UTF-8.
+def locale-is-utf8 [name] {
+    ($name | str lowercase | str contains "utf")
+}
+
+# ensure-utf8-locale answers a locale this machine has that speaks UTF-8, or
+# an empty text when there is none. It exists because the project path holds
+# "Æ": a child spawned under the C locale receives the path with that
+# character replaced by "??", so the check opens a file that is not there and
+# the gate reports a failure that belongs to the environment, not the code.
+def ensure-utf8-locale [] {
+    let named = ([($env.LANG? | default "") ($env.LC_ALL? | default "")] | where {|l| locale-is-utf8 $l })
+    if (not ($named | is-empty)) {
+        $named | first
+    } else {
+        let available = (^locale -a | lines | where {|l| locale-is-utf8 $l })
+        if ($available | is-empty) { "" } else { $available | first }
     }
 }
 
@@ -70,11 +91,33 @@ def main [ --list ] {
         exit 0
     }
 
+    # The gate's locale is set once here, before any stage spawns a child,
+    # and it is named: a stage that cannot be given one must say so, never go
+    # red with an empty answer. See ensure-utf8-locale for the reason.
+    let utf8 = (ensure-utf8-locale)
+    if ($utf8 | is-empty) {
+        print "the gate cannot run: this machine has no UTF-8 locale, and the project path holds Æ — a child under the C locale receives that path as ??therion and every stage that spawns a child would report a false failure"
+        exit 3
+    }
+    $env.LANG = $utf8
+    $env.LC_ALL = $utf8
+    print $"the gate's locale: ($utf8) — the project path holds Æ, and a child under the C locale receives it as ??therion"
+
     let results = ($STAGES | each {|s| run-one $s })
 
     for r in $results {
         print $"--- ($r.name)"
         print $r.out
+        # A stage that exits nonzero with nothing to say must not vanish: the
+        # dispatcher prints the reason the child gave, or says the child gave
+        # none, so a red run is never a blank line.
+        if ($r.code != 0) and ($r.out | is-empty) {
+            print (if ($r.err | is-empty) {
+                "the stage exited nonzero and said nothing"
+            } else {
+                $r.err
+            })
+        }
     }
 
     let red = ($results | where {|r| $r.code != 0 } | length)
