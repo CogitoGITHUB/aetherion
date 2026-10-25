@@ -1,13 +1,11 @@
 #lang racket/base
 ;; One job: named chunks and their graph.
-;; Registered in plan/package-tree.org (literate/chunks.rkt). Lands with TODO
-;; item 6 (build step 5, literate code).
 ;;
 ;; A chunk is a code block that says its own name:
 ;;
 ;;   code start
 ;;   chunk: build-the-index
-;;   into: plan/FILE-INVENTORY.org
+;;   into: docs/example.aiu
 ;;   depends: read-the-nodes
 ;;   <the code itself, line for line>
 ;;   code end
@@ -18,7 +16,7 @@
 ;; alone: it is content, not work.
 ;;
 ;; Three frozen rules decide this file, and none of them is mine:
-;;   - rule B (syntax/first-slice-freeze.org): a declaration is a hint, never
+;;   - rule B: a declaration is a hint, never
 ;;     meaning. So chunk, into and depends decide what a run sends, never what
 ;;     a reader reads.
 ;;   - rule D: a code block's body is opaque to the parser. Those bytes belong
@@ -130,7 +128,7 @@
   found)
 
 ;; check-end-offset compares the walk with what the tree already knows: a node
-;; entry carries the end byte offset (join/INDEX.org). When the two disagree
+;; entry carries the end byte offset. When the two disagree
 ;; the run says so and keeps the walk's answer, because the frozen matching
 ;; rule is the one the parser followed too. A CR LF page is skipped: its bytes
 ;; do not line up with its lines, and a comparison that cannot be true must not

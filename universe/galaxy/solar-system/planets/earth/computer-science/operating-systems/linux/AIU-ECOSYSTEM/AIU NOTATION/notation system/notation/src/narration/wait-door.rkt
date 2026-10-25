@@ -1,6 +1,6 @@
 #lang racket/base
 ;; One job: wait-for / wait-done; why is never blank.
-;; Lands with TODO item 1 (the floor). Every blocking call in the package
+;; Every blocking call in the package
 ;; announces itself here before it blocks and again when it is through.
 
 (require "events.rkt"

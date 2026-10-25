@@ -1,7 +1,6 @@
 #lang racket/base
 ;; One job: the error record — what happened, who, where.
 ;; The floor of the package: this file uses nothing from any other area.
-;; Lands with TODO item 1 (the tree lands).
 ;;
 ;; This build has no gen:custom-write ("bad require spec" — found by the first
 ;; by-hand run, 2026-10-17), so the record carries no writer of its own.

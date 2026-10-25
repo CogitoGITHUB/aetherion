@@ -1,6 +1,5 @@
 #lang racket/base
 ;; One job: JSON — read it, write it, and move between AIU and JSON.
-;; Registered in plan/package-tree.org (data/json.rkt).
 ;;
 ;; The owner asked for JSON compatibility: AIU structures go out as JSON and
 ;; JSON comes back as AIU structures, in both directions, without losing what
@@ -386,7 +385,7 @@
 ;; keyword is not one of these is content, not data.
 (define data-keywords
   '(tags language style theme color format font level
-         caption column cell row-id meta))
+         caption column cell row-id meta todo kind))
 
 ;; document->json turns a parsed document into the JSON value that stands for
 ;; it: an array holding one object per top-level block, in the order the

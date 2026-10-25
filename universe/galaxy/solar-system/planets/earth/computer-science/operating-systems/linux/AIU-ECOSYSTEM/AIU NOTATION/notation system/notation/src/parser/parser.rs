@@ -1,8 +1,7 @@
 //! One job: the layered parser — blocks, nesting, opaque code bodies, and the
 //! five registered errors.
-//! Registered in plan/package-tree.org (parser/parser.rs).
 //!
-//! Frozen rules live in syntax/first-slice-freeze.org; this file is their only
+//! Frozen rules live in the README; this file is their only
 //! implementation for the first slice (title, paragraph, code).
 //!
 //! The block form, which the owner's format rules fix: a block is three lines of

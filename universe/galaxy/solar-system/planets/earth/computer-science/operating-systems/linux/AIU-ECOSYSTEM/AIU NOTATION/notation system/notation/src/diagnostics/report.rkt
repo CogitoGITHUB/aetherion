@@ -1,8 +1,6 @@
 #lang racket/base
 ;; One job: one diagnosis the reader sees — where, what, and what to do —
 ;; and the count and the exit code the CLI answers with.
-;; Registered in plan/package-tree.org (diagnostics/report.rkt). Lands with
-;; TODO item 5 (build-order step 4).
 ;;
 ;; Every line of a diagnosis comes from errors/render.rkt, the only printer of
 ;; an error in the package. This file holds no format string of a finding of

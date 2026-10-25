@@ -1,9 +1,8 @@
 //! One job: the plain fallback — text out, nothing invented.
-//! Registered in plan/package-tree.org (rendering/plain.rs).
 //!
 //! Plain rendering shows what the reader wrote and nothing else: the block
 //! lines and the declaration lines are gone, the content is kept word for word
-//! (syntax/first-slice-freeze.org, rule F: rendering hides start, end and
+//! (the README, rule F: rendering hides start, end and
 //! declaration lines and keeps content).
 //!
 //! It adds nothing of its own: no headings, no numbering, no box drawing, no

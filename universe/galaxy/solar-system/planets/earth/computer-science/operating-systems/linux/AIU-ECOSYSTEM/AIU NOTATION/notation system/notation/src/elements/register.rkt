@@ -1,9 +1,7 @@
 #lang racket/base
 ;; One job: the one table — name to meaning.
-;; Registered in plan/package-tree.org (elements/register.rkt). Lands with
-;; TODO item 3.
 ;;
-;; Tier 1 has four block names (syntax/first-slice-freeze.org, rule A). The
+;; Tier 1 has four block names. The
 ;; heading name came with the owner's request for automatic heading numbers.
 ;; Adding a name here is a decision for the owner, not for a build.
 

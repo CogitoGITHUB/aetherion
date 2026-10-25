@@ -2,7 +2,7 @@
 # One job: the comment law, made mechanical — every .rkt, .rs and .nu file under
 # notation/ and gate/ starts with a header comment (what it is, why it exists,
 # who calls it), and every top-level definition has a comment line directly above
-# it. Registered in plan/package-tree.org; called by gate/check.nu as stage
+# it. called by gate/check.nu as stage
 # "comment-lint".
 #
 # It only reads: it never rewrites a file and never loads one, and it names no

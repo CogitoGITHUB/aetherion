@@ -1,8 +1,7 @@
 //! One job: the module list — which area files belong to the crate.
-//! Registered in plan/package-tree.org.
 //!
 //! `#[path]` is used on purpose: every area file lives exactly where the tree
-//! in plan/package-tree.org lists it, so no per-area module file is invented
+//! in the README lists it, so no per-area module file is invented
 //! just to make the compiler happy. The reader must be able to find each file
 //! by name in the register, and the register stays the source for it.
 //!

@@ -1,6 +1,6 @@
 #!/usr/bin/env nu
 # One job: the test check -- runs every gate/tests/*-test.rkt in one Racket process.
-# Registered in plan/package-tree.org; gate stage "run-tests".
+# Gate stage "run-tests".
 
 use ./env.nu *
 

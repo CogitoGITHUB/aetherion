@@ -3,7 +3,7 @@
 ;; Why: the file keeps its start and end lines so any tool can read it, but a
 ;; reader wants the page: file title, numbered sections, wrapped text, framed
 ;; code, and none of the marks.
-;; Called by: the Nushell command "see" (tools/see/INDEX.org).
+;; Called by: the Nushell command "see".
 ;; Usage: racket see.rkt FILE [--plain] [--width N]
 ;; This is a viewer, not the checker: it shows what it can and lists problems
 ;; at the end. The real check is: aiu check FILE

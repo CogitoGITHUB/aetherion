@@ -2,8 +2,8 @@
 ;; One job: the command table — one name, one function; a command reads the
 ;; document it was given, says what it found, and hands back the exit code a
 ;; shell may trust.
-;; Registered in plan/package-tree.org (entry/dispatch.rkt). Lands with TODO
-;; item 3; =check= lands with it, =literate= and =send= with TODO item 6 (build
+;;
+;; =check= lands with it, =literate= and =send= later (build
 ;; step 5, literate code).
 ;;
 ;; The table is closed: a name nobody registered is refused here, so a command

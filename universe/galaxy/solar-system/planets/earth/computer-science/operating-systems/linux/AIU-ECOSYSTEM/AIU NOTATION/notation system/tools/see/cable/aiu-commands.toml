@@ -1,0 +1,20 @@
+[metadata]
+name = "aiu-commands"
+description = "Pick an aiu command"
+
+[source]
+command = "cat aiu-commands.txt"
+display = "{split:;:0}"
+output = "{split:;:0}"
+
+[preview]
+command = "bash aiu-cmd-preview.sh \"{}\""
+
+[keybindings]
+enter = "actions:pick"
+
+[actions.pick]
+description = "write the chosen command to /tmp/aiu-cmd"
+command = "printf %s {} > /tmp/aiu-cmd"
+shell = "bash"
+mode = "execute"

@@ -1,12 +1,11 @@
 //! One job: print the parse tree as a plain text document — the
-//! `parse-tree-document` shape frozen in join/INDEX.org.
-//! Registered in plan/package-tree.org (join/rust-exports.rs).
+//! `parse-tree-document` shape frozen in the README.
 //!
 //! This is the only function the Racket side may call, and it depends on no
 //! Racket at all: text in, document text out. How the document is carried — a
 //! call or a subprocess — is still open and is not decided here.
 //!
-//! The shape, in one place so the Rust side and join/INDEX.org cannot drift:
+//! The shape, in one place so the Rust side and the README cannot drift:
 //!   NOTATION-DOCUMENT 1
 //!   file "<path>"
 //!   node block <name> <startLine> <startOffset> <endLine> <endOffset> <depth>

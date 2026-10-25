@@ -1,13 +1,11 @@
 #lang racket/base
 ;; One job: gather every finding a reader must be told, in tree order.
-;; Registered in plan/package-tree.org (diagnostics/collect.rkt). Lands with
-;; TODO item 5 (build-order step 4).
 ;;
 ;; A finding is data, never a printed line. It carries WHO (the file it is
 ;; about), WHERE (the 1-based line and the 1-based character column — the
 ;; pair the text area produces), WHAT (what is wrong, one sentence) and
 ;; WHAT TO DO (what the reader can do about it). What to do is never empty:
-;; an error that cannot say what to do is not an error yet (join/INDEX.org).
+;; an error that cannot say what to do is not an error yet.
 ;;
 ;; This file prints nothing and never waits. Reading a tree in memory does
 ;; not block, so the wait door stays shut and narration/ is not used here:
@@ -50,7 +48,7 @@
 ;; does not know the keyword yet — rule B registers tags, language, style,
 ;; theme, color, format and font — so no page can carry a link today and the
 ;; link check stays quiet. Registering "link" is the owner's decision (see
-;; plan/package-tree.org, "Declaration keywords"); this file already reads the
+;; the README, "Declaration keywords"); this file already reads the
 ;; shape, so nothing here changes when that decision lands.
 (define link-keyword 'link)
 
@@ -140,7 +138,7 @@
 
 ;; walk-declaration reads one declaration. A declaration reaches this file as
 ;; the four fields of the document's declaration line, in order — keyword,
-;; value, line, byte offset (join/INDEX.org) — so a finding can name where
+;; value, line, byte offset — so a finding can name where
 ;; the declaration itself is. Any other shape is refused rather than guessed;
 ;; model/outline.rkt is the file that must fill block-node-declarations with
 ;; this shape, and it does not yet, so the declaration findings below stay
@@ -178,7 +176,7 @@
           '())))
 
 ;; walk-tags reads a tags declaration. A tag names the file it sits in
-;; (syntax/file-identity.org), so the one way a tag can name nothing is to
+;;, so the one way a tag can name nothing is to
 ;; stop being a name at all: a word carrying punctuation cannot be searched
 ;; for, typed on a phone keyboard or matched later. Resolving a tag against
 ;; other files is not decided yet and belongs to references/ when it lands.
@@ -231,7 +229,7 @@
 ;; recovered-finding is the finding a parser error node becomes. The kind, the
 ;; what and the what to do are the parser's own words, so the reader is told
 ;; exactly what was recovered and what to do about it — every stray-text error
-;; included, which is what plan/package-tree.org registers this file for. The
+;; included, which is what the README registers this file for. The
 ;; frozen shape says whatToDo is always filled; this file does not invent one
 ;; when it is not.
 (define (recovered-finding lines who n)
@@ -258,7 +256,7 @@
                                (- offset (bytes-before-line lines line))))))
 
 ;; bytes-before-line counts the bytes of every line before the given one, each
-;; with its newline, because an offset indexes bytes (join/INDEX.org).
+;; with its newline, because an offset indexes bytes.
 (define (bytes-before-line lines line)
   (let loop ([i 1] [at 0])
     (cond
@@ -271,7 +269,7 @@
 
 ;; chars-before-byte counts the characters held by the first n bytes of a
 ;; line. Offsets are bytes and columns are characters, so the two are counted
-;; apart here and nowhere else (syntax/first-slice-freeze.org, rule F).
+;; apart here and nowhere else.
 (define (chars-before-byte l n)
   (let loop ([cs (string->list l)] [bytes 0] [chars 0])
     (cond

@@ -1,7 +1,5 @@
 #lang racket/base
 ;; One job: literal names — what a name is, what it is not.
-;; Registered in plan/package-tree.org (elements/literals.rkt). Lands with
-;; TODO item 3.
 ;;
 ;; A block name is written as a bare lowercase word: no symbol, no quotes, no
 ;; angle brackets. This file is the one place that decides what counts.
@@ -9,7 +7,7 @@
 (require racket/list
          racket/string)
 
-;; Provided with TODO item 5: diagnostics/collect.rkt asks literal-name? what
+;; Provided here: diagnostics/collect.rkt asks literal-name? what
 ;; a tag is, so no second place decides what a name looks like.
 (provide name-char? literal-name? name-of start-line? end-line?)
 

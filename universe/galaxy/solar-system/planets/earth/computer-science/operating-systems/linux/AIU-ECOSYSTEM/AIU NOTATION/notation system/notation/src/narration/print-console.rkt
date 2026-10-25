@@ -1,6 +1,6 @@
 #lang racket/base
 ;; One job: the ONE printer to the terminal.
-;; Lands with TODO item 1 (the floor). Nothing else writes to the terminal.
+;; Nothing else writes to the terminal.
 
 (require "events.rkt")
 

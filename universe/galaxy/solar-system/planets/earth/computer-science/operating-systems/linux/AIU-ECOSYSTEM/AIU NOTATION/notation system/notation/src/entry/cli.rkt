@@ -1,6 +1,6 @@
 #lang racket/base
 ;; One job: argv to a command — one parser, one dispatch.
-;; Registered in plan/package-tree.org (entry/cli.rkt). Lands with TODO item 3.
+;;
 ;;
 ;; This is the only place that reads argv and the only place that reads a file
 ;; for the commands. It parses the argv list, hands it to dispatch.rkt, and

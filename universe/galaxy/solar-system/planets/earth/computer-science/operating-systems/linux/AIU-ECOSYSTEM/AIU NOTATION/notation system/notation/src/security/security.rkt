@@ -1,7 +1,7 @@
 #lang racket/base
 ;; One job: the refusals as data — every rule this format has, by id.
-;; Registered in plan/package-tree.org (security/security.rkt): "the total
-;; predicates: output-safe?, state-changing?, refusals". Lands with TODO item 1
+;; "the total
+;; predicates: output-safe?, state-changing?, refusals".
 ;; (the tree lands).
 ;;
 ;; A rule is a row of four: the id that says what is refused, the predicate that

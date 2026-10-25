@@ -1,8 +1,6 @@
 #lang racket/base
 ;; One job: what would be written — the dry-run shape, built and said, and not
 ;; written.
-;; Registered in plan/package-tree.org (generation/plan.rkt). Lands with TODO
-;; item 6 (build step 5, literate code).
 ;;
 ;; A plan is the whole act before any of it happens: one step per chunk, in the
 ;; order the chunks may be sent, each carrying the text that would go to disk,

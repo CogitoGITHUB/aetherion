@@ -1,8 +1,7 @@
 #lang racket/base
 ;; One job: the total predicates — the shapes a value may be refused for.
-;; Lands with TODO item 1 (the tree lands).
 ;;
-;; plan/package-tree.org registers one file for this area (security/security.rkt,
+;; the README registers one file for this area (security/security.rkt,
 ;; "the total predicates: output-safe?, state-changing?, refusals"). The area
 ;; keeps that name for the refusals (security.rkt) and puts the predicates here,
 ;; because one file has one job; widening the register is the owner's edit and

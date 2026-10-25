@@ -1,15 +1,13 @@
 #lang racket/base
 ;; One job: targets as data — where a chunk may go, and the door that says no.
-;; Registered in plan/package-tree.org (literate/targets.rkt). Lands with TODO
-;; item 6 (build step 5, literate code).
 ;;
 ;; A target is written after into:, in one of three forms:
 ;;
-;;   into: plan/FILE-INVENTORY.org
-;;   into: plan/FILE-INVENTORY.org at heading The tree
-;;   into: plan/FILE-INVENTORY.org at block literate
+;;   into: docs/example.aiu
+;;   into: docs/example.aiu at heading The tree
+;;   into: docs/example.aiu at block literate
 ;;
-;; The three places are the ones literate-code/targets.org names: the whole
+;; The three places are the ones the README names: the whole
 ;; file, a heading, or a block, with heading the recommended default and a
 ;; block the override. A path that itself holds " at " is read as the first
 ;; form, and this file says so rather than counting the spaces and deciding.
@@ -87,7 +85,7 @@
 ;;
 ;; This is the small door this area owns while security/security.rkt does not
 ;; exist. That area is where the total predicates belong (output-safe?,
-;; state-changing?), it is named in plan/package-tree.org and it lands later;
+;; state-changing?), it is named in the README and it lands later;
 ;; when it does, these four refusals are replaced by its answers, not added to.
 (define (writable-path path written)
   (define clean (string-trim path))
@@ -133,7 +131,7 @@
 ;; owns from then on. A heading or a block place names a place inside a file
 ;; somebody else wrote, and this run does not splice into it yet.
 ;;
-;; That gap is named rather than hidden. literate-code/targets.org recommends
+;; That gap is named rather than hidden. The README recommends
 ;; heading as the default and a block as the override, and it is a skeleton
 ;; page: the exact design is still the owner's. scan.rkt reports every target
 ;; of this kind as a finding, and a run that meets one loads the chunk in

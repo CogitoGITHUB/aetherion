@@ -1,17 +1,16 @@
 //! One job: the comments in the text — the spans the buffer keeps and the
 //! renderer drops.
-//! Registered in plan/package-tree.org (text/comments.rs).
-//! TODO.org item 7 (step 6 of plan/build-order.org): comments are first-class
+//! comments are first-class
 //! in text and stripped by rendering.
 //!
 //! What it reads, taken from the format and not invented here:
-//!   * syntax/open-close-mark.org:34 — "Blocks nest: a comment block may sit
+//!   * "Blocks nest: a comment block may sit
 //!     inside a title block". A comment is therefore a block, written with the
 //!     same mark as every other block:
 //!         comment start
 //!         a note for the owner, which the reader never sees
 //!         comment end
-//!   * rule A of syntax/first-slice-freeze.org — a block line is exactly two
+//!   * rule A of the README — a block line is exactly two
 //!     words, the name and `start`, or `end` and the name. So `comment start`
 //!     opens a comment only when those two words are the whole line; the same
 //!     two words inside a line of prose open nothing, as rule D already says for
@@ -19,7 +18,7 @@
 //! No inline comment sign exists in the format yet and none is invented here;
 //! an undecided shape is reported, not guessed.
 //!
-//! This area holds the text and nothing else (text/INDEX.org): no meaning, no
+//! This area holds the text and nothing else: no meaning, no
 //! errors, no block names beyond the comment's own. Whether a body is opaque
 //! is the parser's law (rule D), so a caller scans the range it has decided is
 //! readable and the bytes of a code body are left alone unless it asks.
@@ -28,12 +27,12 @@ use crate::buffer::Buffer;
 use crate::positions::{offset_to_line_col, LineCol};
 
 /// The name a comment block carries, spelled the way the format already spells
-/// it. TODO item 7.
+/// it.
 pub const COMMENT_BLOCK_NAME: &str = "comment";
 
 /// One comment, as the text keeps it: a byte span (start inclusive, end
 /// exclusive), the 1-based line it opens on, and whether it was closed.
-/// Offsets are bytes, by rule F of syntax/first-slice-freeze.org.
+/// Offsets are bytes, by rule F of the README.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Comment {
     /// The first byte of the `comment start` line.
@@ -70,7 +69,7 @@ impl Comment {
 }
 
 /// Every comment in the whole buffer, in the order they appear. This is what
-/// the renderer asks for when it drops comments. TODO item 7.
+/// the renderer asks for when it drops comments.
 pub fn find_comments(buffer: &Buffer) -> Vec<Comment> {
     find_comments_in(buffer, 0, buffer.len())
 }
@@ -78,7 +77,7 @@ pub fn find_comments(buffer: &Buffer) -> Vec<Comment> {
 /// Every comment whose `comment start` line falls inside the byte range
 /// `from .. to`, in the order they appear. A caller that has decided a range
 /// is not readable (an opaque code body, rule D) scans only the rest, so a
-/// comment word in code is code. TODO item 7.
+/// comment word in code is code.
 pub fn find_comments_in(buffer: &Buffer, from: usize, to: usize) -> Vec<Comment> {
     let mut out: Vec<Comment> = Vec::new();
     if to <= from {
@@ -123,7 +122,7 @@ pub fn find_comments_in(buffer: &Buffer, from: usize, to: usize) -> Vec<Comment>
 
 /// True when the line `start .. end` is covered by a comment the renderer must
 /// drop. A comment body line is not a block line and not a declaration line, so
-/// only the comment spans say it goes. TODO item 7.
+/// only the comment spans say it goes.
 pub fn is_comment_line(comments: &[Comment], start: usize, end: usize) -> bool {
     comments.iter().any(|c| c.start < end && start < c.end)
 }

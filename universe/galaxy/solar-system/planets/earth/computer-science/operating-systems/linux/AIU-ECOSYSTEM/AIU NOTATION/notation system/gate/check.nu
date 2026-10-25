@@ -1,6 +1,6 @@
 #!/usr/bin/env nu
 # One job: the dispatcher — named stages, one table, --list.
-# Registered in plan/package-tree.org. check.nu is the only gate entry point;
+# Check.nu is the only gate entry point;
 # no other script may be the thing someone runs "by hand" instead.
 #
 # Two rules this file keeps:
@@ -24,8 +24,11 @@ const STAGES = [
     {name: "one-way", script: "one-way-dependency-lint.nu", kind: "nu"}
     {name: "security-gate", script: "security-gate-lint.nu", kind: "nu"}
     {name: "language-split", script: "language-split-lint.nu", kind: "nu"}
+    {name: "register", script: "register-lint.nu", kind: "nu"}
     {name: "load-check", script: "load-check.nu", kind: "nu"}
     {name: "comment-lint", script: "comment-lint.nu", kind: "nu"}
+    {name: "pages", script: "pages-lint.nu", kind: "nu"}
+    {name: "keywords", script: "keywords-lint.nu", kind: "nu"}
     {name: "run-tests", script: "test-check.nu", kind: "nu"}
 ]
 

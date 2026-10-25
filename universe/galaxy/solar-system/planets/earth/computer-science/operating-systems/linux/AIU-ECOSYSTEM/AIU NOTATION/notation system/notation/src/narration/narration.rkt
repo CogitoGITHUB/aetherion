@@ -1,6 +1,6 @@
 #lang racket/base
 ;; One job: a run's voice — open, step, note, warn, skip, decide.
-;; Lands with TODO item 1 (the floor). This file only makes events and hands
+;; This file only makes events and hands
 ;; them to the printer; it never decides what a run should say next.
 
 (require "events.rkt"

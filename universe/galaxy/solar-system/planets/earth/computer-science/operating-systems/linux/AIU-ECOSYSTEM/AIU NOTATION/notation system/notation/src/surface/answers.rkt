@@ -1,12 +1,10 @@
 #lang racket/base
 ;; One job: the surface document — the frozen text an editor reads, and the
 ;; loader that reads that text back into facts.
-;; Registered in plan/package-tree.org (surface/answers.rkt). Lands with TODO
-;; item 8 (build step 7, the engine surface).
 ;;
 ;; This file is the boundary in words for a caller that is not Racket and does
 ;; not run this notation. It is the same idea as the parse-tree-document frozen
-;; in join/INDEX.org — plain text, one line per fact, UTF-8, a newline after the
+;; in the README — plain text, one line per fact, UTF-8, a newline after the
 ;; last line — and a different shape, because this one is written for the
 ;; editor's notation mode and not for the meaning side.
 ;;
@@ -19,17 +17,17 @@
 ;; The first line is the shape's version. A reader that does not know the
 ;; number refuses the document and says which shape it wanted: an engine and an
 ;; editor that disagree refuse each other by version, by name
-;; (contract/notation-engine-boundary.org). The last line is =end=; a document
+;;. The last line is =end=; a document
 ;; without it is truncated, and this reader refuses it rather than answer half
 ;; a tree.
 ;;
 ;; Lines are 1-based and offsets are byte offsets into the file the =file= line
-;; names (join/INDEX.org, "Bytes, not text, where it matters"). There is no
+;; names. There is no
 ;; endLine field: model/nodes.rkt holds one line and one span per node and this
 ;; file does not invent a field the tree does not carry. The shape only grows:
 ;; a field added later is a new line shape, and a reader that meets one it does
 ;; not know refuses the document instead of skipping past the line
-;; (contract/notation-engine-boundary.org, "How it changes").
+;;.
 ;;
 ;; The loader half reads text and answers plain data. It requires nothing of
 ;; the model and nothing of the meaning side, so a consumer may take this file,
@@ -245,7 +243,7 @@
   (findf (lambda (n) (string=? (answer-address n) address)) (answers-nodes a)))
 
 
-;; Quoting is the rule frozen in join/INDEX.org: a quoted field is wrapped in
+;; Quoting is the rule frozen in the README: a quoted field is wrapped in
 ;; double quotes, the spaces inside are kept as written, a double quote inside
 ;; is written twice, and no newline ever appears inside. It is written here
 ;; once for this whole area — answers.rkt and notices.rkt both quote this way,

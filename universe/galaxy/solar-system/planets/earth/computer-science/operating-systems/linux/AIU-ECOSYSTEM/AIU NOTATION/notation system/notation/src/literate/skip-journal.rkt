@@ -1,7 +1,5 @@
 #lang racket/base
 ;; One job: a changed chunk rebuilds, an unchanged one SKIPs naming the hash.
-;; Registered in plan/package-tree.org (literate/skip-journal.rkt). Lands with
-;; TODO item 6 (build step 5, literate code).
 ;;
 ;; The store is content-addressed: every entry is a file whose NAME is the hash
 ;; of what was sent, and whose two lines are the target it went to and the hash
@@ -24,7 +22,7 @@
 ;; itself. What it says is in the reason of the decision, which is the same
 ;; sentence the event carries:
 ;;
-;;   skip: chunk build → plan/FILE-INVENTORY.org — unchanged; the same content
+;;   skip: chunk build → docs/example.aiu — unchanged; the same content
 ;;   hash 5f2c1e0a9d8b7c6e5f4a3b2c1d0e9f8a is already written there, so nothing
 ;;   was sent
 ;;

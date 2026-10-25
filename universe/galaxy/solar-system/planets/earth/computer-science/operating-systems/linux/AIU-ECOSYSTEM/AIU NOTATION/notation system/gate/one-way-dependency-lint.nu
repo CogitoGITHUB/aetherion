@@ -1,7 +1,7 @@
 #!/usr/bin/env nu
 # One job: the area table above, enforced — a require may point downward only.
-# Registered in plan/package-tree.org; the area order is transcribed from
-# plan/package-tree.org, "The law", and that file stays the source for it.
+# the area order is transcribed from
+# the README, "The law", and that file stays the source for it.
 #
 # errors is the floor and entry is the ceiling; a reference from a lower area
 # to a higher one is a failure. This lint starts checking for real by itself as

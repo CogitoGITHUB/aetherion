@@ -1,9 +1,8 @@
 //! One job: the text state — bytes, lines, offsets.
-//! Registered in plan/package-tree.org (text/buffer.rs).
 //!
 //! The buffer owns the file bytes and the line starts. Everything else reads
 //! positions through it, so there is exactly one place that knows how a line
-//! begins. Offsets are counted in **bytes** (syntax/first-slice-freeze.org,
+//! begins. Offsets are counted in **bytes** (the README,
 //! rule F); a column is counted in characters and is derived in positions.rs.
 
 /// The raw text of one file, plus where each line starts.

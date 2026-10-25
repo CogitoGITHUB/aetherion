@@ -1,7 +1,7 @@
 [package]
 # One job: the crate manifest for the notation package. One crate, no
 # workspace, no dependencies: the first slice is Rust alone and nothing is
-# fetched to build it. Registered in plan/package-tree.org.
+# fetched to build it.
 name = "notation"
 version = "0.1.0"
 edition = "2021"

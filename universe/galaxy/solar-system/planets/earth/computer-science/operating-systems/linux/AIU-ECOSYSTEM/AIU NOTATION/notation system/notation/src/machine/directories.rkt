@@ -1,6 +1,6 @@
 #lang racket/base
 ;; One job: the one place HOME / XDG is read.
-;; Lands with TODO item 1 (the floor). No other file reads HOME or XDG; if a
+;; No other file reads HOME or XDG; if a
 ;; file needs a path, it asks here.
 
 (require racket/file

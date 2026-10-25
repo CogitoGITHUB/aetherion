@@ -1,7 +1,6 @@
 #lang racket/base
 ;; One job: the one door that turns a rule and an offending value into the
 ;; refusal every reader sees.
-;; Lands with TODO item 1 (the tree lands).
 ;;
 ;; The refusal is an error record from ../errors/raise.rkt and nothing else:
 ;; who is this area, where is this file, and what is one sentence naming the
@@ -25,7 +24,7 @@
 ;; not an id — a caller looks the id up in security.rkt, so a rule that does not
 ;; exist is caught there and not printed as a broken message here. The rule id
 ;; is named in the text so a reader can match the line on the screen with the
-;; rule in INDEX.org.
+;; rule in the README.
 (define (refuse rule value)
   (raise-err 'security "refuse.rkt"
              (format "rule ~a refuses \"~a\": ~a; ~a"

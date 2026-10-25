@@ -1,6 +1,5 @@
 #!/usr/bin/env nu
 # One job: only join/ may cross Rust and Racket.
-# Registered in plan/package-tree.org.
 #
 # It checks every .rs and every .rkt file in the package for a reference to the
 # other language. A reference outside join/ is a failure; join/ is where the

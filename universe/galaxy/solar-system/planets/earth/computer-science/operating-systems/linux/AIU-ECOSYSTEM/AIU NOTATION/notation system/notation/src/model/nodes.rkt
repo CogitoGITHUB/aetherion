@@ -1,9 +1,7 @@
 #lang racket/base
 ;; One job: what a node is; identity; blocks and error nodes only.
-;; Registered in plan/package-tree.org (model/nodes.rkt). Lands with TODO
-;; item 3.
 ;;
-;; There is no node kind for loose text (syntax/first-slice-freeze.org, rule
+;; There is no node kind for loose text (the README, rule
 ;; b). Text outside a block becomes a stray-text **error node** that keeps its
 ;; span, so the reader can find it and the text is never deleted.
 
@@ -17,7 +15,7 @@
 ;; what is inside it.
 ;;
 ;; The end line is its own field and not guessed from the end offset, because
-;; the frozen document shape (join/INDEX.org) carries both, and a reader that
+;; the frozen document shape carries both, and a reader that
 ;; had to derive one from the other would be reading a different shape.
 ;;
 ;; The depth is how many blocks are open above it. It is the field that lets a
@@ -74,7 +72,7 @@
   (if (block-node? n) (block-node-depth n) 0))
 
 ;; quote-field writes one field the way the frozen document shape writes it:
-;; in double quotes, with a double quote inside written twice (join/INDEX.org,
+;; in double quotes, with a double quote inside written twice (the README,
 ;; "Quoting"). A field that is written this way reads back as the same text.
 (define (quote-field text)
   (define out (open-output-string))

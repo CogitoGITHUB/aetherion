@@ -1,8 +1,7 @@
 //! One job: recovery — a broken element falls back to an error node and the
 //! text after it keeps parsing.
-//! Registered in plan/package-tree.org (parser/partial.rs).
 //!
-//! TODO.org item 4 ("Robustness", plan/build-order.org step 3): incremental
+//! incremental
 //! reparse and recovery. This file is the recovery half; reparse.rs is the
 //! incremental half and calls into it here.
 //!

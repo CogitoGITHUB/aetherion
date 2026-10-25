@@ -1,11 +1,9 @@
 #lang racket/base
 ;; One job: dependency scanning over the chunks — what waits on what, and what
 ;; a reader must be told about.
-;; Registered in plan/package-tree.org (literate/scan.rkt). Lands with TODO
-;; item 6 (build step 5, literate code).
 ;;
 ;; Scanning reads names and depends: lines and runs nothing. That is the whole
-;; discipline (engine/code-chunk-graph.org: the graph is scanned without
+;; discipline (the README: the graph is scanned without
 ;; executing anything), and it is why a chunk that would need a language to run
 ;; is still safe to list here.
 ;;

@@ -1,0 +1,12 @@
+see;aiu see FILE [--plain];View a page, formatted. Opens the page picker when no file is given.
+open;aiu open FILE;Open a page in your editor (AIU_EDITOR, else EDITOR).
+check;aiu check FILE;Check a page and list errors with their line numbers. Exit 0 means clean.
+render;aiu render FILE;Plain text render of a page.
+parse;aiu parse FILE;Print the parse tree, including error lines.
+roundtrip;aiu roundtrip FILE;Check that the page prints back byte for byte.
+pick;aiu pick [FOLDER];Pick a page with tv and print its path.
+update;aiu update;Rebuild the binary and regenerate the type pages if local files changed.
+list;aiu list [--plain];List the blocks and file types. With tv: pick blocks or types, then a list with details; new-block and new-type help you make new ones. --plain prints the two tables.
+gate;aiu gate;Run the light gate: all checks of the code itself.
+new;aiu new TYPE FILE;Create a page from the starter of a type, then check it. Asks for type and file.
+newtype;aiu newtype NAME;Write a module for a new file type, then run aiu update. Asks for the name.

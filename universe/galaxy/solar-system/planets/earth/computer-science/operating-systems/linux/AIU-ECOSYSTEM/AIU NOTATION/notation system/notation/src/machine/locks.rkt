@@ -1,6 +1,6 @@
 #lang racket/base
 ;; One job: one-writer locks — wait and retry, never force.
-;; Lands with TODO item 1 (the floor). A lock is a file, created exclusively;
+;; A lock is a file, created exclusively;
 ;; a writer that cannot get it waits and says why, and it never takes a lock
 ;; from someone else by force.
 

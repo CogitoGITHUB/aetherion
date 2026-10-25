@@ -1,7 +1,6 @@
 //! One job: offset to line/column and back, one pair of functions.
-//! Registered in plan/package-tree.org (text/positions.rs).
 //!
-//! The rule from syntax/first-slice-freeze.org, rule F: **offsets are counted
+//! The rule from the README, rule F: **offsets are counted
 //! in bytes, columns are counted in characters**. Both directions are here, so
 //! no other file converts a position in its own way.
 

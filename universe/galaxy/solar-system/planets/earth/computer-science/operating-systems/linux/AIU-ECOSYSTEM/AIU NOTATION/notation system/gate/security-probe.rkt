@@ -2,7 +2,6 @@
 ;; One job: the security gate's probe — every security rule is called on a
 ;; value that must be refused and on a value that must pass, and the answers
 ;; are checked against what the rule says it refuses.
-;; Registered in plan/package-tree.org (gate/security-probe.rkt).
 ;;
 ;; Who calls it: gate/security-gate-lint.nu, the gate stage "security-gate".
 ;; It is a file and not an expression inside the stage because a program that

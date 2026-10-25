@@ -1,6 +1,5 @@
 #!/usr/bin/env nu
 # tools/aiu.nu — the daily script: check, render and roundtrip a .aiu page.
-# Registered in plan/package-tree.org (tools/aiu.nu).
 #
 # One job: give a person ONE command that answers the three questions they
 # ask about a page: is it sound, what does it look like, and does it come

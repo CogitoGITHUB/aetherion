@@ -1,7 +1,5 @@
 #lang racket/base
 ;; One job: a name and its body reach the right meaning.
-;; Registered in plan/package-tree.org (elements/dispatch.rkt). Lands with
-;; TODO item 3.
 ;;
 ;; Dispatch is the only door from a name to a meaning. It looks the name up in
 ;; register.rkt and refuses anything unregistered; it never guesses, and it

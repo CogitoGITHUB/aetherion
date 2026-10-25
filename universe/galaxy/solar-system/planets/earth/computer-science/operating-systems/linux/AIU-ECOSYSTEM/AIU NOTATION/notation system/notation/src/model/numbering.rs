@@ -1,5 +1,4 @@
 //! One job: the heading numbers — 1, 1.1, 1.1.1 — computed from the page.
-//! Registered in plan/package-tree.org (model/numbering.rs).
 //!
 //! The number is never written by hand. The author writes a heading block and
 //! says how deep it is with a `level:` declaration; the number follows from

@@ -1,8 +1,8 @@
 //! One job: the five commands — parse, render, render-rich, roundtrip, todos — one file path each.
-//! Registered in plan/package-tree.org (src/main.rs), provisional 2026-07-17
+//! provisional 2026-07-17
 //! alongside the binary target in Cargo.toml.
 //!
-//! This binary exists for the one by-hand run allowed in item 3 of TODO.org.
+//! This binary exists for the one by-hand run allowed.
 //! Nothing here is automatic, nothing writes outside /tmp unless it is told to,
 //! and every failure is named rather than turned into a quiet zero.
 

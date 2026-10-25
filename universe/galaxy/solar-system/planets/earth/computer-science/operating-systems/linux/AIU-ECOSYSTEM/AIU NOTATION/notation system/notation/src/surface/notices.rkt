@@ -1,8 +1,6 @@
 #lang racket/base
 ;; One job: what the boundary sends unasked — a document parsed, a document
 ;; changed — and the errors that come with them.
-;; Registered in plan/package-tree.org (surface/notices.rkt). Lands with TODO
-;; item 8 (build step 7, the engine surface).
 ;;
 ;; An answer is asked for; a notice is not. The host is typing, the tree
 ;; changes, and the boundary says so on its own — there is no call to wait for
@@ -11,7 +9,7 @@
 ;; counting, which this shape never does.
 ;;
 ;; The errors here are the same =stray-text= errors the =check= command prints,
-;; each with its line number (plan/package-tree.org, surface/notices.rkt), and
+;; each with its line number, and
 ;; they carry no address: a notice can arrive for a document whose tree was
 ;; never built, and an address exists only when a tree does. The line number is
 ;; the position a reader can act on, and it is what =check= has always given.
@@ -51,7 +49,7 @@
 
 ;; The two words an unasked event may be. A third is not added here without a
 ;; root decision: the vocabulary is the owner's, and this file only names the
-;; two the boundary already speaks (contract/notation-engine-boundary.org,
+;; two the boundary already speaks (the README,
 ;; "report the new parse and its errors").
 (define notice-kinds '(parsed did-change))
 

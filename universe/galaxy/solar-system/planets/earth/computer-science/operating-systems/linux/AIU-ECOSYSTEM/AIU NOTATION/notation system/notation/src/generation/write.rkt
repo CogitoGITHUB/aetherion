@@ -1,7 +1,5 @@
 #lang racket/base
 ;; One job: write through security, into declared targets only.
-;; Registered in plan/package-tree.org (generation/write.rkt). Lands with TODO
-;; item 6 (build step 5, literate code).
 ;;
 ;; This is the only place in the package that writes a document's content, and
 ;; it writes one thing: the text of a planned send, into the target the
@@ -10,7 +8,7 @@
 ;;   - a target that is not a declared one: targets.rkt's door already refused
 ;;     an absolute path, a directory and a path that climbs out with "..".
 ;;   - a target that is the document itself, which would cost the source
-;;     (rules/rule-01-never-lose-work.org).
+;;    .
 ;;   - a target file that exists and that this document's store holds nothing
 ;;     sent to it, so no run of this document ever wrote it. Replacing a file
 ;;     nobody sent is how work is lost, and the way out is a human's: delete it
@@ -18,7 +16,7 @@
 ;;   - a step that is a load. A load is written nowhere by definition.
 ;;
 ;; The security area (security/security.rkt, output-safe? and state-changing?)
-;; does not exist yet and is named in plan/package-tree.org. These four
+;; does not exist yet and is named in the README. These four
 ;; refusals are this file's own door while that is true; when the area lands
 ;; they are replaced by its answers, not added to. gate/security-gate-lint.nu
 ;; says NOTHING-TO-CHECK for exactly this reason.
@@ -167,7 +165,7 @@
 ;; declared target, and the rename leaves nothing behind.
 ;;
 ;; The directory a target implies is created if it is missing, because a target
-;; that names plan/x.org means that directory is part of what was declared.
+;; that names a file under plan means that directory is part of what was declared.
 (define (write-file-at target text)
   (define beside (beside-target target))
 ;; beside-target gives the file that stands next to a target, which is

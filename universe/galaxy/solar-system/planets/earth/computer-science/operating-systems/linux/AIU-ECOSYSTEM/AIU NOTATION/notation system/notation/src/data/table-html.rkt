@@ -1,6 +1,5 @@
 #lang racket/base
 ;; One job: a table drawn as HTML.
-;; Registered in plan/package-tree.org (data/table-html.rkt).
 ;;
 ;; The table itself is decided by data/table.rkt; this file only draws it. The
 ;; owner asked for the table structure to be kept apart from its rendering, so

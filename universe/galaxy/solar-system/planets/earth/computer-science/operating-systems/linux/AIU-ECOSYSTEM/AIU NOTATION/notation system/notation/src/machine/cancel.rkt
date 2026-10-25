@@ -1,6 +1,6 @@
 #lang racket/base
 ;; One job: the cancellation door every blocking call passes.
-;; Lands with TODO item 1 (the floor). A blocking call takes this door and
+;; A blocking call takes this door and
 ;; checks it; nothing else may decide on its own that it should stop.
 
 (require "../errors/raise.rkt")

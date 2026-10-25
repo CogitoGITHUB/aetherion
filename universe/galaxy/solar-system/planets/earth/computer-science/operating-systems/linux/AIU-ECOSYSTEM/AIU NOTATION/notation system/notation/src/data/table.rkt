@@ -1,7 +1,6 @@
 #lang racket/base
 ;; One job: the table — its columns, its header, its rows, and whether the
 ;; cells fit the columns they sit under.
-;; Registered in plan/package-tree.org (data/table.rkt).
 ;;
 ;; The owner asked for tables that use AIU keywords instead of punctuation, and
 ;; for the table to be a structure of its own, not a drawing. This file holds

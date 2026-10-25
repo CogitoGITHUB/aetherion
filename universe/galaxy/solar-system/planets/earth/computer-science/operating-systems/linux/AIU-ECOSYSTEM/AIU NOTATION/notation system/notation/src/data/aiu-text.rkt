@@ -1,7 +1,6 @@
 #lang racket/base
 ;; One job: write AIU text — the .aiu form — from blocks that are described as
 ;; data.
-;; Registered in plan/package-tree.org (data/aiu-text.rkt).
 ;;
 ;; The owner asked for the two ways to move between AIU and JSON, and this file
 ;; holds the AIU side of the second one: JSON comes back as blocks described as

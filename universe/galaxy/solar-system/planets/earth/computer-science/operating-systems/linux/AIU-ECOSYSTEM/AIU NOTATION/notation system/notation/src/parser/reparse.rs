@@ -1,7 +1,6 @@
 //! One job: re-read only the slice of the file an edit touched.
-//! Registered in plan/package-tree.org (parser/reparse.rs).
 //!
-//! TODO.org item 4 ("Robustness", plan/build-order.org step 3): incremental
+//! incremental
 //! reparse. It is done when an edit in the middle of a file leaves the rest of
 //! the file rendered, and the caller is told which elements were rebuilt so
 //! the renderer draws only those.
@@ -25,7 +24,7 @@ use crate::partial;
 use crate::parser::{Node, Span, Tree};
 
 /// One edit: the bytes in `start..end` are replaced by `text`. Offsets are
-/// bytes (syntax/first-slice-freeze.org, rule F).
+/// bytes.
 #[derive(Debug, Clone)]
 pub struct Edit {
     pub start: usize,

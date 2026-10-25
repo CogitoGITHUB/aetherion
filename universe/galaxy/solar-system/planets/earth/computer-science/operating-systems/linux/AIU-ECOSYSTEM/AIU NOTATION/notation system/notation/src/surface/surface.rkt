@@ -1,8 +1,6 @@
 #lang racket/base
 ;; One job: the calls the editor and the multiplexer make, and the answers they
 ;; get back — with the node addresses those answers carry.
-;; Registered in plan/package-tree.org (surface/surface.rkt). Lands with TODO
-;; item 8 (build step 7, the engine surface).
 ;;
 ;; This is the door. A host opens a document, the tree is built on the meaning
 ;; side, and everything that leaves this file leaves as the text frozen in
@@ -29,10 +27,10 @@
 ;; What breaks it: inserting, removing or re-kindling a sibling of the SAME
 ;; kind above a node renumbers the ordinals below it, so a stored address then
 ;; names whatever node moved into that slot. That is the price of an address
-;; computed and never authored (contract/node-addressing-and-comments.org,
+;; computed and never authored (the README,
 ;; lines 13-15), and it is a price worth naming rather than hiding: a node that
 ;; must keep its name across a reorder needs an authored id, which is the open
-;; question in ROOT-REQUEST-D014.org. This file does not invent it. An address
+;; question in the README. This file does not invent it. An address
 ;; that must outlive a reorder stays a path in this document and an identity in
 ;; the host.
 ;;
@@ -80,8 +78,7 @@
 ;; and an address, it answers the node that address names, or #f when the
 ;; document holds no such node. This is the call an editor may make over the
 ;; contract alone — the text goes in, plain data comes out, and no part of this
-;; package is needed to answer it (TODO item 8, the loader without the
-;; notation).
+;; package is needed to answer it.
 (define (surface-node-at document-text address)
   (answers-at (read-answers document-text) address))
 
@@ -121,7 +118,7 @@
 
 ;; kind-word is the word that goes into an address for a node: a block names
 ;; itself, an error names what it found. It is the kind the contract promises
-;; an address is built from (node-addressing-and-comments.org, lines 13-15).
+;; an address is built from.
 (define (kind-word n)
   (cond
     [(block-node? n) (symbol->string (block-node-name n))]
@@ -136,7 +133,7 @@
 
 ;; block-answer builds one node answer. The span is the bytes the renderer
 ;; cuts the node's text out of; children is counted so a reader needs no
-;; counting to know what sits inside what (join/INDEX.org, same rule).
+;; counting to know what sits inside what.
 (define (block-answer placed)
   (define n (car placed))
   (answer (cdr placed)
@@ -149,7 +146,7 @@
 
 ;; fault-answer builds one error answer. what and what-to-do must both be
 ;; filled: an error that cannot say what to do is not an error yet
-;; (join/INDEX.org), and a tree that broke that rule is named here instead of
+;;, and a tree that broke that rule is named here instead of
 ;; being passed on as a blank.
 (define (fault-answer placed)
   (define n (car placed))
@@ -171,7 +168,7 @@
 ;; The target is refused in two cases before a byte moves, and each refusal
 ;; names what the reader may do:
 ;;   - the target is the file the answer describes, which would cost the
-;;     document it is an answer about (rules/rule-01-never-lose-work.org).
+;;     document it is an answer about.
 ;;   - the target is a directory, which has nowhere for a reader to read from.
 ;;
 ;; The text goes to a =.new= file beside the target and is renamed over it in

@@ -1,5 +1,4 @@
 //! One job: comments and marks stripped here, in one place.
-//! Registered in plan/package-tree.org (rendering/strip.rs).
 //!
 //! strip.rs is the **only** stripper in the package. If another file decides to
 //! drop a line, it calls this one; nobody re-implements the rule. It knows two
@@ -9,7 +8,7 @@
 //! Everything else is content and is kept exactly as written.
 //!
 //! Comments are the third thing it drops, and the spans come from text/:
-//! text/comments.rs says where they are (TODO item 7). This file never reads a
+//! text/comments.rs says where they are. This file never reads a
 //! comment itself, only the byte ranges it must drop, so there is exactly one
 //! place that knows what a comment is and one place that removes it.
 

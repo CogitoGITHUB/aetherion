@@ -1,11 +1,9 @@
 #lang racket/base
 ;; One job: the tree built from parsed elements.
-;; Registered in plan/package-tree.org (model/outline.rkt). Lands with TODO
-;; item 3.
 ;;
-;; It reads a parse-tree-document (join/INDEX.org) — the plain text the Rust
+;; It reads a parse-tree-document — the plain text the Rust
 ;; parser printed — and builds the node tree. It reads only the shape frozen in
-;; join/INDEX.org, so the two sides cannot drift without one of them failing.
+;; the README, so the two sides cannot drift without one of them failing.
 ;;
 ;; Three things happen here and nowhere else: the declarations are attached to
 ;; the block they were written in, the children are put under the block they
@@ -144,7 +142,7 @@
 
 ;; split-fields splits a document line into its fields. A field in double
 ;; quotes is one field and keeps the spaces inside it, because the frozen
-;; shape writes a value that has spaces as one quoted field (join/INDEX.org,
+;; shape writes a value that has spaces as one quoted field (the README,
 ;; "Quoting"). A doubled quote inside a quoted field is one quote in the
 ;; value, and the closing quote is the one that is not doubled.
 (define (split-fields line)
@@ -174,7 +172,7 @@
   (scan 0 #f "" '()))
 
 ;; unquote-field reads a quoted field: the quotes come off and a doubled quote
-;; inside becomes one quote (join/INDEX.org, "Quoting").
+;; inside becomes one quote.
 (define (unquote-field field)
   (define trimmed (string-trim field))
   (define inner

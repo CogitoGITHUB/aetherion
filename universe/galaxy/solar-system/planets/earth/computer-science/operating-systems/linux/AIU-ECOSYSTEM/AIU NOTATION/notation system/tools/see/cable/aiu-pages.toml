@@ -8,7 +8,7 @@ display = "{split:/:-1}"
 output = "{}"
 
 [preview]
-command = "bash ($env.AIU_NOTATION_ROOT | path join tools see preview.sh) '{}' 60"
+command = "bash ($env.AIU_NOTATION_ROOT | path join tools see preview-fit.sh) '{}' 60"
 
 [keybindings]
 enter = "actions:pick"

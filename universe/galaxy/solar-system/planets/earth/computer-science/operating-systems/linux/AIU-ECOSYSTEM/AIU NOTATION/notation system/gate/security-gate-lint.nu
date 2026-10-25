@@ -1,7 +1,7 @@
 #!/usr/bin/env nu
 # One job: the security gate — every security rule is called on a value that
 # must be refused and on a value that must pass, and the answer is checked.
-# Registered in plan/package-tree.org; gate stage "security-gate".
+# Gate stage "security-gate".
 #
 # The stage calls gate/security-probe.rkt, which opens the security area and
 # probes every rule, and the probe also names the files that call each rule,

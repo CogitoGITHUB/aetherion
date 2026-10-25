@@ -1,10 +1,8 @@
 #lang racket/base
 ;; One job: how a send names a node (contract step 9).
-;; Registered in plan/package-tree.org (model/addressing.rkt). Lands with TODO
-;; item 3.
 ;;
 ;; The contract says it in one sentence
-;; (contract/node-addressing-and-comments.org:13-15):
+;;:
 ;;   "Address: names a node by kind and position — title, paragraph, code block,
 ;;    chunk — computed, never authored; stable while the document is edited
 ;;    elsewhere; readable by the owner and by an agent alike."
@@ -12,7 +10,7 @@
 ;; So an address here is computed from a node's kind and position and nothing
 ;; else. There is no way to write one by hand, and a node that carries an
 ;; authored id has no address from this file. That last part is the open
-;; contract question in ROOT-REQUEST-D014.org: an authored id is a different
+;; contract question in the README: an authored id is a different
 ;; thing, and this file does not invent it.
 
 (require "nodes.rkt")

@@ -1,6 +1,6 @@
 #lang racket/base
 ;; One job: the event record — schema only, decides nothing.
-;; Lands with TODO item 1 (the floor). Narration uses the errors floor and
+;; Narration uses the errors floor and
 ;; nothing above it.
 
 ;; An event is one thing that happened: its kind, what it was, and the
@@ -8,7 +8,7 @@
 (struct ev (kind what detail)
   #:transparent)
 
-;; The six kinds a run's voice may speak (plan/architecture.org, narration).
+;; The six kinds a run's voice may speak.
 ;; A seventh kind is not added here: the record carries the schema, the owner
 ;; decides the vocabulary.
 (define ev-kinds '(open step note warn skip decide))

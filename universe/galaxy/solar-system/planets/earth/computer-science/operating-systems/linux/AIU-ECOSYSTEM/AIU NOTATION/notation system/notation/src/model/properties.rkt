@@ -1,17 +1,15 @@
 #lang racket/base
 ;; One job: tags, properties, planning states on nodes.
-;; Registered in plan/package-tree.org (model/properties.rkt). Lands with TODO
-;; item 3.
 ;;
 ;; Everything here comes from a declaration line, and every declaration is a
-;; **hint**, never meaning (syntax/first-slice-freeze.org, rule B). A tag read
+;; **hint**, never meaning. A tag read
 ;; here may inform a reader; it may never change what an element is.
 
 (require racket/string
          "nodes.rkt"
          "../errors/raise.rkt")
 
-;; Provided with TODO item 5: diagnostics/collect.rkt reads the registered
+;; Provided here: diagnostics/collect.rkt reads the registered
 ;; keywords and the one word splitter from here, so this vocabulary has one
 ;; home and no file repeats it.
 (provide property-keywords parse-tags property-of tags-of planning-state-of)

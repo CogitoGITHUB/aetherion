@@ -1,6 +1,5 @@
 #lang racket/base
 ;; One job: the one raise helper; nothing raises around it.
-;; Lands with TODO item 1 (the tree lands).
 
 (require "err.rkt")
 

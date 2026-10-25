@@ -1,6 +1,6 @@
 #!/usr/bin/env nu
 # One job: the load check — verify every .rkt module under notation/ and gate/ loads cleanly in Racket.
-# Registered in plan/package-tree.org; gate stage "load-check".
+# Gate stage "load-check".
 #
 # Runs: racket -l racket/base -e '(dynamic-require (string->path "<abs path>") (void))'
 # for every .rkt module under notation/ and gate/ by the full Racket path,

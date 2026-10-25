@@ -1,6 +1,5 @@
 //! One job: the rich tier — the plain tier's content, drawn with unicode.
-//! Registered in plan/package-tree.org (rendering/rich.rs).
-//! TODO.org item 9, step 8 of plan/build-order.org: plain and rich unicode on
+//! plain and rich unicode on
 //! the phone; the graphics tier stays planned, and this file keeps that honest.
 //!
 //! What is drawn, and what each mark means:
@@ -40,7 +39,7 @@
 //!     that the reader cannot follow, and the freeze keeps inline links open.
 //!   * No colour and no escape codes. Bold and italic are asked for as
 //!     declarations and answered with a mark in the margin.
-//!   * No tables, no numbering, no cross references: package-tree.org names
+//!   * No tables, no numbering, no cross references: the README names
 //!     tables here as planned, and a Tier 2 element decides their meaning
 //!     before a renderer draws them.
 //!   * Code is never re-wrapped, re-indented or cut. A line too wide for the
@@ -53,7 +52,7 @@
 //!     only stripper.
 //!   * Emphasis reads registered declarations (`style:`, `format:`) only.
 //!     Inline emphasis inside a paragraph stays open in
-//!     syntax/first-slice-freeze.org, so no inline mark is invented here.
+//!     the README, so no inline mark is invented here.
 
 use crate::buffer::Buffer;
 use crate::comments::{find_comments_in, is_comment_line, Comment};

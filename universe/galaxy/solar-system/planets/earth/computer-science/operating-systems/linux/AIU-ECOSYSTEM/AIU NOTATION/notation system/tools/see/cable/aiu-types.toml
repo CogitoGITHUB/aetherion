@@ -1,0 +1,20 @@
+[metadata]
+name = "aiu-types"
+description = "Pick a file type"
+
+[source]
+command = "bash aiu-types.sh"
+display = "{}"
+output = "{}"
+
+[preview]
+command = 'bash aiu-type-preview.sh "{}"'
+
+[keybindings]
+enter = "actions:pick"
+
+[actions.pick]
+description = "write the chosen type to /tmp/aiu-type"
+command = "printf %s {} > /tmp/aiu-type"
+shell = "bash"
+mode = "execute"
