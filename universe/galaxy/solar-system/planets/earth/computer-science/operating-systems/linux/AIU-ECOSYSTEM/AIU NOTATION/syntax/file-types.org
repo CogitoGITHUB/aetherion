@@ -16,9 +16,9 @@ Today one thing: which block names the page may use (allowed-blocks). A type may
 any block (notes) or a fixed list (book).
 
 * Where types live
-notation/src/filetypes/file-types/ holds one module per type, or one folder per type
-with its own modules beside type.rkt. filetypes.rkt finds them by scanning the folder,
-so adding a type never edits the engine. See notation/src/filetypes/INDEX.org.
+types/ at the top of the repo holds one module per type, or one folder per type with its
+own modules beside type.rkt. filetypes.rkt (in notation system/) finds them by scanning
+the folder, so adding a type never edits the engine. See the README, "Making a file type".
 
 * Findings
 - unknown-file-type: kind: names a type that has no module

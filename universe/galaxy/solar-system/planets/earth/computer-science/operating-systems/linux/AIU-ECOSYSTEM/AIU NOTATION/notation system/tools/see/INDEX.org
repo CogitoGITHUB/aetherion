@@ -24,3 +24,10 @@ declaration lines are not shown. The file itself is never changed.
 - font, theme and format lines are hints and are ignored here
 - an older flat heading block is still shown, without numbers
 - width is counted in characters; wide characters can wrap early
+
+
+* The picker
+The Nushell command "aiu see|open|check|render|parse|roundtrip" opens tv when no file is
+given. tv lists the .aiu pages below the current folder (or the folder you pass), shows
+only the file names, and previews each page with preview.sh, which prints the formatted
+page and caches it in /tmp/aiu-preview. AIU_PICK_FIRST=1 skips tv (for scripts).

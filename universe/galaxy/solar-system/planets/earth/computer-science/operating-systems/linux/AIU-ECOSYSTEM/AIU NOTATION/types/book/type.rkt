@@ -1,7 +1,7 @@
 #lang racket/base
 ;; type.rkt -- the file type "book", in its own folder so it can grow modules.
 ;; Called by: filetypes.rkt (found by scanning file-types/).
-(require "../../type.rkt" "blocks.rkt")
+(require "../_base.rkt" "blocks.rkt")
 (provide the-type)
 
 ;; The book type.

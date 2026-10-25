@@ -1,7 +1,7 @@
 #lang racket/base
 ;; notes.rkt -- the file type "notes": loose notes, any block allowed.
 ;; Called by: filetypes.rkt (found by scanning this folder).
-(require "../type.rkt")
+(require "_base.rkt")
 (provide the-type)
 
 ;; The notes type.

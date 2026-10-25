@@ -1,0 +1,5 @@
+* types
+One module per file type, or one folder per type. A page picks one with kind: under its
+title. filetypes.rkt (in notation system/) scans this folder, so adding a type edits no
+engine file. Names starting with an underscore are not types (_base.rkt is the shared door).
+See the README, "Making a file type".

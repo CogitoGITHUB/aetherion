@@ -7,7 +7,7 @@
 (provide (all-from-out "type.rkt") load-file-types file-type-named type-modules)
 
 ;; The folder that holds one module per file type.
-(define-runtime-path types-dir "file-types")
+(define-runtime-path types-dir "../../../../types")
 
 ;; The module that defines the type at one entry of the folder: a .rkt file is the type
 ;; itself, a subfolder holds it in type.rkt beside its own modules. Anything else, and

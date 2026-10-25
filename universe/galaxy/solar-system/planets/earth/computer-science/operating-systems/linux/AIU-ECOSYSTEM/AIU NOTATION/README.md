@@ -101,6 +101,7 @@ meaning. Here every part is named with a word, so the checker can be exact.
 Needs Rust (cargo) and Racket 9 (CS).
 
 ~~~
+cd "notation system"
 cargo build --manifest-path notation/Cargo.toml
 export AIU_NOTATION_BIN="$PWD/notation/target/debug/notation"
 ~~~
@@ -110,7 +111,7 @@ says so.
 
 ## Commands
 
-Run from the project folder. Quote paths: the folder name contains a space. Always set
+Run from the `notation system/` folder. Quote paths: the folder name contains a space. Always set
 `LC_ALL=C.UTF-8`, or Racket garbles non-ASCII characters in paths.
 
 | Task | Command |
@@ -136,7 +137,7 @@ above: `aiu see|open|check|render|parse|roundtrip|pick [FILE|FOLDER]`. With a fi
 on that file. With nothing, or a folder, it opens the [television](https://github.com/alexpasmantier/television)
 (`tv`) picker over the `.aiu` pages below it, with the formatted page in a preview pane.
 
-Install once: put it on PATH, for example `ln -s "$PWD/tools/see/aiu" ~/.local/bin/aiu`.
+Install once: put it on PATH, for example `ln -s "$PWD/notation system/tools/see/aiu" ~/.local/bin/aiu` (from the repo root)`.
 `tv` is optional; without it, pass a file. Settings, all optional:
 
 | Variable | Effect |
@@ -174,16 +175,16 @@ come from earlier sessions and are unverified.
 ## Making a file type
 
 A file type says which blocks a page may use. A page picks one with `kind:` under its
-title's start line, and the checker then holds the page to it. Types live in
-`notation/src/filetypes/file-types/`, one module each; no engine file is edited.
+title's start line, and the checker then holds the page to it. Types live in `types/` at
+the top of the repo, one module each; no engine file is edited.
 
-1. Create `notation/src/filetypes/file-types/NAME.rkt`:
+1. Create `types/NAME.rkt`:
 
 ~~~
 #lang racket/base
 ;; NAME.rkt -- the file type "NAME": one line saying what it is for.
-;; Called by: filetypes.rkt (found by scanning this folder).
-(require "../type.rkt")
+;; Called by: filetypes.rkt (found by scanning types/).
+(require "_base.rkt")
 (provide the-type)
 
 ;; The NAME type.
@@ -192,15 +193,17 @@ title's start line, and the checker then holds the page to it. Types live in
 
    The fields are the name (what a page writes after `kind:`), a one-line description,
    and the allowed block names, or `#f` to allow any block.
-2. A type that needs more modules gets a folder instead: `file-types/NAME/type.rkt`
-   provides `the-type`, with its other modules beside it (see `file-types/book/`).
-   A name starting with an underscore is ignored, so `_draft.rkt` is safe scratch.
+2. A type that needs more modules gets a folder instead: `types/NAME/type.rkt` provides
+   `the-type`, starts with `(require "../_base.rkt")`, and keeps its other modules beside
+   it (see `types/book/`). A name starting with an underscore is ignored, so `_draft.rkt`
+   is safe scratch.
 3. Try it: write a page with `kind: NAME` and run `check`. A disallowed block gives
    `block-not-in-type`; a name no module defines gives `unknown-file-type`.
-4. Add a page check for it to `gate/tests/filetypes-test.rkt`. The loader checks there
-   already cover every type: it loads, and no two types share a name.
-5. Run the gate: `LC_ALL=C.UTF-8 nu gate/check.nu`. Then add one line for the type to
-   `syntax/file-types.org`.
+4. The loader checks in `notation system/gate/tests/filetypes-test.rkt` already cover
+   every type: it loads, and no two types share a name. Add a page check there for
+   anything special about the new type.
+5. Run the gate from `notation system/`: `nu gate/check.nu`. Then add one line for the
+   type to `syntax/file-types.org`.
 
 ## Status
 
@@ -241,17 +244,19 @@ Known gaps, found by hand:
 ## Repo map
 
 ~~~
-README.md      this file
-AI-GUIDE.md    what an AI must know to write .aiu files
-AGENT.md       rules for an AI working on the package
-TODO.org       the one list of what is left
-HANDOFF.org    the true state
-notation/      Rust crate (parse, render, roundtrip) and Racket package (check, model);
-               every area has its own INDEX.org
-syntax/        the rules, one file per topic, plus example pages
-tools/         see (viewer, aiu command, tv picker channel), aiu.nu (older script)
-gate/          the light gate: checks of the code itself
-plan/          package-tree.org: the register of names
+README.md          this file
+AI-GUIDE.md        what an AI must know to write .aiu files
+AGENT.md           rules for an AI working on the package
+TODO.org           the one list of what is left
+HANDOFF.org        the true state
+syntax/            the rules, one file per topic, plus example pages
+types/             the file types: one module (or folder) per type, used by kind:
+notation system/   all the code; every command in this README runs from here
+  notation/        Rust crate (parse, render, roundtrip) and Racket package (check, model);
+                   every area has its own INDEX.org
+  tools/           see (viewer, aiu command, tv picker channel), aiu.nu (older script)
+  gate/            the light gate: checks of the code itself
+  plan/            package-tree.org: the register of names
 ~~~
 
 ## Development

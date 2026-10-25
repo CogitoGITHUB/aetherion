@@ -7,10 +7,10 @@
 # AIU_PICK_FIRST=1 skips tv and takes the first page (for scripts and checks).
 
 # The project root is three folders above this file (tools/see/aiu).
-const project_root = (path self | path dirname | path dirname | path dirname)
+const script_file = (path self)
 
 def main [cmd: string, target?: path, --plain (-p)] {
-  let root = ($env.AIU_NOTATION_ROOT? | default $project_root)
+  let root = (^readlink -f $script_file | str trim | path dirname | path dirname | path dirname)
   let bin = ($root | path join notation target debug notation)
   let cli = ($root | path join notation src entry cli.rkt)
   let view = ($root | path join tools see see.rkt)
@@ -44,7 +44,7 @@ def main [cmd: string, target?: path, --plain (-p)] {
         error make {msg: "tv (television) is not on PATH. Install it, or give a file: aiu see FILE"}
       }
       rm -f /tmp/aiu-pick
-      try { do { cd $dir; ^tv aiu-pages --cable-dir ($root | path join tools see cable) --preview-size 80 } } catch {|e| print $"tv failed: ($e.msg)" }
+      try { do { cd $dir; with-env {AIU_NOTATION_ROOT: $root} { ^tv aiu-pages --cable-dir ($root | path join tools see cable) --preview-size 80 } } } catch {|e| print $"tv failed: ($e.msg)" }
       let out = (if ("/tmp/aiu-pick" | path exists) { open --raw /tmp/aiu-pick | str trim } else { "" })
       if ($out | is-empty) {
         print "nothing chosen"
