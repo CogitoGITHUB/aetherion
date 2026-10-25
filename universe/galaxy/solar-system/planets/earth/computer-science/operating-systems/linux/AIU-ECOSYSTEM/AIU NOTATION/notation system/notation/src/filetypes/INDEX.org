@@ -1,3 +1,0 @@
-* filetypes
-Loads the file types of the notation. filetypes.rkt scans types/ (top of the repo) and
-returns every type as a file-type record (type.rkt). The types themselves live in types/.

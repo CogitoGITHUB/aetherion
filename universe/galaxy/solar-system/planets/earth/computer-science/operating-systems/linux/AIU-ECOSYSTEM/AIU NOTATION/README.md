@@ -8,8 +8,11 @@ It is meant to replace Org, Markdown and LaTeX for the writing its author does. 
 text stays the source of truth: any editor, `grep` and `git diff` work on a `.aiu` file.
 This folder adds a checker and a terminal viewer.
 
-Status as of 2026-10-24: the core blocks (title, paragraph, section, code, comment) work
-and were run by hand on the author's phone. The status table below says what else is real.
+Status as of 2026-10-25: the core blocks (title, paragraph, section, code, comment) and
+file types work and were run by hand. The status table below says what else is real.
+
+This README is the only documentation. An AI agent needs nothing else to write `.aiu`
+pages or to work on the package.
 
 ## A page in 20 seconds
 
@@ -52,23 +55,23 @@ numbered `1  A section`, the code in a frame, no start or end lines, the comment
    alone on its line, starts at column 0, is lowercase, and uses the same name both times.
 3. Declarations are lines `keyword: value` straight under the start line. Only registered
    keywords count; any other `word: text` line is ordinary content.
-4. A code block's body is opaque: nothing in it opens or closes a block. Only the exact
+4. A code block body is opaque: nothing in it opens or closes a block. Only the exact
    line `code end` closes it.
 5. Blocks nest. A `section` holds other blocks, and its first block is its `title`.
 6. Numbers are computed (1, 1.1, 1.2, 2). Never type them.
 7. Nothing is repaired silently. A broken file keeps its exact bytes and the error names
    the line. A good file prints back byte for byte (the round trip).
 
-Registered declaration keywords: `tags`, `kind`, `language`, `style`, `theme`, `color`, `format`,
-`font`, `level`, `caption`, `column`, `cell`, `row-id`, `meta`, `todo`. They are hints
-about a block. The viewer honors `style:` (bold, dim, italic, underline, several allowed
-with spaces) and `color:` (red, green, yellow, blue, magenta, cyan, white, gray).
+Registered declaration keywords: `tags`, `kind`, `language`, `style`, `theme`, `color`,
+`format`, `font`, `level`, `caption`, `column`, `cell`, `row-id`, `meta`, `todo`. They are
+hints about a block. The viewer honors `style:` (bold, dim, italic, underline, several
+allowed with spaces) and `color:` (red, green, yellow, blue, magenta, cyan, white, gray).
 
 ## The blocks
 
 | Block | Purpose |
 |---|---|
-| `title` | the file's title (first block of the file) and each section's title (first block of the section); `tags:` goes under its start line |
+| `title` | the file title (first block of the file) and each section title (first block of the section); `tags:` goes under its start line |
 | `paragraph` | prose |
 | `section` | holds a title and more blocks, sections included; the nesting depth is the level |
 | `code` | opaque text; `language:` goes under its start line |
@@ -84,7 +87,7 @@ meaning. Here every part is named with a word, so the checker can be exact.
 | You want | Org | Markdown | LaTeX | `.aiu` |
 |---|---|---|---|---|
 | file title | `#+TITLE:` | `# Title` | `\title{}` | a `title` block, first in the file |
-| tags | `:tag:`, `#+FILETAGS:` | front matter | none | `tags:` under the title's start line |
+| tags | `:tag:`, `#+FILETAGS:` | front matter | none | `tags:` under the title start line |
 | chapter, section | `*` `**` | `#` `##` | `\chapter` `\section` | nested `section` blocks |
 | section numbers | exporter | none | automatic | computed, never typed |
 | paragraph | plain text | plain text | plain text | a `paragraph` block |
@@ -111,8 +114,8 @@ says so.
 
 ## Commands
 
-Run from the `notation system/` folder. Quote paths: the folder name contains a space. Always set
-`LC_ALL=C.UTF-8`, or Racket garbles non-ASCII characters in paths.
+Run from the `notation system/` folder. Quote paths: the folder name contains a space.
+Always set `LC_ALL=C.UTF-8`, or Racket garbles non-ASCII characters in paths.
 
 | Task | Command |
 |---|---|
@@ -121,6 +124,9 @@ Run from the `notation system/` folder. Quote paths: the folder name contains a 
 | Plain text render | `$AIU_NOTATION_BIN render FILE` |
 | Parse tree | `$AIU_NOTATION_BIN parse FILE` |
 | Round trip | `$AIU_NOTATION_BIN roundtrip FILE` |
+| Regenerate starter pages | `LC_ALL=C.UTF-8 racket notation/src/filetypes/make-live.rkt` |
+| Update after local changes | `aiu update` |
+| Gate | `nu gate/check.nu` |
 
 `check` exits 0 when clean, 1 when it found errors, 2 when it could not run (missing file
 or binary). Also present, written by earlier sessions and not run by the author:
@@ -133,11 +139,18 @@ the commands above.
 ### The `aiu` command and the picker
 
 `tools/see/aiu` is a Nushell script (needs Nushell and Racket) that wraps the commands
-above: `aiu see|open|check|render|parse|roundtrip|pick [FILE|FOLDER]`. With a file it works
+above: `aiu see|open|check|render|parse|roundtrip|pick [FILE|FOLDER]`, and `aiu update` (no file). With a file it works
 on that file. With nothing, or a folder, it opens the [television](https://github.com/alexpasmantier/television)
 (`tv`) picker over the `.aiu` pages below it, with the formatted page in a preview pane.
 
-Install once: put it on PATH, for example `ln -s "$PWD/notation system/tools/see/aiu" ~/.local/bin/aiu` (from the repo root)`.
+`aiu update` brings the local install up to date. It rebuilds the Rust binary when any
+`.rs`, `Cargo.toml` or `Cargo.lock` is newer than `notation/target/debug/notation`, and
+regenerates `types/*.aiu` when anything under `notation/src/filetypes/` is newer than the
+oldest page. It prints one line per step: `built`, `regenerated` or `up to date`. It does
+not fetch from upstream yet. It never deletes pages, so remove the page of a deleted type
+by hand.
+
+Install once, from the repo root: `ln -s "$PWD/notation system/tools/see/aiu" ~/.local/bin/aiu`.
 `tv` is optional; without it, pass a file. Settings, all optional:
 
 | Variable | Effect |
@@ -175,15 +188,16 @@ come from earlier sessions and are unverified.
 ## Making a file type
 
 A file type says which blocks a page may use. A page picks one with `kind:` under its
-title's start line, and the checker then holds the page to it. Types live in `types/` at
-the top of the repo, one module each; no engine file is edited.
+title start line, and the checker then holds the page to it. Types live in
+`notation/src/filetypes/types/`, one module each. The loader scans that folder, so no
+engine file is edited.
 
-1. Create `types/NAME.rkt`:
+1. Create `notation/src/filetypes/types/NAME.rkt`:
 
 ~~~
 #lang racket/base
 ;; NAME.rkt -- the file type "NAME": one line saying what it is for.
-;; Called by: filetypes.rkt (found by scanning types/).
+;; Called by: filetypes.rkt (found by scanning filetypes/types/).
 (require "_base.rkt")
 (provide the-type)
 
@@ -193,39 +207,41 @@ the top of the repo, one module each; no engine file is edited.
 
    The fields are the name (what a page writes after `kind:`), a one-line description,
    and the allowed block names, or `#f` to allow any block.
-2. A type that needs more modules gets a folder instead: `types/NAME/type.rkt` provides
-   `the-type`, starts with `(require "../_base.rkt")`, and keeps its other modules beside
-   it (see `types/book/`). A name starting with an underscore is ignored, so `_draft.rkt`
-   is safe scratch.
+2. A type that needs more modules gets a folder instead: `notation/src/filetypes/types/NAME/type.rkt`
+   provides `the-type`, starts with `(require "../_base.rkt")`, and keeps its other modules
+   beside it (see `notation/src/filetypes/types/book/`). A name starting with an underscore
+   is ignored, so `_draft.rkt` is safe scratch.
 3. Try it: write a page with `kind: NAME` and run `check`. A disallowed block gives
    `block-not-in-type`; a name no module defines gives `unknown-file-type`.
-4. The loader checks in `notation system/gate/tests/filetypes-test.rkt` already cover
-   every type: it loads, and no two types share a name. Add a page check there for
-   anything special about the new type.
-5. Run the gate from `notation system/`: `nu gate/check.nu`. Then add one line for the
-   type to `syntax/file-types.org`.
+4. The checks in `gate/tests/filetypes-test.rkt` already cover every type: it loads, and
+   no two types share a name. Add a page check there for anything special about the new type.
+5. Run `aiu update`, which regenerates the starter pages, then run the gate.
+
+`types/` at the top of the repo holds one generated starter `.aiu` page per type. Never
+edit them by hand.
 
 ## Status
 
-| Feature | State | Details |
-|---|---|---|
-| title, paragraph, section, code, comment | works, run by hand 2026-10-24 | `syntax/GUIDE.org` |
-| declarations under a start line | works (tags, language, style checked) | `syntax/properties-and-tags.org` |
-| stray text is an error, also inside a section | works, run by hand | `syntax/first-slice-freeze.org` |
-| a section must start with a title | works, run by hand | `syntax/structure.org` |
-| exact round trip | works, run by hand | |
-| terminal viewer `see` | works, run by hand | `tools/see/INDEX.org` |
-| `aiu` command and tv picker | works, run by hand 2026-10-25 | `tools/see/INDEX.org` |
-| section numbers | the viewer computes them; the checker's own numbering still counts only `heading` | `TODO.org` |
-| `heading` with `level:` | parsed; being replaced by `section` | |
-| tables | the Rust parser accepts them; the checker's name table does not | `syntax/tables-and-figures.org` |
-| literate code, JSON, todos, rich render, editor surface, security rules | written by earlier AI sessions, not verified by the author | `syntax/feature-status.org` |
-| inline bold, italic, links | not built | |
-| math and graphs | far future | |
-| including a block from another file | planned; needs authored ids | `TODO.org` |
-| file types: `kind:` under the title, one module per type (book, notes) | works, run by hand 2026-10-25 | `syntax/file-types.org` |
-| editor hosting: completion, live errors, hidden end lines | planned, separate project | `EDITOR-HANDOFF.org` |
-| kit: MCP server, skill, plugin | planned | `TODO.org` |
+| Feature | State |
+|---|---|
+| title, paragraph, section, code, comment | works, run by hand 2026-10-24 |
+| declarations under a start line | works (tags, language, style checked) |
+| stray text is an error, also inside a section | works, run by hand |
+| a section must start with a title | works, run by hand |
+| exact round trip | works, run by hand |
+| terminal viewer `see` | works, run by hand |
+| `aiu` command and tv picker | works, run by hand 2026-10-25 |
+| `aiu update` | works, run by hand 2026-10-25; local changes only, no upstream fetch |
+| section numbers | the viewer computes them; the checker's own numbering still counts only `heading` |
+| `heading` with `level:` | parsed; being replaced by `section` |
+| tables | the Rust parser accepts them; the checker's name table does not |
+| literate code, JSON, todos, rich render, editor surface, security rules | written by earlier AI sessions, not verified by the author |
+| file types: `kind:` under the title, one module per type | works, run by hand 2026-10-25 |
+| inline bold, italic, links | not built |
+| math and graphs | far future |
+| including a block from another file | planned; needs authored ids |
+| editor hosting: completion, live errors, hidden end lines | planned, separate project |
+| kit: MCP server, skill, plugin | planned |
 
 Known gaps, found by hand:
 
@@ -238,49 +254,49 @@ Known gaps, found by hand:
 
 ## For AI agents
 
-Everything an AI needs to use this notation and to add a file type is in this README and `AI-GUIDE.md`. Short version:
+Writing a page:
 
-- Write a page: blocks only (`title`, `paragraph`, `section`, `code`, `comment`), each as `name start` ... `name end`, nothing outside a block, declarations (`kind:`, `tags:`) directly under a start line. Check it: from `notation system/`, `LC_ALL=C.UTF-8 racket notation/src/entry/cli.rkt check FILE` with `AIU_NOTATION_BIN` set (see Build).
-- Add a file type: copy the template in `types/README.md` to `types/NAME.rkt`, set the name, description and allowed blocks, then run `nu gate/check.nu` from `notation system/`. No engine file is edited.
-- Never create backup files, never type section numbers, never use blocks marked not built.
+- Use blocks only (`title`, `paragraph`, `section`, `code`, `comment`), each as
+  `name start` ... `name end`, nothing outside a block.
+- Put declarations (`kind:`, `tags:`) directly under a start line.
+- Never type section numbers, never use blocks marked not built.
+- Check it with `check` (see Commands), with `AIU_NOTATION_BIN` set (see Build).
 
-- To write `.aiu` files, read `AI-GUIDE.md` first.
-- To work on the package, read `AGENT.md`, `TODO.org` and `HANDOFF.org`.
+Working on the package:
+
+- Never create backup files. Build output and scratch files live in `/tmp` or in the
+  git-ignored `notation/target`.
+- Do not run git unless asked. Commit only with explicit relative paths, never `git add -A`.
+- Quote paths, set `LC_ALL=C.UTF-8`, and wrap shell commands in `bash -c` when the user
+  shell is Nushell.
+- Do not create or edit `.org` files; this README is the documentation.
 
 ## Repo map
 
 ~~~
-README.md          this file
-AI-GUIDE.md        what an AI must know to write .aiu files
+README.md          this file: the only documentation
+AI-GUIDE.md        short guide for an AI writing .aiu files
 AGENT.md           rules for an AI working on the package
-TODO.org           the one list of what is left
-HANDOFF.org        the true state
-syntax/            the rules, one file per topic, plus example pages
-types/             the file types: one module (or folder) per type, used by kind:
+types/             one starter .aiu page per file type, generated, never edited
 notation system/   all the code; every command in this README runs from here
-  notation/        Rust crate (parse, render, roundtrip) and Racket package (check, model);
-                   every area has its own INDEX.org
+  notation/        Rust crate (parse, render, roundtrip) and Racket package (check, model)
+    src/filetypes/        type loader, make-live.rkt, and types/ (one module per file type)
   tools/           see (viewer, aiu command, tv picker channel), aiu.nu (older script)
   gate/            the light gate: checks of the code itself
-  plan/            package-tree.org: the register of names
 ~~~
 
 ## Development
 
 - Gate: `gate/check.nu`, run with Nushell. It checks parentheses, names, dependency
   direction, the Rust/Racket split, module loading and comments.
-- Register a name in `plan/package-tree.org` before you use it. One file, one job, a
-  header comment, and a comment above every definition.
-- Commit with explicit relative paths, never `git add -A`. Build output and scratch files
-  live in `/tmp` or in the git-ignored `notation/target`.
+- One file, one job, a header comment, and a comment above every definition.
 
 ### Adding a feature
 
 Keep this README short: change rows, never paste details here.
 
-1. Write or extend `syntax/<topic>.org` with the rule and an example.
-2. New block name: add it to `BLOCK_NAMES` in `notation/src/parser/parser.rs` and to the
+1. New block name: add it to `BLOCK_NAMES` in `notation/src/parser/parser.rs` and to the
    table in `notation/src/elements/register.rkt`. The two lists must agree.
-3. New error: add it to `ErrorKind` in `parser.rs`, and one row to the errors table.
-4. Change one row in the status table here and one in `syntax/feature-status.org`.
-5. Prove it with one real run and put the output in `syntax/first-run-output.org`.
+2. New error: add it to `ErrorKind` in `parser.rs`, and one row to the errors table.
+3. Change one row in the status table here.
+4. Prove it with one real run of `check` on a page that uses the feature.

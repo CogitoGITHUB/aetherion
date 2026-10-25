@@ -1,0 +1,27 @@
+title start
+kind: book
+tags: book
+A new book page
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section start
+title start
+First section
+title end
+
+
+paragraph start
+Sections nest.
+paragraph end
+
+
+section end
+
+comment start
+chapters of sections and prose
+comment end
+

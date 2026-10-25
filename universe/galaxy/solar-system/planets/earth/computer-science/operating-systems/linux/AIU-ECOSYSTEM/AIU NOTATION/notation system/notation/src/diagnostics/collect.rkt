@@ -82,7 +82,7 @@
         (list (finding 'unknown-file-type who (block-node-line top) 0
                        (format "the kind ~a is not a file type; the types are ~a"
                                type-name (type-names))
-                       "write one of the types, or add a module for it to filetypes/file-types/"))]
+                       "write one of the types, or add a module for it to filetypes/types/"))]
        [(not (file-type-allowed-blocks found)) '()]
        [else (append-map (lambda (n) (walk-type lines who found n)) nodes)])]))
 

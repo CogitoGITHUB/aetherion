@@ -1,0 +1,27 @@
+title start
+kind: todo
+tags: todo
+A new todo page
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section start
+title start
+First section
+title end
+
+
+paragraph start
+Sections nest.
+paragraph end
+
+
+section end
+
+comment start
+tasks grouped in sections
+comment end
+

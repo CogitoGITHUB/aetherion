@@ -4,6 +4,7 @@
 #   aiu open [FILE|FOLDER]            open a page in the editor named by AIU_EDITOR (else EDITOR)
 #   aiu check|render|parse|roundtrip [FILE|FOLDER]
 #   aiu pick [FOLDER]                 only print the chosen path
+#   aiu update                        rebuild the binary and starter pages if local files changed
 # AIU_PICK_FIRST=1 skips tv and takes the first page (for scripts and checks).
 
 # The project root is three folders above this file (tools/see/aiu).
@@ -15,9 +16,14 @@ def main [cmd: string, target?: path, --plain (-p)] {
   let cli = ($root | path join notation src entry cli.rkt)
   let view = ($root | path join tools see see.rkt)
   let racket = ($env.AIU_RACKET? | default "racket")
-  let known = ["check" "render" "parse" "roundtrip" "see" "open" "pick"]
+  let known = ["check" "render" "parse" "roundtrip" "see" "open" "pick" "update"]
   if not ($cmd in $known) {
     error make {msg: $"unknown command '($cmd)'. Use one of: ($known | str join ' ')"}
+  }
+
+  if $cmd == "update" {
+    update-package $root $bin $racket
+    return
   }
 
   mut file = ""
@@ -81,5 +87,40 @@ def main [cmd: string, target?: path, --plain (-p)] {
     with-env {LC_ALL: "C.UTF-8"} {
       run-external $bin $cmd $f
     }
+  }
+}
+
+# update-package rebuilds what local changes left stale: the Rust binary, then the starter pages.
+def update-package [root: string, bin: string, racket: string] {
+  # upstream: the fetch step goes here, before the two steps below.
+  let repo = ($root | path dirname)
+
+  let rust = (do { cd $root; glob notation/src/**/*.rs } | append [($root | path join notation Cargo.toml) ($root | path join notation Cargo.lock)])
+  let newest_rust = ($rust | each {|p| ls $p | get modified | first } | sort | last)
+  let bin_time = (if ($bin | path exists) { ls $bin | get modified | first } else { null })
+  let stale_bin = (if $bin_time == null { true } else { $newest_rust > $bin_time })
+  if $stale_bin {
+    print "rust: changed, building"
+    try { ^cargo build --manifest-path ($root | path join notation Cargo.toml) } catch { error make {msg: "rust: build failed"} }
+    print "rust: built"
+  } else {
+    print "rust: up to date"
+  }
+
+  let sources = (do { cd $root; glob notation/src/filetypes/**/*.rkt })
+  let newest_source = ($sources | each {|p| ls $p | get modified | first } | sort | last)
+  let pages = (do { cd $repo; glob types/*.aiu })
+  let oldest_page = (if ($pages | is-empty) { null } else { $pages | each {|p| ls $p | get modified | first } | sort | first })
+  let stale_pages = (if $oldest_page == null { true } else { $newest_source > $oldest_page })
+  if $stale_pages {
+    let make = ($root | path join notation src filetypes make-live.rkt)
+    let r = (with-env {LC_ALL: "C.UTF-8"} { run-external $racket $make } | complete)
+    if $r.exit_code != 0 {
+      print $r.stderr
+      error make {msg: "pages: regenerating failed"}
+    }
+    print "pages: regenerated"
+  } else {
+    print "pages: up to date"
   }
 }

@@ -1,0 +1,23 @@
+title start
+kind: journal
+tags: journal
+A new journal page
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section start
+title start
+First section
+title end
+
+
+paragraph start
+Sections nest.
+paragraph end
+
+
+section end
+

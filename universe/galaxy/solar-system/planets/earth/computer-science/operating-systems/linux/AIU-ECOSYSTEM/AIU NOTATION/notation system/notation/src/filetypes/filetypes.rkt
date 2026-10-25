@@ -1,13 +1,13 @@
 #lang racket/base
-;; filetypes.rkt -- finds and loads every file type in the file-types/ folder.
-;; Why: adding a file type means adding one module to file-types/, with no edit here
+;; filetypes.rkt -- finds and loads every file type in the filetypes/types/ folder.
+;; Why: adding a file type means adding one module to filetypes/types/, with no edit here
 ;; or in the engine.
 ;; Called by: nothing yet (to be wired into the engine).
 (require racket/runtime-path "type.rkt")
 (provide (all-from-out "type.rkt") load-file-types file-type-named type-modules)
 
 ;; The folder that holds one module per file type.
-(define-runtime-path types-dir "../../../../types")
+(define-runtime-path types-dir "types")
 
 ;; The module that defines the type at one entry of the folder: a .rkt file is the type
 ;; itself, a subfolder holds it in type.rkt beside its own modules. Anything else, and
