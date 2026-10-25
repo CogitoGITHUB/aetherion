@@ -22,7 +22,8 @@
          "../elements/register.rkt"
          "../model/nodes.rkt"
          "../model/outline.rkt"
-         "../model/properties.rkt")
+         "../model/properties.rkt"
+         "../filetypes/filetypes.rkt")
 
 (provide collect-findings finding-kinds (struct-out finding))
 
@@ -33,14 +34,16 @@
 ;; is not known — never that it is the first one.
 (struct finding (kind who line column what what-to-do) #:transparent)
 
-;; The five kinds of finding, named here so a caller may count or filter on
+;; The kinds of finding, named here so a caller may count or filter on
 ;; them without matching words inside a sentence.
 (define finding-kinds
   '(unknown-element-name
     tag-names-nothing
     property-no-value
     link-no-target
-    parser-recovery))
+    parser-recovery
+    unknown-file-type
+    block-not-in-type))
 
 ;; link is the keyword a link declaration carries. A link is not a property:
 ;; a property is a hint for a reader, and a link names a target. The parser
@@ -61,7 +64,47 @@
   (define who (or (outline-file o) "the document"))
   (define lines (page-lines page))
   (define targets (link-targets who (outline-nodes o)))
-  (append-map (lambda (n) (walk-node lines who targets n)) (outline-nodes o)))
+  (append (append-map (lambda (n) (walk-node lines who targets n)) (outline-nodes o))
+          (type-findings lines who (outline-nodes o))))
+
+;; type-findings checks a page against the file type it declares with kind: on its
+;; first block. A page with no kind: is not checked, so every old page stays valid.
+(define (type-findings lines who nodes)
+  (define top (for/first ([n (in-list nodes)] #:when (block-node? n)) n))
+  (define declared (and top (property-of top 'kind)))
+  (cond
+    [(not declared) '()]
+    [else
+     (define type-name (string-trim declared))
+     (define found (file-type-named type-name))
+     (cond
+       [(not found)
+        (list (finding 'unknown-file-type who (block-node-line top) 0
+                       (format "the kind ~a is not a file type; the types are ~a"
+                               type-name (type-names))
+                       "write one of the types, or add a module for it to filetypes/file-types/"))]
+       [(not (file-type-allowed-blocks found)) '()]
+       [else (append-map (lambda (n) (walk-type lines who found n)) nodes)])]))
+
+;; walk-type reports every block under n that the file type does not allow.
+(define (walk-type lines who found n)
+  (cond
+    [(not (block-node? n)) '()]
+    [else
+     (define allowed (file-type-allowed-blocks found))
+     (append
+      (if (member (symbol->string (block-node-name n)) allowed)
+          '()
+          (list (finding 'block-not-in-type who (block-node-line n)
+                         (column-at lines (block-node-line n) (block-node-start n))
+                         (format "a ~a page may not use a ~a block"
+                                 (file-type-name found) (block-node-name n))
+                         (format "use one of ~a, or change the kind" allowed))))
+      (append-map (lambda (c) (walk-type lines who found c)) (block-node-children n)))]))
+
+;; type-names lists the file types that exist, for a message.
+(define (type-names)
+  (sort (hash-keys (load-file-types)) string<?))
 
 ;; walk-node reads one node and then its children, so a reader meets the
 ;; findings of a block before the findings of what is inside it.

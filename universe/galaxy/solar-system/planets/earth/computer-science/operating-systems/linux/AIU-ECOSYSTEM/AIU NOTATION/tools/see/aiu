@@ -1,0 +1,85 @@
+#!/usr/bin/env nu
+# aiu: the everyday command for .aiu pages. With no file it opens tv to pick one.
+#   aiu see [FILE|FOLDER] [--plain]   show a page, formatted, in the terminal
+#   aiu open [FILE|FOLDER]            open a page in the editor named by AIU_EDITOR (else EDITOR)
+#   aiu check|render|parse|roundtrip [FILE|FOLDER]
+#   aiu pick [FOLDER]                 only print the chosen path
+# AIU_PICK_FIRST=1 skips tv and takes the first page (for scripts and checks).
+
+# The project root is three folders above this file (tools/see/aiu).
+const project_root = (path self | path dirname | path dirname | path dirname)
+
+def main [cmd: string, target?: path, --plain (-p)] {
+  let root = ($env.AIU_NOTATION_ROOT? | default $project_root)
+  let bin = ($root | path join notation target debug notation)
+  let cli = ($root | path join notation src entry cli.rkt)
+  let view = ($root | path join tools see see.rkt)
+  let racket = ($env.AIU_RACKET? | default "racket")
+  let known = ["check" "render" "parse" "roundtrip" "see" "open" "pick"]
+  if not ($cmd in $known) {
+    error make {msg: $"unknown command '($cmd)'. Use one of: ($known | str join ' ')"}
+  }
+
+  mut file = ""
+  if $target != null {
+    let kind = ($target | path type)
+    if $kind == "" {
+      error make {msg: $"no such file or folder: ($target)"}
+    }
+    if $kind == "file" {
+      $file = $target
+    }
+  }
+  if $file == "" {
+    let dir = (if $target != null { $target } else { $env.PWD })
+    let all = (do { cd $dir; glob **/*.aiu | where {|p| not ($p | str contains "/target/") and not ($p | str contains "/.git/")} | sort })
+    if ($all | is-empty) {
+      print $"no .aiu pages found under ($dir)"
+      return
+    }
+    if (($env.AIU_PICK_FIRST? | default "") != "") {
+      $file = ($all | first)
+    } else {
+      if (which tv | is-empty) {
+        error make {msg: "tv (television) is not on PATH. Install it, or give a file: aiu see FILE"}
+      }
+      rm -f /tmp/aiu-pick
+      try { do { cd $dir; ^tv aiu-pages --cable-dir ($root | path join tools see cable) --preview-size 80 } } catch {|e| print $"tv failed: ($e.msg)" }
+      let out = (if ("/tmp/aiu-pick" | path exists) { open --raw /tmp/aiu-pick | str trim } else { "" })
+      if ($out | is-empty) {
+        print "nothing chosen"
+        return
+      }
+      $file = ($out | lines | first)
+    }
+  }
+  let f = $file
+
+  if $cmd == "pick" {
+    print $f
+  } else if $cmd == "see" {
+    let cols = (try { term size | get columns } catch { 80 })
+    with-env {LC_ALL: "C.UTF-8"} {
+      if $plain {
+        run-external $racket $view $f "--plain" "--width" ($cols | into string)
+      } else {
+        run-external $racket $view $f "--width" ($cols | into string)
+      }
+    }
+  } else if $cmd == "open" {
+    let ed = ($env.AIU_EDITOR? | default ($env.EDITOR? | default ""))
+    if ($ed | is-empty) {
+      error make {msg: "no editor set. Set AIU_EDITOR to its command, or EDITOR."}
+    }
+    let parts = ($ed | split row " " | where {|p| $p != ""})
+    run-external ($parts | first) ...($parts | skip 1) $f
+  } else if $cmd == "check" {
+    with-env {LC_ALL: "C.UTF-8", AIU_NOTATION_BIN: $bin} {
+      run-external $racket $cli "check" $f
+    }
+  } else {
+    with-env {LC_ALL: "C.UTF-8"} {
+      run-external $bin $cmd $f
+    }
+  }
+}

@@ -88,11 +88,17 @@ section end
 Any other line like `word: text` is plain content, which is fine. Do not use the
 declaration keywords made for tables and todos.
 
+## File types
+
+- `kind: book` or `kind: notes` under the title's start line holds the page to that type
+- a `book` page may only use title, section, paragraph, code and comment blocks
+- no `kind:` line means no type check
+
 ## Not built: do not write
 
 - bold, italic or link markup inside a paragraph: write plain text
 - lists, tables, math, includes of other files
-- `kind:` or `status:` lines
+- `status:` lines
 - `heading`, `table`, `header` and `row` blocks
 - any block name that is not in the table above
 

@@ -1,0 +1,20 @@
+[metadata]
+name = "aiu-pages"
+description = "Pick an .aiu page"
+
+[source]
+command = '''print (glob **/*.aiu | where {|p| not ($p | str contains "/target/") and not ($p | str contains "/.git/")} | sort | str join "\n")'''
+display = "{split:/:-1}"
+output = "{}"
+
+[preview]
+command = "bash ($env.AIU_NOTATION_ROOT | path join tools see preview.sh) '{}' 60"
+
+[keybindings]
+enter = "actions:pick"
+
+[actions.pick]
+description = "write the chosen page to /tmp/aiu-pick"
+command = "printf '%s' '{}' > /tmp/aiu-pick"
+shell = "bash"
+mode = "execute"

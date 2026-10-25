@@ -46,8 +46,8 @@ pub const BLOCK_NAMES: [&str; 9] = [
 ];
 
 /// The registered declaration keywords (rule B). They are hints, never meaning.
-pub const DECLARATION_KEYWORDS: [&str; 14] = [
-    "tags", "language", "style", "theme", "color", "format", "font", "level", "caption", "column", "cell",
+pub const DECLARATION_KEYWORDS: [&str; 15] = [
+    "tags", "kind", "language", "style", "theme", "color", "format", "font", "level", "caption", "column", "cell",
     "row-id", "meta", "todo",
 ];
 

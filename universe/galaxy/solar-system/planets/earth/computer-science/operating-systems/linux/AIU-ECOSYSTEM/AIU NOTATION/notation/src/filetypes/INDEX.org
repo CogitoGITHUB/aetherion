@@ -1,0 +1,8 @@
+* filetypes
+Loads the file types of the notation. filetypes.rkt scans file-types/ and returns every
+type as a file-type record (type.rkt).
+
+* Adding a type
+- one file: file-types/NAME.rkt, providing the-type
+- or a folder: file-types/NAME/type.rkt providing the-type, with its own modules beside it
+- names starting with an underscore are ignored

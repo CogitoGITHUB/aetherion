@@ -15,6 +15,9 @@
 
 use ./env.nu *
 
+# Racket garbles non-ASCII paths without this, and the project folder name has one.
+$env.LC_ALL = "C.UTF-8"
+
 const STAGES = [
     {name: "paren-check", script: "read-check.rkt", kind: "racket"}
     {name: "naming", script: "banned-words-lint.nu", kind: "nu"}
@@ -23,6 +26,7 @@ const STAGES = [
     {name: "language-split", script: "language-split-lint.nu", kind: "nu"}
     {name: "load-check", script: "load-check.nu", kind: "nu"}
     {name: "comment-lint", script: "comment-lint.nu", kind: "nu"}
+    {name: "run-tests", script: "test-check.nu", kind: "nu"}
 ]
 
 # run-one stage returns what happened, and never raises: a stage that fails is

@@ -59,7 +59,7 @@ numbered `1  A section`, the code in a frame, no start or end lines, the comment
 7. Nothing is repaired silently. A broken file keeps its exact bytes and the error names
    the line. A good file prints back byte for byte (the round trip).
 
-Registered declaration keywords: `tags`, `language`, `style`, `theme`, `color`, `format`,
+Registered declaration keywords: `tags`, `kind`, `language`, `style`, `theme`, `color`, `format`,
 `font`, `level`, `caption`, `column`, `cell`, `row-id`, `meta`, `todo`. They are hints
 about a block. The viewer honors `style:` (bold, dim, italic, underline, several allowed
 with spaces) and `color:` (red, green, yellow, blue, magenta, cyan, white, gray).
@@ -126,10 +126,30 @@ or binary). Also present, written by earlier sessions and not run by the author:
 `render-rich FILE`, `todos FILE`, and the other commands of `cli.rkt`.
 
 On the author's phone, `racket` is not on PATH; the full path is
-`/root/home/shape/opt/racket-full/bin/racket`. The author's Nushell config defines
-shortcuts around the commands above: `aiu check|render|parse|roundtrip FILE`, `see FILE`,
-`newaiu FILE`. They live outside this repo; the long forms always work. `tools/aiu.nu` is
-an older script; prefer the commands above.
+`/root/home/shape/opt/racket-full/bin/racket`. `tools/aiu.nu` is an older script; prefer
+the commands above.
+
+### The `aiu` command and the picker
+
+`tools/see/aiu` is a Nushell script (needs Nushell and Racket) that wraps the commands
+above: `aiu see|open|check|render|parse|roundtrip|pick [FILE|FOLDER]`. With a file it works
+on that file. With nothing, or a folder, it opens the [television](https://github.com/alexpasmantier/television)
+(`tv`) picker over the `.aiu` pages below it, with the formatted page in a preview pane.
+
+Install once: put it on PATH, for example `ln -s "$PWD/tools/see/aiu" ~/.local/bin/aiu`.
+`tv` is optional; without it, pass a file. Settings, all optional:
+
+| Variable | Effect |
+|---|---|
+| `AIU_RACKET` | path of the Racket binary when `racket` is not on PATH |
+| `AIU_EDITOR` (else `EDITOR`) | the editor `aiu open` starts |
+| `AIU_PICK_FIRST=1` | skip the picker and take the first page (for scripts) |
+
+How the picker works: the tv channel `tools/see/cable/aiu-pages.toml` lists the pages,
+previews them with `tools/see/preview.sh`, and on Enter writes the choice to
+`/tmp/aiu-pick`, which `aiu` then reads. The choice goes through a file because tv crashes
+("cursor position could not be read") when the shell captures its output with `$(tv ...)`
+or `| str trim`.
 
 ## Errors
 
@@ -145,9 +165,42 @@ normal; the line number is right.
 | `unknown-element-name` | the Racket table does not know that name | same |
 | `missing-title` | the file, or a section, does not start with a title block | start it with `title start` |
 | `bad-heading-level` | the `level:` of an old `heading` is not a whole number | write 1, 2, 3 |
+| `unknown-file-type` | `kind:` names a type that has no module | write an existing type, or make it (see Making a file type) |
+| `block-not-in-type` | the page uses a block its `kind:` does not allow | use an allowed block, or change the kind |
 
 Other findings exist (`tag-names-nothing`, `property-no-value`, `link-no-target`); they
 come from earlier sessions and are unverified.
+
+## Making a file type
+
+A file type says which blocks a page may use. A page picks one with `kind:` under its
+title's start line, and the checker then holds the page to it. Types live in
+`notation/src/filetypes/file-types/`, one module each; no engine file is edited.
+
+1. Create `notation/src/filetypes/file-types/NAME.rkt`:
+
+~~~
+#lang racket/base
+;; NAME.rkt -- the file type "NAME": one line saying what it is for.
+;; Called by: filetypes.rkt (found by scanning this folder).
+(require "../type.rkt")
+(provide the-type)
+
+;; The NAME type.
+(define the-type (file-type "NAME" "one line description" (list "title" "paragraph")))
+~~~
+
+   The fields are the name (what a page writes after `kind:`), a one-line description,
+   and the allowed block names, or `#f` to allow any block.
+2. A type that needs more modules gets a folder instead: `file-types/NAME/type.rkt`
+   provides `the-type`, with its other modules beside it (see `file-types/book/`).
+   A name starting with an underscore is ignored, so `_draft.rkt` is safe scratch.
+3. Try it: write a page with `kind: NAME` and run `check`. A disallowed block gives
+   `block-not-in-type`; a name no module defines gives `unknown-file-type`.
+4. Add a page check for it to `gate/tests/filetypes-test.rkt`. The loader checks there
+   already cover every type: it loads, and no two types share a name.
+5. Run the gate: `LC_ALL=C.UTF-8 nu gate/check.nu`. Then add one line for the type to
+   `syntax/file-types.org`.
 
 ## Status
 
@@ -159,6 +212,7 @@ come from earlier sessions and are unverified.
 | a section must start with a title | works, run by hand | `syntax/structure.org` |
 | exact round trip | works, run by hand | |
 | terminal viewer `see` | works, run by hand | `tools/see/INDEX.org` |
+| `aiu` command and tv picker | works, run by hand 2026-10-25 | `tools/see/INDEX.org` |
 | section numbers | the viewer computes them; the checker's own numbering still counts only `heading` | `TODO.org` |
 | `heading` with `level:` | parsed; being replaced by `section` | |
 | tables | the Rust parser accepts them; the checker's name table does not | `syntax/tables-and-figures.org` |
@@ -166,7 +220,7 @@ come from earlier sessions and are unverified.
 | inline bold, italic, links | not built | |
 | math and graphs | far future | |
 | including a block from another file | planned; needs authored ids | `TODO.org` |
-| document kinds (book, research, notes) | planned; no design file yet | |
+| file types: `kind:` under the title, one module per type (book, notes) | works, run by hand 2026-10-25 | `syntax/file-types.org` |
 | editor hosting: completion, live errors, hidden end lines | planned, separate project | `EDITOR-HANDOFF.org` |
 | kit: MCP server, skill, plugin | planned | `TODO.org` |
 
@@ -195,7 +249,7 @@ HANDOFF.org    the true state
 notation/      Rust crate (parse, render, roundtrip) and Racket package (check, model);
                every area has its own INDEX.org
 syntax/        the rules, one file per topic, plus example pages
-tools/         see (viewer), aiu.nu (older script)
+tools/         see (viewer, aiu command, tv picker channel), aiu.nu (older script)
 gate/          the light gate: checks of the code itself
 plan/          package-tree.org: the register of names
 ~~~

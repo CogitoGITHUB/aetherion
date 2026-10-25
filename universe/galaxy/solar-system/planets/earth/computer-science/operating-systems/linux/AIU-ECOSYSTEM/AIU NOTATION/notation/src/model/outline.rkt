@@ -82,6 +82,8 @@
     (raise-err 'outline "outline.rkt"
                "the document has no end line; it is truncated, so the tree is not whole"))
   (outline 1 file-path (reverse roots)))
+;; keep-blocks-above answers the open blocks that sit higher than a depth, so a block that
+;; closes at that depth no longer counts as open.
 (define (keep-blocks-above open depth)
   (for/list ([b (in-list open)]
              #:when (< (node-depth b) depth))
