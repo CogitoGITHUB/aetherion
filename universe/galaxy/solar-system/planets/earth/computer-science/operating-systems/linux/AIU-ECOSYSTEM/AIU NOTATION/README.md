@@ -238,6 +238,12 @@ Known gaps, found by hand:
 
 ## For AI agents
 
+Everything an AI needs to use this notation and to add a file type is in this README and `AI-GUIDE.md`. Short version:
+
+- Write a page: blocks only (`title`, `paragraph`, `section`, `code`, `comment`), each as `name start` ... `name end`, nothing outside a block, declarations (`kind:`, `tags:`) directly under a start line. Check it: from `notation system/`, `LC_ALL=C.UTF-8 racket notation/src/entry/cli.rkt check FILE` with `AIU_NOTATION_BIN` set (see Build).
+- Add a file type: copy the template in `types/README.md` to `types/NAME.rkt`, set the name, description and allowed blocks, then run `nu gate/check.nu` from `notation system/`. No engine file is edited.
+- Never create backup files, never type section numbers, never use blocks marked not built.
+
 - To write `.aiu` files, read `AI-GUIDE.md` first.
 - To work on the package, read `AGENT.md`, `TODO.org` and `HANDOFF.org`.
 
