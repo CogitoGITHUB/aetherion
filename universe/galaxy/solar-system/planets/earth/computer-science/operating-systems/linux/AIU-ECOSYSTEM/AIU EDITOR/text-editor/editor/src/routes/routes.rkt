@@ -38,12 +38,26 @@
   '("escape" "return" "tab" "space" "backspace" "delete"
     "up" "down" "left" "right" "home" "end" "pageup" "pagedown"))
 
+;; named-text is the text a named key carries: the keys whose name is not
+;; the character they stand for. Only these two carry text. Tab is not one
+;; of them: in the one layer where the keys are text, the tab is the trigger
+;; that starts the layer's sequences, so it never stands for a character.
+;; Every other named key — the arrows, the escape, the backspace, the
+;; delete, home, end, the page keys — carries no text at all: it is a
+;; command, and a layer that does not bind it must say so, never type its
+;; name into the file.
+(define named-text
+  '(("space" . " ")
+    ("return" . "\n")))
+
 ;; text-of answers the text one key carries, or nothing when the key
 ;; carries no text. A key named with a prefix that names a modifier
 ;; (C- for control, M- for alt, S- for shift) is a command, not text.
+;; The answer is the text and not the name: a space is a space.
 (define (text-of key)
   (cond
-    [(member key named-keys) key]
+    [(assoc key named-text) (cdr (assoc key named-text))]
+    [(member key named-keys) #f]
     [(or (string-prefix? key "C-")
          (string-prefix? key "M-")
          (string-prefix? key "S-")) #f]
@@ -118,5 +132,6 @@
          reserved-prefix-collisions
          reserved-prefix
          keys-of
+         text-of
          editor-layers
          layers)

@@ -22,7 +22,8 @@
 ;; A key may be a SEQUENCE of keys, and the names of the keys are joined
 ;; by a space: "space space" is the double space.
 
-(require racket/string
+(require racket/list
+         racket/string
          "../devloop/start.rkt")
 
 ;; reserved-prefix is the key the multiplexer keeps for itself. It applies
@@ -71,11 +72,20 @@
 
 ;; insert-keys are the keys of the write layer. Here the keys are text,
 ;; so the layer holds the trigger's sequences only: the tab starts them.
+;; The keys that carry no text are bound too, so a person writing does not
+;; have to leave the layer to move or to take a character back: the arrows
+;; move the point and backspace deletes before it, and neither is typed
+;; into the file as its own name.
 (define insert-keys
   '(("tab tab" "mode")
     ("tab s" "save")
     ("tab q" "quit")
-    ("tab v" "visual-mode")))
+    ("tab v" "visual-mode")
+    ("up" "move-up")
+    ("down" "move-down")
+    ("left" "move-left")
+    ("right" "move-right")
+    ("backspace" "delete")))
 
 ;; select-keys are the keys of the select layer: the trigger's sequences,
 ;; and the selected text is what they act on.
@@ -120,18 +130,19 @@
 (define (sequence-of key)
   (filter (lambda (name) (not (string=? name ""))) (string-split key " ")))
 
-;; prefix-of? answers whether a sequence of key names is the start of
-;; some key of the layer, and is not the whole of it. A prefix waits for
-;; the next key, and the next key is an action: no timer decides it.
+;; prefix-of? answers whether a sequence of key names is the start of some
+;; key of the layer, and is not the whole of it. A prefix waits for the next
+;; key, and the next key is an action: no timer decides it.
 ;;
-;; The layer decides: a space in the write layer is a typed space, so it
-;; is not the start of the double space of the visual layer.
+;; The comparison is between KEY NAMES, not between texts: "b" is the key
+;; named b and "backspace" is a different key, so "b" is not the start of
+;; "backspace". Reading the names as text is what made typing a "b" wait for
+;; a key that never came.
 (define (prefix-of? layer names)
-  (define written (string-join names " "))
-  (for*/or ([binding (in-list (keys-of layer))]
-            #:when (not (string=? (car binding) written)))
-    (and (string-prefix? (car binding) written)
-         (> (string-length (car binding)) (string-length written)))))
+  (for*/or ([binding (in-list (keys-of layer))])
+    (define wanted (sequence-of (car binding)))
+    (and (> (length wanted) (length names))
+         (equal? (take wanted (length names)) names))))
 
 ;; The tables, for the routing above them and the gate beside them.
 (provide reserved-prefix

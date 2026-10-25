@@ -216,6 +216,18 @@
 (define (words-of line)
   (filter (lambda (word) (not (string=? word ""))) (string-split line " ")))
 
+;; run-command-words runs one command whose words are already split, and
+;; answers whether the session goes on and the line of text to print. It
+;; stands beside run-command because the live session's text is not a
+;; typed line: a space the person pressed is one word that IS a space,
+;; and splitting then rejoining it would turn it into nothing at all.
+(define (run-command-words session name words)
+  (define handler (hash-ref commands name #f))
+  (if handler
+      (handler session words)
+      (cons #t (format "there is no command named ~a; ask for one of: ~a"
+                       name (string-join command-names ", ")))))
+
 ;; run-command runs one typed line and answers whether the session goes
 ;; on, and the line of text to print. A line with no words says nothing
 ;; and changes nothing.
@@ -223,12 +235,7 @@
   (define words (words-of line))
   (if (null? words)
       (cons #t "")
-      (let ([name (car words)] [rest (cdr words)])
-        (define handler (hash-ref commands name #f))
-        (if handler
-            (handler session rest)
-            (cons #t (format "there is no command named ~a; ask for one of: ~a"
-                             name (string-join command-names ", ")))))))
+      (run-command-words session (car words) (cdr words))))
 
 ;; ask sends one request to the hot path for this session and answers the
 ;; response. The file and the journal are added to every request: the hot
@@ -333,6 +340,7 @@
          the-level
          set-level!
          run-command
+         run-command-words
          command-names
          answer-line
          ask)

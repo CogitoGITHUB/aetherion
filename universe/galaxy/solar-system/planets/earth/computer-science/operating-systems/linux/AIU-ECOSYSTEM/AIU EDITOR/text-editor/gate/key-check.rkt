@@ -53,17 +53,63 @@
         (format "the key ~a of the layer ~a is not in the keymap" key layer)]
        [else #f])]))
 
-;; main checks the keys and answers what is wrong, one line per fault.
-;; It exits non-zero when a fault is found.
+;; text-faults answers what is wrong with the write layer's text, or nothing
+;; when it is right. A key that carries text must answer that text and not
+;; its own name, and the write layer's routing must hand that text on. This
+;; is the check that catches a space typed into the file as the word
+;; "space", and a return typed as the word "return".
+(define (text-faults)
+  (define wanted '(("space" . " ") ("return" . "\n") ("a" . "a") ("tab" . #f)))
+  (filter values
+          (for/list ([pair (in-list wanted)])
+            (define key (car pair))
+            (define text (cdr pair))
+            (define carries (text-of key))
+            (cond
+              [(not (equal? carries text))
+               (format "the key ~a carries ~s, and it must carry ~s" key carries text)]
+              [else
+               (define meaning (routing-meaning (route-key key '() "write")))
+               (cond
+                 [(not (equal? meaning text))
+                  (format "the write layer routes ~a to ~s, and the text is ~s" key meaning text)]
+                 [else #f])]))))
+
+;; prefix-faults answers what is wrong with the rule that decides when a key
+;; waits for the next one, or nothing when it is right. The comparison is
+;; between key NAMES: "b" is one key, "backspace" is another, and reading them
+;; as text makes typing a "b" wait for a key that never comes.
+(define (prefix-faults)
+  (define cases
+    (list (list "write" (list "tab") #t)
+          (list "write" (list "b") #f)
+          (list "write" (list "tab" "tab") #f)
+          (list "visual" (list "space") #t)
+          (list "visual" (list "space" "s") #f)))
+  (filter values
+          (for/list ([case (in-list cases)])
+            (define layer (car case))
+            (define names (cadr case))
+            (define wanted (caddr case))
+            (define got (prefix-of? layer names))
+            (if (equal? got wanted)
+                #f
+                (format "the prefix of ~a in the layer ~a answers ~a, and it must answer ~a"
+                        names layer got wanted)))))
+
+;; main checks the keys and the write layer's text, and answers what is wrong,
+;; one line per fault. It exits non-zero when a fault is found.
 (define (main)
   (define keys
     (for*/list ([layer (in-list editor-layers)]
                 [binding (in-list (keys-of layer))])
       (cons layer (car binding))))
   (define faults
-    (filter values
-            (for/list ([entry (in-list keys)])
-              (check-key (car entry) (cdr entry)))))
+    (append (filter values
+                    (for/list ([entry (in-list keys)])
+                      (check-key (car entry) (cdr entry))))
+            (text-faults)
+            (prefix-faults)))
   (if (null? faults)
       (begin
         (printf "OK key-check — ~a keys checked, the decoder and the keymaps agree on every one\n"
