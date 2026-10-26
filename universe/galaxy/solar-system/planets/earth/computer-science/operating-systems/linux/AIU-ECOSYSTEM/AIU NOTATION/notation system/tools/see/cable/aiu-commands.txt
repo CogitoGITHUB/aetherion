@@ -1,4 +1,4 @@
-see;aiu see FILE [--plain];View a page, formatted. Opens the page picker when no file is given.
+see;aiu see FILE [--plain] [--contracts];View a page, formatted. Add --contracts for its contract panel. Opens the page picker when no file is given.
 open;aiu open FILE;Open a page in your editor (AIU_EDITOR, else EDITOR).
 check;aiu check FILE;Check a page and list errors with their line numbers. Exit 0 means clean.
 render;aiu render FILE;Plain text render of a page.

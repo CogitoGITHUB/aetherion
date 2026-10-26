@@ -9,5 +9,6 @@
 
 ;; The contracts of a journal page. A rule is checked; a question is only reported.
 (define the-contracts
-  (list (list 'rule "*" "paragraph" 'max-words 200)
+  (list (list 'question "*" "title" "Does the title give the date or the topic?")
+        (list 'rule "*" "paragraph" 'max-words 200)
         (list 'question "*" "paragraph" "What happened, and what was decided or learned?")))

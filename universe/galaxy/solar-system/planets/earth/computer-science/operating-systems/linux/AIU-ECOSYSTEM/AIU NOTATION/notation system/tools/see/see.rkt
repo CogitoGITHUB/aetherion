@@ -4,7 +4,7 @@
 ;; reader wants the page: file title, numbered sections, wrapped text, framed
 ;; code, and none of the marks.
 ;; Called by: the Nushell command "see".
-;; Usage: racket see.rkt FILE [--plain] [--width N]
+;; Usage: racket see.rkt FILE [--plain] [--width N] [--contracts]
 ;; This is a viewer, not the checker: it shows what it can and lists problems
 ;; at the end. The real check is: aiu check FILE
 (require racket/string racket/file)
@@ -13,6 +13,9 @@
 
 ;; no color codes when true
 (define plain? #f)
+
+;; true when the contracts panel is asked for
+(define contracts? #f)
 ;; terminal width given by the caller
 (define width 80)
 ;; the file to show
@@ -22,6 +25,9 @@
 (let loop ([as (vector->list (current-command-line-arguments))])
   (cond
     [(null? as) (void)]
+    [(equal? (car as) "--contracts")
+     (set! contracts? #t)
+     (loop (cdr as))]
     [(equal? (car as) "--plain")
      (set! plain? #t)
      (loop (cdr as))]
@@ -35,7 +41,7 @@
      (loop (cdr as))]))
 
 (unless target
-  (eprintf "usage: see FILE [--plain] [--width N]\n")
+  (eprintf "usage: see FILE [--plain] [--width N] [--contracts]\n")
   (exit 2))
 (unless (file-exists? target)
   (eprintf "see: no such file: ~a\n" target)
@@ -369,7 +375,7 @@
      (gap!)
      (print-code b)]
     [(equal? name "comment")
-     (set! hidden-comments (add1 hidden-comments))]
+     (gap!) (print-text b)]
     [(equal? name "heading")
      (print-legacy-heading b)]
     [(equal? name "stray")
@@ -420,6 +426,165 @@
   (for ([p (in-list (reverse problems))])
     (out (sgr '(31) (string-append "  " p))))
   (out (sgr '(2) "run: aiu check FILE   for the full check")))
+
+
+;; ---------- contracts panel ----------
+
+(require racket/runtime-path
+         (for-syntax racket/base)
+         (only-in racket/system system*/exit-code)
+         (only-in compiler/find-exe find-exe)
+         (only-in racket/port with-output-to-string)
+         (only-in racket/string string-split))
+
+;; the command line of the checker, in the package two folders above this file's folder
+(define-runtime-path checker-cli "../../notation/src/entry/cli.rkt")
+
+;; the Rust binary the checker reads pages with
+(define-runtime-path checker-bin "../../notation/target/debug/notation")
+
+;; the module that answers the contracts of a file type; loaded only when the panel is asked for
+(define-runtime-path types-module "../../notation/src/filetypes/filetypes.rkt")
+
+;; contract-run runs the checker on the target with questions on, and answers its exit code
+;; and the lines it printed.
+(define (contract-run)
+  (putenv "AIU_QUESTIONS" "1")
+  (putenv "LC_ALL" "C.UTF-8")
+  (unless (getenv "AIU_NOTATION_BIN")
+    (putenv "AIU_NOTATION_BIN" (path->string checker-bin)))
+  (define code #f)
+  (define text
+    (with-output-to-string
+      (lambda ()
+        (parameterize ([current-error-port (current-output-port)])
+          (set! code (system*/exit-code (find-exe) checker-cli "check" target))))))
+  (cons code (string-split text "\n")))
+
+;; contract-findings keeps the contract findings among the checker's lines, each as
+;; (line kind what to-do).
+(define (contract-findings lines)
+  (for*/list ([l (in-list lines)]
+              [m (in-value
+                  (regexp-match
+                   #px"^ERR .* at line ([0-9]+), column [^:]*: (rule-violated|question-unverified): (.*); what to do: (.*)$"
+                   l))]
+              #:when m)
+    (list (cadr m) (caddr m) (cadddr m) (list-ref m 4))))
+
+;; contract-wrap breaks text into lines of at most n characters, at spaces.
+(define (contract-wrap text n)
+  (let loop ([ws (string-split text)] [cur ""] [acc '()])
+    (cond
+      [(null? ws) (reverse (if (string=? cur "") acc (cons cur acc)))]
+      [(string=? cur "") (loop (cdr ws) (car ws) acc)]
+      [(<= (+ (string-length cur) 1 (string-length (car ws))) n)
+       (loop (cdr ws) (string-append cur " " (car ws)) acc)]
+      [else (loop ws "" (cons cur acc))])))
+
+;; contract-print prints one finding: a label with its line, the sentence, then what to do.
+(define (contract-print f)
+  (define rule? (equal? (cadr f) "rule-violated"))
+  (out (sgr (if rule? '(1 31) '(1 33))
+            (format "~a  line ~a" (if rule? "RULE BROKEN" "OPEN QUESTION") (car f))))
+  (for ([l (in-list (contract-wrap (caddr f) (- cols 2)))])
+    (out (string-append "  " l)))
+  (for ([l (in-list (contract-wrap (string-append "to do: " (cadddr f)) (- cols 2)))])
+    (out (sgr '(2) (string-append "  " l)))))
+
+;; page-kind answers the kind the page declares in its file title, or #f.
+(define (page-kind)
+  (for/or ([ln (in-list (file->lines target))]
+           #:break (equal? (string-trim ln) "title end"))
+    (define m (regexp-match #px"^kind:[ \t]*([^ \t]+)" ln))
+    (and m (cadr m))))
+
+;; section-title-of answers the title text of a section block, or "" when it has none.
+(define (section-title-of s)
+  (define t (find-title (kids s)))
+  (if t (string-trim (block-text t)) ""))
+
+;; count-blocks counts the blocks called name under the list bs that sit in a section titled
+;; sec ("*" means any section); cur is the title of the section the list sits in.
+(define (count-blocks bs name sec cur)
+  (for/sum ([k (in-list bs)])
+    (cond
+      [(equal? (blk-name k) "section")
+       (count-blocks (kids k) name sec (section-title-of k))]
+      [(and (equal? (blk-name k) name) (or (equal? sec "*") (equal? sec cur))) 1]
+      [else 0])))
+
+;; finding-matches? answers whether the finding f was made by the contract c.
+(define (finding-matches? c f)
+  (define kind (cadr f))
+  (define what (caddr f))
+  (define todo (cadddr f))
+  (and (string-prefix? what (format "a ~a block in " (caddr c)))
+       (or (equal? (cadr c) "*")
+           (string-contains? what (format "in the section ~a " (cadr c))))
+       (if (eq? (car c) 'rule)
+           (and (equal? kind "rule-violated")
+                (string-contains? todo (format "rule ~a ~a holds" (cadddr c) (list-ref c 4))))
+           (and (equal? kind "question-unverified")
+                (string-contains? what (format "must answer: ~a" (cadddr c)))))))
+
+;; contract-label writes one contract as a short phrase.
+(define (contract-label c)
+  (define where (if (equal? (cadr c) "*") "any section" (format "section ~a" (cadr c))))
+  (if (eq? (car c) 'rule)
+      (format "rule: ~a in ~a: ~a ~a" (caddr c) where (cadddr c) (list-ref c 4))
+      (format "question: ~a in ~a: ~a" (caddr c) where (cadddr c))))
+
+;; contract-list-print prints every contract of the type with its state on this page: a rule
+;; holds, is broken, or has no block to check; a question is never passed, only not verified.
+(define (contract-list-print cs fs)
+  (for ([c (in-list cs)])
+    (define n (count-blocks (kids root) (caddr c) (cadr c) ""))
+    (define hits (filter (lambda (f) (finding-matches? c f)) fs))
+    (define at (string-join (map car hits) ", "))
+    (define-values (codes status)
+      (cond
+        [(= n 0) (values '(2) "no matching block")]
+        [(eq? (car c) 'question)
+         (values '(33) (if (null? hits) "not verified" (format "not verified (line ~a)" at)))]
+        [(pair? hits) (values '(1 31) (format "BROKEN, line ~a" at))]
+        [else (values '(32) (format "holds in ~a block~a" n (if (= n 1) "" "s")))]))
+    (for ([l (in-list (contract-wrap (contract-label c) (- cols 4)))])
+      (out (string-append "  " l)))
+    (out (sgr codes (string-append "    -> " status)))))
+
+;; contract-panel prints the contracts of the page after everything else, apart from the
+;; content: first every contract of its type with its state, then each finding. It never
+;; changes the page.
+(define (contract-panel)
+  (define result (contract-run))
+  (define code (car result))
+  (define fs (contract-findings (cdr result)))
+  (define kind (page-kind))
+  (define cs (if kind ((dynamic-require types-module 'contracts-of) kind) '()))
+  (gap!)
+  (out (sgr '(1 36) "Contracts (rules are checked; questions are not verified)"))
+  (cond
+    [(not (memv code '(0 1)))
+     (out (sgr '(1 31) (format "the checker could not run (exit ~a)" code)))
+     (for ([l (in-list (cdr result))]) (out (string-append "  " l)))]
+    [else
+     (cond
+       [(not kind) (out (sgr '(2) "this page has no kind: line, so no contract applies"))]
+       [(null? cs) (out (sgr '(2) (format "no contracts apply to the kind ~a" kind)))]
+       [else
+        (out (sgr '(1) (format "contracts of the type ~a:" kind)))
+        (contract-list-print cs fs)])
+     (cond
+       [(null? fs) (out (sgr '(2) "no contract findings"))]
+       [else
+        (gap!)
+        (for ([f (in-list fs)]) (contract-print f))
+        (out (sgr '(2) (format "rules broken: ~a, open questions: ~a"
+                               (length (filter (lambda (f) (equal? (cadr f) "rule-violated")) fs))
+                               (length (filter (lambda (f) (equal? (cadr f) "question-unverified")) fs)))))])]))
+
+(when contracts? (contract-panel))
 
 ;; exit code: 0 when clean, 1 when problems were listed
 (exit (if (null? problems) 0 1))

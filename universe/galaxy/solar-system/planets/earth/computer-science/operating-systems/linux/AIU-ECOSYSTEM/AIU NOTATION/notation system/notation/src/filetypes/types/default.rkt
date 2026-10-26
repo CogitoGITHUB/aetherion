@@ -7,7 +7,10 @@
 ;; The default type.
 (define the-type (file-type "default" "any block is allowed" #f))
 
-;; The contracts of a default page. A rule is checked; there are no questions.
+;; The contracts of a default page. A rule is checked; a question is only reported.
 (define the-contracts
   (list (list 'rule "*" "paragraph" 'max-words 250)
-        (list 'rule "*" "code" 'needs-declaration "language")))
+        (list 'rule "*" "code" 'needs-declaration "language")
+        (list 'question "*" "title" "Does the title say what the page is about?")
+        (list 'question "*" "paragraph" "Does the paragraph make one point?")
+        (list 'question "*" "code" "Does the code do what the text around it says?")))

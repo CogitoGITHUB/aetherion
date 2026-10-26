@@ -17,7 +17,9 @@
 ;; The contracts of a decision page. A rule is checked by the checker; a question is only
 ;; reported, because a person or an AI must judge it.
 (define the-contracts
-  (list (list 'rule "Context" "paragraph" 'max-words 120)
+  (list (list 'question "Decision" "paragraph" "Is it one choice, stated so someone can act on it?")
+        (list 'question "Context" "paragraph" "What forces this decision now?")
+        (list 'rule "Context" "paragraph" 'max-words 120)
         (list 'rule "Decision" "paragraph" 'max-words 80)
         (list 'rule "*" "code" 'needs-declaration "language")
         (list 'question "Options" "paragraph" "Which option was rejected, and why?")

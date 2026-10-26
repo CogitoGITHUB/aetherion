@@ -9,6 +9,7 @@
 
 ;; The contracts of a book page. A rule is checked; a question is only reported.
 (define the-contracts
-  (list (list 'rule "*" "paragraph" 'max-words 250)
+  (list (list 'question "*" "title" "Does the title say what this chapter or section covers?")
+        (list 'rule "*" "paragraph" 'max-words 250)
         (list 'rule "*" "code" 'needs-declaration "language")
         (list 'question "*" "paragraph" "Does this paragraph hold one idea a reader could restate?")))

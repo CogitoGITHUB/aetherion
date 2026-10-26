@@ -78,7 +78,9 @@
 (define (run-checks)
   (run-base-checks)
   (check-contracts)
-  (check-type-contracts))
+  (check-type-contracts)
+  (check-viewer)
+  (check-viewer-contracts))
 
 ;; contract-section writes one section of a decision page: its title block, then the body.
 (define (contract-section title body)
@@ -192,3 +194,87 @@
   (expect-clean "default" short)
   (expect-rule "default" long)
   (expect-rule "default" plain-code))
+
+;; view-page writes one page to a temporary file, runs the viewer on it with the flags, and
+;; answers the exit code and everything the viewer printed.
+(define (view-page text flags)
+  (define file (make-temporary-file "aiu-view-~a.aiu"))
+  (display-to-file text file #:exists 'truncate)
+  (putenv "AIU_NOTATION_BIN" (path->string (binary)))
+  (putenv "LC_ALL" "C.UTF-8")
+  (define out (open-output-string))
+  (define code
+    (parameterize ([current-output-port out]
+                   [current-error-port out])
+      (apply system*/exit-code (find-exe)
+             (build-path project-root "tools" "see" "see.rkt")
+             (path->string file)
+             flags)))
+  (delete-file file)
+  (values code (get-output-string out)))
+
+;; check-viewer checks the contracts panel of the viewer: it shows broken rules and open
+;; questions, says so when there are none, and is absent without the flag.
+(define (check-viewer)
+  (define long (word-paragraph 130))
+  (define short (contract-paragraph "Text."))
+  (let-values ([(code text) (view-page (contract-page long) (list "--plain" "--contracts"))])
+    (check-true (has-word? "RULE BROKEN" text) text)
+    (check-true (has-word? "130 words" text) text))
+  (let-values ([(code text) (view-page (contract-page long) (list "--plain"))])
+    (check-false (has-word? "RULE BROKEN" text) text)
+    (check-false (has-word? "Contracts" text) text))
+  (let-values ([(code text) (view-page (contract-page short) (list "--plain" "--contracts"))])
+    (check-true (has-word? "OPEN QUESTION" text) text)
+    (check-false (has-word? "RULE BROKEN" text) text))
+  (let-values ([(code text) (view-page (typed-page "default" short) (list "--plain" "--contracts"))])
+    (check-true (has-word? "rules broken: 0" text) text)))
+
+;; aiu-see-page writes one page to a temporary file, runs "aiu see" on it through Nushell
+;; with the flags, and answers the exit code and everything it printed. Nushell refuses a
+;; working directory that ends in a slash, which Racket hands to a child process, so bash
+;; first moves to the physical directory and only then starts Nushell.
+(define (aiu-see-page text flags)
+  (define file (make-temporary-file "aiu-aiusee-~a.aiu"))
+  (display-to-file text file #:exists 'truncate)
+  (putenv "AIU_NOTATION_BIN" (path->string (binary)))
+  (putenv "AIU_RACKET" (path->string (find-exe)))
+  (putenv "LC_ALL" "C.UTF-8")
+  (define nu (find-executable-path "nu"))
+  (define bash (find-executable-path "bash"))
+  (define out (open-output-string))
+  (define code
+    (if (and nu bash)
+        (parameterize ([current-output-port out]
+                       [current-error-port out])
+          (apply system*/exit-code bash
+                 "-c" "cd \"$(pwd -P)\" && exec \"$@\""
+                 "bash" nu
+                 (build-path project-root "tools" "see" "aiu")
+                 "see" (path->string file) flags))
+        -1))
+  (delete-file file)
+  (values code (get-output-string out)))
+
+;; check-viewer-contracts checks the full contract list of the panel: every contract with its
+;; state, a page without a kind, and the flag passed through the aiu command.
+(define (check-viewer-contracts)
+  (define long (word-paragraph 130))
+  (define short (contract-paragraph "Text."))
+  (let-values ([(code text) (view-page (contract-page long) (list "--plain" "--contracts"))])
+    (check-true (has-word? "BROKEN, line" text) text)
+    (check-true (has-word? "holds in 1 block" text) text)
+    (check-true (has-word? "no matching block" text) text)
+    (check-true (has-word? "not verified (line" text) text))
+  (let-values ([(code text) (view-page (contract-page short) (list "--plain" "--contracts"))])
+    (check-true (has-word? "holds in 1 block" text) text)
+    (check-false (has-word? "BROKEN" text) text))
+  (let-values ([(code text) (view-page (string-append "title start\nA test page\ntitle end\n\n" short)
+                                       (list "--plain" "--contracts"))])
+    (check-true (has-word? "no kind: line" text) text)
+    (check-true (has-word? "no contract findings" text) text))
+  (let-values ([(code text) (aiu-see-page (contract-page long) (list "--plain" "--contracts"))])
+    (check-true (has-word? "RULE BROKEN" text) text))
+  (let-values ([(code text) (aiu-see-page (contract-page long) (list "--plain"))])
+    (check-true (has-word? "Text." text) text)
+    (check-false (has-word? "Contracts" text) text)))

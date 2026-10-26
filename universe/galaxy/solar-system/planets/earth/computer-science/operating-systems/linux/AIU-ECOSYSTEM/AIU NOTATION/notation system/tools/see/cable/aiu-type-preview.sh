@@ -6,7 +6,7 @@ ns=$(cd "$d/../../.." && pwd)
 export AIU_NOTATION_ROOT=$ns
 w=$(bash "$d/../fitwidth.sh")
 if [ "$1" != "new-type" ]; then
-  bash "$d/../preview-fit.sh" "$ns/../types/$1.aiu"
+  bash "$d/../preview-fit.sh" "$ns/../types/$1.aiu" --contracts
   exit 0
 fi
 t="$ns/notation/src/filetypes/types"

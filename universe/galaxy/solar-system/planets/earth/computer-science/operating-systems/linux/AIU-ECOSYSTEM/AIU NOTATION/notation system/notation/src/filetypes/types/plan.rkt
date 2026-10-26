@@ -15,7 +15,8 @@
 
 ;; The contracts of a plan page. A rule is checked; a question is only reported.
 (define the-contracts
-  (list (list 'rule "Goal" "paragraph" 'max-words 60)
+  (list (list 'question "Steps" "paragraph" "Is each step one action that can be finished and checked?")
+        (list 'rule "Goal" "paragraph" 'max-words 60)
         (list 'rule "Steps" "paragraph" 'max-words 120)
         (list 'rule "*" "code" 'needs-declaration "language")
         (list 'question "Goal" "paragraph" "Can the goal be stated as one outcome, not an activity?")

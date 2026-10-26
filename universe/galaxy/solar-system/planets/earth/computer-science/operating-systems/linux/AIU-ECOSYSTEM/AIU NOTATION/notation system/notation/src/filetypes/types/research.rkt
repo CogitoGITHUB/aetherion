@@ -16,7 +16,9 @@
 
 ;; The contracts of a research page. A rule is checked; a question is only reported.
 (define the-contracts
-  (list (list 'rule "Abstract" "paragraph" 'max-words 200)
+  (list (list 'question "References" "paragraph" "Does every source cited in the text appear here?")
+        (list 'question "Introduction" "paragraph" "Does it say why the question matters?")
+        (list 'rule "Abstract" "paragraph" 'max-words 200)
         (list 'rule "*" "code" 'needs-declaration "language")
         (list 'question "Abstract" "paragraph" "Does it state the question, the method, the result and a limit?")
         (list 'question "Methods" "paragraph" "Could a reader repeat this from the text alone?")

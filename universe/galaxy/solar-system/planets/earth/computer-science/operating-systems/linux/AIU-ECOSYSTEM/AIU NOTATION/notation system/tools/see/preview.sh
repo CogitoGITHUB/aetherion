@@ -6,6 +6,7 @@
 # Usage: preview.sh FILE [WIDTH]
 f="$1"
 w="${2:-60}"
+x="$3"
 if [ ! -f "$f" ]; then
   echo "no such file: $f"
   exit 0
@@ -13,11 +14,11 @@ fi
 here="$(cd "$(dirname "$0")" && pwd)"
 dir=/tmp/aiu-preview
 mkdir -p "$dir"
-key=$(printf '%s|%s|%s' "$(readlink -f "$f")" "$(stat -c %Y "$f")" "$w" | md5sum | cut -c1-20)
+key=$(printf '%s|%s|%s|%s' "$(readlink -f "$f")" "$(stat -c %Y "$f")" "$w" "$x" | md5sum | cut -c1-20)
 out="$dir/$key"
 if [ ! -s "$out" ]; then
-  LC_ALL=C.UTF-8 "${AIU_RACKET:-racket}" "$here/see.rkt" "$f" --width "$w" > "$out.$$" 2>&1
-  mv "$out.$$" "$out"
+  LC_ALL=C.UTF-8 "${AIU_RACKET:-racket}" "$here/see.rkt" "$f" --width "$w" $x > "$out.$$" 2>&1
+  rc=$?; if [ "$rc" -eq 0 ]; then mv "$out.$$" "$out"; else cat "$out.$$"; rm -f "$out.$$"; exit 0; fi
 fi
 cat "$out"
 exit 0
