@@ -67,6 +67,11 @@ pub const OP_GIT_DIFF: &str = "git-diff";
 /// The shared layer is asked, and it only reads.
 pub const OP_GIT_HISTORY: &str = "git-history";
 
+/// OP_NOTATION_RENDER answers the page as a person reads it: the notation's
+/// plain render of the text as it stands, so the block markers are gone and
+/// what stays is the content. The engine is the notation crate, in process.
+pub const OP_NOTATION_RENDER: &str = "notation-render";
+
 /// OP_NOTATION answers the page of an AIU NOTATION file: the parse document
 /// (`NOTATION-DOCUMENT 1`) of the text as it stands, the journal's unsaved
 /// edits included. The engine is the notation crate, called in this process,

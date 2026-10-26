@@ -41,6 +41,20 @@
                       (answer-data answer 'what)
                       (answer-data answer 'what_to_do)))]))
 
+;; render-of answers the page as a person reads it: the notation's plain
+;; render of the text as it stands, so the block markers are gone and the
+;; content stays. It is what the view shows and the write layer does not.
+(define (render-of file journal)
+  (define answer
+    (ask-hot "notation-render" (hasheq 'file (path->string file)
+                                       'journal (path->string journal))))
+  (if (response-ok answer)
+      (answer-data answer 'text)
+      (format "~a: ~a — ~a"
+              (answer-data answer 'kind)
+              (answer-data answer 'what)
+              (answer-data answer 'what_to_do))))
+
 ;; page-answer? answers whether the answer is a page rather than a refusal.
 (define (page-answer? answer)
   (page? answer))
@@ -50,4 +64,5 @@
 (provide page-refusal
          page-refusal-text
          page-of
+         render-of
          page-answer?)

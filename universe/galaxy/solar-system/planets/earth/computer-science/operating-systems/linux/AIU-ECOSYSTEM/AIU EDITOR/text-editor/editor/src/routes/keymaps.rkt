@@ -69,6 +69,7 @@
     ("space n" "next-block")
     ("space p" "prev-block")
     ("space e" "block-end")
+    ("space r" "view")
     ("up" "move-up")
     ("down" "move-down")
     ("left" "move-left")

@@ -43,10 +43,11 @@
     (define got (page-of file journal))
     (print-line
      (if (page? got)
-         (format "the page: ~a blocks, ~a faults (space b blocks, space k check)"
+         (format "the page: ~a blocks, ~a faults (space b blocks, space k check, space r view)"
                  (length (page-blocks got))
                  (length (page-faults got)))
-         (page-refusal-text got))))
+         (page-refusal-text got)))
+    (when (page? got) (print-line (render-of file journal))))
   (raw-mode)
   (dynamic-wind
     (lambda () #f)

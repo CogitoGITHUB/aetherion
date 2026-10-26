@@ -238,6 +238,17 @@
           [else (cons #t "the point is outside every block")]))
       (cons #t (page-refusal-text got))))
 
+;; command-view answers the page the way the layer asks for it: outside the
+;; write layer the page is rendered and its block markers are gone; in the
+;; write layer the text is answered as it is, markers and all, because that is
+;; what the keys edit. A file that is not a page answers its text.
+(define (command-view session words)
+  (define file (session-file session))
+  (if (and (string-suffix? (path->string file) ".aiu")
+           (not (string=? (the-layer session) "write")))
+      (cons #t (render-of file (session-journal session)))
+      (cons #t (answer-line (ask session "show" (hasheq))))))
+
 ;; command-kind answers what kind of file this session edits: an AIU NOTATION
 ;; page by its extension, or plain text. The extension is the whole test, and
 ;; it is the notation format's own.
@@ -278,7 +289,8 @@
                            "next-block" command-next-block
                            "prev-block" command-prev-block
                            "block-end" command-block-end
-                           "kind" command-kind))
+                           "kind" command-kind
+                           "view" command-view))
 
 ;; commands is the table: one name, one function. The keys are compared
 ;; as text, so a name typed on the keyboard finds its function. The table

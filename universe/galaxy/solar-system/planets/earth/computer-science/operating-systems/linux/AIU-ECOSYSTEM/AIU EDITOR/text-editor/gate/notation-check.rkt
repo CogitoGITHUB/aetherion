@@ -121,6 +121,24 @@
         (format "the fault of the planted page names nothing to do: ~a" (fault-what f))]
        [else #f])]))
 
+;; check-render answers what is wrong with the view: the render of a starter
+;; page carries no block marker, and it carries the page's own words. This is
+;; the proof that the view hides the syntax and the write layer does not.
+(define (check-render page)
+  (define rendered (render-of page scratch-journal))
+  (define lines (string-split rendered "\n"))
+  (define markers
+    (filter (lambda (line)
+              (or (string-suffix? (string-trim line) " start")
+                  (string-suffix? (string-trim line) " end")))
+            lines))
+  (cond
+    [(string=? (string-trim rendered) "")
+     (format "the view of ~a is empty" page)]
+    [(not (null? markers))
+     (format "the view of ~a still carries the marker ~s" page (car markers))]
+    [else #f]))
+
 ;; check-version answers what is wrong with the version guard: a document that
 ;; is not version 1 is refused, and the refusal says something.
 (define (check-version)
@@ -142,7 +160,7 @@
     [else
      (define faults
        (append (filter values (map check-page pages))
-               (filter values (list (check-planted) (check-version)))))
+               (filter values (list (check-planted) (check-version) (check-render (car pages))))))
      (if (null? faults)
          (begin
            (printf "OK notation-check — ~a starter pages read through the engine: a title first, no fault, every block inside the text; a planted fault names its line and what to do; a document that is not version 1 is refused\n"

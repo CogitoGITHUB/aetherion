@@ -93,6 +93,14 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
                 vec![("document".to_string(), document)],
             )
         }
+        rust_exports::OP_NOTATION_RENDER => {
+            // The page as a person reads it: the notation's plain render, so
+            // the markers are gone and the content stays. The same text the
+            // parse sees, unsaved edits included.
+            let text = current_text(&file, &journal_path);
+            let rendered = notation::plain::render_plain(&text);
+            (true, vec![("text".to_string(), rendered)])
+        }
         rust_exports::OP_GIT => {
             // The Git facts of the file's own directory. The shared layer
             // is asked, and it only reads.
