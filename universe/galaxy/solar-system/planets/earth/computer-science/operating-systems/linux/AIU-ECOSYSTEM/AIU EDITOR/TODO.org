@@ -152,6 +152,10 @@ away: the tree stays exactly as the gate last saw it.
 
   26. TODO (owner addition, 2026-10-22) — The agent's hands on the editor: the same surface the multiplexer gets in its item 23 — the agent drives the editor the way the owner does: the buffers, the splits, the scroll and the copy are commands on the editor's own wire, and the editor's MCP server carries them, so the owner can say "open a buffer", "split", "scroll", "copy that part and paste it over there" and the agent does it; done when: an agent opens and closes a buffer, splits and closes a window, scrolls the view, copies a part into the editor's own ring and pastes it into another buffer or into the agent, and every one of those runs the same code the owner's key runs; deps: 6, 14, 18, multiplexer item 23.
 
+  27. DONE (the engine in =3a493712=; the gate stage =notation-check=) — AIU NOTATION hosted in the editor (owner, 2026-10-26): a =.aiu= page is read in the editor's own hot path, because the notation crate is a path dependency of the editor's crate (op =notation=), and the meaning side reads =NOTATION-DOCUMENT 1= in =notation/document.rkt=; done when: a person opens a page and the editor answers its blocks, the block the point is in, its faults and the block navigation, with the gate proving the four starter pages, a planted fault and the version guard; deps: none.
+    - What it is: no install, no pm, no plugin, no environment variable. Commands: =blocks=, =block=, =check=, =next-block=, =prev-block=, =block-end=, =kind=. Keys: =space b=, =space k=, =space n=, =space p=, =space e=. A page says its block and fault count the moment it opens, in the scripted session and the live one.
+    - What is still owed from the plan: the notation's checker run as the authority, the read-only render, a new page from the four kinds, completion of block names, the end lines hidden, and the two address shapes made one.
+
 * After the done line
 # what continues on its own.
   - The program's own checklist from checklist/tier-2/ content; tier 3 stays plan only until the owner opens it.
