@@ -24,10 +24,10 @@
          racket/system
          "../editor/src/machine/directories.rkt"
          "../editor/src/machine/run.rkt"
-         "../editor/src/notation/loader.rkt"
-         "../editor/src/notation/manifest.rkt"
-         "../editor/src/notation/pm.rkt"
-         "../editor/src/notation/seam.rkt")
+         "../editor/src/plugins/loader.rkt"
+         "../editor/src/plugins/manifest.rkt"
+         "../editor/src/plugins/pm.rkt"
+         "../editor/src/plugins/seam.rkt")
 
 ;; plugin-name is the name of the plugin the proofs use.
 (define plugin-name "gate-plugin")

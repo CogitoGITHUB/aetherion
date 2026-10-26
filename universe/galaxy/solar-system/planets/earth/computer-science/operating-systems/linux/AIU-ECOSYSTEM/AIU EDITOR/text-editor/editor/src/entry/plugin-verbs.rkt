@@ -12,10 +12,10 @@
 (require racket/list
          racket/path
          racket/string
-         "../notation/loader.rkt"
-         "../notation/manifest.rkt"
-         "../notation/pm.rkt"
-         "../notation/seam.rkt"
+         "../plugins/loader.rkt"
+         "../plugins/manifest.rkt"
+         "../plugins/pm.rkt"
+         "../plugins/seam.rkt"
          "../narration/print-console.rkt")
 
 ;; plugin-verb answers the plugins the editor knows: one line per

@@ -29,7 +29,7 @@ What belongs elsewhere:
 The area law binds the package. The areas, lowest first:
 
 `errors`, `narration`, `machine`, `security`, `join`, `devloop`, `journal`, `buffer`,
-`notation`, `commands`, `routes`, `input`, `drawing`, `models`, `dashboard`, `send`,
+`plugins`, `commands`, `routes`, `input`, `drawing`, `models`, `dashboard`, `send`,
 `picker`, `checkpoint`, `audit`, `entry`.
 
 A dependency points downward only, `join/` is the only place Rust and Racket meet, and
@@ -79,7 +79,7 @@ graph TD
     COMMANDS --> DASH["dashboard/<br/>the placeable pieces"]
     COMMANDS --> CHECK["checkpoint/<br/>the checkpoint, the rollback, the stop switch"]
     COMMANDS --> AUDIT["audit/<br/>what changed, and the undo that refuses"]
-    COMMANDS --> PLUG["notation/<br/>the plugin seam, the manifest, the loader"]
+    COMMANDS --> PLUG["plugins/<br/>the plugin seam, the manifest, the loader"]
     BUFFER --> JOIN["join/<br/>one line of JSON each way, through a pair of files"]
     INPUT --> JOIN
     DASH --> JOIN
@@ -108,7 +108,7 @@ The areas, one job each:
 | `models/` | the models the meaning side answers from |
 | `dashboard/` | the status and the context display, as placeable pieces |
 | `send/` | the bundle, the boundary, the OpenCode client |
-| `notation/` | the plugin seam, the manifest, the pm seam, the loader |
+| `plugins/` | the plugin seam, the manifest, the pm seam, the loader |
 | `checkpoint/` | the checkpoint, the rollback, the stop switch |
 | `audit/` | the live audit of what the agent changed |
 | `devloop/` | the work mode, the bake, the last good |
