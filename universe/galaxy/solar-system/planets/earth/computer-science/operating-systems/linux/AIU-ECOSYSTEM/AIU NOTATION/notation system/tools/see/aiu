@@ -165,9 +165,15 @@ def main [cmd?: string, target?: path, extra?: string, --plain (-p)] {
       }
     }
   } else if $cmd == "open" {
-    let ed = ($env.AIU_EDITOR? | default ($env.EDITOR? | default ""))
+    # The AIU editor opens a page first: it reads .aiu with the notation
+    # engine built in. AIU_EDITOR and EDITOR are the fallback, so a machine
+    # without aiutd still opens the page somewhere.
+    let found = (try { which aiutd | get path.0 } catch { "" })
+    let ed = (if ($found | is-empty) {
+        ($env.AIU_EDITOR? | default ($env.EDITOR? | default ""))
+      } else { $found })
     if ($ed | is-empty) {
-      error make {msg: "no editor set. Set AIU_EDITOR to its command, or EDITOR."}
+      error make {msg: "no editor set. Put aiutd on PATH, or set AIU_EDITOR to its command."}
     }
     let parts = ($ed | split row " " | where {|p| $p != ""})
     run-external ($parts | first) ...($parts | skip 1) $f

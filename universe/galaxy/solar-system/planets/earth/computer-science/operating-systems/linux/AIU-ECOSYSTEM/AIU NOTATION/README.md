@@ -264,7 +264,7 @@ Install once, from the repo root: `ln -s "$PWD/notation system/tools/see/aiu" ~/
 | Variable | Effect |
 |---|---|
 | `AIU_RACKET` | path of the Racket binary when `racket` is not on PATH |
-| `AIU_EDITOR` (else `EDITOR`) | the editor `aiu open` starts |
+| `aiutd` (else `AIU_EDITOR`, else `EDITOR`) | the editor `aiu open` starts: the AIU editor first, because it reads a page with the notation engine built in |
 | `AIU_PICK_FIRST=1` | skip the picker and take the first page (for scripts) |
 
 How the picker works: the tv channel `tools/see/cable/aiu-pages.toml` lists the pages,
