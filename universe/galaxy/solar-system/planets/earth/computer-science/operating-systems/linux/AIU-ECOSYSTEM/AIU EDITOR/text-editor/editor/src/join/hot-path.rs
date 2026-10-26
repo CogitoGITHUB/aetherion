@@ -74,14 +74,24 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
             // The commits of the repository the file is in.
             let path = std::path::Path::new(&file);
             (true, git_facts::history(path))
-        }
-        rust_exports::OP_GIT_DIFF => {
+        }        rust_exports::OP_GIT_DIFF => {
             // The diff of one file, in the layer's own marks. The
             // comparison is named by the caller: unstaged, staged or
             // all.
             let path = std::path::Path::new(&file);
             let asked = wire_json::arg(request, "comparison");
             (true, git_facts::diff(path, &asked))
+        }
+        rust_exports::OP_NOTATION => {
+            // The page of an AIU NOTATION file, parsed by the notation crate
+            // in this process. The text as it stands is parsed, so unsaved
+            // edits in the journal are what the page shows.
+            let text = current_text(&file, &journal_path);
+            let document = notation::rust_exports::parse_document(&file, &text);
+            (
+                true,
+                vec![("document".to_string(), document)],
+            )
         }
         rust_exports::OP_GIT => {
             // The Git facts of the file's own directory. The shared layer

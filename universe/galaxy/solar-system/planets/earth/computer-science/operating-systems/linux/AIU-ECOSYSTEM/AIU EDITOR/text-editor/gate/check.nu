@@ -28,6 +28,7 @@ const STAGES = [
     {name: "route-check", script: "route-check.rkt", kind: "racket-plain"}
     {name: "explorer-check", script: "explorer-check.rkt", kind: "racket-plain"}
     {name: "key-check", script: "key-check.rkt", kind: "racket-plain"}
+    {name: "notation-check", script: "notation-check.rkt", kind: "racket-plain"}
     {name: "dashboard-check", script: "dashboard-check.rkt", kind: "racket-plain"}
     {name: "secret-check", script: "secret-check.rkt", kind: "racket-plain"}
     {name: "kit-check", script: "kit-check.rkt", kind: "racket-plain"}

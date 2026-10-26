@@ -66,3 +66,10 @@ pub const OP_GIT_DIFF: &str = "git-diff";
 /// OP_GIT_HISTORY answers the commits of the repository a file is in.
 /// The shared layer is asked, and it only reads.
 pub const OP_GIT_HISTORY: &str = "git-history";
+
+/// OP_NOTATION answers the page of an AIU NOTATION file: the parse document
+/// (`NOTATION-DOCUMENT 1`) of the text as it stands, the journal's unsaved
+/// edits included. The engine is the notation crate, called in this process,
+/// so the meaning side never needs a second program or an environment
+/// variable to read a page.
+pub const OP_NOTATION: &str = "notation";

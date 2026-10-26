@@ -19,6 +19,7 @@
   - route-check.rkt — the route check: the reserved prefix is bound by no layer
  - explorer-check.rkt — the explorer check: the panel holds every command of the table
   - key-check.rkt — the key check: the decoder and the keymaps agree
+  - notation-check.rkt — the notation check: the starter pages read through the engine, a planted fault, the version guard
   - dashboard-check.rkt — the dashboard check: every piece is really drawn
   - secret-check.rkt — the no-secrets check: a real bundle and the disk
   - kit-check.rkt — the kit check: the six proofs of the kit format

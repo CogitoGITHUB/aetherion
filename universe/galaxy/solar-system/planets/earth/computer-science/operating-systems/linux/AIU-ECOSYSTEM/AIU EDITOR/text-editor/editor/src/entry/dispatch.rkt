@@ -33,6 +33,8 @@
          "../routes/routes.rkt"
          "../join/hot-path.rkt"
          "../join/protocol.rkt"
+         "../notation/document.rkt"
+         "../notation/host.rkt"
          "live.rkt"
          "plugin-verbs.rkt")
 
@@ -66,6 +68,18 @@
         (let ([hot-start (hot-path-start-ms)])
           (when hot-start
             (print-line (format "the hot path's first call took ~a ms" hot-start))))
+        ;; An AIU NOTATION page says what it is the moment it opens: how many
+        ;; blocks it holds and how many faults the parser found. The page is
+        ;; read through the same engine the commands use, so the line cannot
+        ;; disagree with them.
+        (when (string-suffix? (path->string file) ".aiu")
+          (define got (page-of file journal))
+          (print-line
+           (if (page? got)
+               (format "the page: ~a blocks, ~a faults (commands: blocks, block, check, next-block, prev-block, block-end)"
+                       (length (page-blocks got))
+                       (length (page-faults got)))
+               (page-refusal-text got))))
         (let loop ()
           (define line (read-line (current-input-port)))
           (unless (eof-object? line)

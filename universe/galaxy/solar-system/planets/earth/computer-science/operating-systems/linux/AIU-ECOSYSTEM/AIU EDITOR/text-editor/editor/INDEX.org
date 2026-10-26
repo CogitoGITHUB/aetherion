@@ -35,6 +35,10 @@
  - src/journal/replay.rkt — rebuild state after a crash; never guesses silently
  - src/buffer/INDEX.org — the buffer area: the text state
  - src/buffer/buffer.rs — the text: bytes, lines, offsets
+ - src/notation/INDEX.org — the notation area: the page, the seam call, the block text
+ - src/notation/document.rkt — the page: read NOTATION-DOCUMENT 1 into blocks, decls and faults
+ - src/notation/host.rkt — ask the hot path for a page; refuse a bad version by name
+ - src/notation/where.rkt — where the point sits in a page; the page and its faults as text
  - src/commands/INDEX.org — the commands area: the command table
  - src/commands/commands.rkt — the command table: one name, one function
  - src/commands/tasks.rkt — the task table and the runner: declare, list, run, sequence

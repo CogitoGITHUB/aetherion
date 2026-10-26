@@ -27,13 +27,26 @@
          "../machine/terminal.rkt"
          "../routes/keyboard.rkt"
          "../routes/keymaps.rkt"
-         "../routes/routes.rkt")
+         "../routes/routes.rkt"
+         "../notation/document.rkt"
+         "../notation/host.rkt")
 
 ;; live-session runs the live session on a file: the terminal goes raw,
 ;; the keys are read and run, and the terminal is given back when the
 ;; session ends.
 (define (live-session file journal)
   (define session (make-session file journal))
+  ;; An AIU NOTATION page says what it is before the first key: the blocks it
+  ;; holds and the faults the parser found, in the same words the scripted
+  ;; session uses.
+  (when (string-suffix? (path->string file) ".aiu")
+    (define got (page-of file journal))
+    (print-line
+     (if (page? got)
+         (format "the page: ~a blocks, ~a faults (space b blocks, space k check)"
+                 (length (page-blocks got))
+                 (length (page-faults got)))
+         (page-refusal-text got))))
   (raw-mode)
   (dynamic-wind
     (lambda () #f)

@@ -17,4 +17,9 @@ path = "src/join/hot-path.rs"
 [dependencies]
 # The shared read-only Git layer, by path: one Git model for this program
 # and for the multiplexer, so the two cannot disagree about what Git says.
-git-inspection = { path = "../../shared-layers/git-inspection" }
+git-inspection = { path = "../../../shared-layers/git-inspection" }
+
+# The AIU NOTATION engine, by path: the parser the editor hosts. It has no
+# dependencies of its own and is never fetched, so the build stays offline;
+# the editor calls it in-process, so opening a page needs no second program.
+notation = { path = "../../../AIU NOTATION/notation system/notation" }

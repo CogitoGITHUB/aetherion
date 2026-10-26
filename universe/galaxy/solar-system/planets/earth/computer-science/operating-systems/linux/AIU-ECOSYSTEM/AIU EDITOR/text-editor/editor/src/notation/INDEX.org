@@ -1,0 +1,19 @@
+#+TITLE: INDEX — AIU EDITOR/editor/src/notation/
+# One job: list every file in the area and the single job of each.
+# Status: current; updated in the same commit as any change in this directory.
+
+* Files
+# one line per file: its name, then the single job it performs.
+
+ - INDEX.org — this index: every file of the area and its one job
+ - document.rkt — the page: read NOTATION-DOCUMENT 1 into blocks, decls and faults
+ - host.rkt — ask the hot path for a page; refuse a document that is not version 1
+ - where.rkt — where the point sits in a page; the page and its faults as text
+
+* Why this area exists
+# the one paragraph a reader needs.
+The AIU NOTATION engine is the notation crate, linked into the hot path, so a
+page is parsed in the editor with no second program and no environment
+variable. This area reads the document the seam answers and turns it into what
+the commands need: the blocks with their byte offsets, the faults with their
+lines, and the text a person reads.

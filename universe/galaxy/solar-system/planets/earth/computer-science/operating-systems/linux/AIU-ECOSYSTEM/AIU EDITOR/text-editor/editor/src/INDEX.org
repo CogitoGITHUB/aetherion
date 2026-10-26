@@ -11,6 +11,7 @@
  - join/ — the seam: the wire and the meaning side, the one place two languages meet
  - journal/ — the record of every edit, and the work that is not saved yet
  - buffer/ — the text state: bytes, lines, offsets
+ - notation/ — the AIU NOTATION page: the parse, the blocks, the faults
  - plugins/ — the plugin seam: the manifest, the loader, the pm seam
  - commands/ — the command table: what a typed line means
  - devloop/ — the work mode, the bake and the last good

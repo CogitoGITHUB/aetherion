@@ -29,7 +29,7 @@ What belongs elsewhere:
 The area law binds the package. The areas, lowest first:
 
 `errors`, `narration`, `machine`, `security`, `join`, `devloop`, `journal`, `buffer`,
-`plugins`, `commands`, `routes`, `input`, `drawing`, `models`, `dashboard`, `send`,
+`notation`, `plugins`, `commands`, `routes`, `input`, `drawing`, `models`, `dashboard`, `send`,
 `picker`, `checkpoint`, `audit`, `entry`.
 
 A dependency points downward only, `join/` is the only place Rust and Racket meet, and
@@ -52,6 +52,7 @@ the one-way lint and the language-split lint keep every other area clean.
 | The secrets seam: the predicates, the redaction, the no-secrets check | Implemented and verified |
 | The kit: the envelope, the capability declaration, the MCP server, the skill, the plugin | Implemented and verified |
 | The plugin system: the editor asks pm, loads, refuses by name | Implemented and verified |
+| AIU NOTATION pages: open, blocks, the point's block, faults, block navigation | Implemented and verified: the four starter pages read through the notation engine inside the hot path, a planted fault names its line and what to do, and the gate proves it |
 | The checkpoint, the rollback and the stop switch | In progress: the area and the send that checkpoints first are done |
 | The tasks: declare, list, run, sequence | Implemented and verified |
 | The dashboard and the placeable pieces | Implemented and verified |
@@ -101,6 +102,7 @@ The areas, one job each:
 | `join/` | the wire: the request, the answer, the transport |
 | `journal/` | the record of every edit, and the replay |
 | `buffer/` | the text state: bytes, lines, offsets |
+| `notation/` | the AIU NOTATION page: the parse, the blocks, the point's block, the faults |
 | `commands/` | the command table: one name, one function |
 | `routes/` | the routing: which layer sees a key first |
 | `input/` | the Rust key decoder |
@@ -465,8 +467,10 @@ across both programs.
   model is the one in use.
 - pm does not run on this phone: its Racket package database cannot be read by this
   Racket, so `plugin-install` says so and installs nothing.
-- The notation's own side is not built: the seam, the manifest and the loader are here,
-  but the notation engine that answers them is another project.
+- The notation is now the editor's own page kind, read in process: the engine is
+  the notation crate linked into the hot path. What is still owed is its checker
+  run as the authority, the read-only render, the completion of block names, and
+  the end lines hidden.
 - The second agent adapter was skipped by the owner, so one adapter stands.
 - The root D-number for the reserved prefix is still owed: the root decision log is
   read-only from this project.

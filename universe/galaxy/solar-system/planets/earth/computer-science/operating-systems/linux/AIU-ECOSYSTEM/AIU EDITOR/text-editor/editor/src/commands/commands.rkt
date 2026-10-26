@@ -15,7 +15,10 @@
          "../buffer/selection.rkt"
          "../join/protocol.rkt"
          "../join/hot-path.rkt"
-         "../journal/replay.rkt")
+         "../journal/replay.rkt"
+         "../notation/document.rkt"
+         "../notation/host.rkt"
+         "../notation/where.rkt")
 
 ;; session is the state of one editing session: the file being edited, the
 ;; journal that holds the work not saved yet, and the point — where the
@@ -174,6 +177,77 @@
 (define (command-level-up session words)
   (cons #t (format "level: ~a" (set-level! session (min 3 (+ (the-level session) 1))))))
 
+;; command-blocks answers the blocks of the page the session edits, one line
+;; each: the name, the lines it covers and its declarations. It is the page as
+;; a person reads it, and it is read through the notation engine.
+(define (command-blocks session words)
+  (define got (page-of (session-file session) (session-journal session)))
+  (cons #t (if (page? got) (blocks-text got) (page-refusal-text got))))
+
+;; command-block answers the block the point sits in: the innermost one, so a
+;; point inside a section's title answers the title and not the section.
+(define (command-block session words)
+  (define got (page-of (session-file session) (session-journal session)))
+  (if (page? got)
+      (let ([b (block-at got (the-point session))])
+        (cons #t
+              (if b
+                  (format "the block: ~a  lines ~a-~a"
+                          (block-name b) (block-start-line b) (block-end-line b))
+                  "the point is outside every block")))
+      (cons #t (page-refusal-text got))))
+
+;; command-check answers the faults of the page: where each one is, what is
+;; wrong and what to do about it. A page with no fault says so.
+(define (command-check session words)
+  (define got (page-of (session-file session) (session-journal session)))
+  (cons #t (if (page? got) (faults-text got) (page-refusal-text got))))
+
+;; command-next-block moves the point to the start of the next block, and says
+;; where it landed.
+(define (command-next-block session words)
+  (define got (page-of (session-file session) (session-journal session)))
+  (if (page? got)
+      (let ([b (block-start-after got (the-point session))])
+        (cond
+          [b (move-to session (block-start b))
+             (cons #t (format "the block: ~a at line ~a" (block-name b) (block-start-line b)))]
+          [else (cons #t "the point is past the last block")]))
+      (cons #t (page-refusal-text got))))
+
+;; command-prev-block moves the point to the start of the block before it.
+(define (command-prev-block session words)
+  (define got (page-of (session-file session) (session-journal session)))
+  (if (page? got)
+      (let ([b (block-start-before got (the-point session))])
+        (cond
+          [b (move-to session (block-start b))
+             (cons #t (format "the block: ~a at line ~a" (block-name b) (block-start-line b)))]
+          [else (cons #t "the point is before the first block")]))
+      (cons #t (page-refusal-text got))))
+
+;; command-block-end moves the point to the end of the block it is in, so a
+;; person can see where the block closes.
+(define (command-block-end session words)
+  (define got (page-of (session-file session) (session-journal session)))
+  (if (page? got)
+      (let ([b (block-closing got (the-point session))])
+        (cond
+          [b (move-to session (block-end b))
+             (cons #t (format "the end of ~a is line ~a" (block-name b) (block-end-line b)))]
+          [else (cons #t "the point is outside every block")]))
+      (cons #t (page-refusal-text got))))
+
+;; command-kind answers what kind of file this session edits: an AIU NOTATION
+;; page by its extension, or plain text. The extension is the whole test, and
+;; it is the notation format's own.
+(define (command-kind session words)
+  (define name (path->string (session-file session)))
+  (cons #t
+        (if (string-suffix? name ".aiu")
+            "the kind: notation page (.aiu)"
+            "the kind: text")))
+
 ;; command-table is the table as data: one name and one function per
 ;; command.
 (define command-table
@@ -197,7 +271,14 @@
                            "write-mode" command-write-mode
                            "select-mode" command-select-mode
                            "level-down" command-level-down
-                           "level-up" command-level-up))
+                           "level-up" command-level-up
+                           "blocks" command-blocks
+                           "block" command-block
+                           "check" command-check
+                           "next-block" command-next-block
+                           "prev-block" command-prev-block
+                           "block-end" command-block-end
+                           "kind" command-kind))
 
 ;; commands is the table: one name, one function. The keys are compared
 ;; as text, so a name typed on the keyboard finds its function. The table
