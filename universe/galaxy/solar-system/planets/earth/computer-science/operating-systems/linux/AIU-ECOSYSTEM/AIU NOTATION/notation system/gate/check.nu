@@ -51,7 +51,7 @@ def run-one [stage] {
     }
 }
 
-# main runs every stage and prints each one's output plus the verdict; with
+# main runs every stage, printing each one as it ends, then the verdict; with
 # --list it only names the stages and the scripts they run.
 def main [ --list ] {
     if $list {
@@ -62,12 +62,14 @@ def main [ --list ] {
         exit 0
     }
 
-    let results = ($STAGES | each {|s| run-one $s })
-
-    for r in $results {
-        print $"--- ($r.name)"
+    mut results = []
+    for s in $STAGES {
+        print $"--- ($s.name)"
+        let r = (run-one $s)
         print $r.out
+        $results = ($results | append $r)
     }
+
 
     let red = ($results | where {|r| $r.code != 0 } | length)
     let nothing = ($results | where {|r| $r.out =~ "NOTHING-TO-CHECK" } | length)

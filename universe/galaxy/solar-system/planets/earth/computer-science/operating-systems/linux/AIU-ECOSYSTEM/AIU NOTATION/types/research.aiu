@@ -1,0 +1,80 @@
+title start
+kind: research
+tags: research
+A new research page
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section start
+title start
+Abstract
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+section start
+title start
+Introduction
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+section start
+title start
+Methods
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+section start
+title start
+Results
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+section start
+title start
+Discussion
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+section start
+title start
+References
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+comment start
+abstract, introduction, methods, results, discussion, references
+comment end
+

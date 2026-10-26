@@ -1,0 +1,14 @@
+title start
+kind: note
+tags: note
+A new note page
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+comment start
+one idea in a few paragraphs, no sections
+comment end
+

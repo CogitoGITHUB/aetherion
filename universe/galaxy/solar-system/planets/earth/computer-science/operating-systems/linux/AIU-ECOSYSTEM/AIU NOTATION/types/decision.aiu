@@ -1,0 +1,58 @@
+title start
+kind: decision
+tags: decision
+A new decision page
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section start
+title start
+Context
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+section start
+title start
+Options
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+section start
+title start
+Decision
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+section start
+title start
+Consequences
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+comment start
+one decision: context, options, decision, consequences
+comment end
+

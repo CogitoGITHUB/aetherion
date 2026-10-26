@@ -18,6 +18,7 @@
 ;; whole path so the program never depends on the PATH.
 
 (require racket/file
+         racket/port
          racket/string
          racket/system
          "directories.rkt")
@@ -75,10 +76,28 @@
   settings)
 
 ;; The terminal, for the entry above it.
+;; terminal-size answers the columns and the rows of the terminal, or 80 by
+;; 24 when the terminal does not say. stty is asked, because this Racket
+;; cannot ask the terminal itself.
+(define (terminal-size)
+  (define out (with-output-to-string (lambda () (system* stty "size"))))
+  (define parts (string-split (string-trim out)))
+  (cond
+    [(and (= (length parts) 2)
+          (string->number (car parts))
+          (string->number (cadr parts)))
+     (define columns (string->number (cadr parts)))
+     (define rows (string->number (car parts)))
+     (if (or (<= columns 0) (<= rows 0))
+         (values 80 24)
+         (values columns rows))]
+    [else (values 80 24)]))
+
 (provide stty
          settings-file
          saved-settings
          current-settings
          save-settings
          restore-settings
-         raw-mode)
+         raw-mode
+         terminal-size)

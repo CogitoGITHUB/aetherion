@@ -42,7 +42,7 @@
   (regexp-match? (regexp-quote word) text))
 
 ;; run-checks is the one entry the test runner calls.
-(define (run-checks)
+(define (run-base-checks)
   (check-true (file-exists? (binary)) "the Rust binary is not built: run cargo build first")
   (define types (load-file-types))
   (check-true (hash-has-key? types "book") "the book type is missing")
@@ -72,3 +72,123 @@
   (let-values ([(code text)
                 (check-page "title start\nkind: default\nMy default\ntitle end\n\nheading start\nlevel: 1\nFine\nheading end\n")])
     (check-equal? code 0 text)))
+
+;; run-checks is the one entry the test runner calls: the file type checks, then the
+;; contract checks.
+(define (run-checks)
+  (run-base-checks)
+  (check-contracts)
+  (check-type-contracts))
+
+;; contract-section writes one section of a decision page: its title block, then the body.
+(define (contract-section title body)
+  (string-append "section start\ntitle start\n" title "\ntitle end\n" body "section end\n\n"))
+
+;; contract-paragraph writes one paragraph block holding the text.
+(define (contract-paragraph text)
+  (string-append "paragraph start\n" text "\nparagraph end\n"))
+
+;; contract-page writes a complete decision page whose Context section holds the given body.
+(define (contract-page context-body)
+  (string-append "title start\nkind: decision\nD-001 A test decision\ntitle end\n\n"
+                 (contract-section "Context" context-body)
+                 (contract-section "Options" (contract-paragraph "Text."))
+                 (contract-section "Decision" (contract-paragraph "Text."))
+                 (contract-section "Consequences" (contract-paragraph "Text."))))
+
+;; check-contracts checks the contracts of the decision type: a clean page, a broken rule,
+;; a missing declaration, and that questions appear only when AIU_QUESTIONS is 1.
+(define (check-contracts)
+  (define short (contract-paragraph "Text."))
+  (define long (contract-paragraph (apply string-append (for/list ([i (in-range 130)]) "word "))))
+  (define plain-code "code start\nx(1)\ncode end\n")
+  (define lang-code "code start\nlanguage: racket\nx(1)\ncode end\n")
+  (let-values ([(code text) (check-page (contract-page short))])
+    (check-equal? code 0 text)
+    (check-false (has-word? "question-unverified" text) text))
+  (let-values ([(code text) (check-page (contract-page long))])
+    (check-equal? code 1 text)
+    (check-true (has-word? "rule-violated" text) text))
+  (let-values ([(code text) (check-page (contract-page plain-code))])
+    (check-equal? code 1 text)
+    (check-true (has-word? "rule-violated" text) text))
+  (let-values ([(code text) (check-page (contract-page lang-code))])
+    (check-equal? code 0 text))
+  (putenv "AIU_QUESTIONS" "1")
+  (let-values ([(code text) (check-page (contract-page short))])
+    (check-equal? code 1 text)
+    (check-true (has-word? "question-unverified" text) text))
+  (environment-variables-set! (current-environment-variables) #"AIU_QUESTIONS" #f))
+
+;; word-paragraph writes a paragraph block of n words.
+(define (word-paragraph n)
+  (contract-paragraph (apply string-append (for/list ([i (in-range n)]) "word "))))
+
+;; typed-page writes a page of the given kind: its title block, then the body.
+(define (typed-page kind body)
+  (string-append "title start\nkind: " kind "\nA test page\ntitle end\n\n" body))
+
+;; sectioned-body writes one section for each title; the section named long holds 300 words.
+(define (sectioned-body titles long)
+  (apply string-append
+         (for/list ([t (in-list titles)])
+           (contract-section t (if (equal? t long) (word-paragraph 300) (contract-paragraph "Text."))))))
+
+;; expect-clean checks that a page of the kind has no findings.
+(define (expect-clean kind body)
+  (let-values ([(code text) (check-page (typed-page kind body))])
+    (check-equal? code 0 text)))
+
+;; expect-rule checks that a page of the kind breaks a rule.
+(define (expect-rule kind body)
+  (let-values ([(code text) (check-page (typed-page kind body))])
+    (check-equal? code 1 text)
+    (check-true (has-word? "rule-violated" text) text)))
+
+;; expect-questions checks that a page of the kind reports unverified questions, and only
+;; while AIU_QUESTIONS is 1.
+(define (expect-questions kind body)
+  (putenv "AIU_QUESTIONS" "1")
+  (let-values ([(code text) (check-page (typed-page kind body))])
+    (check-equal? code 1 text)
+    (check-true (has-word? "question-unverified" text) text))
+  (environment-variables-set! (current-environment-variables) #"AIU_QUESTIONS" #f))
+
+;; check-type-contracts checks that every type carries contracts, then one clean page, one
+;; broken rule and, where the type has questions, one report for each type but decision.
+(define (check-type-contracts)
+  (for ([(name t) (in-hash (load-file-types))])
+    (check-true (pair? (contracts-of name)) (format "~a carries no contracts" name)))
+  (define short (contract-paragraph "Text."))
+  (define long (word-paragraph 300))
+  (define plain-code "code start\nx(1)\ncode end\n")
+  (define plan-titles (list "Goal" "Steps" "Done when" "Open questions"))
+  (define research-titles
+    (list "Abstract" "Introduction" "Methods" "Results" "Discussion" "References"))
+  (define module-titles (list "Purpose" "Code"))
+  (expect-clean "plan" (sectioned-body plan-titles #f))
+  (expect-rule "plan" (sectioned-body plan-titles "Goal"))
+  (expect-questions "plan" (sectioned-body plan-titles #f))
+  (expect-clean "research" (sectioned-body research-titles #f))
+  (expect-rule "research" (sectioned-body research-titles "Abstract"))
+  (expect-questions "research" (sectioned-body research-titles #f))
+  (expect-clean "module" (sectioned-body module-titles #f))
+  (expect-rule "module" (sectioned-body module-titles "Purpose"))
+  (expect-rule "module" (string-append (contract-section "Purpose" short)
+                                       (contract-section "Code" plain-code)))
+  (expect-questions "module" (sectioned-body module-titles #f))
+  (expect-clean "note" short)
+  (expect-rule "note" long)
+  (expect-rule "note" plain-code)
+  (expect-clean "book" short)
+  (expect-rule "book" long)
+  (expect-questions "book" short)
+  (expect-clean "journal" short)
+  (expect-rule "journal" long)
+  (expect-questions "journal" short)
+  (expect-clean "todo" short)
+  (expect-rule "todo" long)
+  (expect-questions "todo" short)
+  (expect-clean "default" short)
+  (expect-rule "default" long)
+  (expect-rule "default" plain-code))

@@ -1,0 +1,58 @@
+title start
+kind: plan
+tags: plan
+A new plan page
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section start
+title start
+Goal
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+section start
+title start
+Steps
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+section start
+title start
+Done when
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+section start
+title start
+Open questions
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+comment start
+a goal, its steps, when it is done, what is open
+comment end
+

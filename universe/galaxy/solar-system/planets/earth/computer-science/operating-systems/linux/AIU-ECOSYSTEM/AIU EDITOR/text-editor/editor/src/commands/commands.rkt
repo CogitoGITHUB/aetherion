@@ -337,6 +337,12 @@
   (ask-hot op (hash-set (hash-set args 'file (path->string (session-file session)))
                          'journal (path->string (session-journal session)))))
 
+;; session-text answers the text of the buffer as it stands, for the painter:
+;; the saved file with the journal's unsaved edits on top.
+(define (session-text session)
+  (define answer (ask session "show" (hasheq)))
+  (if (response-ok answer) (hash-ref (response-data answer) 'text "") ""))
+
 ;; answer-line turns one answer from the hot path into one line of text,
 ;; with the names in a fixed order, so two answers read the same way.
 (define (answer-line answer)
@@ -436,4 +442,5 @@
          run-command-words
          command-names
          answer-line
+         session-text
          ask)

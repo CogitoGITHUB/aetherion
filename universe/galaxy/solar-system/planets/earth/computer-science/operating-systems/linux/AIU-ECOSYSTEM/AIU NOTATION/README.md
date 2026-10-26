@@ -12,7 +12,7 @@ This README is the only documentation, for people and for AI agents. Humans can 
 top to bottom. An agent should read the sections "Writing pages" and "Working on the
 package" before doing anything.
 
-Status as of 2026-10-25: the core blocks (title, paragraph, section, code, comment) and
+Status as of 2026-10-26: the core blocks (title, paragraph, section, code, comment) and
 file types work and were run by hand. The status table near the end says what else is real.
 
 ## Quick start
@@ -117,6 +117,22 @@ A file type says which blocks a page may use. A page picks one with `kind: NAME`
 title start line, and `check` then rejects any block the type does not allow. No `kind:`
 line means no type check.
 
+A type can also demand sections. Its module exports `the-sections`, a list of section
+titles; a page of that type must hold a top-level `section` with each title, in that
+order (`section-missing`, `section-out-of-order`). Other sections may follow, and the
+starter page of the type already holds them. Types with sections: `decision` (Context,
+Options, Decision, Consequences), `plan` (Goal, Steps, Done when, Open questions),
+`research` (Abstract, Introduction, Methods, Results, Discussion, References), `module`
+(Purpose, Code). `note` allows no sections at all.
+
+A type can also carry contracts: its module exports `the-contracts`, a list of entries
+`(rule SECTION BLOCK NAME ARG)` and `(question SECTION BLOCK TEXT)`. SECTION is a section
+title, or `"*"` for any. A rule is deterministic and checked (`rule-violated`): `max-words`,
+`min-words`, `max-lines`, `must-match`, `must-not-match`, `needs-declaration`. A question is
+semantic: the checker cannot decide it, so it is reported as `question-unverified` only
+when `AIU_QUESTIONS=1`, for a person or an AI to judge. Nothing is ever edited to satisfy a
+contract. Every type carries contracts, and the gate fails for a type that has none: `decision`, `plan`, `research`, `module`, `note`, `book`, `journal`, `todo`, `default`.
+
 Run `aiu list` to see the blocks and the file types that exist now. The folder
 `types/` at the top of the repo holds one generated starter page per type. Never edit
 those by hand; look at them to see what a type allows.
@@ -139,6 +155,8 @@ To make a type:
    The fields are the name (what a page writes after `kind:`), a one-line description,
    and the allowed block names, or `#f` to allow any block. Only list blocks the parser
    knows, from the blocks table above.
+   To demand sections, also export `the-sections`, a list of titles (see `decision.rkt`).
+   Every type must also export `the-contracts` with at least one entry; the gate fails for a type without, so a new type needs its contracts before the gate is green.
 2. A type that needs more modules gets a folder instead: `notation/src/filetypes/types/NAME/type.rkt`
    provides `the-type`, starts with `(require "../_base.rkt")`, and keeps its other modules
    beside it (see `notation/src/filetypes/types/book/`). A name starting with an underscore
@@ -291,6 +309,10 @@ the kind, the line and what to do.
 | `bad-heading-level` | the `level:` of an old `heading` is not a whole number | write 1, 2, 3 |
 | `unknown-file-type` | `kind:` names a type that has no module | write an existing type, or make it |
 | `block-not-in-type` | the page uses a block its `kind:` does not allow | use an allowed block, or change the kind |
+| `section-missing` | the page's type requires a section title the page does not have | add a section with that title |
+| `section-out-of-order` | the required sections are not in the order the type lists them | reorder the sections |
+| `rule-violated` | a block breaks a rule in the `the-contracts` of its page's type | change the block; the checker never edits it |
+| `question-unverified` | a contract question applies to the block; only with `AIU_QUESTIONS=1` | have a person or an AI judge it |
 
 Other findings exist (`tag-names-nothing`, `property-no-value`, `link-no-target`); they
 come from earlier sessions and are unverified.
@@ -363,6 +385,8 @@ Do not: create files outside what the user asked for; edit anything under `notat
 | tables | the Rust parser accepts them; the name table of the checker does not |
 | literate code, JSON, todos, rich render, editor surface, security rules | written by earlier AI sessions, not verified by the author |
 | file types: `kind:` under the title, one module per type | works, run by hand 2026-10-25 |
+| required sections in file types (decision, plan, research, module, note) | works, run by hand 2026-10-26 |
+| block contracts: `the-contracts` in every type | works, run by hand and by the gate (filetypes-test) 2026-10-26; rules checked, questions only reported; viewer display not built |
 | inline bold, italic, links | not built |
 | math and graphs | far future |
 | including a block from another file | planned; needs authored ids |
@@ -395,6 +419,7 @@ notation system/   all the code; every command in this README runs from here
 
 - Gate: `gate/check.nu`, run with Nushell. It checks parentheses, names, dependency
   direction, the Rust/Racket split, module loading, comments, the file type tests and that the block names of the parser and the register agree, that every page checks clean and prints back exactly, and that the keyword lists agree.
+- The gate prints each stage header and its output as soon as that stage ends, not all at the end.
 - Keep this README short: change rows, never paste details here.
 
 Adding a feature:

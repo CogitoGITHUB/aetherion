@@ -1,0 +1,27 @@
+title start
+kind: default
+tags: default
+A new default page
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section start
+title start
+First section
+title end
+
+
+paragraph start
+Sections nest.
+paragraph end
+
+
+section end
+
+comment start
+any block is allowed
+comment end
+

@@ -18,41 +18,60 @@
 ;; raw, and the next run gives it back before it goes raw again.
 
 (require racket/list
+         racket/path
          racket/port
          racket/string
          "../narration/print-console.rkt"
          "../commands/commands.rkt"
          "../join/hot-path.rkt"
          "../join/protocol.rkt"
+         "../drawing/screen.rkt"
          "../machine/terminal.rkt"
          "../routes/keyboard.rkt"
          "../routes/keymaps.rkt"
          "../routes/routes.rkt"
          "../notation/document.rkt"
-         "../notation/host.rkt")
+         "../notation/host.rkt"
+         "../notation/where.rkt")
 
 ;; live-session runs the live session on a file: the terminal goes raw,
 ;; the keys are read and run, and the terminal is given back when the
 ;; session ends.
 (define (live-session file journal)
   (define session (make-session file journal))
-  ;; An AIU NOTATION page says what it is before the first key: the blocks it
-  ;; holds and the faults the parser found, in the same words the scripted
-  ;; session uses.
-  (when (string-suffix? (path->string file) ".aiu")
-    (define got (page-of file journal))
-    (print-line
-     (if (page? got)
-         (format "the page: ~a blocks, ~a faults (space b blocks, space k check, space r view)"
-                 (length (page-blocks got))
-                 (length (page-faults got)))
-         (page-refusal-text got)))
-    (when (page? got) (print-line (render-of file journal))))
+  ;; A person opens the editor to write, so the write layer is where the
+  ;; session starts: a letter is text at once. The tab starts the commands.
+  (set-layer! session "write")
   (raw-mode)
+  (display "\u001b[?1049h")
   (dynamic-wind
     (lambda () #f)
-    (lambda () (key-loop session (current-input-port)))
-    (lambda () (restore-settings))))
+    (lambda () (repaint session) (key-loop session (current-input-port)))
+    (lambda ()
+      (display "\u001b[?1049l")
+      (restore-settings))))
+
+;; repaint draws the whole screen for the session as it stands: the text with
+;; the cursor on the point, and the mode line naming the file, the layer, the
+;; line and the block the point is in.
+(define (repaint session)
+  (define-values (width height) (terminal-size))
+  (define text (session-text session))
+  (define name (path->string (session-file session)))
+  (define-values (row column) (point-line text (the-point session)))
+  (define where
+    (if (string-suffix? name ".aiu")
+        (let ([got (page-of (session-file session) (session-journal session))])
+          (if (page? got)
+              (let ([b (block-at got (the-point session))])
+                (format "  ~a  ~a blocks" (if b (block-name b) "-") (length (page-blocks got))))
+              ""))
+        ""))
+  (display
+   (paint text (the-point session) width height
+          (format "~a  ~a  ~a:~a~a" (file-name-from-path (session-file session))
+                  (the-layer session) row column where)))
+  (flush-output))
 
 ;; outcome is what one round of the loop did: the bytes that are left
 ;; for the next round, and whether the session goes on. The bytes are
@@ -88,6 +107,7 @@
           [(null? pending) (loop '())]
           [else
            (define result (act-on session pending))
+           (repaint session)
            (cond
              [(eq? (outcome-rest result) 'wait)
               (loop pending)]
@@ -161,7 +181,9 @@
 ;; is a space, so the live session hands the words over whole.
 (define (run-it-words session name words)
   (define answer (run-command-words session name words))
-  (unless (string=? (cdr answer) "")
+  ;; Typing is not narrated on the screen: the paint shows the text, and a
+  ;; line per letter would only be painted over. Every other answer is said.
+  (unless (or (string=? name "type") (string=? (cdr answer) ""))
     (print-line (cdr answer)))
   (car answer))
 

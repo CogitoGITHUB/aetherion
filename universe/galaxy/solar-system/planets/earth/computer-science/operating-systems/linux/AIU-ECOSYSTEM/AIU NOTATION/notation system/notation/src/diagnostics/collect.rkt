@@ -41,7 +41,11 @@
     link-no-target
     parser-recovery
     unknown-file-type
-    block-not-in-type))
+    block-not-in-type
+    section-missing
+    section-out-of-order
+    rule-violated
+    question-unverified))
 
 ;; link is the keyword a link declaration carries. A link is not a property:
 ;; a property is a hint for a reader, and a link names a target. The parser
@@ -81,8 +85,13 @@
                        (format "the kind ~a is not a file type; the types are ~a"
                                type-name (type-names))
                        "write one of the types, or add a module for it to filetypes/types/"))]
-       [(not (file-type-allowed-blocks found)) '()]
-       [else (append-map (lambda (n) (walk-type lines who found n)) nodes)])]))
+         [else
+          (append
+           (if (file-type-allowed-blocks found)
+               (append-map (lambda (n) (walk-type lines who found n)) nodes)
+               '())
+           (section-findings lines who found nodes)
+           (contract-findings lines who found nodes))])]))
 
 ;; walk-type reports every block under n that the file type does not allow.
 (define (walk-type lines who found n)
@@ -278,3 +287,179 @@
        (loop (cdr cs)
              (+ bytes (bytes-length (string->bytes/utf-8 (string (car cs)))))
              (add1 chars))])))
+;; read-page-text answers the text of the file a document names, or #f when there is no
+;; such file. A caller that holds only the document gives no page, so the section titles
+;; are read from the file instead.
+(define (read-page-text who)
+  (cond
+    [(and (string? who) (file-exists? who))
+     (bytes->string/utf-8
+      (call-with-input-file who (lambda (in) (read-bytes (file-size who) in)))
+      #\?)]
+    [else #f]))
+
+;; declaration-text? answers whether a line of text is a declaration: a registered keyword
+;; and a colon at the start of the line.
+(define (declaration-text? text)
+  (define m (regexp-match #px"^([a-z][a-z-]*):" text))
+  (and m (memq (string->symbol (cadr m)) property-keywords) #t))
+
+;; section-title-text reads the text of one title block from the page lines: the lines
+;; between its start line and its end line, without declaration lines, joined by spaces.
+(define (section-title-text lines t)
+  (define start (block-node-line t))
+  (define end (block-node-end-line t))
+  (define body
+    (if (and (>= start 1) (> end start) (<= end (length lines)))
+        (take (drop lines start) (- end start 1))
+        '()))
+  (string-trim
+   (string-join
+    (filter (lambda (s)
+              (not (or (string=? (string-trim s) "")
+                       (declaration-text? (string-trim s)))))
+            body)
+    " ")))
+
+;; page-section-titles lists the titles of the top-level sections of a page, in page order.
+(define (page-section-titles lines nodes)
+  (for/list ([n (in-list nodes)]
+             #:when (and (block-node? n) (eq? (block-node-name n) 'section)))
+    (define t
+      (for/first ([c (in-list (block-node-children n))]
+                  #:when (and (block-node? c) (eq? (block-node-name c) 'title)))
+        c))
+    (if t (section-title-text lines t) "")))
+
+;; section-findings checks the sections a file type requires. The type lists their titles
+;; in order; the page must hold a top-level section with each title, in that order. A
+;; missing section is one finding, and a wrong order is one finding. Other sections may
+;; follow. When the page text cannot be read, nothing is claimed.
+(define (section-findings lines who found nodes)
+  (define wanted (required-sections-of (file-type-name found)))
+  (define tl (or lines (let ([text (read-page-text who)]) (and text (page-lines text)))))
+  (cond
+    [(or (null? wanted) (not tl)) '()]
+    [else
+     (define type (file-type-name found))
+     (define top (for/first ([n (in-list nodes)] #:when (block-node? n)) n))
+     (define line (if top (block-node-line top) 0))
+     (define have (page-section-titles tl nodes))
+     (define missing (filter (lambda (t) (not (member t have))) wanted))
+     (define present (remove-duplicates (filter (lambda (t) (member t wanted)) have)))
+     (define expected (filter (lambda (t) (member t have)) wanted))
+     (append
+      (for/list ([t (in-list missing)])
+        (finding 'section-missing who line 0
+                 (format "a ~a page needs a section titled ~a" type t)
+                 (format "add a section whose title is ~a; a ~a page holds the sections ~a"
+                         t type wanted)))
+      (if (equal? present expected)
+          '()
+          (list (finding 'section-out-of-order who line 0
+                         (format "the sections of this ~a page are not in the order the type requires"
+                                 type)
+                         (format "put the sections in this order: ~a" wanted)))))]))
+
+;; block-raw-lines answers the lines between a block's start line and its end line.
+(define (block-raw-lines lines n)
+  (define start (block-node-line n))
+  (define end (block-node-end-line n))
+  (if (and (>= start 1) (> end start) (<= end (length lines)))
+      (take (drop lines start) (- end start 1))
+      '()))
+
+;; block-content-lines answers the raw lines of a block without blank and declaration lines.
+(define (block-content-lines lines n)
+  (filter (lambda (s)
+            (not (or (string=? (string-trim s) "")
+                     (declaration-text? (string-trim s)))))
+          (block-raw-lines lines n)))
+
+;; block-declared? answers whether a block carries a declaration with the keyword kw.
+(define (block-declared? lines n kw)
+  (define head
+    (takef (block-raw-lines lines n) (lambda (s) (declaration-text? (string-trim s)))))
+  (for/or ([s (in-list head)])
+    (string-prefix? (string-trim s) (string-append kw ":"))))
+
+;; placed-blocks lists every block that is not a section as (block . title of the section
+;; it sits in), in page order; the title is "" for a block outside any section.
+(define (placed-blocks lines nodes sec)
+  (append-map
+   (lambda (n)
+     (cond
+       [(not (block-node? n)) '()]
+       [(eq? (block-node-name n) 'section)
+        (define t
+          (for/first ([c (in-list (block-node-children n))]
+                      #:when (and (block-node? c) (eq? (block-node-name c) 'title)))
+            c))
+        (placed-blocks lines (block-node-children n) (if t (section-title-text lines t) ""))]
+       [else (list (cons n sec))]))
+   nodes))
+
+;; contract-applies? answers whether a contract names this block in this section; the
+;; section "*" means any section.
+(define (contract-applies? c n sec)
+  (and (equal? (symbol->string (block-node-name n)) (caddr c))
+       (or (equal? (cadr c) "*") (equal? (cadr c) sec))))
+
+;; rule-failure answers a sentence saying how a block breaks a deterministic rule, or #f
+;; when the block keeps it.
+(define (rule-failure lines n name arg)
+  (define ls (block-content-lines lines n))
+  (define text (string-join ls " "))
+  (define words (length (string-split text)))
+  (case name
+    [(max-words) (and (> words arg) (format "has ~a words, the most allowed is ~a" words arg))]
+    [(min-words) (and (< words arg) (format "has ~a words, the least allowed is ~a" words arg))]
+    [(max-lines) (and (> (length ls) arg)
+                      (format "has ~a lines, the most allowed is ~a" (length ls) arg))]
+    [(must-match) (and (not (regexp-match? (pregexp arg) text))
+                       (format "does not match ~a" arg))]
+    [(must-not-match) (and (regexp-match? (pregexp arg) text)
+                           (format "must not match ~a" arg))]
+    [(needs-declaration) (and (not (block-declared? lines n arg))
+                              (format "has no ~a: declaration" arg))]
+    [else (format "is governed by the unknown rule ~a" name)]))
+
+;; where-text names the place a contract speaks about.
+(define (where-text sec)
+  (if (equal? sec "") "the page" (format "the section ~a" sec)))
+
+;; check-placed answers the findings of every contract that applies to one block. Rules
+;; are checked always. Questions are semantic: the checker cannot answer them, so they
+;; are reported as unverified, and only when AIU_QUESTIONS is 1.
+(define (check-placed lines who cs ask? n sec)
+  (append-map
+   (lambda (c)
+     (cond
+       [(not (contract-applies? c n sec)) '()]
+       [(eq? (car c) 'rule)
+        (define bad (rule-failure lines n (cadddr c) (list-ref c 4)))
+        (if bad
+            (list (finding 'rule-violated who (block-node-line n) 0
+                           (format "a ~a block in ~a ~a" (caddr c) (where-text sec) bad)
+                           (format "change the block so the rule ~a ~a holds; the checker never edits it"
+                                   (cadddr c) (list-ref c 4))))
+            '())]
+       [(and (eq? (car c) 'question) ask?)
+        (list (finding 'question-unverified who (block-node-line n) 0
+                       (format "a ~a block in ~a must answer: ~a (the checker cannot verify this)"
+                               (caddr c) (where-text sec) (cadddr c))
+                       "have a person or an AI judge the block against the question"))]
+       [else '()]))
+   cs))
+
+;; contract-findings checks the contracts of the page's file type against the page. A type
+;; without contracts, or a page whose text cannot be read, gives no findings.
+(define (contract-findings lines who found nodes)
+  (define cs (contracts-of (file-type-name found)))
+  (define tl (or lines (let ([text (read-page-text who)]) (and text (page-lines text)))))
+  (cond
+    [(or (null? cs) (not tl)) '()]
+    [else
+     (define ask? (equal? (getenv "AIU_QUESTIONS") "1"))
+     (append-map (lambda (p) (check-placed tl who cs ask? (car p) (cdr p)))
+                 (placed-blocks tl nodes ""))]))

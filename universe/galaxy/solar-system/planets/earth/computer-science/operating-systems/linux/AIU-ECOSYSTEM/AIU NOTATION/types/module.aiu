@@ -1,0 +1,36 @@
+title start
+kind: module
+tags: module
+A new module page
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section start
+title start
+Purpose
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+section start
+title start
+Code
+title end
+
+paragraph start
+Write here.
+paragraph end
+
+section end
+
+comment start
+a purpose, then the code
+comment end
+
