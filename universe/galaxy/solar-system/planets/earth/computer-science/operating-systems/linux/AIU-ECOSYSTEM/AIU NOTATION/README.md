@@ -241,10 +241,8 @@ Fix one error at a time from the top. Later ones may disappear.
 | `aiu update` from upstream | planned |
 | kit: MCP server, skill, plugin | planned |
 
-Known gaps:
+Known gaps: none.
 
-- The viewer and the checker keep separate keyword lists; the gate stage `keywords` fails when they differ.
-- Underline under a numbered heading is one character too long (`--flat` only; the boxes have none).
 
 ## 13. Repo map
 

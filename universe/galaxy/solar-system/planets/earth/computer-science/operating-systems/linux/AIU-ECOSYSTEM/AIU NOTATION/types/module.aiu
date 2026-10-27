@@ -1,11 +1,11 @@
 title start
 kind: module
 tags: module
-A new module page
+Module page: a piece of code, explained before it is shown
 title end
 
 paragraph start
-Write here.
+Use a module page to document one piece of code so it can be understood without running it. Say what it is for first, then show it.
 paragraph end
 
 section start
@@ -14,7 +14,7 @@ Purpose
 title end
 
 paragraph start
-Write here.
+Say what problem this code solves and what it leaves out. Keep it short. If you cannot state the purpose in a few sentences, the module is doing too much.
 paragraph end
 
 section end
@@ -25,8 +25,14 @@ Code
 title end
 
 paragraph start
-Write here.
+The code goes in a code block, with its language written under the start line. Below is a tiny example.
 paragraph end
+
+code start
+language: racket
+(define (greet name)
+  (string-append "hello " name))
+code end
 
 section end
 

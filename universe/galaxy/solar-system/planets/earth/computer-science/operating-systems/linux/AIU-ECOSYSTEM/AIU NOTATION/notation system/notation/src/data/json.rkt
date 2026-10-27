@@ -383,9 +383,7 @@
 
 ;; The keywords a declaration may carry that the data area reads. A line whose
 ;; keyword is not one of these is content, not data.
-(define data-keywords
-  '(tags language style theme color format font level
-         caption column cell row-id meta todo kind))
+(define data-keywords property-keywords)
 
 ;; document->json turns a parsed document into the JSON value that stands for
 ;; it: an array holding one object per top-level block, in the order the

@@ -1,11 +1,11 @@
 title start
 kind: decision
 tags: decision
-A new decision page
+Decision page: record one choice and why
 title end
 
 paragraph start
-Write here.
+Use a decision page when you choose between options and want the reason to survive. Fill each section below and replace this text with your own.
 paragraph end
 
 section start
@@ -14,7 +14,7 @@ Context
 title end
 
 paragraph start
-Write here.
+Say what forces the choice now: the problem, the limits, and what happens if nothing changes. Write it so a stranger understands it a year from now. Keep it short and factual.
 paragraph end
 
 section end
@@ -25,7 +25,7 @@ Options
 title end
 
 paragraph start
-Write here.
+List the realistic ways to solve it, one sentence each, and say which you rejected and why. A rejected option written down stops the same argument from coming back.
 paragraph end
 
 section end
@@ -36,7 +36,7 @@ Decision
 title end
 
 paragraph start
-Write here.
+State the one choice you made, in a sentence someone can act on. No hedging and no list of maybes.
 paragraph end
 
 section end
@@ -47,7 +47,7 @@ Consequences
 title end
 
 paragraph start
-Write here.
+Say what becomes easier, and above all what becomes harder, because of this choice. This is the part you will be glad to have in a year.
 paragraph end
 
 section end

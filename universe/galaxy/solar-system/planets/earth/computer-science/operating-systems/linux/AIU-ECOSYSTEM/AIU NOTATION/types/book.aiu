@@ -1,11 +1,11 @@
 title start
 kind: book
 tags: book
-A new book page
+Book page: a chapter of sections and prose
 title end
 
 paragraph start
-Write here.
+Use a book page for long writing: a chapter, a guide or an essay. The title names the chapter and each section covers one part of it.
 paragraph end
 
 section start
@@ -14,7 +14,7 @@ First section
 title end
 
 paragraph start
-Sections nest.
+A section develops one idea over a few paragraphs. Keep each paragraph to a single point a reader could restate, and start a new section when the idea changes.
 paragraph end
 
 section end

@@ -1,0 +1,59 @@
+title start
+kind: default
+tags: comment todo
+Comments and todo marks on blocks
+title end
+
+paragraph start
+This page shows two features. A comment can be attached to one block or to several blocks at once. A todo mark puts the word TODO down the left edge of any block.
+paragraph end
+
+section start
+title start
+A comment on one block
+title end
+
+paragraph start
+Install the tool on a clean machine and run the checker on one page.
+comment start
+This comment sits inside the paragraph it belongs to. The viewer draws it as its own box inside that block, so you see at once what it is about.
+comment end
+paragraph end
+section end
+
+section start
+title start
+A comment on two blocks
+title end
+
+comment start
+One comment for both paragraphs below. Write the note first, then put the blocks it covers inside the comment.
+
+paragraph start
+First block covered by the comment.
+paragraph end
+
+paragraph start
+Second block covered by the same comment.
+paragraph end
+comment end
+section end
+
+section start
+title start
+A todo mark
+title end
+
+paragraph start
+todo: open
+Write the install guide.
+comment start
+todo: open draws TODO in red down the left side of the block.
+comment end
+paragraph end
+
+paragraph start
+todo: done
+Fix the viewer so block names sit on the left.
+paragraph end
+section end

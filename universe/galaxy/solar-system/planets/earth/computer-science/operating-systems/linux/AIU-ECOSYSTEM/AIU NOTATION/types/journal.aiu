@@ -1,11 +1,11 @@
 title start
 kind: journal
 tags: journal
-A new journal page
+Journal page: dated entries in plain prose
 title end
 
 paragraph start
-Write here.
+Use a journal page to write what happened and what you learned, one section per day or topic. Put the date or the topic in each section title.
 paragraph end
 
 section start
@@ -14,7 +14,7 @@ First section
 title end
 
 paragraph start
-Sections nest.
+Write what happened, what you decided and what you learned, in plain sentences. Do not tidy it. A later reader needs the facts and the reason more than good style.
 paragraph end
 
 section end

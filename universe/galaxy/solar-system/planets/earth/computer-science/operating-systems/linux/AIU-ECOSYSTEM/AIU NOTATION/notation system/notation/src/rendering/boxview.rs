@@ -105,6 +105,11 @@ fn clip(s: &str, n: usize) -> String {
     t
 }
 
+/// Title lettering: capitals with a space between letters and three between words.
+fn big(s: &str) -> String {
+    s.to_uppercase().split_whitespace().map(|w| w.chars().map(|c| c.to_string()).collect::<Vec<_>>().join(" ")).collect::<Vec<_>>().join("   ")
+}
+
 /// A divider line inside a box.
 fn divider() -> L {
     L { s: String::new(), n: 0, sep: true }
@@ -221,13 +226,16 @@ impl Boxes {
         let room = w.saturating_sub(2).max(8);
         for (k, l) in wrap(text, room).iter().enumerate() {
             let lead = if k == 0 { mark } else { "  " };
-            res.push(self.line(codes, &format!("{}{}", lead, clip(l, room))));
+            let mut x = self.line(codes, &format!("{}{}", lead, clip(l, room)));
+            x.s.push_str(&" ".repeat(w.saturating_sub(x.n)));
+            x.n = w.max(x.n);
+            res.push(x);
         }
         res
     }
 
     /// Draw a box of the given total width around the inner lines, with the label in its top edge.
-    fn frame(&self, label: &str, tcodes: &[u32], inner: Vec<L>, w: usize, heavy: bool) -> Vec<L> {
+    fn frame(&self, label: &str, tcodes: &[u32], inner: Vec<L>, w: usize, heavy: bool, center: bool) -> Vec<L> {
         let (tl, tr, bl, br, h, v, ml, mr) = if heavy {
             ("╔", "╗", "╚", "╝", "═", "║", "╠", "╣")
         } else {
@@ -235,19 +243,21 @@ impl Boxes {
         };
         let w = w.max(10);
         let lab = clip(label, w - 6);
-        let dashes = w - lab.chars().count() - 5;
+        let fill = w - lab.chars().count() - 4;
+        let (dl, dr) = (1, fill - 1);
         let mut res: Vec<L> = Vec::new();
-        let top = format!("{}{}{}{}{}",
-            self.sgr(&[2], &format!("{}{} ", tl, h)), self.sgr(tcodes, &lab),
-            self.sgr(&[2], " "), self.sgr(&[2], &h.repeat(dashes)), self.sgr(&[2], tr));
+        let top = format!("{}{}{}{}",
+            self.sgr(&[2], &format!("{}{} ", tl, h.repeat(dl))), self.sgr(tcodes, &lab),
+            self.sgr(&[2], &format!(" {}", h.repeat(dr))), self.sgr(&[2], tr));
         res.push(L { s: top, n: w, sep: false });
         for l in inner {
             if l.sep {
                 let s = self.sgr(&[2], &format!("{}{}{}", ml, h.repeat(w - 2), mr));
                 res.push(L { s, n: w, sep: false });
             } else {
-                let pad = " ".repeat((w - 4).saturating_sub(l.n));
-                let s = format!("{}{}{}{}", self.sgr(&[2], &format!("{} ", v)), l.s, pad, self.sgr(&[2], &format!(" {}", v)));
+                let room = (w - 4).saturating_sub(l.n);
+                let (lp, rp) = if center { (room / 2, room - room / 2) } else { (0, room) };
+                let s = format!("{}{}{}{}{}", self.sgr(&[2], &format!("{} ", v)), " ".repeat(lp), l.s, " ".repeat(rp), self.sgr(&[2], &format!(" {}", v)));
                 res.push(L { s, n: w, sep: false });
             }
         }
@@ -390,12 +400,13 @@ impl Boxes {
         if inner.is_empty() {
             inner.push(self.line(&[], ""));
         }
-        self.frame(&format!("section {} · {}", num, ttext), &codes, inner, width, false)
+        self.frame(&format!("section {} · {}", num, ttext), &codes, inner, width, false, true)
     }
 
     /// Draw one block as a box, with its contract rows under it when contracts are shown.
     fn draw(&mut self, b: &Block, sec: &str, depth: usize, width: usize) -> Vec<L> {
-        let iw = width.saturating_sub(4);
+        let todo = decl(b, "todo");
+        let iw = width.saturating_sub(if todo.is_some() { 6 } else { 4 });
         let mut inner: Vec<L> = Vec::new();
         let mut label = b.name.clone();
         let mut tcodes: Vec<u32> = vec![1];
@@ -405,7 +416,11 @@ impl Boxes {
                 let text = self.text_of(b);
                 let mut codes: Vec<u32> = vec![1, 33];
                 codes.extend(self.style(b));
-                inner.extend(self.wrapped(&codes, &text, iw));
+                let first = depth == 0 && !self.seen_title;
+                let tl: Vec<String> = if first { wrap(&text, (iw / 2).saturating_sub(2)).iter().map(|l| big(l)).collect() } else { wrap(&text, iw) };
+                if first { inner.push(self.line(&[], "")); }
+                for l in tl { inner.push(self.line(&codes, &clip(&l, iw))); }
+                if first { inner.push(self.line(&[], "")); }
                 if depth == 0 && !self.seen_title {
                     self.seen_title = true;
                     if let Some(k) = decl(b, "kind").filter(|k| !k.is_empty()) {
@@ -417,7 +432,13 @@ impl Boxes {
                 }
             }
             "paragraph" | "comment" => {
-                let codes = self.style(b);
+                let mut codes = self.style(b);
+                if b.name == "comment" {
+                    codes = vec![2, 33];
+                    tcodes = vec![2, 33];
+                    let n = b.children.iter().filter(|c| matches!(c, Node::Block(_))).count();
+                    label = if n == 0 { "comment".to_string() } else { format!("comment · on {} block{}", n, if n == 1 { "" } else { "s" }) };
+                }
                 for (k, g) in groups(&self.body(b)).iter().enumerate() {
                     if k > 0 {
                         inner.push(self.line(&[], ""));
@@ -447,6 +468,15 @@ impl Boxes {
                 }
             }
         }
+        if b.children.iter().any(|n| matches!(n, Node::Block(_))) {
+            let kids = self.nodes(&b.children, usize::MAX, sec, depth + 1, iw);
+            if !kids.is_empty() {
+                if !inner.is_empty() {
+                    inner.push(self.line(&[], ""));
+                }
+                inner.extend(kids);
+            }
+        }
         if inner.is_empty() {
             inner.push(self.line(&[], ""));
         }
@@ -455,7 +485,35 @@ impl Boxes {
             inner.push(divider());
             inner.extend(rows);
         }
-        self.frame(&label, &tcodes, inner, width, false)
+        let center = b.name != "code";
+        match todo {
+            Some(v) => self.todo_side(&label, &tcodes, inner, width, center, &v),
+            None => self.frame(&label, &tcodes, inner, width, false, center),
+        }
+    }
+
+    /// Draw a block box with the word TODO (or DONE) running down its left edge, one letter per line.
+    fn todo_side(&self, label: &str, tcodes: &[u32], inner: Vec<L>, width: usize, center: bool, v: &str) -> Vec<L> {
+        let done = v.trim() == "done";
+        let word: Vec<char> = if done { "DONE" } else { "TODO" }.chars().collect();
+        let col: u32 = if done { 32 } else { 31 };
+        let mut inner = inner;
+        while inner.iter().filter(|l| !l.sep).count() < word.len() {
+            inner.push(self.line(&[], ""));
+        }
+        let mut out: Vec<L> = Vec::new();
+        let mut k = 0usize;
+        for l in inner {
+            if l.sep {
+                out.push(l);
+                continue;
+            }
+            let ch = if k < word.len() { word[k].to_string() } else { " ".to_string() };
+            k += 1;
+            let g = format!("{}{}", self.sgr(&[1, col], &ch), self.sgr(&[2], "│"));
+            out.push(L { s: format!("{}{}", g, l.s), n: l.n + 2, sep: false });
+        }
+        self.frame(label, tcodes, out, width, false, center)
     }
 }
 
@@ -537,7 +595,7 @@ pub fn render_boxes(text: &str, width: usize, plain: bool, contracts: bool) -> S
             }
         }
         let label = match &kind { Some(k) => format!("CONTRACTS · {}", k), None => "CONTRACTS".to_string() };
-        for l in v.frame(&label, &[1, 36], inner, wd, true) {
+        for l in v.frame(&label, &[1, 36], inner, wd, true, true) {
             out.push_str(&l.s);
             out.push_str("\n");
         }

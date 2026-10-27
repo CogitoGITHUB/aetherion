@@ -1,11 +1,11 @@
 title start
 kind: default
 tags: default
-A new default page
+Default page: any block, when no other type fits
 title end
 
 paragraph start
-Write here.
+The default type allows every block and has no required sections. Use it for pages that do not fit a type, and pick a stricter type when one does.
 paragraph end
 
 section start
@@ -14,8 +14,13 @@ First section
 title end
 
 paragraph start
-Sections nest.
+A section groups blocks under one title. This one holds a paragraph and a code block, with the language written under the start line.
 paragraph end
+
+code start
+language: racket
+(display "hello")
+code end
 
 section end
 

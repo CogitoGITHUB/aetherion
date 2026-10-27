@@ -1,11 +1,15 @@
 title start
 kind: note
 tags: note
-A new note page
+Note page: one idea in a few paragraphs
 title end
 
 paragraph start
-Write here.
+Use a note page to capture one idea. It has a title and paragraphs, and it cannot hold sections, so it stays small. If the idea grows, move it to a bigger page type.
+paragraph end
+
+paragraph start
+Write the idea so a reader could restate it in one sentence, and keep each paragraph to one point.
 paragraph end
 
 comment start

@@ -1,11 +1,11 @@
 title start
 kind: research
 tags: research
-A new research page
+Research page: a question, how you tested it, what you found
 title end
 
 paragraph start
-Write here.
+Use a research page when you investigate one question and want a reader to find the method and the results without reading everything. Replace each section text with your own.
 paragraph end
 
 section start
@@ -14,7 +14,7 @@ Abstract
 title end
 
 paragraph start
-Write here.
+Summarise the whole page in a few sentences: the question, the method, the result and one limit. Write it last. A reader who stops here should still know what you found.
 paragraph end
 
 section end
@@ -25,7 +25,7 @@ Introduction
 title end
 
 paragraph start
-Write here.
+Say what the question is and why it matters. Name what is already known and what is missing, so the reader sees where your work fits.
 paragraph end
 
 section end
@@ -36,7 +36,7 @@ Methods
 title end
 
 paragraph start
-Write here.
+Describe what you did so a reader could repeat it from this text alone: the material, the steps and the tools. Put commands or code in a code block.
 paragraph end
 
 section end
@@ -47,7 +47,7 @@ Results
 title end
 
 paragraph start
-Write here.
+Report what you found, without opinion. Every claim must point to evidence such as a number, a quote or a file. Leave the meaning for the next section.
 paragraph end
 
 section end
@@ -58,7 +58,7 @@ Discussion
 title end
 
 paragraph start
-Write here.
+Say what the results mean, what they do not show, and what to test next. Be honest about limits and about anything that surprised you.
 paragraph end
 
 section end
@@ -69,7 +69,7 @@ References
 title end
 
 paragraph start
-Write here.
+List every source you cited, one per line, with enough detail to find it again. A source in the text must appear here.
 paragraph end
 
 section end

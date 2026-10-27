@@ -1,11 +1,11 @@
 title start
 kind: todo
 tags: todo
-A new todo page
+Todo page: tasks grouped in sections
 title end
 
 paragraph start
-Write here.
+Use a todo page for tasks. Each task is one short paragraph, and sections group them by theme.
 paragraph end
 
 section start
@@ -14,7 +14,11 @@ First section
 title end
 
 paragraph start
-Sections nest.
+Write one task per paragraph, as one action that can be finished and checked.
+paragraph end
+
+paragraph start
+Keep it under forty words. If a task needs more, split it into two tasks.
 paragraph end
 
 section end

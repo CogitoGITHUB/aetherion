@@ -3,7 +3,7 @@
 # Called by: cable/*.toml, cable/*.sh, pick.sh. Usage: preview-fit.sh FILE [--contracts] | preview-fit.sh --width
 c=$(stty size </dev/tty 2>/dev/null); c=${c#* }
 case $c in ""|*[!0-9]*) c=56 ;; esac
-w=$((c - 6)); [ "$w" -lt 30 ] && w=30
+w=$((c - 3)); [ "$w" -lt 30 ] && w=30
 if [ "$1" = "--width" ]; then echo "$w"; exit 0; fi
 [ -f "$1" ] || { echo "no such file: $1"; exit 0; }
 here=$(cd "${0%/*}" && pwd)

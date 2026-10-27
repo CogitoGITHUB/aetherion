@@ -1,11 +1,11 @@
 title start
 kind: plan
 tags: plan
-A new plan page
+Plan page: a goal, the steps, and when it is done
 title end
 
 paragraph start
-Write here.
+Use a plan page for work that has an end. It forces you to say what finished means, so the plan cannot be silently dropped.
 paragraph end
 
 section start
@@ -14,7 +14,7 @@ Goal
 title end
 
 paragraph start
-Write here.
+Write the outcome as one sentence, not an activity. Say what will be true when you are finished, for example a result someone could look at.
 paragraph end
 
 section end
@@ -25,7 +25,11 @@ Steps
 title end
 
 paragraph start
-Write here.
+Write each step as one action that can be finished and checked, one paragraph per step.
+paragraph end
+
+paragraph start
+Put the steps in the order you will do them. If a step needs two actions, split it.
 paragraph end
 
 section end
@@ -36,7 +40,7 @@ Done when
 title end
 
 paragraph start
-Write here.
+Write the test that proves the goal is reached, so someone else could run it without asking you.
 paragraph end
 
 section end
@@ -47,7 +51,7 @@ Open questions
 title end
 
 paragraph start
-Write here.
+List what you do not know yet, and who can answer each question. Remove a question once it is answered.
 paragraph end
 
 section end
