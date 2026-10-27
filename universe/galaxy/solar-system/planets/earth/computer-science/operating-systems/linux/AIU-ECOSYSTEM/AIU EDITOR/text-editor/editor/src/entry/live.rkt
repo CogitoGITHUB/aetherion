@@ -39,6 +39,10 @@
 ;; session ends.
 (define (live-session file journal)
   (define session (make-session file journal))
+  ;; The viewport is the first text line shown at the top of the screen. It
+  ;; is kept here, and it changes only when the point leaves the window, so a
+  ;; moving point does not drag the page under it.
+  (define viewport (box 1))
   ;; A person opens the editor to write, so the write layer is where the
   ;; session starts: a letter is text at once. The tab starts the commands.
   (set-layer! session "write")
@@ -46,19 +50,23 @@
   (display "\u001b[?1049h")
   (dynamic-wind
     (lambda () #f)
-    (lambda () (repaint session) (key-loop session (current-input-port)))
+    (lambda ()
+      (repaint session viewport)
+      (key-loop session (current-input-port) viewport))
     (lambda ()
       (display "\u001b[?1049l")
       (restore-settings))))
 
-;; repaint draws the whole screen for the session as it stands: the text with
-;; the cursor on the point, and the mode line naming the file, the layer, the
-;; line and the block the point is in.
-(define (repaint session)
+;; repaint draws the whole screen for the session as it stands: the text from
+;; the first visible line, the cursor on the point, and the mode line on the
+;; last row of the terminal naming the file, the layer, the line and the block
+;; the point is in. The window moves only when the point would leave it.
+(define (repaint session viewport)
   (define-values (width height) (terminal-size))
   (define text (session-text session))
   (define name (path->string (session-file session)))
   (define-values (row column) (point-line text (the-point session)))
+  (define top (viewport-top viewport row (max 1 (- height 1))))
   (define where
     (if (string-suffix? name ".aiu")
         (let ([got (page-of (session-file session) (session-journal session))])
@@ -68,10 +76,24 @@
               ""))
         ""))
   (display
-   (paint text (the-point session) width height
+   (paint text (the-point session) width height top
           (format "~a  ~a  ~a:~a~a" (file-name-from-path (session-file session))
                   (the-layer session) row column where)))
   (flush-output))
+
+;; viewport-top answers the first line shown at the top of the screen: the
+;; window is left alone while the point is inside it, and it moves just enough
+;; when the point leaves it. The answer is stored too, so the next key sees the
+;; window this key left, and a moving point never drags the page under itself.
+(define (viewport-top viewport row visible)
+  (define shown (unbox viewport))
+  (define next
+    (cond
+      [(< row shown) row]
+      [(>= row (+ shown visible)) (max 1 (- row (sub1 visible)))]
+      [else shown]))
+  (set-box! viewport next)
+  next)
 
 ;; outcome is what one round of the loop did: the bytes that are left
 ;; for the next round, and whether the session goes on. The bytes are
@@ -97,7 +119,7 @@
 ;; so a key that is the start of a sequence is seen whole. Everything that is
 ;; already in the buffer is walked before the read waits again, so a paste is
 ;; typed in the order it was pasted.
-(define (key-loop session port)
+(define (key-loop session port viewport)
   (define chunk (make-bytes 1024))
   (let loop ([buffer '()])
     (define arrived (read-available port chunk))
@@ -107,7 +129,7 @@
           [(null? pending) (loop '())]
           [else
            (define result (act-on session pending))
-           (repaint session)
+           (repaint session viewport)
            (cond
              [(eq? (outcome-rest result) 'wait)
               (loop pending)]

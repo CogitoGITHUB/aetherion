@@ -2,9 +2,16 @@
 ;; One job: the screen — the text, the cursor on the point, the mode line.
 ;; Registered in plan/package-tree.org; lands with TODO item 21.
 ;;
-;; A painter and nothing else: it takes the text, where the point is and what
-;; the mode line says, and answers the one string the terminal prints. It
-;; reads no file and asks no engine, so a paint cannot change anything.
+;; A painter and nothing else: it takes the text, where the point is, the
+;; first line of the window and what the mode line says, and answers the one
+;; string the terminal prints. It reads no file and asks no engine, so a paint
+;; cannot change anything.
+;;
+;; The point is a BYTE offset (the hot path counts bytes) and the screen counts
+;; characters, so the two are converted here and nowhere else. The mode line
+;; sits on the LAST row of the terminal, and the text never moves on its own:
+;; the caller decides the first visible line, and the cursor is always drawn on
+;; the row the text of the point is on.
 ;;
 ;; The paint is a full redraw: the screen is cleared and written whole. Slower
 ;; than changing a line, and always right.
@@ -23,15 +30,32 @@
 (define (cursor-to row column)
   (ansi (format "~a;~aH" row column)))
 
-;; point-line answers the line and column the point is on, both 1-based,
-;; counted in characters.
+;; decode-prefix answers the first N bytes of a text as a string. A byte that
+;; lands inside a character is rounded down to that character's first byte, so
+;; a point in the middle of a character is still a point on the screen.
+(define (decode-prefix bytes n)
+  (let loop ([take (min (max n 0) (bytes-length bytes))])
+    (cond
+      [(<= take 0) ""]
+      [else
+       (with-handlers ([exn:fail? (lambda (e) (loop (sub1 take)))])
+         (bytes->string/utf-8 (subbytes bytes 0 take)))])))
+
+;; point-line answers the line and column the point is on, both 1-based, and
+;; the column counted in characters. The point is a byte offset into the text's
+;; UTF-8 bytes; a point at the start of a line is on THAT line, never on the
+;; line before it.
 (define (point-line text point)
-  (define at (min (max point 0) (string-length text)))
-  (define before (substring text 0 at))
-  (define rows (string-split before "\n"))
-  (if (null? rows)
-      (values 1 0)
-      (values (length rows) (string-length (car (reverse rows))))))
+  (define bytes (string->bytes/utf-8 text))
+  (define before (decode-prefix bytes point))
+  (define newlines
+    (for/sum ([ch (in-string before)]) (if (char=? ch #\newline) 1 0)))
+  (define last-start
+    (for/fold ([start 0])
+              ([ch (in-string before)]
+               [i (in-naturals)])
+      (if (char=? ch #\newline) (add1 i) start)))
+  (values (add1 newlines) (- (string-length before) last-start)))
 
 ;; fit answers one line cut or padded to exactly width characters.
 (define (fit line width)
@@ -40,25 +64,27 @@
     [(>= (string-length clean) width) (substring clean 0 width)]
     [else (string-append clean (make-string (- width (string-length clean)) #\space))]))
 
-;; paint answers the whole screen for one state: the text scrolled so the
-;; point is visible, the mode line under the text, the cursor on the point.
-;; The caller prints the answer; nothing here writes to the terminal.
-(define (paint text point width height mode-line)
-  (define rows (string-split text "\n"))
+;; paint answers the whole screen for one state: the text from the first
+;; visible line, blank rows filling the window, the mode line on the last row,
+;; and the cursor on the point. A point outside the window is clamped into it,
+;; so the cursor is never drawn on the mode line.
+(define (paint text point width height top mode-line)
+  (define rows (string-split text "\n" #:trim? #f))
+  (define visible (max 1 (- height 1)))
+  (define top-line (max 1 (min top (max 1 (length rows)))))
   (define-values (row column) (point-line text point))
-  (define visible (max 1 (- height 2)))
-  (define first-row (max 1 (- row (quotient visible 2))))
-  (define start (max 0 (sub1 first-row)))
+  (define cursor-row (max top-line (min row (+ top-line (sub1 visible)))))
   (define shown
-    (for/list ([i (in-range visible)] #:when (< (+ start i) (length rows)))
-      (list-ref rows (+ start i))))
+    (for/list ([i (in-range visible)])
+      (define number (+ top-line i))
+      (if (<= number (length rows)) (list-ref rows (sub1 number)) "")))
   (string-join
    (append
     (list clear-screen)
-    (for/list ([line (in-list shown)] [i (in-naturals 1)])
+    (for/list ([line (in-list shown)])
       (string-append (fit line width) "\n"))
     (list (ansi "7m") (fit mode-line width) (ansi "27m")
-          (cursor-to (- row (sub1 first-row)) (+ column 1))))
+          (cursor-to (- cursor-row top-line -1) (+ column 1))))
    ""))
 
 ;; The painter, for the session above it.

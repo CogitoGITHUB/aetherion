@@ -116,15 +116,32 @@
         (cons #t (answer-line answer)))
       (cons #t "the text could not be inserted")))
 
-;; command-delete takes one character out of the buffer, before the
-;; cursor, and journals the edit.
+;; command-delete takes the character BEFORE the cursor out of the buffer,
+;; and journals the edit. The start of that character is asked of the hot
+;; path (the "move" left answer), so a character of several bytes is taken
+;; whole and never split: the buffer is bytes, and a point inside a
+;; character is not a point. The point moves back with the character, so a
+;; second backspace takes the one before it. At the start of the text there
+;; is nothing before the point, and the command says so instead of taking
+;; the character in front of it.
 (define (command-delete session words)
   (define at (the-point session))
-  (define answer
-    (ask session "delete-at" (hasheq 'at (number->string at) 'count "1")))
-  (if (response-ok answer)
-      (cons #t (answer-line answer))
-      (cons #t "the text could not be deleted")))
+  (if (zero? at)
+      (cons #t "the point is at the start: there is nothing before it to delete")
+      (let* ([left (ask session "move"
+                        (hasheq 'at (number->string at) 'direction "left"))]
+             [before (if (response-ok left)
+                         (string->number (hash-ref (response-data left) 'at
+                                                   (number->string (sub1 at))))
+                         (sub1 at))]
+             [answer (ask session "delete-at"
+                          (hasheq 'at (number->string before)
+                                  'count (number->string (- at before))))])
+        (if (response-ok answer)
+            (begin
+              (move-to session before)
+              (cons #t (answer-line answer)))
+            (cons #t "the text could not be deleted")))))
 
 ;; command-select turns the selection on where the cursor stands, and
 ;; answers the text of the region.
