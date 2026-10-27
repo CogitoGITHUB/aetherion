@@ -8,7 +8,7 @@ display = "{}"
 output = "{}"
 
 [preview]
-command = 'bash aiu-type-preview.sh "{}"'
+command = 'bash aiu-type-preview-fit.sh "{}"'
 
 [keybindings]
 enter = "actions:pick"

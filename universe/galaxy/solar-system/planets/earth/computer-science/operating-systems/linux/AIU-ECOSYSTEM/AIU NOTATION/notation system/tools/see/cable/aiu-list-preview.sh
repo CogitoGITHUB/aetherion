@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# aiu-list-preview.sh: details for the aiu list menus, read from the code.
+# aiu-list-preview-fit.sh: details for the aiu list menus, read from the code.
 # Called by: cable/aiu-list-kind.toml, aiu-list-blocks.toml, aiu-list-types.toml. Arguments: kind (kind, block or type), entry.
 d=$(cd "$(dirname "$0")" && pwd)
 ns=$(cd "$d/../../.." && pwd)
 export AIU_NOTATION_ROOT=$ns
-w=$(bash "$d/../fitwidth.sh")
+w=$(bash "$d/../preview-fit.sh" --width)
 src="$ns/notation/src"
 t="$src/filetypes/types"
 kind=$1
@@ -40,7 +40,7 @@ block)
     if [ -n "$r" ]; then echo "$r"; else echo "(not registered: parsed only)"; fi
   } | fold -s -w "$w" ;;
 *)
-  if [ "$name" = "new-type" ]; then bash "$d/aiu-type-preview.sh" new-type; exit 0; fi
+  if [ "$name" = "new-type" ]; then bash "$d/aiu-type-preview-fit.sh" new-type; exit 0; fi
   e="$t/$name.rkt"; [ -e "$e" ] || e="$t/$name"
   {
     echo "TYPE $name"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # aiu-list.sh: prints the entries of one aiu list, one name per line.
-# Called by: cable/aiu-list-blocks.toml, cable/aiu-list-types.toml and aiu-list-preview.sh.
+# Called by: cable/aiu-list-blocks.toml, cable/aiu-list-types.toml and aiu-list-preview-fit.sh.
 # Argument: blocks, types, blocks-only or types-only; the first two add the entry new-block or new-type.
 d=$(cd "$(dirname "$0")" && pwd)
 ns=$(cd "$d/../../.." && pwd)

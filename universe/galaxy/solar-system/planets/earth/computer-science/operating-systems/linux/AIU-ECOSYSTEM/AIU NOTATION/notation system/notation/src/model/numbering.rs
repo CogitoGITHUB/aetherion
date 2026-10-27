@@ -9,11 +9,13 @@
 //! heading at level L takes the next number at that level and restarts every
 //! deeper level; the number is those numbers joined with a dot.
 //!
+//! ```text
 //!     heading start            -> 1
 //!     heading start            -> 1.1
 //!     heading start            -> 1.1.1
 //!     heading start            -> 1.2
 //!     heading start            -> 2
+//! ```
 //!
 //! The Racket model has the same rule in its own numbering file, so a page
 //! numbered by the binary and a document numbered by the model agree.

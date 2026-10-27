@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
-# preview-fit.sh: runs preview.sh with a width that fits the tv preview pane.
-# Called by: cable/aiu-pages.toml and cable/aiu-type-preview.sh. Argument: the page file.
-d=$(cd "$(dirname "$0")" && pwd)
-w=$(bash "$d/fitwidth.sh")
-case "$2" in --*) x="$2";; *) x="";; esac
-exec bash "$d/preview.sh" "$1" "$w" "$x"
+# preview-fit.sh: prints one .aiu page formatted for the tv pane through the Rust view command; --width prints the pane width.
+# Called by: cable/*.toml, cable/*.sh, pick.sh. Usage: preview-fit.sh FILE [--contracts] | preview-fit.sh --width
+c=$(stty size </dev/tty 2>/dev/null); c=${c#* }
+case $c in ""|*[!0-9]*) c=56 ;; esac
+w=$((c - 6)); [ "$w" -lt 30 ] && w=30
+if [ "$1" = "--width" ]; then echo "$w"; exit 0; fi
+[ -f "$1" ] || { echo "no such file: $1"; exit 0; }
+here=$(cd "${0%/*}" && pwd)
+bin="$here/../../notation/target/debug/notation"
+[ -x "$AIU_NOTATION_BIN" ] && bin="$AIU_NOTATION_BIN"
+f=$1; shift; x=""
+for a in "$@"; do [ "$a" = "--contracts" ] && x="--contracts"; done
+exec "$bin" view "$f" --width "$w" $x

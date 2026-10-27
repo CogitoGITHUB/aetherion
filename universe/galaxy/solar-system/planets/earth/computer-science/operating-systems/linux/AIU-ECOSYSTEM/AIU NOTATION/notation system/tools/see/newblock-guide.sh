@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # newblock-guide.sh: checks a new block name and prints the places a new block touches, read from the code.
-# Called by: the new-block entry of the aiu list menu and cable/aiu-list-preview.sh. Argument: the name, or --preview. Edits nothing.
+# Called by: the new-block entry of the aiu list menu and cable/aiu-list-preview-fit.sh. Argument: the name, or --preview. Edits nothing.
 d=$(cd "$(dirname "$0")" && pwd)
 ns=$(cd "$d/../.." && pwd)
-w=$(bash "$d/fitwidth.sh")
+w=$(bash "$d/preview-fit.sh" --width)
 p="$ns/notation/src/parser/parser.rs"
 r="$ns/notation/src/elements/register.rkt"
 l="$ns/gate/register-lint.nu"

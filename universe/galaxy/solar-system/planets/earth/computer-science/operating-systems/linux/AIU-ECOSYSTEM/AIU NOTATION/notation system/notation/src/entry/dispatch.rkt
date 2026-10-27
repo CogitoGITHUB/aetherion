@@ -100,10 +100,11 @@
      ;; diagnostics/report.rkt, which prints through errors/render.rkt — the
      ;; only printer of an error in the package. This command adds no shape
      ;; of its own: it reads the report and decides what to exit with. The
-     ;; page is #f, because a parse-tree-document carries byte offsets and no
+     ;; page is the file text, so columns can be counted; a document carries offsets and no
      ;; page; with no page no column can be counted, and every finding says
      ;; its column is unknown rather than naming a wrong one.
-     (define report (build-report file-name (collect-findings #f o)))
+     (define page (let ([b (call-with-input-file path (lambda (in) (read-bytes (file-size path) in)))]) (if (bytes? b) (bytes->string/utf-8 b #\?) "")))
+     (define report (build-report file-name (collect-findings page o)))
      (define body (report-text report))
      ;; The exit code comes from the report, not from a count read here, so one
      ;; place decides what a finding is worth to the shell.

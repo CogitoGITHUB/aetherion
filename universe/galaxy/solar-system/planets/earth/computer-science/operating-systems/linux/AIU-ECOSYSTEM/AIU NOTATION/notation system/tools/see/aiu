@@ -90,8 +90,9 @@ def main [cmd?: string, target?: path, extra?: string, --plain (-p), --contracts
   let root = (^readlink -f $script_file | str trim | path dirname | path dirname | path dirname)
   let bin = ($root | path join notation target debug notation)
   let cli = ($root | path join notation src entry cli.rkt)
-  let view = ($root | path join tools see see.rkt)
-  let racket = ($env.AIU_RACKET? | default "racket")
+  let view = ($root | path join tools see aiu)
+  let rk = ($env.HOME | path join opt racket-full bin racket)
+  let racket = ($env.AIU_RACKET? | default (if ($rk | path exists) { $rk } else { "racket" }))
   let known = ["check" "render" "parse" "roundtrip" "see" "open" "pick" "update" "list" "gate" "new" "newtype"]
   if not ($cmd in $known) {
     error make {msg: $"unknown command '($cmd)'. Use one of: ($known | str join ' ')"}
@@ -160,9 +161,9 @@ def main [cmd?: string, target?: path, extra?: string, --plain (-p), --contracts
     let extra_flags = (if $contracts { ["--contracts"] } else { [] })
     with-env {LC_ALL: "C.UTF-8"} {
       if $plain {
-        run-external $racket $view $f "--plain" ...$extra_flags "--width" ($cols | into string)
+        run-external ...(see-pair $racket $view $extra_flags) $f "--plain" ...$extra_flags "--width" ($cols | into string)
       } else {
-        run-external $racket $view $f ...$extra_flags "--width" ($cols | into string)
+        run-external ...(see-pair $racket $view $extra_flags) $f ...$extra_flags "--width" ($cols | into string)
       }
     }
   } else if $cmd == "open" {
@@ -314,4 +315,25 @@ def new-type [root: string, racket: string, name] {
   print $"wrote ($file)"
   update-package $root ($root | path join notation target debug notation) $racket
   print "next: set the description, the allowed blocks and the contracts in that file, then run aiu update"
+}
+
+# see-pair: the command that draws a page: the Rust view; for the contracts panel it first makes sure the data file is fresh.
+# Called by: the see command above. Arguments: the Racket binary, this script path, the extra flags.
+def see-pair [racket: string, view: string, flags: list] {
+  let root = ($view | path dirname | path dirname | path dirname)
+  let env_bin = ($env.AIU_NOTATION_BIN? | default "")
+  let bin = (if ($env_bin | path exists) { $env_bin } else { $root | path join notation target debug notation })
+  if ($flags | any {|x| $x == "--contracts"}) { refresh-contracts $root $racket }
+  [$bin "view"]
+}
+
+# refresh-contracts: writes notation/target/contracts.dat when it is missing or older than a file type module.
+# Called by: see-pair. Arguments: the project root, the Racket binary.
+def refresh-contracts [root: string, racket: string] {
+  let dat = ($root | path join notation target contracts.dat)
+  let types = ($root | path join notation src filetypes)
+  let stale = (if ($dat | path exists) { (^find $types -name "*.rkt" -newer $dat | str trim) != "" } else { true })
+  if $stale {
+    with-env {LC_ALL: "C.UTF-8"} { run-external $racket ($types | path join dump-contracts.rkt) $dat }
+  }
 }

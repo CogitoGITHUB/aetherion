@@ -7,6 +7,10 @@
 //! and every failure is named rather than turned into a quiet zero.
 
 use std::time::Instant;
+#[path = "rendering/view.rs"]
+mod view;
+#[path = "rendering/boxview.rs"]
+mod boxview;
 
 use notation::buffer::Buffer;
 use notation::parser::{parse, Node};
@@ -48,6 +52,18 @@ fn main() {
     match command.as_str() {
         // Print the payload document on stdout, and the parse time on stderr,
         // so the document can be redirected to a file and still be parseable.
+        // Print the page formatted for a terminal: numbers, frames, colour.
+        "view" => {
+            let (mut width, mut plain, mut i) = (56usize, false, 3usize);
+            let mut contracts = false;
+            let mut flat = false;
+            while i < args.len() {
+                if args[i] == "--plain" { plain = true; } else if args[i] == "--contracts" { contracts = true; } else if args[i] == "--flat" { flat = true; }
+                else if args[i] == "--width" && i + 1 < args.len() { width = args[i + 1].parse().unwrap_or(56); i += 1; }
+                i += 1;
+            }
+            if flat { print!("{}", view::render_view(&text, width, plain, contracts)); } else { print!("{}", boxview::render_boxes(&text, width, plain, contracts)); }
+        }
         "parse" => {
             let started = Instant::now();
             let document = parse_document(&path, &text);

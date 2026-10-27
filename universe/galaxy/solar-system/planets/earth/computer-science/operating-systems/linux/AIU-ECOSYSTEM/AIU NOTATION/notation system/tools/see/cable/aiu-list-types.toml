@@ -8,7 +8,7 @@ display = "{}"
 output = "{}"
 
 [preview]
-command = "bash aiu-list-preview.sh type \"{}\""
+command = "bash aiu-list-preview-fit.sh type \"{}\""
 
 [keybindings]
 enter = "actions:pick"

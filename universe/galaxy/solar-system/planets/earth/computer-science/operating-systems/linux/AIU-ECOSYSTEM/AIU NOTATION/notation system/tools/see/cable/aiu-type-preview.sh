@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# aiu-type-preview.sh: preview for the type list: a starter page, or how to make a new type.
+# aiu-type-preview-fit.sh: preview for the type list: a starter page, or how to make a new type.
 # Called by: cable/aiu-types.toml. Argument: the selected entry. The how-to is built from the code.
 d=$(cd "$(dirname "$0")" && pwd)
 ns=$(cd "$d/../../.." && pwd)
 export AIU_NOTATION_ROOT=$ns
-w=$(bash "$d/../fitwidth.sh")
+w=$(bash "$d/../preview-fit.sh" --width)
 if [ "$1" != "new-type" ]; then
   bash "$d/../preview-fit.sh" "$ns/../types/$1.aiu" --contracts
   exit 0

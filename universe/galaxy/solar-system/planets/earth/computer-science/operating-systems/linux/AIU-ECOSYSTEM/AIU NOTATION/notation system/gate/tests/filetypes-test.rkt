@@ -39,7 +39,7 @@
 
 ;; has-word? answers whether the checker's output names a finding.
 (define (has-word? word text)
-  (regexp-match? (regexp-quote word) text))
+  (regexp-match? (regexp-quote word) (regexp-replace* #px"[[:space:]]+" text " ")))
 
 ;; run-checks is the one entry the test runner calls.
 (define (run-base-checks)
@@ -73,6 +73,53 @@
                 (check-page "title start\nkind: default\nMy default\ntitle end\n\nheading start\nlevel: 1\nFine\nheading end\n")])
     (check-equal? code 0 text)))
 
+;; box-page writes one page to a temporary file, runs the boxed viewer on it with the flags, and
+;; answers the exit code and everything the viewer printed.
+(define (box-page text flags)
+  (define file (make-temporary-file "aiu-box-~a.aiu"))
+  (display-to-file text file #:exists (quote truncate))
+  (putenv "AIU_NOTATION_BIN" (path->string (binary)))
+  (putenv "LC_ALL" "C.UTF-8")
+  (define out (open-output-string))
+  (define code
+    (parameterize ([current-output-port out]
+                   [current-error-port out])
+      (apply system*/exit-code (binary) "view" (path->string file) flags)))
+  (delete-file file)
+  (values code (get-output-string out)))
+
+;; check-boxes checks the boxed viewer: every block in a box of its own, the contracts band at
+;; the top, and each contract on the box it judges.
+(define (check-boxes)
+  (define long (word-paragraph 130))
+  (define short (contract-paragraph "Text."))
+  (define wide (list "--plain" "--width" "80"))
+  (define wide-c (list "--plain" "--contracts" "--width" "80"))
+  (let-values ([(code text) (box-page (contract-page long) wide-c)])
+    (check-equal? code 0 text)
+    (check-true (has-word? "CONTRACTS" text) text)
+    (check-true (has-word? "RULE BROKEN" text) text)
+    (check-true (has-word? "130 words" text) text)
+    (check-true (has-word? "section 1" text) text)
+    (check-true (has-word? "rules broken: 1" text) text)
+    (check-false (has-word? "missing: code" text) text))
+  (let-values ([(code text) (box-page (contract-page long) wide)])
+    (check-true (has-word? "paragraph" text) text)
+    (check-false (has-word? "CONTRACTS" text) text)
+    (check-false (has-word? "RULE BROKEN" text) text))
+  (let-values ([(code text) (box-page (contract-page short) wide-c)])
+    (check-true (has-word? "OPEN QUESTION" text) text)
+    (check-true (has-word? "holds: max-words 120" text) text)
+    (check-false (has-word? "RULE BROKEN" text) text))
+  (let-values ([(code text) (box-page "title start\nkind: decision\nD\ntitle end\n\nsection start\ntitle start\nContext\ntitle end\nparagraph start\nText.\nparagraph end\nsection end\n" wide-c)])
+    (check-true (has-word? "missing: paragraph in section Decision" text) text)
+    (check-false (has-word? "missing: code" text) text))
+  (let-values ([(code text) (box-page (typed-page "default" short) wide-c)])
+    (check-true (has-word? "rules broken: 0" text) text))
+  (let-values ([(code text) (box-page (string-append "title start\nA test page\ntitle end\n\n" short) wide-c)])
+    (check-true (has-word? "no contract applies" text) text)
+    (check-true (has-word? "paragraph" text) text)))
+
 ;; run-checks is the one entry the test runner calls: the file type checks, then the
 ;; contract checks.
 (define (run-checks)
@@ -80,7 +127,8 @@
   (check-contracts)
   (check-type-contracts)
   (check-viewer)
-  (check-viewer-contracts))
+  (check-viewer-contracts)
+  (check-boxes))
 
 ;; contract-section writes one section of a decision page: its title block, then the body.
 (define (contract-section title body)
@@ -206,10 +254,9 @@
   (define code
     (parameterize ([current-output-port out]
                    [current-error-port out])
-      (apply system*/exit-code (find-exe)
-             (build-path project-root "tools" "see" "see.rkt")
+      (apply system*/exit-code (binary) "view"
              (path->string file)
-             flags)))
+             (cons "--flat" flags))))
   (delete-file file)
   (values code (get-output-string out)))
 
@@ -272,7 +319,7 @@
   (let-values ([(code text) (view-page (string-append "title start\nA test page\ntitle end\n\n" short)
                                        (list "--plain" "--contracts"))])
     (check-true (has-word? "no kind: line" text) text)
-    (check-true (has-word? "no contract findings" text) text))
+    (check-true (has-word? "no contract applies" text) text))
   (let-values ([(code text) (aiu-see-page (contract-page long) (list "--plain" "--contracts"))])
     (check-true (has-word? "RULE BROKEN" text) text))
   (let-values ([(code text) (aiu-see-page (contract-page long) (list "--plain"))])

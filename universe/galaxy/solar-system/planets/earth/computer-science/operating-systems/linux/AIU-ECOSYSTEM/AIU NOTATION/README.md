@@ -14,7 +14,7 @@ AI agents: read README-AI.md first, not this file.
 |---|---|
 | Format | `.aiu` files made of named blocks |
 | Checker | `check` names every error with its line |
-| Viewer | `see` shows a page formatted in the terminal |
+| Viewer | `see` shows a page as boxes in the terminal; `--contracts` puts each contract on the block it judges |
 | Command | `aiu` wraps all of it, with tv menus |
 | File types | a `kind:` limits blocks, demands sections, adds contracts |
 
@@ -70,7 +70,7 @@ comment end
 section end
 ~~~
 
-In the viewer: the title big and underlined with its tags below, the section numbered `1  A section`, the code in a frame, no start or end lines.
+In the viewer: every block is a box named after its kind, the title box shows its tags, the section box is numbered `section 1 · A section` and holds its blocks, and no start or end lines show.
 
 ## 5. The rules
 
@@ -152,13 +152,13 @@ Then set the description, allowed blocks and contracts in `notation/src/filetype
 | Command | Does |
 |---|---|
 | `aiu` | tv menu of all commands, with a preview of each |
-| `aiu see FILE` | formatted view (`--plain`, `--width N`, `--contracts`) |
+| `aiu see FILE` | boxed view (`--plain`, `--width N`, `--contracts`) |
 | `aiu check FILE` | check a page |
 | `aiu open FILE` | open in the editor |
 | `aiu render FILE` | plain text render |
 | `aiu parse FILE` | parse tree |
 | `aiu roundtrip FILE` | byte-exact round trip test |
-| `aiu pick [FOLDER]` | tv page picker with preview |
+| `aiu pick [FOLDER]` | tv page picker; the preview shows the contracts panel |
 | `aiu list` | blocks and file types that exist now |
 | `aiu new TYPE FILE` | new page from a type starter, checked |
 | `aiu newtype NAME` | new file type from the template |
@@ -172,7 +172,7 @@ Exit codes of `check`: 0 clean, 1 errors found, 2 could not run.
 | Variable | Effect |
 |---|---|
 | `AIU_NOTATION_BIN` | path of the Rust binary (required) |
-| `AIU_RACKET` | Racket binary when `racket` is not on PATH |
+| `AIU_RACKET` | Racket binary; when unset, `aiu` uses `~/opt/racket-full/bin/racket` if it exists, else `racket` from PATH |
 | `aiutd`, else `AIU_EDITOR`, else `EDITOR` | editor used by `aiu open` |
 | `AIU_QUESTIONS=1` | report contract questions |
 | `AIU_PICK_FIRST=1` | skip the picker, take the first page |
@@ -225,8 +225,11 @@ Fix one error at a time from the top. Later ones may disappear.
 | stray text and section title errors | works |
 | exact round trip | works |
 | viewer `see`, shows comments | works |
+| boxed viewer, contracts shown on the blocks they judge | works |
 | `aiu` command, tv picker and menus | works |
 | `aiu update`, `list`, `gate`, `new`, `newtype` | works |
+| `render` keeps every line of a code body, marker-looking lines included | works |
+| `check` errors name the right line and column, and the end-line wording is `NAME end` | works |
 | file types, required sections, contracts | works |
 | section numbers | viewer only; the checker still counts `heading` |
 | tables | parser only |
@@ -240,10 +243,8 @@ Fix one error at a time from the top. Later ones may disappear.
 
 Known gaps:
 
-- `render` drops a code line that looks like a block marker; file, `check` and round trip are correct.
 - The viewer and the checker keep separate keyword lists; the gate stage `keywords` fails when they differ.
-- Underline under a numbered heading is one character too long.
-- The error wording `parser-recovery ... column unknown` is clumsy.
+- Underline under a numbered heading is one character too long (`--flat` only; the boxes have none).
 
 ## 13. Repo map
 

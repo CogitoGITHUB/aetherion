@@ -422,10 +422,10 @@ pub fn parse(buffer: &Buffer) -> Tree {
             ErrorNode {
                 kind: ErrorKind::UnclosedBlock,
                 span: Span::empty(buffer.len()),
-                line: buffer.len().saturating_sub(1).max(1),
+                line: buffer.line_count().max(1),
                 opener_line: Some(opener),
                 what: format!("block \"{}\" was opened at line {} and never closed", name, opener),
-                what_to_do: format!("add its matching \"end {}\" line", name),
+                what_to_do: format!("add its matching \"{} end\" line", name),
             },
         );
         attach(&mut open, &mut top, Node::Block(block));
@@ -485,7 +485,7 @@ fn close_block(open: &mut Vec<Block>, top: &mut Vec<Node>, name: &str, span: Spa
                 span,
                 line,
                 opener_line: None,
-                what: format!("\"end {}\" closes nothing: no block is open", name),
+                what: format!("\"{} end\" closes nothing: no block is open", name),
                 what_to_do: "remove the line, or open the block it was meant to close".to_string(),
             },
         ),
@@ -506,7 +506,7 @@ fn close_block(open: &mut Vec<Block>, top: &mut Vec<Node>, name: &str, span: Spa
                     line,
                     opener_line: Some(opener),
                     what: format!(
-                        "\"end {}\" does not match the innermost open \"{}\" block",
+                        "\"{} end\" does not match the innermost open \"{}\" block",
                         name, inner
                     ),
                     what_to_do: format!("close the open \"{}\" block first", inner),

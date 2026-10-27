@@ -30,7 +30,7 @@ export AIU_NOTATION_BIN="$PWD/notation/target/debug/notation"
 | Variable | Effect |
 |---|---|
 | `AIU_NOTATION_BIN` | Rust binary; without it `check` exits 2 |
-| `AIU_RACKET` | Racket binary if `racket` is not on PATH |
+| `AIU_RACKET` | Racket binary; when unset, `aiu` uses `~/opt/racket-full/bin/racket` if it exists, else `racket` from PATH |
 | `AIU_QUESTIONS=1` | report contract questions |
 | `AIU_PICK_FIRST=1` | skip the picker (scripts) |
 | `LC_ALL=C.UTF-8` | needed for non-ASCII paths |
@@ -162,11 +162,11 @@ Every change ends with: one status row updated, and one real `check` run on a pa
 
 ### Viewer and cache
 
-- After any `.rkt` change run `raco make tools/see/see.rkt notation/src/entry/cli.rkt` (raco sits beside racket). A render then takes about 3 to 5 s on the phone instead of 11 s.
-- The preview cache `/tmp/aiu-preview` is keyed on page, time, width and flags, not on `see.rkt`. After changing the viewer run `rm -rf /tmp/aiu-preview`.
+- After any `.rkt` change run `raco make` from the same folder as `racket` (a `raco` of another version compiles files `racket` refuses to load).
 - Racket on the author phone: `/root/home/shape/opt/racket-full/bin/racket`.
 - tv crashes when the shell captures its output. Choices go through files in `/tmp` (`aiu-cmd`, `aiu-type`, `aiu-pick`). Never use `$(tv ...)` or `| str trim` on tv.
-- Previews wrap through `tools/see/fitwidth.sh`; page previews through `tools/see/preview-fit.sh`.
+- Page previews run `tools/see/preview-fit.sh FILE [--contracts]`, which calls the Rust `view` command (about 0.01 s); `preview-fit.sh --width` prints the pane width. There is no cache.
+- The contracts panel is drawn by `view FILE --contracts` from `notation/target/contracts.dat`, written by `racket notation/src/filetypes/dump-contracts.rkt PATH`; `aiu see FILE --contracts` rewrites it when a type module is newer. `must-match` and `must-not-match` rules are not evaluated by `view`; use `aiu check`.
 
 ## 6. Commands
 
@@ -175,7 +175,7 @@ Run from the `notation system/` folder.
 | Task | Command |
 |---|---|
 | Check a page | `LC_ALL=C.UTF-8 racket notation/src/entry/cli.rkt check FILE` |
-| View a page | `LC_ALL=C.UTF-8 racket tools/see/see.rkt FILE` (`--plain`, `--width N`, `--contracts`) |
+| View a page | `$AIU_NOTATION_BIN view FILE` (`--plain`, `--width N`, `--contracts`, `--flat`); boxes by default, `--flat` is the old line drawing and is not passed through `aiu see`; contracts sit on the box they judge, read from `notation/target/contracts.dat` |
 | Plain render | `$AIU_NOTATION_BIN render FILE` |
 | Parse tree | `$AIU_NOTATION_BIN parse FILE` |
 | Round trip | `$AIU_NOTATION_BIN roundtrip FILE` |
@@ -196,7 +196,10 @@ Run from the `notation system/` folder.
 | title, paragraph, section, code, comment | works |
 | declarations, stray text, section title rule, round trip | works |
 | viewer `see` (shows comments), `aiu`, tv picker and menus | works |
+| boxed viewer, contracts shown on the blocks they judge | works |
 | `aiu update`, `list`, `gate`, `new`, `newtype` | works |
+| `render` keeps every line of a code body, marker-looking lines included | works |
+| `check` errors name the right line and column, and the end-line wording is `NAME end` | works |
 | file types, required sections, contracts | works |
 | `heading` with `level:` | parsed; replaced by `section` |
 | tables | parser accepts, checker rejects |
@@ -207,10 +210,8 @@ Run from the `notation system/` folder.
 
 Known gaps:
 
-- `render` drops a code line that looks like a block marker (fix is in `strip.rs`); file, `check` and round trip are correct.
 - Viewer and checker keep separate keyword lists; the gate stage `keywords` catches drift.
-- Viewer underline under a numbered heading is one character too long.
-- The `parser-recovery ... column unknown` wording is clumsy.
+- Viewer underline under a numbered heading is one character too long (`--flat` only; the boxes have none).
 
 ## 9. Repo map
 
@@ -227,3 +228,40 @@ Known gaps:
 ## 10. Report format
 
 Short. State what changed, then the real output of the last `check` or gate run. No recap of steps.
+## 11. Handoff (2026-10-27): state
+
+### Done and verified by diff
+
+| Change | State |
+|---|---|
+| Rust `view` command (`notation/src/rendering/view.rs`, hooked in `main.rs`) | Prints the formatted page, 0.01 s. Output equals the old Racket viewer on all 9 `types/*.aiu` plus a broken page, with and without `--contracts`. |
+| `tools/see/see.rkt` | Deleted. It had a second parser and started a second Racket for `check`, which cost about 3.5 s per render. |
+| `tools/see/preview-fit.sh` | The one preview script. `FILE [--contracts]` calls `notation view` and passes `--contracts` on; `--width` prints the pane width. No cache, no prewarm. `fitwidth.sh`, `preview.sh`, `prewarm.sh` are deleted and all callers were rewritten. |
+| Contracts panel | `view FILE --contracts` reads `notation/target/contracts.dat`, written by `racket notation/src/filetypes/dump-contracts.rkt PATH`. `aiu see --contracts` refreshes it when a type module is newer (`refresh-contracts` in `tools/see/aiu`). |
+| `aiu see` | Runs the Rust view (0.2 s, 0.6 s with `--contracts`) through `see-pair` in `tools/see/aiu`. |
+| `AIU_NOTATION_BIN` | Was set one folder too high in `~/.config/nushell/env.nu`; fixed. `preview-fit.sh` ignores it when the file is missing. |
+| Racket and raco | `racket` is 9.3, but a `raco` on PATH was 8.18 and compiled files `racket` refused to load. Always use the `raco` beside `racket` (the one in `AIU_RACKET`); the `racket` and `raco` on PATH are 8.18 and make files the gate cannot load. |
+
+### Gate
+
+`gate/tests/filetypes-test.rkt` function `view-page` runs `notation view` with the page and the flags. `nu gate/check.nu` ends green: 11 stages, 0 checks failed. The gate exit code is trustworthy: it exited 1 with 2 checks failing and 0 when green. The viewer tests compare text with whitespace collapsed, because the viewer wraps lines.
+
+### Boxed viewer
+
+`view` draws every block as a box named after its kind (`notation/src/rendering/boxview.rs`). With `--contracts` a heavy band at the top gives the counts and the contracts of named sections the page lacks, and each contract sits in the box it judges as `RULE BROKEN`, `OPEN QUESTION` or `holds`. `--flat` keeps the old line drawing (`view.rs`); the notes below describe `--flat`. In the gate, `check-viewer` and `check-viewer-contracts` run with `--flat` and `check-boxes` tests the boxes.
+
+### Open work (2026-10-27)
+
+The last script (flat underline fix in `tools/../view.rs`, `self.rule` now uses the wrapped width) was sent but its output was never read: rebuild, run `view FILE --flat --plain` on a numbered section, and run `nu gate/check.nu > /tmp/g.txt 2>&1` before trusting it.
+
+Still open:
+
+- The viewer and the checker keep separate keyword lists (`parser.rs`, `model/properties.rkt`, `data/json.rkt`). Goal: one source. Needs `gate/check.nu`, `gate/keywords-lint.nu`, and the three lists read first.
+- Compiled `.zo` files must be built by Racket 9.3 (`AIU_RACKET`, `~/opt/racket-full/bin/raco`). Nushell `env.nu` still puts the 8.18 `opt/racket/bin` on PATH. Goal: make `aiu update` and the gate rebuild with the raco beside `AIU_RACKET`. Needs `aiu update-package` read first.
+- Last verified: gate green, 11 stages, 135 checks, 0 failed.
+
+### Known differences and traps
+
+- `view` draws at `width - 2` columns to match the old viewer. The contract label wraps at `cols - 2` and the finding text at `cols - 4`.
+- `view` does not evaluate `must-match` or `must-not-match` rules. Use `aiu check` for those. The current types use none.
+- Do not edit the gate or `notation/` without being asked. This handoff came from a request to find the slow preview, so the gate edit above was in scope only for removing `see.rkt`.
