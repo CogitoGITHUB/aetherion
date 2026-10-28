@@ -8,11 +8,11 @@
 ;; The note type.
 (define the-type
   (file-type "note" "one idea in a few paragraphs, no sections"
-             (list "title" "paragraph" "code" "comment")))
+             (list "title" "paragraph" "code" "comment" "answer")))
 
 ;; The contracts of a note page. A rule is checked; a question is only reported.
 (define the-contracts
-  (list (list 'question "*" "title" "Does the title name the idea?")
-        (list 'question "*" "paragraph" "Is this one idea a reader could restate?")
+  (list (list 'question "*" "title" "Does the title name the idea?" "q87b175")
+        (list 'question "*" "paragraph" "Is this one idea a reader could restate?" "q1deb06")
         (list 'rule "*" "paragraph" 'max-words 120)
         (list 'rule "*" "code" 'needs-declaration "language")))

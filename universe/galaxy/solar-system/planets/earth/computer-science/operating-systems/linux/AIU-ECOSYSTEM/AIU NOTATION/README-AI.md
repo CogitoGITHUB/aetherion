@@ -68,7 +68,8 @@ The loop:
 | `paragraph` | prose |
 | `section` | title first; then paragraph, code, comment, section |
 | `code` | `language:` under its start line |
-| `comment` | note for readers; never put a line `x start` or `x end` inside |
+| `comment` | note for readers; put it inside a block to attach it, or put blocks inside it to cover them |
+| `answer` | answer to one contract question; inside the judged block; needs `for: ID` and `asked: text` |
 
 ### Allowed declarations
 
@@ -79,6 +80,9 @@ The loop:
 | `language` | `code` | language name |
 | `style` | `paragraph`, `title` | bold, dim, italic, underline |
 | `color` | `paragraph`, `title` | red green yellow blue magenta cyan white gray |
+| `todo` | any block | a description; start it with done when finished |
+| `for` | `answer` | question ID |
+| `asked` | `answer` | copy of the question text |
 
 ### Do not write
 
@@ -86,7 +90,7 @@ The loop:
 - lists, tables, math, includes of other files
 - `status:` lines
 - `heading`, `table`, `header`, `row` blocks
-- the keywords `level`, `caption`, `column`, `cell`, `row-id`, `meta`, `todo`
+- the keywords `level`, `caption`, `column`, `cell`, `row-id`, `meta`
 - invented block names
 
 ### Common mistakes
@@ -200,6 +204,8 @@ Run from the `notation system/` folder.
 | declarations, stray text, section title rule, round trip | works |
 | viewer `see` (shows comments), `aiu`, tv picker and menus | works |
 | boxed viewer, contracts shown on the blocks they judge | works |
+| comment attached to a block or around several blocks, `todo:` mark in the top-right corner, description in a tray under the box | works |
+| `answer` blocks matched by question ID, `aiu fill FILE` | works |
 | `aiu update`, `list`, `gate`, `new`, `newtype` | works |
 | `render` keeps every line of a code body, marker-looking lines included | works |
 | `check` errors name the right line and column, and the end-line wording is `NAME end` | works |

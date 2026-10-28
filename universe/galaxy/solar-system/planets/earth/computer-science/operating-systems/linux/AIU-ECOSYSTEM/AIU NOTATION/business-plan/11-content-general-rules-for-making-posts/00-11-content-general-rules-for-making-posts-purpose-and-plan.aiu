@@ -1,0 +1,48 @@
+title start
+kind: default
+tags: business-plan content purpose plan
+Content: general rules for making posts
+title end
+
+paragraph start
+The building blocks and rules for posts, independent of any topic.
+paragraph end
+
+section start
+title start
+Plan
+title end
+paragraph start
+Hold the formats, series, calendar and the rules every post follows, including sourcing and accuracy rules for anything that reports news. Topic folders are added on top of this later.
+paragraph end
+section end
+
+section start
+title start
+Subfolders
+title end
+code start
+language: text
+01-content-content-strategy-basics
+02-content-topic-pillars
+03-content-post-formats
+04-content-repeatable-series
+05-content-sourcing-and-accuracy-rules
+06-content-posting-calendar
+07-content-idea-bank
+08-content-ai-and-automation
+code end
+paragraph start
+Everything here stays general. Specific content types, topics, platforms and accounts are added later as new folders on top of these.
+paragraph end
+section end
+
+section start
+title start
+Files to plan next
+title end
+paragraph start
+todo: plan the files of each subfolder
+Decide which pages each subfolder needs and which file type each page uses.
+paragraph end
+section end

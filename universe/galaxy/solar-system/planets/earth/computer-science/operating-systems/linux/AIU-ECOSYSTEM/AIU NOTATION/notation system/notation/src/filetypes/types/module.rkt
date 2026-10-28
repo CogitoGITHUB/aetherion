@@ -11,11 +11,11 @@
 ;; The module type.
 (define the-type
   (file-type "module" "a purpose, then the code"
-             (list "title" "section" "paragraph" "code" "comment")))
+             (list "title" "section" "paragraph" "code" "comment" "answer")))
 
 ;; The contracts of a module page. A rule is checked; a question is only reported.
 (define the-contracts
-  (list (list 'question "Code" "code" "Does the code do what Purpose says, and nothing more?")
+  (list (list 'question "Code" "code" "Does the code do what Purpose says, and nothing more?" "qc549e1")
         (list 'rule "Purpose" "paragraph" 'max-words 80)
         (list 'rule "*" "code" 'needs-declaration "language")
-        (list 'question "Purpose" "paragraph" "What problem does this module solve, and what does it leave out?")))
+        (list 'question "Purpose" "paragraph" "What problem does this module solve, and what does it leave out?" "q5e4923")))

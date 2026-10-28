@@ -1,29 +1,67 @@
 title start
 kind: todo
-tags: todo
-Todo page: tasks grouped in sections
+tags: todo viewer
+Todo page: tasks with marks, notes and answers
 title end
 
 paragraph start
-Use a todo page for tasks. Each task is one short paragraph, and sections group them by theme.
+Use a todo page for tasks. Each task is one short paragraph. A todo line under its start line marks it open or done, and sections group tasks by theme.
 paragraph end
 
 section start
 title start
-First section
+Open tasks
 title end
 
 paragraph start
-Write one task per paragraph, as one action that can be finished and checked.
+todo: write the install guide and test it on a clean machine before Friday
+Install the tool on a clean machine and run the checker on one page.
+answer start
+for: qadd5fe
+asked: Is this one action that can be finished and checked?
+Yes. One install and one check, finished when the checker prints clean.
+answer end
 paragraph end
 
 paragraph start
-Keep it under forty words. If a task needs more, split it into two tasks.
+todo: waiting for Anna to name the second operating system
+Test the install on a second operating system.
+comment start
+Anna may have a spare laptop. Ask her again on Monday. A comment inside a block belongs to that block.
+comment end
 paragraph end
-
 section end
 
-comment start
-tasks grouped in sections
-comment end
+section start
+title start
+Done
+title end
 
+comment start
+These two tasks came from the same review, so one comment covers both. Put the blocks inside the comment.
+
+paragraph start
+todo: done viewer fixed, block names now sit on the left
+Move the block names to the left edge.
+paragraph end
+
+paragraph start
+todo: done contracts now show on every page
+Show the contracts without a flag.
+paragraph end
+comment end
+section end
+
+section start
+title start
+Ideas
+title end
+
+paragraph start
+A task with no todo line is just a note. Keep each task under forty words, and split it when it needs more.
+paragraph end
+
+comment start
+The questions under each block come from the todo type. Fill them in with an answer block; the answer is matched to its question by ID, so reordering questions never breaks it.
+comment end
+section end

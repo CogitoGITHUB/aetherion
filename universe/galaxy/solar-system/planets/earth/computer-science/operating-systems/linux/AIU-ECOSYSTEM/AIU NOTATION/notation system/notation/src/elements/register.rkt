@@ -25,7 +25,8 @@
    (element 'heading "a numbered section heading" #f)
      ;; owner decision 2026-10-24: a section holds its own title first, then text, code and sub-sections.
      (element 'section "a block that holds its own title, text and sub-sections" #f)
-   (element 'comment "a block of text the reader drops" #f)))
+   (element 'comment "a block of text the reader drops" #f)
+   (element 'answer "the answer to one contract question, kept inside the block it judges" #f)))
 
 ;; known-name? answers whether a name is registered. It is the only question a
 ;; caller needs before it may use a name.

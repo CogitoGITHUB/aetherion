@@ -1,18 +1,28 @@
 title start
 kind: note
-tags: note
-Note page: one idea in a few paragraphs
+tags: note idea
+Note page: one idea, said once
 title end
 
 paragraph start
-Use a note page to capture one idea. It has a title and paragraphs, and it cannot hold sections, so it stays small. If the idea grows, move it to a bigger page type.
+Use a note page to capture one idea. It holds a title and paragraphs only, so it stays small. When the idea grows, move it to a type that has sections.
+answer start
+for: q1deb06
+asked: Is this one idea a reader could restate?
+Yes. One idea: a note stays small because it cannot grow sections.
+answer end
 paragraph end
 
 paragraph start
-Write the idea so a reader could restate it in one sentence, and keep each paragraph to one point.
+todo: link this idea to the page that uses it
+Keep each paragraph to one point a reader could restate in a sentence.
 paragraph end
 
 comment start
-one idea in a few paragraphs, no sections
+A note may hold a comment and a code block as well. Here is a code block.
 comment end
 
+code start
+language: text
+one idea, a few paragraphs, no sections
+code end

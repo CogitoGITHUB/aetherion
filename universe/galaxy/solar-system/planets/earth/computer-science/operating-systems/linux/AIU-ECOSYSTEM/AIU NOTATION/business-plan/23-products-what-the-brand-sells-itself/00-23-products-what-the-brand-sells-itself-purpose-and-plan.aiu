@@ -1,0 +1,48 @@
+title start
+kind: default
+tags: business-plan products purpose plan
+Products: what the brand sells itself
+title end
+
+paragraph start
+Things the brand makes and sells, as opposed to links to other sellers.
+paragraph end
+
+section start
+title start
+Plan
+title end
+paragraph start
+Plan digital products, services, merchandise and memberships, ordered by effort and expected return.
+paragraph end
+section end
+
+section start
+title start
+Subfolders
+title end
+code start
+language: text
+01-products-product-selection
+02-products-digital-products
+03-products-paid-services
+04-products-merchandise
+05-products-memberships
+06-products-product-launch-procedure
+07-products-hardware
+08-products-ai-and-automation
+code end
+paragraph start
+Everything here stays general. Specific content types, topics, platforms and accounts are added later as new folders on top of these.
+paragraph end
+section end
+
+section start
+title start
+Files to plan next
+title end
+paragraph start
+todo: plan the files of each subfolder
+Decide which pages each subfolder needs and which file type each page uses.
+paragraph end
+section end

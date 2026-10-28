@@ -11,14 +11,14 @@
 ;; The plan type.
 (define the-type
   (file-type "plan" "a goal, its steps, when it is done, what is open"
-             (list "title" "section" "paragraph" "comment")))
+             (list "title" "section" "paragraph" "comment" "answer")))
 
 ;; The contracts of a plan page. A rule is checked; a question is only reported.
 (define the-contracts
-  (list (list 'question "Steps" "paragraph" "Is each step one action that can be finished and checked?")
+  (list (list 'question "Steps" "paragraph" "Is each step one action that can be finished and checked?" "q5e9296")
         (list 'rule "Goal" "paragraph" 'max-words 60)
         (list 'rule "Steps" "paragraph" 'max-words 120)
         (list 'rule "*" "code" 'needs-declaration "language")
-        (list 'question "Goal" "paragraph" "Can the goal be stated as one outcome, not an activity?")
-        (list 'question "Done when" "paragraph" "Could someone check this without asking the author?")
-        (list 'question "Open questions" "paragraph" "Who can answer each open question?")))
+        (list 'question "Goal" "paragraph" "Can the goal be stated as one outcome, not an activity?" "q575f3b")
+        (list 'question "Done when" "paragraph" "Could someone check this without asking the author?" "qd95f0b")
+        (list 'question "Open questions" "paragraph" "Who can answer each open question?" "q5f8e09")))

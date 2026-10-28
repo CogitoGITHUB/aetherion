@@ -361,12 +361,18 @@
                                  type)
                          (format "put the sections in this order: ~a" wanted)))))]))
 
-;; block-raw-lines answers the lines between a block's start line and its end line.
+;; block-raw-lines answers the lines between a block's start line and its end line, leaving out the lines of blocks nested inside it.
 (define (block-raw-lines lines n)
   (define start (block-node-line n))
   (define end (block-node-end-line n))
+  (define kids
+    (for/list ([c (in-list (block-node-children n))] #:when (block-node? c))
+      (cons (block-node-line c) (block-node-end-line c))))
   (if (and (>= start 1) (> end start) (<= end (length lines)))
-      (take (drop lines start) (- end start 1))
+      (for/list ([s (in-list (take (drop lines start) (- end start 1)))]
+                 [ln (in-naturals (+ start 1))]
+                 #:unless (for/or ([k (in-list kids)]) (and (>= ln (car k)) (<= ln (cdr k)))))
+        s)
       '()))
 
 ;; block-content-lines answers the raw lines of a block without blank and declaration lines.

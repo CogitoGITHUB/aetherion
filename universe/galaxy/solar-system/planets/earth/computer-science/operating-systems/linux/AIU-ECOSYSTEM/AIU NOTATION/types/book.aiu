@@ -1,7 +1,7 @@
 title start
 kind: book
-tags: book
-Book page: a chapter of sections and prose
+tags: book chapter
+Book page: a chapter on how notes become pages
 title end
 
 paragraph start
@@ -10,16 +10,43 @@ paragraph end
 
 section start
 title start
-First section
+The idea
 title end
 
 paragraph start
-A section develops one idea over a few paragraphs. Keep each paragraph to a single point a reader could restate, and start a new section when the idea changes.
+A note is only useful when it can be found and understood later. A named block tells a reader and a script what each piece of text is.
+answer start
+for: qe995c0
+asked: Does this paragraph hold one idea a reader could restate?
+Yes. Named blocks make a note findable and readable.
+answer end
 paragraph end
 
+comment start
+A comment can sit in a block, or wrap several blocks as in the next section.
+comment end
 section end
 
+section start
+title start
+The method
+title end
+
 comment start
-chapters of sections and prose
+These two paragraphs describe one method, so one comment covers both.
+
+paragraph start
+Write the page, then run the checker until it prints clean.
+paragraph end
+
+paragraph start
+todo: add a short example page
+Read the checker output from the top, because later errors often disappear.
+paragraph end
 comment end
 
+code start
+language: bash
+aiu check page.aiu
+code end
+section end

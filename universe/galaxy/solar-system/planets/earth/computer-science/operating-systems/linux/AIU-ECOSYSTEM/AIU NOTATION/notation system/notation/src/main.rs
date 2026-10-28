@@ -64,6 +64,24 @@ fn main() {
             }
             if flat { print!("{}", view::render_view(&text, width, plain, contracts)); } else { print!("{}", boxview::render_boxes(&text, width, plain, contracts)); }
         }
+        // Add an empty answer slot under every question that has none; never touches an answer.
+        "fill" => {
+            match boxview::fill_page(&text) {
+                Ok((new, report)) => {
+                    if new != text {
+                        if let Err(e) = std::fs::write(&path, new) {
+                            eprintln!("notation: cannot write {}: {}", path, e);
+                            std::process::exit(2);
+                        }
+                    }
+                    for l in report { println!("{}", l); }
+                }
+                Err(e) => {
+                    eprintln!("notation: {}", e);
+                    std::process::exit(2);
+                }
+            }
+        }
         "parse" => {
             let started = Instant::now();
             let document = parse_document(&path, &text);

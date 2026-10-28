@@ -1,0 +1,47 @@
+title start
+kind: default
+tags: business-plan monetization purpose plan
+Monetization: how the brand earns
+title end
+
+paragraph start
+Every way the brand earns, planned from the first day.
+paragraph end
+
+section start
+title start
+Plan
+title end
+paragraph start
+Layer income by speed: donations and Buy Me a Coffee first, affiliate links, platform shops, then sponsorships and products. The requirements tracker records thresholds with the date they were checked, because platforms change them.
+paragraph end
+section end
+
+section start
+title start
+Subfolders
+title end
+code start
+language: text
+01-monetization-requirements-with-check-dates
+02-monetization-quick-wins-donations-and-tips
+03-monetization-affiliate-programs
+04-monetization-platform-payouts
+05-monetization-sponsorships
+06-monetization-monetization-tracking
+07-monetization-ai-and-automation
+code end
+paragraph start
+Everything here stays general. Specific content types, topics, platforms and accounts are added later as new folders on top of these.
+paragraph end
+section end
+
+section start
+title start
+Files to plan next
+title end
+paragraph start
+todo: plan the files of each subfolder
+Decide which pages each subfolder needs and which file type each page uses.
+paragraph end
+section end

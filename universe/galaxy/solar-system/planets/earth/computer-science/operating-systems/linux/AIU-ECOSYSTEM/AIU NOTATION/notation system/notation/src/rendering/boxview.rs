@@ -17,6 +17,7 @@ struct Contract {
     block: String,
     name: String,
     arg: String,
+    id: String,
 }
 
 /// The page being drawn, with the contracts of its type and the running counts.
@@ -143,6 +144,7 @@ fn load_contracts(kind: &str) -> Option<Vec<Contract>> {
             block: f[3].to_string(),
             name: if rule { f[4].to_string() } else { String::new() },
             arg: if rule { f.get(5).unwrap_or(&"").to_string() } else { f[4].to_string() },
+            id: if rule { String::new() } else { f.get(5).unwrap_or(&"").to_string() },
         });
     }
     Some(res)
@@ -303,6 +305,7 @@ impl Boxes {
         let cs = std::mem::take(&mut self.cs);
         let mut bad: Vec<L> = Vec::new();
         let mut ask: Vec<L> = Vec::new();
+        let mut qn = 0u32;
         let mut good: Vec<L> = Vec::new();
         for c in &cs {
             if c.block != b.name || !(c.section == "*" || c.section == sec) {
@@ -320,8 +323,28 @@ impl Boxes {
                     self.ok += 1;
                 }
             } else {
-                ask.extend(self.row("? ", &[33], &format!("{}OPEN QUESTION: {}", tag, c.arg), w));
-                self.open += 1;
+                qn += 1;
+                ask.extend(self.row("? ", &[33], &format!("{}Q{}: {}", tag, qn, c.arg), w));
+                let ans = b.children.iter().find_map(|k| match k {
+                    Node::Block(a) if a.name == "answer" && !c.id.is_empty() && decl(a, "for").as_deref() == Some(c.id.as_str()) => Some(a),
+                    _ => None,
+                }).filter(|a| !self.text_of(a).is_empty());
+                ask.extend(self.row("  ", &[2], &"┄".repeat(w.saturating_sub(8).max(4)), w));
+                match ans {
+                    Some(a) => {
+                        let saved = decl(a, "asked").unwrap_or_default();
+                        if !saved.is_empty() && saved != c.arg {
+                            ask.extend(self.row("≠ ", &[1, 33], &format!("STALE: the question changed. This answer was for: {}", saved), w));
+                        }
+                        let t = self.text_of(a);
+                        ask.extend(self.row("✔ ", &[32], &t, w));
+                        self.ok += 1;
+                    }
+                    None => {
+                        ask.extend(self.row("… ", &[2], "no answer yet", w));
+                        self.open += 1;
+                    }
+                }
             }
         }
         self.cs = cs;
@@ -336,7 +359,7 @@ impl Boxes {
         for n in ns {
             match n {
                 Node::Block(b) => {
-                    if b.span.start == skip {
+                    if b.span.start == skip || b.name == "answer" {
                         continue;
                     }
                     let mut one = self.draw(b, sec, depth, width);
@@ -406,7 +429,7 @@ impl Boxes {
     /// Draw one block as a box, with its contract rows under it when contracts are shown.
     fn draw(&mut self, b: &Block, sec: &str, depth: usize, width: usize) -> Vec<L> {
         let todo = decl(b, "todo");
-        let iw = width.saturating_sub(if todo.is_some() { 6 } else { 4 });
+        let iw = width.saturating_sub(4);
         let mut inner: Vec<L> = Vec::new();
         let mut label = b.name.clone();
         let mut tcodes: Vec<u32> = vec![1];
@@ -492,28 +515,39 @@ impl Boxes {
         }
     }
 
-    /// Draw a block box with the word TODO (or DONE) running down its left edge, one letter per line.
+    /// Draw a block box with TODO or DONE in its top-right corner and, when there is a description, a tray hung on its bottom edge.
     fn todo_side(&self, label: &str, tcodes: &[u32], inner: Vec<L>, width: usize, center: bool, v: &str) -> Vec<L> {
-        let done = v.trim() == "done";
-        let word: Vec<char> = if done { "DONE" } else { "TODO" }.chars().collect();
+        let t = v.trim();
+        let (first, rest) = match t.split_once(" ") { Some((x, y)) => (x, y.trim()), None => (t, "") };
+        let (done, desc) = if first == "done" { (true, rest) } else if first == "open" { (false, rest) } else { (false, t) };
+        let badge = if done { "DONE" } else { "TODO" };
         let col: u32 = if done { 32 } else { 31 };
-        let mut inner = inner;
-        while inner.iter().filter(|l| !l.sep).count() < word.len() {
-            inner.push(self.line(&[], ""));
+        let w = width.max(10);
+        let mut framed = self.frame(label, tcodes, inner, width, false, center);
+        let lab = clip(label, w.saturating_sub(badge.len() + 12));
+        let fill = w.saturating_sub(lab.chars().count() + badge.len() + 8);
+        let top = format!("{}{}{}{}{}",
+            self.sgr(&[2], "╭─ "), self.sgr(tcodes, &lab),
+            self.sgr(&[2], &format!(" {} ", "─".repeat(fill))), self.sgr(&[1, col], badge), self.sgr(&[2], " ─╮"));
+        framed[0] = L { s: top, n: w, sep: false };
+        if desc.is_empty() {
+            return framed;
         }
-        let mut out: Vec<L> = Vec::new();
-        let mut k = 0usize;
-        for l in inner {
-            if l.sep {
-                out.push(l);
-                continue;
-            }
-            let ch = if k < word.len() { word[k].to_string() } else { " ".to_string() };
-            k += 1;
-            let g = format!("{}{}", self.sgr(&[1, col], &ch), self.sgr(&[2], "│"));
-            out.push(L { s: format!("{}{}", g, l.s), n: l.n + 2, sep: false });
+        framed.pop();
+        let mut out = framed;
+        let lab2 = format!(" {} ", if done { "DONE" } else { "TODO · open" });
+        let fill2 = w.saturating_sub(3 + lab2.chars().count());
+        out.push(L { s: self.sgr(&[col], &format!("╰─{}{}╯", lab2, "─".repeat(fill2))), n: w, sep: false });
+        let tw = w.saturating_sub(4).max(4);
+        let mut rows = wrap(desc, tw);
+        if rows.is_empty() { rows.push(String::new()); }
+        for r in rows {
+            let r = clip(&r, tw);
+            let pad = tw.saturating_sub(r.chars().count());
+            out.push(L { s: format!("{} {}{} {}", self.sgr(&[col], "│"), self.sgr(&[col], &r), " ".repeat(pad), self.sgr(&[col], "│")), n: w, sep: false });
         }
-        self.frame(label, tcodes, out, width, false, center)
+        out.push(L { s: self.sgr(&[col], &format!("╰{}╯", "─".repeat(w.saturating_sub(2)))), n: w, sep: false });
+        out
     }
 }
 
@@ -614,4 +648,99 @@ pub fn render_boxes(text: &str, width: usize, plain: bool, contracts: bool) -> S
         out.push_str(&format!("{}\n", v.sgr(&[2], "run: aiu check FILE   for the full check")));
     }
     out
+}
+
+/// The drawing methods that find the answer slots a page lacks.
+impl Boxes {
+    /// Walk the blocks, collect the answer slots to add, and note stale and retired answers.
+    fn fill_walk(&self, ns: &[Node], sec: &str, add: &mut Vec<(usize, String)>, rep: &mut Vec<String>) {
+        for n in ns {
+            if let Node::Block(b) = n {
+                if b.name == "section" {
+                    let t = b.children.iter().find_map(|c| match c { Node::Block(t) if t.name == "title" => Some(t), _ => None });
+                    let title = t.map(|t| self.text_of(t)).unwrap_or_default();
+                    self.fill_walk(&b.children, &title, add, rep);
+                    continue;
+                }
+                if b.name == "answer" {
+                    continue;
+                }
+                for c in &self.cs {
+                    if c.rule || c.id.is_empty() || c.block != b.name || !(c.section == "*" || c.section == sec) {
+                        continue;
+                    }
+                    let has = b.children.iter().any(|k| matches!(k, Node::Block(a) if a.name == "answer" && decl(a, "for").as_deref() == Some(c.id.as_str())));
+                    if has {
+                        continue;
+                    }
+                    if b.name == "code" {
+                        rep.push(format!("line {}: code block skipped, question {} needs a person", b.line, c.id));
+                        continue;
+                    }
+                    add.push((self.end_line(b), format!("answer start\nfor: {}\nasked: {}\nanswer end", c.id, c.arg)));
+                }
+                for k in &b.children {
+                    if let Node::Block(a) = k {
+                        if a.name == "answer" {
+                            let id = decl(a, "for").unwrap_or_default();
+                            match self.cs.iter().find(|c| !c.rule && c.id == id) {
+                                None => rep.push(format!("line {}: RETIRED question {}, answer kept: {}", a.line, id, decl(a, "asked").unwrap_or_default())),
+                                Some(c) => {
+                                    let saved = decl(a, "asked").unwrap_or_default();
+                                    if !saved.is_empty() && saved != c.arg {
+                                        rep.push(format!("line {}: STALE answer {}, question now: {}", a.line, id, c.arg));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                self.fill_walk(&b.children, sec, add, rep);
+            }
+        }
+    }
+}
+
+/// The page with an empty answer slot added under every question that has none, and a report of what was added or needs a person.
+pub fn fill_page(text: &str) -> Result<(String, Vec<String>), String> {
+    let tree = parse(&Buffer::from_text(text));
+    let mut starts = vec![0usize];
+    for (i, _) in text.match_indices("\n") {
+        starts.push(i + 1);
+    }
+    let kind: Option<String> = tree.nodes.iter()
+        .find_map(|n| match n { Node::Block(b) if b.name == "title" => Some(b), _ => None })
+        .and_then(|t| decl(t, "kind"))
+        .and_then(|k| k.split_whitespace().next().map(|s| s.to_string()));
+    let k = kind.ok_or("no kind: line, so no questions apply")?;
+    let cs = load_contracts(&k).ok_or("no contract data: run aiu update, or aiu see FILE --contracts once")?;
+    let v = Boxes {
+        text: text.to_string(),
+        lines: text.split("\n").map(|l| l.to_string()).collect(),
+        starts,
+        width: 60,
+        plain: true,
+        counters: [0; 12],
+        seen_title: false,
+        problems: Vec::new(),
+        cs,
+        ok: 0,
+        broken: 0,
+        open: 0,
+        unchecked: 0,
+    };
+    let mut add: Vec<(usize, String)> = Vec::new();
+    let mut rep: Vec<String> = Vec::new();
+    v.fill_walk(&tree.nodes, "", &mut add, &mut rep);
+    let mut out: Vec<String> = Vec::new();
+    for (i, l) in v.lines.iter().enumerate() {
+        for (ln, t) in &add {
+            if *ln == i + 1 {
+                out.push(t.clone());
+            }
+        }
+        out.push(l.clone());
+    }
+    rep.insert(0, format!("added {} answer slot(s)", add.len()));
+    Ok((out.join("\n"), rep))
 }

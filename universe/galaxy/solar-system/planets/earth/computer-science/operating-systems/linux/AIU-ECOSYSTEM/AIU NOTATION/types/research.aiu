@@ -1,11 +1,11 @@
 title start
 kind: research
-tags: research
-Research page: a question, how you tested it, what you found
+tags: research notes
+Research page: does plain text make notes easier to find
 title end
 
 paragraph start
-Use a research page when you investigate one question and want a reader to find the method and the results without reading everything. Replace each section text with your own.
+Use a research page when you investigate one question and want a reader to find the method and the results at once.
 paragraph end
 
 section start
@@ -14,9 +14,13 @@ Abstract
 title end
 
 paragraph start
-Summarise the whole page in a few sentences: the question, the method, the result and one limit. Write it last. A reader who stops here should still know what you found.
+We ask whether plain text files help a person find an old note faster than a note app does. Twenty notes were searched by hand and by grep on one machine. Grep found every note and the app missed some. The test was small and used one person.
+answer start
+for: qfdb2b2
+asked: Does it state the question, the method, the result and a limit?
+Yes. It names the question, the method, the result and one limit.
+answer end
 paragraph end
-
 section end
 
 section start
@@ -25,9 +29,13 @@ Introduction
 title end
 
 paragraph start
-Say what the question is and why it matters. Name what is already known and what is missing, so the reader sees where your work fits.
+People keep notes for years and then cannot find them. If the storage format decides how fast a note is found, choosing it well saves time every day.
+answer start
+for: q075df6
+asked: Does it say why the question matters?
+Yes. The cost is paid every day, for years.
+answer end
 paragraph end
-
 section end
 
 section start
@@ -36,9 +44,22 @@ Methods
 title end
 
 paragraph start
-Describe what you did so a reader could repeat it from this text alone: the material, the steps and the tools. Put commands or code in a code block.
+The same twenty notes were stored twice, as text files and in an app. For each note a search phrase was written first, then both stores were searched with it.
+answer start
+for: q6b4b50
+asked: Could a reader repeat this from the text alone?
+Yes, with the phrase list and the command below.
+answer end
 paragraph end
 
+code start
+language: bash
+grep -rl meeting notes/
+code end
+
+comment start
+A command goes in a code block so a reader can copy it. Always write the language under the start line.
+comment end
 section end
 
 section start
@@ -47,9 +68,13 @@ Results
 title end
 
 paragraph start
-Report what you found, without opinion. Every claim must point to evidence such as a number, a quote or a file. Leave the meaning for the next section.
+Grep returned all twenty notes. The app returned seventeen and ranked four of them below the first page.
+answer start
+for: q1e9f6a
+asked: Does every claim point to evidence?
+Yes. Each count comes from the search log.
+answer end
 paragraph end
-
 section end
 
 section start
@@ -58,9 +83,18 @@ Discussion
 title end
 
 paragraph start
-Say what the results mean, what they do not show, and what to test next. Be honest about limits and about anything that surprised you.
+Plain text looks better for finding notes, but one person and twenty notes show little. A larger test with several people is needed.
+answer start
+for: qabfedd
+asked: What do these results not show?
+They do not show how it scales, or whether other people would find the same.
+answer end
 paragraph end
 
+paragraph start
+todo: find three people to repeat the test
+A repeat with other people would settle the limit above.
+paragraph end
 section end
 
 section start
@@ -69,12 +103,11 @@ References
 title end
 
 paragraph start
-List every source you cited, one per line, with enough detail to find it again. A source in the text must appear here.
+No sources are cited yet. List each source here as one line.
+answer start
+for: q29fee1
+asked: Does every source cited in the text appear here?
+Not yet. The list is empty because the text cites nothing.
+answer end
 paragraph end
-
 section end
-
-comment start
-abstract, introduction, methods, results, discussion, references
-comment end
-

@@ -1,0 +1,134 @@
+title start
+kind: default
+tags: notation tutorial
+AIU notation in one page
+title end
+
+paragraph start
+Files end in .aiu. Everything sits inside a named block: a line with the name and the word start, the content, then a line with the name and the word end. Markers sit alone on their line, at column 0, in lowercase. Text outside a block is an error. Never type numbers, the viewer computes section numbers.
+paragraph end
+
+section start
+title start
+Blocks
+title end
+paragraph start
+The blocks are title, paragraph, section, code, comment and answer. A file starts with a title. A section starts with its own title, then holds paragraphs, code, comments and other sections. Paragraphs are plain prose only: no bold, italic, links, lists or tables.
+paragraph end
+code start
+language: text
+title start
+tags: demo
+My page
+title end
+
+section start
+title start
+A section
+title end
+paragraph start
+Plain text goes here.
+paragraph end
+section end
+code end
+section end
+
+section start
+title start
+Declarations
+title end
+paragraph start
+A declaration is a keyword, a colon and a value, written directly under the start line of its block.
+paragraph end
+code start
+language: text
+tags: a b c              file title
+kind: plan               file title, picks the file type
+language: racket         code block
+style: bold dim italic   paragraph or title
+color: red green blue    paragraph or title
+todo: description        any block
+for: ID                  answer
+asked: question text     answer
+code end
+section end
+
+section start
+title start
+Todo marks
+title end
+paragraph start
+A todo line puts a TODO badge in the top-right corner of the block and hangs the description under it. Start the description with the word done and the badge reads DONE.
+paragraph end
+code start
+language: text
+paragraph start
+todo: write the install guide
+Install the tool on a clean machine.
+paragraph end
+code end
+section end
+
+section start
+title start
+Comments
+title end
+paragraph start
+A comment inside a block belongs to that block. A comment around several blocks covers all of them. Each is drawn as its own box.
+paragraph end
+code start
+language: text
+paragraph start
+The text of the block.
+comment start
+A note about this block.
+comment end
+paragraph end
+code end
+section end
+
+section start
+title start
+File types
+title end
+paragraph start
+kind under the file title picks a type. The checker then rejects blocks the type forbids, demands its sections in order and applies its contracts. Types: decision, plan, research, module, note, book, journal, todo, default. A note allows no sections. The default type allows everything.
+paragraph end
+section end
+
+section start
+title start
+Questions and answers
+title end
+paragraph start
+Each type asks questions about its blocks, shown under the block. An answer block goes inside the block it judges and is matched to its question by ID. The asked line keeps a copy of the question, so a reworded question shows as STALE and nothing is rewritten.
+paragraph end
+code start
+language: text
+paragraph start
+Install the tool and run the checker.
+answer start
+for: qadd5fe
+asked: Is this one action that can be finished and checked?
+Yes. One install and one check.
+answer end
+paragraph end
+code end
+section end
+
+section start
+title start
+Commands
+title end
+code start
+language: text
+aiu check FILE     list every error with its line
+aiu see FILE       draw the page as boxes
+aiu new TYPE FILE  start a page from a type
+aiu fill FILE      add an empty answer under every question
+aiu list           show the blocks and types
+code end
+paragraph start
+Fix one error at a time from the top, because later ones often disappear.
+paragraph end
+section end

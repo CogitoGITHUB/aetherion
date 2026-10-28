@@ -4,4 +4,4 @@
 (provide book-blocks)
 
 ;; The block names a book may use.
-(define book-blocks (list "title" "section" "paragraph" "code" "comment"))
+(define book-blocks (list "title" "section" "paragraph" "code" "comment" "answer"))

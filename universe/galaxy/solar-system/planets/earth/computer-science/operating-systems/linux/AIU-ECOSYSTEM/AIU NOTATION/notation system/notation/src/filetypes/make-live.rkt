@@ -132,7 +132,7 @@
               (section-text title (items-text t (text-of name title)))))]))
 
 ;; starter-page builds the text of one type starter page from what the type allows.
-(define (starter-page t)
+(define (starter-page-plain t)
   (define name (file-type-name t))
   (string-append
    (block-text "title" (list (string-append "kind: " name)
@@ -179,11 +179,238 @@
           (blk "title" (list "A todo mark"))
           (list "")
           (blk "paragraph"
-               (append (list "todo: open" "Write the install guide.")
-                       (blk "comment" (list "todo: open draws TODO in red down the left side of the block."))))
+               (append (list "todo: write the install guide and test it on a clean machine before Friday" "Install the tool on a clean machine and run the checker on one page.")
+                       (blk "comment" (list "The word todo, a colon and a description under the start line puts TODO in the top-right corner and hangs the description under the box. Start the description with done when the task is finished."))))
           (list "")
-          (blk "paragraph" (list "todo: done" "Fix the viewer so block names sit on the left.")))))
+          (blk "paragraph" (list "todo: done viewer fixed, names now sit on the left" "Fix the viewer so block names sit on the left.")))))
    "\n"))
+
+;; stack joins blocks (each a list of lines) with one blank line between them.
+(define (stack . bs)
+  (apply append (car bs) (for/list ([b (in-list (cdr bs))]) (cons "" b))))
+
+;; The hand-written todo starter page: marks, comments on one and on two blocks, and an answer.
+(define todo-page
+  (string-append
+   (string-join
+    (stack
+     (blk "title" (list "kind: todo" "tags: todo viewer" "Todo page: tasks with marks, notes and answers"))
+     (blk "paragraph" (list "Use a todo page for tasks. Each task is one short paragraph. A todo line under its start line marks it open or done, and sections group tasks by theme."))
+     (blk "section"
+          (stack
+           (blk "title" (list "Open tasks"))
+           (blk "paragraph"
+                (append (list "todo: write the install guide and test it on a clean machine before Friday"
+                              "Install the tool on a clean machine and run the checker on one page.")
+                        (blk "answer" (list "for: qadd5fe"
+                                            "asked: Is this one action that can be finished and checked?"
+                                            "Yes. One install and one check, finished when the checker prints clean."))))
+           (blk "paragraph"
+                (append (list "todo: waiting for Anna to name the second operating system"
+                              "Test the install on a second operating system.")
+                        (blk "comment" (list "Anna may have a spare laptop. Ask her again on Monday. A comment inside a block belongs to that block.")))))) 
+     (blk "section"
+          (stack
+           (blk "title" (list "Done"))
+           (blk "comment"
+                (append (list "These two tasks came from the same review, so one comment covers both. Put the blocks inside the comment.")
+                        (list "")
+                        (blk "paragraph" (list "todo: done viewer fixed, block names now sit on the left" "Move the block names to the left edge."))
+                        (list "")
+                        (blk "paragraph" (list "todo: done contracts now show on every page" "Show the contracts without a flag."))))))
+     (blk "section"
+          (stack
+           (blk "title" (list "Ideas"))
+           (blk "paragraph" (list "A task with no todo line is just a note. Keep each task under forty words, and split it when it needs more."))
+           (blk "comment" (list "The questions under each block come from the todo type. Fill them in with an answer block; the answer is matched to its question by ID, so reordering questions never breaks it.")))))
+    "\n")
+   "\n"))
+
+;; ans builds an answer block for the question of a type whose text holds frag, with its ID and saved text.
+(define (ans type frag text)
+  (define c
+    (for/first ([c (in-list (contracts-of type))]
+                #:when (and (equal? (symbol->string (car c)) "question")
+                            (string-contains? (cadddr c) frag)))
+      c))
+  (if c
+      (blk "answer" (list (string-append "for: " (list-ref c 4))
+                          (string-append "asked: " (cadddr c))
+                          text))
+      (list)))
+
+;; para builds a paragraph from strings (lines) and lists (nested blocks), in the order given.
+(define (para . parts)
+  (blk "paragraph" (apply append (map (lambda (x) (if (string? x) (list x) x)) parts))))
+
+;; sec builds a section from its title and the blocks inside it.
+(define (sec title . kids)
+  (blk "section" (apply stack (cons (blk "title" (list title)) kids))))
+
+;; note builds a comment from lines of text.
+(define (note . lines)
+  (blk "comment" lines))
+
+;; cover builds one comment that wraps several blocks after its own text.
+(define (cover text . kids)
+  (blk "comment" (apply append (list text) (map (lambda (k) (cons "" k)) kids))))
+
+;; ttl builds the file title block with its kind and tags.
+(define (ttl kind tags text)
+  (blk "title" (list (string-append "kind: " kind) (string-append "tags: " tags) text)))
+
+;; page joins blocks into the text of a whole page.
+(define (page . bs)
+  (string-append (string-join (apply stack bs) "\n") "\n"))
+
+;; The decision starter page.
+(define (decision-page)
+  (page
+   (ttl "decision" "decision notes" "Decision page: keep every note as a plain text file")
+   (para "Use a decision page when you choose between options and want the reason to survive. This one is a worked example, so replace its text with your own.")
+   (sec "Context"
+        (para "Notes were spread over three apps, each with its own format. Searching meant opening every app, and an export could lose structure."
+              (ans "decision" "What forces" "Searching and exporting were already failing, and the pile grows every week."))
+        (note "Keep the context short and factual. A stranger should understand it a year from now."))
+   (sec "Options"
+        (para "Stay with the three apps. Move everything to one plain text format. Use a database."
+              (ans "decision" "Which option was rejected" "The database was rejected, because no plain editor opens it and grep cannot read it."))
+        (para "todo: ask whether pictures need a fourth option" "Pictures and tables fit none of these options yet."))
+   (sec "Decision"
+        (para "Write every note as a plain text file in one folder, and read it with any editor."
+              (ans "decision" "Is it one choice" "Yes. One folder and one format, with no exceptions.")))
+   (sec "Consequences"
+        (para "Search and diffs become simple and nothing is locked in. Pictures and tables need their own answer later."
+              (ans "decision" "What gets harder" "Pictures and tables, and any tool that expects a database."))
+        (para "todo: done folder created and the first fifty notes moved" "The move started the same week."))))
+
+;; The plan starter page.
+(define (plan-page)
+  (page
+   (ttl "plan" "plan release" "Plan page: ship the first public release")
+   (para "Use a plan page for work that has an end. It forces you to say what finished means, so the plan cannot be silently dropped.")
+   (sec "Goal"
+        (para "A person can install the tool on a clean machine and check one page in under five minutes."
+              (ans "plan" "Can the goal" "Yes. One outcome that someone can time.")))
+   (sec "Steps"
+        (para "todo: done guide written" "Write the install guide in plain steps."
+              (ans "plan" "Is each step" "Yes. One action, finished when the guide exists."))
+        (para "todo: waiting for a clean machine" "Run the guide on a clean machine and note every place it fails.")
+        (para "Fix what the clean run showed, then run it again.")
+        (note "A comment inside a block belongs to that block. Use it for a reminder that is not part of the step."))
+   (sec "Done when"
+        (para "The guide works on a clean machine without help, and the archive is public."
+              (ans "plan" "Could someone check" "Yes. Run the guide, then open the public link.")))
+   (sec "Open questions"
+        (para "todo: ask Anna by Monday" "Who tests on a second operating system, and by what date?"
+              (ans "plan" "Who can answer" "Anna, and nobody else has a second machine.")))))
+
+;; The research starter page.
+(define (research-page)
+  (page
+   (ttl "research" "research notes" "Research page: does plain text make notes easier to find")
+   (para "Use a research page when you investigate one question and want a reader to find the method and the results at once.")
+   (sec "Abstract"
+        (para "We ask whether plain text files help a person find an old note faster than a note app does. Twenty notes were searched by hand and by grep on one machine. Grep found every note and the app missed some. The test was small and used one person."
+              (ans "research" "Does it state" "Yes. It names the question, the method, the result and one limit.")))
+   (sec "Introduction"
+        (para "People keep notes for years and then cannot find them. If the storage format decides how fast a note is found, choosing it well saves time every day."
+              (ans "research" "why the question matters" "Yes. The cost is paid every day, for years.")))
+   (sec "Methods"
+        (para "The same twenty notes were stored twice, as text files and in an app. For each note a search phrase was written first, then both stores were searched with it."
+              (ans "research" "Could a reader repeat" "Yes, with the phrase list and the command below."))
+        (blk "code" (list "language: bash" "grep -rl meeting notes/"))
+        (note "A command goes in a code block so a reader can copy it. Always write the language under the start line."))
+   (sec "Results"
+        (para "Grep returned all twenty notes. The app returned seventeen and ranked four of them below the first page."
+              (ans "research" "Does every claim" "Yes. Each count comes from the search log.")))
+   (sec "Discussion"
+        (para "Plain text looks better for finding notes, but one person and twenty notes show little. A larger test with several people is needed."
+              (ans "research" "do these results not show" "They do not show how it scales, or whether other people would find the same."))
+        (para "todo: find three people to repeat the test" "A repeat with other people would settle the limit above."))
+   (sec "References"
+        (para "No sources are cited yet. List each source here as one line."
+              (ans "research" "Does every source" "Not yet. The list is empty because the text cites nothing.")))))
+
+;; The module starter page.
+(define (module-page)
+  (page
+   (ttl "module" "module example" "Module page: a tiny function explained before its code")
+   (para "Use a module page to document one piece of code so it can be understood without running it. Say what it is for first, then show it.")
+   (sec "Purpose"
+        (para "Add one to a number. It does not read input, print anything or check that the input is a number."
+              (ans "module" "What problem" "It gives the other code one named step for adding one, and nothing more."))
+        (para "todo: decide whether it should refuse a text input" "The page leaves that out on purpose."))
+   (sec "Code"
+        (para "The code goes in a code block, with its language written under the start line.")
+        (blk "code" (list "language: racket" "(define (add-one n)" "  (+ n 1))"))
+        (note "A code body is opaque, so a question about code cannot be answered inside it. A person answers it here, beside the code."))))
+
+;; The note starter page.
+(define (note-page)
+  (page
+   (ttl "note" "note idea" "Note page: one idea, said once")
+   (para "Use a note page to capture one idea. It holds a title and paragraphs only, so it stays small. When the idea grows, move it to a type that has sections."
+         (ans "note" "Is this one idea" "Yes. One idea: a note stays small because it cannot grow sections."))
+   (para "todo: link this idea to the page that uses it" "Keep each paragraph to one point a reader could restate in a sentence.")
+   (note "A note may hold a comment and a code block as well. Here is a code block.")
+   (blk "code" (list "language: text" "one idea, a few paragraphs, no sections"))))
+
+;; The journal starter page.
+(define (journal-page)
+  (page
+   (ttl "journal" "journal workshop" "Journal page: a week in the workshop")
+   (sec "Monday: the viewer day"
+        (para "Moved the block names to the left so the centre is free for the text. Then fixed the todo mark, so the word sits in the wall of the box. Next I want the contracts visible on every page."
+              (ans "journal" "What happened" "The viewer changed. I decided to keep the letters in the wall and hang the description under the box.")))
+   (sec "Tuesday: contracts and answers"
+        (para "todo: write the other starter pages" "Questions now have permanent IDs, so an answer can never end up under the wrong question. Reordering questions no longer breaks a file."
+              (ans "journal" "What happened" "Answers match by ID. I learned that the checker was counting nested lines, and fixed it.")))))
+
+;; The book starter page.
+(define (book-page)
+  (page
+   (ttl "book" "book chapter" "Book page: a chapter on how notes become pages")
+   (para "Use a book page for long writing: a chapter, a guide or an essay. The title names the chapter and each section covers one part of it.")
+   (sec "The idea"
+        (para "A note is only useful when it can be found and understood later. A named block tells a reader and a script what each piece of text is."
+              (ans "book" "Does this paragraph hold one idea" "Yes. Named blocks make a note findable and readable."))
+        (note "A comment can sit in a block, or wrap several blocks as in the next section."))
+   (sec "The method"
+        (cover "These two paragraphs describe one method, so one comment covers both."
+               (para "Write the page, then run the checker until it prints clean.")
+               (para "todo: add a short example page" "Read the checker output from the top, because later errors often disappear."))
+        (blk "code" (list "language: bash" "aiu check page.aiu")))))
+
+;; The default starter page.
+(define (default-page)
+  (page
+   (ttl "default" "default example" "Default page: every block in one place")
+   (para "The default type allows every block and has no required sections. Use it when no other type fits, and pick a stricter type when one does.")
+   (sec "Blocks"
+        (para "A section groups blocks under one title. This one shows a paragraph, a comment, a code block and a todo mark."
+              (ans "default" "Does the paragraph make one point" "Yes. It lists what a section can hold."))
+        (para "todo: done add a section inside a section" "Sections nest, so a part can have parts of its own.")
+        (blk "code" (list "language: racket" "(display hello)"))
+        (note "The default type asks that every code block names its language."))
+   (sec "Nested"
+        (sec "A section inside a section"
+             (para "A section can hold sections, and the viewer numbers them for you.")))))
+
+;; starter-page uses a hand-written page for each type that has one and the generated one for the rest.
+(define (starter-page t)
+  (define name (file-type-name t))
+  (cond
+    [(equal? name "todo") todo-page]
+    [(equal? name "decision") (decision-page)]
+    [(equal? name "plan") (plan-page)]
+    [(equal? name "research") (research-page)]
+    [(equal? name "module") (module-page)]
+    [(equal? name "note") (note-page)]
+    [(equal? name "journal") (journal-page)]
+    [(equal? name "book") (book-page)]
+    [(equal? name "default") (default-page)]
+    [else (starter-page-plain t)]))
 
 ;; main writes a starter page for every type that loads.
 (module+ main

@@ -5,11 +5,11 @@
 (provide the-type the-contracts)
 
 ;; The todo type.
-(define the-type (file-type "todo" "tasks grouped in sections" (list "title" "section" "paragraph" "comment")))
+(define the-type (file-type "todo" "tasks grouped in sections" (list "title" "section" "paragraph" "comment" "answer")))
 
 ;; The contracts of a todo page. A rule is checked; a question is only reported.
 (define the-contracts
-  (list (list 'question "*" "title" "Does the title name one group of tasks?")
+  (list (list 'question "*" "title" "Does the title name one group of tasks?" "q8d0b1f")
         (list 'rule "*" "paragraph" 'max-words 40)
         (list 'rule "*" "paragraph" 'max-lines 3)
-        (list 'question "*" "paragraph" "Is this one action that can be finished and checked?")))
+        (list 'question "*" "paragraph" "Is this one action that can be finished and checked?" "qadd5fe")))

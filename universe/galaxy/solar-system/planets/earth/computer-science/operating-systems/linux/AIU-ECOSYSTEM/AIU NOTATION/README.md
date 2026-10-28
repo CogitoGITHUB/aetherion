@@ -92,7 +92,8 @@ In the viewer: every block is a box named after its kind, the title box shows it
 | `paragraph` | prose; the viewer joins and wraps lines; a blank line starts a new paragraph |
 | `section` | a title first, then paragraph, code, comment or section blocks |
 | `code` | text kept exactly; `language:` under its start line |
-| `comment` | a note for readers; shown as plain text; never put a line `x start` or `x end` inside |
+| `comment` | a note for readers; inside a block it attaches to that block, around blocks it covers all of them; shown as its own box |
+| `answer` | the answer to one contract question; goes inside the block it judges, with `for: ID` and `asked: question text` |
 | `heading` | older flat heading with `level:`; being replaced by `section`; do not write new ones |
 | `table`, `header`, `row` | parsed, but `check` rejects them; do not use yet |
 
@@ -107,9 +108,12 @@ Run `aiu list` for the live list.
 | `language` | `code` | any language name |
 | `style` | `paragraph`, `title` | `bold`, `dim`, `italic`, `underline` (several, space separated) |
 | `color` | `paragraph`, `title` | `red green yellow blue magenta cyan white gray` |
+| `todo` | any block | `todo: description`, or `todo: done description` when finished; the viewer writes TODO or DONE in the top-right corner of the box; a description hangs under the box in a tray |
+| `for` | `answer` | the ID of the question answered; matching is by ID, never by number or position |
+| `asked` | `answer` | a saved copy of the question text; if the type words it differently the viewer shows STALE and changes nothing |
 | `theme`, `format`, `font` | any | accepted, ignored by terminals |
 
-Registered but not verified, do not use: `level`, `caption`, `column`, `cell`, `row-id`, `meta`, `todo`.
+Registered but not verified, do not use: `level`, `caption`, `column`, `cell`, `row-id`, `meta`.
 
 ## 8. File types
 
@@ -124,7 +128,7 @@ A page picks a type with `kind: NAME` under its title start line. `check` then r
 | `note` | none allowed |
 | `book`, `journal`, `todo`, `default` | no required sections |
 
-Other sections may follow the required ones. Starter pages live in `types/` (generated, never edited by hand).
+Other sections may follow the required ones. Starter pages live in `types/` (generated, never edited by hand); `types/comment.aiu` shows attached comments and todo marks.
 
 ### Contracts
 
@@ -161,6 +165,7 @@ Then set the description, allowed blocks and contracts in `notation/src/filetype
 | `aiu pick [FOLDER]` | tv page picker; the preview shows the contracts panel |
 | `aiu list` | blocks and file types that exist now |
 | `aiu new TYPE FILE` | new page from a type starter, checked |
+| `aiu fill FILE` | adds an empty answer slot under every question that has none; never edits an answer; reports STALE and RETIRED ones |
 | `aiu newtype NAME` | new file type from the template |
 | `aiu update` | rebuild the binary and regenerate `types/` if stale |
 | `aiu gate` | run the light gate |
@@ -226,6 +231,10 @@ Fix one error at a time from the top. Later ones may disappear.
 | exact round trip | works |
 | viewer `see`, shows comments | works |
 | boxed viewer, contracts shown on the blocks they judge | works |
+| comment attached to a block or around several blocks | works |
+| `todo:` mark in the top-right corner of a box, description in a tray under it | works |
+| questions with answers, matched by ID, shown under each block | works |
+| `aiu fill`: empty answer slots, stale and retired reports | works |
 | `aiu` command, tv picker and menus | works |
 | `aiu update`, `list`, `gate`, `new`, `newtype` | works |
 | `render` keeps every line of a code body, marker-looking lines included | works |

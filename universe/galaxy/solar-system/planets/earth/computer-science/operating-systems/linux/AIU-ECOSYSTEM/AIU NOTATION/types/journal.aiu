@@ -1,21 +1,36 @@
 title start
 kind: journal
-tags: journal
-Journal page: dated entries in plain prose
+tags: journal workshop
+Journal page: a week in the workshop
 title end
-
-paragraph start
-Use a journal page to write what happened and what you learned, one section per day or topic. Put the date or the topic in each section title.
-paragraph end
 
 section start
 title start
-First section
+Monday: the viewer day
 title end
 
 paragraph start
-Write what happened, what you decided and what you learned, in plain sentences. Do not tidy it. A later reader needs the facts and the reason more than good style.
+Moved the block names to the left so the centre is free for the text. Then fixed the todo mark, so the word sits in the wall of the box. Next I want the contracts visible on every page.
+answer start
+for: q22f4a9
+asked: What happened, and what was decided or learned?
+The viewer changed. I decided to keep the letters in the wall and hang the description under the box.
+answer end
 paragraph end
-
 section end
 
+section start
+title start
+Tuesday: contracts and answers
+title end
+
+paragraph start
+todo: write the other starter pages
+Questions now have permanent IDs, so an answer can never end up under the wrong question. Reordering questions no longer breaks a file.
+answer start
+for: q22f4a9
+asked: What happened, and what was decided or learned?
+Answers match by ID. I learned that the checker was counting nested lines, and fixed it.
+answer end
+paragraph end
+section end

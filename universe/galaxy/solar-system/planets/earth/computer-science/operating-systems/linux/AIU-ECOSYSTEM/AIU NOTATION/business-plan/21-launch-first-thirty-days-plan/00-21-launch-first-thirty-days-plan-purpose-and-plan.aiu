@@ -1,0 +1,47 @@
+title start
+kind: default
+tags: business-plan launch purpose plan
+Launch: the first thirty days
+title end
+
+paragraph start
+The ordered plan to go live and earn fast.
+paragraph end
+
+section start
+title start
+Plan
+title end
+paragraph start
+Lay out the days from setup to first results, with checklists, so nothing waits.
+paragraph end
+section end
+
+section start
+title start
+Subfolders
+title end
+code start
+language: text
+01-launch-pre-launch-preparation
+02-launch-week-one
+03-launch-week-two
+04-launch-week-three
+05-launch-week-four
+06-launch-thirty-day-review
+07-launch-ai-and-automation
+code end
+paragraph start
+Everything here stays general. Specific content types, topics, platforms and accounts are added later as new folders on top of these.
+paragraph end
+section end
+
+section start
+title start
+Files to plan next
+title end
+paragraph start
+todo: plan the files of each subfolder
+Decide which pages each subfolder needs and which file type each page uses.
+paragraph end
+section end

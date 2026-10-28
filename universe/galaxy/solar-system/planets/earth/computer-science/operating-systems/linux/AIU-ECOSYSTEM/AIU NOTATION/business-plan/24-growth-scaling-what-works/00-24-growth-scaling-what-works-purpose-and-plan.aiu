@@ -1,0 +1,45 @@
+title start
+kind: default
+tags: business-plan growth purpose plan
+Growth: scaling what works
+title end
+
+paragraph start
+How the brand grows after launch.
+paragraph end
+
+section start
+title start
+Plan
+title end
+paragraph start
+Plan the stages of growth, collaborations, and how to add accounts, each decided from analytics.
+paragraph end
+section end
+
+section start
+title start
+Subfolders
+title end
+code start
+language: text
+01-growth-growth-stages
+02-growth-collaborations
+03-growth-adding-accounts-and-scaling
+04-growth-content-scaling
+05-growth-ai-and-automation
+code end
+paragraph start
+Everything here stays general. Specific content types, topics, platforms and accounts are added later as new folders on top of these.
+paragraph end
+section end
+
+section start
+title start
+Files to plan next
+title end
+paragraph start
+todo: plan the files of each subfolder
+Decide which pages each subfolder needs and which file type each page uses.
+paragraph end
+section end

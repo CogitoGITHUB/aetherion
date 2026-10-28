@@ -1,11 +1,11 @@
 title start
 kind: decision
-tags: decision
-Decision page: record one choice and why
+tags: decision notes
+Decision page: keep every note as a plain text file
 title end
 
 paragraph start
-Use a decision page when you choose between options and want the reason to survive. Fill each section below and replace this text with your own.
+Use a decision page when you choose between options and want the reason to survive. This one is a worked example, so replace its text with your own.
 paragraph end
 
 section start
@@ -14,9 +14,17 @@ Context
 title end
 
 paragraph start
-Say what forces the choice now: the problem, the limits, and what happens if nothing changes. Write it so a stranger understands it a year from now. Keep it short and factual.
+Notes were spread over three apps, each with its own format. Searching meant opening every app, and an export could lose structure.
+answer start
+for: q552a83
+asked: What forces this decision now?
+Searching and exporting were already failing, and the pile grows every week.
+answer end
 paragraph end
 
+comment start
+Keep the context short and factual. A stranger should understand it a year from now.
+comment end
 section end
 
 section start
@@ -25,9 +33,18 @@ Options
 title end
 
 paragraph start
-List the realistic ways to solve it, one sentence each, and say which you rejected and why. A rejected option written down stops the same argument from coming back.
+Stay with the three apps. Move everything to one plain text format. Use a database.
+answer start
+for: qe8a03e
+asked: Which option was rejected, and why?
+The database was rejected, because no plain editor opens it and grep cannot read it.
+answer end
 paragraph end
 
+paragraph start
+todo: ask whether pictures need a fourth option
+Pictures and tables fit none of these options yet.
+paragraph end
 section end
 
 section start
@@ -36,9 +53,13 @@ Decision
 title end
 
 paragraph start
-State the one choice you made, in a sentence someone can act on. No hedging and no list of maybes.
+Write every note as a plain text file in one folder, and read it with any editor.
+answer start
+for: qf9407a
+asked: Is it one choice, stated so someone can act on it?
+Yes. One folder and one format, with no exceptions.
+answer end
 paragraph end
-
 section end
 
 section start
@@ -47,12 +68,16 @@ Consequences
 title end
 
 paragraph start
-Say what becomes easier, and above all what becomes harder, because of this choice. This is the part you will be glad to have in a year.
+Search and diffs become simple and nothing is locked in. Pictures and tables need their own answer later.
+answer start
+for: q0cb6eb
+asked: What gets harder because of this decision?
+Pictures and tables, and any tool that expects a database.
+answer end
 paragraph end
 
+paragraph start
+todo: done folder created and the first fifty notes moved
+The move started the same week.
+paragraph end
 section end
-
-comment start
-one decision: context, options, decision, consequences
-comment end
-

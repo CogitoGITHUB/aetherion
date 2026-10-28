@@ -1,7 +1,7 @@
 title start
 kind: plan
-tags: plan
-Plan page: a goal, the steps, and when it is done
+tags: plan release
+Plan page: ship the first public release
 title end
 
 paragraph start
@@ -14,9 +14,13 @@ Goal
 title end
 
 paragraph start
-Write the outcome as one sentence, not an activity. Say what will be true when you are finished, for example a result someone could look at.
+A person can install the tool on a clean machine and check one page in under five minutes.
+answer start
+for: q575f3b
+asked: Can the goal be stated as one outcome, not an activity?
+Yes. One outcome that someone can time.
+answer end
 paragraph end
-
 section end
 
 section start
@@ -25,13 +29,27 @@ Steps
 title end
 
 paragraph start
-Write each step as one action that can be finished and checked, one paragraph per step.
+todo: done guide written
+Write the install guide in plain steps.
+answer start
+for: q5e9296
+asked: Is each step one action that can be finished and checked?
+Yes. One action, finished when the guide exists.
+answer end
 paragraph end
 
 paragraph start
-Put the steps in the order you will do them. If a step needs two actions, split it.
+todo: waiting for a clean machine
+Run the guide on a clean machine and note every place it fails.
 paragraph end
 
+paragraph start
+Fix what the clean run showed, then run it again.
+paragraph end
+
+comment start
+A comment inside a block belongs to that block. Use it for a reminder that is not part of the step.
+comment end
 section end
 
 section start
@@ -40,9 +58,13 @@ Done when
 title end
 
 paragraph start
-Write the test that proves the goal is reached, so someone else could run it without asking you.
+The guide works on a clean machine without help, and the archive is public.
+answer start
+for: qd95f0b
+asked: Could someone check this without asking the author?
+Yes. Run the guide, then open the public link.
+answer end
 paragraph end
-
 section end
 
 section start
@@ -51,12 +73,12 @@ Open questions
 title end
 
 paragraph start
-List what you do not know yet, and who can answer each question. Remove a question once it is answered.
+todo: ask Anna by Monday
+Who tests on a second operating system, and by what date?
+answer start
+for: q5f8e09
+asked: Who can answer each open question?
+Anna, and nobody else has a second machine.
+answer end
 paragraph end
-
 section end
-
-comment start
-a goal, its steps, when it is done, what is open
-comment end
-

@@ -93,7 +93,7 @@ def main [cmd?: string, target?: path, extra?: string, --plain (-p), --contracts
   let view = ($root | path join tools see aiu)
   let rk = ($env.HOME | path join opt racket-full bin racket)
   let racket = ($env.AIU_RACKET? | default (if ($rk | path exists) { $rk } else { "racket" }))
-  let known = ["check" "render" "parse" "roundtrip" "see" "open" "pick" "update" "list" "gate" "new" "newtype"]
+  let known = ["check" "render" "parse" "roundtrip" "see" "open" "pick" "update" "list" "gate" "new" "newtype" "fill"]
   if not ($cmd in $known) {
     error make {msg: $"unknown command '($cmd)'. Use one of: ($known | str join ' ')"}
   }
@@ -112,6 +112,11 @@ def main [cmd?: string, target?: path, extra?: string, --plain (-p), --contracts
   }
   if $cmd == "new" {
     new-page $root $racket $bin $target $extra
+    return
+  }
+  if $cmd == "fill" {
+    refresh-contracts $root $racket
+    run-external $bin "fill" $target
     return
   }
   if $cmd == "newtype" {
@@ -229,6 +234,7 @@ def update-package [root: string, bin: string, racket: string] {
   } else {
     print "pages: up to date"
   }
+  refresh-contracts $root $racket
 }
 
 # list-package prints the block names the parser knows and the file types that load.

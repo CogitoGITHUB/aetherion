@@ -45,15 +45,15 @@ A todo mark
 title end
 
 paragraph start
-todo: open
-Write the install guide.
+todo: write the install guide and test it on a clean machine before Friday
+Install the tool on a clean machine and run the checker on one page.
 comment start
-todo: open draws TODO in red down the left side of the block.
+The word todo, a colon and a description under the start line puts TODO in the top-right corner and hangs the description under the box. Start the description with done when the task is finished.
 comment end
 paragraph end
 
 paragraph start
-todo: done
+todo: done viewer fixed, names now sit on the left
 Fix the viewer so block names sit on the left.
 paragraph end
 section end

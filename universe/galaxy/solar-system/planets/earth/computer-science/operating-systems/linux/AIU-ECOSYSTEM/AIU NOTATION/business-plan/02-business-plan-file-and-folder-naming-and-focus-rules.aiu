@@ -1,0 +1,90 @@
+title start
+kind: default
+tags: business-plan rules naming focus
+Business plan rules for naming, focusing and creating files and folders
+title end
+
+paragraph start
+These rules apply to every file and folder in this business plan, for a person and for any AI. They change only when the owner says so.
+paragraph end
+
+section start
+title start
+Names
+title end
+paragraph start
+Every file and every folder is named so that its name alone says exactly what it holds. A longer name is fine. A name that makes you guess is not.
+paragraph end
+paragraph start
+Never use a general name such as intro, notes, misc, general, stuff, data, info or content on its own. If a name could fit many things, it is the wrong name.
+paragraph end
+paragraph start
+A file name starts with the topic of its folder, then the subject of the file, so fuzzy search by topic finds it and shows what it is. Names are lowercase words joined with hyphens, with no spaces. A two digit number comes first, as the numbering rules below say.
+paragraph end
+paragraph start
+The title inside a file says the same thing as its name.
+paragraph end
+section end
+
+section start
+title start
+Files
+title end
+paragraph start
+Every file is an aiu file that follows 00-notation-usage-guide-for-any-ai.aiu. A file that does not check clean is not finished.
+paragraph end
+paragraph start
+One subject per file. If a second subject appears while writing, it becomes a second file. Never put two subjects in one file.
+paragraph end
+paragraph start
+Keep every file small enough to read in one sitting. When a file grows past one clear subject, split it, so nobody has to search a long file or guess how many things are in it.
+paragraph end
+paragraph start
+Before creating a file, check that no existing file already covers the subject. Extend that file only if the new text is the same subject, otherwise create a new focused file.
+paragraph end
+paragraph start
+Never store passwords, recovery codes, card numbers or other secrets in any file.
+paragraph end
+section end
+
+section start
+title start
+Folders
+title end
+paragraph start
+A folder holds one category. Every folder has one purpose file, named after the folder with purpose-and-plan at the end, that says what the folder is and what is planned for it.
+paragraph end
+paragraph start
+Never create a folder or a file without a full, specific name, and never leave a folder without its purpose file once it holds anything.
+paragraph end
+paragraph start
+The general folders stay general. Specific content types, topics, platforms and accounts are added later as new folders on top of the general ones, each following these same rules.
+paragraph end
+section end
+
+section start
+title start
+Numbering and order
+title end
+paragraph start
+Every folder and every file starts with a two digit number that follows the order in which the work happens in practice, from the first step to the last. Numbers restart inside each folder.
+paragraph end
+paragraph start
+Within a folder, zero zero is always the purpose file, and the numbers after it follow the order of the work. When the order changes, renumber the names, and never give one number to two subjects in the same folder.
+paragraph end
+paragraph start
+Every area that handles something physical has a hardware folder, and every area has an ai and automation folder, so each one has a plan for its equipment and for what can be delegated or automated.
+paragraph end
+paragraph start
+A new file starts as a stub: a title and a todo mark with no content, so the file tree shows what exists and what is still to write.
+paragraph end
+section end
+
+section start
+title start
+Changing these rules
+title end
+paragraph start
+Nobody changes this file except on the explicit request of the owner. An AI that thinks a rule should change says so and waits.
+paragraph end
+section end
