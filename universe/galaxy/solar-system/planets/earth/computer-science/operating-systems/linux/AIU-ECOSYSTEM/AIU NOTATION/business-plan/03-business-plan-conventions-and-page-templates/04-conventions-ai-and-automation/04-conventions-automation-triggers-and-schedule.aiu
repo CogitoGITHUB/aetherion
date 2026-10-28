@@ -1,10 +1,19 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions automation-triggers-and-schedule
 Conventions automation triggers and schedule
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+A name audit runs after every batch of new files, before the tree is given to an AI, and once a week.
 paragraph end
+
+paragraph start
+The audit lists the names that break the pattern, so a person or an AI reads a short report instead of the whole tree.
+paragraph end
+
+paragraph start
+todo: build the name audit command
+Not built yet. An AI does the audit by hand.
+paragraph end
+

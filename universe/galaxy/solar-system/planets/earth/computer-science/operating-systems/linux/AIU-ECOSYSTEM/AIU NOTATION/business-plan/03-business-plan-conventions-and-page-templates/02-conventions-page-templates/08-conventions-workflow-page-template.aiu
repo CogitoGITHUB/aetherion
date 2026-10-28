@@ -1,10 +1,34 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions workflow-page-template
 Conventions workflow page template
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+A workflow page describes one repeatable process from trigger to finished result. It uses the plan file type, which requires Goal, Steps, Done when and Open questions in that order.
 paragraph end
+
+paragraph start
+Each step is one action that can be finished and checked. The page names who does the step, a person or an AI, so automation can be added later.
+paragraph end
+
+code start
+language: text
+title start
+kind: plan
+tags: business-plan AREAKEY workflow
+Name of the process
+title end
+
+section start
+title start
+Goal
+title end
+paragraph start
+The finished result as one outcome.
+paragraph end
+section end
+
+Steps, Done when and Open questions follow in the same shape.
+code end
+

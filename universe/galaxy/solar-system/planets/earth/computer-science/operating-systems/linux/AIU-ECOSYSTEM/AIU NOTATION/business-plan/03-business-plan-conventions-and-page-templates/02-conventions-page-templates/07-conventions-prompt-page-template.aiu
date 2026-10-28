@@ -1,10 +1,23 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions prompt-page-template
 Conventions prompt page template
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+A prompt page stores one prompt for one task. The prompt text goes in a code block so it is kept exactly. Around it, the page states the task, the input the AI needs, the output expected, and what a person checks before using it.
 paragraph end
+
+paragraph start
+One prompt per page. Variants of a prompt are named in the page name and never stacked in one file.
+paragraph end
+
+code start
+language: text
+Task: what the AI must produce
+Input: what it receives
+Rules: what it must follow, including the folder rules
+Output: the exact form of the answer
+Stop: where it must stop and wait
+code end
+

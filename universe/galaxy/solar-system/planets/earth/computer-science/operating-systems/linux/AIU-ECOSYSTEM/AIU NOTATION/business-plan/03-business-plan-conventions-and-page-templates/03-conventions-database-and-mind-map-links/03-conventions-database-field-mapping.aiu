@@ -1,10 +1,28 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions database-field-mapping
 Conventions database field mapping
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Every file becomes one database row. Its fields come from its path and its content, so no field has to be typed twice.
 paragraph end
+
+paragraph start
+Folders become rows too, with the same fields minus the file ones.
+paragraph end
+
+code start
+language: text
+area number       from the area folder name
+area name         from the area folder name
+subfolder number  from the subfolder name
+subfolder name    from the subfolder name
+file number       from the file name
+subject           from the file name
+kind              from the kind line
+tags              from the tags line
+todo state        open, done or none, from the todo line
+answers           from answer blocks, matched by question ID
+code end
+

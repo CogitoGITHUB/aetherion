@@ -1,10 +1,18 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions search-and-tagging-conventions
 Conventions search and tagging conventions
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Fuzzy search works on file names, so the area key comes right after the number and the last word names the kind of page.
 paragraph end
+
+paragraph start
+The ending word tells you what the page is. Rules states what must always hold. Procedure gives ordered steps. Checklist is items to tick. Template is a skeleton to copy. List is a plain inventory. Register is a record of items that exist. Log is entries added over time. Plan is intended future work. Method describes how something is done. Recipe gives exact settings. Criteria are the tests for a choice. Profile describes one person or thing.
+paragraph end
+
+paragraph start
+Each page also carries a tags line under its title, as the tag vocabulary page says.
+paragraph end
+

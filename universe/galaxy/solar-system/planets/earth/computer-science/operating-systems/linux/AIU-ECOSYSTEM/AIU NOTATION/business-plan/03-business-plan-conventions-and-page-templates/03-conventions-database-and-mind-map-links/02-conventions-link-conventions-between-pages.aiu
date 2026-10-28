@@ -1,10 +1,23 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions link-conventions-between-pages
 Conventions link conventions between pages
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+The notation has no link syntax yet, so a page refers to another page by writing its exact file name in a paragraph, including the number and the area key.
 paragraph end
+
+paragraph start
+Because numbers can change, every reference is found by searching for the old name when a folder is renumbered. A reference never uses a short or informal name.
+paragraph end
+
+paragraph start
+An area key is never reused by another area, so a file name stays unique in the whole tree even when numbers repeat.
+paragraph end
+
+paragraph start
+todo: add link support to the notation, or a tool that rewrites references on renumbering
+Until then references are updated by hand.
+paragraph end
+

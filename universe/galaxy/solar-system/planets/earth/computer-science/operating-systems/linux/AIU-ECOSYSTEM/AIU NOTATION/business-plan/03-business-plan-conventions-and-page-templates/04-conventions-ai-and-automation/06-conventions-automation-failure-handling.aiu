@@ -1,10 +1,14 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions automation-failure-handling
 Conventions automation failure handling
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+If a rename or a check fails, the AI stops at the first error, reports the real output and waits.
 paragraph end
+
+paragraph start
+It never retries blindly, never deletes anything to make an error disappear, and never edits a page only to satisfy a check unless asked.
+paragraph end
+

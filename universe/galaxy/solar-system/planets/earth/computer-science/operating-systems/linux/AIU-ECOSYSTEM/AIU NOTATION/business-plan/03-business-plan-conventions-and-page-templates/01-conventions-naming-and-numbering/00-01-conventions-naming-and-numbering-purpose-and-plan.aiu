@@ -1,10 +1,10 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions purpose plan
 Conventions naming and numbering purpose and plan
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+This folder holds the rules for naming and numbering every file and folder in the business plan: the file pattern, the folder pattern, the order of numbers, how to renumber, and how names help search.
 paragraph end
+

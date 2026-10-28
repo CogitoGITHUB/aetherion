@@ -1,10 +1,14 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions ai-tasks-that-can-be-delegated
 Conventions ai tasks that can be delegated
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+An AI may create stubs for new areas, rename and renumber after approval, update subfolder lists, run checks and report the real output, and audit names against the naming rules.
 paragraph end
+
+paragraph start
+An AI may not change the rules, delete files, or start a new area unless the owner asks.
+paragraph end
+

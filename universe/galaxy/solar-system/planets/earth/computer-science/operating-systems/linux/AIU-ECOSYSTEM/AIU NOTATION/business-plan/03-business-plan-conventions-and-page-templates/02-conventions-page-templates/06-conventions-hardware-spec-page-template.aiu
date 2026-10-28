@@ -1,10 +1,25 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions hardware-spec-page-template
 Conventions hardware spec page template
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+A hardware spec page covers one piece of equipment or one equipment category. It states the job the equipment must do before it names any product.
 paragraph end
+
+paragraph start
+It is a note page with the fields as plain lines in one code block.
+paragraph end
+
+code start
+language: text
+job to do      what it must achieve
+minimum        the weakest acceptable level
+preferred      the better option if the budget allows
+budget limit   the most to spend
+where to buy   shops or sellers
+status         needed, ordered, owned or retired
+replacement    what happens when it fails
+code end
+

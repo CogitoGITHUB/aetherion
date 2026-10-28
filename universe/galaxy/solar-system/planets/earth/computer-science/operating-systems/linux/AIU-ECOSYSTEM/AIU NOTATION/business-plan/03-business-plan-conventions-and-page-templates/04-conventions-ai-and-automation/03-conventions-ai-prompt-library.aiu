@@ -1,10 +1,22 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions ai-prompt-library
 Conventions ai prompt library
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Prompts for this area are stored one per page. The first one audits names.
 paragraph end
+
+paragraph start
+More prompts are added as separate pages when they are needed.
+paragraph end
+
+code start
+language: text
+Read the notation usage guide and the naming rules first.
+List every file and folder in the business plan whose name breaks the naming rules.
+Report each one with the rule it breaks.
+Do not rename anything. Stop after the report.
+code end
+

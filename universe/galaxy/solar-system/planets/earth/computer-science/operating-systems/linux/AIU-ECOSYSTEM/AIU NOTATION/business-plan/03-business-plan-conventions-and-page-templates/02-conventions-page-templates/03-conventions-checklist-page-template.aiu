@@ -1,10 +1,28 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions checklist-page-template
 Conventions checklist page template
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+A checklist page lists steps to tick, one task per paragraph. It uses the todo file type. A todo line marks a task open, and starting the description with done marks it finished.
 paragraph end
+
+paragraph start
+One checklist per page and one purpose per checklist, so it can be run without reading anything else.
+paragraph end
+
+code start
+language: text
+title start
+kind: todo
+tags: business-plan AREAKEY checklist
+What the checklist is for
+title end
+
+paragraph start
+todo: why this step matters
+The step as one action.
+paragraph end
+code end
+

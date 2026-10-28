@@ -1,10 +1,14 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions human-review-checkpoints
 Conventions human review checkpoints
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+The owner approves every renumbering, every change to the rules, every deletion and every new area.
 paragraph end
+
+paragraph start
+Before and after each of these, the AI shows the tree so the change can be seen.
+paragraph end
+

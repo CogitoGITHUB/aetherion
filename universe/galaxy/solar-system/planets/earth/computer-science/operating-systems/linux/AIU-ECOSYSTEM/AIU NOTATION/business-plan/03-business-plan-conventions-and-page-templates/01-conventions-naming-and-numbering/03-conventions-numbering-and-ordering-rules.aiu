@@ -1,10 +1,18 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions numbering-and-ordering-rules
 Conventions numbering and ordering rules
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Numbers have two digits and follow the order in which the work happens in practice, from the first step to the last. They do not rank importance.
 paragraph end
+
+paragraph start
+Numbers restart inside every folder. Zero zero is always the purpose file. In the root, the notation usage guide is zero zero, the introduction is zero one, these rules are zero two, and the areas start at zero three.
+paragraph end
+
+paragraph start
+Two subjects never share a number in the same folder, and numbers are not skipped, so the sequence always reads without gaps.
+paragraph end
+

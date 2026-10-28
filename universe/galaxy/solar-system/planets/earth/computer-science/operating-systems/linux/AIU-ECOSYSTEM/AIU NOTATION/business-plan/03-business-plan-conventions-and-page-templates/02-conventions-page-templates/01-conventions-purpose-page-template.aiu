@@ -1,10 +1,36 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions purpose-page-template
 Conventions purpose page template
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+A purpose page explains one folder: what it holds, what is planned for it, and which files still need planning. It uses the default file type and is named zero zero, the folder name, and purpose and plan.
 paragraph end
+
+paragraph start
+It stays general. It describes the folder and never holds content that belongs in a subject file.
+paragraph end
+
+code start
+language: text
+title start
+kind: default
+tags: business-plan AREAKEY purpose plan
+Folder name purpose and plan
+title end
+
+paragraph start
+What the folder holds.
+paragraph end
+
+section start
+title start
+Plan
+title end
+paragraph start
+What is planned for the folder.
+paragraph end
+section end
+code end
+

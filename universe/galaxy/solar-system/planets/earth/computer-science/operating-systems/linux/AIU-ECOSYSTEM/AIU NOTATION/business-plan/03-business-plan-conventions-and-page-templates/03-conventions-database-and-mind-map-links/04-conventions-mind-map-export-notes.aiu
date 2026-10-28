@@ -1,10 +1,23 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions mind-map-export-notes
 Conventions mind map export notes
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+The folder tree is already the skeleton of a mind map. The root is the business plan, the areas are the first branches, the subfolders the second, and the files are the leaves.
 paragraph end
+
+paragraph start
+Links between pages would add cross connections, and todo marks and tags could colour the nodes.
+paragraph end
+
+paragraph start
+The box view can show more than a mind map, and how the two fit together is not decided. This page only records that the numbering keeps both options open.
+paragraph end
+
+paragraph start
+todo: decide how the mind map and the box view work together
+Decide after the first group of files is written.
+paragraph end
+

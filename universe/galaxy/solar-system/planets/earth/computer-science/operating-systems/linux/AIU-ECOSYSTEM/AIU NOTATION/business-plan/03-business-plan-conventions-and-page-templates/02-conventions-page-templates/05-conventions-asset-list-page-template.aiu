@@ -1,10 +1,21 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions asset-list-page-template
 Conventions asset list page template
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+An asset list names every file of one kind that the brand needs, one per line, with where it is used and its status. It is a plain inventory and does not describe the assets.
 paragraph end
+
+paragraph start
+It is a note page with one code block, because the lines are kept exactly as written.
+paragraph end
+
+code start
+language: text
+overlay-glitch-scanlines | video intro | made
+logo-white-transparent | all videos | to make
+avatar-square-monochrome | all accounts | to make
+code end
+

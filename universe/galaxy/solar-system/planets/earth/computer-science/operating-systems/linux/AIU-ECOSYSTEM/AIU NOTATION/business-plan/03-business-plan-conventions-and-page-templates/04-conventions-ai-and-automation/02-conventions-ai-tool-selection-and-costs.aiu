@@ -1,10 +1,15 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions ai-tool-selection-and-costs
 Conventions ai tool selection and costs
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+The work is done by the command line AI the owner runs, using the notation usage guide and the root introduction as its instructions. No other tool is needed for these conventions.
 paragraph end
+
+paragraph start
+todo: record which AI tool is used and what it costs per month
+Fill this in once the tool is settled.
+paragraph end
+

@@ -1,10 +1,24 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions file-naming-pattern
 Conventions file naming pattern
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Every file name has four parts in this order: a two digit number, the area key, the subject in plain words, and the extension aiu. Words are lowercase and joined with hyphens, with no spaces, accents or capital letters.
 paragraph end
+
+paragraph start
+The subject part says exactly what the single file covers, so the name alone tells you what is inside. A long name is correct. A short name that makes you guess is wrong.
+paragraph end
+
+paragraph start
+A date appears in a name only when the file is a dated log or a dated report.
+paragraph end
+
+code start
+language: text
+01-brand-colour-palette-monochrome-white-red-purple-rules.aiu
+03-cinematography-composition-rules.aiu
+code end
+

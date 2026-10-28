@@ -1,10 +1,14 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions ai-data-and-privacy-limits
 Conventions ai data and privacy limits
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+An AI working here sees only the business plan folder and nothing else on the device.
 paragraph end
+
+paragraph start
+No file in this folder holds passwords, recovery codes, card numbers or other secrets, so nothing secret can reach an AI.
+paragraph end
+

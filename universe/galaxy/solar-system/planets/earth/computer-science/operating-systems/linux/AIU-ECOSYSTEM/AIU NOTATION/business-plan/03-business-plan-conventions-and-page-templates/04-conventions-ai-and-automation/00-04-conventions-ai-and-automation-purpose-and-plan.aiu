@@ -1,10 +1,10 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions purpose plan
 Conventions ai and automation purpose and plan
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+This folder holds how an AI and automation work with the conventions: what can be delegated, the tools, prompts, triggers, review points, failure handling and data limits.
 paragraph end
+

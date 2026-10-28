@@ -1,10 +1,30 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions research-page-template
 Conventions research page template
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+A research page covers one question and its evidence. It uses the research file type, so the checker demands the six sections in order. One question per page: a second question becomes a second page.
 paragraph end
+
+code start
+language: text
+title start
+kind: research
+tags: business-plan AREAKEY research
+The question as a title
+title end
+
+section start
+title start
+Abstract
+title end
+paragraph start
+The question, the method, the result and one limit.
+paragraph end
+section end
+
+The same shape repeats for Introduction, Methods, Results, Discussion and References.
+code end
+

@@ -1,10 +1,23 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions renumbering-procedure
 Conventions renumbering procedure
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Renumbering happens only when the order of the work changes or a new step is inserted, and only after the owner approves.
 paragraph end
+
+paragraph start
+The steps are: decide the new position, move every later number in that folder up by one, rename the files and folders in one batch, update the subfolder list in the folder purpose file and the folder list in the root introduction, then check a sample of pages.
+paragraph end
+
+paragraph start
+If any step fails, stop and report the real output. Do not repair by guessing.
+paragraph end
+
+paragraph start
+todo: write a script that renumbers a folder and updates every reference
+Today this is done in one batch by an AI after the owner approves.
+paragraph end
+

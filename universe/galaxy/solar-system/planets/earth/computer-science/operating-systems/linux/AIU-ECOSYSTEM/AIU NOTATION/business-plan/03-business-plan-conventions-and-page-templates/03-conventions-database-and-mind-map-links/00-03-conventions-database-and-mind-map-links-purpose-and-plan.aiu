@@ -1,10 +1,10 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions purpose plan
 Conventions database and mind map links purpose and plan
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+This folder holds how pages become database rows and how the tree becomes a mind map: tags, links between pages, field mapping and export notes.
 paragraph end
+

@@ -1,10 +1,23 @@
 title start
-kind: default
-tags: business-plan conventions stub
+kind: note
+tags: business-plan conventions tag-vocabulary
 Conventions tag vocabulary
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Each page has one tags line under its title. The tags are, in order, business-plan, the area key, then the subject words.
 paragraph end
+
+paragraph start
+A page that has not been written yet also carries the tag stub, and the tag is removed when the page is written.
+paragraph end
+
+paragraph start
+Tags describe the page and never decide what it means.
+paragraph end
+
+paragraph start
+todo: decide whether pages need a status tag such as draft or final
+Only the stub tag exists today.
+paragraph end
+
