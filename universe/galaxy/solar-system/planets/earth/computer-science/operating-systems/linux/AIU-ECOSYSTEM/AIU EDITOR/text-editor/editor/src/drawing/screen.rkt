@@ -23,8 +23,11 @@
 (define (ansi code)
   (string-append "\u001b[" code))
 
-;; clear-screen is the whole screen, gone, and the cursor in the corner.
-(define clear-screen (ansi "2J"))
+;; clear-screen is the whole screen, gone, and the cursor in the corner. The
+;; HOME is part of it: a frame must start at row 1 whatever was printed over
+;; the last one, or the next frame would be drawn from wherever that text left
+;; the cursor and the whole screen would shift.
+(define clear-screen (string-append (ansi "2J") (ansi "H")))
 
 ;; cursor-to answers a move to one row and one column, both 1-based.
 (define (cursor-to row column)
@@ -66,9 +69,11 @@
 
 ;; paint answers the whole screen for one state: the text from the first
 ;; visible line, blank rows filling the window, the mode line on the last row,
-;; and the cursor on the point. A point outside the window is clamped into it,
-;; so the cursor is never drawn on the mode line.
-(define (paint text point width height top mode-line)
+;; and — when there is a cursor — the cursor on the point. A point outside the
+;; window is clamped into it, so the cursor is never drawn on the mode line.
+;; The view layer has no cursor: it is a page being read, not a point being put
+;; down, and a cursor there would claim a place the keys cannot type at.
+(define (paint text point width height top mode-line cursor? preformatted?)
   (define rows (string-split text "\n" #:trim? #f))
   (define visible (max 1 (- height 1)))
   (define top-line (max 1 (min top (max 1 (length rows)))))
@@ -82,9 +87,12 @@
    (append
     (list clear-screen)
     (for/list ([line (in-list shown)])
-      (string-append (fit line width) "\n"))
+      (string-append (if preformatted? line (fit line width)) "\n"))
     (list (ansi "7m") (fit mode-line width) (ansi "27m")
-          (cursor-to (- cursor-row top-line -1) (+ column 1))))
+          (if cursor?
+              (string-append (ansi "?25h")
+                             (cursor-to (- cursor-row top-line -1) (+ column 1)))
+              (ansi "?25l"))))
    ""))
 
 ;; The painter, for the session above it.

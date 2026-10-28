@@ -25,7 +25,7 @@
 ;; cursor stands — and the selection, which is the region around the
 ;; point when a selection is on. The point and the selection are boxes,
 ;; because a command changes them.
-(struct session (file journal point selection layer level) #:transparent)
+(struct session (file journal point selection layer level view-top) #:transparent)
 
 ;; name<? orders two names, whether they are symbols or strings: the table
 ;; of commands is keyed by strings and the answers come back keyed by
@@ -194,6 +194,15 @@
 (define (command-level-up session words)
   (cons #t (format "level: ~a" (set-level! session (min 3 (+ (the-level session) 1))))))
 
+;; command-view-up scrolls the rendered view up one line. The view has a
+;; place of its own, so reading a long page never moves the point.
+(define (command-view-up session words)
+  (cons #t (format "view line: ~a" (set-view-top! session (sub1 (the-view-top session))))))
+
+;; command-view-down scrolls the rendered view down one line.
+(define (command-view-down session words)
+  (cons #t (format "view line: ~a" (set-view-top! session (add1 (the-view-top session))))))
+
 ;; command-blocks answers the blocks of the page the session edits, one line
 ;; each: the name, the lines it covers and its declarations. It is the page as
 ;; a person reads it, and it is read through the notation engine.
@@ -300,6 +309,8 @@
                            "select-mode" command-select-mode
                            "level-down" command-level-down
                            "level-up" command-level-up
+                           "view-up" command-view-up
+                           "view-down" command-view-down
                            "blocks" command-blocks
                            "block" command-block
                            "check" command-check
@@ -376,7 +387,7 @@
 ;; selection and the layer the editor is in. Nothing else is kept, so the
 ;; session is the only thing that carries the state between commands.
 (define (make-session file journal)
-  (session file journal (box 0) (box #f) (box "visual") (box 2)))
+  (session file journal (box 0) (box #f) (box "visual") (box 2) (box 0)))
 
 ;; the-layer answers the layer the editor is in: "visual", "write" or
 ;; "select".
@@ -398,6 +409,17 @@
 (define (set-level! session level)
   (set-box! (session-level session) level)
   level)
+
+;; the-view-top answers the first line the view shows: a rendered page is
+;; taller than the screen, so the view scrolls on its own, beside the point.
+(define (the-view-top session)
+  (unbox (session-view-top session)))
+
+;; set-view-top! puts the view at one line and answers it; a line before the
+;; top of the page is the top of the page, and there is no timer in it.
+(define (set-view-top! session line)
+  (set-box! (session-view-top session) (max 0 line))
+  (the-view-top session))
 
 ;; the-point answers where the cursor stands in this session.
 (define (the-point session)
@@ -455,6 +477,8 @@
          set-layer!
          the-level
          set-level!
+         the-view-top
+         set-view-top!
          run-command
          run-command-words
          command-names

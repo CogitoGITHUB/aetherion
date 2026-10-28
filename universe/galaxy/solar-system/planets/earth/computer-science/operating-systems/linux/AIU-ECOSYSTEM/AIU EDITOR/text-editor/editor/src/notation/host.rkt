@@ -59,10 +59,27 @@
 (define (page-answer? answer)
   (page? answer))
 
+;; view-of answers the page the way the notation's own view draws it: the
+;; boxes and colours the `notation view` command prints, so the editor's view
+;; and tv's preview are one page. A page the view cannot draw answers the
+;; reason in one line, so the view never goes blank without saying why.
+(define (view-of file journal width)
+  (define answer
+    (ask-hot "notation-view" (hasheq 'file (path->string file)
+                                     'journal (path->string journal)
+                                     'width (number->string width))))
+  (if (response-ok answer)
+      (hash-ref (response-data answer) 'text "")
+      (format "~a: ~a — ~a"
+              (answer-data answer 'kind)
+              (answer-data answer 'what)
+              (answer-data answer 'what_to_do))))
+
 ;; The seam call, for the areas above it. refusal-text is the struct's own
 ;; accessor, so a refusal always prints the one text it was built with.
 (provide page-refusal
          page-refusal-text
          page-of
          render-of
+         view-of
          page-answer?)

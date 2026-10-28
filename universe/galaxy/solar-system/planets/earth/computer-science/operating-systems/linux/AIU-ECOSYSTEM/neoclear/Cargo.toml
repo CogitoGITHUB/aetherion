@@ -1,0 +1,15 @@
+[package]
+name = "neoclear"
+version = "0.1.0"
+edition = "2021"
+description = "Clear your terminal with a rain of braille glyphs that converges, fades and vanishes."
+license = "GPL-3.0-or-later"
+
+[dependencies]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

@@ -72,6 +72,11 @@ pub const OP_GIT_HISTORY: &str = "git-history";
 /// what stays is the content. The engine is the notation crate, in process.
 pub const OP_NOTATION_RENDER: &str = "notation-render";
 
+/// OP_NOTATION_VIEW answers the page as the notation's own view draws it: the
+/// boxes, colours and numbers the `notation view` command prints. The editor's
+/// view mode shows this, so the editor and tv's preview are one page.
+pub const OP_NOTATION_VIEW: &str = "notation-view";
+
 /// OP_NOTATION answers the page of an AIU NOTATION file: the parse document
 /// (`NOTATION-DOCUMENT 1`) of the text as it stands, the journal's unsaved
 /// edits included. The engine is the notation crate, called in this process,

@@ -101,6 +101,32 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
             let rendered = notation::plain::render_plain(&text);
             (true, vec![("text".to_string(), rendered)])
         }
+        rust_exports::OP_NOTATION_VIEW => {
+            // The page as the notation's own view draws it: the same boxes and
+            // colours the `notation view` command prints, so the editor's view
+            // and tv's preview are one page. The text as it stands is what is
+            // drawn, unsaved edits included.
+            let text = current_text(&file, &journal_path);
+            let width = wire_json::arg(request, "width")
+                .trim()
+                .parse::<usize>()
+                .unwrap_or(56);
+            match notation_view(&text, width) {
+                Ok(rendered) => (true, vec![("text".to_string(), rendered)]),
+                Err(why) => (
+                    false,
+                    vec![
+                        ("kind".to_string(), "err-view-unavailable".to_string()),
+                        ("what".to_string(), why),
+                        (
+                            "what_to_do".to_string(),
+                            "build the notation package's own binary, or set AIU_NOTATION_BIN"
+                                .to_string(),
+                        ),
+                    ],
+                ),
+            }
+        }
         rust_exports::OP_GIT => {
             // The Git facts of the file's own directory. The shared layer
             // is asked, and it only reads.
@@ -378,4 +404,39 @@ fn write_answer(answer_path: &str, ok: bool, data: &[(String, String)]) {
         eprintln!("the answer file cannot be written: {}", why);
         std::process::exit(2);
     }
+}
+
+/// notation_view runs the notation's own view over one text: the same
+/// drawing the `notation view` command prints, so the editor's view and
+/// tv's preview are one page. A build that is not there is named.
+fn notation_view(text: &str, width: usize) -> Result<String, String> {
+    let named = std::env::var("AIU_NOTATION_BIN").unwrap_or_default();
+    let bin = if named.is_empty() {
+        std::path::PathBuf::from(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../../AIU NOTATION/notation system/notation/target/debug/notation"
+        ))
+    } else {
+        std::path::PathBuf::from(named)
+    };
+    if !bin.exists() {
+        return Err(format!("the notation view is not built: {} is not there", bin.display()));
+    }
+    let temp = std::env::temp_dir()
+        .join(format!("aiu-editor-view-{}.aiu", std::process::id()));
+    std::fs::write(&temp, text)
+        .map_err(|e| format!("the page could not be written to draw it: {}", e))?;
+    let drawn = std::process::Command::new(&bin)
+        .arg("view").arg(&temp)
+        .arg("--width").arg(width.to_string())
+        .output();
+    let _ = std::fs::remove_file(&temp);
+    let output = drawn.map_err(|e| format!("the notation view could not run: {}", e))?;
+    if !output.status.success() {
+        return Err(format!(
+            "the notation view refused the page: {}",
+            String::from_utf8_lossy(&output.stderr).trim()
+        ));
+    }
+    Ok(String::from_utf8_lossy(&output.stdout).to_string())
 }

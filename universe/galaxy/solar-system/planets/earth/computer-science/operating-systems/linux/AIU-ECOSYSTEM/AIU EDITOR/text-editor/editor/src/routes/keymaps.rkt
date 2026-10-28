@@ -8,9 +8,11 @@
 ;; without reading a function.
 ;;
 ;; THE KEYBOARD IS PLAIN. The owner asked for no modifier at all: no
-;; escape, no meta, no alt, no control. Every key the editor binds is a
+;; meta, no alt, no control, and no chord. Every key the editor binds is a
 ;; key a person can press on its own — a letter, a digit, space, return,
-;; tab, backspace, an arrow or a function key.
+;; tab, backspace, an arrow or a function key. ESCAPE is one of those plain
+;; keys: pressed on its own it goes back to the visual layer, where the
+;; page is read, and it never starts a chord.
 ;;
 ;; THE TRIGGER IS SPACE. A trigger starts a sequence: the trigger and the
 ;; key after it are the command. A trigger that is pressed twice is the
@@ -70,8 +72,9 @@
     ("space p" "prev-block")
     ("space e" "block-end")
     ("space r" "view")
-    ("up" "move-up")
-    ("down" "move-down")
+    ("escape" "visual-mode")
+    ("up" "view-up")
+    ("down" "view-down")
     ("left" "move-left")
     ("right" "move-right")
     ("backspace" "delete")))
@@ -92,6 +95,7 @@
     ("tab r" "view")
     ("tab n" "next-block")
     ("tab p" "prev-block")
+    ("escape" "visual-mode")
     ("up" "move-up")
     ("down" "move-down")
     ("left" "move-left")
@@ -105,7 +109,8 @@
     ("space s" "save")
     ("space q" "quit")
     ("space g" "send")
-    ("space v" "visual-mode")))
+    ("space v" "visual-mode")
+    ("escape" "visual-mode")))
 
 ;; keymaps is the whole table: a layer name and the keys of that layer.
 ;; The tables are put in with list, not with cons and not with a quote:

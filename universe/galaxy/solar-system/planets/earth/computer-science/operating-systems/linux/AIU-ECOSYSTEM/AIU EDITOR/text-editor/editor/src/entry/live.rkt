@@ -43,9 +43,11 @@
   ;; is kept here, and it changes only when the point leaves the window, so a
   ;; moving point does not drag the page under it.
   (define viewport (box 1))
-  ;; A person opens the editor to write, so the write layer is where the
-  ;; session starts: a letter is text at once. The tab starts the commands.
-  (set-layer! session "write")
+  ;; The editor opens as a VIEW: the page is shown as a person reads it, its
+  ;; block markers gone, and no cursor — nothing is typed until the person asks
+  ;; for the write layer with the space and w keys. The visual layer is where
+  ;; the commands live, so a reader cannot change the text by accident.
+  (set-layer! session "visual")
   (raw-mode)
   (display "\u001b[?1049h")
   (dynamic-wind
@@ -54,19 +56,36 @@
       (repaint session viewport)
       (key-loop session (current-input-port) viewport))
     (lambda ()
+      (display "\u001b[?25h")
       (display "\u001b[?1049l")
       (restore-settings))))
 
-;; repaint draws the whole screen for the session as it stands: the text from
-;; the first visible line, the cursor on the point, and the mode line on the
-;; last row of the terminal naming the file, the layer, the line and the block
-;; the point is in. The window moves only when the point would leave it.
+;; page-view answers the text the view layer shows: an AIU NOTATION page
+;; rendered, with its block markers gone, so the page reads as a page; any
+;; other file is shown as its own text.
+(define (page-view session raw width)
+  (define name (path->string (session-file session)))
+  (if (string-suffix? name ".aiu")
+      (view-of (session-file session) (session-journal session) width)
+      raw))
+
+;; repaint draws the whole screen for the session as it stands: in the write
+;; layer the text from the first visible line with the cursor on the point; in
+;; every other layer the page as a reader sees it, with no cursor. The mode line
+;; sits on the last row and names the file, the layer, the line and the block
+;; the point is in — in the view too, so an arrow that moves the point says so
+;; even though the page itself stays put. The window moves only when the point
+;; would leave it.
 (define (repaint session viewport)
   (define-values (width height) (terminal-size))
-  (define text (session-text session))
   (define name (path->string (session-file session)))
-  (define-values (row column) (point-line text (the-point session)))
-  (define top (viewport-top viewport row (max 1 (- height 1))))
+  (define writing? (string=? (the-layer session) "write"))
+  (define raw (session-text session))
+  (define text (if writing? raw (page-view session raw width)))
+  (define-values (row column) (point-line raw (the-point session)))
+  (define top
+    (if writing? (viewport-top viewport row (max 1 (- height 1)))
+        (add1 (the-view-top session))))
   (define where
     (if (string-suffix? name ".aiu")
         (let ([got (page-of (session-file session) (session-journal session))])
@@ -78,7 +97,9 @@
   (display
    (paint text (the-point session) width height top
           (format "~a  ~a  ~a:~a~a" (file-name-from-path (session-file session))
-                  (the-layer session) row column where)))
+                  (the-layer session) row column where)
+          writing?
+          (and (not writing?) (string-suffix? name ".aiu"))))
   (flush-output))
 
 ;; viewport-top answers the first line shown at the top of the screen: the
@@ -178,10 +199,18 @@
         ;; The keys so far are the start of a sequence: the next key is
         ;; waited for, and the wait is an action.
         (outcome 'wait #t)]
-       [(and (string=? layer "write") (text-of (car names)))
-        ;; In the write layer the keys are text, and the text is what the key
-        ;; carries — a space is a space, a return is the newline — never the
-        ;; name of the key. One key at a time, so the order cannot change.
+       [(and (text-of (car names))
+             (or (string=? layer "write")
+                 (not (string=? (car names) "space"))))
+        ;; A key that carries text WRITES. In the write layer it is the text
+        ;; itself — a space is a space, a return is the newline — and in any
+        ;; other layer it starts the write layer and then types itself, so a
+        ;; person who opens the editor as a reader types their way into
+        ;; writing: there is no cursor to find and no key to learn. The space
+        ;; is the visual and select layers' trigger, so it is never taken as
+        ;; text there; the double space still changes the layer.
+        (unless (string=? layer "write")
+          (set-layer! session "write"))
         (outcome (drop-bytes buffer (list (car runs)))
                  (run-it-words session "type" (list (text-of (car names)))))]
        [else
@@ -190,24 +219,21 @@
         (print-line (format "no key is bound to ~a" (car names)))
         (outcome (drop-bytes buffer (list (car runs))) #t)])]))
 
-;; run-it runs one command and answers whether the session goes on. The
-;; answer of the command is printed, so a person sees what the key did.
+;; run-it runs one command and answers whether the session goes on. Nothing is
+;; printed: the screen is the answer. The text is drawn where it stands, the
+;; mode line says the layer and the line, and a line of "point=12" or
+;; "bytes=5" over the page would only be painted over by the next frame — or,
+;; worse, break the frame it landed in. The commands still answer; the live
+;; session chooses not to say the answer out loud.
 (define (run-it session line)
-  (define answer (run-command session line))
-  (unless (string=? (cdr answer) "")
-    (print-line (cdr answer)))
-  (car answer))
+  (car (run-command session line)))
 
 ;; run-it-words runs one command whose words are already split, and answers
-;; whether the session goes on. A key's text is one word even when that word
-;; is a space, so the live session hands the words over whole.
+;; whether the session goes on. A key's text is one word even when that word is
+;; a space, so the live session hands the words over whole. It is silent for
+;; the same reason run-it is: the paint is the answer.
 (define (run-it-words session name words)
-  (define answer (run-command-words session name words))
-  ;; Typing is not narrated on the screen: the paint shows the text, and a
-  ;; line per letter would only be painted over. Every other answer is said.
-  (unless (or (string=? name "type") (string=? (cdr answer) ""))
-    (print-line (cdr answer)))
-  (car answer))
+  (car (run-command-words session name words)))
 
 ;; drop-bytes answers the bytes that are left when the keys that were
 ;; run are taken out of the buffer. The bytes are dropped from the FRONT,

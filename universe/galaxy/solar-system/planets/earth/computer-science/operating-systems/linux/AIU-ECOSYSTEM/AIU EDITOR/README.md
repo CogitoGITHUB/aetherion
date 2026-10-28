@@ -9,8 +9,9 @@ the rules and the configuration. The **hot path** is Rust: the key decoding, the
 the text state and the journal. They meet in one place, `join/`, and one line of JSON
 travels each way.
 
-The editor is driven from a phone, so it binds **no modifier key at all**: no escape, no
-meta, no alt, no control. Every key it takes is a key a person can press on its own.
+The editor is driven from a phone, so it binds **no modifier chord at all**: no meta, no
+alt, no control. Every key it takes is a key a person can press on its own; escape is one
+of those plain keys, and on its own it goes back to the visual layer.
 
 ## Purpose and boundaries
 
@@ -161,8 +162,11 @@ focused program sees a key first, then the editor's own layers, and the multiple
 reserved prefix applies everywhere. No layer of the editor may bind the reserved prefix
 `C-b`.
 
-**The live session.** When the input is a terminal the editor is the real editor: the keys
-are read one at a time, each one routed and run. When the input is a pipe it stays the
+**The live session.** When the input is a terminal the editor is the real editor: it opens
+in the **visual** layer, showing an `.aiu` page as a reader sees it — the block markers
+gone and no cursor, so nothing is typed by accident. The first letter a person types
+starts the write layer (and `space w` does the same by name); `escape` goes back to the view.
+The keys are read one at a time, each one routed and run. When the input is a pipe it stays the
 scripted session, one command per line, so every proof that drives the editor with a pipe
 keeps working. The terminal is put in raw mode, and the settings that were found are saved
 first, so the terminal is given back exactly as it was found even when the editor is
