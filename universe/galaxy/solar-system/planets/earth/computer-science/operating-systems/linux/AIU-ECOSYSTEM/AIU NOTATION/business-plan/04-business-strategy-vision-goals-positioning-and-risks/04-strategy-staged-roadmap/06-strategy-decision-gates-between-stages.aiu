@@ -1,10 +1,23 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy decision-gates-between-stages
 Strategy decision gates between stages
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Each stage ends at a gate: a short list of conditions that must be true before moving on. The gate decides between continue, change and stop. Gates use numbers from the success metrics page, never feelings.
 paragraph end
+
+code start
+language: text
+gate after stage zero   launch readiness checklist complete
+gate after stage one    routine held for thirty days
+gate after stage two    a repeatable winning format found
+gate after stage three  income covers costs
+code end
+
+paragraph start
+todo: set the number for each gate
+The owner sets them after the first review.
+paragraph end
+

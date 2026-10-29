@@ -1,10 +1,19 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy ai-prompt-library
 Strategy ai prompt library
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+The first prompt runs a competitor audit.
 paragraph end
+
+code start
+language: text
+Read the notation usage guide and the competitor profile template first.
+Take the competitor and the platform I give you.
+Fill one profile page using only what is visible on their public pages.
+Mark every unknown field as unknown.
+Stop after the page is written and checked.
+code end
+

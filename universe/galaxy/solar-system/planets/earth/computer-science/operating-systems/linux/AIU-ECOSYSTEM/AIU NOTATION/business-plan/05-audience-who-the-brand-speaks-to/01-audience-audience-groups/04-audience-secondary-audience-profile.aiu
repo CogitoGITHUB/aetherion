@@ -1,10 +1,26 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience secondary-audience-profile
 Audience secondary audience profile
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+This page describes the second group, chosen after the primary one is clear. A second group is added only when it needs different content, not just a different label.
 paragraph end
+
+paragraph start
+Use the fields of the group profile template.
+paragraph end
+
+code start
+language: text
+group name        unknown
+shared problem     unknown
+where they are     unknown
+code end
+
+paragraph start
+todo: choose the secondary group and fill this page from research
+Decide after the primary profile is written.
+paragraph end
+

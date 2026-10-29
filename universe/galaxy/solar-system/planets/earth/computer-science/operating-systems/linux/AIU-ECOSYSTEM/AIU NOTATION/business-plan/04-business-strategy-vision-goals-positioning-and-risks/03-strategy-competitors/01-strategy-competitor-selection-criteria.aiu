@@ -1,10 +1,14 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy competitor-selection-criteria
 Strategy competitor selection criteria
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Choose competitors by what a viewer would watch instead of this brand, not only by topic. Pick a small set: some larger, some at the same stage and some in neighbouring subjects.
 paragraph end
+
+paragraph start
+Record why each was chosen, so the set can be rebuilt later.
+paragraph end
+

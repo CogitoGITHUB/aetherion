@@ -1,10 +1,10 @@
 title start
-kind: default
-tags: business-plan research stub
-Research platform algorithm behaviour purpose and plan
+kind: note
+tags: business-plan research purpose plan
+03 research platform algorithm behaviour
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+This folder holds how the platform feeds rank videos: the method, ranking signals, retention, posting frequency, captions and a dated change log.
 paragraph end
+

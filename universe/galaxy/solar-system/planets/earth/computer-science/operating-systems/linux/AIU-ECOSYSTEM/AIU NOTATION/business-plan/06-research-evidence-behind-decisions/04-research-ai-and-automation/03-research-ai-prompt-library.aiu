@@ -1,10 +1,22 @@
 title start
-kind: default
-tags: business-plan research stub
+kind: note
+tags: business-plan research ai-prompt-library
 Research ai prompt library
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+The first prompt drafts one evidence page.
 paragraph end
+
+code start
+language: text
+Read the notation usage guide and the research page template first.
+Take the question I give you.
+Search for reviews first, then single studies.
+Write one research page, one question only.
+Every claim needs its source in References. Mark secondary sources.
+Paraphrase everything and keep any quote under fifteen words.
+If you find no evidence, say so in the page and add a todo.
+Stop after the page is written and checked.
+code end
+

@@ -21,12 +21,22 @@ mod rust_exports;
 
 use std::env;
 use std::fs;
+use std::io::{BufRead, BufReader, Write};
 
 /// main reads the request, does the work, and writes the answer. The
 /// request file and the answer file are the two arguments: the wire is a
 /// pair of files, because this build hands a child nothing for a pipe.
+///
+/// `serve IN OUT` is the same wire kept open: the two files are named
+/// pipes, the child reads a request line and writes an answer line for as
+/// long as the editor is running. A live session starts it once, so a key
+/// costs no program start.
 fn main() {
     let args: Vec<String> = env::args().collect();
+    if args.len() >= 4 && args[1] == "serve" {
+        serve(&args[2], &args[3]);
+        return;
+    }
     if args.len() < 3 {
         eprintln!("the hot path needs the request file and the answer file");
         std::process::exit(2);
@@ -60,6 +70,55 @@ fn main() {
 
     let (ok, data) = answer_for(&request);
     write_answer(&answer_path, ok, &data);
+}
+
+/// serve keeps the wire open: one request line in, one answer line out, for
+/// as long as the editor runs. The two paths are named pipes, so the child
+/// reads a file stream — the only kind this build hands a child — and the
+/// editor starts no program for a key.
+fn serve(request_path: &str, answer_path: &str) {
+    let input = match fs::File::open(request_path) {
+        Ok(file) => file,
+        Err(why) => {
+            eprintln!("the request pipe cannot be opened: {}", why);
+            std::process::exit(2);
+        }
+    };
+    let mut output = match fs::OpenOptions::new().write(true).open(answer_path) {
+        Ok(file) => file,
+        Err(why) => {
+            eprintln!("the answer pipe cannot be opened: {}", why);
+            std::process::exit(2);
+        }
+    };
+    let reader = BufReader::new(input);
+    for line in reader.lines() {
+        let line = match line {
+            Ok(line) => line,
+            Err(_) => break,
+        };
+        if line.trim().is_empty() {
+            continue;
+        }
+        let (ok, data) = match wire_json::read_request(&line) {
+            Some(request) => answer_for(&request),
+            None => (
+                false,
+                vec![
+                    ("kind".to_string(), "err-bad-request".to_string()),
+                    ("what".to_string(), "the request line is not a request".to_string()),
+                    ("what_to_do".to_string(), "ask for one op with string args".to_string()),
+                ],
+            ),
+        };
+        let text = wire_json::write_response(ok, &data);
+        if writeln!(output, "{}", text).is_err() {
+            break;
+        }
+        if output.flush().is_err() {
+            break;
+        }
+    }
 }
 
 /// answer_for does the work the request asks for, and answers whether it

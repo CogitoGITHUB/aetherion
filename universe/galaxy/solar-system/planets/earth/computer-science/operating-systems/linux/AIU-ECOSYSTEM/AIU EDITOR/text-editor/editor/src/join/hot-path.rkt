@@ -7,6 +7,7 @@
 ;; file and in the journal.
 
 (require "transport.rkt"
+         "live-wire.rkt"
          "../machine/directories.rkt")
 
 ;; first-call-ms holds how long the first call to the hot path took.
@@ -18,9 +19,19 @@
 ;; The arguments are names and values, all strings: the hot path's reader
 ;; stays small and never guesses. The first call is measured, because
 ;; that is the hot path's start.
+;;
+;; When the live session has a wire open, the question goes over it: the
+;; child is already running, so a key pays no program start. Every other
+;; caller — a scripted session, a verb, a gate stage — has no wire, and
+;; the question starts the child once, as it always did.
 (define (ask-hot op args)
   (define started (current-inexact-milliseconds))
-  (define answer (call-over-wire (hot-path-bin) '() (hasheq 'op op 'args args)))
+  (define request (hasheq 'op op 'args args))
+  (define live (current-wire))
+  (define answer
+    (if live
+        (wire-ask live request)
+        (call-over-wire (hot-path-bin) '() request)))
   (when (not (unbox first-call-ms))
     (set-box! first-call-ms
               (inexact->exact (round (- (current-inexact-milliseconds) started)))))

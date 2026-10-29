@@ -1,10 +1,14 @@
 title start
-kind: default
-tags: business-plan research stub
+kind: note
+tags: business-plan research ai-tasks-that-can-be-delegated
 Research ai tasks that can be delegated
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+An AI may search public sources, summarise them in its own words, extract claims with their source, draft evidence pages in the research template, and flag where sources disagree.
 paragraph end
+
+paragraph start
+An AI may not invent a source, a number or a quote, and may not decide what the brand does. The owner decides.
+paragraph end
+

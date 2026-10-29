@@ -1,10 +1,19 @@
 title start
-kind: default
-tags: business-plan research stub
+kind: note
+tags: business-plan research motion-and-glitch-effects-evidence
 Research motion and glitch effects evidence
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+No evidence was found in this round on whether glitch or scan line effects help attention in short video. Treat it as a hypothesis: early motion may stop the scroll but may also lower retention if overused.
 paragraph end
+
+paragraph start
+Test it with two versions of the same video, as set out on the experiments page.
+paragraph end
+
+paragraph start
+todo: run the first glitch against clean test
+Put it in the experiments log.
+paragraph end
+

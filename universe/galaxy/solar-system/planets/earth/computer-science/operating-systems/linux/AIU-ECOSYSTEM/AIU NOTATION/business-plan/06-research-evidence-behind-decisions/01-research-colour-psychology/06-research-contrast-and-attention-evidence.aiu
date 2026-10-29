@@ -1,10 +1,76 @@
 title start
-kind: default
-tags: business-plan research stub
-Research contrast and attention evidence
+kind: research
+tags: business-plan research contrast-and-attention-evidence
+How much do contrast and a distinct colour scheme help a viewer notice a brand
 title end
 
+section start
+title start
+Abstract
+title end
 paragraph start
-todo: write this page
-Not written yet.
+Question: how much do contrast and a distinct colour scheme help a viewer notice a brand. Method: reviews and summaries of attention studies. Result: unusual and contrasting colours pull attention, but a 2025 doctoral study found that familiarity predicted early attention and choice beyond features built to stand out. Limit: the figure of forty percent more attention from a secondary source is not verified.
 paragraph end
+section end
+
+section start
+title start
+Introduction
+title end
+paragraph start
+The cyber look is meant to stand out, so this page asks how far standing out helps.
+paragraph end
+section end
+
+section start
+title start
+Methods
+title end
+paragraph start
+Read a review of colour and attention, summaries of eye tracking work, and a doctoral defence summary on brand attention.
+paragraph end
+section end
+
+section start
+title start
+Results
+title end
+paragraph start
+Red stimuli were found faster in visual search (Elliot, 2015).
+paragraph end
+paragraph start
+Marketing studies describe visual saliency, where unusual or contrasting colours pull attention inside a category. One secondary summary claims up to forty percent more attention for unique colour schemes in eye tracking, a figure that is not verified.
+paragraph end
+paragraph start
+A 2025 doctoral study found that familiarity predicted both early visual attention and final choice beyond features designed to stand out, and warned that moving too far from what viewers know can weaken recognition (Hagen-Aga, 2025).
+paragraph end
+section end
+
+section start
+title start
+Discussion
+title end
+paragraph start
+Standing out helps a first notice, but familiarity matters more over time. One consistent look is itself the main asset. Contrast is best used to make text clear.
+paragraph end
+paragraph start
+todo: verify the forty percent figure or drop it
+Not verified.
+paragraph end
+section end
+
+section start
+title start
+References
+title end
+paragraph start
+Elliot, 2015, Color and psychological functioning: a review of theoretical and empirical work, Frontiers in Psychology 6:368, https://pmc.ncbi.nlm.nih.gov/articles/PMC4383146/
+paragraph end
+paragraph start
+Hagen-Aga, 2025, doctoral defence The Third Source of Brand Saliency, University of South-Eastern Norway, https://www.usn.no/english/research/postgraduate-studies-phd/public-defences/2025/public-defence-monica-therese-hagen-aga
+paragraph end
+paragraph start
+Anu Books, 2025, review of colour in brand communication, https://anubooks.com/uploads/session_pdf/17684618881.pdf (secondary)
+paragraph end
+section end
+

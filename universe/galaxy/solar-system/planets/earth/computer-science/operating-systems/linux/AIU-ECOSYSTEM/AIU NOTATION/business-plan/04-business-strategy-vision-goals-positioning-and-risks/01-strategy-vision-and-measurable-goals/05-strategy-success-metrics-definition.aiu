@@ -1,10 +1,23 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy success-metrics-definition
 Strategy success metrics definition
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+This page defines success in numbers. It names the metrics only. The analytics area measures them.
 paragraph end
+
+paragraph start
+One metric for each of reach, attention, action, money and effort. A number that does not lead to one of these is not a goal.
+paragraph end
+
+code start
+language: text
+reach       audience growth per account
+attention   watch time and retention
+action      link clicks
+money       income per stream
+effort      hours worked per week
+code end
+

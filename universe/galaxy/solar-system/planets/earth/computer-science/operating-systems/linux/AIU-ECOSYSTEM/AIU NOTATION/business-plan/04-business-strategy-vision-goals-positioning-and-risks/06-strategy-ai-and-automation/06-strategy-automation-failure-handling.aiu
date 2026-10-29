@@ -1,10 +1,10 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy automation-failure-handling
 Strategy automation failure handling
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+If a competitor page cannot be read or has changed, the AI marks the field unknown and moves on. It never fills a gap with a guess.
 paragraph end
+

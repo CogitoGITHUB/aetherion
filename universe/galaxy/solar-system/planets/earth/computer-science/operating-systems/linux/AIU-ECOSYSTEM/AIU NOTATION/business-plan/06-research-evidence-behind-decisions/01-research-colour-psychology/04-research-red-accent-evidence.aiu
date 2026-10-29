@@ -1,10 +1,79 @@
 title start
-kind: default
-tags: business-plan research stub
-Research red accent evidence
+kind: research
+tags: business-plan research red-accent-evidence
+What does a red accent do to attention and to the viewer
 title end
 
+section start
+title start
+Abstract
+title end
 paragraph start
-todo: write this page
-Not written yet.
+Question: what does a red accent do to attention and to the viewer. Method: a review of colour and psychological functioning and a review of effects on thinking and emotion. Result: red gets a measurable attention advantage and raises arousal more than green or blue at equal lightness and saturation, but effects on performance are mixed and some did not replicate. Limit: all findings come from lab studies, not social video.
 paragraph end
+section end
+
+section start
+title start
+Introduction
+title end
+paragraph start
+Red is allowed only when needed, so this page asks what red does.
+paragraph end
+section end
+
+section start
+title start
+Methods
+title end
+paragraph start
+Read the two reviews and a popular summary, collecting findings on attention, arousal, performance and meaning.
+paragraph end
+section end
+
+section start
+title start
+Results
+title end
+paragraph start
+Red stimuli receive an attentional advantage in visual search studies, and blue light was linked to greater alertness (Elliot, 2015).
+paragraph end
+paragraph start
+At equal lightness and saturation, red causes higher arousal than green or blue, and vivid colours cause more arousal than pale ones (von Castell and co-authors, 2018).
+paragraph end
+paragraph start
+Brief exposure to red worsened performance in some anagram studies, but other attempts to replicate such effects failed (von Castell and co-authors, 2018).
+paragraph end
+paragraph start
+The meaning of red depends on context: it can convey anger, embarrassment or attraction (Elliot, 2015).
+paragraph end
+section end
+
+section start
+title start
+Discussion
+title end
+paragraph start
+Red used sparingly is supported as a cue that pulls attention. Large red areas have no support either way. Keep red for moments that need an alert feeling, such as breaking news or a warning.
+paragraph end
+paragraph start
+todo: test one red accent against none on the same series
+Put it in the experiments log.
+paragraph end
+section end
+
+section start
+title start
+References
+title end
+paragraph start
+Elliot, 2015, Color and psychological functioning: a review of theoretical and empirical work, Frontiers in Psychology 6:368, https://pmc.ncbi.nlm.nih.gov/articles/PMC4383146/
+paragraph end
+paragraph start
+von Castell, Stelzmann and co-authors, 2018, review of colour effects on cognitive performance and emotion, University of Mainz, https://experimental.psychologie.uni-mainz.de/files/2024/06/2018voncastell-stelzmann.pdf
+paragraph end
+paragraph start
+Fast Company, summary of studies on the colour red, https://www.fastcompany.com/3029854/why-the-color-red-revs-you-up-but-lowers-your-iq
+paragraph end
+section end
+

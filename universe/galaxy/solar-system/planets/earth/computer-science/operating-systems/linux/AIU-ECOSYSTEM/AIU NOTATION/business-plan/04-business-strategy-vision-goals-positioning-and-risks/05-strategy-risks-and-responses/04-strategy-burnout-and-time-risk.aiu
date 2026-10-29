@@ -1,10 +1,14 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy burnout-and-time-risk
 Strategy burnout and time risk
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+One person running many accounts is the biggest operating risk. Output falls first, then quality, then consistency.
 paragraph end
+
+paragraph start
+Response: batch production, automate what can be automated, keep a fixed weekly rhythm with rest days, and cut accounts before cutting quality.
+paragraph end
+

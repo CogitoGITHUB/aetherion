@@ -1,10 +1,70 @@
 title start
-kind: default
-tags: business-plan research stub
-Research hashtag and caption evidence
+kind: research
+tags: business-plan research hashtag-and-caption-evidence
+What do captions, hashtags and spoken words do for discovery
 title end
 
+section start
+title start
+Abstract
+title end
 paragraph start
-todo: write this page
-Not written yet.
+Question: what do captions, hashtags and spoken words do for discovery. Method: industry articles on search and discovery. Result: TikTok search reads keywords in captions, on-screen text and spoken words, and engagement signals as well. The role of hashtags compared with keywords was not established. Limit: sources are industry blogs.
 paragraph end
+section end
+
+section start
+title start
+Introduction
+title end
+paragraph start
+The brand will rely on search as well as the feed, so this page records what feeds search.
+paragraph end
+section end
+
+section start
+title start
+Methods
+title end
+paragraph start
+Read two industry articles on search and discovery.
+paragraph end
+section end
+
+section start
+title start
+Results
+title end
+paragraph start
+TikTok search looks at keywords in captions, on-screen text and spoken words, together with watch time, completion and replays.
+paragraph end
+paragraph start
+Another source lists captions, sounds and hashtags as video information the recommendation system considers.
+paragraph end
+section end
+
+section start
+title start
+Discussion
+title end
+paragraph start
+Write the key phrase in the spoken line, on the screen and in the caption. Hashtags are optional until tested.
+paragraph end
+paragraph start
+todo: test hashtags against none
+Put it in the experiments log.
+paragraph end
+section end
+
+section start
+title start
+References
+title end
+paragraph start
+Logie, TikTok search and discovery, https://logie.ai/news/?p=11206 (industry blog)
+paragraph end
+paragraph start
+Creatordb, social media algorithms in 2026, https://creatordb.app/blog/social-media-algorithms/ (industry blog, weights are directional estimates)
+paragraph end
+section end
+

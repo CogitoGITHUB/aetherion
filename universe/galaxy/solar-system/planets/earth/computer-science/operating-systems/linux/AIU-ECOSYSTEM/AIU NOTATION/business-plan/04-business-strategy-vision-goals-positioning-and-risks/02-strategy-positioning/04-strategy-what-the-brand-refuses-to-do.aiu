@@ -1,10 +1,24 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy what-the-brand-refuses-to-do
 Strategy what the brand refuses to do
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+A refusal list protects the brand when money tempts. Each refusal has a short reason so it can be defended later.
 paragraph end
+
+code start
+language: text
+never promote a product that was not used
+never hide a sponsored or affiliate post
+never publish unchecked news as fact
+never copy another creator
+never make medical promises
+code end
+
+paragraph start
+todo: confirm or change each refusal
+The owner can add or remove lines.
+paragraph end
+

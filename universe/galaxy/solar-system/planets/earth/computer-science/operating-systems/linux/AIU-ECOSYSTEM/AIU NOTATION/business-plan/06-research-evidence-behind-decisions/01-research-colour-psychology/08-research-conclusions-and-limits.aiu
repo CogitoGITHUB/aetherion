@@ -1,10 +1,27 @@
 title start
-kind: default
-tags: business-plan research stub
+kind: note
+tags: business-plan research conclusions-and-limits
 Research conclusions and limits
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Colour research is inconsistent, and a review concluded that general rules are hard to derive from it. So the colour choices are decisions made under uncertainty and are tested on the brand own posts.
 paragraph end
+
+paragraph start
+Supported: a consistent look aids recognition, red used sparingly pulls attention, vivid colours raise arousal more than pale ones, and low saturation reads as less exciting.
+paragraph end
+
+paragraph start
+Not supported or not found: white as an accent, purple, monochrome social feeds, and any effect that depends on culture. These stay hypotheses.
+paragraph end
+
+paragraph start
+Plan: use the palette as designed, record each colour choice as a decision, and run the first experiments from the experiments log before changing anything.
+paragraph end
+
+paragraph start
+todo: review these conclusions after the first ninety days of results
+Replace hypotheses with measured results.
+paragraph end
+

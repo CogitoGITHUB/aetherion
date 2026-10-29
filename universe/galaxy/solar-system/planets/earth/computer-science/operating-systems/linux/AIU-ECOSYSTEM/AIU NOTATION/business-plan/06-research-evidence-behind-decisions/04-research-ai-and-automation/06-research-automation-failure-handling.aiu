@@ -1,10 +1,10 @@
 title start
-kind: default
-tags: business-plan research stub
+kind: note
+tags: business-plan research automation-failure-handling
 Research automation failure handling
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+If a source cannot be opened, record its title and mark it unverified. If sources conflict, record both. A gap is never filled with a guess.
 paragraph end
+

@@ -1,10 +1,15 @@
 title start
-kind: default
-tags: business-plan research stub
+kind: note
+tags: business-plan research ai-tool-selection-and-costs
 Research ai tool selection and costs
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+A conversational AI with web search is enough for this area. No other tool is needed.
 paragraph end
+
+paragraph start
+todo: record the tool and its monthly cost
+Fill in once the tool is settled.
+paragraph end
+

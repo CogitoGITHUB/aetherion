@@ -164,8 +164,9 @@ reserved prefix applies everywhere. No layer of the editor may bind the reserved
 
 **The live session.** When the input is a terminal the editor is the real editor: it opens
 in the **visual** layer, showing an `.aiu` page as a reader sees it — the block markers
-gone and no cursor, so nothing is typed by accident. The first letter a person types
-starts the write layer (and `space w` does the same by name); `escape` goes back to the view.
+gone and no cursor, so nothing is typed by accident. `space w` (or a double space) is the
+only way into the write layer; a letter pressed in the view writes nothing and leaves the
+layer alone, so a stray key never starts writing. `escape` goes back to the view.
 The keys are read one at a time, each one routed and run. When the input is a pipe it stays the
 scripted session, one command per line, so every proof that drives the editor with a pipe
 keeps working. The terminal is put in raw mode, and the settings that were found are saved

@@ -1,10 +1,82 @@
 title start
-kind: default
-tags: business-plan research stub
-Research retention and watch time evidence
+kind: research
+tags: business-plan research retention-and-watch-time-evidence
+How do retention and replays affect the distribution of short videos
 title end
 
+section start
+title start
+Abstract
+title end
 paragraph start
-todo: write this page
-Not written yet.
+Question: how do retention and replays affect distribution. Method: industry articles. Result: completion and rewatches are the strongest signals on TikTok, YouTube looks at the shape of the retention curve, and looping raises watch time per view. Limit: the thresholds quoted by blogs are unverified.
 paragraph end
+section end
+
+section start
+title start
+Introduction
+title end
+paragraph start
+Retention is the signal the brand controls most through editing, so this page records what is known.
+paragraph end
+section end
+
+section start
+title start
+Methods
+title end
+paragraph start
+Read industry articles and a watch time glossary.
+paragraph end
+section end
+
+section start
+title start
+Results
+title end
+paragraph start
+TikTok accelerates distribution when people watch a video more than once without scrolling away.
+paragraph end
+paragraph start
+One source says the completion rate needed for broad distribution rose from about fifty to about seventy percent between 2024 and 2026. This is unverified.
+paragraph end
+paragraph start
+A source on Reels says viewers must pass the first three seconds and aims for about sixty percent retention. This is unverified.
+paragraph end
+paragraph start
+YouTube looks at the shape of the retention curve, not only total minutes, and a video that loops raises watch time per view.
+paragraph end
+section end
+
+section start
+title start
+Discussion
+title end
+paragraph start
+Shorter videos finish more often, and the first seconds decide most of the result. Measure the own retention before trusting any number from a blog.
+paragraph end
+paragraph start
+todo: measure own retention on the first twenty posts
+Compare with the quoted numbers.
+paragraph end
+section end
+
+section start
+title start
+References
+title end
+paragraph start
+Creatordb, social media algorithms in 2026, https://creatordb.app/blog/social-media-algorithms/ (industry blog, weights are directional estimates)
+paragraph end
+paragraph start
+Post Everywhere, how the YouTube algorithm works, updated February 2026, https://posteverywhere.ai/blog/how-the-youtube-algorithm-works (industry blog)
+paragraph end
+paragraph start
+Captions, how to make Instagram reels, https://captions.ai/blog/how-to-make-instagram-reels (industry blog)
+paragraph end
+paragraph start
+Post Everywhere, watch time glossary, https://posteverywhere.ai/social-media-terms/watch-time (industry blog)
+paragraph end
+section end
+

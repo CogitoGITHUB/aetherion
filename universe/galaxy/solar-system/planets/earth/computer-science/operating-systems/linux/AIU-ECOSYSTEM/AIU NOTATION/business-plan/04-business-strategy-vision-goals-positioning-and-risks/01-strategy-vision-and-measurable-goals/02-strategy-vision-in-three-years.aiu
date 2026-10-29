@@ -1,10 +1,19 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy vision-in-three-years
 Strategy vision in three years
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+The three year vision describes what the business looks like in practice: where the audience is, how income is split between streams, how much work is automated and who helps.
 paragraph end
+
+paragraph start
+Write it as an ordinary week in the future, not as a slogan.
+paragraph end
+
+paragraph start
+todo: describe an ordinary week three years from now
+Written by the owner, after the first ninety day review.
+paragraph end
+

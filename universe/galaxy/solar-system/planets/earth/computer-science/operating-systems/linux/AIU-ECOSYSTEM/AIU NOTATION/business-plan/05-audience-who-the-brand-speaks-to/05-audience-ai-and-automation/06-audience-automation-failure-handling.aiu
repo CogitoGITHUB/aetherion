@@ -1,10 +1,10 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience automation-failure-handling
 Audience automation failure handling
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+If a source cannot be read, mark it unavailable and continue. If the numbers are too small to mean anything, mark them small. Gaps are never filled with guesses.
 paragraph end
+

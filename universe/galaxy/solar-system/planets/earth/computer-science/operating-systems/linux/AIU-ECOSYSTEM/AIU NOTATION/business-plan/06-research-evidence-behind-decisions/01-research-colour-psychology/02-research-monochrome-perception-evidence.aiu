@@ -1,10 +1,70 @@
 title start
-kind: default
-tags: business-plan research stub
-Research monochrome perception evidence
+kind: research
+tags: business-plan research monochrome-perception-evidence
+Does a low saturation monochrome look change how a brand is perceived
 title end
 
+section start
+title start
+Abstract
+title end
 paragraph start
-todo: write this page
-Not written yet.
+Question: does a monochrome, low saturation look change how a viewer perceives a brand. Method: a review of colour and psychological functioning and a marketing study read through secondary summaries. Result: saturation is linked with perceived excitement and lightness with a robust impression, so a monochrome look should read as restrained and strong, not exciting. Limit: no study of monochrome social feeds was found, so this stays a hypothesis.
 paragraph end
+section end
+
+section start
+title start
+Introduction
+title end
+paragraph start
+The brand look is monochrome. Before relying on it, this page asks what research says about low saturation and about dark and light tones.
+paragraph end
+section end
+
+section start
+title start
+Methods
+title end
+paragraph start
+Searched for reviews on colour and psychological functioning and for marketing studies on colour and brand personality. Read the available abstracts and summaries. The primary marketing paper was not read in full.
+paragraph end
+section end
+
+section start
+title start
+Results
+title end
+paragraph start
+Marketing experiments on logos and packaging found that all three parts of colour affect brand personality: hue, saturation and value, where value means how light or dark. Saturation was strongly connected with excitement and value with robustness (Labrecque and Milne, 2012, through a secondary summary).
+paragraph end
+paragraph start
+A review of colour effects on thinking and emotion found that vivid colours raise arousal more than pale ones, and that the overall picture is inconsistent, so general rules for real life are hard to derive.
+paragraph end
+section end
+
+section start
+title start
+Discussion
+title end
+paragraph start
+Taken together, a low saturation look should signal calm and strength more than excitement. That suits a serious, technical brand and may work against content that needs an energetic feel. The accents then carry the energy.
+paragraph end
+paragraph start
+todo: test the monochrome look against a version with more colour
+Put it in the experiments log once accounts are live.
+paragraph end
+section end
+
+section start
+title start
+References
+title end
+paragraph start
+Labrecque and Milne, 2012, Exciting red and competent blue, Journal of the Academy of Marketing Science. Read only through secondary summaries, verify against the paper.
+paragraph end
+paragraph start
+von Castell, Stelzmann and co-authors, 2018, review of colour effects on cognitive performance and emotion, University of Mainz, https://experimental.psychologie.uni-mainz.de/files/2024/06/2018voncastell-stelzmann.pdf
+paragraph end
+section end
+

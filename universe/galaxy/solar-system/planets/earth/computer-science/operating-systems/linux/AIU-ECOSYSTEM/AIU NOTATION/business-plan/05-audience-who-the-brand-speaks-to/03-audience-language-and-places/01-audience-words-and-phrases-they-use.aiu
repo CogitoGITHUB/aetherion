@@ -1,10 +1,19 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience words-and-phrases-they-use
 Audience words and phrases they use
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+A plain list of the words and phrases the audience uses for its problems, goals and tools, copied exactly, including misspellings. It feeds captions, hooks, hashtags and search terms.
 paragraph end
+
+paragraph start
+The list is never replaced by words the brand likes better.
+paragraph end
+
+code start
+language: text
+phrase | meaning | where seen | times seen
+code end
+

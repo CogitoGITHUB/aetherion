@@ -1,10 +1,76 @@
 title start
-kind: default
-tags: business-plan research stub
-Research white accent evidence
+kind: research
+tags: business-plan research white-accent-evidence
+Does white work as the main accent colour for a dark monochrome brand
 title end
 
+section start
+title start
+Abstract
+title end
 paragraph start
-todo: write this page
-Not written yet.
+Question: does white work as the main accent for a dark monochrome brand. Method: the same reviews, read for any finding on white. Result: little direct evidence. White served as a neutral control in a colour and performance review, and a cross country study links natural colour associations such as white and purity across populations. Limit: nothing on white accents in social video was found.
 paragraph end
+section end
+
+section start
+title start
+Introduction
+title end
+paragraph start
+White is the planned main accent, so this page asks whether research supports it.
+paragraph end
+section end
+
+section start
+title start
+Methods
+title end
+paragraph start
+Read the colour and cognition review and a secondary article on the cross country study of colour associations, looking only for what they say about white.
+paragraph end
+section end
+
+section start
+title start
+Results
+title end
+paragraph start
+In the colour and cognition review, white was used as the control condition, which treats it as a neutral reference and not as a colour with its own effect.
+paragraph end
+paragraph start
+A cross country study reported through a secondary article found that colour associations rooted in nature, such as white with purity, tend to be shared across populations (Jonauskaite and co-authors, 2020).
+paragraph end
+paragraph start
+Brand studies linked the lightness of a colour to a robust impression (Labrecque and Milne, 2012).
+paragraph end
+section end
+
+section start
+title start
+Discussion
+title end
+paragraph start
+White on a dark background gives the highest contrast, which helps text overlays stay readable. That is a design fact and was not tested here.
+paragraph end
+paragraph start
+todo: find research on text legibility and contrast on small screens
+Not searched yet.
+paragraph end
+section end
+
+section start
+title start
+References
+title end
+paragraph start
+von Castell, Stelzmann and co-authors, 2018, review of colour effects on cognitive performance and emotion, University of Mainz, https://experimental.psychologie.uni-mainz.de/files/2024/06/2018voncastell-stelzmann.pdf
+paragraph end
+paragraph start
+Jonauskaite and co-authors, 2020, colour and emotion associations across 55 countries, Psychological Science. Read only through a secondary article at https://www.thebrandingjournal.com, verify against the paper.
+paragraph end
+paragraph start
+Labrecque and Milne, 2012, Exciting red and competent blue, Journal of the Academy of Marketing Science. Read only through secondary summaries, verify against the paper.
+paragraph end
+section end
+

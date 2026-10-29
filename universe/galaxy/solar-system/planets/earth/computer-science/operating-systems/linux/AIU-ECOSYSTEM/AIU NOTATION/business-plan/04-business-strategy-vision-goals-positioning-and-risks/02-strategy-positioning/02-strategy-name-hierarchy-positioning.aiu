@@ -1,10 +1,22 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy name-hierarchy-positioning
 Strategy name hierarchy positioning
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+SHAPE is the primary name and the face the audience meets first. SHAPESHIFTER and ARCHITECT are two other faces of the same brand. This page fixes what each face means in the market. How each face is used in posts is written in the brand area.
 paragraph end
+
+code start
+language: text
+SHAPE         primary name, first contact
+SHAPESHIFTER  to be decided
+ARCHITECT     to be decided
+code end
+
+paragraph start
+todo: decide what SHAPESHIFTER and ARCHITECT mean to the audience
+The owner decides.
+paragraph end
+

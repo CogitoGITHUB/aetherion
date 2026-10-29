@@ -1,10 +1,24 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy ninety-day-goals
 Strategy ninety day goals
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Ninety day goals cover the first quarter: accounts live, content published, links earning and a routine that works. Each goal has one number and one date.
 paragraph end
+
+paragraph start
+Keep the list short so the work stays focused.
+paragraph end
+
+code start
+language: text
+goal | number | date | how it is measured
+code end
+
+paragraph start
+todo: set the numbers for the first ninety days
+The owner sets them. Nothing is guessed here.
+paragraph end
+

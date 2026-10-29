@@ -1,10 +1,10 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience ai-data-and-privacy-limits
 Audience ai data and privacy limits
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Only public comments and answers given with permission are used. Names, handles and profile links are not stored in the files. No file holds secrets, and the platform rules are checked before collecting at scale.
 paragraph end
+

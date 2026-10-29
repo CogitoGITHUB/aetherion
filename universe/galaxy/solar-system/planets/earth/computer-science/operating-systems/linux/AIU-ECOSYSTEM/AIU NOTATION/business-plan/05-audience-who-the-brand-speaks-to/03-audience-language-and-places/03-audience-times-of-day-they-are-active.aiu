@@ -1,10 +1,10 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience times-of-day-they-are-active
 Audience times of day they are active
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+This page records when the audience is active. Before the first posts, times come from the posting times of large accounts and are marked as estimates. After launch they come from the analytics of the own posts.
 paragraph end
+

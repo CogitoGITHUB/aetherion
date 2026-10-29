@@ -1,10 +1,20 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience top-problems-ranked
 Audience top problems ranked
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+A ranked list of problems, most frequent first, each with a count and one example sentence. The list is rebuilt after every research round, and older versions are kept in the experiments log.
 paragraph end
+
+code start
+language: text
+rank | problem | times seen | example sentence | source
+code end
+
+paragraph start
+todo: fill the list from the first research round
+Needs the research method pages first.
+paragraph end
+

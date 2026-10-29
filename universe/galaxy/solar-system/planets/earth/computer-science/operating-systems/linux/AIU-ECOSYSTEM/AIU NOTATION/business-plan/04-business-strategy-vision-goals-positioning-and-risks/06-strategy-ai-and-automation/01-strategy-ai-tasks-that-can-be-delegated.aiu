@@ -1,10 +1,14 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy ai-tasks-that-can-be-delegated
 Strategy ai tasks that can be delegated
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+An AI may draft options for the goal, position and roadmap pages, run competitor audits from public pages, summarise findings and check pages against the templates.
 paragraph end
+
+paragraph start
+An AI does not decide the mission, the goals, the position or the gates. The owner decides and the AI records.
+paragraph end
+

@@ -1,10 +1,10 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience search-trend-method
 Audience search trend method
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Search suggestions show what people type. Type the beginning of a problem into a search box, record the suggestions, and repeat for each problem. Compare with the comment findings, since a term that appears in both is strong.
 paragraph end
+

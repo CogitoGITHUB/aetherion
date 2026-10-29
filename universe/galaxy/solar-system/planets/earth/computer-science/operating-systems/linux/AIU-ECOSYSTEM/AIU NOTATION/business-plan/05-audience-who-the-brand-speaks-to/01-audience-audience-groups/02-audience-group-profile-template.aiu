@@ -1,10 +1,27 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience group-profile-template
 Audience group profile template
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+One profile per group, one group per page. A profile page is created in this folder when a group is chosen.
 paragraph end
+
+paragraph start
+Facts come from the research methods in this area. A field with no fact stays marked unknown and is never filled with a guess.
+paragraph end
+
+code start
+language: text
+group name
+shared problem
+what they want
+where they spend time
+words they use
+what stops them acting
+what makes them act
+how many exist, as an estimate
+source of each fact
+code end
+

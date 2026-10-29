@@ -1,10 +1,70 @@
 title start
-kind: default
-tags: business-plan research stub
-Research consistency and recognition evidence
+kind: research
+tags: business-plan research consistency-and-recognition-evidence
+Does a consistent look make a brand easier to recognise
 title end
 
+section start
+title start
+Abstract
+title end
 paragraph start
-todo: write this page
-Not written yet.
+Question: does a consistent look make a brand easier to recognise. Method: a review of colour in brand communication and a doctoral study summary. Result: consistent colour use is reported to speed up and sharpen recognition, and familiarity predicts early attention. Limit: both sources are secondary and none was about social video.
 paragraph end
+section end
+
+section start
+title start
+Introduction
+title end
+paragraph start
+The brand runs many accounts, so this page asks whether one shared look is worth enforcing.
+paragraph end
+section end
+
+section start
+title start
+Methods
+title end
+paragraph start
+Read two secondary sources on recognition.
+paragraph end
+section end
+
+section start
+title start
+Results
+title end
+paragraph start
+A review of colour in brand communication reports that consistent colour use increases the speed and accuracy of brand recognition.
+paragraph end
+paragraph start
+A 2025 doctoral study found that familiar brands are prioritised early by visual attention and chosen more (Hagen-Aga, 2025).
+paragraph end
+section end
+
+section start
+title start
+Discussion
+title end
+paragraph start
+This supports one fixed palette, one overlay set and one logo position across all accounts, even when the topics differ.
+paragraph end
+paragraph start
+todo: check the recognition claim in a primary source
+Secondary only.
+paragraph end
+section end
+
+section start
+title start
+References
+title end
+paragraph start
+Anu Books, 2025, review of colour in brand communication, https://anubooks.com/uploads/session_pdf/17684618881.pdf (secondary)
+paragraph end
+paragraph start
+Hagen-Aga, 2025, doctoral defence The Third Source of Brand Saliency, University of South-Eastern Norway, https://www.usn.no/english/research/postgraduate-studies-phd/public-defences/2025/public-defence-monica-therese-hagen-aga
+paragraph end
+section end
+

@@ -24,6 +24,7 @@
          "../narration/print-console.rkt"
          "../commands/commands.rkt"
          "../join/hot-path.rkt"
+         "../join/live-wire.rkt"
          "../join/protocol.rkt"
          "../drawing/screen.rkt"
          "../machine/terminal.rkt"
@@ -53,9 +54,14 @@
   (dynamic-wind
     (lambda () #f)
     (lambda ()
+      ;; The hot path is started once here, before the first frame, and kept
+      ;; for the whole session: a key asks the child that is already running
+      ;; instead of paying a program start for every letter.
+      (wire-start)
       (repaint session viewport)
       (key-loop session (current-input-port) viewport))
     (lambda ()
+      (wire-stop)
       (display "\u001b[?25h")
       (display "\u001b[?1049l")
       (restore-settings))))
@@ -199,18 +205,17 @@
         ;; The keys so far are the start of a sequence: the next key is
         ;; waited for, and the wait is an action.
         (outcome 'wait #t)]
-       [(and (text-of (car names))
-             (or (string=? layer "write")
-                 (not (string=? (car names) "space"))))
-        ;; A key that carries text WRITES. In the write layer it is the text
-        ;; itself — a space is a space, a return is the newline — and in any
-        ;; other layer it starts the write layer and then types itself, so a
-        ;; person who opens the editor as a reader types their way into
-        ;; writing: there is no cursor to find and no key to learn. The space
-        ;; is the visual and select layers' trigger, so it is never taken as
-        ;; text there; the double space still changes the layer.
-        (unless (string=? layer "write")
-          (set-layer! session "write"))
+       [(and (not (string=? layer "write")) (text-of (car names)))
+        ;; A key that carries text writes NOTHING in a reading layer. The
+        ;; write layer is entered by its own key — space then w in the visual
+        ;; layer — and by nothing else, so a stray letter can never start
+        ;; writing and the page a reader is reading cannot change under the
+        ;; key. The key is taken and nothing is said: the mode line already
+        ;; names the layer, and a message over the page would break the frame.
+        (outcome (drop-bytes buffer (list (car runs))) #t)]
+       [(text-of (car names))
+        ;; In the write layer a key that carries text IS the text: a space is
+        ;; a space, a return is the newline.
         (outcome (drop-bytes buffer (list (car runs)))
                  (run-it-words session "type" (list (text-of (car names)))))]
        [else

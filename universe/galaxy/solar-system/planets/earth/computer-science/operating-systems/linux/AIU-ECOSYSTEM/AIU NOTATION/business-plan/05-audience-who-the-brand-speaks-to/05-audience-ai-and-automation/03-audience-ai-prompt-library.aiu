@@ -1,10 +1,21 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience ai-prompt-library
 Audience ai prompt library
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+The first prompt groups collected comments into problems.
 paragraph end
+
+code start
+language: text
+Read the notation usage guide and the problems and desires pages first.
+I give you a list of comments with their source.
+Group the comments that describe the same problem.
+For each group give a count, one plain sentence and one exact example.
+Mark any comment you cannot place as unplaced.
+Do not add problems that are not in the comments.
+Stop after the list.
+code end
+

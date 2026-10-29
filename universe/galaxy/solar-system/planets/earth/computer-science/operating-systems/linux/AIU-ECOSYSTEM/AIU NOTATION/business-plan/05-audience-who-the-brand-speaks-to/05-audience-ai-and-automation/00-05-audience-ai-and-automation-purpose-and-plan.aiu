@@ -1,10 +1,10 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience purpose plan
 Audience ai and automation purpose and plan
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+This folder holds how an AI and automation support the audience work: what can be delegated, tools, prompts, schedule, review points, failure handling and data limits.
 paragraph end
+

@@ -1,10 +1,10 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy purpose plan
 Strategy risks and responses purpose and plan
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+This folder holds what can go wrong and what to do about it, one risk per page.
 paragraph end
+

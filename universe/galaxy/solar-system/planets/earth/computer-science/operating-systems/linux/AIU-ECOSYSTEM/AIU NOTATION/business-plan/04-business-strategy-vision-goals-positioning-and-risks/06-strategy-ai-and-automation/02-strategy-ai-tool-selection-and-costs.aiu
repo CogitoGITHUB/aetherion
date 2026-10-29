@@ -1,10 +1,15 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy ai-tool-selection-and-costs
 Strategy ai tool selection and costs
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+No tool is chosen for the strategy area yet. A conversational AI and the command line AI are enough to start.
 paragraph end
+
+paragraph start
+todo: record the tool and its monthly cost
+Fill in once the tool is settled.
+paragraph end
+

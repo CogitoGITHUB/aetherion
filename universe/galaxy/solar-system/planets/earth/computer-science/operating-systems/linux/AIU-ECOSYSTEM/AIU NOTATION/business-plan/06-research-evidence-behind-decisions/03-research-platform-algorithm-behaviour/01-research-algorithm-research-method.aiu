@@ -1,10 +1,18 @@
 title start
-kind: default
-tags: business-plan research stub
+kind: note
+tags: business-plan research algorithm-research-method
 Research algorithm research method
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Platforms do not publish exact ranking weights. The sources used are industry blogs and statements by platform staff as reported by others, so every claim is marked with its source and treated as an estimate.
 paragraph end
+
+paragraph start
+Method: search for each platform separately, prefer pages that cite an official statement, record the date of each page, and note where sources disagree. Compare with the analytics of the own posts, which outrank any blog.
+paragraph end
+
+paragraph start
+Recheck every quarter, because ranking systems change often. Every change goes in the change log with its date.
+paragraph end
+

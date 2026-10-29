@@ -1,10 +1,15 @@
 title start
-kind: default
-tags: business-plan research stub
+kind: note
+tags: business-plan research typography-evidence
 Research typography evidence
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+No evidence was collected in this round. Questions to answer: which typefaces stay readable on a phone screen over video, what size and weight work, and how much text a frame can hold.
 paragraph end
+
+paragraph start
+todo: search for legibility research on mobile video text
+Not searched yet.
+paragraph end
+

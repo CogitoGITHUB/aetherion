@@ -1,10 +1,85 @@
 title start
-kind: default
-tags: business-plan research stub
-Research short video ranking signals
+kind: research
+tags: business-plan research short-video-ranking-signals
+What signals decide how short videos are distributed on the main platforms
 title end
 
+section start
+title start
+Abstract
+title end
 paragraph start
-todo: write this page
-Not written yet.
+Question: what signals decide how short videos are distributed. Method: industry articles on TikTok, Instagram Reels and YouTube. Result: all three reward measurable attention, mainly watch time and completion. Reels also weighs sends and shares and the follower relationship, while TikTok and Shorts largely ignore follower count. Limit: exact weights are not published and every source is secondary.
 paragraph end
+section end
+
+section start
+title start
+Introduction
+title end
+paragraph start
+The brand posts short videos on several platforms, so this page records what each one rewards.
+paragraph end
+section end
+
+section start
+title start
+Methods
+title end
+paragraph start
+Searched for 2026 explanations of each ranking system and compared them.
+paragraph end
+section end
+
+section start
+title start
+Results
+title end
+paragraph start
+TikTok: sources agree that watch time and completion rate are the heaviest signals, followed by rewatches, shares, saves and comments. One source estimates watch time and completion at forty to fifty percent of the weight and says the exact weights are not published.
+paragraph end
+paragraph start
+Instagram: a reported statement by the head of Instagram puts sends or shares per reach first, then watch time and completion, then likes per reach. Reels also reward follower relationships more than TikTok and Shorts do.
+paragraph end
+paragraph start
+YouTube: watch time, retention and viewer satisfaction lead, and a high click rate with low retention is penalised.
+paragraph end
+paragraph start
+TikTok and Shorts largely ignore follower count, while Reels use it on the first pass.
+paragraph end
+section end
+
+section start
+title start
+Discussion
+title end
+paragraph start
+All three reward measurable attention, so design for the first seconds and for people finishing the video. The percentages are estimates and must not be used as targets.
+paragraph end
+paragraph start
+todo: verify the main claims against official creator pages
+Not done yet.
+paragraph end
+section end
+
+section start
+title start
+References
+title end
+paragraph start
+Creatordb, social media algorithms in 2026, https://creatordb.app/blog/social-media-algorithms/ (industry blog, weights are directional estimates)
+paragraph end
+paragraph start
+Post Everywhere, TikTok vs Instagram Reels vs YouTube Shorts comparison, May 2026, https://posteverywhere.ai/blog/tiktok-vs-instagram-reels-vs-youtube-shorts (industry blog)
+paragraph end
+paragraph start
+Post Everywhere, how the YouTube algorithm works, updated February 2026, https://posteverywhere.ai/blog/how-the-youtube-algorithm-works (industry blog)
+paragraph end
+paragraph start
+Everything PR, how the TikTok algorithm ranks videos in 2026, https://everything-pr.com/tiktok-algorithm-ranking-signals (industry blog)
+paragraph end
+paragraph start
+Rondocin, what 2026 algorithms reward, https://rondocin.it.com/blog/what-2026-algorithms-reward (low trust, reports a statement by the head of Instagram)
+paragraph end
+section end
+

@@ -1,10 +1,14 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience interview-method
 Audience interview method
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+An interview is a short conversation with one person from the audience: about ten minutes and three questions. What is the problem, what have you tried, what stopped you.
 paragraph end
+
+paragraph start
+Notes keep the words used. Ask permission before quoting anything, and keep names out of the files.
+paragraph end
+

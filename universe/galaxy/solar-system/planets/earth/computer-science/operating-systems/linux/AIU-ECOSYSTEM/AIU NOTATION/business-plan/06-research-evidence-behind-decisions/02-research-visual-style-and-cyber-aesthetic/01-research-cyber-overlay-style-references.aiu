@@ -1,10 +1,19 @@
 title start
-kind: default
-tags: business-plan research stub
+kind: note
+tags: business-plan research cyber-overlay-style-references
 Research cyber overlay style references
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+No sources were collected in this round. This page will hold references to public accounts and designs that use cyber overlays, with a note of what each does well.
 paragraph end
+
+paragraph start
+Method: collect twenty public examples, record the elements used such as scan lines, glitch, grids and interface frames, and note how much of the frame they cover. Record observations only. Never copy another creator work.
+paragraph end
+
+paragraph start
+todo: collect twenty public examples
+Needs the competitor profiles first.
+paragraph end
+

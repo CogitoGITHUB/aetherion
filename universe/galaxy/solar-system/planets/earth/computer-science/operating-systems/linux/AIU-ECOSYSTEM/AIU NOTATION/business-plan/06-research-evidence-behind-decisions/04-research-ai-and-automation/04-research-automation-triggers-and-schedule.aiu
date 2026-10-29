@@ -1,10 +1,15 @@
 title start
-kind: default
-tags: business-plan research stub
+kind: note
+tags: business-plan research automation-triggers-and-schedule
 Research automation triggers and schedule
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+The colour pages are researched once and revisited when analytics show a result that contradicts them. The algorithm pages are rechecked every quarter and after any announced change.
 paragraph end
+
+paragraph start
+todo: decide whether the quarterly algorithm check is run by an AI on a schedule
+Manual today.
+paragraph end
+

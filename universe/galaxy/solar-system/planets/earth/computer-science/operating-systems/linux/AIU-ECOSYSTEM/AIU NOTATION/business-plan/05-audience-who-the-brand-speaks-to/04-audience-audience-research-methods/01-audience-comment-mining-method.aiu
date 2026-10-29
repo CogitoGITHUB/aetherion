@@ -1,10 +1,14 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience comment-mining-method
 Audience comment mining method
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Read the comments under about ten posts of larger accounts in the subject. Copy each comment that states a problem, a goal or a question, with the post, the date and the exact words. Stop at fifty useful comments, then count and group them.
 paragraph end
+
+paragraph start
+Public comments only, and no names are kept.
+paragraph end
+

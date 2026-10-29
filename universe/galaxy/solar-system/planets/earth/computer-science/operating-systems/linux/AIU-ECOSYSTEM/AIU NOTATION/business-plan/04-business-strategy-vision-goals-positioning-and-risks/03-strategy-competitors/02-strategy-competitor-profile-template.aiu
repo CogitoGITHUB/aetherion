@@ -1,10 +1,24 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy competitor-profile-template
 Strategy competitor profile template
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+One profile per competitor, one competitor per page. The profile pages are created in this folder when a competitor is chosen.
 paragraph end
+
+code start
+language: text
+name
+platform and handle
+audience size
+subjects
+posting rhythm
+formats
+strongest posts
+weakness
+income streams seen
+notes
+code end
+

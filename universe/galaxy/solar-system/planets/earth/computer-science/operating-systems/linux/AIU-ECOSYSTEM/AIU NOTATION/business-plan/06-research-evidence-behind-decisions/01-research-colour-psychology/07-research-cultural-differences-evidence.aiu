@@ -1,10 +1,70 @@
 title start
-kind: default
-tags: business-plan research stub
-Research cultural differences evidence
+kind: research
+tags: business-plan research cultural-differences-evidence
+Do colour meanings differ between cultures
 title end
 
+section start
+title start
+Abstract
+title end
 paragraph start
-todo: write this page
-Not written yet.
+Question: do colour meanings differ between cultures. Method: a secondary article on a study across 55 countries and a popular summary. Result: associations rooted in nature tend to be shared across populations, while culturally built ones differ. Limit: the primary paper was not read and the audience location is not known.
 paragraph end
+section end
+
+section start
+title start
+Introduction
+title end
+paragraph start
+The audience may be international, so this page asks whether colour meanings travel.
+paragraph end
+section end
+
+section start
+title start
+Methods
+title end
+paragraph start
+Read secondary sources only.
+paragraph end
+section end
+
+section start
+title start
+Results
+title end
+paragraph start
+A study across 55 countries, reported through a secondary article, found that colour associations tied to natural referents tend to be shared, while culturally constructed ones vary (Jonauskaite and co-authors, 2020).
+paragraph end
+paragraph start
+A 2013 study summarised by Fast Company reported that an effect of red on attraction appeared beyond Western samples.
+paragraph end
+section end
+
+section start
+title start
+Discussion
+title end
+paragraph start
+Until the audience location is known, avoid colour meanings that depend on culture and rely on shared ones. This is a judgement, not a finding.
+paragraph end
+paragraph start
+todo: read the primary paper and fill in the audience location
+Needs the audience research.
+paragraph end
+section end
+
+section start
+title start
+References
+title end
+paragraph start
+Jonauskaite and co-authors, 2020, colour and emotion associations across 55 countries, Psychological Science. Read only through a secondary article at https://www.thebrandingjournal.com, verify against the paper.
+paragraph end
+paragraph start
+Fast Company, summary of studies on the colour red, https://www.fastcompany.com/3029854/why-the-color-red-revs-you-up-but-lowers-your-iq
+paragraph end
+section end
+

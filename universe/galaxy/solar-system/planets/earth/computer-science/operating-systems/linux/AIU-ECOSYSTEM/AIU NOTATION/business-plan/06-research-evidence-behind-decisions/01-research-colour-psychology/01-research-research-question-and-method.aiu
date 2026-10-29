@@ -1,10 +1,23 @@
 title start
-kind: default
-tags: business-plan research stub
+kind: note
+tags: business-plan research research-question-and-method
 Research research question and method
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+The question for this folder is which colours and visual styles the brand should use, given a monochrome look with cyber overlays, white as the main accent, and red or purple only when needed.
 paragraph end
+
+paragraph start
+Method: search for reviews first, then for single studies on each colour. For every claim note the source, the year, the type of study and whether it was replicated. Reviews outrank single studies, and industry blogs are used only to find primary sources. A claim that rests on a blog is marked secondary.
+paragraph end
+
+paragraph start
+Rule for use: a finding changes a decision only when it comes from a review or a replicated study. Anything else is a hypothesis and goes to the experiments log to be tested on the brand own posts.
+paragraph end
+
+paragraph start
+todo: check each secondary claim against its primary paper
+Marked verify in the evidence pages.
+paragraph end
+

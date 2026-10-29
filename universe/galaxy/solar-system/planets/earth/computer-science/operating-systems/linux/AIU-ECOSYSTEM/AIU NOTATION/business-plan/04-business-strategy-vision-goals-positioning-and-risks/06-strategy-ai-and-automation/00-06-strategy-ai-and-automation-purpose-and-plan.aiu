@@ -1,10 +1,10 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy purpose plan
 Strategy ai and automation purpose and plan
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+This folder holds how an AI and automation support the strategy work: what can be delegated, tools, prompts, schedule, review points, failure handling and data limits.
 paragraph end
+

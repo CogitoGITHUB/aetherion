@@ -1,10 +1,64 @@
 title start
-kind: default
-tags: business-plan research stub
-Research purple accent evidence
+kind: research
+tags: business-plan research purple-accent-evidence
+Does purple carry a measurable effect for a brand
 title end
 
+section start
+title start
+Abstract
+title end
 paragraph start
-todo: write this page
-Not written yet.
+Question: does purple carry a measurable effect for a brand. Method: the reviews read for any finding on purple. Result: no solid evidence was found in this round. Limit: the primary brand personality paper, which tested hue, was not read in full, so purple results may exist there.
 paragraph end
+section end
+
+section start
+title start
+Introduction
+title end
+paragraph start
+Purple is a possible second accent, so this page records what is known about it.
+paragraph end
+section end
+
+section start
+title start
+Methods
+title end
+paragraph start
+Searched the reviews and summaries for findings on purple.
+paragraph end
+section end
+
+section start
+title start
+Results
+title end
+paragraph start
+The sources read in this round did not report findings on purple. Hue was one of the three parts of colour tested in brand personality studies, but the purple results were not retrieved.
+paragraph end
+section end
+
+section start
+title start
+Discussion
+title end
+paragraph start
+Purple stays a design choice with no evidence behind it. It can be used, but not defended with research yet.
+paragraph end
+paragraph start
+todo: read the Labrecque and Milne paper for hue results and search for reviews on purple
+Needs the primary paper.
+paragraph end
+section end
+
+section start
+title start
+References
+title end
+paragraph start
+Labrecque and Milne, 2012, Exciting red and competent blue, Journal of the Academy of Marketing Science. Read only through secondary summaries, verify against the paper.
+paragraph end
+section end
+

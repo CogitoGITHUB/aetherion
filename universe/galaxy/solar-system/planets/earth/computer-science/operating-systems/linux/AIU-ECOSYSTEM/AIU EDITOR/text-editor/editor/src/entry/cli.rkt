@@ -20,8 +20,10 @@
      (if (command-known? verb)
          (begin
            ;; the measured start is printed with the first answer: it is
-           ;; information, not a gate (rule 02)
-           (print-start)
+           ;; information, not a gate (rule 02). The edit verb is the live
+           ;; session, which owns the whole screen: a start line would land
+           ;; in the frame it is about to draw, so it says nothing there.
+           (unless (string=? verb "edit") (print-start))
            (run-verb verb (cdr args)))
          (usage (format "there is no command named ~a" verb)))]))
 

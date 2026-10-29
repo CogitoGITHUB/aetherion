@@ -1,10 +1,15 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience automation-triggers-and-schedule
 Audience automation triggers and schedule
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Audience research runs in rounds: one before launch and then one each month. Collection of comments can be manual or exported later, and counting and grouping can be done by an AI each round.
 paragraph end
+
+paragraph start
+todo: decide whether comment collection is manual or exported
+Not decided. It is manual today.
+paragraph end
+

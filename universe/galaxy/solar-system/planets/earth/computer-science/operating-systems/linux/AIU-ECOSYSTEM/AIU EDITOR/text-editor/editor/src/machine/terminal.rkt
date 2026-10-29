@@ -79,7 +79,29 @@
 ;; terminal-size answers the columns and the rows of the terminal, or 80 by
 ;; 24 when the terminal does not say. stty is asked, because this Racket
 ;; cannot ask the terminal itself.
+;;
+;; The answer is kept for a short while, because the question is a program
+;; start and a key must not pay one. A window is not asked about again
+;; while the person is pressing keys; a pause of a couple of seconds — the
+;; pause before a resize is noticed, if the window is ever resized — asks
+;; again, and the frame is drawn to the window it is in.
+(define window-cache (box #f))
+(define window-cache-ms 2000)
+
 (define (terminal-size)
+  (define kept (unbox window-cache))
+  (cond
+    [(and kept
+          (< (- (current-inexact-milliseconds) (cdr kept)) window-cache-ms))
+     (values (car (car kept)) (cdr (car kept)))]
+    [else
+     (define-values (columns rows) (ask-stty-for-size))
+     (set-box! window-cache (cons (cons columns rows) (current-inexact-milliseconds)))
+     (values columns rows)]))
+
+;; ask-stty-for-size is the question itself: one stty, read, parsed, and
+;; 80 by 24 when the terminal does not say.
+(define (ask-stty-for-size)
   (define out (with-output-to-string (lambda () (system* stty "size"))))
   (define parts (string-split (string-trim out)))
   (cond

@@ -1,10 +1,23 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience problem-discovery-method
 Audience problem discovery method
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+Problems are found in the words people already use, not in guesses. Sources: comments under larger accounts, questions in communities, search suggestions and replies to polls on the brand own accounts.
 paragraph end
+
+paragraph start
+Copy the exact sentence a person wrote, note where it was found and count how often similar sentences appear. A problem seen once is a note. A problem seen often is a finding.
+paragraph end
+
+code start
+language: text
+1 collect exact sentences with their source
+2 group sentences that describe the same problem
+3 count each group
+4 write one plain sentence per group
+5 add the groups to the ranked problem list
+code end
+

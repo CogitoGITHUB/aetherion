@@ -1,10 +1,19 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience communities-and-creators-they-follow
 Audience communities and creators they follow
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+This page lists the communities, forums, channels and creators the audience already follows, each with a line on why it matters. It is used for research, for collaboration ideas and for finding new questions.
 paragraph end
+
+paragraph start
+Only public places are listed.
+paragraph end
+
+code start
+language: text
+name | platform or place | why it matters | public link
+code end
+

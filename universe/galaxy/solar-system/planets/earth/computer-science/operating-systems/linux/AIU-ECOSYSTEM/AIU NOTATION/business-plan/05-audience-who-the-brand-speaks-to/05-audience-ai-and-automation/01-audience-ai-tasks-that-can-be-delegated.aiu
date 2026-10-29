@@ -1,10 +1,14 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience ai-tasks-that-can-be-delegated
 Audience ai tasks that can be delegated
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+An AI may sort and count collected comments, group similar problems, extract exact phrases, draft interview questions and fill the ranked problem list from notes.
 paragraph end
+
+paragraph start
+An AI may not invent audience facts, estimate numbers without data, or contact people.
+paragraph end
+

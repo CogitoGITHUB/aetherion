@@ -1,10 +1,19 @@
 title start
-kind: default
-tags: business-plan strategy stub
+kind: note
+tags: business-plan strategy competitor-content-audit
 Strategy competitor content audit
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+The content audit looks at the last thirty posts of a competitor and counts formats, subjects, hooks and posting days. It finds what the audience rewards, not what the competitor believes works.
 paragraph end
+
+code start
+language: text
+1 open the profile and list the last thirty posts
+2 note format, subject and opening line of each
+3 note views and comments of each
+4 mark the five best and the five worst
+5 write what the best have in common
+code end
+

@@ -1,10 +1,19 @@
 title start
-kind: default
-tags: business-plan research stub
+kind: note
+tags: business-plan research posting-frequency-evidence
 Research posting frequency evidence
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+No reliable evidence on posting frequency was found. One source lists upload consistency among five main YouTube signals, and the rest were opinions.
 paragraph end
+
+paragraph start
+Decide the frequency from what one person can sustain, then test two rhythms against each other and record the result.
+paragraph end
+
+paragraph start
+todo: test two posting rhythms
+Put it in the experiments log.
+paragraph end
+

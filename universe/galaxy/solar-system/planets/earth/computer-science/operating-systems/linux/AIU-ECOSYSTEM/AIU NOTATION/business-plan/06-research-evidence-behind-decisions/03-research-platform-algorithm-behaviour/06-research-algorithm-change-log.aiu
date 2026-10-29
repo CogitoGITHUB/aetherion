@@ -1,10 +1,23 @@
 title start
-kind: default
-tags: business-plan research stub
+kind: note
+tags: business-plan research algorithm-change-log
 Research algorithm change log
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+October 2026: first collection round. Sources were industry blogs, and no official page was read.
 paragraph end
+
+paragraph start
+December 2025: YouTube and Instagram raised their short-form cap to three minutes, according to one source. Verify before relying on it.
+paragraph end
+
+paragraph start
+Add each new finding as a dated paragraph, newest last.
+paragraph end
+
+paragraph start
+todo: recheck the algorithm pages in January
+Quarterly, then update the dates.
+paragraph end
+

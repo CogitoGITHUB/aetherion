@@ -1,10 +1,10 @@
 title start
-kind: default
-tags: business-plan audience stub
+kind: note
+tags: business-plan audience human-review-checkpoints
 Audience human review checkpoints
 title end
 
 paragraph start
-todo: write this page
-Not written yet.
+A person reads the ranked problem list before it is used for content, and checks five random entries against their source. Any claim without a source is removed.
 paragraph end
+
