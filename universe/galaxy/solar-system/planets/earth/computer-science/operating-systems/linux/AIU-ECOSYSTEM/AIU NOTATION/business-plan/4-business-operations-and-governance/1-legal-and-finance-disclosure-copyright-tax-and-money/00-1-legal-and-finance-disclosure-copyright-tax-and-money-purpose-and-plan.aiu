@@ -1,0 +1,48 @@
+title start
+kind: default
+tags: business-plan legal-finance purpose plan
+Legal and finance: rules and money
+title end
+
+paragraph start
+The rules the brand must follow and the money it handles.
+paragraph end
+
+section start
+title start
+Plan
+title end
+paragraph start
+Cover disclosure of affiliate and sponsored posts, copyright and music, business registration, tax, a ledger of income and expenses, and a list of costs.
+paragraph end
+section end
+
+section start
+title start
+Subfolders
+title end
+code start
+language: text
+1-legal-finance-business-registration-and-setup
+2-legal-finance-tax
+3-legal-finance-copyright-and-music-use
+4-legal-finance-disclosure-of-affiliate-and-sponsored-posts
+5-legal-finance-privacy-and-terms
+6-legal-finance-income-and-expense-ledger
+7-legal-finance-costs-and-runway
+8-legal-finance-ai-and-automation
+code end
+paragraph start
+Everything here stays general. Specific content types, topics, platforms and accounts are added later as new folders on top of these.
+paragraph end
+section end
+
+section start
+title start
+Files to plan next
+title end
+paragraph start
+todo: plan the files of each subfolder
+Decide which pages each subfolder needs and which file type each page uses.
+paragraph end
+section end

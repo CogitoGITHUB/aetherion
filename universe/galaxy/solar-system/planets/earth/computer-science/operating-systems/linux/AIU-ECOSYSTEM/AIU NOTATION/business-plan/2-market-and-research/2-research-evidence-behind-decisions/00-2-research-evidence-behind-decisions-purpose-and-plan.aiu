@@ -1,0 +1,44 @@
+title start
+kind: default
+tags: business-plan research purpose plan
+Research: the evidence behind decisions
+title end
+
+paragraph start
+The evidence behind choices.
+paragraph end
+
+section start
+title start
+Plan
+title end
+paragraph start
+Hold the psychological research on colour and visual style that justifies the look, and notes on how platform algorithms behave. Each page states the question, method, result and a limit.
+paragraph end
+section end
+
+section start
+title start
+Subfolders
+title end
+code start
+language: text
+1-research-colour-psychology
+2-research-visual-style-and-cyber-aesthetic
+3-research-platform-algorithm-behaviour
+4-research-ai-and-automation
+code end
+paragraph start
+Everything here stays general. Specific content types, topics, platforms and accounts are added later as new folders on top of these.
+paragraph end
+section end
+
+section start
+title start
+Files to plan next
+title end
+paragraph start
+todo: plan the files of each subfolder
+Decide which pages each subfolder needs and which file type each page uses.
+paragraph end
+section end

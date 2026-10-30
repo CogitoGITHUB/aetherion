@@ -1,0 +1,45 @@
+title start
+kind: default
+tags: business-plan audience purpose plan
+Audience: who the brand speaks to
+title end
+
+paragraph start
+The people the brand reaches and what they want.
+paragraph end
+
+section start
+title start
+Plan
+title end
+paragraph start
+Describe the audience groups in general terms: their problems, the words they use, where they spend time and what makes them act.
+paragraph end
+section end
+
+section start
+title start
+Subfolders
+title end
+code start
+language: text
+1-audience-audience-groups
+2-audience-problems-and-desires
+3-audience-language-and-places
+4-audience-audience-research-methods
+5-audience-ai-and-automation
+code end
+paragraph start
+Everything here stays general. Specific content types, topics, platforms and accounts are added later as new folders on top of these.
+paragraph end
+section end
+
+section start
+title start
+Files to plan next
+title end
+paragraph start
+todo: plan the files of each subfolder
+Decide which pages each subfolder needs and which file type each page uses.
+paragraph end
+section end

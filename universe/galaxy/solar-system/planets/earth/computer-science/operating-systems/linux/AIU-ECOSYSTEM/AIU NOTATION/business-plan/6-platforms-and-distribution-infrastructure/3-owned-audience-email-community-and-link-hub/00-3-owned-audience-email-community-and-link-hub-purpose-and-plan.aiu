@@ -1,0 +1,45 @@
+title start
+kind: default
+tags: business-plan owned-audience purpose plan
+Owned audience: reach nobody can switch off
+title end
+
+paragraph start
+Ways to reach people directly, outside any platform.
+paragraph end
+
+section start
+title start
+Plan
+title end
+paragraph start
+Plan an email list, a community and a link hub, so the audience survives the loss of any single account.
+paragraph end
+section end
+
+section start
+title start
+Subfolders
+title end
+code start
+language: text
+1-owned-audience-link-hub
+2-owned-audience-email-list
+3-owned-audience-community
+4-owned-audience-audience-ownership-backup
+5-owned-audience-ai-and-automation
+code end
+paragraph start
+Everything here stays general. Specific content types, topics, platforms and accounts are added later as new folders on top of these.
+paragraph end
+section end
+
+section start
+title start
+Files to plan next
+title end
+paragraph start
+todo: plan the files of each subfolder
+Decide which pages each subfolder needs and which file type each page uses.
+paragraph end
+section end

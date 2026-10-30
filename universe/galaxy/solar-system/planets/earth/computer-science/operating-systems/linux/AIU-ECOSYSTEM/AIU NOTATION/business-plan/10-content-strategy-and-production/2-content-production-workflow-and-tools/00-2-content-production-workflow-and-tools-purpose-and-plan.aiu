@@ -1,0 +1,47 @@
+title start
+kind: default
+tags: business-plan production purpose plan
+Production: from idea to posted
+title end
+
+paragraph start
+How content is made.
+paragraph end
+
+section start
+title start
+Plan
+title end
+paragraph start
+Define one repeatable workflow, the tools and equipment, and the templates for scripts, captions and edits, so one person can run many accounts.
+paragraph end
+section end
+
+section start
+title start
+Subfolders
+title end
+code start
+language: text
+1-production-pre-production
+2-production-production-day
+3-production-post-production-handoff
+4-production-publishing-handoff
+5-production-workflow-documentation
+6-production-hardware
+7-production-ai-and-automation
+code end
+paragraph start
+Everything here stays general. Specific content types, topics, platforms and accounts are added later as new folders on top of these.
+paragraph end
+section end
+
+section start
+title start
+Files to plan next
+title end
+paragraph start
+todo: plan the files of each subfolder
+Decide which pages each subfolder needs and which file type each page uses.
+paragraph end
+section end

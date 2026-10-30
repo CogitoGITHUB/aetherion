@@ -1,0 +1,51 @@
+title start
+kind: default
+tags: business-plan photography photography-shooting-and-photo-editing-purpose-and-plan
+Photography shooting and photo editing purpose and plan
+title end
+
+paragraph start
+Photography for SHAPE, SHAPESHIFTER and ARCHITECT, kept general so specific topics and platforms can be added later as new folders on top of these.
+paragraph end
+
+section start
+title start
+Plan
+title end
+
+paragraph start
+Pages here state methods, criteria and templates. A fact about the world is stated only where an evidence page lists its sources and check date. Everything else carries a todo mark.
+paragraph end
+
+section end
+
+section start
+title start
+Subfolders
+title end
+
+code start
+language: text
+1-photography-foundations
+2-photography-look-and-style-planning
+3-photography-shot-planning
+4-photography-shooting
+5-photography-culling-and-selection
+6-photography-photo-editing
+7-photography-hardware
+8-photography-ai-and-automation
+code end
+
+section end
+
+section start
+title start
+Files to plan next
+title end
+
+paragraph start
+todo: decide which pages need owner choices first, then fill those
+Open until the owner decides.
+paragraph end
+
+section end

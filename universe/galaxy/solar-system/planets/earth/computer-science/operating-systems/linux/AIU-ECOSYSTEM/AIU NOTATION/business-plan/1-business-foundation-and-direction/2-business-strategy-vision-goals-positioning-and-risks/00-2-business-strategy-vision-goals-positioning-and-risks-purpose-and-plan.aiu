@@ -1,0 +1,46 @@
+title start
+kind: default
+tags: business-plan strategy purpose plan
+Strategy: direction and positioning
+title end
+
+paragraph start
+The direction of the whole business: why it exists, what it aims for and where it stands among others.
+paragraph end
+
+section start
+title start
+Plan
+title end
+paragraph start
+Set the vision and measurable goals, the positioning against competitors, a roadmap in stages, and a list of risks with a response to each.
+paragraph end
+section end
+
+section start
+title start
+Subfolders
+title end
+code start
+language: text
+1-strategy-vision-and-measurable-goals
+2-strategy-positioning
+3-strategy-competitors
+4-strategy-staged-roadmap
+5-strategy-risks-and-responses
+6-strategy-ai-and-automation
+code end
+paragraph start
+Everything here stays general. Specific content types, topics, platforms and accounts are added later as new folders on top of these.
+paragraph end
+section end
+
+section start
+title start
+Files to plan next
+title end
+paragraph start
+todo: plan the files of each subfolder
+Decide which pages each subfolder needs and which file type each page uses.
+paragraph end
+section end

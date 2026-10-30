@@ -1,0 +1,54 @@
+title start
+kind: default
+tags: business-plan video-editing video-editing-and-post-production-purpose-and-plan
+Video editing and post production purpose and plan
+title end
+
+paragraph start
+Video editing for SHAPE, SHAPESHIFTER and ARCHITECT, kept general so specific topics and platforms can be added later as new folders on top of these.
+paragraph end
+
+section start
+title start
+Plan
+title end
+
+paragraph start
+Pages here state methods, criteria and templates. A fact about the world is stated only where an evidence page lists its sources and check date. Everything else carries a todo mark.
+paragraph end
+
+section end
+
+section start
+title start
+Subfolders
+title end
+
+code start
+language: text
+1-editing-foundations
+10-editing-hardware
+11-editing-ai-and-automation
+2-editing-project-setup
+3-editing-rough-cut
+4-editing-fine-cut
+5-editing-colour-grading
+6-editing-motion-graphics-and-overlays
+7-editing-audio-in-edit
+8-editing-export-and-delivery
+9-editing-repurposing
+code end
+
+section end
+
+section start
+title start
+Files to plan next
+title end
+
+paragraph start
+todo: decide which pages need owner choices first, then fill those
+Open until the owner decides.
+paragraph end
+
+section end
