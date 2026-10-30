@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-hardware-maintenance-and-backup-plan
+Brand hardware maintenance and backup plan
+title end
+
+paragraph start
+Brand master files are kept in at least two places on different devices. Devices get a regular check for updates, storage space and condition.
+paragraph end
+
+paragraph start
+Backups never contain passwords or recovery codes. Name the folders and the schedule here, not any access details.
+paragraph end
+
+code start
+language: text
+what is backed up, from, to, how often, last tested restore
+code end
+
+paragraph start
+todo: choose the two storage places and the schedule
+Open until the owner decides.
+paragraph end

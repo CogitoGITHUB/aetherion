@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-thumbnail-style-guide
+Brand thumbnail style guide
+title end
+
+paragraph start
+A thumbnail has one subject, very few words and the same frame layout every time. It must read at small size on a phone before it is published.
+paragraph end
+
+paragraph start
+Text on a thumbnail follows the contrast thresholds on the colour palette page. Compare each candidate at phone size next to the previous ones.
+paragraph end
+
+code start
+language: text
+template name, subject area, text area, maximum words, contrast checked
+code end
+
+paragraph start
+todo: design the first thumbnail template and test it small
+Open until the owner decides.
+paragraph end

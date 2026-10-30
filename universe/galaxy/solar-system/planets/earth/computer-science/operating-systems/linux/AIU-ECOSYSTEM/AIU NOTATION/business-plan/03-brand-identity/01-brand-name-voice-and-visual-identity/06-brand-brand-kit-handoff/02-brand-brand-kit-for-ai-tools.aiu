@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-brand-kit-for-ai-tools
+Brand brand kit for ai tools
+title end
+
+paragraph start
+An AI tool receives the voice principles, the words lists, the palette roles in plain text and the do and do not pairs. It never receives passwords, account access or private data.
+paragraph end
+
+paragraph start
+Every output from an AI tool is checked by a person against the kit before use, as set on the human review page.
+paragraph end
+
+code start
+language: text
+file, what it tells the tool, updated on
+code end
+
+paragraph start
+todo: decide which tools get the kit after tool selection
+Open until the owner decides.
+paragraph end

@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-iconography-and-symbols
+Brand iconography and symbols
+title end
+
+paragraph start
+Icons use one line weight, one corner style and white on dark by default. A symbol is added only when it replaces words or marks a repeating content type.
+paragraph end
+
+paragraph start
+Every icon is drawn on the same grid and tested at small size. Reuse beats variety, so a new icon needs a reason written beside it.
+paragraph end
+
+code start
+language: text
+icon name, meaning, where used, size tested
+code end
+
+paragraph start
+todo: decide the icon set after the logo is final
+Open until the owner decides.
+paragraph end

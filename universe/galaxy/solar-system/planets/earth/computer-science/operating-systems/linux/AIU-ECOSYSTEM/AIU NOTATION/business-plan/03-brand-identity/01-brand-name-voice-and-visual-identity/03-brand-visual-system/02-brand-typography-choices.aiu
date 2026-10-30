@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-typography-choices
+Brand typography choices
+title end
+
+paragraph start
+Choose at most two typefaces, one for display and one for reading, each with a fallback. Both must stay legible at phone size and carry a licence that covers commercial use in video and products.
+paragraph end
+
+paragraph start
+Read the licence text on the source page of every font before use and store a licence note beside the font file. Never assume a free font is free for commercial use.
+paragraph end
+
+code start
+language: text
+role, typeface, weight, licence note, source page, date checked
+code end
+
+paragraph start
+todo: choose the typefaces and verify each licence
+Open until the owner decides.
+paragraph end

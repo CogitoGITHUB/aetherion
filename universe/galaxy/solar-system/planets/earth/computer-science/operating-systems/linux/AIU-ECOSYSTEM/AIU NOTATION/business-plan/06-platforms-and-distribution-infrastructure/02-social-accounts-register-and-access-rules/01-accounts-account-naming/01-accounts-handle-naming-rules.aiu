@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan accounts accounts-handle-naming-rules
+Accounts handle naming rules
+title end
+
+paragraph start
+Record the handle pattern and the fallback pattern, kept identical across platforms.
+paragraph end
+
+paragraph start
+Never write a password, recovery code or access token in this page. Record only where access is kept, never the access itself.
+paragraph end
+
+code start
+language: text
+question, official source, answer, date checked, confirmed by
+code end
+
+paragraph start
+todo: search official sources and fill this page, because nothing here is verified
+Open until the owner decides.
+paragraph end

@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-when-each-face-is-used
+Brand when each face is used
+title end
+
+paragraph start
+Choose the face by the job of the post, not by mood. Ask one question before each post: what is the viewer meant to feel or do after it. The answer points to one face.
+paragraph end
+
+paragraph start
+Write one sentence of promise per face and one example post per face. If two faces make the same promise, merge them. If a post fits no face, it belongs under SHAPE.
+paragraph end
+
+code start
+language: text
+face, promise, typical post, never used for
+code end
+
+paragraph start
+todo: write the promise of each face
+Open until the owner decides.
+paragraph end

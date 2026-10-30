@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan analytics analytics-ai-tool-selection-and-costs
+Analytics ai tool selection and costs
+title end
+
+paragraph start
+Choose a tool by what it must do, how it handles the data entered, whether its output may be used commercially and what it costs. Record each answer with its source and date.
+paragraph end
+
+paragraph start
+No cost or term is written from memory. Read the tool terms page and note the date.
+paragraph end
+
+code start
+language: text
+tool, task, data handling, commercial use allowed, cost, source, date
+code end
+
+paragraph start
+todo: compare tools when a task is ready to delegate
+Open until the owner decides.
+paragraph end

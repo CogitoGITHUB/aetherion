@@ -1,0 +1,46 @@
+title start
+kind: default
+tags: business-plan introduction
+SHAPE business plan: introduction
+title end
+
+paragraph start
+This folder is the general plan for a social media business under the name SHAPE / SHAPESHIFTER / ARCHITECT. The aim is to start on all platforms and earn as fast as possible. It stays general on purpose: specific topics, content types, platforms and accounts are added later as folders on top of these general ones.
+paragraph end
+
+section start
+title start
+Look and money
+title end
+paragraph start
+The look is monochrome with cyber overlays, white as the main accent, and red or purple only when needed. Income is planned from the first day, starting with donations and affiliate links. Details live in brand, research and monetization.
+paragraph end
+section end
+
+section start
+title start
+Rules for an AI
+title end
+paragraph start
+Read 00-notation-usage-guide-for-any-ai.aiu first, then this file, then the file tree you are given, then the intro.aiu of the folder you work in. The tree shows what exists and the todo marks in the intro files show what is needed next. Write only pages that follow 00-notation-usage-guide-for-any-ai.aiu, only in the folder you were asked to work in, and keep every new folder general unless told otherwise.
+paragraph end
+section end
+
+section start
+title start
+Folders
+title end
+code start
+language: text
+01-business-foundation-and-direction
+02-market-and-research
+03-brand-identity
+04-business-operations-and-governance
+05-revenue-and-business-offers
+06-platforms-and-distribution-infrastructure
+07-business-systems-and-resources
+08-launch-and-execution-planning
+09-measurement-and-growth
+10-content-strategy-and-production
+code end
+section end

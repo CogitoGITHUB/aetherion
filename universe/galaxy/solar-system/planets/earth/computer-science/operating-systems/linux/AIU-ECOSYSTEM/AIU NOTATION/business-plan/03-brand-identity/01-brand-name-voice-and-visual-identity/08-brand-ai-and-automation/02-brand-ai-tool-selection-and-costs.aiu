@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-ai-tool-selection-and-costs
+Brand ai tool selection and costs
+title end
+
+paragraph start
+Choose a tool by what it must do, whether its output may be used commercially, how it handles the data entered and what it costs. Record each answer with its source and date.
+paragraph end
+
+paragraph start
+No cost or licence is written from memory. Read the tool terms page and note the date.
+paragraph end
+
+code start
+language: text
+tool, task, commercial use allowed, data handling, cost, source, date
+code end
+
+paragraph start
+todo: compare tools when a task is ready to delegate
+Open until the owner decides.
+paragraph end

@@ -8,6 +8,7 @@ display = "{}"
 output = "{}"
 
 [preview]
+cached = false
 command = "bash aiu-list-preview-fit.sh type \"{}\""
 
 [keybindings]

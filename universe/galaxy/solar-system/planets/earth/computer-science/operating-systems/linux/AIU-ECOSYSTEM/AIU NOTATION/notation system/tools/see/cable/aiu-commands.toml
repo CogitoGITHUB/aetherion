@@ -8,7 +8,8 @@ display = "{split:;:0}"
 output = "{split:;:0}"
 
 [preview]
-command = "bash aiu-cmd-preview-fit.sh \"{}\""
+cached = false
+command = "bash aiu-cmd-preview.sh \"{}\""
 
 [keybindings]
 enter = "actions:pick"

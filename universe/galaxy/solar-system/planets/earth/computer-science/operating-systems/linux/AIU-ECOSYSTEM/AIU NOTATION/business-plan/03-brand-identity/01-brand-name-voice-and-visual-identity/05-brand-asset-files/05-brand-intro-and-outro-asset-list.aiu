@@ -1,0 +1,25 @@
+title start
+kind: note
+tags: business-plan brand brand-intro-and-outro-asset-list
+Brand intro and outro asset list
+title end
+
+paragraph start
+This page lists the intro, outro and transition files. Each one is short and usable on every platform in the plan.
+paragraph end
+
+paragraph start
+Every intro and outro asset carries the logo and the overlay style and is tested for length and sound with the sound logo.
+paragraph end
+
+code start
+language: text
+intro-main-short
+outro-main-short
+transition-glitch-short
+code end
+
+paragraph start
+todo: decide the length limits after the first edits
+Open until the owner decides.
+paragraph end

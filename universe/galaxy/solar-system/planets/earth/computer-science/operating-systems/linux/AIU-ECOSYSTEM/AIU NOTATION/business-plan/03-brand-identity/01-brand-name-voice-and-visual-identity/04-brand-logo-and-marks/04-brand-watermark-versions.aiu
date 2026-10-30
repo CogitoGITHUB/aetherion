@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-watermark-versions
+Brand watermark versions
+title end
+
+paragraph start
+A watermark is a low opacity version of the mark placed in a fixed corner. It must stay outside areas covered by platform buttons and must not hide the subject.
+paragraph end
+
+paragraph start
+Make one watermark per background type, light and dark, and test each over the busiest footage the brand expects.
+paragraph end
+
+code start
+language: text
+version, background type, corner, opacity, tested on
+code end
+
+paragraph start
+todo: choose the corner and opacity after testing on real footage
+Open until the owner decides.
+paragraph end

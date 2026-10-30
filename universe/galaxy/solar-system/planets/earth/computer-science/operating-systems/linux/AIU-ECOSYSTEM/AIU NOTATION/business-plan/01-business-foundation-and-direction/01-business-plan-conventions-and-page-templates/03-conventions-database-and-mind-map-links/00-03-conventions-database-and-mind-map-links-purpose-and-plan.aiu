@@ -1,0 +1,13 @@
+title start
+kind: note
+tags: business-plan conventions purpose plan
+Conventions database and mind map links purpose and plan
+title end
+
+paragraph start
+This folder holds how pages become database rows and how the tree becomes a mind map: tags, links between pages, field mapping and export notes.
+paragraph end
+
+code start
+language: text
+code end

@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-motion-style-guide
+Brand motion style guide
+title end
+
+paragraph start
+Motion follows few rules: one easing style, a small set of durations, and glitch effects kept short and rare. A viewer should notice the message first and the effect second.
+paragraph end
+
+paragraph start
+Rapid flashing can bother some viewers, so the limit must be checked in the accessibility standard before any strobe effect is used.
+paragraph end
+
+code start
+language: text
+motion name, duration, easing, where used
+code end
+
+paragraph start
+todo: verify the official flash limit and write it here
+Open until the owner decides.
+paragraph end

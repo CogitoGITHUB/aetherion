@@ -162,10 +162,14 @@ pub enum Command {
     SelectCopy,
     /// SelectCopyLine copies the line the point stands on.
     SelectCopyLine,
+    /// SelectCopyOut copies the region out to the Android clipboard.
+    SelectCopyOut,
     /// SelectSend sends the region to the agent in the bundle.
     SelectSend,
     /// SelectAgentHere opens the agent beside the pane, with the region.
     SelectAgentHere,
+    /// PasteClipboard pastes the Android clipboard into the focused pane.
+    PasteClipboard,
     /// LeaveSelect leaves the selection and does nothing else.
     LeaveSelect,
 }
@@ -493,6 +497,20 @@ pub static SELECT: &[Binding] = &[
         bytes: b"Y",
         about: "copy the line the point stands on",
         action: Action::Command(Command::SelectCopyLine),
+        need: Need::Always,
+    },
+    Binding {
+        keys: "o",
+        bytes: b"o",
+        about: "copy the region out to the Android clipboard",
+        action: Action::Command(Command::SelectCopyOut),
+        need: Need::Always,
+    },
+    Binding {
+        keys: "P",
+        bytes: b"P",
+        about: "paste the Android clipboard into the focused pane",
+        action: Action::Command(Command::PasteClipboard),
         need: Need::Always,
     },
     Binding {

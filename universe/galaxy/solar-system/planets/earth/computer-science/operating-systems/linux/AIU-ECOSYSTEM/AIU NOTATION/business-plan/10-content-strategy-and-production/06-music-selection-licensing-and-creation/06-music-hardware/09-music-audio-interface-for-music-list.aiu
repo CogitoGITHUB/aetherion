@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan music music-audio-interface-for-music-list
+Music audio interface for music list
+title end
+
+paragraph start
+This page lists equipment by need, not by product name, for music work. Each entry states the need, the minimum that works and why.
+paragraph end
+
+paragraph start
+Entries are checked on the seller page with a date before any purchase.
+paragraph end
+
+code start
+language: text
+need, minimum, candidate, price, date seen
+code end
+
+paragraph start
+todo: fill when the equipment need is confirmed
+Open until the owner decides.
+paragraph end

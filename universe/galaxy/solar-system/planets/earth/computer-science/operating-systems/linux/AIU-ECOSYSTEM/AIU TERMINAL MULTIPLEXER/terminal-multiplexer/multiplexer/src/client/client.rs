@@ -18,6 +18,7 @@
 #[path = "../devloop/config.rs"]
 mod config;
 
+mod clipboard;
 mod git;
 mod workspace;
 mod editor;

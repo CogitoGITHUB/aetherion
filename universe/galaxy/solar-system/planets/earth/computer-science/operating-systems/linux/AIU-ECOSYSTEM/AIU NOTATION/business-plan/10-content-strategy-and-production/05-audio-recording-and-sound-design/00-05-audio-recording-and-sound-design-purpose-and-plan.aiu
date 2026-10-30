@@ -1,0 +1,51 @@
+title start
+kind: default
+tags: business-plan audio audio-recording-and-sound-design-purpose-and-plan
+Audio recording and sound design purpose and plan
+title end
+
+paragraph start
+Audio for SHAPE, SHAPESHIFTER and ARCHITECT, kept general so specific topics and platforms can be added later as new folders on top of these.
+paragraph end
+
+section start
+title start
+Plan
+title end
+
+paragraph start
+Pages here state methods, criteria and templates. A fact about the world is stated only where an evidence page lists its sources and check date. Everything else carries a todo mark.
+paragraph end
+
+section end
+
+section start
+title start
+Subfolders
+title end
+
+code start
+language: text
+01-audio-foundations
+02-audio-sound-identity-planning
+03-audio-recording-setup
+04-audio-recording-procedure
+05-audio-audio-editing
+06-audio-sound-design
+07-audio-hardware
+08-audio-ai-and-automation
+code end
+
+section end
+
+section start
+title start
+Files to plan next
+title end
+
+paragraph start
+todo: decide which pages need owner choices first, then fill those
+Open until the owner decides.
+paragraph end
+
+section end

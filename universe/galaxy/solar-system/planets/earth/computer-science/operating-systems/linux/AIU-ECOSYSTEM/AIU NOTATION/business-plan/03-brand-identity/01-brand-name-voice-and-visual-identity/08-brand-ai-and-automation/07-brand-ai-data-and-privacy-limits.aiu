@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-ai-data-and-privacy-limits
+Brand ai data and privacy limits
+title end
+
+paragraph start
+Never enter passwords, recovery codes, card numbers or private data of followers into any AI tool. Do not enter unreleased material unless the tool terms say it is not kept or used for training.
+paragraph end
+
+paragraph start
+Read the terms of each tool and record what they say about data use with the date read.
+paragraph end
+
+code start
+language: text
+tool, data kept, used for training, date read, source
+code end
+
+paragraph start
+todo: record the data terms of each chosen tool
+Open until the owner decides.
+paragraph end

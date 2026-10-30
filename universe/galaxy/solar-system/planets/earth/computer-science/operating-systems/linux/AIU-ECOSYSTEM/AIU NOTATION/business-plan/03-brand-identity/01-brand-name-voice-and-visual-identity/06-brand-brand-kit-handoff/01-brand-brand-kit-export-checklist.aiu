@@ -1,0 +1,31 @@
+title start
+kind: note
+tags: business-plan brand brand-brand-kit-export-checklist
+Brand brand kit export checklist
+title end
+
+paragraph start
+The brand kit is exported as one folder that anyone can pick up without asking questions. This checklist is run every time the brand changes.
+paragraph end
+
+paragraph start
+Run it in order and do not publish the kit until every line is checked and the files open on a clean machine.
+paragraph end
+
+code start
+language: text
+voice pages exported
+words lists exported
+palette swatches exported
+fonts and licence notes included
+logo set included
+overlay set included
+templates included
+do and do not pairs included
+no passwords or secrets inside
+code end
+
+paragraph start
+todo: run the checklist after the first complete version
+Open until the owner decides.
+paragraph end

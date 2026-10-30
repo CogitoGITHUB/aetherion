@@ -1,0 +1,26 @@
+title start
+kind: note
+tags: business-plan brand brand-overlay-asset-list
+Brand overlay asset list
+title end
+
+paragraph start
+This page lists every overlay file the brand needs, with a master file and its exports for each one. Each file is named so its name alone says what it is.
+paragraph end
+
+paragraph start
+A file enters the list only after it has a purpose on the cyber overlay page and a test on a phone.
+paragraph end
+
+code start
+language: text
+overlay-scan-lines-white
+overlay-grid-lines-white
+overlay-corner-brackets-white
+overlay-glitch-frame-white
+code end
+
+paragraph start
+todo: decide where the master files are stored and how they are backed up
+Open until the owner decides.
+paragraph end

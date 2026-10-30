@@ -1,0 +1,26 @@
+title start
+kind: note
+tags: business-plan conventions folder-naming-pattern
+Conventions folder naming pattern
+title end
+
+paragraph start
+Every directory begins with a two digit number followed by a full, descriptive name. Numbering starts at 01 and restarts inside each parent directory. Numbers establish ordering within that parent; they do not identify a directory globally. Directory names must be unique among their immediate siblings. Every directory has an introduction file beginning with 00-, followed by the directory name and purpose and plan. The 00- prefix is reserved for introduction files and is never used for directory names.
+paragraph end
+
+paragraph start
+The directory hierarchy has three directory levels below the business-plan root:
+business domain, subject area and subdirectory. Files do not count as directory levels. A deeper directory level is added only when an existing directory grows beyond one clear subject.
+paragraph end
+
+paragraph start
+Every directory holds an introduction file named zero zero, followed by the directory name and purpose and plan. Hardware directories are added only where equipment requires its own structure. AI and automation directories are added only where AI or automation has a meaningful role in that subject. Neither directory is mandatory.
+paragraph end
+
+code start
+language: text
+01-business-foundation-and-direction
+  01-business-plan-conventions-and-page-templates
+  02-business-strategy-vision-goals-positioning-and-risks
+code end
+

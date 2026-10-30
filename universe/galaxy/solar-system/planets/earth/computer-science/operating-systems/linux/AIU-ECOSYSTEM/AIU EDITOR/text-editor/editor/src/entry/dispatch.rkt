@@ -36,7 +36,8 @@
          "../notation/document.rkt"
          "../notation/host.rkt"
          "live.rkt"
-         "plugin-verbs.rkt")
+         "plugin-verbs.rkt"
+         "../dashboard/home.rkt")
 
 ;; input-is-a-terminal? answers whether the standard input is a
 ;; terminal, and not a pipe. A terminal means the live session: the keys
@@ -458,10 +459,26 @@
     [else
      (print-line (format "the stop switch is ~a" (if (stopped?) "thrown" "clear")))]))
 
+;; home-session starts the live session on the dashboard, with no file: the
+;; dashboard is redrawn at the session's level, so the level keys work.
+(define (home-session)
+  (define file (path->complete-path "dashboard"))
+  (define journal (journal-path-for file))
+  (ensure-dir (build-path (state-dir) "journal"))
+  (set-box! home-chosen #f)
+  (parameterize ([home-screen home-lines]
+                 [home-pick home-page]
+                 [home-refresh home-rescan!])
+    (live-session file journal))
+  (define chosen (unbox home-chosen))
+  (when chosen
+    (set-box! home-chosen #f)
+    (edit-session chosen)))
+
 ;; edit-file opens the file the user named and runs the editing session.
 (define (edit-file args)
   (if (null? args)
-      (print-line "the editor: edit needs a file")
+      (if (input-is-a-terminal?) (home-session) (print-line "the editor: edit needs a file"))
       (edit-session (car args))))
 
 ;; commands is the table: one name, one function.

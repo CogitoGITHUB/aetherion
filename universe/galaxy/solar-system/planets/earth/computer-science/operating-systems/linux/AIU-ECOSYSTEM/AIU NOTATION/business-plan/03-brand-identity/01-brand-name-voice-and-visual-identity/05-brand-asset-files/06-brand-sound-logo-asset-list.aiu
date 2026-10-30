@@ -1,0 +1,25 @@
+title start
+kind: note
+tags: business-plan brand brand-sound-logo-asset-list
+Brand sound logo asset list
+title end
+
+paragraph start
+A sound logo is a very short sound that identifies the brand. This page lists its files and the licence of every sound used to make it.
+paragraph end
+
+paragraph start
+Every sound in it must be owned or licensed for commercial use. Keep the licence note beside the file.
+paragraph end
+
+code start
+language: text
+sound-logo-main
+sound-logo-short
+licence note per source sound
+code end
+
+paragraph start
+todo: decide whether a sound logo is wanted at all
+Open until the owner decides.
+paragraph end

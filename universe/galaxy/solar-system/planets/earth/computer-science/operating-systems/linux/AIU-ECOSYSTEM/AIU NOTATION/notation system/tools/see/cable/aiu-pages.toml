@@ -8,6 +8,7 @@ display = "{split:/:-1}"
 output = "{}"
 
 [preview]
+cached = false
 command = "bash ($env.AIU_NOTATION_ROOT | path join tools see preview-fit.sh) '{}' --contracts"
 
 [keybindings]

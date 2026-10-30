@@ -1,0 +1,13 @@
+title start
+kind: note
+tags: business-plan analytics analytics-experiments-and-results-purpose-and-plan
+Analytics experiments and results purpose and plan
+title end
+
+paragraph start
+This folder holds the analytics experiments and results pages of the analytics plan: methods, checklists and owner decisions, each marked with what is verified and what is not.
+paragraph end
+
+code start
+language: text
+code end

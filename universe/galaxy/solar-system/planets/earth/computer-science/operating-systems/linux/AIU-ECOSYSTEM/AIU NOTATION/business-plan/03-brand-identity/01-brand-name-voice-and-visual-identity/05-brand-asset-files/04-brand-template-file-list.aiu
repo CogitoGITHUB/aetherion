@@ -1,0 +1,26 @@
+title start
+kind: note
+tags: business-plan brand brand-template-file-list
+Brand template file list
+title end
+
+paragraph start
+This page lists the template files: thumbnail, title card, caption card, lower third and end card, each with a master and a name.
+paragraph end
+
+paragraph start
+A template is added when a content type needs it twice. Templates are built on the layout rules and the safe area.
+paragraph end
+
+code start
+language: text
+template-thumbnail-main
+template-title-card
+template-caption-card
+template-end-card
+code end
+
+paragraph start
+todo: list the templates after the layout rules are set
+Open until the owner decides.
+paragraph end

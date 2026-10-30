@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-font-file-list
+Brand font file list
+title end
+
+paragraph start
+This page lists every font file used by the brand with its role, its source and the date its licence was checked.
+paragraph end
+
+paragraph start
+A font is listed only after its licence text was read. Never store a font whose licence forbids sharing with an editor.
+paragraph end
+
+code start
+language: text
+font file name, role, source page, licence checked on date, may share with editors
+code end
+
+paragraph start
+todo: fill in after the typefaces are chosen
+Open until the owner decides.
+paragraph end

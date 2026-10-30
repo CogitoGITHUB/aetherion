@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-logo-clear-space-and-minimum-size
+Brand logo clear space and minimum size
+title end
+
+paragraph start
+Clear space is an empty margin kept around the logo, measured in a unit taken from the mark itself. Minimum size is the smallest size at which the logo still reads on a phone.
+paragraph end
+
+paragraph start
+Both values are measured on the final logo, not guessed, and written here with an example image.
+paragraph end
+
+code start
+language: text
+clear space unit, minimum width on phone, tested on date
+code end
+
+paragraph start
+todo: measure and record both values after the final logo exists
+Open until the owner decides.
+paragraph end

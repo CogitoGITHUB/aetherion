@@ -1,0 +1,27 @@
+title start
+kind: note
+tags: business-plan publishing publishing-ai-prompt-library
+Publishing ai prompt library
+title end
+
+paragraph start
+A prompt is stored with its purpose, input, output rule and one example. A failed prompt is kept with the reason.
+paragraph end
+
+paragraph start
+Prompts never contain passwords, codes, tokens or private data.
+paragraph end
+
+code start
+language: text
+purpose
+input
+output rule
+example
+last tested on
+code end
+
+paragraph start
+todo: add prompts as they prove useful
+Open until the owner decides.
+paragraph end

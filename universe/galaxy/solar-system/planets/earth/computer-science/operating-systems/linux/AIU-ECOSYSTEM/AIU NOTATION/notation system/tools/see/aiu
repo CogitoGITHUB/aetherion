@@ -144,11 +144,12 @@ def main [cmd?: string, target?: path, extra?: string, --plain (-p), --contracts
     if (($env.AIU_PICK_FIRST? | default "") != "") {
       $file = ($all | first)
     } else {
-      if (which tv | is-empty) {
-        error make {msg: "tv (television) is not on PATH. Install it, or give a file: aiu see FILE"}
+      if (which broot | is-empty) {
+        error make {msg: "broot is not on PATH. Give a file: aiu see FILE"}
       }
       rm -f /tmp/aiu-pick
-      try { do { cd $dir; with-env {AIU_NOTATION_ROOT: $root} { ^tv aiu-pages --cable-dir ($root | path join tools see cable) --preview-size 80 } } } catch {|e| if not ($e.msg | str contains "non-zero") { print $"tv failed: ($e.msg)" } }
+      try { do { cd $dir; ^broot --conf ($root | path join tools see broot-aiu.toml) --cmd ":open_preview" $dir } } catch {|e| if not ($e.msg | str contains "non-zero") { print $"broot failed: ($e.msg)" } }
+      return
       let out = (if ("/tmp/aiu-pick" | path exists) { open --raw /tmp/aiu-pick | str trim } else { "" })
       if ($out | is-empty) {
         print "nothing chosen"

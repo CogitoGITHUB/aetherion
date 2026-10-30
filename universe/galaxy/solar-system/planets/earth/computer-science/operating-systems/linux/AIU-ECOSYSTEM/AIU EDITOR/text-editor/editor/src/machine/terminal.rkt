@@ -86,8 +86,10 @@
 ;; pause before a resize is noticed, if the window is ever resized — asks
 ;; again, and the frame is drawn to the window it is in.
 (define window-cache (box #f))
+;; window-cache-ms is part of this module.
 (define window-cache-ms 2000)
 
+;; terminal-size is part of this module.
 (define (terminal-size)
   (define kept (unbox window-cache))
   (cond

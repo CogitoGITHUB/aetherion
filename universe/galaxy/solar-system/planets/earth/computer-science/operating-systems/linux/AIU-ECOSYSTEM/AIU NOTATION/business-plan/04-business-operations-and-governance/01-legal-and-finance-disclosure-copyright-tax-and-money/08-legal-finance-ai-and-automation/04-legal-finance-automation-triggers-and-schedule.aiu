@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan legal-and-finance legal-finance-automation-triggers-and-schedule
+Legal finance automation triggers and schedule
+title end
+
+paragraph start
+An automation starts from a trigger, such as a deadline date, a new invoice or a monthly review. Only repeatable steps are automated.
+paragraph end
+
+paragraph start
+Each automation is written with its trigger, steps, schedule and the person who checks the result.
+paragraph end
+
+code start
+language: text
+trigger, steps, schedule, checked by, last run
+code end
+
+paragraph start
+todo: decide the first automations after the first weeks of work
+Open until the owner decides.
+paragraph end

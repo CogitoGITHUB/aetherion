@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-voice-principles
+Brand voice principles
+title end
+
+paragraph start
+The voice is one consistent character across every post, and only the tone changes with the situation. Define it with three to five traits, and give each trait one do example and one do not example.
+paragraph end
+
+paragraph start
+A trait is useful only when its opposite is a real choice. Calm is a usable trait. Good is not, because nobody chooses bad.
+paragraph end
+
+code start
+language: text
+trait, meaning in one sentence, do example, do not example
+code end
+
+paragraph start
+todo: choose the traits and write the examples
+Open until the owner decides.
+paragraph end

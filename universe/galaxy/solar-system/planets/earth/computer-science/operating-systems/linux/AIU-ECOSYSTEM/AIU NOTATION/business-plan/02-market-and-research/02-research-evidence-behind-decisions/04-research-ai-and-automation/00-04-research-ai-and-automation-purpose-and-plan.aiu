@@ -1,0 +1,13 @@
+title start
+kind: note
+tags: business-plan research purpose plan
+04 research ai and automation
+title end
+
+paragraph start
+This folder holds how an AI and automation support the research work: what can be delegated, tools, prompts, schedule, review points, failure handling and data limits.
+paragraph end
+
+code start
+language: text
+code end

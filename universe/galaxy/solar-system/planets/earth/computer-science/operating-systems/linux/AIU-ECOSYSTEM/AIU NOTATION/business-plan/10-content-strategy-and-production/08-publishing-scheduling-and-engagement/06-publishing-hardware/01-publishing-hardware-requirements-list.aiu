@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan publishing publishing-hardware-requirements-list
+Publishing hardware requirements list
+title end
+
+paragraph start
+Write the need first and the device second. For each publishing task write what it needs, the minimum that works and whether it is a must or a nice to have.
+paragraph end
+
+paragraph start
+Start from equipment already owned and list only the gaps.
+paragraph end
+
+code start
+language: text
+need, why, minimum, must have or nice to have, already owned
+code end
+
+paragraph start
+todo: the owner lists the equipment already owned
+Open until the owner decides.
+paragraph end

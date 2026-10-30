@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-grid-and-layout-rules
+Brand grid and layout rules
+title end
+
+paragraph start
+Use one grid for all formats, with the title area, the subject area and the caption area kept in the same relative places. Each platform covers parts of the frame with its own buttons and text.
+paragraph end
+
+paragraph start
+Measure the safe area per platform on the platform pages and record it here once. Keep logos, captions and key overlays inside the shared safe area.
+paragraph end
+
+code start
+language: text
+format, shape, title area, subject area, caption area, safe margin
+code end
+
+paragraph start
+todo: measure the safe area of each platform and record it
+Open until the owner decides.
+paragraph end

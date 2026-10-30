@@ -86,6 +86,9 @@
     commands and the keymap explorer read this one table
   - src/client/select.rs — the selection: the point, the ring of marks and
     the text between them
+  - src/client/clipboard.rs — the Android clipboard: the pick out as one
+    OSC 52 string, the text in, and the refusal that names the missing
+    add-on instead of waiting for ever
   - src/client/workspace.rs — the workspace panel: the shared workspace as the
     multiplexer shows it
   - src/client/editor.rs — the editor's panel: the editor's own words as the

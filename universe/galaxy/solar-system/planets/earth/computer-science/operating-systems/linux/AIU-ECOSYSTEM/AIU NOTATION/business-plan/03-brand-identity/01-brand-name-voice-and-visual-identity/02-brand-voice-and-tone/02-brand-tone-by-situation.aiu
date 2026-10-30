@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-tone-by-situation
+Brand tone by situation
+title end
+
+paragraph start
+Tone is the voice adjusted to the moment. List the situations the brand meets: a new post, praise, criticism, a correction, a sponsored post and news coverage. Write one line of tone for each.
+paragraph end
+
+paragraph start
+News coverage and corrections need the plainest tone, because accuracy matters more than style there. Sponsored posts need clear disclosure wording from the legal and finance pages.
+paragraph end
+
+code start
+language: text
+situation, tone in one line, example reply
+code end
+
+paragraph start
+todo: write the tone line for each situation
+Open until the owner decides.
+paragraph end

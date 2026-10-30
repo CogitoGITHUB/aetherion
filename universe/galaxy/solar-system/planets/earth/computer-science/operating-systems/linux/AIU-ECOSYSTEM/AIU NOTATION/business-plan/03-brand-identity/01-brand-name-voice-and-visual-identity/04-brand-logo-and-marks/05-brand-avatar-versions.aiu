@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-avatar-versions
+Brand avatar versions
+title end
+
+paragraph start
+An avatar is the logo cropped into the small round or square frame each platform uses. It must stay recognisable at the smallest display size.
+paragraph end
+
+paragraph start
+Make one avatar per face, built on the same base so the three look related, and export one file per platform shape.
+paragraph end
+
+code start
+language: text
+face, shape, background, export size, platform
+code end
+
+paragraph start
+todo: make the avatars after the logo is final
+Open until the owner decides.
+paragraph end

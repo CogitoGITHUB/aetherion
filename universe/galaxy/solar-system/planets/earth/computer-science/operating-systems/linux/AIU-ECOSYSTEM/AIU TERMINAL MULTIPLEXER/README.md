@@ -496,6 +496,29 @@ Measured 2026-10-23, inside the proot, with the phone's own output:
   drifts per Android version), Termux:X11's clipboard sharing (server not running, no
   `xclip`/`xsel`).
 
+### The bridge's own code
+
+`multiplexer/src/client/clipboard.rs` is the one place that speaks to the Android
+clipboard, and it keeps the measurements above as its rules:
+
+- `out(text)` answers one OSC 52 string, `ESC ] 52 ; c ; <base64> BEL`, and the client
+  writes it to the owner's own terminal — never into a pane, where the program would
+  print the escape instead of the clipboard taking it. A text that would make the string
+  over 8192 characters is **refused by name with both numbers said** (at most 6132 bytes
+  of text), because the emulator's own answer to a long string is silence. A text holding
+  an escape or a bell is refused too: the emulator would read it as the end of the string.
+- `addon()` asks the phone's package list for `com.termux.api`. This is the gate for the
+  read direction: the `termux-clipboard-get` script is **never run before the package
+  list says the app is there**, so the hang the measurement found cannot happen.
+- `paste()` answers the clipboard's text, or the reason it is not read: on this phone,
+  that reason is `com.termux.api is not installed` — a name, not a wait.
+- `fits(text)` bounds a paste at 65536 bytes and refuses a larger one by name instead of
+  cutting it: a paste whose end is silently lost is a paste the owner would act on wrongly.
+
+The eight unit tests of that file run with `cargo test --offline clipboard` (the RFC 4648
+encoder vectors, the string's shape and ending, the refusals with their numbers).
+
+
 ## Related documentation
 
 - `TODO.org` — the one list of what is left, in build order.

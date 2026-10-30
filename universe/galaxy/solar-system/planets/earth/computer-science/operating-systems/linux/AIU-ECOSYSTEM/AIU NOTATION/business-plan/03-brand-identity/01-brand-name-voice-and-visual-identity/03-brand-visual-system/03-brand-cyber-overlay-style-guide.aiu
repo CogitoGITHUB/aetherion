@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-cyber-overlay-style-guide
+Brand cyber overlay style guide
+title end
+
+paragraph start
+Cyber overlays are thin graphic layers over monochrome footage, such as scan lines, grid lines, data readouts, glitch frames and corner brackets. They are made in white first, and red or purple only where the palette rules allow.
+paragraph end
+
+paragraph start
+Each overlay needs a reason, such as marking a title, a change of section or an emphasis. If it only decorates, remove it. Overlays never cover the face, the subject or caption text.
+paragraph end
+
+code start
+language: text
+overlay name, purpose, colour, where it may appear, where it must not appear
+code end
+
+paragraph start
+todo: build the first overlay set and test it on a phone screen
+Open until the owner decides.
+paragraph end

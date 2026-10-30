@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-automation-failure-handling
+Brand automation failure handling
+title end
+
+paragraph start
+When an automation fails, it stops, keeps the last good version, writes a log line and tells a person. It never retries without limit and never publishes a half result.
+paragraph end
+
+paragraph start
+Every automation has one named person who fixes it and one place where its log is kept.
+paragraph end
+
+code start
+language: text
+failure, what stops, what is kept, who is told, how it is fixed
+code end
+
+paragraph start
+todo: write the log place and the contact once automations exist
+Open until the owner decides.
+paragraph end

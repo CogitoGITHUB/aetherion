@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan platforms platforms-hardware-purchase-order-and-timeline
+Platforms hardware purchase order and timeline
+title end
+
+paragraph start
+Buy in the order the work needs it. Record the date ordered, arrived and tested.
+paragraph end
+
+paragraph start
+Do not order two items that do the same job before the first is tested.
+paragraph end
+
+code start
+language: text
+item, ordered, arrived, tested, status
+code end
+
+paragraph start
+todo: fill when the first purchase is approved
+Open until the owner decides.
+paragraph end

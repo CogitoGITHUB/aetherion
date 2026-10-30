@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-signature-lines
+Brand signature lines
+title end
+
+paragraph start
+A signature line is a short phrase that closes or opens a post and becomes recognisable through repetition. It must be short enough to say in one breath and be true to the voice traits.
+paragraph end
+
+paragraph start
+Test each candidate by reading it aloud and checking that it does not copy another brand. Keep at most one line per face.
+paragraph end
+
+code start
+language: text
+candidate line, face, read aloud result, similar existing use found
+code end
+
+paragraph start
+todo: the owner chooses the lines, none are proposed here
+Open until the owner decides.
+paragraph end

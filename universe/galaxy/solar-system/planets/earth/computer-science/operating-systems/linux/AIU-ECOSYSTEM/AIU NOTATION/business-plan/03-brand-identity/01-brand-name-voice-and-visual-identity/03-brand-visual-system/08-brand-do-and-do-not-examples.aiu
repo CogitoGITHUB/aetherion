@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-do-and-do-not-examples
+Brand do and do not examples
+title end
+
+paragraph start
+Pairs of images teach the style faster than rules. Each pair shows one rule followed and the same rule broken, with one sentence saying why.
+paragraph end
+
+paragraph start
+Collect the pairs from the first real posts rather than inventing them. Each pair carries one rule only.
+paragraph end
+
+code start
+language: text
+rule, do example file, do not example file, reason
+code end
+
+paragraph start
+todo: collect the first pairs after the first posts exist
+Open until the owner decides.
+paragraph end

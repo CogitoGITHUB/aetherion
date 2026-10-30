@@ -1,0 +1,88 @@
+title start
+kind: research
+tags: business-plan brand brand-colour-palette-monochrome-white-red-purple-rules
+Brand colour palette monochrome white red purple rules
+title end
+
+section start
+title start
+Abstract
+title end
+
+paragraph start
+Question: what contrast and colour rules keep a white, red and purple palette readable on a dark monochrome brand. Method: the web accessibility contrast standard, read on 2026-10-29. Result: the standard sets a minimum contrast ratio of 4.5 to 1 for normal text and 3 to 1 for large text, and exempts logotypes. Limit: the standard was written for web pages, not social video, so applying it to overlays is a design choice.
+paragraph end
+
+section end
+
+section start
+title start
+Introduction
+title end
+
+paragraph start
+The palette is monochrome with white as the main accent and red or purple only when needed. This page sets where each colour is allowed and how readable text must be.
+paragraph end
+
+section end
+
+section start
+title start
+Methods
+title end
+
+paragraph start
+Searched the web for the contrast threshold of the Web Content Accessibility Guidelines version 2.2 and read the W3C understanding page and a WebAIM article. The psychology evidence lives in the research area and is not repeated here.
+paragraph end
+
+section end
+
+section start
+title start
+Results
+title end
+
+paragraph start
+Threshold checked 2026-10-29: normal text needs a contrast ratio of at least 4.5 to 1 against its background, and large text at least 3 to 1, where large means 18 point or 14 point bold (W3C, success criterion 1.4.3).
+paragraph end
+
+paragraph start
+Text that is part of a logo or brand name has no minimum contrast requirement (WebAIM, secondary source).
+paragraph end
+
+section end
+
+section start
+title start
+Discussion
+title end
+
+paragraph start
+Palette rules for the plan: the background is near black, text and the main accent are white, red and purple are used one at a time and each for one stated reason, and every text and background pair is measured with a contrast checker before use.
+paragraph end
+
+paragraph start
+The thresholds come from a web standard and are used here as a readability target for video overlays and thumbnails. That use is a design choice and was not tested on viewers.
+paragraph end
+
+paragraph start
+todo: choose the exact colour values and measure every pair against the thresholds
+Not measured yet.
+paragraph end
+
+section end
+
+section start
+title start
+References
+title end
+
+paragraph start
+W3C, Understanding Success Criterion 1.4.3 Contrast Minimum, WCAG 2.2, https://w3c.github.io/wcag/understanding/contrast-minimum.html, primary, checked 2026-10-29
+paragraph end
+
+paragraph start
+WebAIM, Contrast and Color Accessibility, https://webaim.org/articles/contrast/, secondary, verify against the W3C page, checked 2026-10-29
+paragraph end
+
+section end

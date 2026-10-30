@@ -1,0 +1,25 @@
+title start
+kind: note
+tags: business-plan brand brand-colour-file-list
+Brand colour file list
+title end
+
+paragraph start
+This page lists the colour files: swatch exports for design tools, editing tools and AI tools, each holding the same values as the palette page.
+paragraph end
+
+paragraph start
+When a colour value changes on the palette page, every file here is exported again in the same step.
+paragraph end
+
+code start
+language: text
+colour-swatches-design-tools
+colour-swatches-video-editor
+colour-values-plain-text
+code end
+
+paragraph start
+todo: fill in after the palette values are chosen
+Open until the owner decides.
+paragraph end

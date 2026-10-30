@@ -1,0 +1,27 @@
+title start
+kind: note
+tags: business-plan brand brand-ai-prompt-library
+Brand ai prompt library
+title end
+
+paragraph start
+A prompt is stored with its purpose, its input, the rule for its output and one example. A prompt that works is kept, and a prompt that failed is kept with the reason.
+paragraph end
+
+paragraph start
+Prompts never contain passwords, private data or follower personal data.
+paragraph end
+
+code start
+language: text
+purpose
+input
+output rule
+example
+last tested on
+code end
+
+paragraph start
+todo: add prompts as they prove useful
+Open until the owner decides.
+paragraph end

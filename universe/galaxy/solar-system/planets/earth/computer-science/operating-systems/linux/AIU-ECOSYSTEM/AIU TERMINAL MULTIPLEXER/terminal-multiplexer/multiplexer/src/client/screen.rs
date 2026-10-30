@@ -14,6 +14,7 @@
 use serde_json::{json, Value};
 use std::io::Write;
 
+use super::clipboard;
 use super::keymap::{bindings, Command, Context, Keymap, Mode, Resolution, State};
 use super::select::Selection;
 use super::tty;
@@ -56,6 +57,10 @@ pub enum Action {
     /// AskEditor asks the editor what it owns, over the editor's own MCP
     /// server: the answer comes back as the editor's own words.
     AskEditor,
+    /// Terminal writes bytes to the owner's own terminal, never to a pane:
+    /// the Android clipboard's sequence goes there, and a pane's program
+    /// would print it instead of the clipboard taking it.
+    Terminal(Vec<u8>),
 }
 
 /// PaneView is one pane as the screen sees it: its name, its tab, how much
@@ -1036,8 +1041,10 @@ impl Screen {
             | Command::SelectPopMark
             | Command::SelectCopy
             | Command::SelectCopyLine
+            | Command::SelectCopyOut
             | Command::SelectSend
             | Command::SelectAgentHere
+            | Command::PasteClipboard
             | Command::LeaveSelect => self.select_command(command),
         }
     }
@@ -1175,8 +1182,10 @@ impl Screen {
             }
             Command::SelectCopy => return self.copy_region(&lines),
             Command::SelectCopyLine => return self.copy_line(&lines),
+            Command::SelectCopyOut => return self.copy_out(&lines),
             Command::SelectSend => return self.send_region(&lines),
             Command::SelectAgentHere => return self.agent_here(&lines),
+            Command::PasteClipboard => return self.paste_clipboard(),
             Command::PageUp | Command::PageDown => {
                 // The view scrolled, so the text under the point is fresh
                 // text: the pick starts again over it, and the mark that
@@ -1253,6 +1262,94 @@ impl Screen {
         }
         self.message = format!("the line is copied: {}", first_line(&text));
         Action::Nothing
+    }
+
+    /// copy_out puts the region on the Android clipboard, and into the
+    /// multiplexer's own ring with it: one pick, two places, and the ring
+    /// stays the owner's own even when the phone's clipboard is not there.
+    ///
+    /// The bytes go to the owner's terminal, not to a pane: the sequence is
+    /// the terminal's own, and the pane's program would print it.
+    fn copy_out(&mut self, lines: &[String]) -> Action {
+        let text = self.select.region(lines);
+        if text.is_empty() {
+            self.message = "there is no region: the mark is not set".to_string();
+            return Action::Nothing;
+        }
+        let out = match clipboard::out(&text) {
+            Ok(bytes) => bytes,
+            Err(why) => {
+                // The refusal names what would not fit, and the ring keeps
+                // the text all the same: the owner's own copy is not lost to
+                // the phone's limit.
+                self.ring.insert(0, text.clone());
+                if self.ring.len() > RING_KEPT {
+                    self.ring.pop();
+                }
+                self.message = why;
+                return Action::Nothing;
+            }
+        };
+        self.ring.insert(0, text.clone());
+        if self.ring.len() > RING_KEPT {
+            self.ring.pop();
+        }
+        self.message = if clipboard::termux() {
+            format!(
+                "the region is on the Android clipboard: {}",
+                first_line(&text)
+            )
+        } else {
+            format!(
+                "the region went out as OSC 52, and this terminal did not say it is Termux, \
+                 so the phone's clipboard may not have taken it: {}",
+                first_line(&text)
+            )
+        };
+        Action::Terminal(out)
+    }
+
+    /// paste_clipboard reads the Android clipboard and pastes it into the
+    /// focused pane. A phone without the add-on is told by name, before
+    /// anything is written: the script behind it waits for ever there.
+    fn paste_clipboard(&mut self) -> Action {
+        match clipboard::paste() {
+            Ok(text) => self.paste_text(text),
+            Err(why) => {
+                self.message = why;
+                Action::Nothing
+            }
+        }
+    }
+
+    /// paste_text puts the clipboard's text into the focused pane, the way
+    /// the owner's own paste does. The text is checked before it goes: an
+    /// empty clipboard is said, and a paste over the limit is refused with
+    /// the numbers instead of being cut.
+    fn paste_text(&mut self, text: String) -> Action {
+        if text.is_empty() {
+            self.message = "the Android clipboard is empty: nothing is pasted".to_string();
+            return Action::Nothing;
+        }
+        if let Err(why) = clipboard::fits(&text) {
+            self.message = why;
+            return Action::Nothing;
+        }
+        let name = self.focused_pane();
+        if !self.panes.iter().any(|pane| pane.name == name) {
+            self.message = format!("there is no pane named {}", name);
+            return Action::Nothing;
+        }
+        self.message = format!(
+            "the Android clipboard ({} bytes) is on its way to {}",
+            text.len(),
+            name
+        );
+        Action::Request(json!({
+            "op": "send",
+            "pane": name,
+            "data": text
+        }))
     }
 
     /// send_region asks the holder to send the region to the agents. The
@@ -1413,6 +1510,13 @@ impl Screen {
             }
             ["paste", pane] => self.paste_into(pane),
             ["paste", "agent"] => self.paste_to_agent(),
+            ["clipboard", "out"] => {
+                // The pick, and nothing else: the command line never takes a
+                // region the point did not mark.
+                let lines = self.select_lines();
+                self.copy_out(&lines)
+            }
+            ["clipboard", "in"] => self.paste_clipboard(),
             ["focus", pane] => {
                 self.focus_pane(pane);
                 Action::Nothing
@@ -1956,6 +2060,13 @@ pub fn session(
                         let mut request = request;
                         request["client"] = Value::from(client_name);
                         wire::ask(fd, &request)?;
+                    }
+                    Action::Terminal(bytes) => {
+                        // The clipboard's sequence belongs to the owner's
+                        // terminal: it is written where the drawing goes,
+                        // never into a pane's program.
+                        let _ = out.write_all(&bytes);
+                        let _ = out.flush();
                     }
                     Action::AskEditor => {
                         // The holder asks the editor, not the client: the

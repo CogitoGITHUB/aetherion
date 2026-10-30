@@ -3,12 +3,23 @@
 # Status: current; updated in the same commit as any change in this directory.
 
 * Files
-# one line per file: its name, then the single job it performs.
+# one line per file, then the single job it performs.
 
   - INDEX.org — the client area: the thin screen that attaches to a holder
   - client.rs — the client: attaches, asks, reads and detaches; it holds
     nothing of its own
-  - editor.rs — the editor's panel: the editor's own words as the
-    multiplexer shows them
+  - clipboard.rs — the Android clipboard: the pick out as one OSC 52 string,
+    the text in, and the refusal that names the missing add-on
   - control.rs — the agent's hands: the request the agent sent, the words it
     carries, and the answer that goes back to it
+  - editor.rs — the editor's panel: the editor's own words as the
+    multiplexer shows them
+  - git.rs — the git panel: the shared Git model as the multiplexer shows it
+  - keymap.rs — the keymap: the keys that mean what, as one table the
+    dispatcher and the keymap explorer both read
+  - screen.rs — the screen: the panes drawn on one terminal, the mode line,
+    the tab bar, the explorer panel, and the redraw
+  - select.rs — the selection: the point, the ring of marks and the text
+    between them
+  - workspace.rs — the workspace panel: the shared workspace as the
+    multiplexer shows it

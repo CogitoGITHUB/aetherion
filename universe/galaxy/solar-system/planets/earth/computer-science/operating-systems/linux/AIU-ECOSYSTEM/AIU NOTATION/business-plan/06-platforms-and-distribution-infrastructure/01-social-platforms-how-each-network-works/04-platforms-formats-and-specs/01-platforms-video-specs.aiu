@@ -1,0 +1,100 @@
+title start
+kind: research
+tags: business-plan platforms platforms-video-specs
+Platforms video specs
+title end
+
+section start
+title start
+Abstract
+title end
+
+paragraph start
+Question: which video format is shared by TikTok, Instagram Reels and YouTube Shorts. Method: a web search of creator and tool vendor guides, read on 2026-10-29. Result: the guides agree on a 9:16 vertical frame at 1080 by 1920 pixels for all three, while maximum length, file size and safe area values differ between guides. Limit: all sources are secondary vendor guides, official platform help pages were not read, so lengths and sizes are unverified.
+paragraph end
+
+section end
+
+section start
+title start
+Introduction
+title end
+
+paragraph start
+The brand starts on every platform, so one master format that fits all of them saves work. This page records what the evidence supports.
+paragraph end
+
+section end
+
+section start
+title start
+Methods
+title end
+
+paragraph start
+Searched the web once for 2026 short video specifications and read the results. Vendor guides were used because no official page appeared in the results.
+paragraph end
+
+section end
+
+section start
+title start
+Results
+title end
+
+paragraph start
+Several guides recommend 9:16 at 1080 by 1920 pixels for TikTok, Instagram Reels and YouTube Shorts (Sendible, Blitzcut, Frameo, secondary, checked 2026-10-29).
+paragraph end
+
+paragraph start
+Reported maximum lengths conflict. Shorts are given as up to 3 minutes, Reels as 90 seconds, 3 minutes or 20 minutes depending on the guide, and TikTok as up to 10 minutes. No length is adopted.
+paragraph end
+
+paragraph start
+A guide states that each platform interface covers part of the frame, so the safe area must be measured per platform (Kapwing, secondary).
+paragraph end
+
+paragraph start
+One guide reports that YouTube made 9:16 the official Shorts ratio in October 2024 (PostEverywhere, secondary, unverified).
+paragraph end
+
+section end
+
+section start
+title start
+Discussion
+title end
+
+paragraph start
+Working rule for the plan: shoot and master in 9:16 at 1080 by 1920 with one shared safe margin, and read the length and file size limits on each official upload help page before relying on them.
+paragraph end
+
+paragraph start
+todo: read the official upload help page of each platform and record length, size and safe area with the date
+Not verified yet.
+paragraph end
+
+section end
+
+section start
+title start
+References
+title end
+
+paragraph start
+Sendible, Social media video specs, https://www.sendible.com/insights/social-media-video-specs, secondary vendor guide, checked 2026-10-29
+paragraph end
+
+paragraph start
+Blitzcut, Social video specs 2026, https://blitzcutai.com/blog/social-video-specs-2026, secondary vendor guide, checked 2026-10-29
+paragraph end
+
+paragraph start
+Kapwing, Social media video aspect ratios and sizes, https://www.kapwing.com/resources/social-media-video-aspect-ratios-and-sizes-the-2025-guide/, secondary vendor guide, checked 2026-10-29
+paragraph end
+
+paragraph start
+PostEverywhere, YouTube Shorts aspect ratio, https://posteverywhere.ai/blog/youtube-shorts-aspect-ratio, secondary vendor guide, unverified, checked 2026-10-29
+paragraph end
+
+section end

@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-design-workstation-list
+Brand design workstation list
+title end
+
+paragraph start
+The design workstation runs the design, overlay and editing tools the brand needs. List it by need: processing, memory, storage and screen, not by product name.
+paragraph end
+
+paragraph start
+Record the software the brand tools require and the minimum specification each states on its own page.
+paragraph end
+
+code start
+language: text
+tool, required spec source, required spec, date read
+code end
+
+paragraph start
+todo: list the tools first, then the minimum specification of each
+Open until the owner decides.
+paragraph end

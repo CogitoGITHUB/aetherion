@@ -1,0 +1,13 @@
+title start
+kind: note
+tags: business-plan audience purpose plan
+Audience language and places purpose and plan
+title end
+
+paragraph start
+This folder holds the words the audience uses and where and when it can be reached.
+paragraph end
+
+code start
+language: text
+code end

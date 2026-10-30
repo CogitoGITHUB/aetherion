@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-brand-kit-for-editors
+Brand brand kit for editors
+title end
+
+paragraph start
+An editor receives the logo set, templates, overlay set, thumbnail template, do and do not pairs and the file naming rules. Fonts go only where the licence allows sharing.
+paragraph end
+
+paragraph start
+The kit says in one page which file to use for which job, so an editor never has to guess.
+paragraph end
+
+code start
+language: text
+file, job, format, where stored
+code end
+
+paragraph start
+todo: decide how files are shared with editors, without writing any access details here
+Open until the owner decides.
+paragraph end

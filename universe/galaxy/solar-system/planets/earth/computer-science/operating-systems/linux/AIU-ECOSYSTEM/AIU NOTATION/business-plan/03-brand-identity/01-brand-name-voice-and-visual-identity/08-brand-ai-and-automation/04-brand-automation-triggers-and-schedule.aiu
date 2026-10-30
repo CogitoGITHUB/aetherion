@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-automation-triggers-and-schedule
+Brand automation triggers and schedule
+title end
+
+paragraph start
+An automation starts from a trigger, such as a new asset added, a draft ready for review or a weekly check. Only repeatable steps are automated.
+paragraph end
+
+paragraph start
+Each automation is written down with its trigger, its steps, its schedule and the person who checks the result.
+paragraph end
+
+code start
+language: text
+trigger, steps, schedule, checked by, last run
+code end
+
+paragraph start
+todo: decide the first automations after the first weeks of posting
+Open until the owner decides.
+paragraph end

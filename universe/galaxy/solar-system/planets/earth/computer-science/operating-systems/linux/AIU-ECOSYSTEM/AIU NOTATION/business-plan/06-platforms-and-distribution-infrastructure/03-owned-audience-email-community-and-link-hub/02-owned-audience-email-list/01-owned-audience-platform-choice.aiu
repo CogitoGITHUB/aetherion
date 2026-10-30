@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan owned-audience owned-audience-platform-choice
+Owned audience platform choice
+title end
+
+paragraph start
+Choose the tool that holds the email list by what it must do: store consent records, send to a list, let people unsubscribe and export the list. Compare tools on those needs, on how they handle subscriber data and on cost, each with its source and date.
+paragraph end
+
+paragraph start
+The list belongs to the brand, so the tool must allow a full export at any time. Consent and unsubscribe rules are confirmed on the legal pages before the first signup form goes live.
+paragraph end
+
+code start
+language: text
+tool, consent records, unsubscribe, export, data handling, cost, source, date checked
+code end
+
+paragraph start
+todo: compare tools when the first signup form is planned, because no tool or price has been checked
+Open until the owner decides.
+paragraph end

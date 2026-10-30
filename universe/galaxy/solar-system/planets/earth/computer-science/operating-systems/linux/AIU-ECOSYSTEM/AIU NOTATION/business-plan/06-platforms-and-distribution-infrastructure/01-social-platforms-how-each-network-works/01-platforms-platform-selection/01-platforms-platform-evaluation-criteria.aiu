@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan platforms platforms-platform-evaluation-criteria
+Platforms platform evaluation criteria
+title end
+
+paragraph start
+Record the questions this page must answer, where the answers are found and how they are kept current.
+paragraph end
+
+paragraph start
+Platform rules change often, so every rule on a page carries the date it was read on the official page. Anything not read there is marked unverified.
+paragraph end
+
+code start
+language: text
+question, official source, answer, date checked, confirmed by
+code end
+
+paragraph start
+todo: search official sources and fill this page, because nothing here is verified
+Open until the owner decides.
+paragraph end

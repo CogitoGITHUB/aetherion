@@ -57,10 +57,12 @@
       ;; The hot path is started once here, before the first frame, and kept
       ;; for the whole session: a key asks the child that is already running
       ;; instead of paying a program start for every letter.
-      (wire-start)
+      (unless (home-screen) (wire-start))
+      (set-box! home-repaint (lambda () (repaint session viewport)))
       (repaint session viewport)
-      (key-loop session (current-input-port) viewport))
+      (begin (start-home-scan) (key-loop session (current-input-port) viewport)))
     (lambda ()
+      (set-box! home-repaint void)
       (wire-stop)
       (display "\u001b[?25h")
       (display "\u001b[?1049l")
@@ -82,12 +84,25 @@
 ;; the point is in — in the view too, so an arrow that moves the point says so
 ;; even though the page itself stays put. The window moves only when the point
 ;; would leave it.
+;; paint-lock lets one paint run at a time, because the keys and the scan thread
+;; both paint.
+(define paint-lock (make-semaphore 1))
+
+;; repaint draws the screen under the paint lock.
 (define (repaint session viewport)
+  (call-with-semaphore paint-lock (lambda () (repaint-now session viewport))))
+
+;; repaint-now draws the whole screen for the session as it stands.
+(define (repaint-now session viewport)
   (define-values (width height) (terminal-size))
   (define name (path->string (session-file session)))
   (define writing? (string=? (the-layer session) "write"))
   (define raw (session-text session))
-  (define text (if writing? raw (page-view session raw width)))
+  (define home (home-screen))
+  (define text
+    (cond [home (string-join (home (the-level session) (unbox home-explorer)) "\n")]
+          [writing? raw]
+          [else (page-view session raw width)]))
   (define-values (row column) (point-line raw (the-point session)))
   (define top
     (if writing? (viewport-top viewport row (max 1 (- height 1)))
@@ -105,7 +120,7 @@
           (format "~a  ~a  ~a:~a~a" (file-name-from-path (session-file session))
                   (the-layer session) row column where)
           writing?
-          (and (not writing?) (string-suffix? name ".aiu"))))
+          (or (and home #t) (and (not writing?) (string-suffix? name ".aiu")))))
   (flush-output))
 
 ;; viewport-top answers the first line shown at the top of the screen: the
@@ -186,6 +201,19 @@
 ;; acted on, with the rest of the bytes kept for the next round.
 (define (act-on session buffer)
   (define runs (key-runs buffer))
+  (define digit (and (home-screen) (pair? runs) (text-of (car (car runs)))))
+  (define picked
+    (and digit
+         (regexp-match? #px"^[1-9]$" digit)
+         ((home-pick) (string->number digit))))
+  (if picked
+      (begin (set-box! home-chosen picked)
+             (outcome (list) #f))
+      (act-on-file session buffer)))
+
+;; act-on-file runs the keys of a session that has a file.
+(define (act-on-file session buffer)
+  (define runs (key-runs buffer))
   (cond
     [(null? runs)
      ;; The bytes hold no whole key yet: the next byte is read, and the
@@ -231,6 +259,10 @@
 ;; worse, break the frame it landed in. The commands still answer; the live
 ;; session chooses not to say the answer out loud.
 (define (run-it session line)
+  (if (home-screen) (home-run session line) (run-it-file session line)))
+
+;; run-it-file runs one command on a session that has a file.
+(define (run-it-file session line)
   (car (run-command session line)))
 
 ;; run-it-words runs one command whose words are already split, and answers
@@ -238,6 +270,10 @@
 ;; a space, so the live session hands the words over whole. It is silent for
 ;; the same reason run-it is: the paint is the answer.
 (define (run-it-words session name words)
+  (if (home-screen) #t (run-it-words-file session name words)))
+
+;; run-it-words-file runs one command, its words already split, on a session that has a file.
+(define (run-it-words-file session name words)
   (car (run-command-words session name words)))
 
 ;; drop-bytes answers the bytes that are left when the keys that were
@@ -249,5 +285,52 @@
       '()
       (drop buffer taken)))
 
+;; home-screen, when set, is a function from the level to the lines of the
+;; dashboard: the session paints those lines instead of a file.
+(define home-screen (make-parameter #f))
+
+;; The home screen keeps four things: the panel flag, the page the person
+;; chose, the function that answers the nth page, and the function that scans
+;; again.
+(define home-explorer (box #f))
+;; home-chosen holds the page the person picked on the home screen.
+(define home-chosen (box #f))
+;; home-pick answers the path of the nth page of the home screen.
+(define home-pick (make-parameter (lambda (n) #f)))
+;; home-refresh scans the home screen again.
+(define home-refresh (make-parameter void))
+
+;; home-repaint holds the function that paints the open home session, and void
+;; when none is open, so a scan that lands late paints nothing.
+(define home-repaint (box void))
+
+;; home-repaint-later paints the home session, if one is still open.
+(define (home-repaint-later)
+  ((unbox home-repaint)))
+
+;; start-home-scan starts the scan of the home screen in a thread. It runs
+;; after the first paint, so the screen is there before the scan begins.
+(define (start-home-scan)
+  (when (home-screen)
+    ((home-refresh) home-repaint-later)))
+
+;; home-run runs one command on the home screen. Only the commands that need
+;; no file run: the level keys, quit and the visual layer. The panel and the
+;; scan are answered here. Everything else is taken and nothing is done, so a
+;; command that needs a file cannot fail on a screen that has none.
+(define (home-run session line)
+  (define words (string-split line))
+  (define name (if (null? words) "" (car words)))
+  (cond
+    [(member name (list "level-down" "level-up" "quit" "visual-mode"))
+     (car (run-command session line))]
+    [(string=? name "explorer")
+     (set-box! home-explorer (not (unbox home-explorer)))
+     #t]
+    [(string=? name "view")
+     ((home-refresh))
+     #t]
+    [else #t]))
+
 ;; The live session, for the entry above it.
-(provide live-session)
+(provide live-session home-screen home-pick home-refresh home-chosen home-explorer)

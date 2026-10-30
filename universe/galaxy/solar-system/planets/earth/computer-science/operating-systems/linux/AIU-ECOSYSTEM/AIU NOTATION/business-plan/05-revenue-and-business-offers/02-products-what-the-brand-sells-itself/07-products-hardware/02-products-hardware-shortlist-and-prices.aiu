@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan products products-hardware-shortlist-and-prices
+Products hardware shortlist and prices
+title end
+
+paragraph start
+For each need keep up to three candidates with price, seller, source and the date the price was seen. Prices change, so every price carries its check date.
+paragraph end
+
+paragraph start
+No price is written from memory. Each is read from the seller page the day it is recorded.
+paragraph end
+
+code start
+language: text
+need, candidate, price, seller, source, date seen
+code end
+
+paragraph start
+todo: fill the shortlist when a purchase is planned
+Open until the owner decides.
+paragraph end

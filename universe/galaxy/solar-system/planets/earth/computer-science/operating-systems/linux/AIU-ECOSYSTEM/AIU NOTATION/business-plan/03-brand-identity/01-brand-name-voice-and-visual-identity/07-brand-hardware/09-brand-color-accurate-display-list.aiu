@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-color-accurate-display-list
+Brand color accurate display list
+title end
+
+paragraph start
+A monochrome look depends on how blacks and greys appear. An accurate display helps judge them, but every design is also checked on a phone, because viewers watch on phones.
+paragraph end
+
+paragraph start
+A calibrated display is a nice to have until the brand sells printed goods, then it becomes a must.
+paragraph end
+
+code start
+language: text
+display, price, date seen, calibration method
+code end
+
+paragraph start
+todo: decide after the first test on a phone and a normal monitor
+Open until the owner decides.
+paragraph end

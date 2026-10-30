@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan production-workflow production-hook-writing-method
+Production hook writing method
+title end
+
+paragraph start
+This page covers production hook writing method for the production workflow plan. Record what to decide, the criteria for a good result and where the answer is checked.
+paragraph end
+
+paragraph start
+Rules, prices and thresholds change, so none is stated here until it is read on an official page and dated. Anything not read there is unverified.
+paragraph end
+
+code start
+language: text
+question, source, answer, date checked, confirmed by
+code end
+
+paragraph start
+todo: decide the owner choices and read the sources, because nothing here is verified
+Open until the owner decides.
+paragraph end

@@ -1,39 +1,29 @@
 #lang racket/base
-;; One job: argv to a command — one parser, one dispatch. The verb is the
-;; first argument, the rest are the arguments of the verb, and the
-;; dispatch holds what each verb does.
+;; One job: argv to a command, fast. The quick screen is drawn first from a
+;; module that needs only racket/base. An edit on a terminal then loads the
+;; lean edit; every other call loads the full program in cli-full.rkt, where
+;; the parser is. Nothing is loaded that the call does not need.
 ;;
 ;; Usage: racket cli.rkt edit FILE
 
-(require "dispatch.rkt"
-         "documents.rkt"
-         "../devloop/start.rkt"
-         "../narration/print-console.rkt")
+(require "quick.rkt")
 
-;; main parses the arguments and hands them to the dispatch.
-(define (main)
-  (define args (vector->list (current-command-line-arguments)))
-  (cond
-    [(null? args) (usage "no command was given")]
-    [else
-     (define verb (car args))
-     (if (command-known? verb)
-         (begin
-           ;; the measured start is printed with the first answer: it is
-           ;; information, not a gate (rule 02). The edit verb is the live
-           ;; session, which owns the whole screen: a start line would land
-           ;; in the frame it is about to draw, so it says nothing there.
-           (unless (string=? verb "edit") (print-start))
-           (run-verb verb (cdr args)))
-         (usage (format "there is no command named ~a" verb)))]))
+;; compile-deps holds the two programs as dependencies only, so raco make
+;; builds them; they are never loaded from here.
+(module compile-deps racket/base
+  (require "cli-full.rkt" "lean.rkt"))
 
-;; usage says how the program is called, and stops.
-(define (usage why)
-  (print-line (format "the editor: ~a" why))
-  (print-line "usage: racket cli.rkt edit FILE | routes | tasks | task | keys | dashboard | git | git-diff | git-history | bake | send | agent | permit")
-  ;; the refusal code is frozen: the program refused, and it said why
-  (exit exit-refusal))
+;; sibling answers the module path of a file next to this one.
+(define (sibling name)
+  (module-path-index-join name (variable-reference->module-path-index (#%variable-reference))))
 
-;; The parser, for the outside world.
+;; The parser, for the outside world: the edit verb paints at once, then the
+;; lean edit runs on a terminal and the full program runs everywhere else.
 (module+ main
-  (main))
+  (define args (vector->list (current-command-line-arguments)))
+  (define edit? (and (pair? args) (string=? (car args) "edit")))
+  (when edit?
+    (quick-show (and (pair? (cdr args)) (cadr args))))
+  (if (and edit? (terminal-port? (current-input-port)))
+      ((dynamic-require (sibling "lean.rkt") (quote lean-edit)) (cdr args))
+      ((dynamic-require (sibling "cli-full.rkt") (quote main)))))

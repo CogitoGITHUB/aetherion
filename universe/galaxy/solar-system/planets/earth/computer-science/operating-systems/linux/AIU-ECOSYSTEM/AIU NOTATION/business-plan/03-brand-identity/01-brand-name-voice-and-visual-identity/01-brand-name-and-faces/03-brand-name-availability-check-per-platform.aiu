@@ -1,0 +1,23 @@
+title start
+kind: note
+tags: business-plan brand brand-name-availability-check-per-platform
+Brand name availability check per platform
+title end
+
+paragraph start
+For every platform in the plan, search the exact name SHAPE and the faces SHAPESHIFTER and ARCHITECT, plus close spellings, before any account is made. Record what is taken, what is free and who holds near matches.
+paragraph end
+
+paragraph start
+A name is clear only when the exact handle is free, no similar active account works in the same topic, and the same handle can be used everywhere. If not, pick one fallback handle pattern and keep it identical across platforms.
+paragraph end
+
+code start
+language: text
+platform, name searched, exact handle free, similar accounts, fallback handle, date checked
+code end
+
+paragraph start
+todo: run the search on every platform and fill the log, because availability changes and nothing has been checked yet
+Open until the owner decides.
+paragraph end
