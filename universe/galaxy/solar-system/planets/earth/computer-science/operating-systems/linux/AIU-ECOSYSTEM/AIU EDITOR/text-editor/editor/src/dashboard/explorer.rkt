@@ -20,7 +20,8 @@
 (require racket/list
          racket/string
          "../commands/commands.rkt"
-         "../routes/keymaps.rkt")
+         "../routes/keymaps.rkt"
+         "blockview.rkt")
 
 ;; explorer-lines answers the lines of the panel: every layer with the
 ;; keys it binds and the command each key runs, and then the commands

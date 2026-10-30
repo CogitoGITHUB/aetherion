@@ -1,10 +1,10 @@
 title start
 kind: default
 tags: test editor
-Test page for the editor
+Testing page for the editor itself
 title end
 
-paragraph start
+paragraph start 
 This page is a test. Open it with aiutd, then press space r to read it as a page, space b to list the blocks and space k to check it.
 paragraph end
 
@@ -14,8 +14,8 @@ Things to try
 title end
 
 paragraph start
-todo: press space w, type a line here, then press tab s to save
-The write layer is entered with space w. In the write layer the tab key is the trigger.
+todo: press w, type a line here, then press tab s to save
+The write layer is entered with w. In the write layer the tab key is the trigger.
 paragraph end
 
 code start
@@ -27,3 +27,4 @@ comment start
 A comment is a block too. This one is only a note for readers.
 comment end
 section end
+  

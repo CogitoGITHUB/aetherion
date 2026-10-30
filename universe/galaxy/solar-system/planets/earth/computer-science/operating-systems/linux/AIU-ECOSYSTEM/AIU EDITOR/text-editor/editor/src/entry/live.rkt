@@ -33,7 +33,8 @@
          "../routes/routes.rkt"
          "../notation/document.rkt"
          "../notation/host.rkt"
-         "../notation/where.rkt")
+         "../notation/where.rkt"
+         "../dashboard/blockview.rkt")
 
 ;; live-session runs the live session on a file: the terminal goes raw,
 ;; the keys are read and run, and the terminal is given back when the
@@ -46,7 +47,7 @@
   (define viewport (box 1))
   ;; The editor opens as a VIEW: the page is shown as a person reads it, its
   ;; block markers gone, and no cursor — nothing is typed until the person asks
-  ;; for the write layer with the space and w keys. The visual layer is where
+  ;; for the write layer with the w key (the whole block) or the i key (its text). The visual layer is where
   ;; the commands live, so a reader cannot change the text by accident.
   (set-layer! session "visual")
   (raw-mode)
@@ -74,7 +75,7 @@
 (define (page-view session raw width)
   (define name (path->string (session-file session)))
   (if (string-suffix? name ".aiu")
-      (view-of (session-file session) (session-journal session) width)
+      (drawn-view session raw width)
       raw))
 
 ;; repaint draws the whole screen for the session as it stands: in the write
@@ -88,6 +89,87 @@
 ;; both paint.
 (define paint-lock (make-semaphore 1))
 
+;; pending-keys holds the names of the keys typed so far while a sequence waits
+;; for its next key, and nothing otherwise.
+(define pending-keys (box (list)))
+
+;; kname answers the name of a key as shown: the space key is SPC.
+(define (kname s) (if (string=? s "space") "SPC" s))
+
+;; kseq answers a key or a sequence of keys as shown.
+(define (kseq s) (string-join (map kname (sequence-of s)) " "))
+
+;; cell-pad answers a string padded with spaces on the right to n characters.
+(define (cell-pad s n)
+  (string-append s (make-string (max 0 (- n (string-length s))) #\space)))
+
+;; grid answers the lines of a titled table: a top edge with the title, a header
+;; row, a line under it, one line for each row and a bottom edge, with a line
+;; between every column.
+(define (grid title headers rows)
+  (define n (length headers))
+  (define base
+    (for/list ([i (in-range n)])
+      (apply max (map (lambda (r) (string-length (list-ref r i))) (cons headers rows)))))
+  (define head (string-append "╭─ " title " "))
+  (define raw-total (+ (apply + (map (lambda (w) (+ w 2)) base)) n 1))
+  (define extra (max 0 (- (+ (string-length head) 1) raw-total)))
+  (define ws (append (take base (sub1 n)) (list (+ (last base) extra))))
+  (define total (+ (apply + (map (lambda (w) (+ w 2)) ws)) n 1))
+  (define (line l m r)
+    (string-append l (string-join (map (lambda (w) (make-string (+ w 2) #\─)) ws) m) r))
+  (define (row cells)
+    (string-append "│"
+                   (string-join (for/list ([c (in-list cells)] [w (in-list ws)])
+                                  (string-append " " (cell-pad c w) " "))
+                                "│")
+                   "│"))
+  (define top (string-append head (make-string (- total (string-length head) 1) #\─) "╮"))
+  (append (list top (row headers) (line "├" "┼" "┤"))
+          (map row rows)
+          (list (line "╰" "┴" "╯"))))
+
+;; enter-key answers the key of the visual layer that enters a layer: the key whose
+;; command name ends with the layer name and -mode. A dash when there is none.
+(define (enter-key l)
+  (define hit
+    (for/first ([b (in-list (keys-of "visual"))]
+                #:when (string-suffix? (cadr b) (string-append l "-mode")))
+      b))
+  (if hit (kseq (car hit)) "-"))
+
+;; menu-text answers the popup: table 1 holds the keys of the active layer that can
+;; follow the pending keys, two key and command pairs to a row; table 2 holds every
+;; mode with the key that enters it and its trigger. All of it is read from the key
+;; tables, nothing is written by hand.
+(define (menu-text layer pending width)
+  (define following
+    (for/list ([b (in-list (keys-of layer))]
+               #:when (let ([s (sequence-of (car b))])
+                        (and (> (length s) (length pending))
+                             (equal? (take s (length pending)) pending))))
+      (cons (string-join (map kname (drop (sequence-of (car b)) (length pending))) " ")
+            (cadr b))))
+  (define pair-rows
+    (let loop ([ps following])
+      (cond
+        [(null? ps) null]
+        [(null? (cdr ps)) (list (list (car (car ps)) (cdr (car ps)) "" ""))]
+        [else (cons (list (car (car ps)) (cdr (car ps)) (car (cadr ps)) (cdr (cadr ps)))
+                    (loop (cddr ps)))])))
+  (define mode-rows
+    (for/list ([l (in-list editor-layers)])
+      (define t (assoc l trigger-of))
+      (list (string-append (if (string=? l layer) "> " "  ") l)
+            (enter-key l)
+            (if t (kname (cdr t)) "-"))))
+  (string-join
+   (append (grid (format "~a · keys after ~a" layer (string-join (map kname pending) " "))
+                 (list "key" "command" "key" "command")
+                 pair-rows)
+           (grid "modes" (list "mode" "enter" "trigger") mode-rows))
+   "\n"))
+
 ;; repaint draws the screen under the paint lock.
 (define (repaint session viewport)
   (call-with-semaphore paint-lock (lambda () (repaint-now session viewport))))
@@ -98,15 +180,40 @@
   (define name (path->string (session-file session)))
   (define writing? (string=? (the-layer session) "write"))
   (define raw (session-text session))
+  (define overlay
+    (and (not (home-screen))
+         (string-suffix? name ".aiu")
+         (block-overlay session raw width height)))
   (define home (home-screen))
-  (define text
+  (define plain-text
     (cond [home (string-join (home (the-level session) (unbox home-explorer)) "\n")]
           [writing? raw]
           [else (page-view session raw width)]))
+  (define pending (unbox pending-keys))
+  (define menu (and (not home) (pair? pending) (menu-text (the-layer session) pending width)))
+  (define text (if overlay (car overlay) plain-text))
   (define-values (row column) (point-line raw (the-point session)))
-  (define top
+  (define plain-top
     (if writing? (viewport-top viewport row (max 1 (- height 1)))
         (add1 (the-view-top session))))
+  (define top (if overlay (caddr overlay) plain-top))
+  ;; text-shown is the page with the menu drawn over its bottom rows, so the
+  ;; page the person is on stays on the screen above it.
+  (define text-shown
+    (if menu
+        (let* ([ls (string-split text "\n" #:trim? #f)]
+               [ms (string-split menu "\n" #:trim? #f)]
+               [visible (max 1 (- height 1))]
+               [n (min (length ms) visible)]
+               [start (max 0 (+ (sub1 top) (- visible n)))]
+               [padded (if (< (length ls) start)
+                           (append ls (for/list ([i (in-range (- start (length ls)))]) ""))
+                           ls)])
+          (string-join (append (take padded start)
+                               (take ms n)
+                               (if (> (length padded) (+ start n)) (drop padded (+ start n)) (list)))
+                       "\n"))
+        text))
   (define where
     (if (string-suffix? name ".aiu")
         (let ([got (page-of (session-file session) (session-journal session))])
@@ -116,11 +223,11 @@
               ""))
         ""))
   (display
-   (paint text (the-point session) width height top
+   (paint text-shown (if overlay (cadr overlay) (the-point session)) width height top
           (format "~a  ~a  ~a:~a~a" (file-name-from-path (session-file session))
                   (the-layer session) row column where)
           writing?
-          (or (and home #t) (and (not writing?) (string-suffix? name ".aiu")))))
+          (or (and home #t) (and menu #t) (and overlay #t) (and (not writing?) (string-suffix? name ".aiu")))))
   (flush-output))
 
 ;; viewport-top answers the first line shown at the top of the screen: the
@@ -171,6 +278,7 @@
           [(null? pending) (loop '())]
           [else
            (define result (act-on session pending))
+             (set-box! pending-keys (if (eq? (outcome-rest result) (quote wait)) (map car (key-runs pending)) (list)))
            (repaint session viewport)
            (cond
              [(eq? (outcome-rest result) 'wait)
@@ -235,7 +343,7 @@
         (outcome 'wait #t)]
        [(and (not (string=? layer "write")) (text-of (car names)))
         ;; A key that carries text writes NOTHING in a reading layer. The
-        ;; write layer is entered by its own key — space then w in the visual
+        ;; write layer is entered by its own key — w in the visual
         ;; layer — and by nothing else, so a stray letter can never start
         ;; writing and the page a reader is reading cannot change under the
         ;; key. The key is taken and nothing is said: the mode line already
@@ -259,7 +367,9 @@
 ;; worse, break the frame it landed in. The commands still answer; the live
 ;; session chooses not to say the answer out loud.
 (define (run-it session line)
-  (if (home-screen) (home-run session line) (run-it-file session line)))
+  (if (home-screen)
+      (home-run session line)
+      (block-guard session line (lambda () (run-it-file session line)))))
 
 ;; run-it-file runs one command on a session that has a file.
 (define (run-it-file session line)

@@ -60,14 +60,21 @@ The trigger is space. Nothing needs a modifier key.
 
 | Key | Does |
 |---|---|
-| space w | write layer (tab is the trigger there) |
+| w | on a page in the visual layer: write the lit block as raw text, markers shown (see Block editing); tab is the trigger in the write layer |
+| space f | the write layer on the whole page, raw |
 | space s | save |
 | space q | quit |
 | space r | view the page as a reader; on the home screen, scan again |
 | space b, k | blocks, check (pages) |
 | space n, p, e | next block, previous block, block end |
 | space g | send (loads its code on first use) |
-| escape | back to the visual layer |
+| space | waits for the next key and pops up two tables over the bottom rows of the page: table 1 the keys that can follow in the active layer, table 2 the modes with the key that enters each and its trigger (SPC is the space key), both read from the key tables |
+| escape | in the write layer: save, then back to the visual layer; in the move layer: back to the visual layer |
+| h, t | on a page in the visual layer: light the block before or after |
+| n, s | move the point left or right |
+| m | the move layer: h and t swap the lit block with the one before or after it, escape leaves |
+| up, down | on a page in the visual layer: light the block before or after |
+| i | on a page in the visual layer: edit only the text of the lit block, inside its drawn box; escape draws the page again |
 | 1 to 9 | on the home screen, open that page |
 
 ## 6. Home screen
@@ -83,6 +90,22 @@ It shows the last scan at once, kept in `~/.aiu-home-scan.rktd` outside the
 project tree, then scans in a thread and paints the result when it lands.
 Untracked files are not counted in the git rows, because walking them is slow.
 Commands that need a file do nothing on this screen.
+
+## Block editing
+
+On an .aiu page in the visual layer the block under the cursor is lit. Up and
+down move the cursor from block to block. Two keys edit the lit block:
+
+- w writes the block as raw text, with its start and end lines. Every other block stays drawn, and the raw lines sit behind the left edge of the box that holds the block, cut at a space to the width of the box and padded, and the right edges of the boxes are drawn on every line, so the boxes stay closed.
+- i edits only the text of the block. The block stays drawn in its own box, its start and end lines stay hidden, and only the text lines inside the box turn raw. A line longer than the box is cut at a space, and the left edge of the box is drawn on every part and the right edge closes every line, so the box stays clean.
+
+In both, typing stays inside the block (for i, inside its text) and the
+backspace stops at its start. Escape draws the page again. A block that holds
+other blocks, such as a section, has no text of its own: i then does the same
+as w. A block whose lines cannot be told from the drawing is lit as its parent
+block, and when no block can be told the key w opens the whole page to write.
+Space f writes the whole page raw. Space space and space w are no longer keys.
+A plain text file still scrolls with up and down.
 
 ## 7. Build and check
 
@@ -107,6 +130,9 @@ No `compiled/` folder and no backup file may sit inside the tree.
 | open | try by hand that a page picked on the home screen opens as a normal session |
 | open | the quick screen shows an .aiu page as raw text until the editor is ready |
 | open | the hot path binary lives in `/tmp`; rebuild it or set `AIU_HOT_PATH_BIN` if `/tmp` is cleared |
+| open | try the block cursor by hand: up and down, w, i, typing, escape |
+| open | the block cursor matches boxes to blocks by counting them level by level; a comment that wraps blocks may be drawn another way, and then its parent block is lit |
+| open | a raw line wider than the screen is wrapped at a space behind the left edge of its box while a block is edited |
 | open | the scan limits (800 pages, 8 repositories, 4 folders deep) are fixed in code |
 
 ## 9. Repo map
@@ -120,3 +146,12 @@ No `compiled/` folder and no backup file may sit inside the tree.
 | `editor/src/join/` | the seam to the Rust hot path |
 | `editor/src/commands/` | the command table |
 | `gate/` | the light gate |
+
+## 10. Future plans
+
+| Plan | Idea |
+|---|---|
+| tab completion for .aiu | one completion core: given the page text and the point, it answers candidates by context. Block names at a line start, with a snippet that writes the start line, the end line and puts the point between. Allowed values after kind:, language: and todo:. Tags already used across pages after tags:. Block names and declarations should be read from the notation engine, not copied. |
+| completion key | in the write layer tab is the trigger, so the likely key is tab tab, with escape as the way out of the layer |
+| completion in the editor | a complete command in the write layer, loaded on first use like the send key, so the first paint is untouched |
+| LSP | a small separate stdio server that answers textDocument/completion with the same core, so Emacs (eglot) and other editors get the same completion. Built after the in-editor version. |

@@ -485,3 +485,6 @@
          answer-line
          session-text
          ask)
+
+;; move-to is shared with the block view, which puts the point back inside a block.
+(provide move-to)

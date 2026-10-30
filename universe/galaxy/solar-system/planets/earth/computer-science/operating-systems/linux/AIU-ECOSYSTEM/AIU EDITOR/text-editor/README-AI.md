@@ -49,6 +49,31 @@ t editor/README.md; t ""
 Do not time "editor ready" with that loop: it rescans the growing output and
 reports a number far too high. Time keys typed at once instead: `printf " q" | script -qec "aiutd FILE" /dev/null`.
 
+## Block cursor and block edit
+
+Code: `editor/src/dashboard/blockview.rkt`. The live screen asks it, in `live.rkt`,
+for `block-overlay` (what to draw), `block-guard` (wraps every command) and
+`drawn-view` (the notation drawing, kept for the same text and width). The keys
+are in `keymaps.rkt`: up and down are `block-up` and `block-down`, w is
+`block-edit`, i is `block-text`; a file that is not a page scrolls as before.
+`commands.rkt` also provides `move-to`.
+
+How it works, and what to keep true:
+
+- The page parse gives every block its byte range; the notation drawing gives boxes. The drawing is read as boxes (a top edge, a bottom edge, a second bottom edge when a todo tray follows) and matched to blocks level by level, in order. A level whose counts differ is left unmatched, so a block never gets the wrong lines.
+- Answers are not drawn, and the first title of a section is the name on the top edge of the section box.
+- The lit block is the innermost block at the point whose lines are known. It is lit in reverse video; the view follows it.
+- w (`block-edit`, `bv-edit-overlay`): the layer becomes write, the block box is replaced by its raw bytes with start and end lines, behind the left edge of the parent box (`bv-prefix` of the depth) cut at a space by `bv-chunks` to the box width, padded by `bv-pad`, with the right edges of the parent boxes drawn on every line; the rest stays drawn. `edit-mode` is raw and `edit-lo` is the block start.
+- i (`block-text`, `bv-text-overlay`): the layer becomes write, the top and bottom edges of the box stay drawn, and only the text lines between the start and end lines are shown raw inside the box, behind the left edge of the box, each line cut at a space to the screen width by `bv-chunks`, with the left edge drawn on every part, each part padded and closed by the right edge. `edit-mode` is text and `edit-lo` is the first text byte; the point is clamped to the text range (`bv-content`, `bv-hi`). A block that holds other blocks, or has no text line, opens as w does.
+- The point is clamped inside the edit range after every command, and the backspace at the start of the range is refused. Leaving the write layer ends the edit. A block that can no longer be found ends the edit and shows the whole raw page.
+- Keys: w runs `block-edit`, i runs `block-text`; space f is the whole-page write layer (`write-mode`). Space space and space w are not keys any more.
+- Cost: one extra page parse request on each repaint of a page. Nothing here loads before the first paint.
+- The notation project is not touched; if its drawing changes shape, fix the reading of boxes in `blockview.rkt`.
+
+## Block move, keys and menu
+
+Keys in `keymaps.rkt`: h and t are `block-up` and `block-down`, n and s are `move-left` and `move-right`, m is `block-move-mode`. The move layer (`move-keys`, trigger space) has h and t as `block-move-up` and `block-move-down` and escape back to visual. `bv-move` in `blockview.rkt` swaps the lit block with its sibling (`bv-siblings`: same parent, answers and titles never move) by one delete-at and one insert-at, and the point follows the block. Escape in the write layer runs `leave-write`: save, then the visual layer. In `live.rkt`, `pending-keys` holds the keys of a waiting sequence and `menu-text` draws two tables (`grid`) over the bottom rows of the page (`text-shown`): the keys that can follow in the active layer, and every layer in `editor-layers` with its enter key (`enter-key`, found in the visual keys by the command name ending in the layer name and -mode) and its trigger, all read from the key tables.
+
 ## 3. Environment
 
 | Variable | Effect |
@@ -99,6 +124,7 @@ line above every definition.
 | lean live session, lazy send | works, measured |
 | home screen drawn by the notation view, background scan, kept scan | works, measured |
 | home keys (space r, 1 to 9, space q) by hand | not tried by hand |
+| block cursor and block edit (up, down, w, i) | works in a test on the default page, not tried by hand |
 | a page picked on the home screen opens as a normal session | not tried by hand |
 | commands that need a file on the home screen do nothing | not tried by hand |
 | scripted sessions and all other verbs | work through `cli-full.rkt`, gate green |
@@ -113,6 +139,9 @@ line above every definition.
 | open | try by hand that a page picked on the home screen opens as a normal session |
 | open | the quick screen shows an .aiu page as raw text until the editor is ready |
 | open | the hot path binary lives in `/tmp`; rebuild it or set `AIU_HOT_PATH_BIN` if `/tmp` is cleared |
+| open | try the block cursor by hand: up and down, w, i, typing, escape |
+| open | the block cursor matches boxes to blocks by counting them level by level; a comment that wraps blocks may be drawn another way, and then its parent block is lit |
+| open | a raw line wider than the screen is wrapped at a space behind the left edge of its box while a block is edited |
 | open | the scan limits (800 pages, 8 repositories, 4 folders deep) are fixed in code |
 | done | first paint 0.8 s, lazy send, background home scan, gate green with 17 stages |
 
@@ -133,3 +162,11 @@ No recap of steps.
 
 Gate green, 17 stages. The start path is `quick.rkt`, `cli.rkt`, `lean.rkt`. The
 next work is the first todo row: the 1.3 s between first paint and ready.
+
+## 12. Future plans
+
+Ask the owner before starting any of these.
+
+- Tab completion for .aiu: one completion core, in a module loaded on first use (never required by quick.rkt, cli.rkt, lean.rkt, live.rkt or home.rkt). Input is the page text and the point; output is candidates by context: block names at a line start (with a snippet for the start line, the end line and the point between), values after kind:, language: and todo:, tags already used across pages after tags:. Read block names and declarations from the notation engine; do not copy them. If it has no list to read, keep a small table in the editor and make the gate compare it with the notation.
+- Completion key: tab is the trigger of the write layer, so use tab tab and leave the layer with escape.
+- LSP: a separate stdio server over the same core, answering textDocument/completion, built after the in-editor version.

@@ -41,14 +41,15 @@
 ;;   visual — the general mode: the trigger and the plain keys
 ;;   write  — the text mode: the keys are text
 ;;   select — the selected text is what the commands act on
-(define editor-layers '("visual" "write" "select"))
+(define editor-layers '("visual" "write" "select" "move"))
 
 ;; trigger-of answers the trigger of each layer: the key that starts a
 ;; sequence in that layer.
 (define trigger-of
   (list (cons "visual" "space")
         (cons "write" "tab")
-        (cons "select" "space")))
+        (cons "select" "space")
+          (cons "move" "space")))
 
 ;; normal-keys are the keys of the visual layer: the key and the command
 ;; it runs. The command is a name from the command table, never a
@@ -56,8 +57,14 @@
 ;; moves the point names the way it moves, so the table says which arrow
 ;; does what.
 (define normal-keys
-  '(("space space" "mode")
-    ("space w" "write-mode")
+  '(("w" "block-edit")
+    ("h" "block-up")
+    ("t" "block-down")
+    ("n" "move-left")
+    ("s" "move-right")
+    ("m" "block-move-mode")
+    ("i" "block-text")
+    ("space f" "write-mode")
     ("space v" "select-mode")
     ("space s" "save")
     ("space q" "quit")
@@ -73,8 +80,8 @@
     ("space e" "block-end")
     ("space r" "view")
     ("escape" "visual-mode")
-    ("up" "view-up")
-    ("down" "view-down")
+    ("up" "block-up")
+    ("down" "block-down")
     ("left" "move-left")
     ("right" "move-right")
     ("backspace" "delete")))
@@ -95,7 +102,7 @@
     ("tab r" "view")
     ("tab n" "next-block")
     ("tab p" "prev-block")
-    ("escape" "visual-mode")
+    ("escape" "leave-write")
     ("up" "move-up")
     ("down" "move-down")
     ("left" "move-left")
@@ -112,6 +119,13 @@
     ("space v" "visual-mode")
     ("escape" "visual-mode")))
 
+;; move-keys are the keys of the move layer: h and t swap the lit block with
+;; the one before or after it, and escape goes back to the visual layer.
+(define move-keys
+  (list (list "h" "block-move-up")
+        (list "t" "block-move-down")
+        (list "escape" "visual-mode")))
+
 ;; keymaps is the whole table: a layer name and the keys of that layer.
 ;; The tables are put in with list, not with cons and not with a quote:
 ;; a quoted list would hold the NAMES of the tables, and a cons would be
@@ -125,7 +139,8 @@
   (or (and (string=? (mode) "baked") (baked-tables))
       (list (list "visual" normal-keys)
             (list "write" insert-keys)
-            (list "select" select-keys))))
+            (list "select" select-keys)
+              (list "move" move-keys))))
 
 ;; keys-of answers the keys of one layer, or nothing when the table holds
 ;; no layer by that name. The keys of a layer are pairs: a key and the
@@ -161,7 +176,8 @@
          (equal? (take wanted (length names)) names))))
 
 ;; The tables, for the routing above them and the gate beside them.
-(provide reserved-prefix
+(provide move-keys
+         reserved-prefix
          editor-layers
          trigger-of
          normal-keys
