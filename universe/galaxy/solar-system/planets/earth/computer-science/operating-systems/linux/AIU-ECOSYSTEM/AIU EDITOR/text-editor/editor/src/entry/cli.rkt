@@ -11,7 +11,7 @@
 ;; compile-deps holds the two programs as dependencies only, so raco make
 ;; builds them; they are never loaded from here.
 (module compile-deps racket/base
-  (require "cli-full.rkt" "lean.rkt"))
+  (require "cli-full.rkt" "lean.rkt" "../dashboard/shadow.rkt"))
 
 ;; sibling answers the module path of a file next to this one.
 (define (sibling name)

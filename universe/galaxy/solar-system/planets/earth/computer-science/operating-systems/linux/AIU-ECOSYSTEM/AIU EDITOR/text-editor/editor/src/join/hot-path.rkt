@@ -40,6 +40,21 @@
 ;; edit-ops are the hot path operations that change the text; each one is saved at once.
 (define edit-ops (list "type" "delete" "delete-at" "insert-at"))
 
+;; shadow-path is the undo commit module in the dashboard folder, or false.
+(define shadow-path
+  (let ([src (variable-reference->module-source (#%variable-reference))])
+    (and (path? src)
+         (let-values ([(base name dir?) (split-path src)])
+           (and (path? base)
+                (simplify-path (build-path base (quote up) "dashboard" "shadow.rkt")))))))
+
+;; shadow-note! tells the undo commit module that a file was saved; it loads in a thread on first use.
+(define (shadow-note! file)
+  (when (and shadow-path file)
+    (thread (lambda ()
+              (with-handlers ([void void])
+                ((dynamic-require shadow-path (quote shadow-note!)) file))))))
+
 ;; edit-hook is called after an edit was saved; the live session puts a function here.
 (define edit-hook (box void))
 
@@ -47,6 +62,7 @@
 (define (save-after args)
   (when (and (hash-ref args (quote file) #f) (hash-ref args (quote journal) #f))
     (ask-hot-raw "save" (hasheq (quote file) (hash-ref args (quote file)) (quote journal) (hash-ref args (quote journal)))))
+  (shadow-note! (hash-ref args (quote file) #f))
   ((unbox edit-hook)))
 
 ;; read-ops are the hot path operations that only read, so their answers can be kept.

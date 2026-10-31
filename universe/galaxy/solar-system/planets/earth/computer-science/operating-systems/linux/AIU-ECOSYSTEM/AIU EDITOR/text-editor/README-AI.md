@@ -456,7 +456,7 @@ Search and replace with n and N, block cut copy paste, folding, split view, repe
 
 ## 15. Plan: undo from git commits (owner decision, replaces the idea of section 14.2 to 14.5)
 
-Status: planned, nothing built. The owner chose this design. Read section 14.1 first: it says what journal::archive does. First check that its patch applied (grep archive in editor/src/journal/journal.rs, and look for .base and .history files beside the journal). The history file may become unnecessary; ask the owner before deleting it.
+Status: step 1 built (section 17), the rest planned. The owner chose this design. Read section 14.1 first: it says what journal::archive does. First check that its patch applied (grep archive in editor/src/journal/journal.rs, and look for .base and .history files beside the journal). The history file may become unnecessary; ask the owner before deleting it.
 
 ### 15.1 Idea
 
@@ -538,3 +538,12 @@ Owner decision (2026-10-31). It replaces the copies in /tmp as the way to backtr
 ### 16.3 Shell reminder
 
 All of the above goes inside the one bash -c block, with git commands joined by semicolons or on separate lines, nothing after the closing quote, no single quote inside, and git messages in double quotes.
+
+
+## 17. Shadow commits (built 2026-10-31, step 1 of section 15)
+
+Code: `editor/src/dashboard/shadow.rkt` (racket/base only). `save-after` in `join/hot-path.rkt` calls `shadow-note!` with the saved file; that starts a thread which loads the module on first use. It is listed in `compile-deps` of `entry/cli.rkt`, so raco make builds it. One worker commits 1 s after the last note, so a burst of typing is one commit. The repository is `~/.aiu-undo/repo.git`, created on first use with its own user name and email. Every git call passes --git-dir and --work-tree=/, so the project repo is never touched. The commit uses plumbing (hash-object, update-index --cacheinfo, commit) so a nested project repo cannot hide the file. The message is NAME: +A -D lines. No change, no commit. Errors go to `~/.aiu-undo/last-error.txt`, never to the screen.
+
+Decisions: shadow repo outside the project, one commit per debounced burst, history file kept. The AI took these on its own recommendation and the owner went ahead.
+
+Not built yet: undo and redo keys, the tree view, branches, the block name in the message, worktrees, pruning.
