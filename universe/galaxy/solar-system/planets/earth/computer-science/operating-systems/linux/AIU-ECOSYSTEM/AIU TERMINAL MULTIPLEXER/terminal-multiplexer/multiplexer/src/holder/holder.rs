@@ -129,6 +129,40 @@ fn pane_log_tail(session: &Session, pane: &str, limit: usize) -> String {
     lines.join("\n")
 }
 
+/// REWIND_LINES is how many of a pane's lines a rewind shows: the newest ones
+/// up to the record the owner chose, so the view is a page and not a flood.
+const REWIND_LINES: usize = 200;
+
+/// pane_text_at answers the lines one pane had said by one record, read from
+/// the log: every record of that pane up to and including the seq, and never
+/// one after it. The newest REWIND_LINES of them are the answer, so a long
+/// session still reads as a page.
+///
+/// This is a read of the journal and nothing else: it changes no pane and
+/// writes no record, so looking back cannot change what the pane is doing.
+fn pane_text_at(held: &[Value], pane: &str, until: u64, limit: usize) -> Vec<String> {
+    let mut lines: Vec<String> = Vec::new();
+    for record in held {
+        let seq = record.get("seq").and_then(|value| value.as_u64()).unwrap_or(0);
+        if seq > until {
+            break;
+        }
+        if record.get("who").and_then(|value| value.as_str()) != Some(pane) {
+            continue;
+        }
+        if let Some(text) = record
+            .get("outputs")
+            .and_then(|outputs| outputs.get("text"))
+            .and_then(|value| value.as_str())
+        {
+            lines.push(text.to_string());
+        }
+    }
+    let from = lines.len().saturating_sub(limit);
+    lines.drain(0..from);
+    lines
+}
+
 /// command_record answers the command one pane was given and what that pane
 /// printed after it: the two parts of one record, read from the log. A pane
 /// with no command yet answers nothing, and the bundle carries neither part.
@@ -961,6 +995,7 @@ fn answer(session: &mut Session, at: usize, line: &str) -> Result<bool, String> 
             answer_client(session, at, &record);
             Ok(true)
         }
+        "rewind" => rewind(session, at, &request),
         "control" => control(session, at, &request),
         "view" => view(session, at, &request),
         "control-result" => control_result(session, at, &request),
@@ -1732,6 +1767,51 @@ fn view(session: &mut Session, at: usize, request: &Value) -> Result<bool, Strin
     ask_screen(session, at, &id, &[], "view")
 }
 
+/// rewind answers how one pane looked at one record: the lines that pane had
+/// said by then, read from the journal. The answer is a record like every
+/// other op's answer, and it touches no pane: a look back cannot change what
+/// the session is doing.
+fn rewind(session: &mut Session, at: usize, request: &Value) -> Result<bool, String> {
+    let pane = request
+        .get("pane")
+        .and_then(|value| value.as_str())
+        .unwrap_or("")
+        .to_string();
+    let until = request.get("seq").and_then(|value| value.as_u64()).unwrap_or(0);
+    if pane.is_empty() {
+        let record = session.record(Fields {
+            kind: "fail",
+            who: "holder",
+            what: "the pane was not read back",
+            why: "a rewind needs the name of the pane",
+            how: "the request was read and the pane's name was empty",
+            inputs: json!({ "seq": until }),
+            outputs: json!({}),
+            result: json!({}),
+        });
+        session.write(&record);
+        answer_client(session, at, &record);
+        return Ok(true);
+    }
+    let held = log::Log::records(&session.log_path)?;
+    let lines = pane_text_at(&held, &pane, until, REWIND_LINES);
+    let count = lines.len();
+    let record = session.record(Fields {
+        kind: "info",
+        who: "holder",
+        what: "the pane was read back",
+        why: "the owner chose a record and asked how the pane stood at it",
+        how: "the journal was read up to that seq, and the pane's own lines were \
+              taken from it; no pane was touched and no record was written for it",
+        inputs: json!({ "pane": pane, "seq": until }),
+        outputs: json!({ "pane": pane, "seq": until, "count": count, "lines": lines }),
+        result: json!({ "says": "a look back changes nothing" }),
+    });
+    session.write(&record);
+    answer_client(session, at, &record);
+    Ok(true)
+}
+
 /// ask_screen hands the agent's request to the screen and waits for the
 /// screen's answer: the request is remembered by its id, and the answer
 /// goes back to the client that asked.
@@ -2158,4 +2238,48 @@ fn utc_now() -> String {
         parts.tm_min,
         parts.tm_sec
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::pane_text_at;
+    use serde_json::json;
+
+    /// a_log is a journal of three panes' words: two panes say one line each,
+    /// in the order the session recorded them.
+    fn a_log() -> Vec<serde_json::Value> {
+        vec![
+            json!({ "seq": 1, "who": "work", "outputs": { "text": "the first line" } }),
+            json!({ "seq": 2, "who": "notes", "outputs": { "text": "another pane" } }),
+            json!({ "seq": 3, "who": "work", "outputs": { "text": "the second line" } }),
+            json!({ "seq": 4, "who": "work", "outputs": { "text": "the third line" } }),
+        ]
+    }
+
+    #[test]
+    fn a_rewind_answers_the_lines_of_that_pane_up_to_the_chosen_record() {
+        let held = a_log();
+        let lines = pane_text_at(&held, "work", 3, 200);
+        assert_eq!(lines, vec!["the first line", "the second line"]);
+    }
+
+    #[test]
+    fn a_rewind_never_takes_a_record_after_the_one_chosen() {
+        let held = a_log();
+        let lines = pane_text_at(&held, "work", 1, 200);
+        assert_eq!(lines, vec!["the first line"], "nothing of seq 3 or 4");
+    }
+
+    #[test]
+    fn a_rewind_keeps_the_newest_lines_when_the_page_is_full() {
+        let held = a_log();
+        let lines = pane_text_at(&held, "work", 4, 1);
+        assert_eq!(lines, vec!["the third line"], "the newest line of the page");
+    }
+
+    #[test]
+    fn a_rewind_of_a_pane_that_said_nothing_answers_nothing() {
+        let held = a_log();
+        assert!(pane_text_at(&held, "nowhere", 4, 200).is_empty());
+    }
 }

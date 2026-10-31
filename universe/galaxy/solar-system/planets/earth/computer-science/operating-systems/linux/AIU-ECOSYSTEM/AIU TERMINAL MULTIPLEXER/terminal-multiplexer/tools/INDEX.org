@@ -38,6 +38,9 @@
     drives the multiplexer the way the owner does — a tab, a split, a
     scroll, a copy and a paste — and a change without the human's token is
     refused by name
+  - rewind-probe/probe.nu — the phone proof of the rewind: a pane shows the
+    text as it stood at a record the owner chose, read from the journal, and
+    looking back leaves the live pane and its shell alone
   - journal-probe/probe.nu — the phone proof of the journal's rules: the log
     stays inside its written bound, the trim keeps the newest records whole and
     says what it let go, and the session's files are 0600 inside a 0700 dir

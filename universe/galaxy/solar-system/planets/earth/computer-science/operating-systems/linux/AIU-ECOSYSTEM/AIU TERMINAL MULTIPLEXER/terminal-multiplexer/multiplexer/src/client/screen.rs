@@ -1513,6 +1513,7 @@ impl Screen {
                 self.copy_out(&lines)
             }
             ["clipboard", "in"] => self.paste_clipboard(),
+            ["rewind", pane, seq] => self.rewind_to(pane, seq),
             ["focus", pane] => {
                 self.focus_pane(pane);
                 Action::Nothing
@@ -1578,6 +1579,76 @@ impl Screen {
             "ring": self.ring.clone(),
             "message": self.message.clone()
         })
+    }
+
+    /// rewind_to asks the holder how one pane stood at one record. The record
+    /// is chosen by its seq — the number the events strip and the records
+    /// panel show — and the answer fills a panel over the panes. Nothing is
+    /// sent to a pane and nothing is written: a look back cannot change what
+    /// the pane is doing.
+    fn rewind_to(&mut self, pane: &str, seq: &str) -> Action {
+        let wanted: u64 = match seq.parse() {
+            Ok(found) => found,
+            Err(_) => {
+                self.message = format!("{} is not a record number", seq);
+                return Action::Nothing;
+            }
+        };
+        if !self.panes.iter().any(|held| held.name == pane) {
+            self.message = format!("there is no pane named {}", pane);
+            return Action::Nothing;
+        }
+        self.message = format!("the pane {} is being read back to record {}", pane, wanted);
+        Action::Request(json!({ "op": "rewind", "pane": pane, "seq": wanted }))
+    }
+
+    /// take_rewind fills the panel with how one pane stood at one record: the
+    /// journal's own lines, never the live pane's. The panel lies over the
+    /// panes, so the live pane keeps its own output while the owner looks.
+    fn take_rewind(&mut self, record: &Value) {
+        let outputs = match record.get("outputs") {
+            Some(found) => found,
+            None => return,
+        };
+        let pane = outputs
+            .get("pane")
+            .and_then(|value| value.as_str())
+            .unwrap_or("")
+            .to_string();
+        let seq = outputs.get("seq").and_then(|value| value.as_u64()).unwrap_or(0);
+        let lines: Vec<String> = outputs
+            .get("lines")
+            .and_then(|value| value.as_array())
+            .map(|list| {
+                list.iter()
+                    .filter_map(|one| one.as_str().map(|text| text.to_string()))
+                    .collect()
+            })
+            .unwrap_or_default();
+        let mut shown: Vec<String> = vec![
+            String::new(),
+            format!(
+                "  the live pane is not changed — {} as it stood at record {}",
+                pane, seq
+            ),
+            String::new(),
+        ];
+        if lines.is_empty() {
+            shown.push("  that pane had said nothing by that record".to_string());
+        }
+        for line in &lines {
+            shown.push(format!("  {}", line));
+        }
+        shown.push(String::new());
+        shown.push("  the panel stays until another one replaces it".to_string());
+        self.panel = Some(Panel {
+            title: format!("the rewind — {} at record {}", pane, seq),
+            lines: shown,
+        });
+        self.message = format!(
+            "the pane {} was read back to record {}: the live pane is untouched",
+            pane, seq
+        );
     }
 
     /// copy_lines copies the lines of a pane into the multiplexer's own ring,
@@ -2133,7 +2204,10 @@ fn take_record(screen: &mut Screen, line: &str) {
     let who = record.get("who").and_then(|value| value.as_str()).unwrap_or("");
     let what = record.get("what").and_then(|value| value.as_str()).unwrap_or("");
     let why = record.get("why").and_then(|value| value.as_str()).unwrap_or("");
-    screen.events.push(format!("{} {}: {} — {}", kind, who, what, why));
+    let seq = record.get("seq").and_then(|value| value.as_u64()).unwrap_or(0);
+    screen
+        .events
+        .push(format!("#{} {} {}: {} — {}", seq, kind, who, what, why));
     if screen.events.len() > 50 {
         let extra = screen.events.len() - 50;
         screen.events.drain(0..extra);
@@ -2152,6 +2226,10 @@ fn take_record(screen: &mut Screen, line: &str) {
     }
     if what == "the git state was read" {
         screen.take_git(&record);
+        return;
+    }
+    if what == "the pane was read back" {
+        screen.take_rewind(&record);
         return;
     }
     if what == "the editor was asked" {
@@ -2317,6 +2395,58 @@ mod tests {
         let action = screen.paste_text("x".repeat(clipboard::PASTE_MAX + 1));
         assert!(matches!(action, Action::Nothing), "nothing is sent");
         assert!(screen.message.contains("65536"), "the limit: {:?}", screen.message);
+    }
+
+    #[test]
+    fn a_rewind_asks_the_holder_for_that_pane_at_that_record() {
+        let mut screen = a_screen();
+        let action = screen.run_command("rewind work 12");
+        match action {
+            Action::Request(request) => {
+                assert_eq!(request["op"], "rewind");
+                assert_eq!(request["pane"], "work");
+                assert_eq!(request["seq"], 12);
+            }
+            _ => panic!("the rewind is one request"),
+        }
+        assert!(screen.message.contains("record 12"), "the line: {:?}", screen.message);
+    }
+
+    #[test]
+    fn a_rewind_of_a_number_that_is_not_a_record_is_refused_by_name() {
+        let mut screen = a_screen();
+        let action = screen.run_command("rewind work later");
+        assert!(matches!(action, Action::Nothing), "nothing is asked");
+        assert!(screen.message.contains("not a record number"), "the line: {:?}", screen.message);
+    }
+
+    #[test]
+    fn a_rewind_of_a_pane_that_is_not_there_is_refused_by_name() {
+        let mut screen = a_screen();
+        let action = screen.run_command("rewind nowhere 3");
+        assert!(matches!(action, Action::Nothing), "nothing is asked");
+        assert!(screen.message.contains("no pane named nowhere"), "the line: {:?}", screen.message);
+    }
+
+    #[test]
+    fn the_rewind_panel_shows_the_journal_and_leaves_the_live_pane_alone() {
+        let mut screen = a_screen_with_words();
+        let before = screen.panes[0].lines.clone();
+        let record = json!({
+            "kind": "info",
+            "who": "holder",
+            "what": "the pane was read back",
+            "seq": 12,
+            "outputs": { "pane": "work", "seq": 12, "count": 2,
+                         "lines": ["line 1", "line 2"] }
+        });
+        screen.take_rewind(&record);
+        let panel = screen.panel.as_ref().expect("the panel is there");
+        assert!(panel.title.contains("record 12"), "the title: {:?}", panel.title);
+        let shown = panel.lines.join("\n");
+        assert!(shown.contains("line 1"), "the journal's own line: {:?}", shown);
+        assert!(shown.contains("not changed"), "the live pane is named: {:?}", shown);
+        assert_eq!(screen.panes[0].lines, before, "the live pane keeps its own lines");
     }
 
     #[test]

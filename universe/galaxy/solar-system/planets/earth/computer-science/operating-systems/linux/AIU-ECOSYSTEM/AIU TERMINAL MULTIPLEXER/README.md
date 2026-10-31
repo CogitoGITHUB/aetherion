@@ -41,6 +41,7 @@ that way.
 |---|---|
 | The holder: a shell on a pty, in a session that outlives its client | Implemented and verified |
 | The log: one append-only file per session, flushed per record | Implemented and verified |
+| The rewind: a pane as it stood at a record | Implemented and verified: the record is chosen by its seq, the journal answers, and the live pane and its shell are untouched |
 | The journal's bounds and its privacy | Implemented and verified: a written bound, a trim record that says what it let go, and 0700/0600 on the session's own files |
 | The socket: a unix socket in the session's state directory | Implemented and verified |
 | The client: attaches, asks, reads, detaches, holds nothing | Implemented and verified |
@@ -121,6 +122,15 @@ holds instead of quietly getting less. The bound can be lowered on a small disk
 is 0700 and the files in it — the log, the pid, the socket — are 0600, set both when they
 are made and when they are opened, because a file made before this rule was written was
 0644.
+
+**The rewind.** The journal is a history, and the owner can look back into it: `:rewind PANE
+SEQ` asks the holder how that pane stood at that record, and the answer is the pane's own
+lines up to that record — never one after it — drawn in a panel over the panes. The seq is
+the number every record carries, and the events strip and the records panel show it
+(`#12 …`), so the record to go back to can be read off the screen. Looking back changes
+nothing: no bytes go to a pane, the shell keeps its pid, and the live pane keeps its own
+output while the panel lies over it. The answer is a record like every op's answer, so what
+was looked at is on the log too.
 
 **The ops on the holder's socket.** One JSON object per line, both ways, and the ops are:
 `attach`, `detach`, `state`, `read`, `send`, `open`, `resize`, `rename`, `close`. A request
@@ -476,7 +486,7 @@ finds no Racket file in the package (the package is Rust only since the move int
 does not have; the choice between dropping the two stages and porting the proofs is the
 owner's, and `TODO.org` item 64 carries it.
 
-The Rust tests: `cargo test --offline` (109 tests: 63 in the client, 28 in the holder, 18
+The Rust tests: `cargo test --offline` (117 tests: 67 in the client, 32 in the holder, 18
 in the bake).
 
 The phone proofs, each a Nu script that prints its evidence:
@@ -488,6 +498,7 @@ The phone proofs, each a Nu script that prints its evidence:
 | `tools/mcp-probe/probe.nu` | the agent's surface, and the token refusal | 6 |
 | `tools/screen-probe/probe.nu` | the drawing, the modes, the keymap, the agent key | 22 |
 | `tools/clipboard-probe/probe.nu` | the pick goes out as one OSC 52 string, and the missing add-on is said by name | 8 |
+| `tools/rewind-probe/probe.nu` | a pane shows the text as it stood at a chosen record, and looking back leaves the live pane and its shell alone | 13 |
 | `tools/journal-probe/probe.nu` | the log stays inside its written bound, the trim keeps whole records and says what it let go, and the session's files are 0600 in a 0700 dir | 12 |
 | `tools/tiny-binary-probe/` | the build and start times that decided the route | measured |
 
