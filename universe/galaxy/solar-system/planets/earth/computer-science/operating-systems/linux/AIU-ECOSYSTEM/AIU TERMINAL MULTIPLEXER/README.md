@@ -41,6 +41,7 @@ that way.
 |---|---|
 | The holder: a shell on a pty, in a session that outlives its client | Implemented and verified |
 | The log: one append-only file per session, flushed per record | Implemented and verified |
+| The session commands: list, create, rename, switch, kill | Implemented and verified: the holder answers all five, a killed session removes its own socket, pid and log, and a session cannot kill itself |
 | The versioned handshake at attach | Implemented and verified: both versions are compared, a mismatch is refused by name with both said and with what to do, and the client prints its build when it starts |
 | The rewind: a pane as it stood at a record | Implemented and verified: the record is chosen by its seq, the journal answers, and the live pane and its shell are untouched |
 | The journal's bounds and its privacy | Implemented and verified: a written bound, a trim record that says what it let go, and 0700/0600 on the session's own files |
@@ -123,6 +124,21 @@ holds instead of quietly getting less. The bound can be lowered on a small disk
 is 0700 and the files in it — the log, the pid, the socket — are 0600, set both when they
 are made and when they are opened, because a file made before this rule was written was
 0644.
+
+**The sessions.** A session is a directory: the holder's state directory, with its log,
+its socket and its pid, under one sessions directory (`--sessions-dir`, the state
+directory's parent by default). The owner's five words are `:sessions`,
+`:session create NAME`, `:session rename NAME`, `:session switch NAME` and
+`:session kill NAME`, and the holder answers every one of them — the same words an agent
+sends, and the same code. Create starts a holder of its own for the new directory, so the
+new session lives on its own. Rename renames this session's directory and moves its paths
+with it (the socket is already bound, so an attached client keeps its connection); another
+session's name cannot be changed from here, because its own holder holds its paths. Switch
+moves the client to another session's socket — the wait ends on the filesystem event that
+creates it — so the owner changes sessions without leaving the client. Kill asks that
+session's holder to shut down, and the holder removes what the session made, names what it
+did not make, and leaves; a session cannot kill itself, because its directory cannot be
+removed under its own feet, and it says so by name.
 
 **The handshake.** A client and a holder agree on two contracts — the holder's own wire
 (`multiplexer-holder/1`) and the log's record shape (`event-log-format/1`) — and they are
@@ -495,9 +511,9 @@ finds no Racket file in the package (the package is Rust only since the move int
 does not have; the choice between dropping the two stages and porting the proofs is the
 owner's, and `TODO.org` item 64 carries it.
 
-The Rust tests: `cargo test --offline` (120 tests: 69 in the client, 32 in the holder, 18
-in the bake, and 1 in `tests/handshake.rs`, which runs the real client against a
-holder socket the test serves by hand).
+The Rust tests: `cargo test --offline` (128 tests: 72 in the client, 37 in the holder, 18 in the bake, and 1 in
+`tests/handshake.rs`, which runs the real client against a holder socket the test serves
+by hand).
 
 The phone proofs, each a Nu script that prints its evidence:
 
@@ -508,6 +524,7 @@ The phone proofs, each a Nu script that prints its evidence:
 | `tools/mcp-probe/probe.nu` | the agent's surface, and the token refusal | 6 |
 | `tools/screen-probe/probe.nu` | the drawing, the modes, the keymap, the agent key | 22 |
 | `tools/clipboard-probe/probe.nu` | the pick goes out as one OSC 52 string, and the missing add-on is said by name | 8 |
+| `tools/sessions-probe/probe.nu` | the sessions stand, a created one lives on its own, the client switches to it, a killed one is gone for good, and a session cannot kill itself | 13 |
 | `tools/rewind-probe/probe.nu` | a pane shows the text as it stood at a chosen record, and looking back leaves the live pane and its shell alone | 13 |
 | `tools/journal-probe/probe.nu` | the log stays inside its written bound, the trim keeps whole records and says what it let go, and the session's files are 0600 in a 0700 dir | 12 |
 | `tools/tiny-binary-probe/` | the build and start times that decided the route | measured |

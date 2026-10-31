@@ -53,6 +53,9 @@ pub enum Ending {
     /// Refused is the holder's answer to a client whose contracts differ, in
     /// the holder's own words plus what to do about it.
     Refused(String),
+    /// Switch is the owner moving this client to another session's socket
+    /// (TODO item 49).
+    Switch(std::path::PathBuf),
 }
 
 /// Action is what the client does with the holder after a key.
@@ -67,6 +70,8 @@ pub enum Action {
     /// AskEditor asks the editor what it owns, over the editor's own MCP
     /// server: the answer comes back as the editor's own words.
     AskEditor,
+    /// Switch leaves this session's screen and attaches to another session.
+    Switch(String),
     /// Terminal writes bytes to the owner's own terminal, never to a pane:
     /// the Android clipboard's sequence goes there, and a pane's program
     /// would print it instead of the clipboard taking it.
@@ -127,6 +132,9 @@ pub struct Screen {
     /// project_name is the project the context stands on. The mode line
     /// names both.
     workspace_name: String,
+    /// sessions_dir is where this session stands with its siblings, as the
+    /// holder said: a switch names another one in it (TODO item 49).
+    sessions_dir: String,
     project_name: String,
     /// level is how much of the screen's own furniture is drawn. Level 1
     /// is the mode row and the tab bar; level 2 adds the specifics and
@@ -184,6 +192,7 @@ impl Screen {
             workspace: None,
             workspace_view: String::new(),
             workspace_name: String::new(),
+            sessions_dir: String::new(),
             project_name: String::new(),
             level: 2,
             shows_tab_bar: true,
@@ -232,6 +241,9 @@ impl Screen {
             Some(found) => found,
             None => return,
         };
+        if let Some(dir) = outputs.get("sessions-dir").and_then(|one| one.as_str()) {
+            self.sessions_dir = dir.to_string();
+        }
         if outputs.get("session").is_none() || outputs.get("panes").is_none() {
             return;
         }
@@ -971,10 +983,7 @@ impl Screen {
                 self.show_records();
                 Action::Nothing
             }
-            Command::ShowSessions => {
-                self.show_sessions();
-                Action::Nothing
-            }
+            Command::ShowSessions => self.show_sessions(),
             Command::GitOverview => self.show_git("overview"),
             Command::GitChanged => self.show_git("changed"),
             Command::GitDiff => self.show_git("diff"),
@@ -1506,6 +1515,10 @@ impl Screen {
             ["editor"] => self.run(Command::OpenEditor),
             ["records"] => self.run(Command::ShowRecords),
             ["sessions"] => self.run(Command::ShowSessions),
+            ["session", "create", name] => self.session_word("create", name),
+            ["session", "rename", name] => self.session_word("rename", name),
+            ["session", "kill", name] => self.session_word("kill", name),
+            ["session", "switch", name] => self.switch_to(name),
             ["scroll", "up"] => self.run(Command::PageUp),
             ["scroll", "down"] => self.run(Command::PageDown),
             ["copy", pane, first, last] => {
@@ -1862,13 +1875,69 @@ impl Screen {
     }
 
     /// show_sessions fills the panel with the sessions this multiplexer knows.
-    fn show_sessions(&mut self) {
+    /// show_sessions asks the holder what stands: the sessions are the
+    /// holder's, and the list is read, never guessed.
+    fn show_sessions(&mut self) -> Action {
+        self.message = "the sessions are being listed".to_string();
+        Action::Request(json!({ "op": "sessions" }))
+    }
+
+    /// take_sessions fills the panel with what the holder says stands: every
+    /// session and whether a holder holds it.
+    fn take_sessions(&mut self, record: &Value) {
         let mut lines: Vec<String> = Vec::new();
-        lines.push(format!("  this one: {}", self.focused_tab()));
+        let sessions = record
+            .get("outputs")
+            .and_then(|outputs| outputs.get("sessions"))
+            .and_then(|value| value.as_array())
+            .cloned()
+            .unwrap_or_default();
+        for one in &sessions {
+            let name = one.get("session").and_then(|v| v.as_str()).unwrap_or("");
+            let held = one.get("held").and_then(|v| v.as_bool()).unwrap_or(false);
+            let why = one.get("why").and_then(|v| v.as_str()).unwrap_or("");
+            if held {
+                lines.push(format!("  {} — a holder holds it", name));
+            } else {
+                lines.push(format!("  {} — {}", name, why));
+            }
+        }
+        if lines.is_empty() {
+            lines.push("  no session stands in this directory yet".to_string());
+        }
         self.panel = Some(Panel {
             title: "the sessions".to_string(),
             lines,
         });
+        self.message = format!("the sessions stand: {}", sessions.len());
+    }
+
+    /// session_word asks the holder to run one of the session commands:
+    /// create, rename or kill.
+    fn session_word(&mut self, what: &str, name: &str) -> Action {
+        if name.is_empty() || name.contains('/') {
+            self.message = format!("{} is not a session name", name);
+            return Action::Nothing;
+        }
+        self.message = format!("the session {} is being asked for {}", name, what);
+        Action::Request(json!({ "op": "session", "what": what, "name": name }))
+    }
+
+    /// switch_to moves this client to another session's socket: the sessions
+    /// directory is the holder's answer, and the name is one of its entries.
+    fn switch_to(&mut self, name: &str) -> Action {
+        if name.is_empty() || name.contains('/') {
+            self.message = format!("{} is not a session name", name);
+            return Action::Nothing;
+        }
+        if self.sessions_dir.is_empty() {
+            self.message =
+                "the holder did not say where the sessions stand, so nothing is switched"
+                    .to_string();
+            return Action::Nothing;
+        }
+        self.message = format!("the client is switching to the session {}", name);
+        Action::Switch(name.to_string())
     }
 
     /// close_panel closes the panel over the panes.
@@ -2148,6 +2217,15 @@ pub fn session(
                         request["client"] = Value::from(client_name);
                         wire::ask(fd, &request)?;
                     }
+                    Action::Switch(name) => {
+                        let to = std::path::Path::new(&screen.sessions_dir).join(&name);
+                        out.write_all(b"\x1b[?25h\x1b[0m\n").ok();
+                        let _ = out.flush();
+                        if let Some(settings) = saved.clone() {
+                            let _ = tty::restore_termios(libc::STDIN_FILENO, &settings);
+                        }
+                        return Ok(Ending::Switch(to));
+                    }
                     Action::Terminal(bytes) => {
                         // The clipboard's sequence belongs to the owner's
                         // terminal: it is written where the drawing goes,
@@ -2281,6 +2359,10 @@ fn take_record(screen: &mut Screen, line: &str) -> Option<String> {
     }
     if what == "the git state was read" {
         screen.take_git(&record);
+        return None;
+    }
+    if what == "the sessions were listed" {
+        screen.take_sessions(&record);
         return None;
     }
     if what == "the pane was read back" {
@@ -2451,6 +2533,42 @@ mod tests {
         let action = screen.paste_text("x".repeat(clipboard::PASTE_MAX + 1));
         assert!(matches!(action, Action::Nothing), "nothing is sent");
         assert!(screen.message.contains("65536"), "the limit: {:?}", screen.message);
+    }
+
+    #[test]
+    fn a_session_word_asks_the_holder_for_that_command() {
+        let mut screen = a_screen();
+        let action = screen.run_command("session create second");
+        match action {
+            Action::Request(request) => {
+                assert_eq!(request["op"], "session");
+                assert_eq!(request["what"], "create");
+                assert_eq!(request["name"], "second");
+            }
+            _ => panic!("a session word is one request"),
+        }
+    }
+
+    #[test]
+    fn a_switch_needs_the_sessions_directory_the_holder_named() {
+        let mut screen = a_screen();
+        let action = screen.run_command("session switch second");
+        assert!(matches!(action, Action::Nothing), "nothing is switched yet");
+        assert!(screen.message.contains("did not say"), "the line: {:?}", screen.message);
+        screen.sessions_dir = "/tmp/opencode/sessions".to_string();
+        let action = screen.run_command("session switch second");
+        match action {
+            Action::Switch(name) => assert_eq!(name, "second"),
+            _ => panic!("the switch is its own action"),
+        }
+    }
+
+    #[test]
+    fn a_session_name_with_a_slash_is_refused_by_name() {
+        let mut screen = a_screen();
+        let action = screen.run_command("session kill a/b");
+        assert!(matches!(action, Action::Nothing), "nothing is asked");
+        assert!(screen.message.contains("not a session name"), "the line: {:?}", screen.message);
     }
 
     #[test]

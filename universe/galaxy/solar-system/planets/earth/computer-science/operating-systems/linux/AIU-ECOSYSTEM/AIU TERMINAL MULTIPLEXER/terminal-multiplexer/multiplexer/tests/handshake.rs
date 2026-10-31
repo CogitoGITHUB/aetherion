@@ -57,26 +57,32 @@ fn a_client_and_a_holder_that_disagree_refuse_each_other_by_name() {
         .spawn()
         .expect("the client starts");
 
-    // The screen asks twice before it draws: the state, then the attach. The
-    // second one is answered with the old holder's refusal, and the connection
-    // closes the way a refused attach does.
-    let (stream, _) = listener.accept().expect("the client connects");
-    let mut writer = stream.try_clone().expect("the socket is copied");
-    let mut reader = BufReader::new(stream);
-    let mut line = String::new();
+    // The screen opens a connection, closes it, and opens another to draw: the
+    // second one asks twice — the state, then the attach — and its attach is
+    // answered with the old holder's refusal.
     let mut asked = 0;
     while asked < 2 {
-        line.clear();
-        if reader.read_line(&mut line).unwrap_or(0) == 0 {
+        let (stream, _) = listener.accept().expect("the client connects");
+        let mut writer = stream.try_clone().expect("the socket is copied");
+        let mut reader = BufReader::new(stream);
+        let mut line = String::new();
+        while asked < 2 {
+            line.clear();
+            if reader.read_line(&mut line).unwrap_or(0) == 0 {
+                break;
+            }
+            if !line.trim().is_empty() {
+                asked += 1;
+            }
+        }
+        if asked >= 2 {
+            writer
+                .write_all(an_old_holder().as_bytes())
+                .expect("the refusal is sent");
+            drop(writer);
             break;
         }
-        if !line.trim().is_empty() {
-            asked += 1;
-        }
     }
-    assert_eq!(asked, 2, "the screen asked for the state and the attach");
-    writer.write_all(an_old_holder().as_bytes()).expect("the refusal is sent");
-    drop(writer);
 
     let end = client.wait_with_output().expect("the client ends");
     let said = String::from_utf8_lossy(&end.stderr).to_string();
