@@ -37,32 +37,14 @@
               (inexact->exact (round (- (current-inexact-milliseconds) started)))))
   answer)
 
-;; edit-ops are the hot path operations that change the text; each one is saved at once.
+;; edit-ops are the hot path operations that change the text; each one only marks the file unsaved.
 (define edit-ops (list "type" "delete" "delete-at" "insert-at"))
 
-;; shadow-path is the undo commit module in the dashboard folder, or false.
-(define shadow-path
-  (let ([src (variable-reference->module-source (#%variable-reference))])
-    (and (path? src)
-         (let-values ([(base name dir?) (split-path src)])
-           (and (path? base)
-                (simplify-path (build-path base (quote up) "dashboard" "shadow.rkt")))))))
+;; dirty-hook is called after every edit op; the live session puts a function here that marks the file unsaved.
+(define dirty-hook (box void))
 
-;; shadow-note! tells the undo commit module that a file was saved; it loads in a thread on first use.
-(define (shadow-note! file)
-  (when (and shadow-path file)
-    (thread (lambda ()
-              (with-handlers ([void void])
-                ((dynamic-require shadow-path (quote shadow-note!)) file))))))
-
-;; edit-hook is called after an edit was saved; the live session puts a function here.
+;; edit-hook is called after a save; the live session puts a function here.
 (define edit-hook (box void))
-
-;; save-after answers nothing: it saves the file of a request that changed the text.
-(define (save-after args)
-  (when (and (hash-ref args (quote file) #f) (hash-ref args (quote journal) #f))
-    (ask-hot-raw "save" (hasheq (quote file) (hash-ref args (quote file)) (quote journal) (hash-ref args (quote journal)))))
-  (void))
 
 ;; read-ops are the hot path operations that only read, so their answers can be kept.
 (define read-ops (list "notation" "show" "notation-render" "notation-view"))
@@ -79,7 +61,7 @@
        (or hit (let ([got (ask-hot-raw op args)]) (hash-set! kept-answers key got) got)))]
     [else
      (hash-clear! kept-answers)
-     (let ([got (ask-hot-raw op args)]) (when (member op edit-ops) (save-after args)) (hash-clear! kept-answers) got)]))
+     (let ([got (ask-hot-raw op args)]) (when (member op edit-ops) ((unbox dirty-hook))) (hash-clear! kept-answers) got)]))
 
 ;; hot-path-start-ms answers the hot path's measured start, or nothing
 ;; when the hot path has not been called yet.
@@ -87,5 +69,5 @@
   (unbox first-call-ms))
 
 ;; The call that asks the hot path.
-(provide edit-hook ask-hot
+(provide edit-hook dirty-hook ask-hot
          hot-path-start-ms)

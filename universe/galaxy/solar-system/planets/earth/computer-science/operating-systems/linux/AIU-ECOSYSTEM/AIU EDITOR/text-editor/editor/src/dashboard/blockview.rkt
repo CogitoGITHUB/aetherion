@@ -637,7 +637,7 @@
 (hash-set! commands "block-move-up" bv-command-move-up)
 (hash-set! commands "block-move-down" bv-command-move-down)
 (hash-set! commands "block-move-mode" bv-command-move-mode)
-(hash-set! commands "leave-write" (lambda (session words) (let ([r (bv-command-leave-write session words)]) (bv-after-write (session-file session)) r)))
+(hash-set! commands "leave-write" (lambda (session words) (let ([r (bv-command-leave-write session words)]) (set-box! unsaved #f) (bv-after-write (session-file session)) r)))
 
 ;; The block view, for the live screen above it.
 (provide block-overlay
@@ -683,3 +683,13 @@
        (cons "kind-todo-open" "todo open")
        (cons "kind-todo-done" "todo done")))
 (provide bv-ranges)
+
+;; The save command is wrapped: it saves, clears unsaved, then runs the git refresh and one undo commit.
+;; Nothing else saves or commits; typing only marks the file unsaved.
+(hash-set! commands "save"
+           (let ([orig (hash-ref commands "save")])
+             (lambda (session words)
+               (let ([r (orig session words)])
+                 (set-box! unsaved #f)
+                 (bv-after-write (session-file session))
+                 r))))

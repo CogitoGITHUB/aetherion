@@ -75,7 +75,7 @@
             (move-to session (line-start-offset (session-text session) ln))))
         (set-box! home-repaint (lambda () (repaint session viewport)))
         (set-box! notify-repaint (lambda () (repaint session viewport)))
-        (set-box! edit-hook (lambda () (gutter-stale!) (git-stale!)))
+        (set-box! edit-hook (lambda () (gutter-stale!) (git-stale!))) (set-box! dirty-hook (lambda () (set-box! unsaved #t)))
         (repaint session viewport)
         (set-box! paint-ready #t)
         (thread (lambda () (repaint session viewport)))
@@ -348,7 +348,7 @@
     (bar-plan-of session (unbox pending-keys) full-width full-height (and (home-screen) #t)
                  (lambda () ((unbox home-repaint)))))
   (define gut? (and (not (home-screen)) (string-suffix? (path->string (session-file session)) ".aiu")))
-  (when gut? (gutter-refresh-maybe (session-file session) (lambda () ((unbox notify-repaint)))))
+  (when (and gut? (not (unbox unsaved))) (gutter-refresh-maybe (session-file session) (lambda () ((unbox notify-repaint)))))
   (define width (- full-width (bar-plan-left plan) (bar-plan-right plan) (if gut? 1 0)))
   (define height (+ 1 (- full-height (bar-plan-top plan) (bar-plan-bottom plan))))
   (define name (path->string (session-file session)))
@@ -386,7 +386,7 @@
   (display
    (paint text-shown (if menu (cdr (menu-screen menu top height)) (if overlay (cadr overlay) (the-point session))) width height top
           (if (bar-plan-line? plan) (format "~a  ~a  ~a:~a~a" (file-name-from-path (session-file session))
-                  (format "~a [~a]" (mode-label (the-layer session)) (unbox kind-filter)) row column where) (bar-plan-text plan))
+                  (format "~a [~a]~a" (mode-label (the-layer session)) (unbox kind-filter) (if (unbox unsaved) "  unsaved: SPC s" "")) row column where) (bar-plan-text plan))
           writing?
           (or (and home #t) (and menu #t) (and overlay #t) (and (not writing?) (string-suffix? name ".aiu")))
           #:offset (bar-plan-top plan) #:left (bar-plan-left plan) #:full full-width #:overlay (string-append (bar-plan-overlay plan) (notify-overlay width height (+ 1 (bar-plan-top plan))))))

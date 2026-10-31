@@ -32,7 +32,7 @@
 (define focus-on (box #f))
 
 ;; bar-order are the parts in the order the level adds them.
-(define bar-order (list "mode" "time" "git" "date" "keys"))
+(define bar-order (list "mode" "time" "save" "date" "keys"))
 
 ;; bar-places are the places the place key goes through.
 (define bar-places (list "bottom" "top" "left" "right" "sides"))
@@ -166,8 +166,8 @@
     (append (if (has? "keys")
                 (list (body-line (format "trigger ~a~a" (bar-kname trig) waiting) width))
                 null)
-            (if (has? "git")
-                (list (edge-line "├" "┤" "git" "" width) (body-line (git-text g) width))
+            (if (and (has? "save") (unbox unsaved))
+                (list (edge-line "├" "┤" "save" "" width) (body-line "unsaved  SPC s saves" width))
                 null)))
   (if (null? names)
       null
@@ -180,7 +180,7 @@
     [(string=? name "mode") (format "~a ~a" (mode-label layer) (unbox kind-filter))]
     [(string=? name "time") (clock-time)]
     [(string=? name "date") (clock-date)]
-    [(string=? name "git") (git-letters g)]
+    [(string=? name "save") "SAVE"]
     [else (let ([t (assoc layer trigger-of)]) (bar-kname (if t (cdr t) "-")))]))
 
 ;; strip-lines answers the rows of a side strip, five columns wide: one cell for
@@ -227,7 +227,7 @@
   (cond
     [(unbox focus-on) (bar-plan 0 0 0 0 "" "" #f)]
     [else
-     (unless (member place (list "line" "hidden")) (git-refresh-maybe dir again))
+     (unless (or (unbox unsaved) (member place (list "line" "hidden"))) (git-refresh-maybe dir again))
      (define g (unbox git-info))
      (define bar-lines
        (if (member place (list "bottom" "top")) (bar-rows layer short pending g width names) null))
@@ -245,7 +245,7 @@
      (define sh (max 3 (- height top-n (length bottom-lines))))
      (define left-names
        (cond [(string=? place "left") names]
-             [(string=? place "sides") (filter (lambda (n) (member n (list "mode" "git" "keys"))) names)]
+             [(string=? place "sides") (filter (lambda (n) (or (member n (list "mode" "keys")) (and (string=? n "save") (unbox unsaved)))) names)]
              [else null]))
      (define right-names
        (cond [(string=? place "right") names]

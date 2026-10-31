@@ -1,4 +1,4 @@
-AI: READ SECTION 18 AT THE END FIRST. Then section 0.
+AI: READ SECTION 19 AT THE END FIRST, then 18. Then section 0.
 
 # AIU EDITOR: guide for AI agents
 
@@ -17,7 +17,7 @@ Several patches in the last session were sent without their output being seen. D
 | dashboard page rewrite | grep -n code-block editor/src/dashboard/home.rkt |
 | git in tabs and fuller git row | grep -n tab-git-text editor/src/dashboard/tabs.rkt |
 | git after first paint, no timer | grep -c paint-ready editor/src/dashboard/box.rkt editor/src/dashboard/bar.rkt editor/src/dashboard/gutter.rkt editor/src/entry/live.rkt |
-| autosave | grep -n edit-ops editor/src/join/hot-path.rkt |
+| manual save | grep -n dirty-hook editor/src/join/hot-path.rkt editor/src/entry/live.rkt |
 
 Then compile and run the gate ONCE (nu gate/check.nu 2>&1 | tail -8; failing lines start with COMMENT or FAIL). Fix only what the real output shows. Do not run the gate again after every small change: the owner finds that wasteful.
 
@@ -185,10 +185,9 @@ In the visual layer the SPC popup has a box named pick with the keys a p e c k l
 
 `dashboard/gutter.rkt` keeps the hunks of `git diff -U0` for the open file, asked in a thread (4 s after the first ask, then every 15 s or when the file changes). `dashboard/gutterview.rkt` puts one column at the left of every drawn line of an .aiu page: plus for added, equals for changed, minus for removed, on the lines of each leaf block that a hunk touches (`bv-ranges`, exported by `blockview.rkt`, maps blocks to drawn lines). `repaint-now` in `live.rkt` takes one column off the page width for it. Lines are matched by the saved file, so unsaved edits can shift a mark until the next refresh. A removal between two blocks puts a minus on the first drawn line of the block after the gap (git reports it at the line before the gap), a removal inside a block marks the block equals. A swap of two blocks shows as plus on one block and minus at the gap, because git describes it that way. Only glyphs, no colour.
 
-## Autosave
+## Save and commit by hand
 
-Every hot path request that changes text (type, delete, delete-at, insert-at) is followed by a save of the same file (`ask-hot`, `join/hot-path.rkt`, `edit-ops`, `save-after`), so git sees the change. `edit-hook` is not called by save-after any more: `leave-write` calls it (section 17), so the git row and strip ask git once after the write layer is left, never while typing. The 4 s wait applies only to the first git ask. The journal is cleared on every save; the history is kept in the history file (section 14).
-
+Nothing is saved or committed while you type. An edit op (type, delete, delete-at, insert-at) only changes the text in the hot path and calls `dirty-hook`, which sets the box `unsaved` (`commands.rkt`); `live.rkt` installs it. The edits stay in the journal until a save, so a quit with unsaved edits loses nothing. The `save` command (space s, tab s) is wrapped at the end of `blockview.rkt`: it saves, clears `unsaved`, then `bv-after-write` runs `edit-hook` (git row, strip and tab git text marked old) and notes the file for `shadow.rkt`, which makes one undo commit on the branch aiu-undo. Escape in the write layer saves and commits the same way. While `unsaved` is true the git row, the git strip and the tab git text are not refreshed. The bar part `save` replaces the git part in `bar-order`: it shows `unsaved  SPC s saves` only when `unsaved` is true and takes no row otherwise; the one line adds `unsaved: SPC s`. This section replaces the old Autosave text and the trigger text of sections 17 and 18.
 ## Git row and git in the tabs
 
 `git-facts` (`bar.rkt`) answers branch, changed files, ahead, behind, last commit, then staged files, unstaged files, inserted lines and deleted lines (`git diff --shortstat HEAD`). `git-text` shows them in the git row of the bar. The git thread also sets `tab-git-text` (`tabs.rkt`), and `tab-rows` ends every tab bar, at all three levels, with a git section holding that text. Both are filled 4 s after start. Untracked files are still not counted.
@@ -575,3 +574,7 @@ State of the code. VERIFY WITH GREP, do not trust this text:
 Todo in this order: 1 find out which patch is installed. 2 make save-after do only the edit (and the save if the owner agrees), no edit-hook. 3 leave-write: edit-hook once, plus one undo commit in a thread (the niced sh version). 4 the owner types and deletes and says if it is smooth. 5 only then undo and redo keys (u and r), the tree view, the history file decision, worktrees.
 
 Errors of the undo commit go to ~/.aiu-undo-error.txt. The old folder ~/.aiu-undo (separate shadow repository, dropped) may be deleted.
+
+## 19. Save and commit by hand (2026-10-31 night, owner decision)
+
+Autosave and the automatic undo commit are gone. A keystroke only edits and marks `unsaved`. Space s (and tab s, and escape in the write layer) saves, clears `unsaved`, refreshes git once and makes one undo commit on aiu-undo. The bar has a part `save` instead of git: it shows only while there are unsaved edits. Details in the section Save and commit by hand. Removed: `save-after`, `shadow-path` and `shadow-note!` in `hot-path.rkt`. Still to try by hand: type and delete (must be instant), SPC s, the reminder in the bar, the strips and the one line.

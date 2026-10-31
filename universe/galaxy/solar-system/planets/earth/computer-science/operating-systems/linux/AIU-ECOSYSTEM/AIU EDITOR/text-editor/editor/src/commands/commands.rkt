@@ -474,3 +474,7 @@
 (hash-set! commands "home-open" command-home-open)
 
 (provide kind-filter mode-label home-request)
+;; unsaved is true while the file has edits that are not saved; the bar and the one line show it.
+(define unsaved (box #f))
+
+(provide unsaved)
