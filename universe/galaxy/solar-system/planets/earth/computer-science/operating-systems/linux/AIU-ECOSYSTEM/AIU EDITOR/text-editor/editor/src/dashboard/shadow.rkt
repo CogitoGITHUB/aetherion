@@ -1,6 +1,8 @@
 #lang racket/base
-;; shadow.rkt: undo commits. After an autosave the saved file is committed to a private
-;; repository outside the project (~/.aiu-undo/repo.git), one commit for each burst of edits.
+;; shadow.rkt: undo commits. After an autosave the saved file is committed on the branch
+;; aiu-undo of the git repository that holds it, one commit for each burst of edits.
+;; The branch is never checked out: each commit is built with git plumbing and a private
+;; temporary index file, so the real index, HEAD and work tree are never touched.
 ;; Needs only racket/base and runs in threads, never on the key path.
 
 ;; shadow-note! is the one entry point: it tells the worker that a file was saved.
@@ -24,19 +26,13 @@
 ;; git-exe is the git program, or false when it is not installed.
 (define git-exe (find-executable-path "git"))
 
-;; undo-dir answers the folder that holds the private repository.
-(define (undo-dir)
-  (build-path (find-system-path (quote home-dir)) ".aiu-undo"))
-
-;; repo-dir answers the git directory of the private repository.
-(define (repo-dir)
-  (build-path (undo-dir) "repo.git"))
+;; zero-id is the old value that update-ref needs when the branch does not exist yet.
+(define zero-id "0000000000000000000000000000000000000000")
 
 ;; log-error! writes a problem to a file, because nothing may be printed over the page.
 (define (log-error! text)
   (with-handlers ([void void])
-    (unless (directory-exists? (undo-dir)) (make-directory (undo-dir)))
-    (call-with-output-file (build-path (undo-dir) "last-error.txt")
+    (call-with-output-file (build-path (find-system-path (quote home-dir)) ".aiu-undo-error.txt")
       (lambda (out) (write-string text out) (newline out))
       #:exists (quote truncate))))
 
@@ -48,32 +44,39 @@
         (unless (eof-object? s) (write-string s out) (loop))))
     (get-output-string out)))
 
-;; git-run runs git and answers a list of exit status, output text and error text.
-(define (git-run . args)
-  (parameterize ([current-directory "/"])
-    (let-values ([(sp out in err) (apply subprocess #f #f #f git-exe args)])
-      (close-output-port in)
-      (let* ([o (slurp out)] [e (slurp err)])
-        (close-input-port out)
-        (close-input-port err)
-        (subprocess-wait sp)
-        (list (subprocess-status sp) o e)))))
+;; chomp removes the line end from the end of a text.
+(define (chomp s)
+  (regexp-replace #rx"[\r\n]+$" s ""))
 
-;; shadow-git runs git against the private repository only, never the project one.
-(define (shadow-git . args)
-  (apply git-run "-c" "commit.gpgsign=false" "--git-dir" (path->string (repo-dir))
-         "--work-tree" "/" args))
+;; git-run runs git in a folder, with an optional private index file, and answers
+;; a list of exit status, output text and error text.
+(define (git-run dir index . args)
+  (let ([env (environment-variables-copy (current-environment-variables))])
+    (when index
+      (environment-variables-set! env #"GIT_INDEX_FILE" (string->bytes/utf-8 index)))
+    (parameterize ([current-directory dir] [current-environment-variables env])
+      (let-values ([(sp out in err)
+                    (apply subprocess #f #f #f git-exe
+                           "-c" "commit.gpgsign=false" "-c" "user.name=aiu-undo"
+                           "-c" "user.email=aiu-undo@localhost" args)])
+        (close-output-port in)
+        (let* ([o (slurp out)] [e (slurp err)])
+          (close-input-port out)
+          (close-input-port err)
+          (subprocess-wait sp)
+          (list (subprocess-status sp) o e))))))
 
-;; ensure-repo! creates the private repository on first use and sets its own user.
-(define (ensure-repo!)
-  (unless (file-exists? (build-path (repo-dir) "HEAD"))
-    (unless (directory-exists? (undo-dir)) (make-directory (undo-dir)))
-    (git-run "init" "--bare" "-q" (path->string (repo-dir)))
-    (for-each (lambda (kv) (shadow-git "config" (car kv) (cdr kv)))
-              (list (cons "core.bare" "false")
-                    (cons "user.name" "aiu-undo")
-                    (cons "user.email" "aiu-undo@localhost")
-                    (cons "status.showUntrackedFiles" "no")))))
+;; git-try answers the output of a git call without its line end, or false when it failed.
+(define (git-try dir index . args)
+  (let ([r (apply git-run dir index args)])
+    (and (zero? (car r)) (chomp (cadr r)))))
+
+;; git-need answers the output of a git call, or raises an error that holds git messages.
+(define (git-need dir index . args)
+  (let ([r (apply git-run dir index args)])
+    (if (zero? (car r))
+        (chomp (cadr r))
+        (error (string-append "git " (car args) ": " (caddr r))))))
 
 ;; stat->words turns a git shortstat line into the change text of the message.
 (define (stat->words stat)
@@ -81,26 +84,46 @@
         [del (regexp-match #px"(\\d+) deletion" stat)])
     (string-append "+" (if ins (cadr ins) "0") " -" (if del (cadr del) "0") " lines")))
 
-;; commit-file! stores the file in the private index and commits it when it changed.
+;; build-commit! adds the file to the tree of the branch aiu-undo and commits it when it changed.
+(define (build-commit! top gitdir full rel name)
+  (let ([index (path->string
+                (build-path gitdir (string-append "aiu-undo-index-"
+                                                  (number->string (current-milliseconds)))))]
+        [parent (git-try top #f "rev-parse" "--verify" "-q" "refs/heads/aiu-undo^{commit}")])
+    (dynamic-wind
+     void
+     (lambda ()
+       (when parent (git-need top index "read-tree" parent))
+       (let ([blob (git-need top #f "hash-object" "-w" "--no-filters" "--" full)])
+         (git-need top index "update-index" "--add" "--cacheinfo" "100644" blob rel)
+         (let* ([tree (git-need top index "write-tree")]
+                [old-tree (if parent
+                              (git-need top #f "rev-parse" (string-append parent "^{tree}"))
+                              (git-need top #f "hash-object" "-t" "tree" "/dev/null"))])
+           (unless (equal? tree old-tree)
+             (let* ([stat (git-need top #f "diff" "--shortstat" old-tree tree "--" rel)]
+                    [msg (string-append name ": " (stat->words stat))]
+                    [new (apply git-need top #f "commit-tree" tree "-m" msg
+                                (if parent (list "-p" parent) (list)))])
+               (git-need top #f "update-ref" "-m" "aiu-undo" "refs/heads/aiu-undo"
+                         new (or parent zero-id)))))))
+     (lambda () (with-handlers ([void void]) (delete-file index))))))
+
+;; commit-file! finds the repository of the file and commits it, or does nothing outside a repository.
 (define (commit-file! full)
-  (ensure-repo!)
   (when (and (file-exists? full) (regexp-match? #rx"^/" full))
-    (let ([h (shadow-git "hash-object" "-w" "--no-filters" "--" full)])
-      (if (not (zero? (car h)))
-          (log-error! (string-append "hash-object: " (caddr h)))
-          (let* ([blob (regexp-replace* #rx"[ \r\n]+" (cadr h) "")]
-                 [u (shadow-git "update-index" "--add" "--cacheinfo"
-                                (string-append "100644," blob "," (substring full 1)))])
-            (if (not (zero? (car u)))
-                (log-error! (string-append "update-index: " (caddr u)))
-                (let ([d (shadow-git "diff" "--cached" "--shortstat")])
-                  (when (regexp-match? #rx"[^ \r\n]" (cadr d))
-                    (let-values ([(base name dir?) (split-path full)])
-                      (let ([c (shadow-git "commit" "-q" "--no-verify" "-m"
-                                           (string-append (path->string name) ": "
-                                                          (stat->words (cadr d))))])
-                        (unless (zero? (car c))
-                          (log-error! (string-append "commit: " (caddr c)))))))))))))) 
+    (let-values ([(base name dir?) (split-path full)])
+      (let ([where (git-try base #f "rev-parse" "--absolute-git-dir" "--show-toplevel" "--show-prefix")])
+        (when where
+          (let* ([m (regexp-match #rx"^([^\n]*)\n([^\n]*)\n?([^\n]*)" where)]
+                 [gitdir (cadr m)]
+                 [top (caddr m)]
+                 [prefix (cadddr m)]
+                 [name-str (path->string name)]
+                 [head (git-try top #f "symbolic-ref" "-q" "HEAD")])
+            (if (equal? head "refs/heads/aiu-undo")
+                (log-error! "HEAD is on aiu-undo, no undo commit was made")
+                (build-commit! top gitdir full (string-append prefix name-str) name-str))))))))
 
 ;; commit-safe! commits one file and turns any error into a line in the error file.
 (define (commit-safe! full)

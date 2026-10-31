@@ -514,10 +514,12 @@ Owner decision (2026-10-31). It replaces the copies in /tmp as the way to backtr
 All of the above goes inside the one bash -c block, with git commands joined by semicolons or on separate lines, nothing after the closing quote, no single quote inside, and git messages in double quotes.
 
 
-## 17. Shadow commits (built 2026-10-31, step 1 of section 15)
+## 17. Undo commits on the branch aiu-undo (step 1 of section 15, rebuilt 2026-10-31)
 
-Code: `editor/src/dashboard/shadow.rkt` (racket/base only). `save-after` in `join/hot-path.rkt` calls `shadow-note!` with the saved file; that starts a thread which loads the module on first use. It is listed in `compile-deps` of `entry/cli.rkt`, so raco make builds it. One worker commits 1 s after the last note, so a burst of typing is one commit. The repository is `~/.aiu-undo/repo.git`, created on first use with its own user name and email. Every git call passes --git-dir and --work-tree=/, so the project repo is never touched. The commit uses plumbing (hash-object, update-index --cacheinfo, commit) so a nested project repo cannot hide the file. The message is NAME: +A -D lines. No change, no commit. Errors go to `~/.aiu-undo/last-error.txt`, never to the screen.
+Code: `editor/src/dashboard/shadow.rkt` (file name kept, racket/base only). `save-after` in `join/hot-path.rkt` calls `shadow-note!` with the saved file; that starts a thread which loads the module on first use. It is listed in `compile-deps` of `entry/cli.rkt`, so raco make builds it. One worker commits 1 s after the last note, so a burst of typing is one commit.
 
-Decisions: shadow repo outside the project, one commit per debounced burst, history file kept. The AI took these on its own recommendation and the owner went ahead.
+The commits go on the branch `aiu-undo` of the git repository that holds the saved file. The branch starts empty and shares no history with main, so plain git log on main never shows it. Read it with `git log aiu-undo`, or `git log aiu-undo -- FILE` for one file. The editor never checks it out. Each commit is built with plumbing and a private temporary index file in the git folder (read-tree of the branch, hash-object, update-index, write-tree, commit-tree, update-ref), so the real index, HEAD and work tree are never touched. If HEAD is on aiu-undo the commit is skipped and logged. A file outside a git repository is skipped. The message is NAME: +A -D lines. No change, no commit. Errors go to `~/.aiu-undo-error.txt`, never to the screen.
 
-Not built yet: undo and redo keys, the tree view, branches, the block name in the message, worktrees, pruning.
+Decisions: branch inside the main repo (the owner preferred it to a separate shadow repository, which was deleted), one commit per debounced burst, history file kept. git push --all would push the branch, so push it only on purpose.
+
+Not built yet: undo and redo keys, the tree view, branches for edits after an undo, the block name in the message, worktrees, pruning.
