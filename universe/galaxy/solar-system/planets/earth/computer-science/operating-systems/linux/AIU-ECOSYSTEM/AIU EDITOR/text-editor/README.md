@@ -529,3 +529,21 @@ Only escape in the write layer triggers it so far. Tab tab, quit while writing a
 Decisions: branch inside the main repo (a separate shadow repository was tried and deleted), one commit for each write session, history file kept. git push --all would push the branch, so push it only on purpose.
 
 Not built yet: undo and redo keys, the tree view, branches for edits after an undo, the block name in the message, worktrees, pruning.
+
+## 18. READ FIRST: owner rule and real state (2026-10-31 late)
+
+OWNER RULE, repeated in anger: NOTHING runs while he types or deletes. No git, no commit, no refresh, no background work on a keystroke. Save to git, the undo commit, the git row and the git strip run only when he LEAVES the write layer (escape, leave-write). One undo step is one write session, never one letter. Never fix this with a debounce timer: it still runs while typing. Ask before building anything that runs on its own. Do not ask for the gate unless the owner asks: it is slow and he hates it.
+
+Measured: with a fake git on PATH (a git that exits 0) typing was almost instant; with real git it lagged. So the cause is git calls after each save: the git row and git strip (edit-hook) and the undo commit worker.
+
+State of the code. VERIFY WITH GREP, do not trust this text:
+- shadow.rkt on disk makes commits on the branch aiu-undo (orphan, plumbing, private index file, never checked out). It works, 4 commits were seen. The disk version may be the one that starts about 11 git processes from Racket. A better version (one niced sh process, 0.5 s wait, AIU_NO_UNDO switch) was written in chat and may NOT be installed.
+- hot-path.rkt: the shadow-note! call was taken out of save-after, so no undo commit happens now. But save-after still calls edit-hook, so the git row and strip go stale after EVERY keystroke and ask git again. That is the lag still to remove.
+- The last patch sent in chat (leave-write calls bv-after-write in blockview.rkt, which calls edit-hook and shadow-note!; save-after calls (void) instead of edit-hook) may NOT have been run. Check: grep -n bv-after-write editor/src/dashboard/blockview.rkt and grep -n edit-hook editor/src/join/hot-path.rkt.
+- Dead code in hot-path.rkt: shadow-path and shadow-note! (unused).
+- save-after still SAVES the file after every edit op (section Autosave). The owner wants nothing running while he types: ask him whether the save also moves to leave-write (the journal already holds unsaved edits).
+- Trigger planned: escape in the write layer only. Tab tab, quit while writing and tab switch are not covered: ask.
+
+Todo in this order: 1 find out which patch is installed. 2 make save-after do only the edit (and the save if the owner agrees), no edit-hook. 3 leave-write: edit-hook once, plus one undo commit in a thread (the niced sh version). 4 the owner types and deletes and says if it is smooth. 5 only then undo and redo keys (u and r), the tree view, the history file decision, worktrees.
+
+Errors of the undo commit go to ~/.aiu-undo-error.txt. The old folder ~/.aiu-undo (separate shadow repository, dropped) may be deleted.
