@@ -204,7 +204,7 @@
 (define menu-groups
   (list (list "save" "file" "save") (list "quit" "file" "quit") (list "send" "file" "send")
         (list "check" "file" "check")
-        (list "level-up" "page" "more rows")
+        (list "undo-mode" "view" "undo tree") (list "level-up" "page" "more rows")
         (list "next-block" "blocks" "next")
         (list "block-end" "blocks" "block end") (list "blocks" "blocks" "list")
         (list "focus-toggle" "view" "focus") (list "explorer" "view" "explorer") (list "home-open" "view" "dashboard")
@@ -231,6 +231,12 @@
         (list "bar-less" "level" "hide one part") (list "bar-more" "level" "show one part")
         (list "tab-less" "level" "hide one level") (list "tab-more" "level" "show one level")
         (list "bar-level-mode" "level" "level adjuster") (list "tab-level-mode" "level" "level adjuster")
+        (list "undo-back" "undo" "back") (list "undo-forward" "undo" "forward")
+        (list "undo-up" "undo" "branch above") (list "undo-down" "undo" "branch below")
+        (list "undo-branch-back" "undo" "last branch point") (list "undo-branch-forward" "undo" "next branch point")
+        (list "undo-tip" "undo" "branch end") (list "undo-mark" "undo" "mark") (list "undo-unmark" "undo" "unmark")
+        (list "undo-diff" "undo" "diff") (list "undo-live" "undo" "live file") (list "undo-keep" "undo" "keep")
+        (list "undo-cancel" "undo" "roll back")
         (list "leave-write" "leave" "save and leave") (list "mode" "leave" "other layer")))
 
 ;; menu-group-order is the order of the group boxes; a group not named here comes last.

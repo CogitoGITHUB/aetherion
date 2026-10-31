@@ -41,7 +41,7 @@
 ;;   visual — the general mode: the trigger and the plain keys
 ;;   write  — the text mode: the keys are text
 ;;   select — the selected text is what the commands act on
-(define editor-layers '("visual" "write" "select" "move" "bar" "bar-level" "tab" "tab-level" "find"))
+(define editor-layers '("visual" "write" "select" "move" "undo" "bar" "bar-level" "tab" "tab-level" "find"))
 
 ;; trigger-of answers the trigger of each layer: the key that starts a
 ;; sequence in that layer.
@@ -54,7 +54,7 @@
           (cons "bar-level" "space")
           (cons "tab" "space")
           (cons "tab-level" "space")
-          (cons "find" "space")))
+          (cons "find" "space") (cons "undo" "space")))
 
 ;; normal-keys are the keys of the visual layer: the key and the command
 ;; it runs. The command is a name from the command table, never a
@@ -82,7 +82,7 @@
     ("space v" "select-mode")
     ("space s" "save")
     ("space q" "quit")
-    ("space u" "level-up")
+    ("space u" "undo-mode")
     ("space ?" "explorer")
     ("space g" "send")
     ("space b" "bar-mode")
@@ -127,6 +127,17 @@
         (list "t" "block-move-down")
         (list "escape" "visual-mode")))
 
+
+;; undo-keys are the keys of the undo layer (Dvorak): h and t go back and forward, n and s switch branch,
+;; a w e jump, m u d mark, unmark and diff, l goes to the live file, k keeps the version, escape rolls back.
+(define undo-keys
+  (list (list "h" "undo-back") (list "t" "undo-forward")
+        (list "n" "undo-up") (list "s" "undo-down")
+        (list "a" "undo-branch-back") (list "w" "undo-branch-forward") (list "e" "undo-tip")
+        (list "m" "undo-mark") (list "u" "undo-unmark") (list "d" "undo-diff")
+        (list "l" "undo-live") (list "k" "undo-keep")
+        (list "up" "move-up") (list "down" "move-down") (list "left" "move-left") (list "right" "move-right")
+        (list "escape" "undo-cancel")))
 
 ;; bar-keys are the keys of the bar layer: the places of the bar, the style, the
 ;; hide key and the key that enters the level adjuster.
@@ -206,7 +217,7 @@
             (list "bar-level" bar-level-keys)
             (list "tab" tab-keys)
             (list "tab-level" tab-level-keys)
-            (list "find" find-keys))))
+            (list "find" find-keys) (list "undo" undo-keys))))
 
 ;; keys-of answers the keys of one layer, or nothing when the table holds
 ;; no layer by that name. The keys of a layer are pairs: a key and the
@@ -259,3 +270,5 @@
          binding-of
          sequence-of
          prefix-of?)
+
+(provide undo-keys)

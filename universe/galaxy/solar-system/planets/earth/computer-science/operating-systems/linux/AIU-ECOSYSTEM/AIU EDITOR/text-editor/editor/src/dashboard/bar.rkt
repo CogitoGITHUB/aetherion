@@ -229,6 +229,7 @@
     [else
      (unless (or (unbox unsaved) (member place (list "line" "hidden"))) (git-refresh-maybe dir again))
      (define g (unbox git-info))
+     (define undo-lines (if (string=? layer "undo") ((unbox undo-rows-hook) width height) null))
      (define bar-lines
        (if (member place (list "bottom" "top")) (bar-rows layer short pending g width names) null))
      (define tab-lines
@@ -240,7 +241,7 @@
               (append (drop-right t 1) (list (join-edge (car b))) (cdr b))]
              [else (append t b)]))
      (define top-lines (group "top"))
-     (define bottom-lines (group "bottom"))
+     (define bottom-lines (if (pair? undo-lines) undo-lines (group "bottom")))
      (define top-n (length top-lines))
      (define sh (max 3 (- height top-n (length bottom-lines))))
      (define left-names
@@ -260,7 +261,7 @@
        (string-append (draw-at top-lines 1 1)
                       (if (null? lines-l) "" (draw-at lines-l (+ top-n 1) 1))
                       (if (null? lines-r) "" (draw-at lines-r (+ top-n 1) (max 1 (- width 4))))))
-     (define line? (string=? place "line"))
+     (define line? (and (string=? place "line") (null? undo-lines)))
      (bar-plan (if (and docked? (pair? lines-l)) 5 0)
                (if (and docked? (pair? lines-r)) 5 0)
                top-n
@@ -358,3 +359,32 @@
 
 (provide git-stale! (struct-out bar-plan)
          bar-plan-of)
+
+;; undo-table holds the real commands of the undo layer; undo.rkt fills it when it is loaded.
+(define undo-table (make-hash))
+
+;; undo-rows-hook answers the rows of the undo panel for a width and a height; undo.rkt sets it.
+(define undo-rows-hook (box (lambda (width height) null)))
+
+;; undo-path is the undo module beside this file, or false.
+(define undo-path
+  (let ([src (variable-reference->module-source (#%variable-reference))])
+    (and (path? src)
+         (let-values ([(base name dir?) (split-path src)])
+           (and (path? base) (simplify-path (build-path base "undo.rkt")))))))
+
+;; undo-stub makes a command that loads the undo module on first use and then runs the real command.
+(define (undo-stub name)
+  (lambda (session words)
+    (with-handlers ([void (lambda (e) (cons #t (format "undo failed: ~a" (if (exn? e) (exn-message e) e))))])
+      (when undo-path (dynamic-require undo-path #f))
+      (let ([f (hash-ref undo-table name #f)])
+        (if f (f session words) (cons #t "undo is not available"))))))
+
+;; The undo commands enter the command table as stubs, so the keys and the gate see them at once.
+(for ([name (in-list (list "undo-mode" "undo-back" "undo-forward" "undo-up" "undo-down"
+                           "undo-branch-back" "undo-branch-forward" "undo-tip" "undo-mark"
+                           "undo-unmark" "undo-diff" "undo-live" "undo-keep" "undo-cancel"))])
+  (hash-set! commands name (undo-stub name)))
+
+(provide undo-table undo-rows-hook)

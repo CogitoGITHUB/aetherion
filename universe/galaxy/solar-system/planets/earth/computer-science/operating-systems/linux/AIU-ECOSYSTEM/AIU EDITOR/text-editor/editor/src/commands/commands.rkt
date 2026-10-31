@@ -478,3 +478,6 @@
 (define unsaved (box #f))
 
 (provide unsaved)
+
+;; The editor pieces that the undo layer needs: the hot path request, the text, the layer, the point and the file.
+(provide ask session-text set-layer! the-point session-file)

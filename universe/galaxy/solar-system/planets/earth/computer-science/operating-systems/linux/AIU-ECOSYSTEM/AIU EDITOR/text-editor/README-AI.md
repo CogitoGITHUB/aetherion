@@ -1,4 +1,4 @@
-AI: READ SECTION 19 AT THE END FIRST, then 18. Then section 0.
+AI: READ SECTIONS 20 AND 19 AT THE END FIRST, then 18. Then section 0.
 
 # AIU EDITOR: guide for AI agents
 
@@ -129,7 +129,7 @@ Source of truth: `keymaps.rkt` (`normal-keys`, `insert-keys`, `select-keys`, `mo
 
 | Layer | Trigger | Keys (command) |
 |---|---|---|
-| visual | space | w block-edit, i block-text, h block-up, t block-down, n move-left, s move-right, m block-move-mode, backspace delete, escape visual-mode, space f write-mode, space v select-mode, space s save, space q quit, space u level-up, space ? explorer, space g send, space b bar-mode, space t tab-mode, space z focus-toggle, space / find-mode, a any, p paragraph, e section, c code, k comment, l title, x todo, o todo open, d todo done, space k check, space n next-block, space e block-end |
+| visual | space | w block-edit, i block-text, h block-up, t block-down, n move-left, s move-right, m block-move-mode, backspace delete, escape visual-mode, space f write-mode, space v select-mode, space s save, space q quit, space u undo-mode, space ? explorer, space g send, space b bar-mode, space t tab-mode, space z focus-toggle, space / find-mode, a any, p paragraph, e section, c code, k comment, l title, x todo, o todo open, d todo done, space k check, space n next-block, space e block-end |
 | write | tab | tab tab mode, tab s save, tab b blocks, escape leave-write, up move-up, down move-down, left move-left, right move-right, backspace delete |
 | select | space | space space mode, space v visual-mode, escape visual-mode |
 | move | space | h block-move-up, t block-move-down, escape visual-mode |
@@ -249,7 +249,7 @@ Run from the `text-editor` folder.
 
 | Task | Command |
 |---|---|
-| Compile | `PLTCOMPILEDROOTS="$HOME/aiu-compiled" raco make editor/src/entry/cli.rkt` (full path of raco: `/root/home/shape/opt/racket-full/bin/raco`) |
+| Compile | `PLTCOMPILEDROOTS="$HOME/aiu-compiled" raco make editor/src/entry/cli.rkt editor/src/dashboard/undo.rkt` (full path of raco: `/root/home/shape/opt/racket-full/bin/raco`) |
 | Gate | `nu gate/check.nu` (17 stages) |
 | Open a file | `aiutd FILE` |
 | Home screen | `aiutd` |
@@ -295,6 +295,9 @@ line above every definition.
 | open | try by hand: the picks in visual (a p e c k l x o d), h and t by pick, the sub-mode in the bar and in the one line |
 | open | after moving blocks the cursor cannot land on the todo tray of a box, so the todo cannot be selected from its box |
 | open | try by hand: the bar (space b), the tabs (space t), focus (space z), find (space /) and the red-only colour |
+| open | copy and paste inside the editor (select, copy, paste, between files and tabs): none exists, text is copied only with the terminal selection |
+| open | after copy and paste exists: update undo mode (section 20) so that copy in an old version and paste in the live file use it |
+| open | try by hand: undo mode (space u): h t, n s, a w e, m u d, l, k, escape, and the tree after a branch |
 | done | first paint 0.8 s, lazy send, background home scan, gate green with 17 stages |
 
 ## 9. Traps
@@ -578,3 +581,16 @@ Errors of the undo commit go to ~/.aiu-undo-error.txt. The old folder ~/.aiu-und
 ## 19. Save and commit by hand (2026-10-31 night, owner decision)
 
 Autosave and the automatic undo commit are gone. A keystroke only edits and marks `unsaved`. Space s (and tab s, and escape in the write layer) saves, clears `unsaved`, refreshes git once and makes one undo commit on aiu-undo. The bar has a part `save` instead of git: it shows only while there are unsaved edits. Details in the section Save and commit by hand. Removed: `save-after`, `shadow-path` and `shadow-note!` in `hot-path.rkt`. Still to try by hand: type and delete (must be instant), SPC s, the reminder in the bar, the strips and the one line.
+
+## 20. Undo mode (space u), drawn like vundo, kept in git (2026-10-31 night)
+
+Space u opens the undo layer (it replaced the more-rows key; the command level-up still exists, unbound). Code: `dashboard/undo.rkt`, loaded on first use through the stubs at the end of `bar.rkt` (`undo-stub`, `undo-table`, `undo-rows-hook`); the keys are `undo-keys` in `keymaps.rkt`; the panel is drawn at the bottom by `bar-plan-of` in place of the bar. Build it with `raco make editor/src/entry/cli.rkt editor/src/dashboard/undo.rkt` (undo.rkt is not in `compile-deps` of `cli.rkt`; compile it by hand after changing it).
+
+- The nodes are the commits of the branch aiu-undo that touch the open file. Opening the layer first saves and commits unsaved work (`shadow-commit-now!`), so every state is a node. A tree is drawn horizontally: first child on the row of its parent, other branches below with a branch mark.
+- A save commits on top of the CURRENT node of the file (kept in `<gitdir>/aiu-undo-cur-<key>`, key from `shadow-key`), so a save after an undo makes a branch. A tip that would be lost is kept as `refs/aiu-undo-old/<commit>`. The tree is read with `git rev-list --parents aiu-undo --glob=refs/aiu-undo-old/* -- FILE`.
+- Keys: h back, t forward, n branch above, s branch below (at a branch point), a last branch point, w next branch point, e end of the branch, m mark, u unmark, d diff to the mark or the parent (any key closes it), arrows move the point in the old text, l go to the live file, k keep this version (it becomes the current node and the file), escape roll back. Enter is not bound: the key name was not checked.
+- Moving shows the old text in the page at once (delete-at and insert-at on the whole text, one request pair per move, only while this layer is open).
+- l: the live text comes back, the write layer opens at the old live point so you can paste what you copied with the terminal selection, and the node and the point you were at are remembered. Escape saves and commits; the next space u opens on that same node and point.
+- AIU_NO_UNDO switches the commits off, then the layer says there are no versions.
+
+Todo for this section: copy and paste inside the editor does not exist yet (see the todo table); when it does, update undo mode to use it.
