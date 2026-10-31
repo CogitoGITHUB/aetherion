@@ -609,6 +609,25 @@
   (set-layer! session "visual")
   (cons #t "saved"))
 
+;; bv-near answers the path of a module found from the folder of this one, or false.
+(define (bv-near . parts)
+  (let ([src (variable-reference->module-source (#%variable-reference))])
+    (and (path? src)
+         (let-values ([(base file dir?) (split-path src)])
+           (and (path? base) (simplify-path (apply build-path base parts)))))))
+
+;; bv-after-write runs once when the write layer is left: the git row and strip are marked old
+;; through edit-hook, and one undo commit is noted in a thread. Nothing runs while typing.
+(define (bv-after-write file)
+  (with-handlers ([void void])
+    (let ([hp (bv-near (quote up) "join" "hot-path.rkt")])
+      (when hp ((unbox (dynamic-require hp (quote edit-hook))))))
+    (let ([sh (bv-near "shadow.rkt")])
+      (when (and sh file)
+        (thread (lambda ()
+                  (with-handlers ([void void])
+                    ((dynamic-require sh (quote shadow-note!)) file))))))))
+
 ;; The four keys are added to the command table when this module is loaded, so
 ;; the keys find them and the gate sees the same table the editor does.
 (hash-set! commands "block-up" bv-command-up)
@@ -618,7 +637,7 @@
 (hash-set! commands "block-move-up" bv-command-move-up)
 (hash-set! commands "block-move-down" bv-command-move-down)
 (hash-set! commands "block-move-mode" bv-command-move-mode)
-(hash-set! commands "leave-write" bv-command-leave-write)
+(hash-set! commands "leave-write" (lambda (session words) (let ([r (bv-command-leave-write session words)]) (bv-after-write (session-file session)) r)))
 
 ;; The block view, for the live screen above it.
 (provide block-overlay

@@ -1,15 +1,15 @@
 #lang racket/base
-;; shadow.rkt: undo commits. After an autosave the saved file is committed on the branch
-;; aiu-undo of the git repository that holds it, one commit for each burst of edits.
-;; The branch is never checked out: each commit is built with git plumbing and a private
-;; temporary index file, so the real index, HEAD and work tree are never touched.
-;; Needs only racket/base and runs in threads, never on the key path.
+;; shadow.rkt: undo commits. When the write layer is left the saved file is committed on the
+;; branch aiu-undo of the git repository that holds it. The branch is never checked out: the
+;; commit is built with git plumbing and a private temporary index file, so the real index,
+;; HEAD and work tree are never touched. The editor starts ONE niced sh process for each
+;; commit; that sh starts the git programs. Needs only racket/base and runs in threads.
 
 ;; shadow-note! is the one entry point: it tells the worker that a file was saved.
 (provide shadow-note!)
 
 ;; quiet-ms is how long the files must stay unchanged before a commit is made.
-(define quiet-ms 1000)
+(define quiet-ms 500)
 
 ;; lock guards the state below.
 (define lock (make-semaphore 1))
@@ -23,11 +23,48 @@
 ;; worker is the running worker thread, or false.
 (define worker #f)
 
-;; git-exe is the git program, or false when it is not installed.
-(define git-exe (find-executable-path "git"))
+;; sh-exe is the shell program, or false.
+(define sh-exe (find-executable-path "sh"))
 
-;; zero-id is the old value that update-ref needs when the branch does not exist yet.
-(define zero-id "0000000000000000000000000000000000000000")
+;; nice-exe is the program that lowers the priority of a command, or false.
+(define nice-exe (find-executable-path "nice"))
+
+;; commit-script is the shell program of one undo commit; it gets the saved file as its argument.
+(define commit-script #<<END
+fail() { echo "$1" >&2; }
+g() { git -c commit.gpgsign=false -c user.name=aiu-undo -c user.email=aiu-undo@localhost "$@"; }
+f="$1"
+cd "$(dirname "$f")" || exit 0
+info=$(git rev-parse --absolute-git-dir --show-toplevel --show-prefix --symbolic-full-name HEAD 2>/dev/null) || exit 0
+gitdir=$(printf "%s\n" "$info" | sed -n 1p)
+top=$(printf "%s\n" "$info" | sed -n 2p)
+prefix=$(printf "%s\n" "$info" | sed -n 3p)
+head=$(printf "%s\n" "$info" | sed -n 4p)
+if [ "$head" = "refs/heads/aiu-undo" ]; then fail "HEAD is on aiu-undo, no undo commit was made"; exit 0; fi
+cd "$top" || exit 0
+rel="$prefix$(basename "$f")"
+idx="$gitdir/aiu-undo-index-$$"
+gi() { GIT_INDEX_FILE="$idx" git -c commit.gpgsign=false -c user.name=aiu-undo -c user.email=aiu-undo@localhost "$@"; }
+work() {
+  parent=$(git rev-parse --verify -q "refs/heads/aiu-undo^{commit}")
+  if [ -n "$parent" ]; then gi read-tree "$parent" || { fail "read-tree failed"; return; }; fi
+  blob=$(git hash-object -w --no-filters -- "$f") || { fail "hash-object failed"; return; }
+  gi update-index --add --cacheinfo 100644 "$blob" "$rel" || { fail "update-index failed"; return; }
+  tree=$(gi write-tree) || { fail "write-tree failed"; return; }
+  if [ -n "$parent" ]; then old=$(git rev-parse "$parent^{tree}"); else old=$(git hash-object -t tree /dev/null); fi
+  if [ "$tree" = "$old" ]; then return; fi
+  stat=$(git diff --no-ext-diff --shortstat "$old" "$tree" -- "$rel")
+  ins=$(printf "%s" "$stat" | sed -n "s/.* \([0-9][0-9]*\) insertion.*/\1/p")
+  del=$(printf "%s" "$stat" | sed -n "s/.* \([0-9][0-9]*\) deletion.*/\1/p")
+  msg="$(basename "$f"): +${ins:-0} -${del:-0} lines"
+  if [ -n "$parent" ]; then new=$(g commit-tree "$tree" -p "$parent" -m "$msg"); else new=$(g commit-tree "$tree" -m "$msg"); fi
+  if [ -z "$new" ]; then fail "commit-tree failed"; return; fi
+  g update-ref -m aiu-undo refs/heads/aiu-undo "$new" "${parent:-0000000000000000000000000000000000000000}" || fail "update-ref failed"
+}
+work
+rm -f "$idx"
+END
+  )
 
 ;; log-error! writes a problem to a file, because nothing may be printed over the page.
 (define (log-error! text)
@@ -44,86 +81,19 @@
         (unless (eof-object? s) (write-string s out) (loop))))
     (get-output-string out)))
 
-;; chomp removes the line end from the end of a text.
-(define (chomp s)
-  (regexp-replace #rx"[\r\n]+$" s ""))
-
-;; git-run runs git in a folder, with an optional private index file, and answers
-;; a list of exit status, output text and error text.
-(define (git-run dir index . args)
-  (let ([env (environment-variables-copy (current-environment-variables))])
-    (when index
-      (environment-variables-set! env #"GIT_INDEX_FILE" (string->bytes/utf-8 index)))
-    (parameterize ([current-directory dir] [current-environment-variables env])
-      (let-values ([(sp out in err)
-                    (apply subprocess #f #f #f git-exe
-                           "-c" "commit.gpgsign=false" "-c" "user.name=aiu-undo"
-                           "-c" "user.email=aiu-undo@localhost" args)])
-        (close-output-port in)
-        (let* ([o (slurp out)] [e (slurp err)])
-          (close-input-port out)
-          (close-input-port err)
-          (subprocess-wait sp)
-          (list (subprocess-status sp) o e))))))
-
-;; git-try answers the output of a git call without its line end, or false when it failed.
-(define (git-try dir index . args)
-  (let ([r (apply git-run dir index args)])
-    (and (zero? (car r)) (chomp (cadr r)))))
-
-;; git-need answers the output of a git call, or raises an error that holds git messages.
-(define (git-need dir index . args)
-  (let ([r (apply git-run dir index args)])
-    (if (zero? (car r))
-        (chomp (cadr r))
-        (error (string-append "git " (car args) ": " (caddr r))))))
-
-;; stat->words turns a git shortstat line into the change text of the message.
-(define (stat->words stat)
-  (let ([ins (regexp-match #px"(\\d+) insertion" stat)]
-        [del (regexp-match #px"(\\d+) deletion" stat)])
-    (string-append "+" (if ins (cadr ins) "0") " -" (if del (cadr del) "0") " lines")))
-
-;; build-commit! adds the file to the tree of the branch aiu-undo and commits it when it changed.
-(define (build-commit! top gitdir full rel name)
-  (let ([index (path->string
-                (build-path gitdir (string-append "aiu-undo-index-"
-                                                  (number->string (current-milliseconds)))))]
-        [parent (git-try top #f "rev-parse" "--verify" "-q" "refs/heads/aiu-undo^{commit}")])
-    (dynamic-wind
-     void
-     (lambda ()
-       (when parent (git-need top index "read-tree" parent))
-       (let ([blob (git-need top #f "hash-object" "-w" "--no-filters" "--" full)])
-         (git-need top index "update-index" "--add" "--cacheinfo" "100644" blob rel)
-         (let* ([tree (git-need top index "write-tree")]
-                [old-tree (if parent
-                              (git-need top #f "rev-parse" (string-append parent "^{tree}"))
-                              (git-need top #f "hash-object" "-t" "tree" "/dev/null"))])
-           (unless (equal? tree old-tree)
-             (let* ([stat (git-need top #f "diff" "--shortstat" old-tree tree "--" rel)]
-                    [msg (string-append name ": " (stat->words stat))]
-                    [new (apply git-need top #f "commit-tree" tree "-m" msg
-                                (if parent (list "-p" parent) (list)))])
-               (git-need top #f "update-ref" "-m" "aiu-undo" "refs/heads/aiu-undo"
-                         new (or parent zero-id)))))))
-     (lambda () (with-handlers ([void void]) (delete-file index))))))
-
-;; commit-file! finds the repository of the file and commits it, or does nothing outside a repository.
+;; commit-file! runs the commit script for one file and logs whatever it says on stderr.
 (define (commit-file! full)
-  (when (and (file-exists? full) (regexp-match? #rx"^/" full))
-    (let-values ([(base name dir?) (split-path full)])
-      (let ([where (git-try base #f "rev-parse" "--absolute-git-dir" "--show-toplevel" "--show-prefix")])
-        (when where
-          (let* ([m (regexp-match #rx"^([^\n]*)\n([^\n]*)\n?([^\n]*)" where)]
-                 [gitdir (cadr m)]
-                 [top (caddr m)]
-                 [prefix (cadddr m)]
-                 [name-str (path->string name)]
-                 [head (git-try top #f "symbolic-ref" "-q" "HEAD")])
-            (if (equal? head "refs/heads/aiu-undo")
-                (log-error! "HEAD is on aiu-undo, no undo commit was made")
-                (build-commit! top gitdir full (string-append prefix name-str) name-str))))))))
+  (when (and sh-exe (file-exists? full) (regexp-match? #rx"^/" full))
+    (let-values ([(sp out in err)
+                  (if nice-exe
+                      (subprocess #f #f #f nice-exe "-n" "19" sh-exe "-c" commit-script "aiu-undo" full)
+                      (subprocess #f #f #f sh-exe "-c" commit-script "aiu-undo" full))])
+      (close-output-port in)
+      (let* ([o (slurp out)] [e (slurp err)])
+        (close-input-port out)
+        (close-input-port err)
+        (subprocess-wait sp)
+        (when (regexp-match? #rx"[^ \r\n]" e) (log-error! e))))))
 
 ;; commit-safe! commits one file and turns any error into a line in the error file.
 (define (commit-safe! full)
@@ -131,7 +101,7 @@
                    (lambda (e) (log-error! (if (exn? e) (exn-message e) "unknown error")))])
     (commit-file! full)))
 
-;; run-worker waits until the edits stop for quiet-ms, commits them, and ends when idle.
+;; run-worker waits until the notes stop for quiet-ms, commits them, and ends when idle.
 (define (run-worker)
   (let loop ()
     (sleep 0.25)
@@ -148,9 +118,9 @@
             [(null? due) (void)]
             [else (for-each commit-safe! due) (loop)]))))
 
-;; shadow-note! is called after every autosave with the saved file.
+;; shadow-note! is called when the write layer is left, with the saved file; AIU_NO_UNDO switches it off.
 (define (shadow-note! file)
-  (when (and git-exe (or (string? file) (path? file)))
+  (when (and sh-exe (not (getenv "AIU_NO_UNDO")) (or (string? file) (path? file)))
     (let ([full (path->string (path->complete-path file))])
       (call-with-semaphore
        lock

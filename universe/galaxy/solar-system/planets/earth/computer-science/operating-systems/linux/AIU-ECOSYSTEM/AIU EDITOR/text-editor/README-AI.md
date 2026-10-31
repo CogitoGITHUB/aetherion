@@ -185,7 +185,7 @@ In the visual layer the SPC popup has a box named pick with the keys a p e c k l
 
 ## Autosave
 
-Every hot path request that changes text (type, delete, delete-at, insert-at) is followed by a save of the same file (`ask-hot`, `join/hot-path.rkt`, `edit-ops`, `save-after`), so git sees the change. `edit-hook` then marks the git row (`git-stale!`, bar.rkt) and the git strip (`gutter-stale!`, gutter.rkt) old, and the next paint asks git again. The 4 s wait applies only to the first git ask. The journal is cleared on every save; the history is kept in the history file (section 14).
+Every hot path request that changes text (type, delete, delete-at, insert-at) is followed by a save of the same file (`ask-hot`, `join/hot-path.rkt`, `edit-ops`, `save-after`), so git sees the change. `edit-hook` is not called by save-after any more: `leave-write` calls it (section 17), so the git row and strip ask git once after the write layer is left, never while typing. The 4 s wait applies only to the first git ask. The journal is cleared on every save; the history is kept in the history file (section 14).
 
 ## Git row and git in the tabs
 
@@ -540,14 +540,18 @@ Owner decision (2026-10-31). It replaces the copies in /tmp as the way to backtr
 All of the above goes inside the one bash -c block, with git commands joined by semicolons or on separate lines, nothing after the closing quote, no single quote inside, and git messages in double quotes.
 
 
-## 17. Undo commits on the branch aiu-undo (step 1 of section 15, rebuilt 2026-10-31)
+## 17. Undo commits on the branch aiu-undo (rebuilt 2026-10-31)
 
-Code: `editor/src/dashboard/shadow.rkt` (file name kept, racket/base only). `save-after` in `join/hot-path.rkt` calls `shadow-note!` with the saved file; that starts a thread which loads the module on first use. It is listed in `compile-deps` of `entry/cli.rkt`, so raco make builds it. One worker commits 1 s after the last note, so a burst of typing is one commit.
+Rule from the owner: nothing runs while typing. A keystroke does the edit and the save and nothing else. Git (the git row and the git strip) and the undo commit run once, when the write layer is left with escape (`leave-write`). Reason: with git calls after every save, typing and deleting lagged; with git switched off it was instant.
 
-The commits go on the branch `aiu-undo` of the git repository that holds the saved file. The branch starts empty and shares no history with main, so plain git log on main never shows it. Read it with `git log aiu-undo`, or `git log aiu-undo -- FILE` for one file. The editor never checks it out. Each commit is built with plumbing and a private temporary index file in the git folder (read-tree of the branch, hash-object, update-index, write-tree, commit-tree, update-ref), so the real index, HEAD and work tree are never touched. If HEAD is on aiu-undo the commit is skipped and logged. A file outside a git repository is skipped. The message is NAME: +A -D lines. No change, no commit. Errors go to `~/.aiu-undo-error.txt`, never to the screen.
+Code: `bv-after-write` in `dashboard/blockview.rkt` is called by the leave-write command. It calls `edit-hook` (from `join/hot-path.rkt`, found with dynamic-require, so no new require) which marks the git row and strip old, and it notes the saved file for `dashboard/shadow.rkt` in a thread. `save-after` in `hot-path.rkt` no longer calls `edit-hook`. `shadow.rkt` is loaded on first use and is listed in `compile-deps` of `entry/cli.rkt`. One worker waits 0.5 s after the note, then starts ONE niced sh process for each file (the string `commit-script` in `shadow.rkt`); that sh starts the git programs.
 
-Decisions: branch inside the main repo (the owner preferred it to a separate shadow repository, which was deleted), one commit per debounced burst, history file kept. git push --all would push the branch, so push it only on purpose.
+The commits go on the branch `aiu-undo` of the git repository that holds the file. The branch starts empty and shares no history with main, so plain git log on main never shows it. Read it with `git log aiu-undo`, or `git log aiu-undo -- FILE`. The editor never checks it out. Each commit uses plumbing and a private temporary index file in the git folder (read-tree of the branch, hash-object, update-index, write-tree, commit-tree, update-ref), so the real index, HEAD and work tree are never touched. If HEAD is on aiu-undo the commit is skipped and logged. A file outside a git repository is skipped. The message is NAME: +A -D lines. No change, no commit. Errors go to `~/.aiu-undo-error.txt`.
+
+Switch: with AIU_NO_UNDO set in the environment of aiutd the editor makes no undo commits.
+
+Only escape in the write layer triggers it so far. Tab tab, quit while writing and a tab switch do not yet: ask the owner. A git strip refresh now happens only after escape, so marks can be old while writing. Dead code left in hot-path.rkt: `shadow-path` and `shadow-note!` (unused, remove later).
+
+Decisions: branch inside the main repo (a separate shadow repository was tried and deleted), one commit for each write session, history file kept. git push --all would push the branch, so push it only on purpose.
 
 Not built yet: undo and redo keys, the tree view, branches for edits after an undo, the block name in the message, worktrees, pruning.
-
-Interim 2026-10-31: the shadow-note! call was taken out of save-after, so nothing commits while typing. It will be wired to leave-write (escape in the write layer).
