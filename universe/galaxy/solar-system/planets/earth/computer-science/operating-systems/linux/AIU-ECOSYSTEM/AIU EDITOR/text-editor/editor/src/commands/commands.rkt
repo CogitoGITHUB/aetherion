@@ -47,11 +47,6 @@
 (define (command-save session words)
   (cons #t (answer-line (ask session "save" (hasheq)))))
 
-;; command-show answers the text as it stands: the file with the journal's
-;; unsaved edits on top.
-(define (command-show session words)
-  (cons #t (answer-line (ask session "show" (hasheq)))))
-
 ;; command-journal answers the journal's records: every edit, in order.
 (define (command-journal session words)
   (cons #t (answer-line (ask session "journal" (hasheq)))))
@@ -183,13 +178,6 @@
   (set-layer! session "select")
   (cons #t "layer: select"))
 
-;; commands is the table: one name, one function. The keys are compared
-;; as text, so a name typed on the keyboard finds its function. The table
-;; is MUTABLE: an area above this one may add its own command to it.
-;; command-level-down hides one level of the editor's own rows.
-(define (command-level-down session words)
-  (cons #t (format "level: ~a" (set-level! session (max 0 (- (the-level session) 1))))))
-
 ;; command-level-up shows one level more of the editor's own rows.
 (define (command-level-up session words)
   (cons #t (format "level: ~a" (set-level! session (min 3 (+ (the-level session) 1))))))
@@ -241,17 +229,6 @@
           [else (cons #t "the point is past the last block")]))
       (cons #t (page-refusal-text got))))
 
-;; command-prev-block moves the point to the start of the block before it.
-(define (command-prev-block session words)
-  (define got (page-of (session-file session) (session-journal session)))
-  (if (page? got)
-      (let ([b (block-start-before got (the-point session))])
-        (cond
-          [b (move-to session (block-start b))
-             (cons #t (format "the block: ~a at line ~a" (block-name b) (block-start-line b)))]
-          [else (cons #t "the point is before the first block")]))
-      (cons #t (page-refusal-text got))))
-
 ;; command-block-end moves the point to the end of the block it is in, so a
 ;; person can see where the block closes.
 (define (command-block-end session words)
@@ -263,17 +240,6 @@
              (cons #t (format "the end of ~a is line ~a" (block-name b) (block-end-line b)))]
           [else (cons #t "the point is outside every block")]))
       (cons #t (page-refusal-text got))))
-
-;; command-view answers the page the way the layer asks for it: outside the
-;; write layer the page is rendered and its block markers are gone; in the
-;; write layer the text is answered as it is, markers and all, because that is
-;; what the keys edit. A file that is not a page answers its text.
-(define (command-view session words)
-  (define file (session-file session))
-  (if (and (string-suffix? (path->string file) ".aiu")
-           (not (string=? (the-layer session) "write")))
-      (cons #t (render-of file (session-journal session)))
-      (cons #t (answer-line (ask session "show" (hasheq))))))
 
 ;; command-kind answers what kind of file this session edits: an AIU NOTATION
 ;; page by its extension, or plain text. The extension is the whole test, and
@@ -291,7 +257,6 @@
   (hash "insert" command-insert-words
                            "type" command-type
                            "save" command-save
-                           "show" command-show
                            "journal" command-journal
                            "replay" command-replay
                            "help" command-help
@@ -307,7 +272,6 @@
                            "visual-mode" command-visual-mode
                            "write-mode" command-write-mode
                            "select-mode" command-select-mode
-                           "level-down" command-level-down
                            "level-up" command-level-up
                            "view-up" command-view-up
                            "view-down" command-view-down
@@ -315,10 +279,8 @@
                            "block" command-block
                            "check" command-check
                            "next-block" command-next-block
-                           "prev-block" command-prev-block
                            "block-end" command-block-end
-                           "kind" command-kind
-                           "view" command-view))
+                           "kind" command-kind))
 
 ;; commands is the table: one name, one function. The keys are compared
 ;; as text, so a name typed on the keyboard finds its function. The table
@@ -488,3 +450,16 @@
 
 ;; move-to is shared with the block view, which puts the point back inside a block.
 (provide move-to)
+
+;; kind-filter holds the kind of block that block-up and block-down move between: any, a block name, todo, todo open or todo done. The bar shows it.
+(define kind-filter (box "any"))
+
+;; mode-label answers the sub-mode shown in the mode line: visual selection in
+;; the select layer, visual navigation when a pick other than any is active,
+;; visual general otherwise, and the layer name for every other layer.
+(define (mode-label layer)
+  (cond [(string=? layer "select") "visual selection"]
+        [(string=? layer "visual") (if (string=? (unbox kind-filter) "any") "visual general" "visual navigation")]
+        [else layer]))
+
+(provide kind-filter mode-label)

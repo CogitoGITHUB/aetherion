@@ -18,8 +18,8 @@
 ;; raw, and the next run gives it back before it goes raw again.
 
 (require racket/list
-         racket/path
-         racket/port
+         racket/path racket/port
+         racket/path racket/port
          racket/string
          "../narration/print-console.rkt"
          "../commands/commands.rkt"
@@ -38,6 +38,9 @@
          "../dashboard/bar.rkt"
          "../dashboard/tabs.rkt"
          "../dashboard/finder.rkt"
+         "../dashboard/notify.rkt"
+         "../dashboard/gutter.rkt"
+         "../dashboard/gutterview.rkt"
          (only-in "../machine/directories.rkt" journal-path-for))
 
 ;; live-session runs the live session on a file: the terminal goes raw, the keys
@@ -70,6 +73,8 @@
             (set-box! find-jump #f)
             (move-to session (line-start-offset (session-text session) ln))))
         (set-box! home-repaint (lambda () (repaint session viewport)))
+        (set-box! notify-repaint (lambda () (repaint session viewport)))
+        (set-box! edit-hook (lambda () (gutter-stale!) (git-stale!)))
         (repaint session viewport)
         (start-home-scan)
         (key-loop session (current-input-port) viewport)
@@ -165,25 +170,169 @@
                              (equal? (take s (length pending)) pending))))
       (cons (string-join (map kname (drop (sequence-of (car b)) (length pending))) " ")
             (cadr b))))
-  (define pair-rows
-    (let loop ([ps following])
-      (cond
-        [(null? ps) null]
-        [(null? (cdr ps)) (list (list (car (car ps)) (cdr (car ps)) "" ""))]
-        [else (cons (list (car (car ps)) (cdr (car ps)) (car (cadr ps)) (cdr (cadr ps)))
-                    (loop (cddr ps)))])))
-  (define mode-rows
-    (for/list ([l (in-list editor-layers)])
-      (define t (assoc l trigger-of))
-      (list (string-append (if (string=? l layer) "> " "  ") l)
-            (enter-key l)
-            (if t (kname (cdr t)) "-"))))
+  (define reachable
+    (for/list ([l (in-list editor-layers)] #:when (not (string=? (enter-key l) "-"))) l))
+  (define switch-to (filter (lambda (l) (not (string=? l layer))) reachable))
+  (define mode-rows (menu-mode-rows switch-to width))
+  (define shown
+    (filter (lambda (p) (not (menu-mode-key? (cdr p) reachable))) following))
+  (define key-width (apply max (cons 1 (map (lambda (p) (string-length (car p))) shown))))
+  (define names (remove-duplicates (map (lambda (p) (menu-group-of (cdr p))) shown)))
+  (define ordered (sort names < #:key menu-group-rank))
+  (define group-boxes
+    (append*
+     (for/list ([g (in-list ordered)])
+       (define cells
+         (for/list ([p (in-list shown)] #:when (string=? (menu-group-of (cdr p)) g))
+           (string-append (cell-pad (car p) key-width) "  " (menu-label-of (cdr p)))))
+       (menu-box g (menu-cells cells (- width 8)) (- width 4)))))
+  (define pick-cells
+    (for/list ([b (in-list (keys-of "visual"))] #:when (and (regexp-match? #rx"^kind-" (cadr b)) (not (regexp-match? #rx" " (car b)))))
+      (string-append (car b) "  " (menu-label-of (cadr b)))))
+  (define pick-boxes
+    (if (string=? layer "visual") (menu-box "pick · h t move between" (menu-cells pick-cells (- width 8)) (- width 4)) null))
+  (define after     (if (null? pending) "keys" (format "keys after ~a" (string-join (map kname pending) " "))))
   (string-join
-   (append (grid (if (null? pending) (format "~a · keys" layer) (format "~a · keys after ~a" layer (string-join (map kname pending) " ")))
-                 (list "key" "command" "key" "command")
-                 pair-rows)
-           (grid "modes" (list "mode" "enter" "trigger") mode-rows))
+   (append (menu-table "modes · switch to" (car mode-rows) (cdr mode-rows) width)
+           (menu-box (format "~a [~a] · ~a" (mode-label layer) (unbox kind-filter) after) (append pick-boxes group-boxes) width))
    "\n"))
+
+;; menu-groups is the table of the menu: each command with the group box it sits in and the words it shows.
+(define menu-groups
+  (list (list "save" "file" "save") (list "quit" "file" "quit") (list "send" "file" "send")
+        (list "check" "file" "check")
+        (list "level-up" "page" "more rows")
+        (list "next-block" "blocks" "next")
+        (list "block-end" "blocks" "block end") (list "blocks" "blocks" "list")
+        (list "focus-toggle" "view" "focus") (list "explorer" "view" "explorer")
+        (list "block-up" "move" "block up") (list "block-down" "move" "block down")
+        (list "move-left" "move" "left") (list "move-right" "move" "right")
+        (list "move-up" "move" "up") (list "move-down" "move" "down")
+        (list "block-move-up" "move" "move block up") (list "block-move-down" "move" "move block down")
+        (list "block-edit" "edit" "edit raw") (list "block-text" "edit" "edit text")
+        (list "delete" "edit" "backspace")
+        (list "kind-any" "kind" "any block") (list "kind-paragraph" "kind" "paragraph")
+        (list "kind-section" "kind" "section") (list "kind-code" "kind" "code")
+        (list "kind-comment" "kind" "comment") (list "kind-title" "kind" "title")
+        (list "kind-todo" "todo" "any todo") (list "kind-todo-open" "todo" "open todo")
+        (list "kind-todo-done" "todo" "done todo")
+        (list "tab-prev" "go" "tab before") (list "tab-next" "go" "tab after")
+        (list "tab-open" "go" "open next page") (list "tab-close" "go" "close tab")
+        (list "bar-place-next" "place" "next place") (list "bar-bottom" "place" "bottom")
+        (list "bar-top" "place" "top") (list "bar-left" "place" "left")
+        (list "bar-right" "place" "right") (list "bar-sides" "place" "sides")
+        (list "tab-place-next" "place" "other place") (list "tab-top" "place" "top")
+        (list "tab-bottom" "place" "bottom") (list "tab-join" "place" "share edge")
+        (list "bar-style" "style" "docked or floating") (list "bar-hide" "style" "hide or show")
+        (list "tab-hide" "style" "hide or show")
+        (list "bar-less" "level" "hide one part") (list "bar-more" "level" "show one part")
+        (list "tab-less" "level" "hide one level") (list "tab-more" "level" "show one level")
+        (list "bar-level-mode" "level" "level adjuster") (list "tab-level-mode" "level" "level adjuster")
+        (list "leave-write" "leave" "save and leave") (list "mode" "leave" "other layer")))
+
+;; menu-group-order is the order of the group boxes; a group not named here comes last.
+(define menu-group-order
+  (list "file" "page" "blocks" "view" "move" "edit" "kind" "todo" "go" "place" "style" "level" "keys" "leave"))
+
+;; menu-group-of answers the group box of a command; a command not in the table sits in keys.
+(define (menu-group-of cmd)
+  (let ([e (assoc cmd menu-groups)]) (if e (cadr e) "keys")))
+
+;; menu-label-of answers the words shown for a command; a command not in the table shows its own name.
+(define (menu-label-of cmd)
+  (let ([e (assoc cmd menu-groups)]) (if e (caddr e) cmd)))
+
+;; menu-group-rank answers the place of a group box in the order.
+(define (menu-group-rank g)
+  (let ([i (index-of menu-group-order g)]) (or i (length menu-group-order))))
+
+;; menu-mode-key? asks whether a command enters one of the layers of the modes box, so its key shows there and not in the keys.
+(define (menu-mode-key? cmd layers)
+  (for/or ([l (in-list layers)]) (string-suffix? cmd (string-append l "-mode"))))
+
+;; menu-box draws lines inside a box of the given total width, with the title on the top edge.
+(define (menu-box title lines width)
+  (define inner (- width 4))
+  (define head (string-append "╭─ " title " "))
+  (define top (string-append head (make-string (max 0 (- width (string-length head) 1)) #\─) "╮"))
+  (append (list top)
+          (for/list ([l (in-list lines)]) (string-append "│ " (cell-pad l inner) " │"))
+          (list (string-append "╰" (make-string (- width 2) #\─) "╯"))))
+
+;; menu-mode-rows answers the headers and the rows of the modes table: one row for each mode with its key, or two modes side by side when the screen is wide enough. The first half of the modes stands on the left.
+(define (menu-mode-rows layers width)
+  (define pairs (map (lambda (l) (list l (enter-key l))) layers))
+  (define name-w (apply max (cons 4 (map (lambda (p) (string-length (car p))) pairs))))
+  (define key-w (apply max (cons 3 (map (lambda (p) (string-length (cadr p))) pairs))))
+  (define two? (and (> (length pairs) 1) (>= (- width 1) (* 2 (+ name-w key-w 6)))))
+  (cond
+    [two?
+     (define rows-n (quotient (+ (length pairs) 1) 2))
+     (define left (take pairs rows-n))
+     (define right (drop pairs rows-n))
+     (cons (list "mode" "key" "mode" "key")
+           (for/list ([i (in-range rows-n)])
+             (append (list-ref left i)
+                     (if (< i (length right)) (list-ref right i) (list "" "")))))]
+    [else (cons (list "mode" "key") pairs)]))
+
+;; menu-table draws a table with a ruled line between every column and a header row, as wide as the given width. The spare width goes to the mode columns.
+(define (menu-table title headers rows width)
+  (define n (length headers))
+  (define natural
+    (for/list ([i (in-range n)])
+      (apply max (map (lambda (r) (string-length (list-ref r i))) (cons headers rows)))))
+  (define extra (max 0 (- width (+ (apply + natural) (* 3 n) 1))))
+  (define name-cols (quotient (+ n 1) 2))
+  (define ws
+    (for/list ([w (in-list natural)] [i (in-naturals)])
+      (if (even? i)
+          (+ w (quotient extra name-cols) (if (< (quotient i 2) (remainder extra name-cols)) 1 0))
+          w)))
+  (define total (+ (apply + ws) (* 3 n) 1))
+  (define (line l m r)
+    (string-append l (string-join (map (lambda (w) (make-string (+ w 2) #\─)) ws) m) r))
+  (define (row cells)
+    (string-append "│"
+                   (string-join (for/list ([c (in-list cells)] [w (in-list ws)])
+                                  (string-append " " (cell-pad c w) " "))
+                                "│")
+                   "│"))
+  (define head (string-append "╭─ " title " "))
+  (define top (string-append head (make-string (max 0 (- total (string-length head) 1)) #\─) "╮"))
+  (append (list top (row headers) (line "├" "┼" "┤"))
+          (map row rows)
+          (list (line "╰" "┴" "╯"))))
+
+;; menu-float centers the lines of a menu in a screen of the given width by putting spaces in front of every line.
+(define (menu-float text width)
+  (define ls (string-split text "\n" #:trim? #f))
+  (define widest (apply max (cons 0 (map string-length ls))))
+  (define pad (make-string (max 0 (quotient (- width widest) 2)) #\space))
+  (string-join (map (lambda (l) (string-append pad l)) ls) "\n"))
+
+;; menu-screen answers the screen text and the point for an open menu: blank rows with the menu in the middle of the rows shown, and the point at the start of the menu so nothing scrolls.
+(define (menu-screen menu top height)
+  (define ms (string-split menu "\n" #:trim? #f))
+  (define visible (max 1 (- height 1)))
+  (define n (min (length ms) visible))
+  (define before (quotient (- visible n) 2))
+  (define lead (max 0 (sub1 top)))
+  (define (blank k) (for/list ([i (in-range k)]) ""))
+  (cons (string-join (append (blank lead) (blank before) (take ms n) (blank (- visible n before))) "\n")
+        (+ lead before)))
+
+;; menu-cells lays cells out in rows of equal columns that fit the inner width.
+(define (menu-cells cells inner)
+  (define cw (+ 2 (apply max (cons 1 (map string-length cells)))))
+  (define per (max 1 (quotient (+ inner 2) cw)))
+  (let loop ([cs cells])
+    (cond
+      [(null? cs) null]
+      [else
+       (define n (min per (length cs)))
+       (cons (string-trim (string-join (for/list ([c (in-list (take cs n))]) (cell-pad c cw)) "") #:left? #f)
+             (loop (drop cs n)))])))
 
 ;; repaint draws the screen under the paint lock.
 (define (repaint session viewport)
@@ -195,7 +344,9 @@
   (define plan
     (bar-plan-of session (unbox pending-keys) full-width full-height (and (home-screen) #t)
                  (lambda () ((unbox home-repaint)))))
-  (define width (- full-width (bar-plan-left plan) (bar-plan-right plan)))
+  (define gut? (and (not (home-screen)) (string-suffix? (path->string (session-file session)) ".aiu")))
+  (when gut? (gutter-refresh-maybe (session-file session) (lambda () ((unbox notify-repaint)))))
+  (define width (- full-width (bar-plan-left plan) (bar-plan-right plan) (if gut? 1 0)))
   (define height (+ 1 (- full-height (bar-plan-top plan) (bar-plan-bottom plan))))
   (define name (path->string (session-file session)))
   (define writing? (string=? (the-layer session) "write"))
@@ -210,30 +361,17 @@
           [writing? raw]
           [else (page-view session raw width)]))
   (define pending (unbox pending-keys))
-  (define menu (and (not home) (or (pair? pending) (member (the-layer session) (list "bar" "bar-level" "tab" "tab-level" "find"))) (menu-text (the-layer session) pending width)))
-  (define text (if overlay (car overlay) plain-text))
+  (define menu (and (not home) (or (pair? pending) (member (the-layer session) (list "bar" "bar-level" "tab" "tab-level" "find"))) (menu-float (menu-text (the-layer session) pending (min width 66)) width)))
+  (define text0 (if overlay (car overlay) plain-text))
+  (define text (if (and gut? (not writing?)) (gutter-apply session text0) text0))
   (define-values (row column) (point-line raw (the-point session)))
   (define plain-top
     (if writing? (viewport-top viewport row (max 1 (- height 1)))
         (add1 (the-view-top session))))
   (define top (if overlay (caddr overlay) plain-top))
-  ;; text-shown is the page with the menu drawn over its bottom rows, so the
-  ;; page the person is on stays on the screen above it.
+  ;; text-shown is the screen text. With a menu open it is a blank screen with the menu floating in the middle, so the page is hidden behind it.
   (define text-shown
-    (if menu
-        (let* ([ls (string-split text "\n" #:trim? #f)]
-               [ms (string-split menu "\n" #:trim? #f)]
-               [visible (max 1 (- height 1))]
-               [n (min (length ms) visible)]
-               [start (max 0 (+ (sub1 top) (- visible n)))]
-               [padded (if (< (length ls) start)
-                           (append ls (for/list ([i (in-range (- start (length ls)))]) ""))
-                           ls)])
-          (string-join (append (take padded start)
-                               (take ms n)
-                               (if (> (length padded) (+ start n)) (drop padded (+ start n)) (list)))
-                       "\n"))
-        text))
+    (if menu (car (menu-screen menu top height)) text))
   (define where
     (if (string-suffix? name ".aiu")
         (let ([got (page-of (session-file session) (session-journal session))])
@@ -243,12 +381,12 @@
               ""))
         ""))
   (display
-   (paint text-shown (if overlay (cadr overlay) (the-point session)) width height top
+   (paint text-shown (if menu (cdr (menu-screen menu top height)) (if overlay (cadr overlay) (the-point session))) width height top
           (if (bar-plan-line? plan) (format "~a  ~a  ~a:~a~a" (file-name-from-path (session-file session))
-                  (the-layer session) row column where) (bar-plan-text plan))
+                  (format "~a [~a]" (mode-label (the-layer session)) (unbox kind-filter)) row column where) (bar-plan-text plan))
           writing?
           (or (and home #t) (and menu #t) (and overlay #t) (and (not writing?) (string-suffix? name ".aiu")))
-          #:offset (bar-plan-top plan) #:left (bar-plan-left plan) #:full full-width #:overlay (bar-plan-overlay plan)))
+          #:offset (bar-plan-top plan) #:left (bar-plan-left plan) #:full full-width #:overlay (string-append (bar-plan-overlay plan) (notify-overlay width height (+ 1 (bar-plan-top plan))))))
   (flush-output))
 
 ;; viewport-top answers the first line shown at the top of the screen: the
@@ -369,6 +507,7 @@
         ;; writing and the page a reader is reading cannot change under the
         ;; key. The key is taken and nothing is said: the mode line already
         ;; names the layer, and a message over the page would break the frame.
+        (notify! "warn" (format "no key: ~a in ~a" (string-join names " ") (mode-label layer)))
         (outcome (drop-bytes buffer (list (car runs))) #t)]
        [(text-of (car names))
         ;; In the write layer a key that carries text IS the text: a space is
@@ -378,7 +517,7 @@
        [else
         ;; The first key means nothing to anybody: it is said out loud
         ;; and the rest of the bytes are kept.
-        (print-line (format "no key is bound to ~a" (car names)))
+        (notify! "warn" (format "no key: ~a in ~a" (string-join names " ") (mode-label layer)))
         (outcome (drop-bytes buffer (list (car runs))) #t)])]))
 
 ;; run-it runs one command and answers whether the session goes on. Nothing is
@@ -453,13 +592,10 @@
   (define words (string-split line))
   (define name (if (null? words) "" (car words)))
   (cond
-    [(member name (list "level-down" "level-up" "quit" "visual-mode"))
+    [(member name (list "level-up" "quit" "visual-mode"))
      (car (run-command session line))]
     [(string=? name "explorer")
      (set-box! home-explorer (not (unbox home-explorer)))
-     #t]
-    [(string=? name "view")
-     ((home-refresh))
      #t]
     [else #t]))
 

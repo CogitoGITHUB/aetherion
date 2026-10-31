@@ -12,7 +12,7 @@ loaded, you can type at once, and the rest of the editor arrives while you work.
 
 | Moment | What happens | Measured on the phone |
 |---|---|---|
-| first paint | the first lines of the file are drawn, with a mode line that says the editor is loading | 0.8 s (was 2.1 s) |
+| first paint | the first lines of the file are drawn, drawn as boxes, with no loading text | 0.8 s (was 2.1 s) |
 | while loading | keys you type wait in the terminal and run when the editor is ready; none are lost | a quit typed at once quits |
 | ready | the commands, the keys and the real screen | about 2 s |
 | first use | the send, audit and checkpoint code loads the first time you press the send key | on demand |
@@ -63,10 +63,10 @@ Visual layer (the page is read):
 
 | Key | Does |
 |---|---|
-| up, h | on a page: light the block before |
-| down, t | on a page: light the block after |
-| left, n | move the point left |
-| right, s | move the point right |
+| h | on a page: light the block before |
+| t | on a page: light the block after |
+| n | move the point left |
+| s | move the point right |
 | w | on a page: write the lit block as raw text, markers shown (see Block editing) |
 | i | on a page: edit only the text of the lit block, inside its drawn box |
 | m | the move layer |
@@ -76,8 +76,7 @@ Visual layer (the page is read):
 | space v | the select layer |
 | space s | save |
 | space q | quit |
-| space l | show |
-| space d, space u | show one level less or one level more of the rows of the editor (0 to 3) |
+| space u | show one level more of the rows of the editor (0 to 3) |
 | space ? | the explorer |
 | space g | send (loads its code on first use) |
 | space b | the bar layer (see Bar) |
@@ -85,21 +84,18 @@ Visual layer (the page is read):
 | space / | find with fzf (see Find) |
 | space z | focus mode: hide the bar, the tabs and the one line, and again to bring them back |
 | space k | check (pages) |
-| space n, p, e | next block, previous block, block end |
-| space r | view the page as a reader; on the home screen, scan again |
+| a p e c k l x o d | pick what h and t move between (see Pick) |
+| space n, e | next block, block end |
 | 1 to 9 | on the home screen, open that page |
-| space, then wait | pops up two tables over the bottom rows of the page: table 1 the keys that can follow in the active layer, table 2 the modes with the key that enters each and its trigger, both read from the key tables |
+| space, then wait | pops up a floating menu in the middle of the screen with the page hidden behind it: the modes you can switch to as a table with the key of each, and below it the keys of the active layer in boxes by group |
 
 Write layer (keys are text, tab is the trigger):
 
 | Key | Does |
 |---|---|
 | tab tab | back to the visual layer |
-| tab s, tab q | save, quit |
-| tab v | the visual layer |
-| tab b, tab k | blocks, check |
-| tab r | view |
-| tab n, tab p | next block, previous block |
+| tab s | save |
+| tab b | blocks |
 | escape | save, then back to the visual layer |
 | up, down, left, right | move the point |
 | backspace | take back the character before the point |
@@ -109,7 +105,6 @@ Select layer (reached with space v):
 | Key | Does |
 |---|---|
 | space space | the write layer |
-| space s, space q, space g | save, quit, send |
 | space v, escape | the visual layer |
 
 Move layer (reached with m):
@@ -146,7 +141,53 @@ other blocks, such as a section, has no text of its own: i then does the same
 as w. A block whose lines cannot be told from the drawing is lit as its parent
 block, and when no block can be told the key w opens the whole page to write.
 Space f writes the whole page raw. Space space is bound only in the select layer, and space w is not a key.
-A plain text file still scrolls with up and down.
+A plain text file still scrolls with h and t.
+
+## Pick
+
+In the visual layer plain keys pick what h and t move between: a any block, p paragraph, e section, c code, k comment, l title, x any todo, o open todo, d done todo. h and t never change. The mode line shows the sub-mode and the pick: visual general (pick any), visual navigation (any other pick), visual selection (the select layer), for example visual navigation [todo open]. The bar, its side strip and the one line show it. A todo is a paragraph with a todo: line; its state is the first word after todo: (done or open), no word is open.
+
+## Notifications
+
+Code: `editor/src/dashboard/notify.rkt` (racket/base and box.rkt only). `notify!` takes a level (info, warn, error) and a text; the box stays 2, 3 or 5 seconds, an identical text replaces the old one, at most 3 show. `notify-overlay` is added to the overlay of the paint in `repaint-now` (`live.rkt`), below a top bar or tabs, and a thread repaints through `notify-repaint` when one expires. An unbound key says no key and the keys of the sequence, with the sub-mode. Errors are drawn red.
+
+## Paint without flicker
+
+`paint` in `screen.rkt` no longer clears the screen. It homes the cursor, puts an erase of the line before every row (`erase-lines`) and wraps the frame in the synchronized update codes `sync-begin` and `sync-end` (`?2026h`, `?2026l`), which a terminal that does not know them ignores. The bar, the tabs and the page are overwritten in place, so nothing blanks between keys. `quick.rkt` still clears once for the first paint.
+
+## Popup pick box
+
+In the visual layer the SPC popup has a box named pick with the keys a p e c k l x o d, built from `normal-keys` (the commands that start with kind-). The title of the popup shows the sub-mode, for example visual general [any].
+
+## State after the session of 2026-10-31
+
+- Gate green, 17 stages. Kind layer removed: the picks are plain keys in visual (a p e c k l x o d), sub-modes visual general, visual navigation, visual selection, shown in the bar, the side strip, the one line and the SPC popup (a pick box and the sub-mode in the title).
+- Notifications: `dashboard/notify.rkt`, an unbound key shows a warn box top right instead of printing over the page.
+- Paint no longer sends the clear code: it homes the cursor, erases each line and wraps the frame in ?2026h and ?2026l (`screen.rkt`). Only `quick.rkt` clears, once. The timing loop that waits for the clear code still sees the first paint only.
+- `quick.rkt` draws an .aiu page as boxes through the notation binary (`boxed-lines`, subprocess only, raw text when it fails) and says nothing about loading. Keys typed meanwhile queue and run when the editor is ready.
+- machine/small.rkt exists but nothing requires it. The start path uses racket/path and racket/port. The swap felt slow on the phone, so measure a keypress before trying it again.
+- Open: the owner reported flicker and slow movement after the quick-screen and small.rkt changes. Test by hand after any paint or start change. If it returns, revert the flicker patch in screen.rkt next.
+- Open: still about 1.3 s from first paint to ready (json in protocol.rkt is needed for the first hot path message, so lazy json gains nothing; racket/path costs about 0.7 s, racket/port 0.4 s on this phone).
+
+## Hot path answer cache
+
+`ask-hot` in `join/hot-path.rkt` keeps the answers of the read requests notation, show, notation-render and notation-view, and clears all of them before and after any other request. A repaint asked the hot path 3 or more times per key (about 1.35 s a key on the phone); now it asks once. A new read-only operation may be added to `read-ops`; a new operation that changes text needs nothing.
+
+## Hot path answer cache
+
+`ask-hot` in `join/hot-path.rkt` keeps the answers of the read requests notation, show, notation-render and notation-view, and clears all of them before and after any other request. A repaint asked the hot path 3 or more times per key; now it asks once. A new read-only operation may be added to `read-ops`; an operation that changes text needs nothing. Measured before: about 0.33 s a key (20 keys 11.9 s, 0 keys 5.2 s).
+
+## Git waits after the first paint
+
+The git thread in `git-refresh-maybe` (`bar.rkt`) sleeps 4 s before it runs git. Found by timing: git started by the first repaint competed with the notation view call of the hot path on 2 cores, and that call took 1.8 s instead of 0.05 s, so the editor looked frozen and the first keys waited. Lesson: put a logging wrapper in AIU_NOTATION_BIN and a fake git on PATH to find who competes, before changing code.
+
+## Git strip
+
+`dashboard/gutter.rkt` keeps the hunks of `git diff -U0` for the open file, asked in a thread (4 s after the first ask, then every 15 s or when the file changes). `dashboard/gutterview.rkt` puts one column at the left of every drawn line of an .aiu page: plus for added, equals for changed, minus for removed, on the lines of each leaf block that a hunk touches (`bv-ranges`, exported by `blockview.rkt`, maps blocks to drawn lines). `repaint-now` in `live.rkt` takes one column off the page width for it. Lines are matched by the saved file, so unsaved edits can shift a mark until the next refresh. Only glyphs, no colour.
+
+## Autosave
+
+Every hot path request that changes text (type, delete, delete-at, insert-at) is followed by a save of the same file (`ask-hot`, `join/hot-path.rkt`, `edit-ops`, `save-after`), so git sees the change. `edit-hook` then marks the git row (`git-stale!`, bar.rkt) and the git strip (`gutter-stale!`, gutter.rkt) old, and the next paint asks git again. The 4 s wait applies only to the first git ask. Unsaved edits no longer exist in normal use; check what save does to the journal before relying on undo.
 
 ## Bar
 
@@ -169,8 +210,8 @@ Space t opens the tab layer, and the popup lists its keys. Every file you open s
 
 | Key | Does |
 |---|---|
-| h, left | the tab before |
-| t, right | the tab after |
+| h | the tab before |
+| t | the tab after |
 | o | open the next page of the folder of the active tab, as a new tab |
 | c | close the active tab (the last one stays) |
 | p | the other place: top or bottom |
@@ -220,15 +261,16 @@ No `compiled/` folder and no backup file may sit inside the tree.
 | done | gate green, 17 stages |
 | open | cut the 1.3 s between first paint and ready: `json` and `racket/port` load at start, replace them or load them later |
 | open | lower the priority of the background scan, so typing never stutters while it runs |
-| open | try the home keys by hand: space r, 1 to 9, space q |
+| open | try the home keys by hand: 1 to 9, space q |
 | open | try by hand that a page picked on the home screen opens as a normal session |
-| open | the quick screen shows an .aiu page as raw text until the editor is ready |
+| done | the quick screen draws an .aiu page as boxes (not tried by hand) |
 | open | the hot path binary lives in `/tmp`; rebuild it or set `AIU_HOT_PATH_BIN` if `/tmp` is cleared |
 | open | try the block cursor by hand: up and down, w, i, typing, escape |
 | open | the block cursor matches boxes to blocks by counting them level by level; a comment that wraps blocks may be drawn another way, and then its parent block is lit |
 | open | a raw line wider than the screen is wrapped at a space behind the left edge of its box while a block is edited |
 | open | the scan limits (800 pages, 8 repositories, 4 folders deep) are fixed in code |
 | open | the project and workspace rows of the tab bar show where the page is; they do not switch yet |
+| open | try by hand: the picks in visual (a p e c k l x o d), h and t by pick, the sub-mode in the bar and in the one line |
 | open | after moving blocks the cursor cannot land on the todo tray of a box, so the todo cannot be selected from its box |
 | open | try by hand: the bar (space b), the tabs (space t), focus (space z), find (space /) and the red-only colour |
 

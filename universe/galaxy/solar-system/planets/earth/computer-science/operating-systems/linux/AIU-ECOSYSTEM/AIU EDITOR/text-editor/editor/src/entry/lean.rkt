@@ -5,7 +5,7 @@
 ;; load when the send key is first pressed. Scripted runs and every other verb
 ;; use cli-full.rkt, which loads everything.
 
-(require racket/path
+(require racket/path racket/port
          "../machine/directories.rkt"
          "../commands/commands.rkt"
          "../dashboard/explorer.rkt"

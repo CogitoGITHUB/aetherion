@@ -68,13 +68,20 @@
     ("n" "move-left")
     ("s" "move-right")
     ("m" "block-move-mode")
+    ("a" "kind-any")
+    ("p" "kind-paragraph")
+    ("e" "kind-section")
+    ("c" "kind-code")
+    ("k" "kind-comment")
+    ("l" "kind-title")
+    ("x" "kind-todo")
+    ("o" "kind-todo-open")
+    ("d" "kind-todo-done")
     ("i" "block-text")
     ("space f" "write-mode")
     ("space v" "select-mode")
     ("space s" "save")
     ("space q" "quit")
-    ("space l" "show")
-    ("space d" "level-down")
     ("space u" "level-up")
     ("space ?" "explorer")
     ("space g" "send")
@@ -84,14 +91,8 @@
     ("space /" "find-mode")
     ("space k" "check")
     ("space n" "next-block")
-    ("space p" "prev-block")
     ("space e" "block-end")
-    ("space r" "view")
     ("escape" "visual-mode")
-    ("up" "block-up")
-    ("down" "block-down")
-    ("left" "move-left")
-    ("right" "move-right")
     ("backspace" "delete")))
 
 ;; insert-keys are the keys of the write layer. Here the keys are text,
@@ -103,13 +104,7 @@
 (define insert-keys
   '(("tab tab" "mode")
     ("tab s" "save")
-    ("tab q" "quit")
-    ("tab v" "visual-mode")
     ("tab b" "blocks")
-    ("tab k" "check")
-    ("tab r" "view")
-    ("tab n" "next-block")
-    ("tab p" "prev-block")
     ("escape" "leave-write")
     ("up" "move-up")
     ("down" "move-down")
@@ -121,9 +116,6 @@
 ;; and the selected text is what they act on.
 (define select-keys
   '(("space space" "mode")
-    ("space s" "save")
-    ("space q" "quit")
-    ("space g" "send")
     ("space v" "visual-mode")
     ("escape" "visual-mode")))
 
@@ -133,6 +125,7 @@
   (list (list "h" "block-move-up")
         (list "t" "block-move-down")
         (list "escape" "visual-mode")))
+
 
 ;; bar-keys are the keys of the bar layer: the places of the bar, the style, the
 ;; hide key and the key that enters the level adjuster.
@@ -161,8 +154,6 @@
 (define tab-keys
   (list (list "h" "tab-prev")
         (list "t" "tab-next")
-        (list "left" "tab-prev")
-        (list "right" "tab-next")
         (list "o" "tab-open")
         (list "c" "tab-close")
         (list "p" "tab-place-next")

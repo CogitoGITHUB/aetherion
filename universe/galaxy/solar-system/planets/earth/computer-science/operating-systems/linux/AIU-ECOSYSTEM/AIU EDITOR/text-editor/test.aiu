@@ -1,30 +1,205 @@
 title start
 kind: default
-tags: test editor
-Testing page for the editor itself
+tags: test editor introduction
+Welcome to AIU EDITOR: an introduction that is also a test page
 title end
 
-paragraph start 
-This page is a test. Open it with aiutd, then press space r to read it as a page and space k to check it. Space b opens the bar keys, space t the tab keys and space z hides all the bars and space / finds with fzf.
+paragraph start
+This page teaches the editor and tests it at once. You are looking at a page drawn as boxes. One block is lit at a time, and the keys below move it, edit it and pick what it moves between. Read a part, press the keys it names, and see the lit block change.
+paragraph end
+
+comment start
+Every key in this page works in the visual layer unless a part says otherwise. The mode line at the bottom shows where you are, for example visual general.
+comment end
+
+section start
+title start
+1. Moving between blocks
+title end
+
+paragraph start
+Press t to light the next block and h to light the one before it. The page scrolls to follow the lit block. Try it now: walk down this section and back up.
+paragraph end
+
+paragraph start
+Space n jumps to the next block and space e to the end of the block. Space u shows more rows of the editor.
 paragraph end
 
 section start
 title start
-Things to try
+Sections nest
 title end
 
 paragraph start
-todo: press w, type a line here, then press tab s to save
-The write layer is entered with w. In the write layer the tab key is the trigger.
+This paragraph sits in a section inside a section. The drawing numbers sections for you, and h and t walk into nested sections in page order.
+paragraph end
+
+section start
+title start
+Three levels deep
+title end
+
+paragraph start
+The deepest level in this page. If the lit block here matches the box you see, the level by level matching works.
+paragraph end
+section end
+section end
+section end
+
+section start
+title start
+2. Picking what h and t move between
+title end
+
+paragraph start
+Plain keys pick the kind of block. They change nothing but the pick, and h and t stay the movement keys. The mode line shows it, for example visual navigation [todo open].
 paragraph end
 
 code start
 language: text
-this block keeps its text exactly as typed
+a  any block (back to visual general)
+p  paragraph
+e  section
+c  code
+k  comment
+l  title
+x  any todo
+o  open todo
+d  done todo
 code end
 
+paragraph start
+Try it: press c and then t. Only the code blocks of this page are visited. Press a to go back to every block.
+paragraph end
+
 comment start
-A comment is a block too. This one is only a note for readers.
+Press k and walk: only comments are lit. Press l and walk: only titles are lit.
 comment end
 section end
-  
+
+section start
+title start
+3. Todos
+title end
+
+paragraph start
+todo: open press o, then t, and see that only open todos are visited
+An open todo is drawn in red with a tray under its box.
+paragraph end
+
+paragraph start
+todo: open press w on this block, change this line, then press escape to save
+The first word after todo: is the state: open or done.
+paragraph end
+
+paragraph start
+todo: press x and see that a todo with no word counts as open
+No word after the colon means open.
+paragraph end
+
+paragraph start
+todo: done press d and see that this done todo is visited
+A done todo has no red.
+paragraph end
+
+paragraph start
+todo: open the cursor cannot land on the todo tray after a block move
+This is a known bug, kept here as a real open todo.
+paragraph end
+section end
+
+section start
+title start
+4. Editing
+title end
+
+paragraph start
+Press w to edit the lit block as raw text, with its start and end lines. Press i to edit only its text inside the box. Escape saves and returns to visual general.
+paragraph end
+
+paragraph start
+Space f opens the whole page as text, the write layer. There the tab key is the trigger: tab s saves, tab b lists the blocks, tab tab switches layer and escape leaves.
+paragraph end
+
+code start
+language: text
+w          edit the block raw
+i          edit the text of the block
+backspace  delete one character
+escape     save and leave
+space s    save
+space f    write the whole page
+code end
+section end
+
+section start
+title start
+5. Moving blocks
+title end
+
+paragraph start
+Press m to move the lit block. Then h and t swap it with the sibling before or after it, and escape ends the move. Titles and answers never move.
+paragraph end
+
+paragraph start
+This paragraph is a good one to move. Press m, then t twice, then escape.
+paragraph end
+
+paragraph start
+And this one is its neighbour. It should swap places with the one above.
+paragraph end
+
+paragraph start
+Press n and s to move the point left and right inside the block.
+paragraph end
+section end
+
+section start
+title start
+6. The bar, the tabs and finding
+title end
+
+paragraph start
+Space b opens the bar keys: where the bar stands, how it looks and which parts it shows. Space t opens the tab keys: the tabs, the project row and the workspace row. Space z hides everything and brings it back.
+paragraph end
+
+paragraph start
+Space / finds with fzf: f for this file, p for the project, w for the workspace, then t for text, b for blocks, d for todos, n for files. A pick opens as a tab at the right line.
+paragraph end
+
+paragraph start
+Press space and wait: a popup lists the modes you can switch to and the keys that can follow.
+paragraph end
+
+code start
+language: text
+space b  bar keys
+space t  tab keys
+space z  focus: hide or show the bars
+space /  find with fzf
+space ?  explorer
+space k  check the page
+space g  send
+space q  quit
+code end
+section end
+
+section start
+title start
+7. The home screen
+title end
+
+paragraph start
+Start aiutd with no file and the home screen lists your pages. The keys 1 to 9 open that page, and space q quits.
+paragraph end
+
+code start
+language: nu
+aiutd test.aiu
+aiutd
+code end
+section end
+
+comment start
+End of the introduction. Press space k to check this page: a page that checks clean is a good sign for the whole editor.
+comment end

@@ -129,9 +129,11 @@
 (define (git-refresh-maybe dir again)
   (when (and (not (unbox git-busy)) (>= (- (current-seconds) (unbox git-stamp)) 20))
     (set-box! git-busy #t)
+    (define first? (zero? (unbox git-stamp)))
     (set-box! git-stamp (current-seconds))
     (thread
      (lambda ()
+       (when first? (sleep 4))
        (define row (with-handlers ([(lambda (e) #t) (lambda (e) "git unavailable")])
                      (git-facts dir)))
        (define changed? (not (equal? row (unbox git-info))))
@@ -147,7 +149,7 @@
   (define trig (let ([t (assoc layer trigger-of)]) (if t (cdr t) "-")))
   (define waiting
     (if (pair? pending) (format "  waiting after ~a" (string-join (map bar-kname pending) " ")) ""))
-  (define title (if (has? "mode") (format "~a · ~a" layer short) "bar"))
+  (define title (if (has? "mode") (format "~a [~a] · ~a" (mode-label layer) (unbox kind-filter) short) "bar"))
   (define stamp
     (string-join (filter values (list (and (has? "time") (clock-time)) (and (has? "date") (clock-date)))) "  "))
   (define middle
@@ -165,7 +167,7 @@
 ;; letter to a row.
 (define (cell-chars name layer g)
   (cond
-    [(string=? name "mode") layer]
+    [(string=? name "mode") (format "~a ~a" (mode-label layer) (unbox kind-filter))]
     [(string=? name "time") (clock-time)]
     [(string=? name "date") (clock-date)]
     [(string=? name "git") (git-letters g)]
@@ -341,5 +343,8 @@
 (hash-set! commands "focus-toggle" command-focus-toggle)
 
 ;; The bar, for the live screen above it.
-(provide (struct-out bar-plan)
+;; git-stale! makes the git row ask again at the next paint.
+(define (git-stale!) (set-box! git-stamp 1))
+
+(provide git-stale! (struct-out bar-plan)
          bar-plan-of)

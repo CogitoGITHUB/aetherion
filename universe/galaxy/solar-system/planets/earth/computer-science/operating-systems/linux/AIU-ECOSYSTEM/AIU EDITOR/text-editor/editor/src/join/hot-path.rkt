@@ -24,7 +24,7 @@
 ;; child is already running, so a key pays no program start. Every other
 ;; caller — a scripted session, a verb, a gate stage — has no wire, and
 ;; the question starts the child once, as it always did.
-(define (ask-hot op args)
+(define (ask-hot-raw op args)
   (define started (current-inexact-milliseconds))
   (define request (hasheq 'op op 'args args))
   (define live (current-wire))
@@ -37,11 +37,40 @@
               (inexact->exact (round (- (current-inexact-milliseconds) started)))))
   answer)
 
+;; edit-ops are the hot path operations that change the text; each one is saved at once.
+(define edit-ops (list "type" "delete" "delete-at" "insert-at"))
+
+;; edit-hook is called after an edit was saved; the live session puts a function here.
+(define edit-hook (box void))
+
+;; save-after answers nothing: it saves the file of a request that changed the text.
+(define (save-after args)
+  (when (and (hash-ref args (quote file) #f) (hash-ref args (quote journal) #f))
+    (ask-hot-raw "save" (hasheq (quote file) (hash-ref args (quote file)) (quote journal) (hash-ref args (quote journal)))))
+  ((unbox edit-hook)))
+
+;; read-ops are the hot path operations that only read, so their answers can be kept.
+(define read-ops (list "notation" "show" "notation-render" "notation-view"))
+
+;; kept-answers holds the answer of each read request until something changes the text.
+(define kept-answers (make-hash))
+
+;; ask-hot answers a request. A read is kept and served again; any other request
+;; clears every kept answer before and after it, so an edit is never shown stale.
+(define (ask-hot op args)
+  (cond
+    [(member op read-ops)
+     (let* ([key (cons op args)] [hit (hash-ref kept-answers key #f)])
+       (or hit (let ([got (ask-hot-raw op args)]) (hash-set! kept-answers key got) got)))]
+    [else
+     (hash-clear! kept-answers)
+     (let ([got (ask-hot-raw op args)]) (when (member op edit-ops) (save-after args)) (hash-clear! kept-answers) got)]))
+
 ;; hot-path-start-ms answers the hot path's measured start, or nothing
 ;; when the hot path has not been called yet.
 (define (hot-path-start-ms)
   (unbox first-call-ms))
 
 ;; The call that asks the hot path.
-(provide ask-hot
+(provide edit-hook ask-hot
          hot-path-start-ms)

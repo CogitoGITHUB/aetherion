@@ -29,6 +29,18 @@
 ;; the cursor and the whole screen would shift.
 (define clear-screen (string-append (ansi "2J") (ansi "H")))
 
+;; sync-begin and sync-end wrap one frame so a terminal that knows the
+;; synchronized update code shows it whole; others ignore both.
+(define sync-begin (ansi "?2026h"))
+;; the definition below belongs to the painter of the screen.
+(define sync-end (ansi "?2026l"))
+
+;; erase-lines puts an erase of the line before every line of a frame, so
+;; old text goes as the new text is written and the screen is never blanked.
+(define (erase-lines text)
+  (string-append (ansi "2K")
+                 (regexp-replace* #rx"\n" text (string-append "\n" (ansi "2K")))))
+
 ;; cursor-to answers a move to one row and one column, both 1-based.
 (define (cursor-to row column)
   (ansi (format "~a;~aH" row column)))
@@ -101,15 +113,12 @@
        (string-append pad (if preformatted? line (fit line width))))
      "\n"))
   (define foot (footer-string mode-line full))
-  (string-append clear-screen
-                 (make-string offset #\newline)
-                 body
-                 (if (string=? foot "") "" (string-append "\n" foot))
+  (string-append sync-begin (ansi "H") (erase-lines (string-append (make-string offset #\newline) body (if (string=? foot "") "" (string-append "\n" foot))))
                  overlay
                  (if cursor?
                      (string-append (ansi "?25h")
                                     (cursor-to (+ offset (- cursor-row top-line -1)) (+ left column 1)))
-                     (ansi "?25l"))))
+                     (ansi "?25l")) sync-end))
 
 ;; The painter, for the session above it.
 (provide paint

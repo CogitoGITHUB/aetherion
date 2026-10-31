@@ -327,7 +327,7 @@
   (cond
     [(not (page? got)) ((hash-ref commands fallback) session words)]
     [else
-     (define blocks (bv-drawn (page-blocks got)))
+     (define blocks (filter bv-kind-match? (bv-drawn (page-blocks got))))
      (define p (the-point session))
      (define current (bv-inside blocks p))
      (define here (if current (block-start current) #f))
@@ -624,3 +624,43 @@
 (provide block-overlay
          block-guard
          drawn-view)
+
+;; bv-todo-state answers done or open for the todo on a block, or false when the block holds no todo. The state is the first word after todo: and no word means open.
+(define (bv-todo-state b)
+  (define found
+    (filter (lambda (d) (member (decl-keyword d) (list "todo" "todo:")))
+            (block-decls b)))
+  (cond
+    [(null? found) #f]
+    [else
+     (define words (string-split (format "~a" (decl-value (car found)))))
+     (if (and (pair? words) (string=? (car words) "done")) "done" "open")]))
+
+;; bv-kind-match? asks whether a block is of the kind the kind layer picked.
+(define (bv-kind-match? b)
+  (define want (unbox kind-filter))
+  (cond
+    [(string=? want "any") #t]
+    [(string=? want "todo") (and (bv-todo-state b) #t)]
+    [(string=? want "todo open") (equal? (bv-todo-state b) "open")]
+    [(string=? want "todo done") (equal? (bv-todo-state b) "done")]
+    [else (string=? (block-name b) want)]))
+
+;; bv-kind-setter answers a command that picks one kind and says which.
+(define (bv-kind-setter want)
+  (lambda (session words)
+    (set-box! kind-filter want)
+    (cons #t (format "kind: ~a" want))))
+
+(for-each
+ (lambda (pair) (hash-set! commands (car pair) (bv-kind-setter (cdr pair))))
+ (list (cons "kind-any" "any")
+       (cons "kind-paragraph" "paragraph")
+       (cons "kind-section" "section")
+       (cons "kind-code" "code")
+       (cons "kind-comment" "comment")
+       (cons "kind-title" "title")
+       (cons "kind-todo" "todo")
+       (cons "kind-todo-open" "todo open")
+       (cons "kind-todo-done" "todo done")))
+(provide bv-ranges)
