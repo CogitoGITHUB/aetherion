@@ -204,13 +204,9 @@ fn main() {
 /// run holds one session from the first moment to the last.
 fn run(args: &[String]) -> Result<(), String> {
     let options = Options::read(args)?;
-    std::fs::create_dir_all(&options.state_dir).map_err(|why| {
-        format!(
-            "the state directory {} cannot be made: {}",
-            options.state_dir.display(),
-            why
-        )
-    })?;
+    // The state directory is the owner's alone (TODO item 51): 0700, and the
+    // files the session writes in it are 0600.
+    log::private_dir(&options.state_dir)?;
 
     let log_path = options.state_dir.join("events.log");
     let socket_path = options.state_dir.join("holder.sock");
@@ -233,7 +229,7 @@ fn run(args: &[String]) -> Result<(), String> {
         }
     }
 
-    let log = log::Log::open(&log_path)?;
+    let log = log::Log::open_with(&log_path, options.log_limit, log::KEEP_RECORDS)?;
     let listen_fd = bind(&socket_path)?;
 
     // The panes of the session: the layout file names them, or the smallest
@@ -290,6 +286,7 @@ fn run(args: &[String]) -> Result<(), String> {
             why
         )
     })?;
+    log::private_file(&pid_path)?;
 
     let mut measured: serde_json::Map<String, Value> = serde_json::Map::new();
     for (key, value) in measure::record(&session.panes[0].shell.measured) {
@@ -464,12 +461,52 @@ impl Session {
 
     /// write puts one record in the log and on every attached client's wire.
     /// A log that cannot be written ends the session: the log IS the record.
+    ///
+    /// The journal's bound is kept here: a log that passed the rule is trimmed,
+    /// and the trim is a record of its own, so what the journal let go is never
+    /// silent (TODO item 51).
     fn write(&mut self, record: &Value) {
         if let Err(why) = self.log.append(record) {
             eprintln!("holder: {}", why);
             std::process::exit(1);
         }
         self.broadcast(record);
+        if !self.log.over_limit() {
+            return;
+        }
+        let note = match self.log.trim() {
+            Ok(trimmed) => self.record(Fields {
+                kind: "info",
+                who: "holder",
+                what: "the journal was trimmed",
+                why: "the log passed the bound this session keeps to",
+                how: "the kept records were written beside the log, synced, and put \
+                      in place by a rename; the rule lives in holder/log.rs",
+                inputs: json!({ "limit-bytes": trimmed.limit }),
+                outputs: json!({
+                    "dropped": trimmed.dropped,
+                    "kept": trimmed.kept,
+                    "from-seq": trimmed.from,
+                    "to-seq": trimmed.to,
+                }),
+                result: json!({}),
+            }),
+            Err(why) => self.record(Fields {
+                kind: "fail",
+                who: "holder",
+                what: "the journal was not trimmed",
+                why: "the bound could not be kept, so the log grows past it",
+                how: "the trim was tried once and refused; the session goes on",
+                inputs: json!({ "limit-bytes": self.log.rule().0 }),
+                outputs: json!({ "bytes": self.log.size() }),
+                result: json!({ "why": why }),
+            }),
+        };
+        if let Err(why) = self.log.append(&note) {
+            eprintln!("holder: {}", why);
+            std::process::exit(1);
+        }
+        self.broadcast(&note);
     }
 
     /// broadcast sends one record to every attached client. A client that
@@ -1874,6 +1911,9 @@ struct Options {
     /// workspace is the workspace this session works on, when the owner
     /// names one. Empty means the only one there is.
     workspace: String,
+    /// log_limit is the bound the session's log keeps to, in bytes: the
+    /// shipped rule unless the owner says less (TODO item 51).
+    log_limit: u64,
 }
 
 impl Options {
@@ -1885,6 +1925,7 @@ impl Options {
         let mut rows: u16 = 24;
         let mut workspace_dir: Option<PathBuf> = None;
         let mut workspace = String::new();
+        let mut log_limit: u64 = log::LIMIT_BYTES;
         let mut at = 0;
         while at < args.len() {
             let name = args[at].clone();
@@ -1919,6 +1960,12 @@ impl Options {
                         .map_err(|_| "--cols wants a number of columns".to_string())?;
                     at += 2;
                 }
+                "--log-limit" => {
+                    log_limit = value
+                        .parse()
+                        .map_err(|_| "--log-limit wants a number of bytes".to_string())?;
+                    at += 2;
+                }
                 "--rows" => {
                     rows = value
                         .parse()
@@ -1927,7 +1974,9 @@ impl Options {
                 }
                 "--help" => {
                     println!(
-                        "holder --state-dir DIR [--shell PROGRAM] [--layout FILE] [--cols N] [--rows N] [--workspace-dir DIR] [--workspace NAME]"
+                        "holder --state-dir DIR [--shell PROGRAM] [--layout FILE] \
+                         [--cols N] [--rows N] [--log-limit BYTES] \
+                         [--workspace-dir DIR] [--workspace NAME]"
                     );
                     std::process::exit(0);
                 }
@@ -1944,6 +1993,7 @@ impl Options {
             rows,
             workspace_dir,
             workspace,
+            log_limit,
         })
     }
 }

@@ -41,6 +41,7 @@ that way.
 |---|---|
 | The holder: a shell on a pty, in a session that outlives its client | Implemented and verified |
 | The log: one append-only file per session, flushed per record | Implemented and verified |
+| The journal's bounds and its privacy | Implemented and verified: a written bound, a trim record that says what it let go, and 0700/0600 on the session's own files |
 | The socket: a unix socket in the session's state directory | Implemented and verified |
 | The client: attaches, asks, reads, detaches, holds nothing | Implemented and verified |
 | The panes and the layout file | Implemented and verified |
@@ -106,6 +107,20 @@ server, the tools, the envelope, the context bundle, the redaction seam).
 log, flushed per record, so a killed process leaves a readable prefix and not a torn
 record (rule 01, and decision D-006). A client that detaches leaves the shells running;
 a second client finds the same session and the same shells.
+
+**The journal's bounds.** The log is the record, so it cannot be unbounded and it cannot
+be edited in place. One session's log stays at or under four mebibytes, and when it passes
+that it is trimmed in one rewrite to the newest 2000 records — and only to as many of those
+as fit in half the bound, so neither the count nor the size can make the other useless. The
+kept part is written beside the log, synced, and put in place by a rename: a reader sees the
+old file whole or the new one whole, and a holder killed in the middle leaves the old log
+untouched. The trim is a record of its own — what it kept, what it let go and the seq the
+kept part starts at — so a reader asking for `--since 0` is told what the journal no longer
+holds instead of quietly getting less. The bound can be lowered on a small disk
+(`--log-limit BYTES`). Everything the session owns is the owner's alone: the state directory
+is 0700 and the files in it — the log, the pid, the socket — are 0600, set both when they
+are made and when they are opened, because a file made before this rule was written was
+0644.
 
 **The ops on the holder's socket.** One JSON object per line, both ways, and the ops are:
 `attach`, `detach`, `state`, `read`, `send`, `open`, `resize`, `rename`, `close`. A request
@@ -326,7 +341,7 @@ No timer anywhere: every wait ends on an event — a record, a socket answer, a 
 cd "AIU TERMINAL MULTIPLEXER/multiplexer"
 CARGO_TARGET_DIR=/tmp/opencode/mux-target cargo build --offline
 
-# the holder owns the session
+# the holder owns the session; the log keeps to 4 MiB unless --log-limit says less
 /tmp/opencode/mux-target/debug/holder --state-dir /tmp/mux-demo --shell /bin/sh
 
 # the client draws it
@@ -461,7 +476,7 @@ finds no Racket file in the package (the package is Rust only since the move int
 does not have; the choice between dropping the two stages and porting the proofs is the
 owner's, and `TODO.org` item 64 carries it.
 
-The Rust tests: `cargo test --offline` (102 tests: 63 in the client, 21 in the holder, 18
+The Rust tests: `cargo test --offline` (109 tests: 63 in the client, 28 in the holder, 18
 in the bake).
 
 The phone proofs, each a Nu script that prints its evidence:
@@ -473,6 +488,7 @@ The phone proofs, each a Nu script that prints its evidence:
 | `tools/mcp-probe/probe.nu` | the agent's surface, and the token refusal | 6 |
 | `tools/screen-probe/probe.nu` | the drawing, the modes, the keymap, the agent key | 22 |
 | `tools/clipboard-probe/probe.nu` | the pick goes out as one OSC 52 string, and the missing add-on is said by name | 8 |
+| `tools/journal-probe/probe.nu` | the log stays inside its written bound, the trim keeps whole records and says what it let go, and the session's files are 0600 in a 0700 dir | 12 |
 | `tools/tiny-binary-probe/` | the build and start times that decided the route | measured |
 
 What is not verified: the key routing with the editor in a pane.
