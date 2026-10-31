@@ -38,7 +38,23 @@
 # The owner gave the whole remaining program in groups, and then one more item.
 # The order of the work: the clipboard first, then G, then D, then A, then the rest.
 # Every item says what, done when, and what it waits for.
-  24. TODO (owner addition, 2026-10-22; FIRST — the owner moved it to the front) — The clipboard bridge to Android: the picked text goes out to the Android clipboard and the Android clipboard comes in; done when: a key copies the pick out, a key pastes the Android clipboard into the focused pane, a large paste is handled safely, and a phone with no bridge says so by name instead of doing nothing; deps: 18. The route that really works on this phone is found by testing the terminal's own clipboard sequence and the Termux clipboard tools from inside the proot, and the finding is written down before the work starts.
+  24. PARTLY DONE (the bridge landed with the screen's own keys; the proof is
+=tools/clipboard-probe/probe.nu=, eight checks green on this phone, and the limits are held by
+unit tests) — The clipboard bridge to Android: the picked text goes out to the Android
+clipboard and the Android clipboard comes in; done when: a key copies the pick out, a key
+pastes the Android clipboard into the focused pane, a large paste is handled safely, and a
+phone with no bridge says so by name instead of doing nothing; deps: 18. WHAT LANDED: =o= in
+the selection writes the pick as one OSC 52 string to the owner's own terminal (never into a
+pane, where the program would print the escape), the text also enters the multiplexer's own
+ring, and a pick over 6132 bytes is refused by name with both numbers; =P= reads the Android
+clipboard and pastes it into the focused pane, bounded at 65536 bytes with a refusal that says
+the numbers instead of cutting the text; =clipboard out= and =clipboard in= are the same two
+commands on the command line. WHAT IS STILL OWED: the paste-in cannot be proved on this phone,
+because =com.termux.api= is not installed and =termux-clipboard-get= waits for ever without it
+(exit 124 under a 15 s bound, measured 2026-10-23) — the bridge asks the package list first and
+never runs the script, so the key answers =com.termux.api is not installed= by name, and the day
+the add-on is installed the same key pastes with no change to this program. A real large
+clipboard text waits for the same install.
   25. TODO (owner addition, 2026-10-22) — The agent acts with no approval prompt, and also while no screen is attached: the holder runs the agent's own words, not the screen's; the secrets still never reach an agent; done when: an agent adds a tab, splits a pane, closes one and sends to a shell with no screen attached and with no token, and a secret is still refused by name on the way to an agent; deps: none. This replaces the token gate and the attached screen of item 23, which the owner took away.
   26. TODO (owner addition, 2026-10-22) — The goal mode: the owner gives a goal and the agent runs on its own; the caps are LIMITS, not approvals — the cost, the context and the time are bounded, and the agent stops when it reaches one; done when: a goal is given, the agent works on it alone, the caps are named and are in force, and reaching a cap ends the run and says which cap it was; deps: 25.
   27. TODO (owner addition, 2026-10-22) — The automatic git checkpoint: one before each agent task and one at intervals; done when: a checkpoint is made before the agent acts and at the interval that is named, the files are added one by one and never in a blanket, and a checkpoint that cannot be made stops the task and says so; deps: 25.
@@ -86,6 +102,16 @@
 * Independent views per client, 2026-10-22
 # the owner's item 40, kept whole.
   63. TODO (owner addition, 2026-10-22) — The independent views per client, so a phone and a laptop attached to the same session never resize each other: (a) every attached client has its own screen size, its own layout, its own focused pane and its own selected tab — the one shared window size is gone; (b) a shell has ONE real terminal size and it follows the client that last typed in it (the last writer); (c) the other clients keep seeing that pane live, padded or cropped, and never resize their own layout; (d) a shell can be pinned to one client's size, so it never follows the last writer; (e) the layout by screen (item 41) is per client; (f) a full-screen program redraws once on a writer switch — no repeated flicker, for example by waiting for a real keypress before the size switches; (g) items 44, 45 and 46 are brought into line with this one; (h) if the client-holder protocol has to change, a CONTRACT CHANGE REQUEST is written instead of the change, and the work stops and the owner is told; done when: two clients of different sizes are attached at the same time and neither one's layout changes when the other types, the shell follows the last writer, a pinned shell does not, the mirror views are padded or cropped, a full-screen program redraws once and does not flicker, and items 44 to 46 say the same thing; deps: 39, 48.
+
+* The gate's own stale stages, 2026-10-31
+# found while doing item 24; named here so it is not lost.
+  64. BLOCKED (the owner's decision: drop the two stages, or port the proofs) — The light
+gate still checks a Racket narration area this package does not have: =paren-check= is given no
+Racket file (the package is Rust only since the move into =terminal-multiplexer/=), and
+=kit-check='s sixth proof reaches for =src/narration/wait-door.rkt= and =narration.rkt=, which do
+not exist, so 2 of the 8 stages stand red and no code of this package is the reason; done when:
+the stage table and the sixth proof name only what this tree holds, and the light gate is green
+at the stages that are left; deps: none.
 
 * After the done line
 # what continues on its own.

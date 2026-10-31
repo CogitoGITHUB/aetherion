@@ -38,3 +38,7 @@
     drives the multiplexer the way the owner does — a tab, a split, a
     scroll, a copy and a paste — and a change without the human's token is
     refused by name
+  - clipboard-probe/probe.nu — the phone proof of the Android clipboard: the
+    pick goes out as one OSC 52 string on the owner's own terminal, and a
+    phone whose read direction has no bridge says the missing app by name
+    instead of waiting for ever

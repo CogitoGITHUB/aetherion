@@ -65,6 +65,16 @@ pub fn run(screen: &mut Screen, words: &[String]) -> Outcome {
             "pane": screen.focused_pane(),
             "data": String::from_utf8_lossy(&bytes).to_string(),
         })),
+        Action::Terminal(_) => {
+            // The Android clipboard is the owner's own terminal, not the
+            // agent's: the words the agent sent do not write it, and the
+            // screen says so instead of pretending it happened.
+            screen.message =
+                "the Android clipboard is the owner's own terminal: a request from an agent \
+                 does not write it"
+                    .to_string();
+            None
+        }
         _ => None,
     };
     Outcome { ask }

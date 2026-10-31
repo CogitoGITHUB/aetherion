@@ -1294,18 +1294,14 @@ impl Screen {
         if self.ring.len() > RING_KEPT {
             self.ring.pop();
         }
-        self.message = if clipboard::termux() {
-            format!(
-                "the region is on the Android clipboard: {}",
-                first_line(&text)
-            )
-        } else {
-            format!(
-                "the region went out as OSC 52, and this terminal did not say it is Termux, \
-                 so the phone's clipboard may not have taken it: {}",
-                first_line(&text)
-            )
-        };
+        // The write is the one route that works, and it works while the
+        // Termux terminal is in the foreground: the line says what it did
+        // and what the route needs, and never claims more than that.
+        self.message = format!(
+            "the region went out to the Android clipboard: {} \
+             (it lands while the termux terminal is in the foreground)",
+            first_line(&text)
+        );
         Action::Terminal(out)
     }
 
@@ -2265,5 +2261,75 @@ mod tests {
         screen.select.restart();
         assert_eq!(screen.select.point, (0, 0));
         assert!(screen.select.mark().is_none(), "the mark is gone");
+    }
+
+    /// a_picked_screen is a screen holding one line of the given length, with
+    /// the whole line picked: the mark at its start and the point at its end.
+    fn a_picked_screen(width: usize) -> Screen {
+        let mut screen = a_screen();
+        let text: String = "x".repeat(width);
+        screen.panes[0].lines = vec![text];
+        screen.mode = Mode::Select;
+        screen.select.set_mark();
+        screen.select.point = (0, width);
+        screen
+    }
+
+    #[test]
+    fn the_pick_goes_out_to_the_android_clipboard_as_one_sequence() {
+        let mut screen = a_picked_screen(11);
+        let action = screen.run(Command::SelectCopyOut);
+        let bytes = match action {
+            Action::Terminal(bytes) => bytes,
+            _ => panic!("the copy out writes the terminal"),
+        };
+        let said = String::from_utf8(bytes).unwrap();
+        assert!(said.starts_with("\x1b]52;c;"), "the OSC 52 prefix: {:?}", said);
+        assert!(said.ends_with('\x07'), "the bell ends it: {:?}", said);
+        assert_eq!(
+            screen.ring.first(),
+            Some(&"xxxxxxxxxxx".to_string()),
+            "the ring holds the same pick"
+        );
+        assert!(screen.message.contains("clipboard"), "the line: {:?}", screen.message);
+    }
+
+    #[test]
+    fn a_pick_over_the_limit_is_refused_by_name_and_the_ring_keeps_it() {
+        let mut screen = a_picked_screen(7000);
+        let action = screen.run(Command::SelectCopyOut);
+        assert!(matches!(action, Action::Nothing), "nothing goes to the terminal");
+        assert!(screen.message.contains("8192"), "the limit: {:?}", screen.message);
+        assert_eq!(screen.ring.len(), 1, "the owner's own copy is not lost");
+    }
+
+    #[test]
+    fn an_empty_android_clipboard_is_said_and_nothing_is_sent() {
+        let mut screen = a_screen();
+        let action = screen.paste_text(String::new());
+        assert!(matches!(action, Action::Nothing), "nothing is sent");
+        assert!(screen.message.contains("empty"), "the line: {:?}", screen.message);
+    }
+
+    #[test]
+    fn a_paste_over_the_limit_is_refused_with_the_numbers() {
+        let mut screen = a_screen();
+        let action = screen.paste_text("x".repeat(clipboard::PASTE_MAX + 1));
+        assert!(matches!(action, Action::Nothing), "nothing is sent");
+        assert!(screen.message.contains("65536"), "the limit: {:?}", screen.message);
+    }
+
+    #[test]
+    fn a_paste_goes_to_the_focused_pane_in_one_request() {
+        let mut screen = a_screen();
+        let action = screen.paste_text("the words".to_string());
+        match action {
+            Action::Request(request) => {
+                assert_eq!(request["op"], "send");
+                assert_eq!(request["pane"], "work");
+                assert_eq!(request["data"], "the words");
+            }
+            _ => panic!("the paste is one request"),
+        }
     }
 }

@@ -104,13 +104,6 @@ pub fn out(text: &str) -> Result<Vec<u8>, String> {
     Ok(bytes)
 }
 
-/// termux answers whether this terminal says it is Termux. The answer is the
-/// terminal's own word, never a guess about the phone: a copy written to a
-/// terminal that is not Termux is a copy nothing takes.
-pub fn termux() -> bool {
-    std::env::var_os("TERMUX_VERSION").is_some()
-}
-
 /// addon answers whether the Termux:API add-on is installed. The package list
 /// answers by itself, so this is the gate the read direction passes through:
 /// the script is never run on a phone that would leave it waiting.
@@ -139,8 +132,8 @@ pub fn addon() -> Result<bool, String> {
 pub fn paste() -> Result<String, String> {
     if !addon()? {
         return Err(format!(
-            "the Android clipboard cannot be read: the Termux:API add-on ({}) is not installed \
-             on this phone, and termux-clipboard-get waits for ever without it",
+            "{} is not installed, so the Android clipboard cannot be read: \
+             termux-clipboard-get waits for ever without it",
             ADDON
         ));
     }

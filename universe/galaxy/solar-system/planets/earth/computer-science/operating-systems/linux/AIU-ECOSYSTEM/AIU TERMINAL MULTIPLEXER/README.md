@@ -62,15 +62,18 @@ that way.
 | Asking the editor for what the editor owns | Implemented and verified: the ask goes over the editor's own server and the answer is the editor's own words |
 | The Git inspection layer inside the multiplexer | Implemented and verified: the key group, the panel and the holder's seam |
 | The screen selection (the biomechanical model) | Implemented and verified: the multiplexer side, the view that scrolls with the page keys, and the pick that restarts over the fresh text; the editor's side is owed |
-| The kit conformance | Implemented and verified: the six proofs run as a gate stage, and the gate is green at 8 stages |
+| The Android clipboard: the pick out, the phone's text in | In part: the copy-out key is verified on this phone; the paste-in key names the missing Termux:API add-on and pastes the day it is installed |
+| The kit conformance | Implemented and verified: the six proofs run as a gate stage |
 | The done line | In progress: the shared checklist records every item's state honestly; the editor's own halves and the owner's deletion of the checklist are owed |
 
 The owner switched the priority to this program on 2026-10-21: it is the foundation under
 the complete workflow, so pm and the editor are paused until it works.
 
-This program's own list is done as of 2026-10-22: every item of TODO.org is DONE, except the
-shared done line, which waits on the editor's own halves and on the owner's deletion of the
-shared checklist. The next program is the editor's.
+This program's list stood done up to item 23 on 2026-10-22; the owner's groups after it
+(items 24 to 63) are the work that is left, and item 24 — the Android clipboard — is done in
+part (the copy-out direction is verified, the paste-in waits for the Termux:API add-on). The
+shared done line waits on the editor's own halves and on the owner's deletion of the shared
+checklist.
 
 ## Architecture
 
@@ -136,10 +139,12 @@ prefix chord. A Control key the owner presses belongs to the program in the pane
 | `w` | the workspace: the workspaces and their projects, the project context, the opening of a project, the editor's own answer |
 | `l` `L` | hide or show one level of the screen's own rows |
 | `PageUp` `PageDown` | scroll the focused pane's view: one page is the height of that pane |
+| `v`, then `o` or `P` | pick the text, copy the pick out to the Android clipboard, or paste the Android clipboard into the focused pane |
 
 **The command line.** `:` opens it, and the words are the commands: `tab new`,
 `tab close`, `tab next`, `pane new`, `pane close`, `pane next`, `scroll up`,
-`scroll down`, `copy PANE FIRST LAST`, `paste PANE`, `paste agent`, `focus PANE`,
+`scroll down`, `copy PANE FIRST LAST`, `paste PANE`, `paste agent`, `clipboard out`,
+`clipboard in`, `focus PANE`,
 `workspace`, `agent`, `editor`, `records`, `sessions`. The same words are what the agent
 sends, so the owner and the agent drive the same code.
 
@@ -187,7 +192,9 @@ before the wait, so a wait is never a silence.
 move the point, `w b` and `w f` move it by word, `m` pushes a mark onto the ring of marks
 and `M` pops it, `y` copies the region into the multiplexer's own ring, `Y` copies the
 line the point stands on, `s` sends the region to the agent in the bundle that every
-program sends, and `p o` opens the agent beside the pane with the region in that bundle.
+program sends, `p o` opens the agent beside the pane with the region in that bundle, `o`
+puts the pick out to the Android clipboard and `P` pastes the Android clipboard into the
+focused pane.
 The candidates are the visible text of the focused pane only: a line that has scrolled out
 of the pane cannot be picked, because it cannot be seen. The escape leaves the selection
 and does nothing else — no text is copied, no bundle is sent and no pane opens. The
@@ -196,6 +203,23 @@ the fresh text: the point stands at the first line of the new window and the mar
 gone, because a mark named a line of the old window. There is no wheel here: there is no
 mouse in this program, so the scroll is a key. What is still owed is the editor's own
 pick: the editor picks its own text the same way.
+
+**The Android clipboard.** The pick goes out and the phone's text comes in, and on this
+phone the two directions are not the same. Out is one OSC 52 string written to the owner's
+own terminal — never into a pane, where the program would print the escape instead of the
+clipboard taking it — and the emulator hands the payload to the Android clipboard. It
+carries at most 6132 bytes of text, one string of 8192 characters, and a longer pick is
+refused by name with both numbers instead of being dropped in silence; the text is in the
+multiplexer's own ring all the same, so the owner's copy is never lost to the phone's
+limit. In needs the Termux:API add-on, which this phone does not have: the bridge asks the
+phone's package list before it runs anything, so `P` answers
+`com.termux.api is not installed` and the script that would wait for ever is never
+started. A paste is bounded at 65536 bytes and a larger one is refused with the numbers
+rather than cut, because a paste whose end is silently lost is a paste the owner would act
+on wrongly. `clipboard out` and `clipboard in` are the same two commands on the command
+line, so an agent can ask for them; when the words come from an agent the screen answers
+that the Android clipboard is the owner's own terminal, because a terminal the agent does
+not hold is not a terminal it can write.
 
 **The agent opens here.** One key in the focused pane opens OpenCode beside it, with that
 pane's context already attached: the tail of the pane's log, the shell, the place and the
@@ -412,7 +436,7 @@ place.
 
 ## Testing and verification
 
-The light gate is the only entry point, and it is green at seven stages:
+The light gate is the only entry point, and it runs eight stages:
 
 ```bash
 /root/home/shape/opt/nushell/0.116.1/nu --no-config-file gate/check.nu
@@ -428,8 +452,17 @@ The light gate is the only entry point, and it is green at seven stages:
 | `one-way` | a dependency may point downward only |
 | `security-gate` | the security rules answer as they say (nothing to check yet) |
 | `language-split` | only `join/` may cross between Rust and Racket |
+| `kit-check` | the six proofs of the kit: the envelope, the exit codes, the token, the skill, the plugin, the feed and the wait door |
 
-The Rust tests: `cargo test --offline` (22 tests at the time of writing).
+Two stages stand red at this commit, and neither is this program's code: `paren-check`
+finds no Racket file in the package (the package is Rust only since the move into
+`terminal-multiplexer/`), and `kit-check`'s sixth proof reaches for
+`src/narration/wait-door.rkt`, which does not exist either. Both name an area the package
+does not have; the choice between dropping the two stages and porting the proofs is the
+owner's, and `TODO.org` item 64 carries it.
+
+The Rust tests: `cargo test --offline` (102 tests: 63 in the client, 21 in the holder, 18
+in the bake).
 
 The phone proofs, each a Nu script that prints its evidence:
 
@@ -439,6 +472,7 @@ The phone proofs, each a Nu script that prints its evidence:
 | `tools/panes-probe/probe.nu` | the panes and the layout file | 6 |
 | `tools/mcp-probe/probe.nu` | the agent's surface, and the token refusal | 6 |
 | `tools/screen-probe/probe.nu` | the drawing, the modes, the keymap, the agent key | 22 |
+| `tools/clipboard-probe/probe.nu` | the pick goes out as one OSC 52 string, and the missing add-on is said by name | 8 |
 | `tools/tiny-binary-probe/` | the build and start times that decided the route | measured |
 
 What is not verified: the key routing with the editor in a pane.
@@ -454,13 +488,17 @@ What is not verified: the key routing with the editor in a pane.
   checked at source level here.
 - The multiplexer is Rust only; the meaning side of the editor is Racket, and the two meet
   in the editor's own `join/`.
+- The Android clipboard's read direction waits for the Termux:API add-on app. On this
+  phone `P` says `com.termux.api is not installed` and the copy-out direction works; a
+  phone that installs the add-on gets the paste without a change to this program.
 
 ## Roadmap
 
 `TODO.org` is the one list, in build order; a finished item is deleted from it in the same
-commit that does the work. The next items are the clipboard bridge, then the owner's group G
-(no token and no attached screen, the goal mode, the git checkpoints, undo, the wake lock),
-then group D, then group A.
+commit that does the work, and an item a phone cannot finish is named in part with what is
+owed. The clipboard bridge (item 24) has its copy-out half verified and its read half waiting
+for the Termux:API add-on. The next items are the owner's group G (no token and no attached
+screen, the goal mode, the git checkpoints, undo, the wake lock), then group D, then group A.
 
 ### Later plans
 
@@ -511,7 +549,8 @@ clipboard, and it keeps the measurements above as its rules:
   read direction: the `termux-clipboard-get` script is **never run before the package
   list says the app is there**, so the hang the measurement found cannot happen.
 - `paste()` answers the clipboard's text, or the reason it is not read: on this phone,
-  that reason is `com.termux.api is not installed` — a name, not a wait.
+  that reason starts with `com.termux.api is not installed` — a name, not a wait, and the
+  name comes first because the mode line cuts a long message.
 - `fits(text)` bounds a paste at 65536 bytes and refuses a larger one by name instead of
   cutting it: a paste whose end is silently lost is a paste the owner would act on wrongly.
 
