@@ -62,7 +62,6 @@
 (define (save-after args)
   (when (and (hash-ref args (quote file) #f) (hash-ref args (quote journal) #f))
     (ask-hot-raw "save" (hasheq (quote file) (hash-ref args (quote file)) (quote journal) (hash-ref args (quote journal)))))
-  (shadow-note! (hash-ref args (quote file) #f))
   ((unbox edit-hook)))
 
 ;; read-ops are the hot path operations that only read, so their answers can be kept.

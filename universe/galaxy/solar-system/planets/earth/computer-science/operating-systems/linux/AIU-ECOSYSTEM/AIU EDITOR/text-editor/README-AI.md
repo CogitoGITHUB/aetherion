@@ -549,3 +549,5 @@ The commits go on the branch `aiu-undo` of the git repository that holds the sav
 Decisions: branch inside the main repo (the owner preferred it to a separate shadow repository, which was deleted), one commit per debounced burst, history file kept. git push --all would push the branch, so push it only on purpose.
 
 Not built yet: undo and redo keys, the tree view, branches for edits after an undo, the block name in the message, worktrees, pruning.
+
+Interim 2026-10-31: the shadow-note! call was taken out of save-after, so nothing commits while typing. It will be wired to leave-write (escape in the write layer).
