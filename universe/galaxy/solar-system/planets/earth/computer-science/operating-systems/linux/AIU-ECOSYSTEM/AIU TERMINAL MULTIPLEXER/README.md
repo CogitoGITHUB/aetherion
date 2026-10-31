@@ -41,6 +41,7 @@ that way.
 |---|---|
 | The holder: a shell on a pty, in a session that outlives its client | Implemented and verified |
 | The log: one append-only file per session, flushed per record | Implemented and verified |
+| The versioned handshake at attach | Implemented and verified: both versions are compared, a mismatch is refused by name with both said and with what to do, and the client prints its build when it starts |
 | The rewind: a pane as it stood at a record | Implemented and verified: the record is chosen by its seq, the journal answers, and the live pane and its shell are untouched |
 | The journal's bounds and its privacy | Implemented and verified: a written bound, a trim record that says what it let go, and 0700/0600 on the session's own files |
 | The socket: a unix socket in the session's state directory | Implemented and verified |
@@ -122,6 +123,14 @@ holds instead of quietly getting less. The bound can be lowered on a small disk
 is 0700 and the files in it — the log, the pid, the socket — are 0600, set both when they
 are made and when they are opened, because a file made before this rule was written was
 0644.
+
+**The handshake.** A client and a holder agree on two contracts — the holder's own wire
+(`multiplexer-holder/1`) and the log's record shape (`event-log-format/1`) — and they are
+compared at attach, before anything is drawn. A rebuilt client that finds an older holder
+still running is refused by name with both sides' versions and with what to do about it
+(leave this session and restart the holder, or run the old client); the client prints that
+line and ends with 2, and it never draws a picture of a session it does not understand. Both
+programs say their own build when they start, so the two ends of a mismatch can be named.
 
 **The rewind.** The journal is a history, and the owner can look back into it: `:rewind PANE
 SEQ` asks the holder how that pane stood at that record, and the answer is the pane's own
@@ -486,8 +495,9 @@ finds no Racket file in the package (the package is Rust only since the move int
 does not have; the choice between dropping the two stages and porting the proofs is the
 owner's, and `TODO.org` item 64 carries it.
 
-The Rust tests: `cargo test --offline` (117 tests: 67 in the client, 32 in the holder, 18
-in the bake).
+The Rust tests: `cargo test --offline` (120 tests: 69 in the client, 32 in the holder, 18
+in the bake, and 1 in `tests/handshake.rs`, which runs the real client against a
+holder socket the test serves by hand).
 
 The phone proofs, each a Nu script that prints its evidence:
 

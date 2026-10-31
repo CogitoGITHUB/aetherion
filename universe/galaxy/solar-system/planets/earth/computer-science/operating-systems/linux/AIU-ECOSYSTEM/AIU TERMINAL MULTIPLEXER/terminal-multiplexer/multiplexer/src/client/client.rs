@@ -34,6 +34,11 @@ const EVENT_CONTRACT: &str = "event-log-format/1";
 const HOLDER_CONTRACT: &str = "multiplexer-holder/1";
 const CLIENT_NAME: &str = "multiplexer-client/1";
 
+/// BUILD is the build this client is: the crate's own version, printed when it
+/// starts, so a rebuilt client that meets an older holder can say what it is
+/// (TODO item 48).
+const BUILD: &str = env!("CARGO_PKG_VERSION");
+
 fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
     match run(&args) {
@@ -48,6 +53,12 @@ fn main() {
 /// run asks the holder one thing and prints what it answers.
 fn run(args: &[String]) -> Result<i32, String> {
     let options = Options::read(args)?;
+    // The client says which build it is before it waits for anything: a rebuilt
+    // client that meets an older holder must be able to say what it is.
+    eprintln!(
+        "client: build {} — contracts {} and {}",
+        BUILD, HOLDER_CONTRACT, EVENT_CONTRACT
+    );
     let socket_path = options.state_dir.join("holder.sock");
 
     eprintln!(
@@ -78,8 +89,15 @@ fn run(args: &[String]) -> Result<i32, String> {
             in_force,
         );
         wire::close(fd);
-        answer?;
-        return Ok(0);
+        match answer? {
+            screen::Ending::Left => return Ok(0),
+            screen::Ending::Refused(why) => {
+                // A refusal is named and ends the client with the code the
+                // program uses for one: 2, the same as the rest of the kit.
+                eprintln!("client: refused: {}", why);
+                return Ok(2);
+            }
+        }
     }
 
     wire::ask(fd, &options.request())?;

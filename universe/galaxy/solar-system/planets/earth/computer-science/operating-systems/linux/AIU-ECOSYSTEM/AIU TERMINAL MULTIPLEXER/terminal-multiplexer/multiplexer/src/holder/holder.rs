@@ -238,6 +238,14 @@ fn main() {
 /// run holds one session from the first moment to the last.
 fn run(args: &[String]) -> Result<(), String> {
     let options = Options::read(args)?;
+    // The holder says which build it is: a client that meets it at attach
+    // compares the contracts, and the refusal must be able to name both sides.
+    eprintln!(
+        "holder: build {} — contracts {} and {}",
+        env!("CARGO_PKG_VERSION"),
+        HOLDER_CONTRACT,
+        EVENT_CONTRACT
+    );
     // The state directory is the owner's alone (TODO item 51): 0700, and the
     // files the session writes in it are 0600.
     log::private_dir(&options.state_dir)?;

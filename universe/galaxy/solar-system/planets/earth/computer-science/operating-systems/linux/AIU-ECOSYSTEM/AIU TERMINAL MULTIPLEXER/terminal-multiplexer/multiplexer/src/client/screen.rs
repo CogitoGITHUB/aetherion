@@ -45,6 +45,16 @@ const RING_KEPT: usize = 20;
 /// newest ones, each with the number the agent names it by.
 const VIEW_LINES: usize = 40;
 
+/// Ending is how the screen's life ended: the owner left, or the holder
+/// refused the contracts and said why (TODO item 48).
+pub enum Ending {
+    /// Left is the owner's own leaving: the session goes on without them.
+    Left,
+    /// Refused is the holder's answer to a client whose contracts differ, in
+    /// the holder's own words plus what to do about it.
+    Refused(String),
+}
+
 /// Action is what the client does with the holder after a key.
 pub enum Action {
     Nothing,
@@ -1972,7 +1982,7 @@ pub fn session(
     editor_program: String,
     editor_mcp: Vec<String>,
     mut config: ConfigFile,
-) -> Result<(), String> {
+) -> Result<Ending, String> {
     let saved = tty::save_termios(libc::STDIN_FILENO).ok();
     let _ = tty::make_raw(libc::STDIN_FILENO);
     let mut screen = Screen::empty(agent_program, editor_program, editor_mcp);
@@ -2082,7 +2092,17 @@ pub fn session(
                     wire::ask(fd, &json!({ "op": "state", "client": client_name }))?;
                     continue;
                 }
-                take_record(&mut screen, &line);
+                if let Some(why) = take_record(&mut screen, &line) {
+                    // The holder refused the contracts: the client says so in
+                    // the holder's own words and stops drawing, because a
+                    // picture from a session it does not understand is a lie.
+                    out.write_all(b"\x1b[?25h\x1b[0m\n").ok();
+                    let _ = out.flush();
+                    if let Some(settings) = saved.clone() {
+                        let _ = tty::restore_termios(libc::STDIN_FILENO, &settings);
+                    }
+                    return Ok(Ending::Refused(why));
+                }
                 if let Some(id) = screen.take_pending() {
                     let data = screen.view();
                     wire::ask(fd, &control::answer(&id, &data))?;
@@ -2187,7 +2207,39 @@ pub fn session(
     if let Some(settings) = saved {
         let _ = tty::restore_termios(libc::STDIN_FILENO, &settings);
     }
-    Ok(())
+    Ok(Ending::Left)
+}
+
+/// refusal_text answers the holder's refusal of the contracts, in one line that
+/// says both builds and what to do, and None for any other record: a client
+/// that meets a holder it does not agree with must not go on drawing.
+pub fn refusal_text(record: &Value) -> Option<String> {
+    let what = record.get("what").and_then(|value| value.as_str())?;
+    if what != "the client and the holder do not agree on the contract" {
+        return None;
+    }
+    let inputs = record.get("inputs").cloned().unwrap_or(Value::Null);
+    let outputs = record.get("outputs").cloned().unwrap_or(Value::Null);
+    let said = |value: &Value, key: &str| {
+        value
+            .get(key)
+            .and_then(|one| one.as_str())
+            .unwrap_or("")
+            .to_string()
+    };
+    let safe = record
+        .get("result")
+        .and_then(|result| result.get("safe-path"))
+        .and_then(|one| one.as_str())
+        .unwrap_or("finish the session and restart the holder");
+    Some(format!(
+        "the contracts differ — this client is {} and {}, the holder is {} and {}; {}",
+        said(&inputs, "client-holder-contract"),
+        said(&inputs, "client-event-contract"),
+        said(&outputs, "holder-holder-contract"),
+        said(&outputs, "holder-event-contract"),
+        safe
+    ))
 }
 
 /// take_record reads one record from the holder into the screen.
@@ -2195,11 +2247,14 @@ pub fn session(
 /// Every record is shown: the program's output goes into the pane it came
 /// from, and the event itself goes into the events strip, so nothing that
 /// happened is silent (rule 01: nothing important is silent).
-fn take_record(screen: &mut Screen, line: &str) {
+fn take_record(screen: &mut Screen, line: &str) -> Option<String> {
     let record: Value = match serde_json::from_str(line) {
         Ok(found) => found,
-        Err(_) => return,
+        Err(_) => return None,
     };
+    if let Some(why) = refusal_text(&record) {
+        return Some(why);
+    }
     let kind = record.get("kind").and_then(|value| value.as_str()).unwrap_or("");
     let who = record.get("who").and_then(|value| value.as_str()).unwrap_or("");
     let what = record.get("what").and_then(|value| value.as_str()).unwrap_or("");
@@ -2219,26 +2274,27 @@ fn take_record(screen: &mut Screen, line: &str) {
             .and_then(|value| value.as_str())
             .unwrap_or("");
         screen.push_text(who, text);
-        return;
+        return None;
     }
     if what == "the workspace was read" {
         screen.take_workspace(&record);
     }
     if what == "the git state was read" {
         screen.take_git(&record);
-        return;
+        return None;
     }
     if what == "the pane was read back" {
         screen.take_rewind(&record);
-        return;
+        return None;
     }
     if what == "the editor was asked" {
         screen.take_editor(&record);
-        return;
+        return None;
     }
     if who == "holder" {
         screen.take_state(&record);
     }
+    None
 }
 
 #[cfg(test)]
@@ -2395,6 +2451,35 @@ mod tests {
         let action = screen.paste_text("x".repeat(clipboard::PASTE_MAX + 1));
         assert!(matches!(action, Action::Nothing), "nothing is sent");
         assert!(screen.message.contains("65536"), "the limit: {:?}", screen.message);
+    }
+
+    #[test]
+    fn a_contract_refusal_is_answered_in_both_versions_and_what_to_do() {
+        let record = json!({
+            "kind": "fail",
+            "who": "holder",
+            "what": "the client and the holder do not agree on the contract",
+            "inputs": {
+                "client-event-contract": "event-log-format/1",
+                "client-holder-contract": "multiplexer-holder/1"
+            },
+            "outputs": {
+                "holder-event-contract": "event-log-format/2",
+                "holder-holder-contract": "multiplexer-holder/2"
+            },
+            "result": { "safe-path": "finish the session and restart the holder" }
+        });
+        let why = refusal_text(&record).expect("the refusal is named");
+        assert!(why.contains("multiplexer-holder/1"), "the client's: {:?}", why);
+        assert!(why.contains("multiplexer-holder/2"), "the holder's: {:?}", why);
+        assert!(why.contains("event-log-format/2"), "both events: {:?}", why);
+        assert!(why.contains("restart the holder"), "what to do: {:?}", why);
+    }
+
+    #[test]
+    fn a_record_that_is_not_a_refusal_is_not_taken_for_one() {
+        let record = json!({ "kind": "info", "what": "the records were read" });
+        assert!(refusal_text(&record).is_none(), "no refusal here");
     }
 
     #[test]

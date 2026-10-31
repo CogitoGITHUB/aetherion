@@ -103,4 +103,7 @@
 # no empty directory is created before the item that needs it.
   - security, join, panes, routing, layouts, records, control and entry land
     with the items that need them.
-  - tests and test-doubles open when tests open (root DECISIONS.org D-001).
+  - tests/ — the proofs that need a real binary on the other end of a socket
+  - tests/handshake.rs — the versioned handshake: a client and a holder that
+    disagree refuse each other by name, with both versions said and with what
+    to do next
