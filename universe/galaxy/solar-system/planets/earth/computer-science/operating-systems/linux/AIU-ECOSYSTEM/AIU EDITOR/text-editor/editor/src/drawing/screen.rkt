@@ -67,13 +67,24 @@
     [(>= (string-length clean) width) (substring clean 0 width)]
     [else (string-append clean (make-string (- width (string-length clean)) #\space))]))
 
-;; paint answers the whole screen for one state: the text from the first
-;; visible line, blank rows filling the window, the mode line on the last row,
-;; and — when there is a cursor — the cursor on the point. A point outside the
-;; window is clamped into it, so the cursor is never drawn on the mode line.
+;; footer-string answers the last rows of the screen. Nothing is drawn for an empty
+;; text, one line is the old mode line in reverse video, and several lines are the
+;; bar box in white text with no background.
+(define (footer-string mode-line width)
+  (cond [(string=? mode-line "") ""]
+        [(regexp-match? #rx"\n" mode-line)
+         (string-append (ansi "97m")
+                        (string-join (map (lambda (l) (fit l width)) (string-split mode-line "\n" #:trim? #f)) "\n")
+                        (ansi "0m"))]
+        [else (string-append (ansi "7m") (fit mode-line width) (ansi "27m"))]))
+
+;; paint answers the whole screen for one state: the text from the first visible
+;; line pushed down by offset rows and right by left columns, the footer rows under
+;; it, the overlay drawn over it, and the cursor on the point when there is one.
 ;; The view layer has no cursor: it is a page being read, not a point being put
 ;; down, and a cursor there would claim a place the keys cannot type at.
-(define (paint text point width height top mode-line cursor? preformatted?)
+(define (paint text point width height top mode-line cursor? preformatted?
+               #:offset [offset 0] #:left [left 0] #:full [full width] #:overlay [overlay ""])
   (define rows (string-split text "\n" #:trim? #f))
   (define visible (max 1 (- height 1)))
   (define top-line (max 1 (min top (max 1 (length rows)))))
@@ -83,17 +94,22 @@
     (for/list ([i (in-range visible)])
       (define number (+ top-line i))
       (if (<= number (length rows)) (list-ref rows (sub1 number)) "")))
-  (string-join
-   (append
-    (list clear-screen)
-    (for/list ([line (in-list shown)])
-      (string-append (if preformatted? line (fit line width)) "\n"))
-    (list (ansi "7m") (fit mode-line width) (ansi "27m")
-          (if cursor?
-              (string-append (ansi "?25h")
-                             (cursor-to (- cursor-row top-line -1) (+ column 1)))
-              (ansi "?25l"))))
-   ""))
+  (define pad (make-string left #\space))
+  (define body
+    (string-join
+     (for/list ([line (in-list shown)])
+       (string-append pad (if preformatted? line (fit line width))))
+     "\n"))
+  (define foot (footer-string mode-line full))
+  (string-append clear-screen
+                 (make-string offset #\newline)
+                 body
+                 (if (string=? foot "") "" (string-append "\n" foot))
+                 overlay
+                 (if cursor?
+                     (string-append (ansi "?25h")
+                                    (cursor-to (+ offset (- cursor-row top-line -1)) (+ left column 1)))
+                     (ansi "?25l"))))
 
 ;; The painter, for the session above it.
 (provide paint

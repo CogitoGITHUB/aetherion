@@ -99,6 +99,9 @@ struct Pane {
     /// args are the arguments the program was started with: a restarted pane
     /// runs the same program the same way.
     args: Vec<String>,
+    /// hidden says the pane is closed and not drawn, and its shell keeps
+    /// running: a close hides, and a kill is another word (TODO item 45).
+    hidden: bool,
     /// typed is what the owner has typed into this pane since the last
     /// newline: the command the pane is given is the line that ends here.
     typed: String,
@@ -296,6 +299,7 @@ fn run(args: &[String]) -> Result<(), String> {
             name: pane.name,
             tab: pane.tab,
             weight: pane.weight,
+            hidden: false,
             args: Vec::new(),
             typed: String::new(),
             shell,
@@ -581,7 +585,18 @@ impl Session {
         let workspace_name = self.workspace.clone();
         let workspace = workspace::read(&workspace_dir, &workspace_name, "list");
         let mut panes: Vec<Value> = Vec::new();
+        let mut hidden: Vec<Value> = Vec::new();
         for pane in &self.panes {
+            if pane.hidden {
+                hidden.push(json!({
+                    "name": pane.name.clone(),
+                    "tab": pane.tab.clone(),
+                    "pid": pane.shell.pid,
+                    "alive": pane.shell.alive_now(),
+                    "program": pane.shell.program.clone(),
+                }));
+                continue;
+            }
             panes.push(json!({
                 "name": pane.name.clone(),
                 "tab": pane.tab.clone(),
@@ -611,6 +626,7 @@ impl Session {
                         .collect::<Vec<Value>>(),
                 ),
                 "panes": Value::Array(panes),
+                "hidden": Value::Array(hidden),
                 "log": self.log_path.display().to_string(),
                 "socket": self.socket_path.display().to_string(),
                 "state-dir": self.state_dir.display().to_string(),
@@ -1269,6 +1285,7 @@ fn answer(session: &mut Session, at: usize, line: &str) -> Result<bool, String> 
             answer_client(session, at, &record);
             Ok(true)
         }
+        "kill" => kill_pane(session, at, &request),
         "open" => {
             let wanted = request
                 .get("name")
@@ -1423,6 +1440,7 @@ fn answer(session: &mut Session, at: usize, line: &str) -> Result<bool, String> 
                 name: name.clone(),
                 tab: tab.clone(),
                 weight: 1,
+            hidden: false,
                 args: args.clone(),
                 typed: String::new(),
                 shell: opened,
@@ -1648,6 +1666,9 @@ fn answer(session: &mut Session, at: usize, line: &str) -> Result<bool, String> 
             Ok(true)
         }
         "close" => {
+            // A close HIDES: the pane stops being drawn and its shell keeps
+            // running. Ending it for good is the separate word "kill"
+            // (TODO item 45), so a wrong key cannot lose a shell.
             let kind = request
                 .get("kind")
                 .and_then(|value| value.as_str())
@@ -1658,45 +1679,55 @@ fn answer(session: &mut Session, at: usize, line: &str) -> Result<bool, String> 
                 .and_then(|value| value.as_str())
                 .unwrap_or("")
                 .to_string();
-            let mut closed: Vec<String> = Vec::new();
+            let mut hidden: Vec<String> = Vec::new();
+            for pane in session.panes.iter_mut() {
+                let chosen = if kind == "tab" {
+                    pane.tab == name
+                } else {
+                    pane.name == name
+                };
+                if chosen && !pane.hidden {
+                    pane.hidden = true;
+                    hidden.push(pane.name.clone());
+                }
+            }
             if kind == "tab" {
-                for pane in session.panes.iter_mut() {
-                    if pane.tab == name {
-                        unsafe {
-                            libc::kill(pane.shell.pid, libc::SIGTERM);
-                        }
-                        closed.push(pane.name.clone());
-                    }
-                }
-                session.panes.retain(|pane| pane.tab != name);
                 session.tabs.retain(|tab| *tab != name);
-            } else {
-                for pane in session.panes.iter_mut() {
-                    if pane.name == name {
-                        unsafe {
-                            libc::kill(pane.shell.pid, libc::SIGTERM);
-                        }
-                        closed.push(pane.name.clone());
-                    }
-                }
-                session.panes.retain(|pane| pane.name != name);
+            }
+            if hidden.is_empty() {
+                let record = session.record(Fields {
+                    kind: "fail",
+                    who: "holder",
+                    what: "nothing was hidden",
+                    why: "there is no drawn pane of that name, or it is already hidden",
+                    how: "the panes were looked at and none of them is the one named",
+                    inputs: json!({ "kind": kind, "name": name }),
+                    outputs: json!({}),
+                    result: json!({ "comes-back": "pane show NAME brings a hidden pane back" }),
+                });
+                session.write(&record);
+                answer_client(session, at, &record);
+                return Ok(true);
             }
             let record = session.record(Fields {
                 kind: "info",
                 who: "holder",
-                what: "it closed",
-                why: "the client asked for it to close",
-                how: "the programs were told to end and the panes were let go",
-                inputs: json!({ "kind": kind, "name": name, "client": client_name(&request) }),
-                outputs: json!({ "closed": Value::Array(
-                    closed.iter().map(|n| Value::from(n.clone())).collect::<Vec<Value>>()
+                what: "the pane was hidden",
+                why: "the owner closed it",
+                how: "it stops being drawn and its shell keeps running; a kill is \
+                      the separate word",
+                inputs: json!({ "kind": kind, "name": name,
+                                "client": client_name(&request) }),
+                outputs: json!({ "hidden": Value::Array(
+                    hidden.iter().map(|one| Value::from(one.clone())).collect::<Vec<Value>>()
                 ) }),
-                result: json!({}),
+                result: json!({ "comes-back": "pane show NAME" }),
             });
             session.write(&record);
             answer_client(session, at, &record);
             Ok(true)
         }
+
         other => {
             let record = session.record(Fields {
                 kind: "fail",
@@ -1841,6 +1872,8 @@ fn session_command(session: &mut Session, at: usize, request: &Value) -> Result<
     match what.as_str() {
         "create" => create_session(session, at, &name),
         "rename" => rename_session(session, at, &name),
+        "kill" => kill_session(session, at, &name),
+        "show" => show_pane(session, at, &name),
         "kill" => kill_session(session, at, &name),
         other => {
             a_fail(session, at, "the session command was refused",
@@ -2080,6 +2113,77 @@ fn ask_once(socket: &Path, request: &Value) -> Result<Value, String> {
     let first = answer.lines().next().unwrap_or("").to_string();
     serde_json::from_str(&first)
         .map_err(|why| format!("the answer is not a record: {}", why))
+}
+
+/// kill_pane ends a shell for good: the pane is removed and its terminal is
+/// closed. This is the separate word from close/hide (TODO item 45), and
+/// nothing uses it by accident.
+fn kill_pane(session: &mut Session, at: usize, request: &Value) -> Result<bool, String> {
+    let name = request
+        .get("name")
+        .and_then(|value| value.as_str())
+        .unwrap_or("")
+        .to_string();
+    let at_pane = match session.panes.iter().position(|pane| pane.name == name) {
+        Some(found) => found,
+        None => {
+            a_fail(session, at, "the pane was not killed",
+                format!("there is no pane named {}", name),
+                json!({ "name": name }));
+            return Ok(true);
+        }
+    };
+    let pane = session.panes.remove(at_pane);
+    close(pane.shell.master);
+    let record = session.record(Fields {
+        kind: "info",
+        who: &pane.name,
+        what: "the pane was killed",
+        why: "the owner asked to kill it for good",
+        how: "the terminal was closed and the shell is ended; it will not come back",
+        inputs: json!({ "name": pane.name.clone() }),
+        outputs: json!({ "panes": session.panes.len() }),
+        result: json!({}),
+    });
+    session.write(&record);
+    answer_client(session, at, &record);
+    Ok(true)
+}
+
+/// show_pane brings a hidden pane back: its shell keeps running, and it
+/// becomes drawn again.
+fn show_pane(session: &mut Session, at: usize, name: &str) -> Result<bool, String> {
+    let mut shown = false;
+    for pane in session.panes.iter_mut() {
+        if pane.name == name && pane.hidden {
+            pane.hidden = false;
+            shown = true;
+            break;
+        }
+    }
+    if !shown {
+        a_fail(session, at, "the pane was not shown back",
+            format!("there is no hidden pane named {}", name),
+            json!({ "name": name }));
+        return Ok(true);
+    }
+    if !session.tabs.contains(&session.panes.iter().find(|pane| pane.name == name).unwrap().tab) {
+        let tab = session.panes.iter().find(|pane| pane.name == name).unwrap().tab.clone();
+        session.tabs.push(tab);
+    }
+    let record = session.record(Fields {
+        kind: "info",
+        who: name,
+        what: "the pane was shown again",
+        why: "the owner asked to bring it back",
+        how: "the hidden pane is drawn again and its shell was never ended",
+        inputs: json!({ "name": name }),
+        outputs: json!({}),
+        result: json!({}),
+    });
+    session.write(&record);
+    answer_client(session, at, &record);
+    Ok(true)
 }
 
 /// rewind answers how one pane looked at one record: the lines that pane had

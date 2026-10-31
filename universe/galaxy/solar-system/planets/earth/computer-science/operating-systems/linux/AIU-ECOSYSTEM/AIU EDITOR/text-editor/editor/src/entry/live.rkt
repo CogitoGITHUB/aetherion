@@ -34,22 +34,19 @@
          "../notation/document.rkt"
          "../notation/host.rkt"
          "../notation/where.rkt"
-         "../dashboard/blockview.rkt")
+         "../dashboard/blockview.rkt"
+         "../dashboard/bar.rkt"
+         "../dashboard/tabs.rkt"
+         "../dashboard/finder.rkt"
+         (only-in "../machine/directories.rkt" journal-path-for))
 
-;; live-session runs the live session on a file: the terminal goes raw,
-;; the keys are read and run, and the terminal is given back when the
-;; session ends.
+;; live-session runs the live session on a file: the terminal goes raw, the keys
+;; are read and run, and the terminal is given back when the session ends. A tab
+;; key ends one round and names the next file, and the session goes on in the same
+;; terminal with that file, so the hot path and the screen stay up while the tabs
+;; change. The work not saved yet of every file stays in its own journal.
 (define (live-session file journal)
-  (define session (make-session file journal))
-  ;; The viewport is the first text line shown at the top of the screen. It
-  ;; is kept here, and it changes only when the point leaves the window, so a
-  ;; moving point does not drag the page under it.
-  (define viewport (box 1))
-  ;; The editor opens as a VIEW: the page is shown as a person reads it, its
-  ;; block markers gone, and no cursor — nothing is typed until the person asks
-  ;; for the write layer with the w key (the whole block) or the i key (its text). The visual layer is where
-  ;; the commands live, so a reader cannot change the text by accident.
-  (set-layer! session "visual")
+  (unless (home-screen) (tab-show! (path->string file)))
   (raw-mode)
   (display "\u001b[?1049h")
   (dynamic-wind
@@ -59,9 +56,27 @@
       ;; for the whole session: a key asks the child that is already running
       ;; instead of paying a program start for every letter.
       (unless (home-screen) (wire-start))
-      (set-box! home-repaint (lambda () (repaint session viewport)))
-      (repaint session viewport)
-      (begin (start-home-scan) (key-loop session (current-input-port) viewport)))
+      (let next-round ([file file] [journal journal])
+        (define session (make-session file journal))
+        ;; The viewport is the first text line shown at the top of the screen. It
+        ;; changes only when the point leaves the window, so a moving point does
+        ;; not drag the page under it.
+        (define viewport (box 1))
+        ;; The editor opens as a view: the page is shown as a person reads it, and
+        ;; nothing is typed until the write layer is asked for with w or i.
+        (set-layer! session "visual")
+        (let ([ln (unbox find-jump)])
+          (when ln
+            (set-box! find-jump #f)
+            (move-to session (line-start-offset (session-text session) ln))))
+        (set-box! home-repaint (lambda () (repaint session viewport)))
+        (repaint session viewport)
+        (start-home-scan)
+        (key-loop session (current-input-port) viewport)
+        (define next (unbox tab-switch))
+        (when next
+          (set-box! tab-switch #f)
+          (next-round (string->path next) (journal-path-for (string->path next))))))
     (lambda ()
       (set-box! home-repaint void)
       (wire-stop)
@@ -164,7 +179,7 @@
             (enter-key l)
             (if t (kname (cdr t)) "-"))))
   (string-join
-   (append (grid (format "~a · keys after ~a" layer (string-join (map kname pending) " "))
+   (append (grid (if (null? pending) (format "~a · keys" layer) (format "~a · keys after ~a" layer (string-join (map kname pending) " ")))
                  (list "key" "command" "key" "command")
                  pair-rows)
            (grid "modes" (list "mode" "enter" "trigger") mode-rows))
@@ -176,7 +191,12 @@
 
 ;; repaint-now draws the whole screen for the session as it stands.
 (define (repaint-now session viewport)
-  (define-values (width height) (terminal-size))
+  (define-values (full-width full-height) (terminal-size))
+  (define plan
+    (bar-plan-of session (unbox pending-keys) full-width full-height (and (home-screen) #t)
+                 (lambda () ((unbox home-repaint)))))
+  (define width (- full-width (bar-plan-left plan) (bar-plan-right plan)))
+  (define height (+ 1 (- full-height (bar-plan-top plan) (bar-plan-bottom plan))))
   (define name (path->string (session-file session)))
   (define writing? (string=? (the-layer session) "write"))
   (define raw (session-text session))
@@ -190,7 +210,7 @@
           [writing? raw]
           [else (page-view session raw width)]))
   (define pending (unbox pending-keys))
-  (define menu (and (not home) (pair? pending) (menu-text (the-layer session) pending width)))
+  (define menu (and (not home) (or (pair? pending) (member (the-layer session) (list "bar" "bar-level" "tab" "tab-level" "find"))) (menu-text (the-layer session) pending width)))
   (define text (if overlay (car overlay) plain-text))
   (define-values (row column) (point-line raw (the-point session)))
   (define plain-top
@@ -224,10 +244,11 @@
         ""))
   (display
    (paint text-shown (if overlay (cadr overlay) (the-point session)) width height top
-          (format "~a  ~a  ~a:~a~a" (file-name-from-path (session-file session))
-                  (the-layer session) row column where)
+          (if (bar-plan-line? plan) (format "~a  ~a  ~a:~a~a" (file-name-from-path (session-file session))
+                  (the-layer session) row column where) (bar-plan-text plan))
           writing?
-          (or (and home #t) (and menu #t) (and overlay #t) (and (not writing?) (string-suffix? name ".aiu")))))
+          (or (and home #t) (and menu #t) (and overlay #t) (and (not writing?) (string-suffix? name ".aiu")))
+          #:offset (bar-plan-top plan) #:left (bar-plan-left plan) #:full full-width #:overlay (bar-plan-overlay plan)))
   (flush-output))
 
 ;; viewport-top answers the first line shown at the top of the screen: the

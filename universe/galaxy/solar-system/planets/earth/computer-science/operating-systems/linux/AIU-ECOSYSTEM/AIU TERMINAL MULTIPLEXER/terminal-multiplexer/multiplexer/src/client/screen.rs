@@ -959,6 +959,14 @@ impl Screen {
                     "name": pane
                 }))
             }
+            Command::PaneClose => {
+                let pane = self.focused_pane();
+                Action::Request(json!({
+                    "op": "close",
+                    "kind": "pane",
+                    "name": pane
+                }))
+            }
             Command::PaneRename => {
                 self.mode = Mode::Command;
                 self.command = "pane rename ".to_string();
@@ -1484,6 +1492,7 @@ impl Screen {
             ["tab", "previous"] => self.run(Command::TabPrevious),
             ["pane", "new"] => self.run(Command::PaneAdd),
             ["pane", "close"] => self.run(Command::PaneClose),
+            ["pane", "kill"] => { let pane = self.focused_pane(); self.message = format!("the pane {} will be killed for good", pane); Action::Request(json!({ "op": "kill", "name": pane })) }
             ["pane", "rename", name] => Action::Request(json!({
                 "op": "rename",
                 "kind": "pane",

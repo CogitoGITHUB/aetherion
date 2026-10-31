@@ -1,0 +1,81 @@
+#+TITLE: CONTRACT CHANGE REQUEST 01 — the agent's words run in the holder
+# One job: the one protocol change TODO item 25 needs, put to the owner before any code moves.
+# Status: open; the work stops here until the owner answers.
+
+* What the owner asked for (item 25, 2026-10-22)
+
+"The agent acts with no approval prompt, and also while no screen is attached: the holder
+runs the agent's own words, not the screen's; the secrets still never reach an agent."
+Done when: an agent adds a tab, splits a pane, closes one and sends to a shell with no
+screen attached and with no token, and a secret is still refused by name on the way to an
+agent. It replaces the token gate and the attached screen of item 23.
+
+* What stands today (read from the code, 2026-10-31)
+
+- =multiplexer_send= already talks to the holder with no screen and no view: the bytes go
+  straight to a pane's shell.
+- =multiplexer_control= sends =op: control= with words + the human's token. The holder
+  compares the token itself (=token_matches=, =holder.rs:1667=), then forwards the words to
+  the attached screen (=ask_screen=, =holder.rs:1701=) and waits for =control-result=. With
+  no screen the holder refuses: "no screen is attached to this session, so there is nothing
+  to drive".
+- =multiplexer_view= is the same forward-to-the-screen path, so it also needs a screen.
+- The words themselves are the screen's code (=control::run= → =Screen::run_command=), which
+  owns the tabs, the panes, the ring of copies, the selection, the scroll and the panels.
+  The holder owns the panes' processes, the layout, the log and the state record.
+
+* What has to change on the wire
+
+1. =op: control= is answered by the holder: no forwarding, no =control-result= from a
+   screen, and the answer comes back on the same connection that asked.
+2. The =confirm= field goes away, and so does the token check in the holder and in the MCP
+   (=token_given=, =agents/mcp.rs:193=). =capabilities.json= says of both mutating tools
+   "it needs the human's token": that sentence goes, and the declaration is re-checked.
+3. =op: view= is answered by the holder when no screen is attached (the panes, their tabs,
+   their lines from the log). With a screen attached it stays the screen's answer, because
+   the ring of copies is the screen's.
+4. Everything else stays: =attach=, =detach=, =state=, =read=, =send=, =open=, =resize=,
+   =rename=, =close=, and the record of every change as the log's own record.
+5. The redaction seam does not move: a line that names a credential keeps its name and loses
+   its value on the way to an agent, and that stays a refusal by name.
+
+* The one choice the owner has to make
+
+The words fall in two groups, and the second group is where a screen is still needed:
+
+- The session's words: =tab new=, =tab close=, =pane new= (the split), =pane close=,
+  =focus PANE=, =send=. The holder already owns every object behind them, so it can run
+  them with no screen and no view.
+- The view's words: =scroll up/down=, =copy PANE FIRST LAST=, =paste PANE=, =paste agent=,
+  =view=. They act on the ring of copies and on a scroll offset, which live in the screen.
+
+(a) MINIMAL — the holder runs the session's words; the view's words answer by name
+    ("the scroll and the ring are the screen's; item 63 moves them into the holder").
+    Satisfies item 25's done-when exactly. No state is built twice, and item 63 (independent
+    views per client) then moves the view state once, for the right reason.
+(b) HOLDER-OWNS-THE-VIEW — the holder grows its own ring and a scroll offset per pane now,
+    and runs every word with no screen. Bigger, and item 63 will rewrite the same state per
+    client, so part of it is built to be thrown away.
+(c) DO IT AFTER 63 — item 25 waits for the per-client views, and the agent's words stay
+    screen-bound until then.
+
+Recommendation: (a). It is the smallest true reading of item 25, it needs no second copy of
+the view, and it leaves the view state to item 63, which is where the owner already ordered
+it to live.
+
+* What the owner's answer changes elsewhere
+
+- README: rule 07 as the program states it ("read is free, a change needs the human's
+  token"), the =multiplexer_control= paragraph, and the ops table all change with the
+  answer, in the same commit.
+- =gate/kit-check.nu= proof 3 ("the gating and the re-check") checks the token: it becomes a
+  check that a change is answered and recorded with no token, or it is dropped by the owner's
+  word. It is already red for another reason (item 64).
+- DECISIONS.org is the owner's to amend: this request is not a decision until it is written
+  there.
+
+* Stop
+
+No code moves until the owner answers (a), (b) or (c). The rest of the list is unaffected:
+item 26 (the goal mode) depends on 25, so it waits behind it; items 48, 51, 58 and 60 do not
+depend on 25 and can run in either order.

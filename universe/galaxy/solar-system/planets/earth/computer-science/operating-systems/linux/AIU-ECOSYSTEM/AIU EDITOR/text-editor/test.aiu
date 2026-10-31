@@ -5,7 +5,7 @@ Testing page for the editor itself
 title end
 
 paragraph start 
-This page is a test. Open it with aiutd, then press space r to read it as a page, space b to list the blocks and space k to check it.
+This page is a test. Open it with aiutd, then press space r to read it as a page and space k to check it. Space b opens the bar keys, space t the tab keys and space z hides all the bars and space / finds with fzf.
 paragraph end
 
 section start

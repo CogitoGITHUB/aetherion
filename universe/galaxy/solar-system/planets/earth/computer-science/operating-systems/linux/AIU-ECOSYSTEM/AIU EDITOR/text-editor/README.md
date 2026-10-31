@@ -52,31 +52,72 @@ The gate runs under nushell: `nu gate/check.nu`.
 | Rust hot path binary | yes for files | default `/tmp/editor-target/debug/hot-path`, or `AIU_HOT_PATH_BIN` |
 | AIU NOTATION binary | no | draws the home screen and pages as boxes; without it the page text shows as it is |
 | git | no | feeds the git rows of the home screen |
+| fzf and rg | for find | space / needs both |
 | nushell | for the gate | `nu gate/check.nu` |
 
 ## 5. Keys
 
-The trigger is space. Nothing needs a modifier key.
+The trigger is space, and tab in the write layer. Nothing needs a modifier key. SPC is the space key. Every key below is read from `editor/src/routes/keymaps.rkt`.
+
+Visual layer (the page is read):
 
 | Key | Does |
 |---|---|
-| w | on a page in the visual layer: write the lit block as raw text, markers shown (see Block editing); tab is the trigger in the write layer |
+| up, h | on a page: light the block before |
+| down, t | on a page: light the block after |
+| left, n | move the point left |
+| right, s | move the point right |
+| w | on a page: write the lit block as raw text, markers shown (see Block editing) |
+| i | on a page: edit only the text of the lit block, inside its drawn box |
+| m | the move layer |
+| backspace | take back the character before the point |
+| escape | stay in the visual layer |
 | space f | the write layer on the whole page, raw |
+| space v | the select layer |
 | space s | save |
 | space q | quit |
-| space r | view the page as a reader; on the home screen, scan again |
-| space b, k | blocks, check (pages) |
-| space n, p, e | next block, previous block, block end |
+| space l | show |
+| space d, space u | show one level less or one level more of the rows of the editor (0 to 3) |
+| space ? | the explorer |
 | space g | send (loads its code on first use) |
-| space | waits for the next key and pops up two tables over the bottom rows of the page: table 1 the keys that can follow in the active layer, table 2 the modes with the key that enters each and its trigger (SPC is the space key), both read from the key tables |
-| escape | in the write layer: save, then back to the visual layer; in the move layer: back to the visual layer |
-| h, t | on a page in the visual layer: light the block before or after |
-| n, s | move the point left or right |
-| m | the move layer: h and t swap the lit block with the one before or after it, escape leaves |
-| up, down | on a page in the visual layer: light the block before or after |
-| i | on a page in the visual layer: edit only the text of the lit block, inside its drawn box; escape draws the page again |
+| space b | the bar layer (see Bar) |
+| space t | the tab layer (see Tabs) |
+| space / | find with fzf (see Find) |
+| space z | focus mode: hide the bar, the tabs and the one line, and again to bring them back |
+| space k | check (pages) |
+| space n, p, e | next block, previous block, block end |
+| space r | view the page as a reader; on the home screen, scan again |
 | 1 to 9 | on the home screen, open that page |
+| space, then wait | pops up two tables over the bottom rows of the page: table 1 the keys that can follow in the active layer, table 2 the modes with the key that enters each and its trigger, both read from the key tables |
 
+Write layer (keys are text, tab is the trigger):
+
+| Key | Does |
+|---|---|
+| tab tab | back to the visual layer |
+| tab s, tab q | save, quit |
+| tab v | the visual layer |
+| tab b, tab k | blocks, check |
+| tab r | view |
+| tab n, tab p | next block, previous block |
+| escape | save, then back to the visual layer |
+| up, down, left, right | move the point |
+| backspace | take back the character before the point |
+
+Select layer (reached with space v):
+
+| Key | Does |
+|---|---|
+| space space | the write layer |
+| space s, space q, space g | save, quit, send |
+| space v, escape | the visual layer |
+
+Move layer (reached with m):
+
+| Key | Does |
+|---|---|
+| h, t | swap the lit block with the one before or after it |
+| escape | back to the visual layer |
 ## 6. Home screen
 
 `aiutd` with no file opens the home screen. It is an AIU page built in memory by
@@ -104,8 +145,61 @@ backspace stops at its start. Escape draws the page again. A block that holds
 other blocks, such as a section, has no text of its own: i then does the same
 as w. A block whose lines cannot be told from the drawing is lit as its parent
 block, and when no block can be told the key w opens the whole page to write.
-Space f writes the whole page raw. Space space and space w are no longer keys.
+Space f writes the whole page raw. Space space is bound only in the select layer, and space w is not a key.
 A plain text file still scrolls with up and down.
+
+## Bar
+
+Space b opens the bar layer, and the popup lists its keys. The bar has five parts: the layer, the time, git, the date and the keys. It stands at the bottom or the top as a box, or on the sides as strips with the letters upright: docked beside the page, or floating over it. With both sides the layer, git and the keys are on the left, and the time and the date on the right. A screen under 14 rows and the home screen keep the one old line. The time is read at each paint, and git is asked in a thread every 20 seconds, never in a paint.
+
+| Key | Does |
+|---|---|
+| p | next place: bottom, top, left, right, sides |
+| b, u, l, r, s | place: bottom, top, left, right, sides |
+| d | docked or floating |
+| x | hide the bar, or show it again |
+| v | the level adjuster |
+| escape | back to the visual layer |
+
+Level adjuster (v): h hides one part, t shows one more. The parts come in the order layer, time, git, date, keys. Escape goes back to the bar layer.
+
+## Tabs
+
+Space t opens the tab layer, and the popup lists its keys. Every file you open stays as a tab, and the active one has a dot. The tab bar is one box with up to three sections, the level: 1 tabs, 2 project and tabs, 3 workspace, project and tabs. The workspace is the folder named AIU-ECOSYSTEM (or AIU_ROOT) and the folders beside it, the project is the first folder under it that holds the page, and the dot marks where the active page is. The project and workspace rows only show where the page is; they do not switch yet. The tab bar needs 16 rows and stays at the top or the bottom, never on the sides. It can share its edge with the bar when both stand at the same edge (j), or stand apart. Work not saved yet stays in the journal of its own file when you change tab.
+
+| Key | Does |
+|---|---|
+| h, left | the tab before |
+| t, right | the tab after |
+| o | open the next page of the folder of the active tab, as a new tab |
+| c | close the active tab (the last one stays) |
+| p | the other place: top or bottom |
+| u, b | place: top, bottom |
+| j | share the edge with the bar, or stand apart |
+| x | hide the tab bar, or show it again |
+| v | the level adjuster |
+| escape | back to the visual layer |
+
+Level adjuster (v): h hides one level, t shows one more, escape goes back to the tab layer. Both bars open with every level shown: the tab bar at level 3 and the bar with all five parts.
+
+Space z is focus mode: it hides the bar, the tabs and the one line, and shows them again.
+
+## Colour
+
+Pages are drawn without colour. Bold and dim stay; the only colour is red, on an open todo (its TODO badge, its tray and its box). A done todo is plain. The rule lives in `sgr` of the notation project (`boxview.rs` and `view.rs`); rebuild the notation binary and the hot path after a change.
+
+## Find
+
+Space / opens the find layer, and the popup lists its keys. fzf runs over what you pick: the first key is the scope, the second the kind. The pick opens as a tab and the point jumps to its line. The terminal belongs to fzf while it runs; escape in fzf comes back with nothing picked.
+
+| Keys | Searches |
+|---|---|
+| f t, f b, f d | the open file: its text, its block types, its todos |
+| p t, p b, p d, p n | the project: text, block types, todos, file names |
+| w t, w b, w d, w n | the workspace: text, block types, todos, file names |
+| escape | back to the visual layer |
+
+The rows show paths relative to the folder searched, and the top of the screen previews the file: a page (.aiu) drawn as boxes the way the editor draws it, any other file as numbered lines around the picked line with a mark on it. Text covers every file of the scope. Block types and todos read the pages (.aiu). It needs fzf and rg; without fzf the key says so.
 
 ## 7. Build and check
 
@@ -134,6 +228,9 @@ No `compiled/` folder and no backup file may sit inside the tree.
 | open | the block cursor matches boxes to blocks by counting them level by level; a comment that wraps blocks may be drawn another way, and then its parent block is lit |
 | open | a raw line wider than the screen is wrapped at a space behind the left edge of its box while a block is edited |
 | open | the scan limits (800 pages, 8 repositories, 4 folders deep) are fixed in code |
+| open | the project and workspace rows of the tab bar show where the page is; they do not switch yet |
+| open | after moving blocks the cursor cannot land on the todo tray of a box, so the todo cannot be selected from its box |
+| open | try by hand: the bar (space b), the tabs (space t), focus (space z), find (space /) and the red-only colour |
 
 ## 9. Repo map
 

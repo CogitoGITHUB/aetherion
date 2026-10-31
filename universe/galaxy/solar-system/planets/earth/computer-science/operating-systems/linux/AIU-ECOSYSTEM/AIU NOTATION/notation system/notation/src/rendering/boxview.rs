@@ -191,7 +191,18 @@ impl Boxes {
     }
 
     /// Colour the text with ANSI codes, unless plain.
+    fn sgr_todo(&self, codes: &[u32], s: &str) -> String {
+        if self.plain || codes.is_empty() || s.is_empty() {
+            return s.to_string();
+        }
+        let c: Vec<String> = codes.iter().map(|n| n.to_string()).collect();
+        format!("\x1b[{}m{}\x1b[0m", c.join(";"), s)
+    }
+
+    /// Style the text with ANSI codes, never a colour: only the todo box keeps red.
     fn sgr(&self, codes: &[u32], s: &str) -> String {
+        let kept: Vec<u32> = codes.iter().copied().filter(|n| *n < 30).collect();
+        let codes = &kept[..];
         if self.plain || codes.is_empty() || s.is_empty() {
             return s.to_string();
         }
@@ -521,14 +532,14 @@ impl Boxes {
         let (first, rest) = match t.split_once(" ") { Some((x, y)) => (x, y.trim()), None => (t, "") };
         let (done, desc) = if first == "done" { (true, rest) } else if first == "open" { (false, rest) } else { (false, t) };
         let badge = if done { "DONE" } else { "TODO" };
-        let col: u32 = if done { 32 } else { 31 };
+        let red: Vec<u32> = if done { vec![] } else { vec![31] };
         let w = width.max(10);
         let mut framed = self.frame(label, tcodes, inner, width, false, center);
         let lab = clip(label, w.saturating_sub(badge.len() + 12));
         let fill = w.saturating_sub(lab.chars().count() + badge.len() + 8);
         let top = format!("{}{}{}{}{}",
             self.sgr(&[2], "╭─ "), self.sgr(tcodes, &lab),
-            self.sgr(&[2], &format!(" {} ", "─".repeat(fill))), self.sgr(&[1, col], badge), self.sgr(&[2], " ─╮"));
+            self.sgr(&[2], &format!(" {} ", "─".repeat(fill))), self.sgr_todo(&[&[1u32][..], &red[..]].concat(), badge), self.sgr(&[2], " ─╮"));
         framed[0] = L { s: top, n: w, sep: false };
         if desc.is_empty() {
             return framed;
@@ -537,16 +548,16 @@ impl Boxes {
         let mut out = framed;
         let lab2 = format!(" {} ", if done { "DONE" } else { "TODO · open" });
         let fill2 = w.saturating_sub(3 + lab2.chars().count());
-        out.push(L { s: self.sgr(&[col], &format!("╰─{}{}╯", lab2, "─".repeat(fill2))), n: w, sep: false });
+        out.push(L { s: self.sgr_todo(&red, &format!("╰─{}{}╯", lab2, "─".repeat(fill2))), n: w, sep: false });
         let tw = w.saturating_sub(4).max(4);
         let mut rows = wrap(desc, tw);
         if rows.is_empty() { rows.push(String::new()); }
         for r in rows {
             let r = clip(&r, tw);
             let pad = tw.saturating_sub(r.chars().count());
-            out.push(L { s: format!("{} {}{} {}", self.sgr(&[col], "│"), self.sgr(&[col], &r), " ".repeat(pad), self.sgr(&[col], "│")), n: w, sep: false });
+            out.push(L { s: format!("{} {}{} {}", self.sgr_todo(&red, "│"), self.sgr_todo(&red, &r), " ".repeat(pad), self.sgr_todo(&red, "│")), n: w, sep: false });
         }
-        out.push(L { s: self.sgr(&[col], &format!("╰{}╯", "─".repeat(w.saturating_sub(2)))), n: w, sep: false });
+        out.push(L { s: self.sgr_todo(&red, &format!("╰{}╯", "─".repeat(w.saturating_sub(2)))), n: w, sep: false });
         out
     }
 }

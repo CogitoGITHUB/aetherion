@@ -113,6 +113,8 @@ impl<'a> View<'a> {
 
     /// Colour the text with ANSI codes, unless plain.
     fn sgr(&self, codes: &[u32], s: &str) -> String {
+        let kept: Vec<u32> = codes.iter().copied().filter(|n| *n < 30).collect();
+        let codes = &kept[..];
         if self.plain || codes.is_empty() || s.is_empty() {
             return s.to_string();
         }

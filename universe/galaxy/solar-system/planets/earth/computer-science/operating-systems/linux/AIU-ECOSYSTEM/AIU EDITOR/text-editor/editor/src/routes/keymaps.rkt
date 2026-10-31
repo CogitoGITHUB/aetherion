@@ -41,7 +41,7 @@
 ;;   visual — the general mode: the trigger and the plain keys
 ;;   write  — the text mode: the keys are text
 ;;   select — the selected text is what the commands act on
-(define editor-layers '("visual" "write" "select" "move"))
+(define editor-layers '("visual" "write" "select" "move" "bar" "bar-level" "tab" "tab-level" "find"))
 
 ;; trigger-of answers the trigger of each layer: the key that starts a
 ;; sequence in that layer.
@@ -49,7 +49,12 @@
   (list (cons "visual" "space")
         (cons "write" "tab")
         (cons "select" "space")
-          (cons "move" "space")))
+          (cons "move" "space")
+          (cons "bar" "space")
+          (cons "bar-level" "space")
+          (cons "tab" "space")
+          (cons "tab-level" "space")
+          (cons "find" "space")))
 
 ;; normal-keys are the keys of the visual layer: the key and the command
 ;; it runs. The command is a name from the command table, never a
@@ -73,7 +78,10 @@
     ("space u" "level-up")
     ("space ?" "explorer")
     ("space g" "send")
-    ("space b" "blocks")
+    ("space b" "bar-mode")
+    ("space t" "tab-mode")
+    ("space z" "focus-toggle")
+    ("space /" "find-mode")
     ("space k" "check")
     ("space n" "next-block")
     ("space p" "prev-block")
@@ -126,6 +134,67 @@
         (list "t" "block-move-down")
         (list "escape" "visual-mode")))
 
+;; bar-keys are the keys of the bar layer: the places of the bar, the style, the
+;; hide key and the key that enters the level adjuster.
+(define bar-keys
+  (list (list "p" "bar-place-next")
+        (list "b" "bar-bottom")
+        (list "u" "bar-top")
+        (list "l" "bar-left")
+        (list "r" "bar-right")
+        (list "s" "bar-sides")
+        (list "d" "bar-style")
+        (list "x" "bar-hide")
+        (list "v" "bar-level-mode")
+        (list "escape" "visual-mode")))
+
+;; bar-level-keys are the keys of the level adjuster: h hides one part of the bar,
+;; t shows one more, and escape goes back to the bar layer.
+(define bar-level-keys
+  (list (list "h" "bar-less")
+        (list "t" "bar-more")
+        (list "escape" "bar-mode")))
+;; tab-keys are the keys of the tab layer: h and left go to the tab before, t and
+;; right to the tab after, o opens the next page of the folder, c closes the tab,
+;; p, u and b place the bar, j joins it to the bar, x hides it and v enters the
+;; level adjuster.
+(define tab-keys
+  (list (list "h" "tab-prev")
+        (list "t" "tab-next")
+        (list "left" "tab-prev")
+        (list "right" "tab-next")
+        (list "o" "tab-open")
+        (list "c" "tab-close")
+        (list "p" "tab-place-next")
+        (list "u" "tab-top")
+        (list "b" "tab-bottom")
+        (list "j" "tab-join")
+        (list "x" "tab-hide")
+        (list "v" "tab-level-mode")
+        (list "escape" "visual-mode")))
+
+;; tab-level-keys are the keys of the tab level adjuster: h hides one level, t
+;; shows one more, and escape goes back to the tab layer.
+(define tab-level-keys
+  (list (list "h" "tab-less")
+        (list "t" "tab-more")
+        (list "escape" "tab-mode")))
+;; find-keys are the keys of the find layer: the first key is the scope (f the
+;; file, p the project, w the workspace) and the second is the kind (t text, b
+;; block types, d todos, n file names).
+(define find-keys
+  (list (list "f t" "find-file-text")
+        (list "f b" "find-file-blocks")
+        (list "f d" "find-file-todos")
+        (list "p t" "find-project-text")
+        (list "p b" "find-project-blocks")
+        (list "p d" "find-project-todos")
+        (list "p n" "find-project-files")
+        (list "w t" "find-workspace-text")
+        (list "w b" "find-workspace-blocks")
+        (list "w d" "find-workspace-todos")
+        (list "w n" "find-workspace-files")
+        (list "escape" "visual-mode")))
 ;; keymaps is the whole table: a layer name and the keys of that layer.
 ;; The tables are put in with list, not with cons and not with a quote:
 ;; a quoted list would hold the NAMES of the tables, and a cons would be
@@ -140,7 +209,12 @@
       (list (list "visual" normal-keys)
             (list "write" insert-keys)
             (list "select" select-keys)
-              (list "move" move-keys))))
+              (list "move" move-keys)
+            (list "bar" bar-keys)
+            (list "bar-level" bar-level-keys)
+            (list "tab" tab-keys)
+            (list "tab-level" tab-level-keys)
+            (list "find" find-keys))))
 
 ;; keys-of answers the keys of one layer, or nothing when the table holds
 ;; no layer by that name. The keys of a layer are pairs: a key and the
@@ -177,6 +251,11 @@
 
 ;; The tables, for the routing above them and the gate beside them.
 (provide move-keys
+         bar-keys
+         bar-level-keys
+         tab-keys
+         tab-level-keys
+         find-keys
          reserved-prefix
          editor-layers
          trigger-of
