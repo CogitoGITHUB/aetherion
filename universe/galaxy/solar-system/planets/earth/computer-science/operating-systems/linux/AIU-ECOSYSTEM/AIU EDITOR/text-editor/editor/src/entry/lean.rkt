@@ -34,7 +34,10 @@
   (define file (path->complete-path path))
   (define journal (journal-path-for file))
   (ensure-dir (build-path (state-dir) "journal"))
-  (live-session file journal))
+  (live-session file journal)
+  (when (unbox home-request)
+    (set-box! home-request #f)
+    (home-session)))
 
 ;; home-session runs the home screen. A page picked there opens in the live
 ;; session when the home screen ends.

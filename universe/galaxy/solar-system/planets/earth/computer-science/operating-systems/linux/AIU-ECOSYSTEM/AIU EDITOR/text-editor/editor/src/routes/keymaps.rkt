@@ -90,6 +90,7 @@
     ("space z" "focus-toggle")
     ("space /" "find-mode")
     ("space k" "check")
+    ("space h" "home-open")
     ("space n" "next-block")
     ("space e" "block-end")
     ("escape" "visual-mode")

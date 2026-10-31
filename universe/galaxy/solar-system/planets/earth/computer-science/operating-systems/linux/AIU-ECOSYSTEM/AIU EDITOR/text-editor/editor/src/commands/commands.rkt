@@ -462,4 +462,15 @@
         [(string=? layer "visual") (if (string=? (unbox kind-filter) "any") "visual general" "visual navigation")]
         [else layer]))
 
-(provide kind-filter mode-label)
+;; home-request is set by the home-open command; the loader opens the dashboard
+;; when the round of the live session ends with it set.
+(define home-request (box #f))
+
+;; command-home-open asks for the dashboard and ends the round.
+(define (command-home-open session words)
+  (set-box! home-request #t)
+  (cons #f "dashboard"))
+
+(hash-set! commands "home-open" command-home-open)
+
+(provide kind-filter mode-label home-request)

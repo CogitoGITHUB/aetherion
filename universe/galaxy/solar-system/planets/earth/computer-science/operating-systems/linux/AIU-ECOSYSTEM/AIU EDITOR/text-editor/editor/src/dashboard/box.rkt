@@ -45,4 +45,8 @@
 (define (white s) (string-append "\u001b[97m" s "\u001b[0m"))
 
 ;; The box drawing, for the bar and the tabs.
-(provide box-pad edge-line rule-line body-line join-edge draw-at white)
+;; paint-ready is true once the first full paint of the page has finished; the
+;; git threads wait for it, so they never compete with the first paint.
+(define paint-ready (box #f))
+
+(provide paint-ready box-pad edge-line rule-line body-line join-edge draw-at white)

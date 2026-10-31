@@ -41,6 +41,26 @@ pub fn records(path: &str) -> Vec<String> {
     text.lines().map(|line| line.to_string()).collect()
 }
 
+/// archive keeps the history of the work: the first time it saves the text the
+/// file had before, as the base, and every time it appends the records of the
+/// journal to the history file. The base with a prefix of the history replayed
+/// on it is any past state.
+pub fn archive(path: &str, saved_before: &str) {
+    let records = records(path);
+    if records.is_empty() {
+        return;
+    }
+    let base = format!("{}.base", path);
+    if !std::path::Path::new(&base).exists() {
+        let _ = std::fs::write(&base, saved_before);
+    }
+    if let Ok(mut file) = OpenOptions::new().create(true).append(true).open(format!("{}.history", path)) {
+        for record in records {
+            let _ = writeln!(file, "{}", record);
+        }
+    }
+}
+
 /// clear empties the journal: the file on disk now holds the work.
 pub fn clear(path: &str) {
     let _ = std::fs::write(path, "");

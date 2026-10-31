@@ -5,6 +5,9 @@
 
 ;; kept holds the hunks of the file in kept-file: lists of first line, last
 ;; line and mark.
+(require (only-in "box.rkt" paint-ready))
+
+;; kept holds the hunks of the file in kept-file.
 (define kept (box null))
 
 ;; kept-file holds the file the kept hunks belong to.
@@ -48,7 +51,7 @@
 ;; gutter-refresh-maybe asks git in a thread when the answer is fifteen
 ;; seconds old or belongs to another file, and calls again when it changed.
 (define (gutter-refresh-maybe file again)
-  (when (and (not (unbox busy))
+  (when (and (unbox paint-ready) (not (unbox busy))
              (or (not (equal? (unbox kept-file) file))
                  (>= (- (current-seconds) (unbox stamp)) 15)))
     (define first? (zero? (unbox stamp)))
@@ -56,7 +59,7 @@
     (set-box! stamp (current-seconds))
     (thread
      (lambda ()
-       (when first? (sleep 4))
+       (void)
        (define hunks (with-handlers ([(lambda (e) #t) (lambda (e) null)]) (parse-hunks (git-diff file))))
        (define changed? (not (and (equal? (unbox kept-file) file) (equal? hunks (unbox kept)))))
        (set-box! kept hunks)

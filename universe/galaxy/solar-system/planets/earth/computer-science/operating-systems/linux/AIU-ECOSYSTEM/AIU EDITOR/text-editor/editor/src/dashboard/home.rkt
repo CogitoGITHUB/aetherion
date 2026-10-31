@@ -303,9 +303,14 @@
                   (list (format "... ~a more open todos" (- (length open-todos) n)))))
            null)))]))
 
-;; home-text answers the page of the home screen: the title, the keys, the
-;; pages, the work and the open todos from the last scan, which is shown at
-;; once while a new scan runs in the background.
+;; code-block answers the rows as one code block, so every row keeps its own
+;; line and its own left edge.
+(define (code-block rows)
+  (string-append "code start\nlanguage: text\n" (string-join rows "\n") "\ncode end\n"))
+
+;; home-text answers the page of the home screen: the title, the keys that
+;; exist, the pages one to a line, the work and the open todos from the last
+;; scan, which is shown at once while a new scan runs in the background.
 (define (home-text)
   (define d (data))
   (define age (scan-age))
@@ -313,22 +318,21 @@
   (join-blocks
    (append
     (list (title-block "AIU DASHBOARD")
-          (paragraph-block
-           (list "space q quit  ·  space r scan again"
-                 "1 to 9 opens that page"
-                 (cond
-                   [busy? "scanning in the background"]
-                   [age (format "last scan ~a min ago" age)]
-                   [else "no scan yet"]))))
+          (code-block
+           (list "1 to 9   open that page"
+                 "space ?  explorer"
+                 "space /  find"
+                 "space q  quit"
+                 (cond [busy? "scanning in the background"]
+                       [age (format "last scan ~a min ago" age)]
+                       [else "no scan yet"]))))
     (if d
-        (list (paragraph-block (cons "Pages" (page-rows d 3)))
+        (list (code-block (cons "Pages" (page-rows d 9)))
               (paragraph-block (cons "Work" (work-rows d 2)))
               (todos-block d 3))
         (list (paragraph-block
                (list "Nothing scanned yet"
-                     (if busy?
-                         "the page fills in when the scan lands"
-                         "press space r to scan the folders"))))))))
+                     (if busy? "the page fills in when the scan lands" "the scan starts by itself"))))))))
 
 ;; notation-bin answers the notation binary: the one AIU_NOTATION_BIN names,
 ;; or the one built under the notation project.

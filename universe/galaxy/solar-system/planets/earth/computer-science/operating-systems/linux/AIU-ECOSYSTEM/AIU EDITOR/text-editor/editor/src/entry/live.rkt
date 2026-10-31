@@ -39,6 +39,7 @@
          "../dashboard/tabs.rkt"
          "../dashboard/finder.rkt"
          "../dashboard/notify.rkt"
+         (only-in "../dashboard/box.rkt" paint-ready)
          "../dashboard/gutter.rkt"
          "../dashboard/gutterview.rkt"
          (only-in "../machine/directories.rkt" journal-path-for))
@@ -76,6 +77,8 @@
         (set-box! notify-repaint (lambda () (repaint session viewport)))
         (set-box! edit-hook (lambda () (gutter-stale!) (git-stale!)))
         (repaint session viewport)
+        (set-box! paint-ready #t)
+        (thread (lambda () (repaint session viewport)))
         (start-home-scan)
         (key-loop session (current-input-port) viewport)
         (define next (unbox tab-switch))
@@ -204,7 +207,7 @@
         (list "level-up" "page" "more rows")
         (list "next-block" "blocks" "next")
         (list "block-end" "blocks" "block end") (list "blocks" "blocks" "list")
-        (list "focus-toggle" "view" "focus") (list "explorer" "view" "explorer")
+        (list "focus-toggle" "view" "focus") (list "explorer" "view" "explorer") (list "home-open" "view" "dashboard")
         (list "block-up" "move" "block up") (list "block-down" "move" "block down")
         (list "move-left" "move" "left") (list "move-right" "move" "right")
         (list "move-up" "move" "up") (list "move-down" "move" "down")

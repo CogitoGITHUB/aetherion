@@ -164,7 +164,7 @@
   (define sections
     (append (if (>= level 3) (list (cons "workspace" workspace-text)) null)
             (if (>= level 2) (list (cons "project" project-text)) null)
-            (list (cons "tabs" tabs-text))))
+            (list (cons "tabs" tabs-text)) (list (cons "git" (unbox tab-git-text)))))
   (append (list (edge-line "╭" "╮" (car (car sections)) "" width)
                 (body-line (cdr (car sections)) width))
           (append* (for/list ([s (in-list (cdr sections))])
@@ -300,3 +300,9 @@
          tab-joined
          tb-root
          tb-project-dir)
+
+;; tab-git-text holds the git row as text, set by the git thread of the bar, so
+;; the tab bar shows it at every level.
+(define tab-git-text (box "reading git"))
+
+(provide tab-git-text)

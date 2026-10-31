@@ -94,11 +94,17 @@
      (define m (regexp-match #px"^## (?:No commits yet on |Initial commit on )?([^. ]+)" head))
      (define ahead (regexp-match #px"ahead ([0-9]+)" head))
      (define behind (regexp-match #px"behind ([0-9]+)" head))
+     (define stat (git-out dir (list "diff" "--shortstat" "HEAD")))
+     (define (stat-n rx) (let ([m (regexp-match rx stat)]) (if m (string->number (cadr m)) 0)))
      (list (if m (cadr m) "?")
            (sub1 (length st))
            (if ahead (string->number (cadr ahead)) 0)
            (if behind (string->number (cadr behind)) 0)
-           (string-trim (git-out dir (list "log" "-1" "--format=%h  %s"))))]))
+           (string-trim (git-out dir (list "log" "-1" "--format=%h  %s")))
+           (length (filter (lambda (l) (and (> (string-length l) 1) (not (memv (string-ref l 0) (list #\space #\?))))) (cdr st)))
+           (length (filter (lambda (l) (and (> (string-length l) 1) (not (memv (string-ref l 1) (list #\space #\?))))) (cdr st)))
+           (stat-n #px"([0-9]+) insertion")
+           (stat-n #px"([0-9]+) deletion"))]))
 
 ;; git-text answers the git facts as one row of text.
 (define (git-text g)
@@ -110,6 +116,9 @@
       (filter values
               (list (list-ref g 0)
                     (if (zero? (list-ref g 1)) "clean" (format "~a changed" (list-ref g 1)))
+                    (and (> (list-ref g 5) 0) (format "~a staged" (list-ref g 5)))
+                    (and (> (list-ref g 6) 0) (format "~a unstaged" (list-ref g 6)))
+                    (and (or (> (list-ref g 7) 0) (> (list-ref g 8) 0)) (format "+~a -~a" (list-ref g 7) (list-ref g 8)))
                     (and (> (list-ref g 2) 0) (format "~a ahead" (list-ref g 2)))
                     (and (> (list-ref g 3) 0) (format "~a behind" (list-ref g 3)))
                     (and (not (string=? (list-ref g 4) "")) (list-ref g 4))))
@@ -127,17 +136,18 @@
 ;; git-refresh-maybe asks git in a thread when the last answer is twenty seconds
 ;; old, and calls again when the answer changed, so the bar is painted anew.
 (define (git-refresh-maybe dir again)
-  (when (and (not (unbox git-busy)) (>= (- (current-seconds) (unbox git-stamp)) 20))
+  (when (and (unbox paint-ready) (not (unbox git-busy)) (>= (- (current-seconds) (unbox git-stamp)) 20))
     (set-box! git-busy #t)
     (define first? (zero? (unbox git-stamp)))
     (set-box! git-stamp (current-seconds))
     (thread
      (lambda ()
-       (when first? (sleep 4))
+       (void)
        (define row (with-handlers ([(lambda (e) #t) (lambda (e) "git unavailable")])
                      (git-facts dir)))
        (define changed? (not (equal? row (unbox git-info))))
        (set-box! git-info row)
+       (set-box! tab-git-text (git-text row))
        (set-box! git-busy #f)
        (when changed? (again))))))
 

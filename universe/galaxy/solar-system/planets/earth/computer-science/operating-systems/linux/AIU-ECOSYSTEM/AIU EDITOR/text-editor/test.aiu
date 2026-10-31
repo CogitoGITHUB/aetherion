@@ -1,16 +1,16 @@
 title start
 kind: default
 tags: test editor introduction
-Welcome to AIU EDITOR: an introduction that is also a test page
+A Welcome to AIU EDITOR: an introduction that is also a test page
 title end
-
-paragraph start
-This page teaches the editor and tests it at once. You are looking at a page drawn as boxes. One block is lit at a time, and the keys below move it, edit it and pick what it moves between. Read a part, press the keys it names, and see the lit block change.
-paragraph end
 
 comment start
 Every key in this page works in the visual layer unless a part says otherwise. The mode line at the bottom shows where you are, for example visual general.
 comment end
+
+paragraph start
+This page teaches the editor and tests it at once. You are looking at a page drawn as boxes. One block is lit at a time, and the keys below move it, edit it and pick what it moves between. Read a part, press the keys it names, and see the lit block change.
+paragraph end
 
 section start
 title start

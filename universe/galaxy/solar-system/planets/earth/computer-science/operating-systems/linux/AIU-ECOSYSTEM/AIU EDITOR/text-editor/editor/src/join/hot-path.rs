@@ -228,6 +228,7 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
         }
         rust_exports::OP_SAVE => {
             let text = current_text(&file, &journal_path);
+            let before = fs::read_to_string(&file).unwrap_or_default();
             if let Err(why) = fs::write(&file, &text) {
                 return (
                     false,
@@ -238,6 +239,7 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
                     ],
                 );
             }
+            journal::archive(&journal_path, &before);
             journal::clear(&journal_path);
             let state = buffer::new_buffer(&text);
             (

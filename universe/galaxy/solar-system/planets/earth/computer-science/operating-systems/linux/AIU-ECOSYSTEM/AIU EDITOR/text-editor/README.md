@@ -1,5 +1,7 @@
 # AIU EDITOR
 
+AI agents: README-AI.md section 0 (START HERE) says what to do next.
+
 A terminal text editor written in Racket with a Rust hot path. It is built so a
 file is on the screen in under a second, and everything else loads behind it.
 
@@ -84,6 +86,7 @@ Visual layer (the page is read):
 | space / | find with fzf (see Find) |
 | space z | focus mode: hide the bar, the tabs and the one line, and again to bring them back |
 | space k | check (pages) |
+| space h | open the dashboard (home screen) |
 | a p e c k l x o d | pick what h and t move between (see Pick) |
 | space n, e | next block, block end |
 | 1 to 9 | on the home screen, open that page |
@@ -173,21 +176,29 @@ In the visual layer the SPC popup has a box named pick with the keys a p e c k l
 
 `ask-hot` in `join/hot-path.rkt` keeps the answers of the read requests notation, show, notation-render and notation-view, and clears all of them before and after any other request. A repaint asked the hot path 3 or more times per key (about 1.35 s a key on the phone); now it asks once. A new read-only operation may be added to `read-ops`; a new operation that changes text needs nothing.
 
-## Hot path answer cache
-
-`ask-hot` in `join/hot-path.rkt` keeps the answers of the read requests notation, show, notation-render and notation-view, and clears all of them before and after any other request. A repaint asked the hot path 3 or more times per key; now it asks once. A new read-only operation may be added to `read-ops`; an operation that changes text needs nothing. Measured before: about 0.33 s a key (20 keys 11.9 s, 0 keys 5.2 s).
-
-## Git waits after the first paint
-
-The git thread in `git-refresh-maybe` (`bar.rkt`) sleeps 4 s before it runs git. Found by timing: git started by the first repaint competed with the notation view call of the hot path on 2 cores, and that call took 1.8 s instead of 0.05 s, so the editor looked frozen and the first keys waited. Lesson: put a logging wrapper in AIU_NOTATION_BIN and a fake git on PATH to find who competes, before changing code.
-
 ## Git strip
 
-`dashboard/gutter.rkt` keeps the hunks of `git diff -U0` for the open file, asked in a thread (4 s after the first ask, then every 15 s or when the file changes). `dashboard/gutterview.rkt` puts one column at the left of every drawn line of an .aiu page: plus for added, equals for changed, minus for removed, on the lines of each leaf block that a hunk touches (`bv-ranges`, exported by `blockview.rkt`, maps blocks to drawn lines). `repaint-now` in `live.rkt` takes one column off the page width for it. Lines are matched by the saved file, so unsaved edits can shift a mark until the next refresh. Only glyphs, no colour.
+`dashboard/gutter.rkt` keeps the hunks of `git diff -U0` for the open file, asked in a thread (4 s after the first ask, then every 15 s or when the file changes). `dashboard/gutterview.rkt` puts one column at the left of every drawn line of an .aiu page: plus for added, equals for changed, minus for removed, on the lines of each leaf block that a hunk touches (`bv-ranges`, exported by `blockview.rkt`, maps blocks to drawn lines). `repaint-now` in `live.rkt` takes one column off the page width for it. Lines are matched by the saved file, so unsaved edits can shift a mark until the next refresh. A removal between two blocks puts a minus on the first drawn line of the block after the gap (git reports it at the line before the gap), a removal inside a block marks the block equals. A swap of two blocks shows as plus on one block and minus at the gap, because git describes it that way. Only glyphs, no colour.
 
 ## Autosave
 
-Every hot path request that changes text (type, delete, delete-at, insert-at) is followed by a save of the same file (`ask-hot`, `join/hot-path.rkt`, `edit-ops`, `save-after`), so git sees the change. `edit-hook` then marks the git row (`git-stale!`, bar.rkt) and the git strip (`gutter-stale!`, gutter.rkt) old, and the next paint asks git again. The 4 s wait applies only to the first git ask. Unsaved edits no longer exist in normal use; check what save does to the journal before relying on undo.
+Every hot path request that changes text (type, delete, delete-at, insert-at) is followed by a save of the same file (`ask-hot`, `join/hot-path.rkt`, `edit-ops`, `save-after`), so git sees the change. `edit-hook` then marks the git row (`git-stale!`, bar.rkt) and the git strip (`gutter-stale!`, gutter.rkt) old, and the next paint asks git again. The 4 s wait applies only to the first git ask. The journal is cleared on every save; the history is kept in the history file (section 14).
+
+## Git row and git in the tabs
+
+`git-facts` (`bar.rkt`) answers branch, changed files, ahead, behind, last commit, then staged files, unstaged files, inserted lines and deleted lines (`git diff --shortstat HEAD`). `git-text` shows them in the git row of the bar. The git thread also sets `tab-git-text` (`tabs.rkt`), and `tab-rows` ends every tab bar, at all three levels, with a git section holding that text. Both are filled 4 s after start. Untracked files are still not counted.
+
+## Git starts after the page is shown
+
+No timer. `paint-ready` (`box.rkt`) is set by `live-session` right after the first full paint; `git-refresh-maybe` (bar.rkt) and `gutter-refresh-maybe` (gutter.rkt) do nothing until it is true, and one more repaint is started in a thread so they begin at once. Rule from the owner: once the page is shown and can be worked on, everything else may run in the background. Any older text in this file about waiting 4 s is obsolete.
+
+## Dashboard key
+
+Space h in the visual layer runs `home-open` (`commands.rkt`): it sets `home-request` and returns false, which ends the round of `live-session`; `file-session` (`lean.rkt`) then opens the home screen with `home-session` in the same terminal. A page picked there opens as a normal session. The popup lists it as dashboard in the view group.
+
+## Dashboard page
+
+`home-text` (`home.rkt`) builds the home page: title, a code block with the real keys (1 to 9, space ?, space /, space q), a code block with one page per line (`page-rows d 9`), the work paragraph and the open todos. The old text about space r (scan again) is gone because that key was deleted.
 
 ## Bar
 
@@ -294,3 +305,210 @@ No `compiled/` folder and no backup file may sit inside the tree.
 | completion key | in the write layer tab is the trigger, so the likely key is tab tab, with escape as the way out of the layer |
 | completion in the editor | a complete command in the write layer, loaded on first use like the send key, so the first paint is untouched |
 | LSP | a small separate stdio server that answers textDocument/completion with the same core, so Emacs (eglot) and other editors get the same completion. Built after the in-editor version. |
+
+## 13. Plan: marks and bookmarks
+
+Status: planned, nothing built. Ask the owner before starting. Modelled on Neovim marks and the jumplist and on Emacs bookmarks, registers and the mark ring, but anchored to BLOCKS, because pages are boxes and blocks move (m, h, t).
+
+### 13.1 What exists in the two editors (reference)
+
+| Idea | Neovim | Emacs |
+|---|---|---|
+| local mark in one buffer | m a to z, jump with a quote or a backtick | register: C-x r SPC, jump C-x r j |
+| global mark that opens its file | m A to Z | bookmark: C-x r m, jump C-x r b |
+| list and delete | :marks, :delmarks | C-x r l (bookmark list), delete in that list |
+| survives a restart | shada file | bookmark file, saved on exit or at once |
+| automatic marks | last change, last insert, last jump, selection start and end | the mark ring: set mark, C-x C-x swaps, C-u C-SPC pops |
+| history of places | jumplist C-o and C-i, changelist g; and g, | global mark ring |
+
+### 13.2 What AIU EDITOR does
+
+Four things, in this order of build:
+
+1. Local marks: a to z, kept per file.
+2. Global marks and named bookmarks: A to Z and free names, kept for every file, opening the file when used.
+3. Jumplist: every jump (find, tab switch, mark jump, next-block, block-end) pushes the place; back and forward walk it.
+4. Automatic marks: last change, last edit block, last jump, last visual block.
+
+### 13.3 Anchor: a place is a block, not a line
+
+A place is stored as: file path, block name, depth, the number of the block among its siblings, the first text line of the block (up to 60 characters), and the byte offset inside the block.
+
+To jump: parse the page (one cached `page-of`), try in order: same sibling number and same name and same first line; same name and same first line anywhere in the file; same sibling number and name; the stored byte offset clamped to the file. The jump lights the block and puts the point at the stored offset inside it. A plain text file uses the byte offset only.
+
+A block moved with m keeps its marks because the first-line match finds it. An edited first line falls back to the number, then to the offset. A mark that finds nothing says so in a notification and keeps the mark.
+
+### 13.4 Keys (all in the visual layer, none collide with w i h t n s m a p e c k l x o d)
+
+| Keys | Command | Does |
+|---|---|---|
+| space m, then a to z | mark-set | local mark at the lit block |
+| space m, then A to Z | mark-set-global | global mark, opens its file |
+| space j, then a to z or A to Z | mark-jump | jump to that mark |
+| space j, then space j | mark-jump-last | back to where the last jump started |
+| space m, then m | mark-list | list all marks and bookmarks in fzf (reuses `run-picker` of `finder.rkt`), a pick jumps |
+| space m, then x, then a letter | mark-delete | delete one mark |
+| space [ and space ] | jump-back and jump-forward | walk the jumplist |
+| space m, then n | bookmark-set | ask a name in the mode line, store a named bookmark |
+| space j, then b | bookmark-jump | fzf over the named bookmarks |
+
+The popup (`menu-groups` in `live.rkt`) gets a marks group so the keys show after space m and space j. A key needs a row there, a row in `normal-keys` and a command in the table, or the gate (`key-check`, `explorer-check`) goes red.
+
+The letter after space m or space j is read as the next key in a waiting sequence. The sequences are generated from a to z and A to Z in `keymaps.rkt` by a loop, not typed by hand, so the table stays small to read.
+
+### 13.5 Storage
+
+- File: `~/.aiu-marks.rktd`, outside the project tree (the rule: no state inside the tree). One s-expression: local marks by file, global marks, named bookmarks, the jumplist (last 100), the automatic marks.
+- Written at once after each change, in a thread, by writing a temp file in the same folder and renaming it, so a crash never leaves half a file.
+- Read in a thread after the first paint (`paint-ready`), never before. A mark key pressed before the read ends waits for it, with no message.
+- Local marks are keyed by the complete path of the file. A renamed file loses its marks; the list shows the missing ones in a dim line and deletes them on request.
+
+### 13.6 Where it shows
+
+- Strip: the git strip column stays for git. Marks show as the letter at the RIGHT edge of the first drawn line of the block, outside the box, so nothing inside the drawing changes. One column, taken only when the file has marks.
+- Mode line and bar: the layer cell shows the count, for example `visual general [any] m3`.
+- Dashboard: a section with the named bookmarks, one per line, with the key to open them (number keys stay for pages).
+- Tabs: no change.
+
+### 13.7 Build plan (one script and one gate run per step, owner tries each by hand)
+
+| Step | Work | Done when |
+|---|---|---|
+| 1 | `dashboard/marks.rkt`: the data (racket/base only), `place-of` (block to place), `find-place` (place to block, the fallback order of 13.3), the file read and write | a script proof in the gate: set a place, move the block, find it again |
+| 2 | commands `mark-set`, `mark-jump`, `mark-delete`, keys by loop in `keymaps.rkt`, menu rows, notifications | space m a then space j a works by hand |
+| 3 | jumplist: push on every jump, `jump-back`, `jump-forward`, last-jump mark | back and forward work across tabs |
+| 4 | global marks and named bookmarks, the fzf list `mark-list` and `bookmark-jump` | a bookmark opens its file in a tab at its block |
+| 5 | strip letters, bar count, dashboard section | visible and no slower |
+| 6 | automatic marks: last change (set by `edit-hook`), last edit block, last visual block | space j then a special letter jumps |
+| 7 | test page section and README tables updated | `test.aiu` teaches the keys |
+
+### 13.8 Rules for the build
+
+- Lazy: `marks.rkt` is loaded on the first mark key, the way the send stub loads, and never required by `quick.rkt`, `cli.rkt`, `lean.rkt`, `live.rkt` or `home.rkt`. Use `dynamic-require` in a stub command.
+- No hot path request is added to a keypress; a jump asks `page-of` once (cached).
+- After each step: gate green, then the owner holds h or t and says if it is smooth. Measure a keypress, not only the start.
+- No change to AIU NOTATION. If block identity needs an id in the notation, ask the owner first. The plan above works without one.
+
+### 13.9 Open questions for the owner
+
+1. Are the keys in 13.4 right, or should marks live in their own layer like the bar does?
+2. Should local marks use the block or the exact character position when both are known?
+3. Should the marks letter show at the right edge of the page, or only in the list?
+
+## 14. Plan: undo tree and undo with git
+
+Status: step 1 built (history kept), the rest planned. Ask the owner before each step.
+
+### 14.1 Why the history file
+
+`current_text` replays the journal on top of the saved file, so the journal must be cleared on save or every edit would apply twice. Autosave saves after each edit, so the journal is empty almost always. `journal::archive` (`journal/journal.rs`), called by `OP_SAVE` in `join/hot-path.rs` before the clear, keeps `<journal>.base` (the file text before the first save) and appends every record to `<journal>.history`. State n is `replay(base, history[0..n])`. Older edits made before this change have no history.
+
+### 14.2 Undo tree
+
+Every record becomes a node: id, parent id, time. Undo moves to the parent, and a new edit after an undo makes a branch, so no redo path is lost. A tree view (keys h and t between nodes, a diff of the node) shows the branches. The tree file lives beside the history. Restoring a node writes the replayed text through the normal edit ops so it is itself undoable. Needs one new hot path op that answers the text at node n.
+
+### 14.3 Undo with git
+
+Revert a hunk or a block with git apply -R using the hunks of the git strip (`gutter.rkt`), and restore a block or the file from any commit of its log. Built after the tree.
+
+### 14.4 Keys
+
+Proposed: u undo, r redo (plain keys in visual are free), space u the tree view (space u is level-up today, ask first). Each key needs a row in `normal-keys`, a command and a `menu-groups` row.
+
+### 14.5 Build steps
+
+| Step | Work | State |
+|---|---|---|
+| 1 | history file and base kept on save | built, rebuild the hot path |
+| 2 | op that answers the text at node n, undo and redo keys with a linear history | planned |
+| 3 | tree with parents and branches, tree view | planned |
+| 4 | git hunk and block revert, restore from commit | planned |
+
+### 14.6 Other missing features
+
+Search and replace with n and N, block cut copy paste, folding, split view, repeat and macros, outline list, git stage and blame, reload when the file changes on disk, spell check.
+
+## 15. Plan: undo from git commits (owner decision, replaces the idea of section 14.2 to 14.5)
+
+Status: planned, nothing built. The owner chose this design. Read section 14.1 first: it says what journal::archive does. First check that its patch applied (grep archive in editor/src/journal/journal.rs, and look for .base and .history files beside the journal). The history file may become unnecessary; ask the owner before deleting it.
+
+### 15.1 Idea
+
+Every change is autosaved, and every autosave becomes a git commit. The commit message is the file name plus the change, for example: test.aiu: +3 -1 lines in paragraph. Undo is a walk through those commits. The undo view is a tree of commits with their diffs.
+
+### 15.2 Hard rule conflict, solved with a shadow repository
+
+README rule: never use git in the project repo (it holds other projects, never git add -A). So the commits go in a PRIVATE repository outside the tree, for example ~/.aiu-undo/repo.git, driven with --git-dir=~/.aiu-undo/repo.git and --work-tree=/ (or the folder of the file). The project repo is never touched. Only the one saved file is added each time (git add -- FILE), never -A. Ask the owner to confirm this reading of the rule before building.
+
+### 15.3 Commits
+
+- Run in a background thread, after paint-ready, never on the key path. Debounce: commit about 1 s after the last edit, so typing a word is one commit.
+- Triggered by edit-hook (hot-path.rkt, already called after every autosave) which marks the file dirty; one worker thread does the commits in order.
+- Message: FILE NAME + change. The change text comes from git diff --shortstat and the block name at the point (page-of is cached).
+- A file with no change makes no commit. Check that git commit has user.name and user.email set in the shadow repo config (set them at creation).
+- The commit must not slow the page: measure a key press before and after (lesson 6 of the lessons section).
+
+### 15.4 Undo and redo
+
+- Undo = write the file content from the previous commit (git show COMMIT:PATH), through the normal edit ops so the editor state stays right, and make a NEW commit on top. Undo is itself undoable and nothing is lost.
+- Branches: when the owner undoes and then edits, the new commit goes on a git branch from the old commit. The undo tree is the commit graph. git worktree is an option for opening an old branch beside the current one (split view, section 14.6); the plain shadow repo with branches is enough for the first version.
+- Keys (ask the owner): u undo, r redo, a tree key (space u is level-up today, ask first). Each key needs a row in normal-keys, a command and a menu-groups row, or the gate goes red.
+
+### 15.5 Undo view
+
+- A tree of commits for the open file: git log --graph --oneline -- FILE, one line per commit with time and message, walked with h and t, a diff of the lit commit shown beside or below (git diff COMMIT^ COMMIT -- FILE).
+- First version: run it through run-picker (finder.rkt) with fzf and a preview script, like find does; a pick restores that commit. Second version: draw it as an AIU page in the editor with the notation view.
+- Everything must wrap to the screen width (owner rule for terminal and tv previews).
+
+### 15.6 Build steps
+
+| Step | Work |
+|---|---|
+| 1 | shadow repo created on first use in a thread; commit worker with debounce; message builder |
+| 2 | undo and redo keys, a new commit on top, notification of what was restored |
+| 3 | fzf tree view with diff preview (git log --graph, git diff) |
+| 4 | branches on edit after undo, the tree shown with branch marks |
+| 5 | git hunk and block revert from the git strip (gutter.rkt), restore from a commit |
+| 6 | optional: git worktree to open an old state beside the current one; pruning of old commits |
+
+### 15.7 Rules for the build
+
+Lazy: new module loaded on first use, never required by quick.rkt, cli.rkt, lean.rkt, live.rkt or home.rkt except through a stub. No hot path request on a key press. One script per step, compile, gate, then the owner holds h or t and says if it is smooth. Update both READMEs in the same script. Scripts: one bash -c block, nothing after the closing quote, no single quote inside.
+
+### 15.8 Questions for the owner
+
+1. Is the shadow repository outside the project acceptable under the never git rule?
+2. One commit per debounced edit burst, or one per save of the page?
+3. Keep the history file of section 14, or drop it once commits exist?
+
+## 16. Work rules: always update the READMEs, commit with git, no backup files
+
+Owner decision (2026-10-31). It replaces the copies in /tmp as the way to backtrack. The old rule "never git" is relaxed for THIS workflow only: the repo holds other projects, so git is used with explicit paths and never with add -A, add . or commit -a.
+
+### 16.1 Every change, in this order, inside the same script
+
+1. Before patching: commit the files the script will touch, exactly as they are now, so the state before is saved.
+   git add -- FILE1 FILE2 README.md README-AI.md
+   git commit -m "before: FILE1 FILE2: what is about to change" -- FILE1 FILE2 README.md README-AI.md
+   If nothing changed, git commit fails with nothing to commit: that is fine, go on.
+2. Patch the files and update README.md and README-AI.md in the same script, every time.
+3. Compile. If it fails, restore ONLY the touched files: git checkout HEAD -- FILE1 FILE2 README.md README-AI.md and compile again. No copies in /tmp.
+4. If it compiles, commit the result with the file names and the change as the message:
+   git add -- FILE1 FILE2 README.md README-AI.md
+   git commit -m "FILE1 FILE2: what changed" -- FILE1 FILE2 README.md README-AI.md
+5. Run the gate only when the owner asks or after a bigger step, and commit again if the gate made you fix something.
+
+### 16.2 Rules
+
+- Pathspec always. Never git add -A, git add ., git commit -a, git reset --hard, git clean, git checkout . or git stash: other projects live in this repo.
+- New files: git add -- the exact path. Deleted files: git rm -- the exact path.
+- Commit message format: FILES: change, in one line, under 100 characters. Prefix before: or after: only when it helps.
+- Backtrack one file: git checkout COMMIT -- FILE. See the history of a file: git log --oneline -n 15 -- FILE. See what a step changed: git show --stat COMMIT.
+- Do not push, pull, branch or amend unless the owner asks. The owner pushes.
+- No backup files anywhere. Scratch scripts still live in /tmp and are deleted at the end of the script.
+- If git fails (lock file, not a repository), print the real error, go on without it for that step and tell the owner. Do not fall back to backup copies in the tree.
+- The undo from commits in section 15 is a different repository (the private shadow one). This section is only about how the AI changes the code.
+
+### 16.3 Shell reminder
+
+All of the above goes inside the one bash -c block, with git commands joined by semicolons or on separate lines, nothing after the closing quote, no single quote inside, and git messages in double quotes.
