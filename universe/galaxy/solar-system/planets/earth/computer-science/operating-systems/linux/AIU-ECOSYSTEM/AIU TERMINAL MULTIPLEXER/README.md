@@ -74,16 +74,17 @@ The owner switched the priority to this program on 2026-10-21: it is the foundat
 the complete workflow, so pm and the editor are paused until it works.
 
 This program's list stood done up to item 23 on 2026-10-22; the owner's groups after it
-(items 24 to 63) are the work that is left, and item 24 — the Android clipboard — is done in
-part (the copy-out direction is verified, the paste-in waits for the Termux:API add-on). The
-shared done line waits on the editor's own halves and on the owner's deletion of the shared
-checklist.
+(items 24 to 63) are the work that is left. Since then items 48, 49, 51 and 59 are done and
+deleted from the list; item 24 is done in part (the copy-out direction is verified, the paste-in
+waits for the Termux:API add-on); item 25 waits on the owner's answer to
+`CONTRACT-CHANGE-REQUEST-01.org`. The shared done line waits on the editor's own halves and on
+the owner's deletion of the shared checklist.
 
 ## Architecture
 
 ```mermaid
 graph TD
-    CLIENT["client/<br/>screen.rs, keymap.rs<br/>the drawing and the keys"] -->|one JSON line<br/>each way over a socket| HOLDER["holder/<br/>holder.rs, wire.rs, log.rs<br/>the session, the panes, the log"]
+    CLIENT["client/<br/>screen.rs, keymap.rs, clipboard.rs<br/>the drawing, the keys, the phone's clipboard"] -->|one JSON line<br/>each way over a socket| HOLDER["holder/<br/>holder.rs, log.rs, sessions.rs<br/>the session, the panes, the log, the sessions"]
     HOLDER --> TTY["tty/<br/>the pty and the terminal modes"]
     HOLDER --> AGENTS["agents/<br/>mcp.rs, tools.rs, envelope.rs<br/>the agent surface"]
     MCP["mux-mcp<br/>the MCP server over stdio"] --> AGENTS
@@ -101,8 +102,9 @@ Three binaries in one crate:
 The areas, lowest first: `errors/` (the record, the raise, the render), `narration/`
 (events, voice, the wait door, the one printer), `machine/` (the HOME seam, the one-writer
 locks, the cancellation door), `tty/` (the pty, the terminal modes, the size), `holder/`
-(the session and the ops), `client/` (the screen and the keymap), `agents/` (the MCP
-server, the tools, the envelope, the context bundle, the redaction seam).
+(the session, the ops, the log's rules, the sessions directory), `client/` (the screen, the
+keymap, the selection, the panels, the Android clipboard), `agents/` (the MCP server, the
+tools, the envelope, the context bundle, the redaction seam).
 
 ## Implemented capabilities
 
@@ -158,8 +160,10 @@ output while the panel lies over it. The answer is a record like every op's answ
 was looked at is on the log too.
 
 **The ops on the holder's socket.** One JSON object per line, both ways, and the ops are:
-`attach`, `detach`, `state`, `read`, `send`, `open`, `resize`, `rename`, `close`. A request
-that is not JSON is refused by name, and the refusal says why.
+`attach`, `detach`, `state`, `read`, `send`, `open`, `resize`, `rename`, `close`, plus the
+reads and commands that came later — `git`, `workspace`, `editor`, `rewind`, `sessions`,
+`session`, `shutdown`, `control`, `view` and `control-result`. A request that is not JSON is
+refused by name, and the refusal says why.
 
 **The panes.** A layout file names the panes of a session; each pane is a shell with a
 name, and every record the session writes carries the pane's name, so a send is aimed at a
@@ -330,6 +334,13 @@ The holder's socket, one JSON object per line, both ways:
 | `control` | the agent's words, run on the owner's own screen; a change needs the human's token |
 | `view` | the agent's read of the screen: the tabs, the panes, the scroll and the ring |
 | `control-result` | the screen's answer to the agent's request |
+| `git` | what the shared read-only Git layer says, one panel's worth |
+| `workspace` | what the shared workspace engine holds, one view at a time |
+| `editor` | the editor's own server is asked for what the editor owns |
+| `rewind` | how one pane stood at one record, read from the journal; nothing is touched |
+| `sessions` | what stands in the sessions directory, and whether a holder holds it |
+| `session` | `create`, `rename` or `kill`, with the name of the session |
+| `shutdown` | the holder removes what the session made and leaves; another session asks for it |
 
 The client's own options:
 
@@ -337,6 +348,7 @@ The client's own options:
 client --state-dir DIR --op screen [--agent-program PATH] [--editor-program PATH]
 client --state-dir DIR --op screen|editor [--editor-mcp-arg WORD]...
 client --state-dir DIR --op state|read|send|open|resize|rename|close ...
+holder --state-dir DIR [--sessions-dir DIR] [--log-limit BYTES] [--layout FILE]
 ```
 
 The layout file, one JSON object, naming the panes:
@@ -351,7 +363,9 @@ The layout file, one JSON object, naming the panes:
 ```
 
 The MCP tools, over stdio, one JSON-RPC request per line: `multiplexer_sessions`,
-`multiplexer_records`, `multiplexer_send`. The last one needs the human's token.
+`multiplexer_records`, `multiplexer_send`, `multiplexer_control` and `multiplexer_view`. The
+two that change a session ask for the human's token until the owner's item 25 lands
+(`CONTRACT-CHANGE-REQUEST-01.org` is the request that moves the words into the holder).
 
 ## How it works
 
@@ -529,7 +543,12 @@ The phone proofs, each a Nu script that prints its evidence:
 | `tools/journal-probe/probe.nu` | the log stays inside its written bound, the trim keeps whole records and says what it let go, and the session's files are 0600 in a 0700 dir | 12 |
 | `tools/tiny-binary-probe/` | the build and start times that decided the route | measured |
 
-What is not verified: the key routing with the editor in a pane.
+What is not verified: the key routing with the editor in a pane, and the clipboard's
+paste-in direction (it waits for the Termux:API add-on, which this phone does not have).
+
+`tests/handshake.rs` is the one proof that needs a socket on both ends: the real client runs
+against a holder the test serves by hand, so the refusal is the client's own behaviour and
+not a mock's.
 
 ## Limitations
 
@@ -550,9 +569,13 @@ What is not verified: the key routing with the editor in a pane.
 
 `TODO.org` is the one list, in build order; a finished item is deleted from it in the same
 commit that does the work, and an item a phone cannot finish is named in part with what is
-owed. The clipboard bridge (item 24) has its copy-out half verified and its read half waiting
-for the Termux:API add-on. The next items are the owner's group G (no token and no attached
-screen, the goal mode, the git checkpoints, undo, the wake lock), then group D, then group A.
+owed. Done since the owner's groups were written: item 48 (the versioned handshake), item 49
+(the session commands), item 51 (the journal's rules) and item 59 (the rewind); item 24, the
+Android clipboard, has its copy-out half verified and its read half waiting for the Termux:API
+add-on. Item 25 — the agent's words run in the holder, with no token and no attached screen —
+is stopped at `CONTRACT-CHANGE-REQUEST-01.org` until the owner picks a shape, and the group G
+items that depend on it (26, 27, 28, 30, 32 to 36, 58) wait behind it. Item 60, the read-only
+watch attach, is next, since item 48 unlocked it.
 
 ### Later plans
 
