@@ -204,3 +204,6 @@ Settle popup fix (2026-11-01): seen, after z the first frame after the trace lin
 
 
 Settle final-frame fix (2026-11-01): seen, with AIU_FRAMES frames 2 to 7 after space z were popup frames and the popup-free frames 8 and 9 never came within 20 s after z, so the popup wait hung. The judge now reads the last frame of the full output after q. Not seen: whether frame 8 follows q. Open: plain-screen strips colours, so a colour-only feature gives the recorder no diff.
+
+
+Short output (2026-11-01): owner wants only the important lines in the tables. why-short keeps the cause line. Not yet wired to the table.
