@@ -1,0 +1,35 @@
+# PLAN: self-testing, self-documenting AIU EDITOR (written 2026-11-01)
+
+Owner decision. Give this file to any AI first. Update it in the same step as any work.
+
+## What the owner wants
+1. Built-in commands replace one-off scripts: `aiutd update`, `aiutd test`, `aiutd trace`. Tests run by level, verbose, built in, one per feature.
+2. Tests write the docs. Nobody edits the docs by hand. A feature appears in the docs only when its tests pass.
+3. Renames: README.md becomes `aiutd-tutorial.aiu` (humans, opened with `aiutd aiutd-tutorial.aiu`). README-AI.md becomes `ai-starting-point.md` (AI). New `todo.aiu` holds every planned feature taken from the READMEs.
+4. Each CLI command is documented in the tutorial by the code itself.
+5. No more random scripts. Output is pasted back by the owner; replies are prompts only.
+
+## Design
+- Feature registry: one file per feature in `editor/src/features/`, each gives: name, keys, commands, docs text (tutorial block), AI notes, tests with a level.
+- Levels: 1 new (only what changed since last green), 2 features (all feature tests), 3 everything (features, gate stages, timing). `aiutd test --level N`.
+- `aiutd update` = raco make, then tests at the level given (default 2), then regenerate docs, then git commit with explicit paths. Stops at the first red and prints the real failing lines.
+- `aiutd docs` writes `aiutd-tutorial.aiu` and `ai-starting-point.md` from the registry and the passing results. Hand-written parts live in `docs/parts/` as small .aiu or .md fragments only for things code cannot know (rules, owner traps).
+- `todo.aiu` is generated from the registry entries marked planned plus the fragment `docs/parts/todo-source`. When a feature passes it moves out of todo.
+- Headless driver (section 24 of the old README): real key loop, virtual terminal, plain-text screen capture, assertions. Trace (AIU_TRACE) is part of it.
+
+## Steps
+| # | Step | State |
+|---|---|---|
+| 0 | read .aiu syntax, launcher script, gate, how docs are referenced in code and gate | next |
+| 1 | todo.aiu from all planned items of both READMEs (sections 8, 10, 12, 13, 14, 15, 22, 23, 24) | open |
+| 2 | feature registry + `aiutd update` (compile, gate level, commit) | open |
+| 3 | trace (AIU_TRACE) in live.rkt | open, first patch refused |
+| 4 | headless driver + `aiutd test --level` + first feature tests (move, write, save) | open |
+| 5 | `aiutd docs`: generate tutorial.aiu and ai-starting-point.md, then git mv the READMEs and fix references in code and gate | open |
+| 6 | tests for cursors, selection, copy, paste, undo | open |
+| 7 | marks, bookmarks, completion, rest of todo.aiu, each added with its tests | open |
+
+## Traps (keep)
+- Trace patch of 2026-11-01 was REFUSED: anchor `(repaint session viewport)` occurs 6 times in live.rkt, `(define result (act-on session pending))` once. Use the key-loop one only, or edit by line range after reading.
+- Nushell: one bash -c, single quotes outside, none inside, nothing after the closing quote. Git with explicit paths only. No backup files. Lazy modules only; nothing on the start path. Nothing runs while the owner types.
+- Do not rename the READMEs until step 5: code and gate may refer to them.
