@@ -116,3 +116,5 @@ Frames loop fix (2026-11-01): the frames file loop used in-naturals and never en
 Frames block removed (2026-11-01): the hang is after driver returned, the in-naturals diagnosis was wrong. The frames file block is gone and live lines mark each step after the driver. Not yet seen running.
 
 wrap-line fix (2026-11-01): wrap-line looped forever when the width was 0 or less, which hung the report after live line building report. Suspected cause, not seen: term-width answers 0 when no tty (timeout). wrap-line now returns the line whole for width under 1.
+
+Short failure report (2026-11-01): the failure detail no longer prints the last frame dump (lines starting with >) and the mode list shows only the mode and frames per key. Seen: plain timeout caused the hangs, timeout --foreground finished; the wrap-line guess was wrong. Seen: with the frame driver the snapshots are in sync, and space u leaves the mode at visual general. Undo message still not seen.

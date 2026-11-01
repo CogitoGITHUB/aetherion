@@ -560,7 +560,7 @@
       (judge l screen file-text seconds)))
   (define ok? (and (pair? verdicts) (andmap car verdicts)))
   (live "diagnosing")
-  (define why (if ok? (list) (append (diagnose code-file out out1) (trace-since trace-start) (list "    mode after each key:") (key-modes dir (string-split (string-join (line-values lines "keys") " "))) (list "    file head, first 6 lines:") (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))))
+  (define why (if ok? (list) (append (filter (lambda (l) (not (regexp-match? #rx"^    >" l))) (diagnose code-file out out1)) (trace-since trace-start) (list "    mode after each key:") (map (lambda (l) (car (regexp-split #rx" [|] " l))) (key-modes dir (string-split (string-join (line-values lines "keys") " ")))) (list "    file head, first 6 lines:") (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))))
   (with-handlers ([void void])
     (display-to-file screen (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name ".txt")) #:exists (quote truncate)))
   (live "deleting temp folder")
