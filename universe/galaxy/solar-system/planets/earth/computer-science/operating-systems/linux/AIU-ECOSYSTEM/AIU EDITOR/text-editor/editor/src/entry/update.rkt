@@ -275,7 +275,14 @@
          (set! ok #f)
          (set! fail-lines (if (null? stage-times) (first-n g-lines 12) (list)))))
      (define total (secs t-all))
-     (define all (append records (list (list "total" total ok))))
+     (define test-results (if (and ok (>= level 1)) (run-all-tests level) (list)))
+     (when (not (andmap caddr test-results)) (set! ok #f))
+     (for ([r (in-list test-results)]) (log-step! level (string-append "test:" (car r)) (cadr r)))
+     (define test-block
+       (append* (for/list ([r (in-list test-results)])
+                  (cons (step-line (string-append "test:" (car r)) (cadr r) (caddr r)) (cadddr r)))))
+     (define total2 (secs t-all))
+     (define all (append records (list (list "total" total2 ok))))
      (define lines (for/list ([r (in-list all)]) (step-line (car r) (cadr r) (caddr r))))
      (define slowest
        (append*
@@ -286,8 +293,8 @@
      (define notes
        (append (list (format "stages                  ~a" (stage-label level)))
                (if (= level 3) (list "timing                  not built yet") (list))))
-     (emit (list "AIUTD UPDATE" (format "LEVEL ~a  ~a  ~a s" level (if ok "GREEN" "RED") total))
-           (append lines slowest notes fail-lines))
+     (emit (list "AIUTD UPDATE" (format "LEVEL ~a  ~a  ~a s" level (if ok "GREEN" "RED") total2))
+           (append lines slowest test-block notes fail-lines))
      (if ok 0 1)]))
 
 ;; key-bytes answers the text a terminal sends for a key name; a single character stands for itself.
@@ -414,6 +421,18 @@
                 (for/list ([v (in-list verdicts)])
                   (string-append "    " (if (car v) "ok   " "FAIL ") (cadr v)))
                 why)))
+
+;; run-all-tests runs every test file of the level or below and answers the list of results.
+(define (run-all-tests level)
+  (define dir (and editor-root (build-path editor-root "gate" "tests")))
+  (define files
+    (if (and dir (directory-exists? dir))
+        (sort (filter (lambda (p) (regexp-match? #rx"[.]test$" (path->string p)))
+                      (directory-list dir #:build? #t))
+              string<? #:key path->string)
+        (list)))
+  (define wanted (filter (lambda (p) (<= (test-level p) level)) files))
+  (for/list ([p (in-list wanted)]) (run-test p)))
 
 ;; do-test runs every test file of the level or below, reports each with its time, answers 0 or 1.
 (define (do-test level)
