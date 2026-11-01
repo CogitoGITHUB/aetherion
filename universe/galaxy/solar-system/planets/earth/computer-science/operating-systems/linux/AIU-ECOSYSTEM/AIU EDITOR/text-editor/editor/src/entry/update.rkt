@@ -47,7 +47,7 @@
                    [current-error-port out]
                    [current-directory dir]
                    [current-input-port (open-input-string "")])
-      (apply system*/exit-code exe args)))
+      (apply system*/exit-code (find-executable-path "sh") "-c" "cd \"$1\" && shift && exec \"$@\"" "sh" (path->string (path->complete-path dir)) (if (path? exe) (path->string exe) exe) args)))
   (values code (get-output-string out)))
 
 ;; width-cache keeps the terminal width after the first question.
@@ -162,6 +162,21 @@
   (define near (and exe (build-path (path-only exe) "raco")))
   (if (and near (file-exists? near)) near (find-executable-path "raco")))
 
+;; stamp-path is the file whose time says when the last good compile ended.
+(define stamp-path (build-path (find-system-path (quote home-dir)) ".aiu-build-stamp"))
+
+;; sources-newer? says whether any .rkt file under editor/src is newer than the stamp, or the stamp is missing.
+(define (sources-newer?)
+  (define stamp (and (file-exists? stamp-path) (file-or-directory-modify-seconds stamp-path)))
+  (or (not stamp)
+      (for/or ([p (in-directory (build-path editor-root "editor" "src"))])
+        (and (regexp-match? #rx"[.]rkt$" (path->string p))
+             (> (file-or-directory-modify-seconds p) stamp)))))
+
+;; touch-stamp! writes the stamp file now.
+(define (touch-stamp!)
+  (call-with-output-file stamp-path #:exists (quote truncate) (lambda (o) (write-string "ok" o))))
+
 ;; real-lines drops empty lines and the harmless registered twice warnings.
 (define (real-lines text)
   (filter (lambda (l)
@@ -186,8 +201,12 @@
      (define ok #t)
      (let ()
        (define t (current-inexact-milliseconds))
+       (define stale? (sources-newer?))
        (define-values (code text)
-         (if raco (capture editor-root raco (cons "make" compile-files)) (values 1 "raco was not found")))
+         (cond [(not stale?) (values 0 "")]
+               [raco (capture editor-root raco (cons "make" compile-files))]
+               [else (values 1 "raco was not found")]))
+       (when (and stale? (= code 0)) (touch-stamp!))
        (set! records (append records (list (list "compile" (secs t) (= code 0)))))
        (unless (= code 0)
          (set! ok #f)
