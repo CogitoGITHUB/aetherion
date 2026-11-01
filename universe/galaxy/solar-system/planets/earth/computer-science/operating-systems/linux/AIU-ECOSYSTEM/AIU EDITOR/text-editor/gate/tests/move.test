@@ -1,0 +1,6 @@
+test move
+level 1
+file test.aiu
+keys t t t t
+expect screen contains Moving between blocks
+expect seconds-under 30

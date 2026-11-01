@@ -1,0 +1,6 @@
+test edit
+level 1
+file test.aiu
+keys space f Z Z
+expect file contains ZZtitle start
+expect seconds-under 30

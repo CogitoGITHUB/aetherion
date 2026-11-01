@@ -290,12 +290,130 @@
            (append lines slowest notes fail-lines))
      (if ok 0 1)]))
 
-;; run answers the verb: update works, the other tool verbs say they are not built yet.
+;; key-bytes answers the text a terminal sends for a key name; a single character stands for itself.
+(define (key-bytes k)
+  (cond [(equal? k "space") " "]
+        [(equal? k "escape") "\u001b"]
+        [(equal? k "return") "\r"]
+        [(equal? k "tab") "\t"]
+        [(equal? k "backspace") "\u007f"]
+        [(equal? k "up") "\u001b[A"]
+        [(equal? k "down") "\u001b[B"]
+        [(equal? k "right") "\u001b[C"]
+        [(equal? k "left") "\u001b[D"]
+        [else k]))
+
+;; line-values answers the text after a key word on every line that starts with it.
+(define (line-values lines key)
+  (for/list ([l (in-list lines)] #:when (string-prefix? l (string-append key " ")))
+    (string-trim (substring l (add1 (string-length key))))))
+
+;; plain-screen strips the terminal codes of a frame; reverse video shows as brackets.
+(define (plain-screen s)
+  (define a (regexp-replace* #rx"\u001b\\[7m" s "["))
+  (define b (regexp-replace* #rx"\u001b\\[27m" a "]"))
+  (define c (regexp-replace* #px"\u001b\\[[0-9;?]*[A-Za-z]" b ""))
+  (regexp-replace* #rx"\r" c ""))
+
+;; last-frame answers the last full frame in the output, the one the editor drew last.
+(define (last-frame text)
+  (define parts (regexp-split (regexp-quote "\u001b[?2026h") text))
+  (define frames (filter (lambda (p) (regexp-match? #rx"^\u001b\\[H" p)) parts))
+  (if (null? frames) text (last frames)))
+
+;; test-lines answers the trimmed, non-empty lines of a test file.
+(define (test-lines path)
+  (filter (lambda (l) (not (string=? l ""))) (map string-trim (file->lines path))))
+
+;; test-level answers the level of a test file, 2 when it names none.
+(define (test-level path)
+  (define v (line-values (test-lines path) "level"))
+  (or (and (pair? v) (string->number (car v))) 2))
+
+;; judge checks one expect line against the screen, the file text and the seconds; answers (ok? text).
+(define (judge l screen file-text seconds)
+  (define m (regexp-match #px"^expect (screen|file) (contains|lacks) (.*)$" l))
+  (define s (regexp-match #px"^expect seconds-under ([0-9.]+)$" l))
+  (cond
+    [m (define hay (if (equal? (cadr m) "screen") screen file-text))
+       (define has? (regexp-match? (regexp (regexp-quote (cadddr m))) hay))
+       (define ok? (if (equal? (caddr m) "contains") has? (not has?)))
+       (list ok? (substring l 7))]
+    [s (list (< seconds (string->number (cadr s))) (substring l 7))]
+    [else (list #f (string-append "unknown line: " l))]))
+
+;; run-test runs one test file on a copy of its page in a temporary folder; answers (name seconds ok? detail-lines).
+(define (run-test path)
+  (define lines (test-lines path))
+  (define name (let ([v (line-values lines "test")]) (if (pair? v) (car v) "unnamed")))
+  (define page (let ([v (line-values lines "file")]) (if (pair? v) (car v) "test.aiu")))
+  (define input
+    (apply string-append
+           (for/list ([l (in-list lines)])
+             (cond [(string-prefix? l "keys ") (apply string-append (map key-bytes (string-split (substring l 5))))]
+                   [(string-prefix? l "type ") (substring l 5)]
+                   [else ""]))))
+  (define dir (make-temporary-file "aiutd-test~a" (quote directory)))
+  (define copy (build-path dir page))
+  (copy-file (build-path editor-root page) copy)
+  (define keys-file (path->string (build-path dir "keys.bin")))
+  (define out (path->string (build-path dir "out.bin")))
+  (define out1 (path->string (build-path dir "mid.bin")))
+  (call-with-output-file keys-file #:exists (quote truncate) (lambda (o) (write-string input o)))
+  (define t0 (current-inexact-milliseconds))
+  (define command
+    (format "( cat ~a; sleep 4; cp ~a ~a; printf \\033; sleep 0.8; printf q; sleep 1 ) | timeout 90 script -qec \"aiutd ~a\" /dev/null > ~a 2>&1"
+            keys-file out out1 (path->string copy) out))
+  (capture dir (find-executable-path "sh") (list "-c" command))
+  (define seconds (secs t0))
+  (define raw (if (file-exists? out1) (file->bytes out1) #""))
+  (define screen (plain-screen (last-frame (bytes->string/utf-8 raw #\?))))
+  (define file-text (with-handlers ([void (lambda (e) "")]) (file->string copy)))
+  (define verdicts
+    (for/list ([l (in-list lines)] #:when (string-prefix? l "expect "))
+      (judge l screen file-text seconds)))
+  (define ok? (and (pair? verdicts) (andmap car verdicts)))
+  (with-handlers ([void void])
+    (display-to-file screen (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name ".txt")) #:exists (quote truncate)))
+  (delete-directory/files dir)
+  (define shown (first-n (string-split screen "\n" #:trim? #f) 24))
+  (list name seconds ok?
+        (append (list (string-append "    keys " (string-join (line-values lines "keys") " ")))
+                (for/list ([v (in-list verdicts)])
+                  (string-append "    " (if (car v) "ok   " "FAIL ") (cadr v)))
+                (if ok? (list) (map (lambda (l) (string-append "    | " l)) shown)))))
+
+;; do-test runs every test file of the level or below, reports each with its time, answers 0 or 1.
+(define (do-test level)
+  (define dir (and editor-root (build-path editor-root "gate" "tests")))
+  (define files
+    (if (and dir (directory-exists? dir))
+        (sort (filter (lambda (p) (regexp-match? #rx"[.]test$" (path->string p)))
+                      (directory-list dir #:build? #t))
+              string<? #:key path->string)
+        (list)))
+  (define wanted (filter (lambda (p) (<= (test-level p) level)) files))
+  (define t-all (current-inexact-milliseconds))
+  (define results (for/list ([p (in-list wanted)]) (run-test p)))
+  (define total (secs t-all))
+  (define ok (and (pair? results) (andmap caddr results)))
+  (for ([r (in-list results)]) (log-step! level (string-append "test:" (car r)) (cadr r)))
+  (log-step! level "test-total" total)
+  (emit (list "AIUTD TEST" (format "LEVEL ~a  ~a  ~a s" level (if ok "GREEN" "RED") total))
+        (if (null? results)
+            (list "no test files at this level in gate/tests")
+            (append*
+             (for/list ([r (in-list results)])
+               (cons (step-line (string-append "test:" (car r)) (cadr r) (caddr r)) (cadddr r))))))
+  (if ok 0 1))
+
+;; run answers the verb: update and test work, the other tool verbs say they are not built yet.
 (define (run args)
   (define verb (car args))
   (exit
    (cond
      [(equal? verb "update") (do-update (level-of args))]
+     [(equal? verb "test") (do-test (level-of args))]
      [else
       (emit (list "AIUTD" (string-upcase verb)) (list "not built yet, see plan.md"))
       0])))
