@@ -599,10 +599,10 @@
       (judge l screen file-text seconds)))
   (define ok? (and (pair? verdicts) (andmap car verdicts)))
   (live "diagnosing")
-  (define why (if ok? (list) (append (filter (lambda (l) (not (regexp-match? #rx"^    >" l))) (diagnose code-file out out1)) (trace-since trace-start) (list "    mode after each key:") (map (lambda (l) (car (regexp-split #rx" [|] " l))) (key-modes dir (string-split (string-join (line-values lines "keys") " ")))) (append (if (member "repo git" lines) (cons "    undo commits of the temp repo:" (map (lambda (l) (string-append "    c " l)) (first-n (string-split (let-values ([(c o) (capture dir (find-executable-path "git") (list "log" "--format=%h %s" "aiu-undo"))]) o) "\n") 6))) (list)) (list "    file head, first 6 lines:")) (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))))
+  (define why-full (if ok? (list) (append (filter (lambda (l) (not (regexp-match? #rx"^    >" l))) (diagnose code-file out out1)) (trace-since trace-start) (list "    mode after each key:") (map (lambda (l) (car (regexp-split #rx" [|] " l))) (key-modes dir (string-split (string-join (line-values lines "keys") " ")))) (append (if (member "repo git" lines) (cons "    undo commits of the temp repo:" (map (lambda (l) (string-append "    c " l)) (first-n (string-split (let-values ([(c o) (capture dir (find-executable-path "git") (list "log" "--format=%h %s" "aiu-undo"))]) o) "\n") 6))) (list)) (list "    file head, first 6 lines:")) (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))))
   (with-handlers ([void void])
     (display-to-file screen (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name ".txt")) #:exists (quote truncate)))
-  (define why-short (let ([c (filter (lambda (l) (regexp-match? #rx"cause:" l)) why)]) (if (pair? c) (list (car c)) (list))))
+  (define why (let ([c (filter (lambda (l) (and (regexp-match? #rx"cause:" l) (not (regexp-match? #rx"exit code 0" l)))) why-full)]) (if (pair? c) (list (car c)) (list))))
   (when (member "record" lines)
     (with-handlers ([void void])
       (display-to-file screen (build-path (find-system-path (quote home-dir)) ".aiu-record-screen.txt") #:exists (quote truncate))
@@ -621,7 +621,7 @@
   (define shown (first-n (string-split screen "\n" #:trim? #f) 24))
   (list name seconds ok?
         (append (list (string-append "    keys " (string-join (line-values lines "keys") " ")))
-                (for/list ([v (in-list verdicts)])
+                (for/list ([v (in-list verdicts)] #:unless (car v))
                   (string-append "    " (if (car v) "ok   " "FAIL ") (cadr v)))
                 why)))
 
@@ -702,7 +702,7 @@
                          (build-path editor-root "editor" "src" "features" (string-append name ".feature")) #:exists (quote truncate))]
     [else (when (file-exists? tpath) (delete-file tpath))])
   (emit (list "AIUTD RECORD" (format "~a  ~a" (if ok "GREEN" "RED") name))
-        (append (if (pair? expects) expects (list "nothing changed on screen or in the file, nothing written")) (unbox rec-why)))
+        (if ok expects (append (if (pair? expects) (list) (list "nothing changed on screen or in the file, nothing written")) (unbox rec-why))))
   (if ok 0 1))
 
 ;; howto-section answers the tutorial section built from docs/parts/how-to-make-tests.md, or nothing when the file is missing.

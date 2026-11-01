@@ -207,3 +207,6 @@ Settle final-frame fix (2026-11-01): seen, with AIU_FRAMES frames 2 to 7 after s
 
 
 Short output (2026-11-01): owner wants only the important lines in the tables. why-short keeps the cause line. Not yet wired to the table.
+
+
+Short tables (2026-11-01): owner wants only important lines. Test tables now print keys, FAIL lines and the cause (not exit code 0). Record prints the recorded expects on green, FAIL lines and cause on red. Not yet seen running.
