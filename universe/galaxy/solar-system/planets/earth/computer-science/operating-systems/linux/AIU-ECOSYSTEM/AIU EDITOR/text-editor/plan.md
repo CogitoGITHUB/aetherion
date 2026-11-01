@@ -210,3 +210,6 @@ Short output (2026-11-01): owner wants only the important lines in the tables. w
 
 
 Short tables (2026-11-01): owner wants only important lines. Test tables now print keys, FAIL lines and the cause (not exit code 0). Record prints the recorded expects on green, FAIL lines and cause on red. Not yet seen running.
+
+
+Frame colours (2026-11-01): seen, the focus-colours test judges plain text and cannot see colours. AIU_FRAMES summary now counts grey (90m) and white (97m) codes per frame. Not yet seen running.

@@ -613,7 +613,7 @@
              [parts (regexp-split (regexp-quote "\u001b[?2026h") all)]
              [rows (for/list ([p (in-list parts)] [i (in-naturals)])
                      (let ([t (plain-screen p)])
-                       (format "frame ~a len ~a visual-general ~a modes-popup ~a" i (string-length t) (regexp-match? #rx"visual general" t) (regexp-match? #rx"modes . switch" t))))])
+                       (format "frame ~a len ~a visual-general ~a modes-popup ~a grey ~a white ~a" i (string-length t) (regexp-match? #rx"visual general" t) (regexp-match? #rx"modes . switch" t) (length (regexp-match* #rx"\u001b\\[90m" p)) (length (regexp-match* #rx"\u001b\\[97m" p)))))])
         (display-to-file (string-join rows "\n") (build-path (find-system-path (quote home-dir)) "aiu-frames-summary.txt") #:exists (quote truncate)))))
   (live "deleting temp folder")
   (remove-tree dir)
