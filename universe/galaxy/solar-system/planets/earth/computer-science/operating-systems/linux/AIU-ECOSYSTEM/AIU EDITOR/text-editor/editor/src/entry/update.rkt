@@ -439,6 +439,63 @@
       (string-append "    after " n ": " (if m (cadr m) "no mode line") (let ([u (regexp-match #px"undo[^│╮╯]{3,60}" scr)]) (if u (string-append " [" (car u) "]") "")) " | "
                      (let ([s (string-join (map string-trim (first-n (if (pair? tail) (cdr tail) tail) 2)) " / ")]) (if (> (string-length s) 70) (substring s 0 70) s))))))
 
+;; drive-editor runs the editor in a pty, sends one key per finished frame, saves a snapshot after each key and the exit code.
+(define (drive-editor dir copy chunks out out1 code-file)
+  (define sh (find-executable-path "sh"))
+  (define-values (sp so si se)
+    (subprocess #f #f (quote stdout) sh "-c" (string-append "AIU_TRACE=1 exec script -qec \"aiutd " copy "\" /dev/null")))
+  (define acc (open-output-bytes))
+  (define marker (byte-regexp (regexp-quote (bytes-append (bytes 27) #"[?2026l"))))
+  (define buf (make-bytes 4096))
+  (define (frames) (length (regexp-match* marker (get-output-bytes acc))))
+  (define (wait-frame n)
+    (define deadline (+ (current-inexact-milliseconds) 20000))
+    (let loop ()
+      (cond
+        [(> (frames) n) #t]
+        [else
+         (define left (- deadline (current-inexact-milliseconds)))
+         (cond
+           [(<= left 0) #f]
+           [(sync/timeout (/ left 1000.0) so)
+            (define k (read-bytes-avail! buf so))
+            (cond [(eof-object? k) #f]
+                  [else (write-bytes buf acc 0 k) (loop)])]
+           [else #f])])))
+  (define (save-to path)
+    (call-with-output-file path #:exists (quote truncate) (lambda (o) (write-bytes (get-output-bytes acc) o))))
+  (define note
+    (if (not (wait-frame 0))
+        "none: no first frame in 20 s"
+        (let loop ([cs chunks] [i 0])
+          (cond
+            [(null? cs) #f]
+            [else
+             (define n (frames))
+             (write-string (car cs) si)
+             (flush-output si)
+             (cond
+               [(wait-frame n)
+                (save-to (build-path dir (format "s~a.bin" i)))
+                (loop (cdr cs) (+ i 1))]
+               [else (format "none: no frame after key ~a" i)])]))))
+  (save-to out1)
+  (write-string "q" si)
+  (flush-output si)
+  (define done (sync/timeout 15 sp))
+  (unless done (subprocess-kill sp #t))
+  (let loop ()
+    (when (sync/timeout 1 so)
+      (define k (read-bytes-avail! buf so))
+      (unless (eof-object? k)
+        (write-bytes buf acc 0 k)
+        (loop))))
+  (save-to out)
+  (call-with-output-file code-file #:exists (quote truncate)
+    (lambda (o) (write-string (or note (if done (number->string (subprocess-status sp)) "124")) o)))
+  (close-output-port si)
+  (close-input-port so))
+
 ;; wrap-text cuts one line into pieces of at most 90 characters.
 (define (wrap-text l)
   (if (<= (string-length l) 90) (list l) (cons (substring l 0 90) (wrap-text (substring l 90)))))
@@ -450,7 +507,7 @@
   (define frame (with-handlers ([void (lambda (e) "")]) (plain-screen (last-frame (bytes->string/utf-8 raw #\?)))))
   (define tail (reverse (first-n (reverse (string-split frame "\n" #:trim? #f)) 10)))
   (append
-   (list (string-append "    cause: exit code " code (if (equal? code "124") " = killed by the 20 s timeout, the editor did not quit after escape then q" ""))
+   (list (string-append "    cause: exit code " code (if (equal? code "124") " = killed, the editor did not quit after q within 15 s" ""))
          (string-append "    mid frame: " (if (file-exists? out1) "saved" "MISSING, the editor produced nothing in 4 s"))
          "    last frame at the end:")
    (map (lambda (l) (string-append "    > " l)) (apply append (map wrap-text tail)))))
@@ -482,19 +539,8 @@
              (cond [(string-prefix? l "keys ") (map key-bytes (string-split (substring l 5)))]
                    [(string-prefix? l "type ") (list (substring l 5))]
                    [else (list)]))))
-  (define feed
-    (string-append
-     "sleep 1.5; "
-     (apply string-append
-            (for/list ([c (in-list chunks)] [i (in-naturals)])
-              (define f (path->string (build-path dir (format "k~a.bin" i))))
-              (call-with-output-file f #:exists (quote truncate) (lambda (o) (write-string c o)))
-              (format "cat ~a; sleep ~a; cp ~a ~a 2>/dev/null; " f (if (equal? c "\u001b") "1.5" "0.4") out (path->string (build-path dir (format "s~a.bin" i))))))))
-  (define command
-    (format "( ~a sleep 4; cp ~a ~a; printf \\\\033; sleep 0.8; printf q; sleep 1 ) | AIU_TRACE=1 timeout 20 script -qec \"aiutd ~a\" /dev/null > ~a 2>&1"
-            feed out out1 (path->string copy) out))
   (define code-file (path->string (build-path dir "code.txt")))
-  (capture dir (find-executable-path "sh") (list "-c" (string-append command "; echo $? > " code-file)))
+  (drive-editor dir (path->string copy) chunks out out1 code-file)
   (define seconds (secs t0))
   (define raw (if (file-exists? out1) (file->bytes out1) #""))
   (define screen (plain-screen (last-frame (bytes->string/utf-8 raw #\?))))
