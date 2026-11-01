@@ -41,7 +41,7 @@
 ;; capture runs a program in a folder and answers its exit code and all its output.
 (define (capture dir exe args)
   (define out (open-output-string))
-  (putenv "PWD" (path->string (path->complete-path dir)))
+  (putenv "PWD" (regexp-replace #rx"(.)/+$" (path->string (path->complete-path dir)) "\\1"))
   (define code
     (parameterize ([current-output-port out]
                    [current-error-port out]

@@ -44,3 +44,5 @@ Timing rule (owner, 2026-11-01): the banner is printed first AND last. Every ste
 Found by the timing log (2026-11-01): raco make per file cost 32 s each (172 s for five), one raco make call with all files costs about 34 s. aiutd update compiles in one call. Never call raco once per file.
 
 Found by aiutd update (2026-11-01): the gate failed in 0.3 s because nu reads the PWD variable and racket current-directory does not set it. capture now sets PWD. Open: raco make takes 37 to 42 s with no change; measure raco alone.
+
+Found by aiutd update (2026-11-01): nu refuses a PWD with a trailing slash; capture strips it. raco make with no change takes 43 s alone (racket start 0.47 s), so the cost is raco checking the dependency tree: investigate how many files and why, then skip raco when nothing is newer than the last build.
