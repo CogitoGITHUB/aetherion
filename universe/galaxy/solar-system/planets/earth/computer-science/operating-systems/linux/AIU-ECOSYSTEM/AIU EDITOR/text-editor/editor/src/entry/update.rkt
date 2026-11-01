@@ -672,6 +672,34 @@
    (filter (lambda (l) (and (>= (string-length l) 6) (<= (string-length l) 78) (regexp-match? #px"[A-Za-z]{3}" l) (regexp-match? #px"^[[:print:]]+$" l) (not (regexp-match? #px"[0-9]:[0-9][0-9]" l))))
            (map string-trim (string-split s "\n")))))
 
+;; no-change-why answers the lines that explain a record with no change: where each key is bound, where its command is defined, whether the screens match and the key trace.
+(define (no-change-why keys ksl bsl)
+  (define src (build-path editor-root "editor" "src"))
+  (define src-text (path->string src))
+  (define km (with-handlers ([void (lambda (e) (list))]) (file->lines (build-path src "routes" "keymaps.rkt"))))
+  (define rkts (with-handlers ([void (lambda (e) (list))]) (find-files (lambda (p) (regexp-match? #rx"[.]rkt$" (path->string p))) src)))
+  (define names
+    (let loop ([t (string-split keys)])
+      (cond [(null? t) (list)]
+            [(and (equal? (car t) "space") (pair? (cdr t))) (cons (string-append "space " (cadr t)) (loop (cddr t)))]
+            [else (cons (car t) (loop (cdr t)))])))
+  (define (where k)
+    (define rx (regexp (string-append "[(]\"" (regexp-quote k) "\" \"([^\"]+)\"[)]")))
+    (define hit (for/first ([l (in-list km)] [i (in-naturals 1)] #:when (regexp-match? rx l)) (cons i (cadr (regexp-match rx l)))))
+    (cond
+      [(not hit) (list (string-append "    key " k ": NOT BOUND in routes/keymaps.rkt"))]
+      [else
+       (define crx (regexp (string-append "[(]hash-set! commands \"" (regexp-quote (cdr hit)) "\"")))
+       (define def
+         (for/or ([p (in-list rkts)])
+           (define ls (with-handlers ([void (lambda (e) (list))]) (file->lines p)))
+           (for/first ([l (in-list ls)] [i (in-naturals 1)] #:when (regexp-match? crx l))
+             (string-append (substring (path->string p) (string-length src-text)) " line " (number->string i)))))
+       (list (string-append "    key " k ": routes/keymaps.rkt line " (number->string (car hit)) " runs " (cdr hit) ", defined in " (or def "NOWHERE, no hash-set! commands found")))]))
+  (append (list (string-append "    screen lines identical to baseline: " (if (equal? ksl bsl) "yes" "no")))
+          (apply append (map where names))
+          (trace-since (max 0 (- (trace-size) 6000)))))
+
 ;; do-record runs keys in the real editor against a no-keys baseline, writes the test and feature from what changed, keeps them only when green.
 (define (do-record words)
   (define name (car words))
@@ -712,7 +740,7 @@
                          (build-path editor-root "editor" "src" "features" (string-append name ".feature")) #:exists (quote truncate))]
     [else (when (file-exists? tpath) (delete-file tpath))])
   (emit (list "AIUTD RECORD" (format "~a  ~a" (if ok "GREEN" "RED") name))
-        (if ok expects (append (if (pair? expects) (list) (list "nothing changed on screen or in the file, nothing written")) (unbox rec-why))))
+        (if ok expects (append (if (pair? expects) (list) (append (list "nothing changed on screen or in the file, nothing written") (no-change-why keys ksl bsl))) (unbox rec-why))))
   (if ok 0 1))
 
 ;; howto-section answers the tutorial section built from docs/parts/how-to-make-tests.md, or nothing when the file is missing.

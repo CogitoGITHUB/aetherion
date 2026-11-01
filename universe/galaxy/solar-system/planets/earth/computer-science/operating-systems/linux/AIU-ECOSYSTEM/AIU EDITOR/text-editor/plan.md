@@ -225,3 +225,6 @@ Centre box (2026-11-01): owner wants the lit box always in the middle of the scr
 
 
 Scroll keys (2026-11-01): g is view-up and r is view-down in the visual layer. They move the view 3 lines and the lit block is kept on screen (pinned at the bottom edge when scrolling up, at the top edge when scrolling down); moving the block centres it again. Open: a mode that scrolls with no lit block. Not seen running.
+
+
+No-change cause (2026-11-01): seen, aiutd record scroll-view g g r printed only nothing changed. The record now prints where each key is bound and defined, the screen match and the key trace. Not yet seen running.
