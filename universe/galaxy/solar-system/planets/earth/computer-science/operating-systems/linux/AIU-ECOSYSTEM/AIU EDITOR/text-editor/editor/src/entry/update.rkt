@@ -406,6 +406,22 @@
   (regexp-replace* (pregexp "[\u0001-\u0008\u000b-\u001f]") s
                    (lambda (m) (string-append "^" (string (integer->char (+ 64 (char->integer (string-ref m 0)))))))))
 
+;; trace-file answers the path of the key trace log.
+(define (trace-file) (build-path (find-system-path (quote home-dir)) ".aiu-trace.log"))
+
+;; trace-size answers how many bytes the key trace log holds now, zero when it is missing.
+(define (trace-size) (with-handlers ([void (lambda (e) 0)]) (file-size (trace-file))))
+
+;; trace-since answers the last 10 trace lines written after the given byte offset, marked with t.
+(define (trace-since start)
+  (with-handlers ([void (lambda (e) (list))])
+    (let ([bs (call-with-input-file (trace-file) (lambda (i) (file-position i start) (read-bytes 100000 i)))])
+      (if (bytes? bs)
+          (cons "    key trace of this run, last 10 lines:"
+                (map (lambda (l) (string-append "    t " l))
+                     (last-n (string-split (bytes->string/utf-8 bs #\?) "\n") 10)))
+          (list "    key trace of this run: empty")))))
+
 ;; wrap-text cuts one line into pieces of at most 90 characters.
 (define (wrap-text l)
   (if (<= (string-length l) 90) (list l) (cons (substring l 0 90) (wrap-text (substring l 90)))))
@@ -440,6 +456,7 @@
   (define out (path->string (build-path dir "out.bin")))
   (define out1 (path->string (build-path dir "mid.bin")))
   (call-with-output-file keys-file #:exists (quote truncate) (lambda (o) (write-string input o)))
+  (define trace-start (trace-size))
   (define t0 (current-inexact-milliseconds))
   (define chunks
     (apply append
@@ -456,7 +473,7 @@
               (call-with-output-file f #:exists (quote truncate) (lambda (o) (write-string c o)))
               (format "cat ~a; sleep ~a; " f (if (equal? c "\u001b") "1.5" "0.4"))))))
   (define command
-    (format "( ~a sleep 4; cp ~a ~a; printf \\\\033; sleep 0.8; printf q; sleep 1 ) | timeout 20 script -qec \"aiutd ~a\" /dev/null > ~a 2>&1"
+    (format "( ~a sleep 4; cp ~a ~a; printf \\\\033; sleep 0.8; printf q; sleep 1 ) | AIU_TRACE=1 timeout 20 script -qec \"aiutd ~a\" /dev/null > ~a 2>&1"
             feed out out1 (path->string copy) out))
   (define code-file (path->string (build-path dir "code.txt")))
   (capture dir (find-executable-path "sh") (list "-c" (string-append command "; echo $? > " code-file)))
@@ -468,7 +485,7 @@
     (for/list ([l (in-list lines)] #:when (string-prefix? l "expect "))
       (judge l screen file-text seconds)))
   (define ok? (and (pair? verdicts) (andmap car verdicts)))
-  (define why (if ok? (list) (append (diagnose code-file out out1) (list "    file head, first 6 lines:") (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))))
+  (define why (if ok? (list) (append (diagnose code-file out out1) (trace-since trace-start) (list "    file head, first 6 lines:") (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))))
   (with-handlers ([void void])
     (display-to-file screen (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name ".txt")) #:exists (quote truncate)))
   (delete-directory/files dir)
