@@ -40,3 +40,5 @@ Every aiutd command prints: one empty line, a banner, one empty line. The banner
 Spacing update (owner, 2026-11-01): TWO empty lines above and TWO after the banner and output of every aiutd command, not one. A todo is a paragraph with a todo: line (declaration keyword, not a block type); the todo text is drawn in the tray and the body line above it holds the detail, so generated todos need a real detail line.
 
 Timing rule (owner, 2026-11-01): the banner is printed first AND last. Every step of every command, and every feature test, is timed with the same records, written to ~/.aiu-timings.log (clock, level, step, seconds), and shown next to the run before, with SLOW when a step grew by half and took over 2 s. Tests built later must use the same timing so hard bugs show as slow steps.
+
+Found by the timing log (2026-11-01): raco make per file cost 32 s each (172 s for five), one raco make call with all files costs about 34 s. aiutd update compiles in one call. Never call raco once per file.

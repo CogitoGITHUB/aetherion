@@ -148,7 +148,7 @@
           (if prev (format "   prev ~a s" prev) "")
           (if slow? "   SLOW" "")))
 
-;; compile-files are the files raco make builds, one by one so each one is timed.
+;; compile-files are the files raco make builds in ONE call: one call per file cost 32 s each, five calls 172 s, one call 34 s.
 (define compile-files
   (list "editor/src/entry/cli.rkt" "editor/src/dashboard/undo.rkt"
         "editor/src/dashboard/multi.rkt" "editor/src/dashboard/clip.rkt"
@@ -183,12 +183,11 @@
      (define records (list))
      (define fail-lines (list))
      (define ok #t)
-     (for ([f (in-list compile-files)] #:break (not ok))
+     (let ()
        (define t (current-inexact-milliseconds))
        (define-values (code text)
-         (if raco (capture editor-root raco (list "make" f)) (values 1 "raco was not found")))
-       (define name (string-append "compile:" (path->string (file-name-from-path f))))
-       (set! records (append records (list (list name (secs t) (= code 0)))))
+         (if raco (capture editor-root raco (cons "make" compile-files)) (values 1 "raco was not found")))
+       (set! records (append records (list (list "compile" (secs t) (= code 0)))))
        (unless (= code 0)
          (set! ok #f)
          (set! fail-lines (first-n (real-lines text) 12))))
