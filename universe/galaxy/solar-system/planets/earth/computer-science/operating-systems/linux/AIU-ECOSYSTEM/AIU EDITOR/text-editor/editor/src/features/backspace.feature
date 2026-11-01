@@ -1,5 +1,5 @@
-name Backspace
+name backspace
 test backspace
-keys space f, backspace
-doc Backspace in the write layer takes back the character before the point.
-ai gate/tests/backspace.test, expects Qtitle start kept and QQtitle start gone.
+keys w Q Q backspace escape space s
+doc Recorded from a real run of the keys w Q Q backspace escape space s.
+ai gate/tests/backspace.test, recorded by aiutd record from the observed screen and file changes.
