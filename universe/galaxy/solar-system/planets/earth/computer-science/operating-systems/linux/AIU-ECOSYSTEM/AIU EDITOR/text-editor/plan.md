@@ -138,3 +138,6 @@ Live lines in update (2026-11-01): aiutd update prints a live line before and af
 
 
 Live lines gated (2026-11-01): seen, aiutd update --level 2 GREEN in 141.3 s with live lines, 5 of 5 tests ok (compile 36.5 s, gate 79.2 s). The per key driver lines now show only with AIU_LIVE set; compile, gate stage, test start and done lines and NO FRAME always show. Not yet seen running. Next: feature registry, aiutd docs, todo.aiu generation, README renames; level 3 and repeat checks for flakes.
+
+
+Feature registry and aiutd docs (2026-11-01): editor/src/features/NAME.feature, plain lines: name, test, keys, doc (one or more), ai. aiutd docs runs each feature test and writes aiutd-tutorial.aiu and ai-starting-point.md in the text-editor folder from the passing ones. The READMEs are untouched, no code or gate refers to them (grep seen empty). Not yet seen running. Next: run aiutd docs, read both files, open the tutorial with aiutd, then todo.aiu generation and the README renames.

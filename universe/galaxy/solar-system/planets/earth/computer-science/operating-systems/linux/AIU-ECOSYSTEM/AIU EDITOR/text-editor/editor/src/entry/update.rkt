@@ -620,6 +620,51 @@
   (define m (member flag args))
   (and m (pair? (cdr m)) (cadr m)))
 
+;; do-docs runs the test of every feature file and writes aiutd-tutorial.aiu and ai-starting-point.md from the passing ones; answers 0 or 1.
+(define (do-docs)
+  (define fdir (and editor-root (build-path editor-root "editor" "src" "features")))
+  (cond
+    [(not (and fdir (directory-exists? fdir)))
+     (emit (list "AIUTD DOCS" "RED") (list "the features folder was not found"))
+     1]
+    [else
+     (define t0 (current-inexact-milliseconds))
+     (define files
+       (sort (filter (lambda (p) (regexp-match? #rx"[.]feature$" (path->string p))) (directory-list fdir #:build? #t))
+             string<? #:key path->string))
+     (define rows
+       (for/list ([p (in-list files)])
+         (define ls (test-lines p))
+         (define (one k) (let ([v (line-values ls k)]) (if (pair? v) (car v) "")))
+         (define tpath (build-path editor-root "gate" "tests" (string-append (one "test") ".test")))
+         (define r (if (file-exists? tpath) (run-test tpath) (list (one "test") 0.0 #f (list "test file missing"))))
+         (list (one "name") (one "keys") (line-values ls "doc") (one "ai") (cadr r) (caddr r))))
+     (define good (filter (lambda (r) (list-ref r 5)) rows))
+     (define aiu
+       (string-join
+        (append
+         (list "title start" "kind: default" "tags: docs aiutd generated" "AIUTD TUTORIAL" "title end" ""
+               "comment start" "Written by aiutd docs from the feature files whose tests pass. Do not edit by hand." "comment end" "")
+         (append*
+          (for/list ([r (in-list good)])
+            (append (list "section start" "title start" (car r) "title end" "")
+                    (append* (for/list ([d (in-list (caddr r))]) (list "paragraph start" d "paragraph end" "")))
+                    (list "paragraph start" (string-append "Keys: " (cadr r)) "paragraph end" "" "section end" "")))))
+        "\n"))
+     (define md
+       (string-join
+        (append (list "# AIUTD starting point (written by aiutd docs, do not edit by hand)" ""
+                      "| feature | keys | test notes |" "|---|---|---|")
+                (for/list ([r (in-list good)]) (string-append "| " (car r) " | " (cadr r) " | " (cadddr r) " |")))
+        "\n"))
+     (display-to-file (string-append aiu "\n") (build-path editor-root "aiutd-tutorial.aiu") #:exists (quote truncate))
+     (display-to-file (string-append md "\n") (build-path editor-root "ai-starting-point.md") #:exists (quote truncate))
+     (define ok (andmap (lambda (r) (list-ref r 5)) rows))
+     (define lines (for/list ([r (in-list rows)]) (step-line (string-append "doc:" (car r)) (list-ref r 4) (list-ref r 5))))
+     (emit (list "AIUTD DOCS" (format "~a  ~a of ~a features written  ~a s" (if ok "GREEN" "RED") (length good) (length rows) (secs t0)))
+           lines)
+     (if ok 0 1)]))
+
 ;; do-test runs every test file of the level or below, reports each with its time, answers 0 or 1.
 (define (do-test level only repeat)
   (define dir (and editor-root (build-path editor-root "gate" "tests")))
@@ -652,6 +697,7 @@
   (exit
    (cond
      [(equal? verb "update") (do-update (level-of args))]
+     [(equal? verb "docs") (do-docs)]
      [(equal? verb "test") (do-test (level-of args) (arg-value args "--only") (max 1 (or (string->number (or (arg-value args "--repeat") "1")) 1)))]
      [else
       (emit (list "AIUTD" (string-upcase verb)) (list "not built yet, see plan.md"))
