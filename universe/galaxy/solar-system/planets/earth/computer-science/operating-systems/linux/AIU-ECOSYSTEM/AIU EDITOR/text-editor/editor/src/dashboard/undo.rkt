@@ -68,23 +68,31 @@
 (define ud-active #f)
 ;; ud-file is the complete path of the file, ud-top the git folder top, ud-rel the path in the repository.
 (define ud-file #f)
+;; ud-top is the top folder of the git repository that holds the file.
 (define ud-top #f)
+;; ud-rel is the path of the file inside the git repository.
 (define ud-rel #f)
 ;; ud-curf is the file in the git folder that holds the current node of this file.
 (define ud-curf #f)
 ;; ud-nodes holds every node by commit id; ud-kids the children of a node, oldest first.
 (define ud-nodes (make-hash))
+;; ud-kids holds the children of each node, oldest first.
 (define ud-kids (make-hash))
 ;; ud-roots and ud-order hold the node ids: the nodes without a parent, and all nodes oldest first.
 (define ud-roots (list))
+;; ud-order holds all node ids, oldest first.
 (define ud-order (list))
 ;; ud-pos holds the place of each node on the grid as (column . row); the two counts are its size.
 (define ud-pos (make-hash))
+;; ud-rows-count is the number of rows of the node grid.
 (define ud-rows-count 1)
+;; ud-cols-count is the number of columns of the node grid.
 (define ud-cols-count 1)
 ;; ud-cur is the node shown, ud-home the node the file was at when the layer opened, ud-mark the marked node.
 (define ud-cur #f)
+;; ud-home is the node the file was at when the layer opened.
 (define ud-home #f)
+;; ud-mark is the node marked with m, for the diff.
 (define ud-mark #f)
 ;; ud-prefer remembers, for each node, the child that forward goes to.
 (define ud-prefer (make-hash))
@@ -92,6 +100,7 @@
 (define ud-texts (make-hash))
 ;; ud-orig-text and ud-orig-point are the live text and point when the layer opened.
 (define ud-orig-text "")
+;; ud-orig-point is the live point when the layer opened.
 (define ud-orig-point 0)
 ;; ud-diff holds the lines of a diff while the diff view shows, else nothing.
 (define ud-diff (list))
