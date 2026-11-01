@@ -1,0 +1,85 @@
+title start
+kind: default
+tags: docs aiutd generated
+AIUTD TUTORIAL
+title end
+
+comment start
+Written by aiutd docs from the feature files whose tests pass. Do not edit by hand.
+comment end
+
+section start
+title start
+Select, copy and paste
+title end
+
+paragraph start
+Space v starts a selection, s extends it, space y copies, escape leaves the layer, space p pastes at the cursor.
+paragraph end
+
+paragraph start
+Keys: space v, space y, space p
+paragraph end
+
+section end
+
+section start
+title start
+Several cursors
+title end
+
+paragraph start
+Space c opens the cursor layer, down adds a cursor on the next line, f opens the write layer and typing applies to every cursor.
+paragraph end
+
+paragraph start
+Keys: space c, down, f
+paragraph end
+
+section end
+
+section start
+title start
+Writing and saving
+title end
+
+paragraph start
+Space f opens the write layer, typing adds text, escape leaves it, space s saves the file.
+paragraph end
+
+paragraph start
+Keys: space f, escape, space s
+paragraph end
+
+section end
+
+section start
+title start
+Moving between blocks
+title end
+
+paragraph start
+Press t to go to the next block of the page.
+paragraph end
+
+paragraph start
+Keys: t
+paragraph end
+
+section end
+
+section start
+title start
+Undo layer
+title end
+
+paragraph start
+Space u opens the undo layer, h steps back to an older saved version, k keeps it as the file.
+paragraph end
+
+paragraph start
+Keys: space u, h, k
+paragraph end
+
+section end
+

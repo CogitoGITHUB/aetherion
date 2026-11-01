@@ -147,3 +147,6 @@ Docs fix (2026-11-01): seen, the generated tutorial said Keys: t next block, mov
 
 
 Temp folder fix (2026-11-01): seen, aiutd docs crashed in run-test: delete-directory cannot delete .git of the temp repo, Directory not empty. Cause not seen, likely a git process still writing. The temp folder is now removed with rm -r -f through remove-tree, which never raises. First compile failed (open-output-nowhere is not loaded in update.rkt), now open-output-string. Not yet seen running.
+
+
+Docs written (2026-11-01): aiutd docs green, aiutd-tutorial.aiu and ai-starting-point.md committed. Not seen: opening the tutorial in the editor. Next: todo.aiu generation, then the README renames.
