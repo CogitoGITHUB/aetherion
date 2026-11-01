@@ -68,3 +68,5 @@ File head (2026-11-01): a failed test prints the first 6 lines of the page file 
 Update runs tests (2026-11-01): aiutd update runs the gate stages, then the tests of its level, and shows them in the same report with failure detail inline. Step 4a done.
 
 Trace (2026-11-01, step 4b): live.rkt key-loop calls trace-key! after act-on. It writes to ~/.aiu-trace.log only when AIU_TRACE is set, reads the environment per key and never at load, and adds no require. It times act-on, not the repaint.
+
+Tables (2026-11-01): every report is a boxed table, columns step, stat, secs, prev. Rows come from step-line, any other detail line is a full width box under its row, the total row is last. Written by table-lines in update.rkt, applied inside emit.
