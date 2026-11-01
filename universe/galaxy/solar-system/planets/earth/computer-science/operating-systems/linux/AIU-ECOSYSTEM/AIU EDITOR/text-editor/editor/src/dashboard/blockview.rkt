@@ -182,17 +182,21 @@
   (set-box! top-line next)
   next)
 
+;; lit-range holds the first and last line of the lit block as last placed, or #f.
+(define lit-range (box #f))
+
 ;; free-block holds #t after a scroll key, then the start line of the block the scroll belongs to, or #f when the view is centred.
 (define free-block (box #f))
 
 ;; bv-place answers the first line to show: after a scroll key the view stays where it was moved but the lit block stays on screen, otherwise the block is centred.
 (define (bv-place from to visible)
   (define fbv (unbox free-block))
+  (set-box! lit-range (cons from to))
   (cond
     [(and fbv (or (eq? fbv #t) (eqv? fbv from)))
      (set-box! free-block from)
      (let* ([lo (max 1 (+ (- to visible) 1))]
-            [next (if (>= (- to from) visible) from (max lo (min from (unbox top-line))))])
+            [next (max 1 (unbox top-line))])
        (set-box! top-line next)
        next)]
     [else (set-box! free-block #f) (bv-center from to visible)]))
@@ -217,7 +221,7 @@
 
 ;; bv-view-overlay answers the drawing with the block at the point lit, the
 ;; point and the first line to show, or nothing when no block can be lit.
-(define (bv-view-overlay session raw width height got)
+(define (bv-view-overlay-base session raw width height got)
   (define lines (string-split (drawn-view session raw width) "\n" #:trim? #f))
   (define ranges (bv-ranges got lines))
   (define target (bv-target (page-blocks got) (the-point session) ranges))
@@ -229,6 +233,33 @@
               "\n")
              (the-point session)
              (bv-place (add1 (car range)) (add1 (cdr range)) (max 1 (- height 1))))))
+
+;; bv-view-overlay answers the base drawing, and after a scroll key it copies the lit block onto the bottom edge of the window when the block is below it, or the top edge when it is above it.
+(define (bv-view-overlay session raw width height got)
+  (define r (bv-view-overlay-base session raw width height got))
+  (define rng (unbox lit-range))
+  (cond
+    [(and r (unbox free-block) rng)
+     (define ls (list->vector (string-split (car r) "\n" #:trim? #f)))
+     (define n (vector-length ls))
+     (define visible (max 1 (- height 1)))
+     (define top (max 1 (min (caddr r) (max 1 n))))
+     (set-box! top-line top)
+     (define from (car rng))
+     (define to (cdr rng))
+     (define k (+ (- to from) 1))
+     (define v (make-vector (max n (+ top visible)) ""))
+     (for ([i (in-range n)]) (vector-set! v i (vector-ref ls i)))
+     (define start
+       (cond [(>= k visible) #f]
+             [(< to top) (- top 1)]
+             [(> from (+ top visible -1)) (+ (- top 1) (- visible k))]
+             [else #f]))
+     (when start
+       (for ([j (in-range k)])
+         (vector-set! v (+ start j) (if (< (+ (- from 1) j) n) (vector-ref ls (+ (- from 1) j)) ""))))
+     (list (string-join (vector->list v) "\n") (cadr r) top)]
+    [else r]))
 
 ;; bv-edit-overlay answers the drawing with the block being edited shown as raw
 ;; text, with its start and end lines, and every other block drawn. The raw lines

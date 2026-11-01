@@ -228,3 +228,6 @@ Scroll keys (2026-11-01): g is view-up and r is view-down in the visual layer. T
 
 
 No-change cause (2026-11-01): seen, aiutd record scroll-view g g r printed only nothing changed. The record now prints where each key is bound and defined, the screen match and the key trace. Not yet seen running.
+
+
+Floating box (2026-11-01): owner wants the view to keep scrolling with g and r while the lit block floats on the screen edge. bv-place no longer clamps; bv-view-overlay wraps bv-view-overlay-base and copies the block onto the bottom edge when scrolling up and the top edge when scrolling down. Not seen on a phone.
