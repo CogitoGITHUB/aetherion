@@ -162,3 +162,6 @@ Old docs carried over (2026-11-01, owner): README.md lines 1 to 265 and README-A
 
 
 More tests (2026-11-01): write-tab and backspace added from the old key tables, kept only if green: [ write-tab backspace ]. Not covered, screens unknown: bar, tabs, focus, find, home keys, block cursor, move layer. Next: read those screens with a frame dump to write expectations, todo.aiu generation, level 3.
+
+
+More tests (2026-11-01): focus-hide, focus-back, find-escape from the probe screens, kept only if green: [ focus-back ]. Seen: bar and tabs keys leave mode visual general and q does not quit there (probe hung 17 s), screens unknown, no tests. Next: read the bar and tabs code for what space b and space t do, todo.aiu generation, level 3.
