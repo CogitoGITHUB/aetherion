@@ -231,3 +231,6 @@ No-change cause (2026-11-01): seen, aiutd record scroll-view g g r printed only 
 
 
 Floating box (2026-11-01): owner wants the view to keep scrolling with g and r while the lit block floats on the screen edge. bv-place no longer clamps; bv-view-overlay wraps bv-view-overlay-base and copies the block onto the bottom edge when scrolling up and the top edge when scrolling down. Not seen on a phone.
+
+
+Pin layer (2026-11-01): space o opens pin mode. Pins are boxes drawn on the top or bottom screen edge once their block scrolls out of the window; the first block is pinned by default. Keys a add, d delete, h t select, u b edge, n s order, x hide, f keep in focus (default hidden in focus). Open: the block kind accessor for a real title pin, a focus level 2 setting, baked tables not regenerated. Not seen running.

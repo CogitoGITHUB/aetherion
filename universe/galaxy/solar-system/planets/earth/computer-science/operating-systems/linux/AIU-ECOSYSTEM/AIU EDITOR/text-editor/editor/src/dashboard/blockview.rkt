@@ -234,8 +234,147 @@
              (the-point session)
              (bv-place (add1 (car range)) (add1 (cdr range)) (max 1 (- height 1))))))
 
-;; bv-view-overlay answers the base drawing, and after a scroll key it copies the lit block onto the bottom edge of the window when the block is below it, or the top edge when it is above it.
+;; pins holds the pinned boxes, each a list of the block start line, the place top or bottom, hidden and keep-in-focus; unset until first used.
+(define pins (box (quote unset)))
+
+;; pin-sel holds the index of the pinned box the pin keys act on.
+(define pin-sel (box 0))
+
+;; cur-start holds the start line of the block at the point as of the last drawing.
+(define cur-start (box #f))
+
+;; first-start holds the start line of the first block of the page.
+(define first-start (box #f))
+
+;; pins-now answers the list of pins and makes the first block the default pin on first use.
+(define (pins-now)
+  (when (eq? (unbox pins) (quote unset))
+    (set-box! pins (if (unbox first-start) (list (list (unbox first-start) "top" #f #f)) (list))))
+  (unbox pins))
+
+;; pin-update! replaces the pin at the selected index with the result of f.
+(define (pin-update! f)
+  (set-box! pins (for/list ([p (in-list (pins-now))] [j (in-naturals)]) (if (= j (unbox pin-sel)) (f p) p))))
+
+;; bv-command-pin-mode enters the pin layer.
+(define (bv-command-pin-mode session words)
+  (pins-now)
+  (set-layer! session "pin")
+  (cons #t "layer: pin"))
+
+;; bv-command-pin-add pins the block at the point at the top and selects it.
+(define (bv-command-pin-add session words)
+  (define all (pins-now))
+  (cond
+    [(not (unbox cur-start)) (cons #t "pin: no block")]
+    [(ormap (lambda (p) (equal? (car p) (unbox cur-start))) all) (cons #t "pin: already pinned")]
+    [else (set-box! pins (append all (list (list (unbox cur-start) "top" #f #f))))
+          (set-box! pin-sel (length all))
+          (cons #t "pin: added")]))
+
+;; bv-command-pin-delete deletes the selected pin, the first block too.
+(define (bv-command-pin-delete session words)
+  (define all (pins-now))
+  (cond
+    [(null? all) (cons #t "pin: none")]
+    [else
+     (define i (min (unbox pin-sel) (- (length all) 1)))
+     (set-box! pins (for/list ([p (in-list all)] [j (in-naturals)] #:unless (= j i)) p))
+     (set-box! pin-sel (max 0 (min i (- (length all) 2))))
+     (cons #t "pin: deleted")]))
+
+;; bv-command-pin-next selects the next pin.
+(define (bv-command-pin-next session words)
+  (define n (length (pins-now)))
+  (when (> n 0) (set-box! pin-sel (modulo (add1 (unbox pin-sel)) n)))
+  (cons #t "pin: next"))
+
+;; bv-command-pin-prev selects the previous pin.
+(define (bv-command-pin-prev session words)
+  (define n (length (pins-now)))
+  (when (> n 0) (set-box! pin-sel (modulo (+ (unbox pin-sel) n -1) n)))
+  (cons #t "pin: previous"))
+
+;; bv-command-pin-top puts the selected pin on the top edge.
+(define (bv-command-pin-top session words)
+  (pin-update! (lambda (p) (list (car p) "top" (caddr p) (cadddr p))))
+  (cons #t "pin: top"))
+
+;; bv-command-pin-bottom puts the selected pin on the bottom edge.
+(define (bv-command-pin-bottom session words)
+  (pin-update! (lambda (p) (list (car p) "bottom" (caddr p) (cadddr p))))
+  (cons #t "pin: bottom"))
+
+;; bv-command-pin-hide hides or shows the selected pin.
+(define (bv-command-pin-hide session words)
+  (pin-update! (lambda (p) (list (car p) (cadr p) (not (caddr p)) (cadddr p))))
+  (cons #t "pin: hide toggled"))
+
+;; bv-command-pin-keep keeps the selected pin visible in focus mode, or hides it there again.
+(define (bv-command-pin-keep session words)
+  (pin-update! (lambda (p) (list (car p) (cadr p) (caddr p) (not (cadddr p)))))
+  (cons #t "pin: keep in focus toggled"))
+
+;; pin-swap! swaps two pins by index and selects the second place.
+(define (pin-swap! a b)
+  (define v (list->vector (pins-now)))
+  (when (and (<= 0 a) (< a (vector-length v)) (<= 0 b) (< b (vector-length v)))
+    (let ([t (vector-ref v a)]) (vector-set! v a (vector-ref v b)) (vector-set! v b t))
+    (set-box! pins (vector->list v))
+    (set-box! pin-sel b)))
+
+;; bv-command-pin-earlier moves the selected pin one step earlier in the stack of its edge.
+(define (bv-command-pin-earlier session words)
+  (pin-swap! (unbox pin-sel) (- (unbox pin-sel) 1))
+  (cons #t "pin: earlier"))
+
+;; bv-command-pin-later moves the selected pin one step later in the stack of its edge.
+(define (bv-command-pin-later session words)
+  (pin-swap! (unbox pin-sel) (+ (unbox pin-sel) 1))
+  (cons #t "pin: later"))
+
+;; bv-view-overlay answers the floating drawing with every shown pin copied onto its screen edge when its block has scrolled out of the window.
 (define (bv-view-overlay session raw width height got)
+  (define lines (string-split (drawn-view session raw width) "\n" #:trim? #f))
+  (define ranges (bv-ranges got lines))
+  (define bl (page-blocks got))
+  (define target (bv-target bl (the-point session) ranges))
+  (set-box! cur-start (and target (block-start target)))
+  (when (pair? bl) (set-box! first-start (block-start (car bl))))
+  (define r (bv-view-overlay-float session raw width height got))
+  (define focus? (and (getenv "AIU_FOCUS_COLOURS") #t))
+  (cond
+    [(and r (pair? (pins-now)))
+     (define ls0 (list->vector (string-split (car r) "\n" #:trim? #f)))
+     (define lv (list->vector lines))
+     (define top (caddr r))
+     (define visible (max 1 (- height 1)))
+     (define lo (- top 1))
+     (define hi (+ lo visible -1))
+     (define v (make-vector (max (vector-length ls0) (+ hi 1)) ""))
+     (for ([i (in-range (vector-length ls0))]) (vector-set! v i (vector-ref ls0 i)))
+     (let loop ([all (pins-now)] [i 0] [to 0] [bo 0])
+       (unless (null? all)
+         (define p (car all))
+         (define rng (hash-ref ranges (car p) #f))
+         (define shown? (and rng (not (caddr p)) (or (not focus?) (cadddr p))))
+         (define k (if rng (+ (- (cdr rng) (car rng)) 1) 0))
+         (define inside? (and rng (>= (car rng) lo) (<= (cdr rng) hi)))
+         (cond
+           [(and shown? (not inside?) (<= (+ to bo k) visible))
+            (define top? (equal? (cadr p) "top"))
+            (define start (if top? (+ lo to) (+ (- hi bo k) 1)))
+            (define colour (if (= i (unbox pin-sel)) "\u001b[97m" "\u001b[90m"))
+            (for ([j (in-range k)])
+              (define idx (+ (car rng) j))
+              (vector-set! v (+ start j) (if (< idx (vector-length lv)) (string-append colour (bv-plain (vector-ref lv idx)) "\u001b[0m") "")))
+            (loop (cdr all) (add1 i) (if top? (+ to k) to) (if top? bo (+ bo k)))]
+           [else (loop (cdr all) (add1 i) to bo)])))
+     (list (string-join (vector->list v) "\n") (cadr r) top)]
+    [else r]))
+
+;; bv-view-overlay answers the base drawing, and after a scroll key it copies the lit block onto the bottom edge of the window when the block is below it, or the top edge when it is above it.
+(define (bv-view-overlay-float session raw width height got)
   (define r (bv-view-overlay-base session raw width height got))
   (define rng (unbox lit-range))
   (cond
@@ -697,6 +836,17 @@
 (hash-set! commands "block-up" bv-command-up)
 (hash-set! commands "view-up" bv-command-view-up)
 (hash-set! commands "view-down" bv-command-view-down)
+(hash-set! commands "pin-mode" bv-command-pin-mode)
+(hash-set! commands "pin-add" bv-command-pin-add)
+(hash-set! commands "pin-delete" bv-command-pin-delete)
+(hash-set! commands "pin-next" bv-command-pin-next)
+(hash-set! commands "pin-prev" bv-command-pin-prev)
+(hash-set! commands "pin-top" bv-command-pin-top)
+(hash-set! commands "pin-bottom" bv-command-pin-bottom)
+(hash-set! commands "pin-hide" bv-command-pin-hide)
+(hash-set! commands "pin-keep" bv-command-pin-keep)
+(hash-set! commands "pin-earlier" bv-command-pin-earlier)
+(hash-set! commands "pin-later" bv-command-pin-later)
 (hash-set! commands "block-down" bv-command-down)
 (hash-set! commands "block-edit" bv-command-edit)
 (hash-set! commands "block-text" bv-command-text)

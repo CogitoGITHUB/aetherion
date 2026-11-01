@@ -208,7 +208,7 @@
         (list "next-block" "blocks" "next")
         (list "block-end" "blocks" "block end") (list "blocks" "blocks" "list")
         (list "focus-toggle" "view" "focus") (list "explorer" "view" "explorer") (list "home-open" "view" "dashboard")
-        (list "block-up" "move" "block up") (list "view-up" "move" "view up") (list "view-down" "move" "view down") (list "block-down" "move" "block down")
+        (list "block-up" "move" "block up") (list "view-up" "move" "view up") (list "view-down" "move" "view down") (list "pin-mode" "view" "pin-mode") (list "pin-add" "view" "pin-add") (list "pin-delete" "view" "pin-delete") (list "pin-next" "view" "pin-next") (list "pin-prev" "view" "pin-prev") (list "pin-top" "view" "pin-top") (list "pin-bottom" "view" "pin-bottom") (list "pin-hide" "view" "pin-hide") (list "pin-keep" "view" "pin-keep") (list "pin-earlier" "view" "pin-earlier") (list "pin-later" "view" "pin-later") (list "block-down" "move" "block down")
         (list "move-left" "move" "left") (list "move-right" "move" "right")
         (list "move-up" "move" "up") (list "move-down" "move" "down")
         (list "block-move-up" "move" "move block up") (list "block-move-down" "move" "move block down")
@@ -380,7 +380,7 @@
           [(or writing? (multi-raw? session)) raw]
           [else (page-view session raw width)]))
   (define pending (unbox pending-keys))
-  (define menu (and (not home) (or (pair? pending) (member (the-layer session) (list "bar" "bar-level" "tab" "tab-level" "find"))) (menu-float (menu-text (the-layer session) pending (min width 66)) width)))
+  (define menu (and (not home) (or (pair? pending) (member (the-layer session) (list "bar" "bar-level" "tab" "tab-level" "find" "pin"))) (menu-float (menu-text (the-layer session) pending (min width 66)) width)))
   (define text0 (if overlay (car overlay) plain-text))
   (define text (if (and gut? (not writing?) (not (multi-raw? session))) (gutter-apply session text0) text0))
   (define-values (row column) (point-line raw (the-point session)))

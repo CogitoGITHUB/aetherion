@@ -41,7 +41,7 @@
 ;;   visual — the general mode: the trigger and the plain keys
 ;;   write  — the text mode: the keys are text
 ;;   select — the selected text is what the commands act on
-(define editor-layers '("visual" "write" "select" "move" "undo" "cursor" "bar" "bar-level" "tab" "tab-level" "find"))
+(define editor-layers '("visual" "write" "select" "move" "undo" "cursor" "bar" "bar-level" "tab" "tab-level" "find" "pin"))
 
 ;; trigger-of answers the trigger of each layer: the key that starts a
 ;; sequence in that layer.
@@ -54,7 +54,7 @@
           (cons "bar-level" "space")
           (cons "tab" "space")
           (cons "tab-level" "space")
-          (cons "find" "space") (cons "undo" "space") (cons "cursor" "space")))
+          (cons "find" "space") (cons "undo" "space") (cons "cursor" "space") (cons "pin" "space")))
 
 ;; normal-keys are the keys of the visual layer: the key and the command
 ;; it runs. The command is a name from the command table, never a
@@ -99,6 +99,7 @@
     ("space h" "home-open")
     ("space n" "next-block")
     ("space e" "block-end")
+    ("space o" "pin-mode")
     ("escape" "visual-mode")
     ("backspace" "delete")))
 
@@ -225,6 +226,12 @@
         (list "w n" "find-workspace-files")
         (list "escape" "visual-mode")))
 ;; keymaps is the whole table: a layer name and the keys of that layer.
+;; pin-keys are the keys of the pin layer: a adds the block at the point, d deletes the selected pin, h and t select, u and b put it on the top or bottom edge, n and s reorder, x hides, f keeps it in focus mode, escape leaves.
+(define pin-keys
+  (list (list "a" "pin-add") (list "d" "pin-delete") (list "h" "pin-prev") (list "t" "pin-next")
+        (list "u" "pin-top") (list "b" "pin-bottom") (list "n" "pin-earlier") (list "s" "pin-later")
+        (list "x" "pin-hide") (list "f" "pin-keep") (list "escape" "visual-mode")))
+
 ;; The tables are put in with list, not with cons and not with a quote:
 ;; a quoted list would hold the NAMES of the tables, and a cons would be
 ;; written flat by the bake — the shape of the tables has to survive the
@@ -243,7 +250,7 @@
             (list "bar-level" bar-level-keys)
             (list "tab" tab-keys)
             (list "tab-level" tab-level-keys)
-            (list "find" find-keys) (list "undo" undo-keys) (list "cursor" cursor-keys))))
+            (list "find" find-keys) (list "undo" undo-keys) (list "cursor" cursor-keys) (list "pin" pin-keys))))
 
 ;; keys-of answers the keys of one layer, or nothing when the table holds
 ;; no layer by that name. The keys of a layer are pairs: a key and the
