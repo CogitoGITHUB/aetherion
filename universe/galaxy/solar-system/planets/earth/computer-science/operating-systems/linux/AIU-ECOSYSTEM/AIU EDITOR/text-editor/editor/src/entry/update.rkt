@@ -486,10 +486,12 @@
   (define (trace-lines) (with-handlers ([void (lambda (e) 0)]) (length (regexp-match* (byte-regexp (bytes 10)) (file->bytes (trace-file))))))
   (define (frames) (length (regexp-match* marker (get-output-bytes acc))))
   (define (wait-frame n [tl #f])
+    (define base #f)
     (define deadline (+ (current-inexact-milliseconds) 20000))
     (let loop ()
       (cond
-        [(and (> (frames) n) (or (not tl) (> (trace-lines) tl))) #t]
+        [(and tl (not base) (> (trace-lines) tl)) (set! base (frames)) (loop)]
+        [(and (> (frames) n) (or (not tl) (and base (> (frames) base)))) #t]
         [else
          (define left (- deadline (current-inexact-milliseconds)))
          (cond

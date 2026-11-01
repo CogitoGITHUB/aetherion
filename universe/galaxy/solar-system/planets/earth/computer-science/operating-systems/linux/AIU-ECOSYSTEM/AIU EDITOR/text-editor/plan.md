@@ -192,3 +192,6 @@ Focus colours (2026-11-01): first compile failed, focus-colours unbound in bar.r
 
 
 Focus colours test (2026-11-01): aiutd record focus-colours space z was RED, nothing committed. Cause: recorder takes frame 2 (popup) instead of settled frame 7. Fix the recorder next.
+
+
+Settled frame (2026-11-01): seen, late popup frames of space were counted as the answer to z. wait-frame now waits for the first frame AFTER the key trace line (the editor writes the trace line before it repaints). No timers. Risk: a trace line and its frame read in one chunk would wait until the 20 s deadline. Not yet seen running.
