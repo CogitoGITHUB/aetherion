@@ -126,3 +126,7 @@ Repo directive fix (2026-11-01): seen, git rev-parse HEAD exits 128 in a repo wi
 Undo test green (2026-11-01): seen, undo.test keys space f Y escape space s space f Z escape space s space u h k, expect file contains Ytitle start, 9.5 s. Causes of the earlier reds: the repo had no commit (fixed in the repo directive), there was no older node before Z, and a final escape after k rolled the keep back. The editor was fine.
 
 Undo race (2026-11-01): seen in ~/.aiu-undo-error.txt: cannot lock ref refs/heads/aiu-undo, reference already exists. The save worker and the synchronous commit of space u both create the branch. commit-safe! now holds a commit lock so only one commit runs at a time. Not yet seen running.
+
+Undo flake (2026-11-01): after the commit lock, undo repeat 3 gave 2 ok 1 FAIL and the error file did not change, so the branch race is not the cause. A failed repo git test now lists the commits of aiu-undo in its temp repo. Not yet seen running.
+
+Undo flake (2026-11-01): after the commit lock, undo repeat 3 gave 2 ok 1 FAIL and the error file did not change, so the branch race is not the cause. A failed repo git test now lists the commits of aiu-undo in its temp repo. Seen: capture answers exit code and output. Not yet seen running.
