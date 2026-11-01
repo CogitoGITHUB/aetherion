@@ -70,6 +70,21 @@ section end
 
 section start
 title start
+Focus mode off
+title end
+
+paragraph start
+A second space z brings the bar, the tabs and the mode line back.
+paragraph end
+
+paragraph start
+Keys: space z, space z
+paragraph end
+
+section end
+
+section start
+title start
 Moving between blocks
 title end
 
