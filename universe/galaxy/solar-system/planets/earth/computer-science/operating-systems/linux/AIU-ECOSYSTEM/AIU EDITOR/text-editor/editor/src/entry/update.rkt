@@ -434,7 +434,10 @@
     (define raw (with-handlers ([void (lambda (e) #"")]) (file->bytes f)))
     (define scr (with-handlers ([void (lambda (e) "")]) (plain-screen (last-frame (bytes->string/utf-8 raw #\?)))))
     (define m (regexp-match #px"╭─ ([a-z]+( [a-z]+)?) \\[" scr))
-    (string-append "    after " n ": " (if m (cadr m) "no mode line"))))
+    (let* ([ls (string-split scr "\n" #:trim? #f)]
+           [tail (let loop ([l ls]) (cond [(null? l) (list)] [(regexp-match? #rx"╭─ [a-z]+ [a-z]+ \\[|╭─ [a-z]+ \\[" (car l)) l] [else (loop (cdr l))]))])
+      (string-append "    after " n ": " (if m (cadr m) "no mode line") " | "
+                     (string-join (map string-trim (first-n (if (pair? tail) (cdr tail) tail) 2)) " / ")))))
 
 ;; wrap-text cuts one line into pieces of at most 90 characters.
 (define (wrap-text l)
