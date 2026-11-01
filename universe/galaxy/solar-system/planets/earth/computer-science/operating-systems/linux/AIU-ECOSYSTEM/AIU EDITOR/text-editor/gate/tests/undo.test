@@ -1,0 +1,6 @@
+test undo
+level 2
+file test.aiu
+keys space f Z escape space s space u h k
+expect file lacks Ztitle start
+expect seconds-under 50

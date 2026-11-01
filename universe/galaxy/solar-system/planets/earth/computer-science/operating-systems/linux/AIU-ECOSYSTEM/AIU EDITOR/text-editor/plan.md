@@ -90,3 +90,5 @@ Compact trace (2026-11-01): trace lines in a failed test show the pending keys a
 Tests step 6 (2026-11-01): gate/tests/cursors.test (space c, down adds a cursor on the next line, f writes, Z typed at both) and gate/tests/copy-paste.test (space v selects 3 characters, space y copies, escape, space p pastes). Expectations come from README-AI sections 21 and 23, never tried by hand. Undo test not written yet, it needs saved commits.
 
 Mode per key (2026-11-01): the driver copies the output after every fed key, and a failed test lists the mode line after each key. test:cursors failed with file head ZZZs033qtitle start, cause not yet seen.
+
+Undo test (2026-11-01): gate/tests/undo.test types Z, saves, opens the undo layer, steps back with h and keeps with k, and expects the file to lose the Z. From README-AI section 20, never tried by hand. Flake note: cursors and edit each failed once under load, 0 of 10 afterwards, to be rechecked at level 3.
