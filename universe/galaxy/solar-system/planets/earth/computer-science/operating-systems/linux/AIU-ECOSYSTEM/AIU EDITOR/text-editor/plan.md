@@ -266,3 +266,6 @@ Trace paint (2026-11-01): key-loop now times the repaint and writes a paint line
 
 
 Todo clean (2026-11-01): removed the done todos from todo.aiu: banner, update, test levels, headless driver, trace, recorder settled frame, focus colours, focus hide level, focus box types. Kept the notation title todo, it belongs to AIU NOTATION.
+
+
+CLI docs (2026-11-01): aiutd docs now writes a Commands of aiutd section (cli-section in update.rkt). The trace line is not checked against the verb. Not seen running.

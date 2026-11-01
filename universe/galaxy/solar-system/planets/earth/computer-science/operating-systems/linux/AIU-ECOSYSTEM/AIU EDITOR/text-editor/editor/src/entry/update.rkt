@@ -772,6 +772,17 @@
                      "\nparagraph end\n\nsection end\n")
       ""))
 
+;; cli-section answers the generated tutorial section that lists the commands of aiutd, one line each.
+(define (cli-section)
+  (string-append "section start\ntitle start\nCommands of aiutd\ntitle end\n\nparagraph start\n"
+                 (string-join (list "aiutd FILE opens the file in the editor, and aiutd alone opens the home screen."
+                                    "aiutd update runs the compile, the tests at a level and the docs."
+                                    "aiutd test --level N runs the tests in gate/tests at that level."
+                                    "aiutd record NAME KEYS records a test from a real run of the keys."
+                                    "aiutd docs runs the test of every feature and writes this tutorial."
+                                    "aiutd trace is a tool verb, and the key trace is written to the trace log when AIU_TRACE is set.")
+                              "\n")
+                 "\nparagraph end\n\nsection end\n"))
 ;; do-docs runs the test of every feature file and writes aiutd-tutorial.aiu and ai-starting-point.md from the passing ones; answers 0 or 1.
 (define (do-docs)
   (define fdir (and editor-root (build-path editor-root "editor" "src" "features")))
@@ -809,7 +820,7 @@
                       "| feature | keys | test notes |" "|---|---|---|")
                 (for/list ([r (in-list good)]) (string-append "| " (car r) " | " (cadr r) " | " (cadddr r) " |")))
         "\n"))
-     (display-to-file (string-append aiu "\n" (howto-section) "\n") (build-path editor-root "aiutd-tutorial.aiu") #:exists (quote truncate))
+     (display-to-file (string-append aiu "\n" (howto-section) "\n" (cli-section) "\n") (build-path editor-root "aiutd-tutorial.aiu") #:exists (quote truncate))
      (display-to-file (string-append md "\n" (parts-text) "\n") (build-path editor-root "ai-starting-point.md") #:exists (quote truncate))
      (define ok (andmap (lambda (r) (list-ref r 5)) rows))
      (for ([r (in-list rows)]) (log-step! 2 (string-append "doc:" (car r)) (list-ref r 4)))
