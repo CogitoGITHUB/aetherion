@@ -388,3 +388,31 @@
   (hash-set! commands name (undo-stub name)))
 
 (provide undo-table undo-rows-hook)
+
+;; multi-table holds the real commands of the cursors and the selection; multi.rkt fills it when it is loaded.
+(define multi-table (make-hash))
+
+;; multi-path is the multi cursor module beside this file, or false.
+(define multi-path
+  (let ([src (variable-reference->module-source (#%variable-reference))])
+    (and (path? src)
+         (let-values ([(base name dir?) (split-path src)])
+           (and (path? base) (simplify-path (build-path base "multi.rkt")))))))
+
+;; multi-stub makes a command that loads the multi cursor module on first use and then runs the real command.
+(define (multi-stub name)
+  (lambda (session words)
+    (with-handlers ([void (lambda (e) (cons #t (format "cursors failed: ~a" (if (exn? e) (exn-message e) e))))])
+      (when multi-path (dynamic-require multi-path #f))
+      (let ([f (hash-ref multi-table name #f)])
+        (if f (f session words) (cons #t "cursors are not available"))))))
+
+;; The cursor and selection commands enter the command table as stubs, so the keys and the gate see them at once.
+(for ([name (in-list (list "cursor-mode" "cur-leave" "cur-below" "cur-above" "cur-next-block" "cur-prev-block"
+                           "cur-next-match" "cur-all-matches" "cur-drop" "cur-clear" "select-mode"
+                           "sel-left" "sel-right" "sel-up" "sel-down" "sel-word" "sel-word-back"
+                           "sel-block-forward" "sel-block-back" "sel-next-match" "sel-all-matches"
+                           "sel-drop" "sel-cancel"))])
+  (hash-set! commands name (multi-stub name)))
+
+(provide multi-table)

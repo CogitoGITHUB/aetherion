@@ -41,7 +41,7 @@
 ;;   visual — the general mode: the trigger and the plain keys
 ;;   write  — the text mode: the keys are text
 ;;   select — the selected text is what the commands act on
-(define editor-layers '("visual" "write" "select" "move" "undo" "bar" "bar-level" "tab" "tab-level" "find"))
+(define editor-layers '("visual" "write" "select" "move" "undo" "cursor" "bar" "bar-level" "tab" "tab-level" "find"))
 
 ;; trigger-of answers the trigger of each layer: the key that starts a
 ;; sequence in that layer.
@@ -54,7 +54,7 @@
           (cons "bar-level" "space")
           (cons "tab" "space")
           (cons "tab-level" "space")
-          (cons "find" "space") (cons "undo" "space")))
+          (cons "find" "space") (cons "undo" "space") (cons "cursor" "space")))
 
 ;; normal-keys are the keys of the visual layer: the key and the command
 ;; it runs. The command is a name from the command table, never a
@@ -80,6 +80,7 @@
     ("i" "block-text")
     ("space f" "write-mode")
     ("space v" "select-mode")
+    ("space c" "cursor-mode")
     ("space s" "save")
     ("space q" "quit") ("q" "quit")
     ("space u" "undo-mode")
@@ -116,9 +117,28 @@
 ;; select-keys are the keys of the select layer: the trigger's sequences,
 ;; and the selected text is what they act on.
 (define select-keys
-  '(("space space" "mode")
-    ("space v" "visual-mode")
-    ("escape" "visual-mode")))
+  (list (list "space space" "mode") (list "space v" "visual-mode")
+        (list "n" "sel-left") (list "s" "sel-right") (list "left" "sel-left") (list "right" "sel-right")
+        (list "up" "sel-up") (list "down" "sel-down") (list "w" "sel-word") (list "b" "sel-word-back")
+        (list "h" "sel-block-back") (list "t" "sel-block-forward")
+        (list "a" "kind-any") (list "p" "kind-paragraph") (list "e" "kind-section") (list "c" "kind-code")
+        (list "k" "kind-comment") (list "l" "kind-title") (list "x" "kind-todo") (list "o" "kind-todo-open")
+        (list "d" "kind-todo-done")
+        (list "j" "sel-next-match") (list "v" "sel-all-matches") (list "r" "sel-drop")
+        (list "escape" "sel-cancel")))
+
+;; cursor-keys are the keys of the cursor layer: t and h add a cursor on the next or previous block of the picked
+;; kind, the arrows add one on the line below or above, j adds the next match, v every match, r drops the last
+;; cursor, z clears them, f opens the write layer for all of them, s starts the selections, escape goes back.
+(define cursor-keys
+  (list (list "t" "cur-next-block") (list "h" "cur-prev-block")
+        (list "down" "cur-below") (list "up" "cur-above")
+        (list "j" "cur-next-match") (list "v" "cur-all-matches") (list "r" "cur-drop") (list "z" "cur-clear")
+        (list "f" "write-mode") (list "s" "select-mode")
+        (list "a" "kind-any") (list "p" "kind-paragraph") (list "e" "kind-section") (list "c" "kind-code")
+        (list "k" "kind-comment") (list "l" "kind-title") (list "x" "kind-todo") (list "o" "kind-todo-open")
+        (list "d" "kind-todo-done")
+        (list "escape" "cur-leave")))
 
 ;; move-keys are the keys of the move layer: h and t swap the lit block with
 ;; the one before or after it, and escape goes back to the visual layer.
@@ -217,7 +237,7 @@
             (list "bar-level" bar-level-keys)
             (list "tab" tab-keys)
             (list "tab-level" tab-level-keys)
-            (list "find" find-keys) (list "undo" undo-keys))))
+            (list "find" find-keys) (list "undo" undo-keys) (list "cursor" cursor-keys))))
 
 ;; keys-of answers the keys of one layer, or nothing when the table holds
 ;; no layer by that name. The keys of a layer are pairs: a key and the
@@ -272,3 +292,5 @@
          prefix-of?)
 
 (provide undo-keys)
+
+(provide cursor-keys)

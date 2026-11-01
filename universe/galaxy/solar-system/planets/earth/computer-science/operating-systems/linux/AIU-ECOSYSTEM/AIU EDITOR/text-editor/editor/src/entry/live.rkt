@@ -231,6 +231,15 @@
         (list "bar-less" "level" "hide one part") (list "bar-more" "level" "show one part")
         (list "tab-less" "level" "hide one level") (list "tab-more" "level" "show one level")
         (list "bar-level-mode" "level" "level adjuster") (list "tab-level-mode" "level" "level adjuster")
+        (list "cursor-mode" "view" "cursors") (list "cur-leave" "cursor" "back") (list "cur-below" "cursor" "line below")
+        (list "cur-above" "cursor" "line above") (list "cur-next-block" "cursor" "next block") (list "cur-prev-block" "cursor" "block before")
+        (list "cur-next-match" "cursor" "next match") (list "cur-all-matches" "cursor" "all matches")
+        (list "cur-drop" "cursor" "drop last") (list "cur-clear" "cursor" "clear")
+        (list "sel-left" "select" "left") (list "sel-right" "select" "right") (list "sel-up" "select" "up")
+        (list "sel-down" "select" "down") (list "sel-word" "select" "word") (list "sel-word-back" "select" "word back")
+        (list "sel-block-forward" "select" "block after") (list "sel-block-back" "select" "block before")
+        (list "sel-next-match" "select" "next match") (list "sel-all-matches" "select" "all matches")
+        (list "sel-drop" "select" "drop last") (list "sel-cancel" "select" "drop selection")
         (list "undo-back" "undo" "back") (list "undo-forward" "undo" "forward")
         (list "undo-up" "undo" "branch above") (list "undo-down" "undo" "branch below")
         (list "undo-branch-back" "undo" "last branch point") (list "undo-branch-forward" "undo" "next branch point")
@@ -363,19 +372,19 @@
   (define overlay
     (and (not (home-screen))
          (string-suffix? name ".aiu")
-         (block-overlay session raw width height)))
+         (not (multi-raw? session)) (block-overlay session raw width height)))
   (define home (home-screen))
   (define plain-text
     (cond [home (string-join (home (the-level session) (unbox home-explorer)) "\n")]
-          [writing? raw]
+          [(or writing? (multi-raw? session)) raw]
           [else (page-view session raw width)]))
   (define pending (unbox pending-keys))
   (define menu (and (not home) (or (pair? pending) (member (the-layer session) (list "bar" "bar-level" "tab" "tab-level" "find"))) (menu-float (menu-text (the-layer session) pending (min width 66)) width)))
   (define text0 (if overlay (car overlay) plain-text))
-  (define text (if (and gut? (not writing?)) (gutter-apply session text0) text0))
+  (define text (if (and gut? (not writing?) (not (multi-raw? session))) (gutter-apply session text0) text0))
   (define-values (row column) (point-line raw (the-point session)))
   (define plain-top
-    (if writing? (viewport-top viewport row (max 1 (- height 1)))
+    (if (or writing? (multi-raw? session)) (viewport-top viewport row (max 1 (- height 1)))
         (add1 (the-view-top session))))
   (define top (if overlay (caddr overlay) plain-top))
   ;; text-shown is the screen text. With a menu open it is a blank screen with the menu floating in the middle, so the page is hidden behind it.
@@ -394,8 +403,8 @@
           (if (bar-plan-line? plan) (format "~a  ~a  ~a:~a~a" (file-name-from-path (session-file session))
                   (format "~a [~a]~a" (mode-label (the-layer session)) (unbox kind-filter) (if (unbox unsaved) "  unsaved: SPC s" "")) row column where) (bar-plan-text plan))
           writing?
-          (or (and home #t) (and menu #t) (and overlay #t) (and (not writing?) (string-suffix? name ".aiu")))
-          #:offset (bar-plan-top plan) #:left (bar-plan-left plan) #:full full-width #:overlay (string-append (bar-plan-overlay plan) (notify-overlay width height (+ 1 (bar-plan-top plan))))))
+          (or (and home #t) (and menu #t) (and overlay #t) (and (not writing?) (not (multi-raw? session)) (string-suffix? name ".aiu")))
+          #:offset (bar-plan-top plan) #:left (bar-plan-left plan) #:full full-width #:overlay (string-append (bar-plan-overlay plan) (live-multi-overlay session raw top height (bar-plan-top plan) (bar-plan-left plan) width (and (not home) (not menu) (not overlay) (or writing? (not (string-suffix? name ".aiu")) (multi-raw? session)) #t)) (notify-overlay width height (+ 1 (bar-plan-top plan))))))
   (flush-output))
 
 ;; viewport-top answers the first line shown at the top of the screen: the
@@ -610,3 +619,10 @@
 
 ;; The live session, for the entry above it.
 (provide live-session home-screen home-pick home-refresh home-chosen home-explorer)
+
+;; live-multi-overlay answers the escape text that draws the extra cursors and the selections over the raw text,
+;; or nothing when the screen does not show the raw text or no cursor or selection is in use.
+(define (live-multi-overlay session raw top height offset left width shown?)
+  (if (and shown? (multi-live? session))
+      ((unbox multi-text-hook) raw top (max 1 (- height 1)) offset left width (the-layer session) (the-point session))
+      ""))

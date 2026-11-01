@@ -75,7 +75,8 @@ Visual layer (the page is read):
 | backspace | take back the character before the point |
 | escape | stay in the visual layer |
 | space f | the write layer on the whole page, raw |
-| space v | the select layer |
+| space v | the select layer (section 21) |
+| space c | the cursor layer (section 21) |
 | space s | save, then one undo commit (nothing is saved while typing) |
 | space q | quit |
 | q | quit |
@@ -256,7 +257,7 @@ The rows show paths relative to the folder searched, and the top of the screen p
 ## 7. Build and check
 
 ~~~
-PLTCOMPILEDROOTS="$HOME/aiu-compiled" raco make editor/src/entry/cli.rkt editor/src/dashboard/undo.rkt
+PLTCOMPILEDROOTS="$HOME/aiu-compiled" raco make editor/src/entry/cli.rkt editor/src/dashboard/undo.rkt editor/src/dashboard/multi.rkt
 nu gate/check.nu
 ~~~
 
@@ -557,7 +558,7 @@ Autosave and the automatic undo commit are gone. A keystroke only edits and mark
 
 ## 20. Undo mode (space u), drawn like vundo, kept in git (2026-10-31 night)
 
-Space u opens the undo layer (it replaced the more-rows key; the command level-up still exists, unbound). Code: `dashboard/undo.rkt`, loaded on first use through the stubs at the end of `bar.rkt` (`undo-stub`, `undo-table`, `undo-rows-hook`); the keys are `undo-keys` in `keymaps.rkt`; the panel is drawn at the bottom by `bar-plan-of` in place of the bar. Build it with `raco make editor/src/entry/cli.rkt editor/src/dashboard/undo.rkt` (undo.rkt is not in `compile-deps` of `cli.rkt`; compile it by hand after changing it).
+Space u opens the undo layer (it replaced the more-rows key; the command level-up still exists, unbound). Code: `dashboard/undo.rkt`, loaded on first use through the stubs at the end of `bar.rkt` (`undo-stub`, `undo-table`, `undo-rows-hook`); the keys are `undo-keys` in `keymaps.rkt`; the panel is drawn at the bottom by `bar-plan-of` in place of the bar. Build it with `raco make editor/src/entry/cli.rkt editor/src/dashboard/undo.rkt editor/src/dashboard/multi.rkt` (undo.rkt is not in `compile-deps` of `cli.rkt`; compile it by hand after changing it).
 
 - The nodes are the commits of the branch aiu-undo that touch the open file. Opening the layer first saves and commits unsaved work (`shadow-commit-now!`), so every state is a node. A tree is drawn horizontally: first child on the row of its parent, other branches below with a branch mark.
 - A save commits on top of the CURRENT node of the file (kept in `<gitdir>/aiu-undo-cur-<key>`, key from `shadow-key`), so a save after an undo makes a branch. A tip that would be lost is kept as `refs/aiu-undo-old/<commit>`. The tree is read with `git rev-list --parents aiu-undo --glob=refs/aiu-undo-old/* -- FILE`.
@@ -567,3 +568,13 @@ Space u opens the undo layer (it replaced the more-rows key; the command level-u
 - AIU_NO_UNDO switches the commits off, then the layer says there are no versions.
 
 Todo for this section: copy and paste inside the editor does not exist yet (see the todo table); when it does, update undo mode to use it.
+
+## 21. Multiple cursors and selection mode (2026-11-01)
+
+Code: `dashboard/multi.rkt` (commands and drawing hooks, loaded on first use through the stubs at the end of `bar.rkt`: `multi-stub`, `multi-table`), the state in boxes of `commands.rkt` (`extra-cursors`, `main-anchor`, `multi-raw-view`, `multi-file`, the hooks, `multi-live?`, `multi-clear!`), the wrappers at the end of `blockview.rkt` (`type`, `delete` and the four moves run for every cursor while extra cursors exist; `block-edit` and `block-text` clear them; escape in visual clears them), the drawing in `repaint-now` of `live.rkt` (`live-multi-overlay`, the raw view) and `bv-view-overlay` (`bv-multi-lit`). Build with `raco make editor/src/entry/cli.rkt editor/src/dashboard/undo.rkt editor/src/dashboard/multi.rkt`.
+
+- There is NO limit on the number of cursors. Typing and backspace make one hot path request for each cursor, so the cost grows with the count; measure it with many cursors.
+- Cursor layer (space c): t and h add a cursor on the next or previous block of the picked kind, down and up add one on the line below or above, j adds the next match of the selected text or of the word under the main cursor (the word becomes selected), v adds every match, r drops the last extra cursor, z clears them all, f opens the write layer (typing and backspace then apply to every cursor, from the last to the first), s starts the selections, a p e c k l x o d pick the kind, escape goes back to visual and keeps the cursors; a second escape in visual clears them.
+- Select layer (space v): every cursor starts a region where it stands. n s, left right, up down, w b extend by text (the screen shows the raw text, selections and cursors in reverse video); h and t extend by block of the picked kind (the page stays drawn and the selected blocks are lit); a p e c k l x o d pick the kind as in visual; j and v add the next or every match as more selections; r drops the last; escape drops the selections and keeps the cursors.
+- Cursors in the drawn page are shown as lit blocks; in raw text as reverse video. In the write layer the terminal cursor is the main one and the others are drawn.
+- Not done yet: copy and paste (next step, todo above), typing over a selection, cursors while a block is edited (they are dropped), the block start is where a block cursor stands.

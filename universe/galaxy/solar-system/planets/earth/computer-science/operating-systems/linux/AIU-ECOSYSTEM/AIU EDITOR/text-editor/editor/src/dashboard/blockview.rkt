@@ -192,7 +192,7 @@
   (and range
        (list (string-join
               (for/list ([l (in-list lines)] [i (in-naturals)])
-                (if (<= (car range) i (cdr range)) (bv-light l) l))
+                (if (or (<= (car range) i (cdr range)) (ormap (lambda (r) (<= (car r) i (cdr r))) (bv-multi-lit session got ranges))) (bv-light l) l))
               "\n")
              (the-point session)
              (bv-follow (add1 (car range)) (add1 (cdr range)) (max 1 (- height 1))))))
@@ -693,3 +693,51 @@
                  (set-box! unsaved #f)
                  (bv-after-write (session-file session))
                  r))))
+
+;; bv-multi-cache keeps the lit ranges of the last drawing, keyed by its ranges table.
+(define bv-multi-cache (box #f))
+
+;; bv-multi-lit answers the line ranges the extra cursors and the selections light, besides the block at the point.
+(define (bv-multi-lit session got ranges)
+  (cond
+    [(not (multi-live? session)) (list)]
+    [else
+     (let ([c (unbox bv-multi-cache)])
+       (if (and c (eq? (car c) ranges))
+           (cdr c)
+           (let ([r ((unbox multi-lit-hook) got ranges (the-point session))])
+             (set-box! bv-multi-cache (cons ranges r))
+             r)))]))
+
+;; The commands that edit or move the point run for every cursor while there are extra cursors: multi.rkt
+;; does the work through multi-edit-hook. With no extra cursor the command is the old one.
+(for-each
+ (lambda (name)
+   (hash-set! commands name
+              (let ([orig (hash-ref commands name)])
+                (lambda (session words)
+                  (if (and (pair? (unbox extra-cursors))
+                           (equal? (unbox multi-file) (session-file session))
+                           (unbox multi-edit-hook))
+                      ((unbox multi-edit-hook) name orig session words)
+                      (orig session words))))))
+ (list "type" "delete" "move-left" "move-right" "move-up" "move-down"))
+
+;; Opening the block edit drops the extra cursors: the block edit is one place.
+(for-each
+ (lambda (name)
+   (hash-set! commands name
+              (let ([orig (hash-ref commands name)])
+                (lambda (session words) (multi-clear!) (orig session words)))))
+ (list "block-edit" "block-text"))
+
+;; Escape in the visual layer drops the extra cursors and the selections first; escape elsewhere is the old command.
+(hash-set! commands "visual-mode"
+           (let ([orig (hash-ref commands "visual-mode")])
+             (lambda (session words)
+               (if (and (string=? (the-layer session) "visual") (multi-live? session))
+                   (begin (multi-clear!) (cons #t "cursors cleared"))
+                   (orig session words)))))
+
+;; The pieces multi.rkt needs from this module.
+(provide bv-kind-match? bv-inside bv-drawn)
