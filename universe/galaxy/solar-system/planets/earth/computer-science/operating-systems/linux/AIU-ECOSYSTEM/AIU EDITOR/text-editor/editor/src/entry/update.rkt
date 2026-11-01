@@ -427,6 +427,15 @@
                      (last-n (string-split (bytes->string/utf-8 bs #\?) "\n") 10)))
           (list "    key trace of this run: empty")))))
 
+;; key-modes answers one line per fed key: the mode shown on the screen after that key.
+(define (key-modes dir names)
+  (for/list ([n (in-list names)] [i (in-naturals)])
+    (define f (build-path dir (format "s~a.bin" i)))
+    (define raw (with-handlers ([void (lambda (e) #"")]) (file->bytes f)))
+    (define scr (with-handlers ([void (lambda (e) "")]) (plain-screen (last-frame (bytes->string/utf-8 raw #\?)))))
+    (define m (regexp-match #px"╭─ ([a-z]+( [a-z]+)?) \\[" scr))
+    (string-append "    after " n ": " (if m (cadr m) "no mode line"))))
+
 ;; wrap-text cuts one line into pieces of at most 90 characters.
 (define (wrap-text l)
   (if (<= (string-length l) 90) (list l) (cons (substring l 0 90) (wrap-text (substring l 90)))))
@@ -476,7 +485,7 @@
             (for/list ([c (in-list chunks)] [i (in-naturals)])
               (define f (path->string (build-path dir (format "k~a.bin" i))))
               (call-with-output-file f #:exists (quote truncate) (lambda (o) (write-string c o)))
-              (format "cat ~a; sleep ~a; " f (if (equal? c "\u001b") "1.5" "0.4"))))))
+              (format "cat ~a; sleep ~a; cp ~a ~a 2>/dev/null; " f (if (equal? c "\u001b") "1.5" "0.4") out (path->string (build-path dir (format "s~a.bin" i))))))))
   (define command
     (format "( ~a sleep 4; cp ~a ~a; printf \\\\033; sleep 0.8; printf q; sleep 1 ) | AIU_TRACE=1 timeout 20 script -qec \"aiutd ~a\" /dev/null > ~a 2>&1"
             feed out out1 (path->string copy) out))
@@ -490,7 +499,7 @@
     (for/list ([l (in-list lines)] #:when (string-prefix? l "expect "))
       (judge l screen file-text seconds)))
   (define ok? (and (pair? verdicts) (andmap car verdicts)))
-  (define why (if ok? (list) (append (diagnose code-file out out1) (trace-since trace-start) (list "    file head, first 6 lines:") (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))))
+  (define why (if ok? (list) (append (diagnose code-file out out1) (trace-since trace-start) (list "    mode after each key:") (key-modes dir (string-split (string-join (line-values lines "keys") " "))) (list "    file head, first 6 lines:") (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))))
   (with-handlers ([void void])
     (display-to-file screen (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name ".txt")) #:exists (quote truncate)))
   (delete-directory/files dir)

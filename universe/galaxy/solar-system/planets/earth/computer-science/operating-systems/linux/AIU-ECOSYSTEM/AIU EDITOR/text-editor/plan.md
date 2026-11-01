@@ -88,3 +88,5 @@ Inline trace (2026-11-01): aiutd test runs the editor with AIU_TRACE set and a f
 Compact trace (2026-11-01): trace lines in a failed test show the pending keys and the ms only, so no table wrap hides them. Seen in a failed edit run: the file head was ZZZZ033qtitle start, the quit escape is still typed as text.
 
 Tests step 6 (2026-11-01): gate/tests/cursors.test (space c, down adds a cursor on the next line, f writes, Z typed at both) and gate/tests/copy-paste.test (space v selects 3 characters, space y copies, escape, space p pastes). Expectations come from README-AI sections 21 and 23, never tried by hand. Undo test not written yet, it needs saved commits.
+
+Mode per key (2026-11-01): the driver copies the output after every fed key, and a failed test lists the mode line after each key. test:cursors failed with file head ZZZs033qtitle start, cause not yet seen.
