@@ -70,21 +70,6 @@ section end
 
 section start
 title start
-Focus mode off
-title end
-
-paragraph start
-A second space z brings the bar, the tabs and the mode line back.
-paragraph end
-
-paragraph start
-Keys: space z, space z
-paragraph end
-
-section end
-
-section start
-title start
 Moving between blocks
 title end
 
@@ -124,6 +109,17 @@ paragraph end
 
 paragraph start
 Keys: space f, tab s, tab tab
+paragraph end
+
+section end
+
+section start
+title start
+How to make tests
+title end
+
+paragraph start
+A test is recorded from a real run, not typed. Run: aiutd record NAME KEYS where KEYS are key names (space, escape, tab, return, up, down, left, right, backspace) or single characters, for example: aiutd record focus-on space z. The command runs the keys in the real editor, compares the screen and the file with a run of no keys, writes gate/tests/NAME.test and editor/src/features/NAME.feature from what changed, and keeps them only when the new test passes. The keys must end in visual mode, or the run hangs for 15 s. Then run aiutd docs, which writes this tutorial from the passing features. Check with aiutd test --level 2 --only NAME and aiutd update --level 2.
 paragraph end
 
 section end

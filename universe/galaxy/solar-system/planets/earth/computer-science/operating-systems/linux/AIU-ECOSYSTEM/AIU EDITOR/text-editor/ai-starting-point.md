@@ -6,7 +6,6 @@
 | Select, copy and paste | space v, space y, space p | gate/tests/copy-paste.test, expects the file to contain tittitle start. |
 | Several cursors | space c, down, f | gate/tests/cursors.test, expects Z typed at both cursors. |
 | Writing and saving | space f, escape, space s | gate/tests/edit.test, keys space f Z Z escape space s, expects the file to contain ZZtitle start. |
-| Focus mode off | space z, space z | gate/tests/focus-back.test, expects visual general on screen. |
 | Moving between blocks | t | gate/tests/move.test, keys t t t t, expects the screen to contain Moving between blocks. |
 | Undo layer | space u, h, k | gate/tests/undo.test, needs repo git, expects Ytitle start kept and YZtitle start gone. A test must end in visual mode. |
 | Write layer tab keys | space f, tab s, tab tab | gate/tests/write-tab.test, expects Qtitle start in the file. |
@@ -20,6 +19,11 @@
 - Do not edit AIU NOTATION. No .org files, no compiled folders in the tree. Never loop over in-naturals without a bound.
 - No one-off scripts for tests or updates: extend aiutd update and aiutd test. No timers or sleeps in the test driver. Every aiutd command prints two empty lines, a banner, a boxed table, the banner, two empty lines.
 - A test must end in visual mode: a final escape after k rolls the keep back, and a test that ends inside the undo layer hangs for 15 s.
+
+
+## How to make tests (never write them by hand)
+
+A test is recorded from a real run, not typed. Run: aiutd record NAME KEYS where KEYS are key names (space, escape, tab, return, up, down, left, right, backspace) or single characters, for example: aiutd record focus-on space z. The command runs the keys in the real editor, compares the screen and the file with a run of no keys, writes gate/tests/NAME.test and editor/src/features/NAME.feature from what changed, and keeps them only when the new test passes. The keys must end in visual mode, or the run hangs for 15 s. Then run aiutd docs, which writes this tutorial from the passing features. Check with aiutd test --level 2 --only NAME and aiutd update --level 2.
 
 
 ## AI notes from the old docs (copied 2026-11-01, rules, lazy contract, keys by layer, traps, gate)
