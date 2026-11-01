@@ -1,4 +1,4 @@
-AI: READ SECTIONS 21, 20 AND 19 AT THE END FIRST, then 18. Then section 0.
+AI: READ SECTION 22 (RULE AND NEXT PLANS) FIRST, then 21, 20, 19 and 18 at the end. Then section 0.
 
 # AIU EDITOR: guide for AI agents
 
@@ -58,6 +58,7 @@ enough.
 | Rule |
 |---|
 | Lazy loading is the main feature. Never slow the first paint (section 2). |
+| PLAN FIRST: put the next plans in the README (section 22) before or with any work, in every reply, so the owner never waits for a plan if tokens run out. |
 | No `.org` files and no `compiled/` folders inside the tree. |
 | Compile with `PLTCOMPILEDROOTS="$HOME/aiu-compiled"`. |
 | `aiutd` must never create or seed a file from `AIU NOTATION/types/default.aiu`. |
@@ -298,6 +299,7 @@ line above every definition.
 | open | copy and paste inside the editor (select, copy, paste, between files and tabs): none exists, text is copied only with the terminal selection |
 | open | after copy and paste exists: update undo mode (section 20) so that copy in an old version and paste in the live file use it |
 | open | try by hand: undo mode (space u): h t, n s, a w e, m u d, l, k, escape, and the tree after a branch |
+| open | NEXT PLANS: see section 22 (the full ordered list); selection mode then copy and paste come first |
 | done | first paint 0.8 s, lazy send, background home scan, gate green with 17 stages |
 
 ## 9. Traps
@@ -604,3 +606,28 @@ Code: `dashboard/multi.rkt` (commands and drawing hooks, loaded on first use thr
 - Select layer (space v): every cursor starts a region where it stands. n s, left right, up down, w b extend by text (the screen shows the raw text, selections and cursors in reverse video); h and t extend by block of the picked kind (the page stays drawn and the selected blocks are lit); a p e c k l x o d pick the kind as in visual; j and v add the next or every match as more selections; r drops the last; escape drops the selections and keeps the cursors.
 - Cursors in the drawn page are shown as lit blocks; in raw text as reverse video. In the write layer the terminal cursor is the main one and the others are drawn.
 - Not done yet: copy and paste (next step, todo above), typing over a selection, cursors while a block is edited (they are dropped), the block start is where a block cursor stands.
+
+## 22. RULE AND NEXT PLANS (written 2026-11-01, read this first)
+
+OWNER RULE (new): the plan goes into the README FIRST, before or together with any work, in every reply. The owner may run out of tokens at any time and must never wait for a plan. When a plan changes, change this section in the same script. This rule is also in the hard rules table.
+
+State: undo mode (section 20) and multiple cursors with selection mode (section 21) are built, compiled and committed, NOT tried by hand. The owner tries them next. Nothing below is built.
+
+### 22.1 Order of work
+
+1. Try by hand and fix what the owner reports: cursor layer (space c), select layer (space v), undo layer (space u). First check: type with 5 cursors and say if it lags (one hot path request per cursor per key).
+2. Copy and paste (the owner asked for it right after selection works). Design: a register ring kept in memory in a lazy module `dashboard/clip.rkt` (stub commands at the end of bar.rkt like undo and multi). Copy takes the text of every selection (several selections are joined with a newline and kept as a list, so paste can give one piece to each cursor when the counts match). Cut copies then deletes. Paste inserts at every cursor, from the last to the first. Typing or backspace over a selection replaces it. Also send the copy to the terminal clipboard with the OSC 52 escape so it reaches the phone clipboard. Keys (ask before binding, Dvorak, plain letters are mostly taken): proposed space y copy, space p paste, space d cut, in visual and in select; show them in the popup groups.
+3. Update undo mode with copy and paste: in the undo layer a copy key puts the text of the old version in the register, and l (live file) pastes it at once at the old live point if the owner says so; the return to the same node and point stays. Also bind enter for keep: read the key names in `routes/keyboard.rkt` first.
+4. One batched hot path op for many cursors (Rust, `multi-edit`: a list of offsets and a text, answered in one round) if step 1 shows lag. Needs `cargo build` of the hot path and a README note.
+5. Cursors while a block is edited (today they are dropped), block cursor at the block start, selection of a block as one unit for cut and paste, paste of a block between pages.
+6. Marks and bookmarks (section 13) and the jumplist, now that cursors and the register exist. Ask the owner the three open questions of 13.9 first, all in one message.
+7. Undo: the owner asks which of the open choices: keep or drop the history file of section 14 (decision pending), pruning of `refs/aiu-undo-old`, a tree view as an AIU page, git hunk revert from the git strip, tab and quit while writing also commit (section 17 open point). Remove the dead code of section 17 if still there.
+8. Housekeeping, in one script: add `undo.rkt` and `multi.rkt` to `compile-deps` of `entry/cli.rkt` (read how `shadow.rkt` is listed first), key tables for the undo, cursor and select layers in README section 5 and in the Keys by layer table of README-AI, a test page (`test.aiu`) that teaches the keys, run the gate ONCE when the owner asks (it will probably flag the new layers in key-check and explorer-check: fix only what it prints).
+9. Older open items (unchanged): the 1.3 s between first paint and ready, the todo tray cursor bug, tab completion and LSP (sections 10 and 12), search and replace, folding, split view, macros, reload when the file changes on disk, spell check.
+
+### 22.2 Traps to remember for the next AI
+
+- Nothing runs while the owner types: no git, no commit, no refresh on a keystroke. Cursors cost one request each per key; that is accepted only after the owner measured it by hand.
+- Every new module is lazy: stubs at the end of bar.rkt, a table filled by the module, the path found with variable-reference->module-source. Compile it by hand (raco make with its path) until it is in compile-deps.
+- Scripts: one bash -c block, single quotes outside, no single quote inside, nothing after the closing quote, paths relative, no backup files, README updates in the same script, git with explicit paths only (section 16), plan in README first (this rule).
+- The owner reads on a phone and pays for every round: ask for ALL reads in one request, wrapped with fold -w 100, never cut -c.
