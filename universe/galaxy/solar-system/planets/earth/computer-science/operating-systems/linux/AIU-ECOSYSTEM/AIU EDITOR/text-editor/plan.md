@@ -248,3 +248,6 @@ Focus write plain page (2026-11-01): seen, space f in focus mode showed the raw 
 
 
 No space f (2026-11-01): owner wants space f deleted. i (block-text) and w (block-edit) are the only keys that start writing from the visual layer, in focus mode too. write-gate removed. Tests backspace, edit, undo, write-tab and focus-type re-recorded with w. Not seen running.
+
+
+Lacks substring (2026-11-01): seen, every w re-record was red with file lacks kind: default, because w types into the line and the file then holds QQkind: default, which contains the old text. The recorder now skips a lacks expect when a keyed line still contains the text. Not seen running.
