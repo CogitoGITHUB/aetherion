@@ -412,13 +412,18 @@
 ;; trace-size answers how many bytes the key trace log holds now, zero when it is missing.
 (define (trace-size) (with-handlers ([void (lambda (e) 0)]) (file-size (trace-file))))
 
+;; compact-trace shortens one trace line to the pending keys and the milliseconds so it fits one table row.
+(define (compact-trace l)
+  (define m (regexp-match #px"^[0-9.]+ act-on ([0-9]+)[0-9.]* ms pending (.*) go-on" l))
+  (if m (string-append "keys " (caddr m) " " (cadr m) "ms") l))
+
 ;; trace-since answers the last 10 trace lines written after the given byte offset, marked with t.
 (define (trace-since start)
   (with-handlers ([void (lambda (e) (list))])
     (let ([bs (call-with-input-file (trace-file) (lambda (i) (file-position i start) (read-bytes 100000 i)))])
       (if (bytes? bs)
           (cons "    key trace of this run, last 10 lines:"
-                (map (lambda (l) (string-append "    t " l))
+                (map (lambda (l) (string-append "    t " (compact-trace l)))
                      (last-n (string-split (bytes->string/utf-8 bs #\?) "\n") 10)))
           (list "    key trace of this run: empty")))))
 

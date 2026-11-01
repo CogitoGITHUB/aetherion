@@ -84,3 +84,5 @@ Flake hunt (2026-11-01): test:edit fails about 2 in 12 runs, keys land in the pa
 Flake cause (2026-11-01): under load escape and the next key arrived in one read (27 32) and became an Alt chord. The driver now waits 1.5 s after an escape key. The quit escape was the text 033 because the shell stripped the backslash, now sent as a real escape.
 
 Inline trace (2026-11-01): aiutd test runs the editor with AIU_TRACE set and a failed test prints the last 10 trace lines of its own run, so a flaky test explains itself. Open flake: test:edit fails about 1 in 10 runs, the s of space s lands in the page as text, cause not yet seen.
+
+Compact trace (2026-11-01): trace lines in a failed test show the pending keys and the ms only, so no table wrap hides them. Seen in a failed edit run: the file head was ZZZZ033qtitle start, the quit escape is still typed as text.
