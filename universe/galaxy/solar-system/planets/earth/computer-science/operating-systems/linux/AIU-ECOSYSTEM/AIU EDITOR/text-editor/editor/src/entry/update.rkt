@@ -41,6 +41,7 @@
 ;; capture runs a program in a folder and answers its exit code and all its output.
 (define (capture dir exe args)
   (define out (open-output-string))
+  (putenv "PWD" (path->string (path->complete-path dir)))
   (define code
     (parameterize ([current-output-port out]
                    [current-error-port out]
@@ -202,7 +203,7 @@
        (set! records (append records (list (list "gate" (secs t1) green?))))
        (unless green?
          (set! ok #f)
-         (set! fail-lines (append (first-n bad 12) (last-n g-lines 2)))))
+         (set! fail-lines (append (first-n bad 12) (if (null? bad) (first-n g-lines 8) (last-n g-lines 2))))))
      (define total (secs t-all))
      (define all (append records (list (list "total" total ok))))
      (define lines (for/list ([r (in-list all)]) (step-line (car r) (cadr r) (caddr r))))
