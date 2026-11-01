@@ -377,9 +377,23 @@
   (define out1 (path->string (build-path dir "mid.bin")))
   (call-with-output-file keys-file #:exists (quote truncate) (lambda (o) (write-string input o)))
   (define t0 (current-inexact-milliseconds))
+  (define chunks
+    (apply append
+           (for/list ([l (in-list lines)])
+             (cond [(string-prefix? l "keys ") (map key-bytes (string-split (substring l 5)))]
+                   [(string-prefix? l "type ") (list (substring l 5))]
+                   [else (list)]))))
+  (define feed
+    (string-append
+     "sleep 1.5; "
+     (apply string-append
+            (for/list ([c (in-list chunks)] [i (in-naturals)])
+              (define f (path->string (build-path dir (format "k~a.bin" i))))
+              (call-with-output-file f #:exists (quote truncate) (lambda (o) (write-string c o)))
+              (format "cat ~a; sleep 0.4; " f)))))
   (define command
-    (format "( cat ~a; sleep 4; cp ~a ~a; printf \\033; sleep 0.8; printf q; sleep 1 ) | timeout 20 script -qec \"aiutd ~a\" /dev/null > ~a 2>&1"
-            keys-file out out1 (path->string copy) out))
+    (format "( ~a sleep 4; cp ~a ~a; printf \\033; sleep 0.8; printf q; sleep 1 ) | timeout 20 script -qec \"aiutd ~a\" /dev/null > ~a 2>&1"
+            feed out out1 (path->string copy) out))
   (define code-file (path->string (build-path dir "code.txt")))
   (capture dir (find-executable-path "sh") (list "-c" (string-append command "; echo $? > " code-file)))
   (define seconds (secs t0))
