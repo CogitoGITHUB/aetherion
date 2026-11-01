@@ -222,3 +222,6 @@ Grey default and focus hide (2026-11-01): owner wants, in normal visual mode, al
 
 
 Centre box (2026-11-01): owner wants the lit box always in the middle of the screen. bv-center replaces bv-follow in bv-view-overlay only. Open: keys to scroll the screen only, with the lit box pinned to the bottom edge when scrolling up and the top edge when scrolling down, and a mode with no lit box. Not seen on a phone.
+
+
+Scroll keys (2026-11-01): g is view-up and r is view-down in the visual layer. They move the view 3 lines and the lit block is kept on screen (pinned at the bottom edge when scrolling up, at the top edge when scrolling down); moving the block centres it again. Open: a mode that scrolls with no lit block. Not seen running.

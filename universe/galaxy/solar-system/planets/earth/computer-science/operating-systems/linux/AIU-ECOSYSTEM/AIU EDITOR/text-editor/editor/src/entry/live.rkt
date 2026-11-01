@@ -208,7 +208,7 @@
         (list "next-block" "blocks" "next")
         (list "block-end" "blocks" "block end") (list "blocks" "blocks" "list")
         (list "focus-toggle" "view" "focus") (list "explorer" "view" "explorer") (list "home-open" "view" "dashboard")
-        (list "block-up" "move" "block up") (list "block-down" "move" "block down")
+        (list "block-up" "move" "block up") (list "view-up" "move" "view up") (list "view-down" "move" "view down") (list "block-down" "move" "block down")
         (list "move-left" "move" "left") (list "move-right" "move" "right")
         (list "move-up" "move" "up") (list "move-down" "move" "down")
         (list "block-move-up" "move" "move block up") (list "block-move-down" "move" "move block down")

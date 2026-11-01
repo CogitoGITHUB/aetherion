@@ -182,6 +182,33 @@
   (set-box! top-line next)
   next)
 
+;; free-block holds #t after a scroll key, then the start line of the block the scroll belongs to, or #f when the view is centred.
+(define free-block (box #f))
+
+;; bv-place answers the first line to show: after a scroll key the view stays where it was moved but the lit block stays on screen, otherwise the block is centred.
+(define (bv-place from to visible)
+  (define fbv (unbox free-block))
+  (cond
+    [(and fbv (or (eq? fbv #t) (eqv? fbv from)))
+     (set-box! free-block from)
+     (let* ([lo (max 1 (+ (- to visible) 1))]
+            [next (if (>= (- to from) visible) from (max lo (min from (unbox top-line))))])
+       (set-box! top-line next)
+       next)]
+    [else (set-box! free-block #f) (bv-center from to visible)]))
+
+;; bv-command-view-up scrolls the view up by 3 lines.
+(define (bv-command-view-up session words)
+  (set-box! top-line (max 1 (- (unbox top-line) 3)))
+  (set-box! free-block #t)
+  (cons #t "view up"))
+
+;; bv-command-view-down scrolls the view down by 3 lines.
+(define (bv-command-view-down session words)
+  (set-box! top-line (+ (unbox top-line) 3))
+  (set-box! free-block #t)
+  (cons #t "view down"))
+
 ;; bv-center answers the first line to show so that the lines from to to sit in the middle of the window; a block taller than the window shows from its first line.
 (define (bv-center from to visible)
   (define next (if (>= (- to from) visible) from (max 1 (- (quotient (+ from to) 2) (quotient visible 2)))))
@@ -201,7 +228,7 @@
                 (let ([lit? (or (<= (car range) i (cdr range)) (ormap (lambda (r) (<= (car r) i (cdr r))) (bv-multi-lit session got ranges)))]) (if (and (getenv "AIU_FOCUS_COLOURS") (not lit?)) "" (string-append (if lit? "\u001b[97m" "\u001b[90m") (bv-plain l) "\u001b[0m"))))
               "\n")
              (the-point session)
-             (bv-center (add1 (car range)) (add1 (cdr range)) (max 1 (- height 1))))))
+             (bv-place (add1 (car range)) (add1 (cdr range)) (max 1 (- height 1))))))
 
 ;; bv-edit-overlay answers the drawing with the block being edited shown as raw
 ;; text, with its start and end lines, and every other block drawn. The raw lines
@@ -637,6 +664,8 @@
 ;; The four keys are added to the command table when this module is loaded, so
 ;; the keys find them and the gate sees the same table the editor does.
 (hash-set! commands "block-up" bv-command-up)
+(hash-set! commands "view-up" bv-command-view-up)
+(hash-set! commands "view-down" bv-command-view-down)
 (hash-set! commands "block-down" bv-command-down)
 (hash-set! commands "block-edit" bv-command-edit)
 (hash-set! commands "block-text" bv-command-text)
