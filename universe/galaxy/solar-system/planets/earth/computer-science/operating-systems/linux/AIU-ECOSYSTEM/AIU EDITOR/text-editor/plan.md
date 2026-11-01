@@ -122,3 +122,5 @@ Short failure report (2026-11-01): the failure detail no longer prints the last 
 Todo added (2026-11-01, owner): focus mode colours and a hide level, see todo.aiu section Focus mode. Seen: AIU_NO_UNDO is not set in the owner shell, commit-safe! swallows errors into log-error!, the undo error file was not touched by the last run. Not seen: commit-file! and log-error!.
 
 Repo directive fix (2026-11-01): seen, git rev-parse HEAD exits 128 in a repo with no commit, so commit-script exits 0 silently and undo has no versions. repo git now also makes one initial commit in the temp folder.
+
+Undo test green (2026-11-01): seen, undo.test keys space f Y escape space s space f Z escape space s space u h k, expect file contains Ytitle start, 9.5 s. Causes of the earlier reds: the repo had no commit (fixed in the repo directive), there was no older node before Z, and a final escape after k rolled the keep back. The editor was fine.
