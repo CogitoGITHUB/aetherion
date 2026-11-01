@@ -156,3 +156,6 @@ Docs parts (2026-11-01): seen, aiutd test --level 2 --repeat 5 gave runs 25 fail
 
 
 Old docs deleted (2026-11-01, owner request): their todo items were compared with todo.aiu, all were there. Mentions in Cargo.toml and todo.aiu reworded. The completion design and sections 12 to 14 went to docs/parts/plans-from-old-readmes.md. Open owner questions 13.9: 1 are the keys of 13.4 right or should marks have their own layer, 2 local marks by block or exact character position, 3 mark letters at the right edge of the page or only in the list. Hand written human parts (keys, home screen, colours, find, bar, tabs) are gone from the tree, history is in git: port them as feature files with tests. Level 3 not run.
+
+
+Old docs carried over (2026-11-01, owner): README.md lines 1 to 265 and README-AI.md lines 56 to 333 copied from commit bb3679b2^ into docs/parts/old-human-guide.md and old-ai-notes.md, appended to ai-starting-point.md by aiutd docs. Next: turn the human guide into feature files with tests (home keys, block cursor, bar, tabs, focus, find, colour), then todo.aiu generation, then level 3.
