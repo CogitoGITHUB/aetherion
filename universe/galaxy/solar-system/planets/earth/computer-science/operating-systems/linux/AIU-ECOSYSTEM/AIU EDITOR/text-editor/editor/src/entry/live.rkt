@@ -455,7 +455,9 @@
         (cond
           [(null? pending) (loop '())]
           [else
+           (define trace-t0 (current-inexact-milliseconds))
            (define result (act-on session pending))
+           (trace-key! pending trace-t0 result)
              (set-box! pending-keys (if (eq? (outcome-rest result) (quote wait)) (map car (key-runs pending)) (list)))
            (repaint session viewport)
            (cond
@@ -464,6 +466,14 @@
              [(outcome-go-on? result)
               (walk (outcome-rest result))]
              [else (void)])])))))
+
+;; trace-key! appends one line to the trace log when AIU_TRACE is set, and does nothing otherwise.
+(define (trace-key! pending t0 result)
+  (when (getenv "AIU_TRACE")
+    (with-handlers ([void void])
+      (call-with-output-file (build-path (find-system-path (quote home-dir)) ".aiu-trace.log") #:exists (quote append)
+        (lambda (o)
+          (fprintf o "~a act-on ~a ms pending ~a go-on ~a\n" (current-inexact-milliseconds) (- (current-inexact-milliseconds) t0) (length pending) (outcome-go-on? result)))))))
 
 ;; longest-binding answers how many leading keys of the buffer form a binding:
 ;; the longest run of them the layer binds. Zero when the layer binds none of

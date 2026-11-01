@@ -66,3 +66,5 @@ Key pacing (2026-11-01): the test driver feeds every key as its own chunk, 0.4 s
 File head (2026-11-01): a failed test prints the first 6 lines of the page file after the run, and no longer prints the screen twice.
 
 Update runs tests (2026-11-01): aiutd update runs the gate stages, then the tests of its level, and shows them in the same report with failure detail inline. Step 4a done.
+
+Trace (2026-11-01, step 4b): live.rkt key-loop calls trace-key! after act-on. It writes to ~/.aiu-trace.log only when AIU_TRACE is set, reads the environment per key and never at load, and adds no require. It times act-on, not the repaint.
