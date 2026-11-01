@@ -80,7 +80,7 @@
     ("i" "block-text")
     ("g" "view-up")
     ("r" "view-down")
-    ("space f" "write-mode")
+    
     ("space v" "select-mode")
     ("space c" "cursor-mode")
     ("space y" "copy")

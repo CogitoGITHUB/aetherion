@@ -245,3 +245,6 @@ Todo focus box types (2026-11-01): added a section to todo.aiu. Focus can also s
 
 
 Focus write plain page (2026-11-01): seen, space f in focus mode showed the raw file because block-overlay returns #f (plain screen) in the write layer before a block is being edited. The wrapper now draws bv-view-overlay in that case when focus is on. Not seen on a phone.
+
+
+No space f (2026-11-01): owner wants space f deleted. i (block-text) and w (block-edit) are the only keys that start writing from the visual layer, in focus mode too. write-gate removed. Tests backspace, edit, undo, write-tab and focus-type re-recorded with w. Not seen running.
