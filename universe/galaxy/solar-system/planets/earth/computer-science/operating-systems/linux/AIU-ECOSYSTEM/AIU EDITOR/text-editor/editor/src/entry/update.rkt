@@ -597,6 +597,14 @@
     (with-handlers ([void void])
       (display-to-file screen (build-path (find-system-path (quote home-dir)) ".aiu-record-screen.txt") #:exists (quote truncate))
       (display-to-file file-text (build-path (find-system-path (quote home-dir)) ".aiu-record-file.txt") #:exists (quote truncate))))
+  (when (getenv "AIU_FRAMES")
+    (with-handlers ([void void])
+      (let* ([all (if (file-exists? out) (bytes->string/utf-8 (file->bytes out) #\?) "")]
+             [parts (regexp-split (regexp-quote "\u001b[?2026h") all)]
+             [rows (for/list ([p (in-list parts)] [i (in-naturals)])
+                     (let ([t (plain-screen p)])
+                       (format "frame ~a len ~a visual-general ~a modes-popup ~a" i (string-length t) (regexp-match? #rx"visual general" t) (regexp-match? #rx"modes . switch" t))))])
+        (display-to-file (string-join rows "\n") (build-path (find-system-path (quote home-dir)) "aiu-frames-summary.txt") #:exists (quote truncate)))))
   (live "deleting temp folder")
   (remove-tree dir)
   (live "building report")

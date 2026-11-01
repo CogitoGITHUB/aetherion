@@ -177,3 +177,6 @@ Record fix (2026-11-01): seen, aiutd record focus-on wrote nothing (nothing chan
 
 
 Record why (2026-11-01): seen, aiutd record focus-on recorded noisy expectations (wrapped fragments, idle bar text) and went RED without a reason. The report now shows the failure detail of its own run. Suspected, not seen: the baseline last frame is a background frame. Not yet seen running.
+
+
+Frame summary (2026-11-01): seen, aiutd record focus-on took its expectations from the space popup: space z draws about 5 frames (mode list: 2 after space, 7 after z) and the driver snapshots the first, a half-redrawn one. With AIU_FRAMES set the test run writes ~/aiu-frames-summary.txt, one line per frame. Not yet seen running. Next: pick the settled frame from that summary without timers.
