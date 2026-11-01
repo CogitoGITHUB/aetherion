@@ -1,5 +1,5 @@
-name Write layer tab keys
+name write-tab
 test write-tab
-keys space f, tab s, tab tab
-doc In the write layer tab s saves the file and tab tab goes back to the visual layer.
-ai gate/tests/write-tab.test, expects Qtitle start in the file.
+keys w Q tab s tab tab
+doc Recorded from a real run of the keys w Q tab s tab tab.
+ai gate/tests/write-tab.test, recorded by aiutd record from the observed screen and file changes.
