@@ -1,0 +1,6 @@
+test write-tab
+level 2
+file test.aiu
+keys space f Q tab s tab tab
+expect file contains Qtitle start
+expect seconds-under 30
