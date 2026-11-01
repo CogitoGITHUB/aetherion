@@ -189,3 +189,6 @@ NEXT FEATURE (2026-11-01, owner): focus mode colours. Box the cursor is in: line
 
 
 Focus colours (2026-11-01): first compile failed, focus-colours unbound in bar.rkt (box in commands.rkt not visible). Now space z sets the environment variable AIU_FOCUS_COLOURS and bv-view-overlay reads it: lit box white, rest grey. Not yet seen running. Next: the hide level.
+
+
+Focus colours test (2026-11-01): aiutd record focus-colours space z was RED, nothing committed. Cause: recorder takes frame 2 (popup) instead of settled frame 7. Fix the recorder next.
