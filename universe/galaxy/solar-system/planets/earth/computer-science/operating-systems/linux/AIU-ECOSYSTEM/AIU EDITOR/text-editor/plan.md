@@ -130,3 +130,5 @@ Undo race (2026-11-01): seen in ~/.aiu-undo-error.txt: cannot lock ref refs/head
 Undo flake (2026-11-01): after the commit lock, undo repeat 3 gave 2 ok 1 FAIL and the error file did not change, so the branch race is not the cause. A failed repo git test now lists the commits of aiu-undo in its temp repo. Not yet seen running.
 
 Undo flake (2026-11-01): after the commit lock, undo repeat 3 gave 2 ok 1 FAIL and the error file did not change, so the branch race is not the cause. A failed repo git test now lists the commits of aiu-undo in its temp repo. Seen: capture answers exit code and output. Not yet seen running.
+
+Undo open fix (2026-11-01): seen in undo.rkt ud-start!: the open committed only when unsaved or the tree was empty, so a save made less than 500 ms before space u had no commit yet (the worker waits) and the newest version was missing. Seen: temp repo had one commit in the red runs. ud-start! now always calls shadow-commit-now!. undo.test keys: Y committed by an open, then Z. Not yet seen running.

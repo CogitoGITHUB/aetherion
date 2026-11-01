@@ -1,7 +1,7 @@
 test undo
 level 2
 file test.aiu
-keys space f Y escape space s space f Z escape space s space u h k
+keys space f Y escape space s space u escape space f Z escape space s space u h k
 expect file contains Ytitle start
 expect seconds-under 50
 repo git
