@@ -473,7 +473,7 @@
     (with-handlers ([void void])
       (call-with-output-file (build-path (find-system-path (quote home-dir)) ".aiu-trace.log") #:exists (quote append)
         (lambda (o)
-          (fprintf o "~a act-on ~a ms pending ~a go-on ~a\n" (current-inexact-milliseconds) (- (current-inexact-milliseconds) t0) (length pending) (outcome-go-on? result)))))))
+          (fprintf o "~a act-on ~a ms pending ~s go-on ~a\n" (current-inexact-milliseconds) (- (current-inexact-milliseconds) t0) (if (> (length pending) 3) (take pending 3) pending) (outcome-go-on? result)))))))
 
 ;; longest-binding answers how many leading keys of the buffer form a binding:
 ;; the longest run of them the layer binds. Zero when the layer binds none of
