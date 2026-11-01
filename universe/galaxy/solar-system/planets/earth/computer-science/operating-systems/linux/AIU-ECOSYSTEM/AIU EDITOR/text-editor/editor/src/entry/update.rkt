@@ -439,6 +439,9 @@
       (string-append "    after " n " (frames " (number->string (length (regexp-match* (byte-regexp (regexp-quote (bytes-append (bytes 27) #"[?2026l"))) raw))) "): " (if m (cadr m) "no mode line") (let ([u (regexp-match #px"undo:[^│╮╯]{3,60}" scr)]) (if u (string-append " [" (car u) "]") "")) " | "
                      (let ([s (string-join (map string-trim (first-n (if (pair? tail) (cdr tail) tail) 2)) " / ")]) (if (> (string-length s) 70) (substring s 0 70) s))))))
 
+;; live prints one progress line to the screen at once, so a hang shows its last step.
+(define (live msg) (eprintf "  live ~a\n" msg) (flush-output (current-error-port)))
+
 ;; drive-editor runs the editor in a pty, sends one key per finished frame, saves a snapshot after each key and the exit code.
 (define (drive-editor dir copy chunks out out1 code-file)
   (define sh (find-executable-path "sh"))
@@ -474,25 +477,25 @@
             [else
              (define n (frames))
              (define tl (trace-lines))
-             (write-string (car cs) si)
+             (begin (live (format "send key ~a" i)) (write-string (car cs) si))
              (flush-output si)
              (cond
                [(wait-frame n tl)
-                (save-to (build-path dir (format "s~a.bin" i)))
+                (begin (live (format "frame after key ~a" i)) (save-to (build-path dir (format "s~a.bin" i))))
                 (loop (cdr cs) (+ i 1))]
-               [else (format "none: no frame after key ~a" i)])]))))
+               [else (live (format "NO FRAME after key ~a in 20 s" i)) (format "none: no frame after key ~a" i)])]))))
   (save-to out1)
-  (write-string "q" si)
+  (begin (live "send q") (write-string "q" si))
   (flush-output si)
-  (define done (sync/timeout 15 sp))
-  (unless done (subprocess-kill sp #t))
+  (define done (begin (live "wait for exit, 15 s at most") (sync/timeout 15 sp)))
+  (begin (live (if done "editor exited, draining output" "editor did not exit, killing it, draining output")) (unless done (subprocess-kill sp #t)))
   (let loop ()
     (when (sync/timeout 1 so)
       (define k (read-bytes-avail! buf so))
       (unless (eof-object? k)
         (write-bytes buf acc 0 k)
         (loop))))
-  (save-to out)
+  (begin (live "output drained, saving") (save-to out))
   (call-with-output-file code-file #:exists (quote truncate)
     (lambda (o) (write-string (or note (if done (number->string (subprocess-status sp)) "124")) o)))
   (close-output-port si)

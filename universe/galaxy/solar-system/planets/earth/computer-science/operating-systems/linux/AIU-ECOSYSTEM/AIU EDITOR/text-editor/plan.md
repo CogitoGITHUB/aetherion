@@ -108,3 +108,5 @@ Frames per key (2026-11-01): the mode list of a failed test shows (frames N), th
 Frames file (2026-11-01): aiutd test writes ~/.aiu-last-test-NAME-frames.txt, the last frame after each key, before the temp folder is deleted. Seen: ~/.aiu-last-test-NAME.txt holds only the mid frame taken after the last key, so it never showed the frame after space u. Snapshots lag one key behind in the mode list; not yet fixed.
 
 Edit test keys (2026-11-01): edit.test ends with escape then space s, as the passing runs did. It was found uncommitted in the working tree and is now committed. Seen: edit 10 of 10 ok and cursors 10 of 10 ok under the frame driver. Open: test:undo, the undo layer did not open after space u in the red runs, cause not yet seen. A test must end in visual mode, an undo-open test that ended inside the undo layer hung the run and needed a restart.
+
+Live output (2026-11-01, owner): the driver prints a live line at every step (send key N, frame after key N, NO FRAME, send q, wait for exit, draining output, saving) so a hang shows its last step on screen. Not yet seen running.
