@@ -70,3 +70,5 @@ Update runs tests (2026-11-01): aiutd update runs the gate stages, then the test
 Trace (2026-11-01, step 4b): live.rkt key-loop calls trace-key! after act-on. It writes to ~/.aiu-trace.log only when AIU_TRACE is set, reads the environment per key and never at load, and adds no require. It times act-on, not the repaint.
 
 Tables (2026-11-01): every report is a boxed table, columns step, stat, secs, prev. Rows come from step-line, any other detail line is a full width box under its row, the total row is last. Written by table-lines in update.rkt, applied inside emit.
+
+Compile timing (2026-11-01): a skipped compile (under 1 s) is not logged, so the next real build is compared with the last real build and no false SLOW shows.

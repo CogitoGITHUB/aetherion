@@ -340,7 +340,7 @@
        (append*
        (for/list ([t (in-list stage-times)])
          (cons (step-line (string-append "gate:" (car t)) (cadr t) (= (caddr t) 0)) (if (= (caddr t) 0) (list) (map (lambda (l) (string-append "    | " l)) (first-n (cadddr t) 15)))))))
-     (for ([r (in-list all)]) (log-step! level (car r) (cadr r)))
+     (for ([r (in-list all)]) (unless (and (equal? (car r) "compile") (< (cadr r) 1)) (log-step! level (car r) (cadr r))))
      (for ([t (in-list stage-times)]) (log-step! level (string-append "gate:" (car t)) (cadr t)))
      (define notes
        (append (list (format "stages                  ~a" (stage-label level)))
