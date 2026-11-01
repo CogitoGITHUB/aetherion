@@ -195,3 +195,6 @@ Focus colours test (2026-11-01): aiutd record focus-colours space z was RED, not
 
 
 Settled frame (2026-11-01): seen, late popup frames of space were counted as the answer to z. wait-frame now waits for the first frame AFTER the key trace line (the editor writes the trace line before it repaints). No timers. Risk: a trace line and its frame read in one chunk would wait until the 20 s deadline. Not yet seen running.
+
+
+Settle race fix (2026-11-01): seen, wait-frame hung 20 s because the frame was read into acc before the trace line was noticed, so base already counted it. Now the trace line is checked before each chunk is appended. Not yet seen running.

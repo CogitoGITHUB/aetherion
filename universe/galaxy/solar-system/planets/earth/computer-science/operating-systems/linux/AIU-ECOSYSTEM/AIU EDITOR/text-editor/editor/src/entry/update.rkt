@@ -499,7 +499,7 @@
            [(sync/timeout (/ left 1000.0) so)
             (define k (read-bytes-avail! buf so))
             (cond [(eof-object? k) #f]
-                  [else (write-bytes buf acc 0 k) (loop)])]
+                  [else (when (and tl (not base) (> (trace-lines) tl)) (set! base (frames))) (write-bytes buf acc 0 k) (loop)])]
            [else #f])])))
   (define (save-to path)
     (call-with-output-file path #:exists (quote truncate) (lambda (o) (write-bytes (get-output-bytes acc) o))))
