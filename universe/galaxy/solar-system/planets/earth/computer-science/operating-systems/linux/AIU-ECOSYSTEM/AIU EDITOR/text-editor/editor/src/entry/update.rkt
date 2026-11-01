@@ -342,6 +342,22 @@
     [s (list (< seconds (string->number (cadr s))) (substring l 7))]
     [else (list #f (string-append "unknown line: " l))]))
 
+;; wrap-text cuts one line into pieces of at most 90 characters.
+(define (wrap-text l)
+  (if (<= (string-length l) 90) (list l) (cons (substring l 0 90) (wrap-text (substring l 90)))))
+
+;; diagnose answers the lines that explain a failed test: exit code, mid frame, last frame.
+(define (diagnose code-file out out1)
+  (define code (with-handlers ([void (lambda (e) "unknown")]) (string-trim (file->string code-file))))
+  (define raw (with-handlers ([void (lambda (e) #"")]) (file->bytes out)))
+  (define frame (with-handlers ([void (lambda (e) "")]) (plain-screen (last-frame (bytes->string/utf-8 raw #\?)))))
+  (define tail (reverse (first-n (reverse (string-split frame "\n" #:trim? #f)) 10)))
+  (append
+   (list (string-append "    cause: exit code " code (if (equal? code "124") " = killed by the 20 s timeout, the editor did not quit after escape then q" ""))
+         (string-append "    mid frame: " (if (file-exists? out1) "saved" "MISSING, the editor produced nothing in 4 s"))
+         "    last frame at the end:")
+   (map (lambda (l) (string-append "    > " l)) (apply append (map wrap-text tail)))))
+
 ;; run-test runs one test file on a copy of its page in a temporary folder; answers (name seconds ok? detail-lines).
 (define (run-test path)
   (define lines (test-lines path))
@@ -362,9 +378,10 @@
   (call-with-output-file keys-file #:exists (quote truncate) (lambda (o) (write-string input o)))
   (define t0 (current-inexact-milliseconds))
   (define command
-    (format "( cat ~a; sleep 4; cp ~a ~a; printf \\033; sleep 0.8; printf q; sleep 1 ) | timeout 90 script -qec \"aiutd ~a\" /dev/null > ~a 2>&1"
+    (format "( cat ~a; sleep 4; cp ~a ~a; printf \\033; sleep 0.8; printf q; sleep 1 ) | timeout 20 script -qec \"aiutd ~a\" /dev/null > ~a 2>&1"
             keys-file out out1 (path->string copy) out))
-  (capture dir (find-executable-path "sh") (list "-c" command))
+  (define code-file (path->string (build-path dir "code.txt")))
+  (capture dir (find-executable-path "sh") (list "-c" (string-append command "; echo $? > " code-file)))
   (define seconds (secs t0))
   (define raw (if (file-exists? out1) (file->bytes out1) #""))
   (define screen (plain-screen (last-frame (bytes->string/utf-8 raw #\?))))
@@ -373,6 +390,7 @@
     (for/list ([l (in-list lines)] #:when (string-prefix? l "expect "))
       (judge l screen file-text seconds)))
   (define ok? (and (pair? verdicts) (andmap car verdicts)))
+  (define why (if ok? (list) (diagnose code-file out out1)))
   (with-handlers ([void void])
     (display-to-file screen (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name ".txt")) #:exists (quote truncate)))
   (delete-directory/files dir)
@@ -381,7 +399,7 @@
         (append (list (string-append "    keys " (string-join (line-values lines "keys") " ")))
                 (for/list ([v (in-list verdicts)])
                   (string-append "    " (if (car v) "ok   " "FAIL ") (cadr v)))
-                (if ok? (list) (map (lambda (l) (string-append "    | " l)) shown)))))
+                (if ok? (list) (append why (map (lambda (l) (string-append "    | " l)) shown))))))
 
 ;; do-test runs every test file of the level or below, reports each with its time, answers 0 or 1.
 (define (do-test level)
