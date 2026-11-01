@@ -1,0 +1,7 @@
+test backspace
+level 2
+file test.aiu
+keys space f Q Q backspace escape space s
+expect file contains Qtitle start
+expect file lacks QQtitle start
+expect seconds-under 30
