@@ -249,7 +249,7 @@
 ;; pins-now answers the list of pins and makes the first block the default pin on first use.
 (define (pins-now)
   (when (eq? (unbox pins) (quote unset))
-    (set-box! pins (if (unbox first-start) (list (list (unbox first-start) "top" #f #f)) (list))))
+    (set-box! pins (if (unbox first-start) (list (list (unbox first-start) "top" #f #t)) (list))))
   (unbox pins))
 
 ;; pin-update! replaces the pin at the selected index with the result of f.
@@ -470,6 +470,27 @@
 ;; block-overlay answers what the live screen draws for a page: the text, the
 ;; point and the first line, or nothing when the plain screen should be used.
 (define (block-overlay session raw width height)
+  (define r (block-overlay-base session raw width height))
+  (define got (and r (getenv "AIU_FOCUS_COLOURS") (string=? (the-layer session) "write") (unbox edit-start) (page-of (session-file session) (session-journal session))))
+  (cond
+    [(and got (page? got))
+     (define lines (string-split (drawn-view session raw width) "\n" #:trim? #f))
+     (define range (hash-ref (bv-ranges got lines) (unbox edit-start) #f))
+     (cond
+       [range
+        (define out (string-split (car r) "\n" #:trim? #f))
+        (define nb (car range))
+        (define na (max 0 (- (length lines) (cdr range) 1)))
+        (define total (length out))
+        (define lost (for/sum ([l (in-list out)] [i (in-range nb)]) (bytes-length (string->bytes/utf-8 l))))
+        (list (string-join (for/list ([l (in-list out)] [i (in-naturals)]) (if (or (< i nb) (>= i (- total na))) "" l)) "\n")
+              (- (cadr r) lost)
+              (caddr r))]
+       [else r])]
+    [else r]))
+
+;; block-overlay-base answers the live drawing of a page without the focus blanking of the lines around an edited block.
+(define (block-overlay-base session raw width height)
   (define got (page-of (session-file session) (session-journal session)))
   (define writing? (string=? (the-layer session) "write"))
   (unless writing? (set-box! edit-start #f) (set-box! edit-mode "raw"))

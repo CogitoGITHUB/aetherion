@@ -237,3 +237,6 @@ Pin layer (2026-11-01): space o opens pin mode. Pins are boxes drawn on the top 
 
 
 Err source (2026-11-01): seen, pin-view replay ended on err-wire-lost from join/live-wire.rkt line 91 and the red table did not show it. A red test or record now prints the err- name on the final screen, its source file, line and 8 lines of context. Not yet seen running. Open: why the wire is lost after the pin layer.
+
+
+Focus typing and pin level 2 (2026-11-01): seen, typing with i or w in focus mode redrew the whole page, because bv-edit-overlay and bv-text-overlay return before + block + after drawn normally. block-overlay now wraps block-overlay-base and blanks the lines outside the edited block in focus mode, shifting the cursor offset by the bytes removed. The first pin (title) defaults to keep-in-focus. Not seen: bv-text-overlay body, running on a phone.
