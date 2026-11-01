@@ -216,3 +216,6 @@ Frame colours (2026-11-01): seen, the focus-colours test judges plain text and c
 
 
 Colour expects (2026-11-01): seen, frames after space z carry 15 grey codes, frames before 0. judge now takes the raw last frame and understands expect colour grey|white; the recorder writes it when a colour appears only with the keys. Not yet seen running.
+
+
+Grey default and focus hide (2026-11-01): owner wants, in normal visual mode, all text grey and the block at the point white, always on. space z focus mode shows only that block, every other line empty. Done in bv-view-overlay. Not seen on a phone.

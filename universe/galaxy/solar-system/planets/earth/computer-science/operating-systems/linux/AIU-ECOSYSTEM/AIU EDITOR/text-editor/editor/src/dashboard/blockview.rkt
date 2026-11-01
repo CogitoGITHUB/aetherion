@@ -192,7 +192,7 @@
   (and range
        (list (string-join
               (for/list ([l (in-list lines)] [i (in-naturals)])
-                (let ([lit? (or (<= (car range) i (cdr range)) (ormap (lambda (r) (<= (car r) i (cdr r))) (bv-multi-lit session got ranges)))]) (if (getenv "AIU_FOCUS_COLOURS") (string-append (if lit? "\u001b[97m" "\u001b[90m") (bv-plain l) "\u001b[0m") (if lit? (bv-light l) l))))
+                (let ([lit? (or (<= (car range) i (cdr range)) (ormap (lambda (r) (<= (car r) i (cdr r))) (bv-multi-lit session got ranges)))]) (if (and (getenv "AIU_FOCUS_COLOURS") (not lit?)) "" (string-append (if lit? "\u001b[97m" "\u001b[90m") (bv-plain l) "\u001b[0m"))))
               "\n")
              (the-point session)
              (bv-follow (add1 (car range)) (add1 (cdr range)) (max 1 (- height 1))))))
