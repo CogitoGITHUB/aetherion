@@ -1,6 +1,6 @@
 # One job: the crate manifest — the hot path builds from here.
 # The build writes its target directory outside the tree, so nothing is
-# written here but the source: see the build command in the project README.
+# written here but the source: see the build command in the build command: aiutd update (see ai-starting-point.md).
 
 [package]
 name = "aiu-editor"

@@ -5,7 +5,7 @@ AIUTD TODO
 title end
 
 comment start
-Every planned feature from the old READMEs. Later this page is written by code from the feature registry, and a feature leaves it when its tests pass.
+Every planned feature, first taken from the old docs (now deleted). Later this page is written by code from the feature registry, and a feature leaves it when its tests pass.
 comment end
 
 section start
@@ -39,7 +39,7 @@ Planned, see plan.md.
 paragraph end
 
 paragraph start
-todo: open aiutd docs: write aiutd-tutorial.aiu and ai-starting-point.md from passing tests, then retire both READMEs
+todo: open aiutd docs: write aiutd-tutorial.aiu and ai-starting-point.md from passing tests, the old docs are already retired
 Planned, see plan.md.
 paragraph end
 
@@ -154,7 +154,7 @@ section end
 
 section start
 title start
-Marks and bookmarks (README section 13)
+Marks and bookmarks (docs/parts/plans-from-old-readmes.md)
 title end
 
 paragraph start
