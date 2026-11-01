@@ -132,3 +132,6 @@ Undo flake (2026-11-01): after the commit lock, undo repeat 3 gave 2 ok 1 FAIL a
 Undo flake (2026-11-01): after the commit lock, undo repeat 3 gave 2 ok 1 FAIL and the error file did not change, so the branch race is not the cause. A failed repo git test now lists the commits of aiu-undo in its temp repo. Seen: capture answers exit code and output. Not yet seen running.
 
 Undo open fix (2026-11-01): seen in undo.rkt ud-start!: the open committed only when unsaved or the tree was empty, so a save made less than 500 ms before space u had no commit yet (the worker waits) and the newest version was missing. Seen: temp repo had one commit in the red runs. ud-start! now always calls shadow-commit-now!. undo.test keys: Y committed by an open, then Z. Not yet seen running.
+
+
+Live lines in update (2026-11-01): aiutd update prints a live line before and after the compile, before and after each gate stage (one nu call per stage at levels 1 and 2, one call at level 3) and before and after each test, with seconds since the previous line, on stderr. Written by gate-run in update.rkt. Not yet seen running. Next: run aiutd update --level 2 without a pipe, then gate the driver live lines behind an env variable.

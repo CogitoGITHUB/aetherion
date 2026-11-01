@@ -283,6 +283,28 @@
               (cdr b)))
     (list (substring (car b) 4) (/ (round (/ ms 100.0)) 10.0) code body)))
 
+;; gate-run runs the gate with one nu call per stage for levels 1 and 2, a live line before and after each, and answers code and output.
+(define (gate-run nu level)
+  (define stages (cond [(= level 1) (string-split level-1-stages ",")] [(= level 2) (string-split level-2-stages ",")] [else #f]))
+  (cond
+    [(not stages)
+     (live "gate all stages start")
+     (let-values ([(c t) (capture editor-root nu (append (list "gate/check.nu") (stage-args level)))])
+       (live (format "gate all stages done code ~a" c))
+       (values c t))]
+    [else
+     (define results
+       (for/list ([s (in-list stages)])
+         (live (string-append "gate " s " start"))
+         (let-values ([(c t) (capture editor-root nu (list "gate/check.nu" "--only" s))])
+           (live (format "gate ~a done code ~a" s c))
+           (cons c t))))
+     (define all-ok
+       (andmap (lambda (r) (and (= (car r) 0) (not (regexp-match? #px"(?m:^CODE [^ ]+ [1-9][0-9]*$)" (cdr r))))) results))
+     (values (if all-ok 0 1)
+             (string-append (apply string-append (map (lambda (r) (string-append (cdr r) "\n")) results))
+                            (if all-ok "light gate: green\n" "light gate: red\n")))]))
+
 ;; do-update compiles each file, then runs the gate from level 2, times all of it, and answers 0 or 1.
 (define (do-update level)
   (cond
@@ -304,7 +326,7 @@
        (define stale? (sources-newer?))
        (define-values (code text)
          (cond [(not stale?) (values 0 "")]
-               [raco (capture editor-root raco (cons "make" compile-files))]
+               [raco (begin (live "compile start") (let-values ([(c t) (capture editor-root raco (cons "make" compile-files))]) (live (format "compile done code ~a" c)) (values c t)))]
                [else (values 1 "raco was not found")]))
        (when (and stale? (= code 0)) (touch-stamp!))
        (set! records (append records (list (list "compile" (secs t) (= code 0)))))
@@ -315,7 +337,7 @@
        (define t1 (current-inexact-milliseconds))
        (define nu (find-executable-path "nu"))
        (define-values (g-code g-text)
-         (if nu (capture editor-root nu (append (list "gate/check.nu") (stage-args level))) (values 1 "nu was not found")))
+         (if nu (gate-run nu level) (values 1 "nu was not found")))
        (define g-lines (real-lines g-text))
        (with-handlers ([void void])
          (display-to-file g-text (build-path (find-system-path (quote home-dir)) ".aiu-last-gate.txt") #:exists (quote truncate)))
@@ -583,7 +605,7 @@
               string<? #:key path->string)
         (list)))
   (define wanted (filter (lambda (p) (<= (test-level p) level)) files))
-  (for/list ([p (in-list wanted)]) (run-test p)))
+  (for/list ([p (in-list wanted)]) (live (format "test ~a start" (path->string p))) (let ([r (run-test p)]) (live (format "test ~a done" (car r))) r)))
 
 ;; arg-value answers the word after a flag in the arguments, or #f when the flag is missing.
 (define (arg-value args flag)
