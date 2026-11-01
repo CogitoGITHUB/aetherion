@@ -538,7 +538,7 @@
   (define out (path->string (build-path dir "out.bin")))
   (define out1 (path->string (build-path dir "mid.bin")))
   (call-with-output-file keys-file #:exists (quote truncate) (lambda (o) (write-string input o)))
-  (when (member "repo git" lines) (capture dir (find-executable-path "git") (list "init" "-q")))
+  (when (member "repo git" lines) (begin (capture dir (find-executable-path "git") (list "init" "-q")) (capture dir (find-executable-path "git") (list "add" "-A")) (capture dir (find-executable-path "git") (list "-c" "user.name=t" "-c" "user.email=t@t" "commit" "-q" "-m" "init"))))
   (define trace-start (trace-size))
   (define t0 (current-inexact-milliseconds))
   (define chunks
