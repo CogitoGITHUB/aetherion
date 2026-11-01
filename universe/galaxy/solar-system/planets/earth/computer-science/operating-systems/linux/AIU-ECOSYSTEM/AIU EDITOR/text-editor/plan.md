@@ -183,3 +183,6 @@ Frame summary (2026-11-01): seen, aiutd record focus-on took its expectations fr
 
 
 Testing paused (2026-11-01, owner): no more test work until the focus mode colours feature works. Open: the recorder takes frame 2 (popup) but frame 7 is settled (seen in the frames summary); write-tab and backspace are hand written; bar and tabs have no tests. Next: focus mode colours from todo.aiu.
+
+
+NEXT FEATURE (2026-11-01, owner): focus mode colours. Box the cursor is in: lines, text and title white; every other box grey. Then a focus level that hides boxes outside the highlights. Step 1 narrow read of where the lit box is drawn: grep focus-on, bv-view-overlay, and fn sgr in AIU NOTATION (boxview.rs, view.rs). Step 2 one patch. Testing stays paused until it works.
