@@ -78,6 +78,7 @@ Visual layer (the page is read):
 | space v | the select layer |
 | space s | save, then one undo commit (nothing is saved while typing) |
 | space q | quit |
+| q | quit |
 | space u | the undo layer (section 20) |
 | space ? | the explorer |
 | space g | send (loads its code on first use) |

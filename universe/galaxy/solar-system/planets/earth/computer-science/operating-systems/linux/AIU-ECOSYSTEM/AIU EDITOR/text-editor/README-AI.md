@@ -129,7 +129,7 @@ Source of truth: `keymaps.rkt` (`normal-keys`, `insert-keys`, `select-keys`, `mo
 
 | Layer | Trigger | Keys (command) |
 |---|---|---|
-| visual | space | w block-edit, i block-text, h block-up, t block-down, n move-left, s move-right, m block-move-mode, backspace delete, escape visual-mode, space f write-mode, space v select-mode, space s save, space q quit, space u undo-mode, space ? explorer, space g send, space b bar-mode, space t tab-mode, space z focus-toggle, space / find-mode, a any, p paragraph, e section, c code, k comment, l title, x todo, o todo open, d todo done, space k check, space n next-block, space e block-end |
+| visual | space | w block-edit, i block-text, h block-up, t block-down, n move-left, s move-right, m block-move-mode, backspace delete, escape visual-mode, space f write-mode, space v select-mode, space s save, q quit, space q quit, space u undo-mode, space ? explorer, space g send, space b bar-mode, space t tab-mode, space z focus-toggle, space / find-mode, a any, p paragraph, e section, c code, k comment, l title, x todo, o todo open, d todo done, space k check, space n next-block, space e block-end |
 | write | tab | tab tab mode, tab s save, tab b blocks, escape leave-write, up move-up, down move-down, left move-left, right move-right, backspace delete |
 | select | space | space space mode, space v visual-mode, escape visual-mode |
 | move | space | h block-move-up, t block-move-down, escape visual-mode |

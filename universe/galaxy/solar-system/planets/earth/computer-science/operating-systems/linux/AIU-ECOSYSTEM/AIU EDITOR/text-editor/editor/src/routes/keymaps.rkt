@@ -81,7 +81,7 @@
     ("space f" "write-mode")
     ("space v" "select-mode")
     ("space s" "save")
-    ("space q" "quit")
+    ("space q" "quit") ("q" "quit")
     ("space u" "undo-mode")
     ("space ?" "explorer")
     ("space g" "send")
