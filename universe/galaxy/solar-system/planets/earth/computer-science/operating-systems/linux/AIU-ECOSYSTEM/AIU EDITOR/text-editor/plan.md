@@ -174,3 +174,6 @@ Launcher fix (2026-11-01): seen, /usr/local/bin/aiutd has its own verb list and 
 
 
 Record fix (2026-11-01): seen, aiutd record focus-on wrote nothing (nothing changed). Likely cause, not seen: record-lines dropped every line with box characters. They are now stripped first. Not yet seen running.
+
+
+Record why (2026-11-01): seen, aiutd record focus-on recorded noisy expectations (wrapped fragments, idle bar text) and went RED without a reason. The report now shows the failure detail of its own run. Suspected, not seen: the baseline last frame is a background frame. Not yet seen running.

@@ -637,6 +637,9 @@
       (string-join (for/list ([p (in-list (sort (filter (lambda (q) (regexp-match? #rx"[.]md$" (path->string q))) (directory-list d #:build? #t)) string<? #:key path->string))]) (file->string p)) "\n")
       ""))
 
+;; rec-why keeps the failure detail lines of the last record test run.
+(define rec-why (box (list)))
+
 ;; record-lines answers the printable, stable lines of a text: no clock, at most 78 characters, with letters.
 (define (record-lines s0)
   (define s (regexp-replace* #px"[│╭╮╰╯├┤┬┴┼─]+" s0 " "))
@@ -675,13 +678,13 @@
     (and (pair? expects)
          (begin
            (display-to-file (format "test ~a\nlevel 2\nfile ~a\nkeys ~a\n~a\nexpect seconds-under 30\n" name pg keys (string-join expects "\n")) tpath #:exists (quote truncate))
-           (caddr (run-test tpath)))))
+           (let ([r (run-test tpath)]) (set-box! rec-why (cadddr r)) (caddr r)))))
   (cond
     [ok (display-to-file (format "name ~a\ntest ~a\nkeys ~a\ndoc Recorded from a real run of the keys ~a.\nai gate/tests/~a.test, recorded by aiutd record from the observed screen and file changes.\n" name name keys keys name)
                          (build-path editor-root "editor" "src" "features" (string-append name ".feature")) #:exists (quote truncate))]
     [else (when (file-exists? tpath) (delete-file tpath))])
   (emit (list "AIUTD RECORD" (format "~a  ~a" (if ok "GREEN" "RED") name))
-        (if (pair? expects) expects (list "nothing changed on screen or in the file, nothing written")))
+        (append (if (pair? expects) expects (list "nothing changed on screen or in the file, nothing written")) (unbox rec-why)))
   (if ok 0 1))
 
 ;; howto-section answers the tutorial section built from docs/parts/how-to-make-tests.md, or nothing when the file is missing.
