@@ -144,3 +144,6 @@ Feature registry and aiutd docs (2026-11-01): editor/src/features/NAME.feature, 
 
 
 Docs fix (2026-11-01): seen, the generated tutorial said Keys: t next block, move.feature now says keys t. Seen, aiutd docs logged nothing to ~/.aiu-timings.log; it now logs each doc step. Seen: aiutd docs takes 25 s because it runs the 5 tests again. Not seen: whether opening aiutd-tutorial.aiu in the editor is slow. Next: run aiutd docs, commit the two generated files, then todo.aiu generation and README renames.
+
+
+Temp folder fix (2026-11-01): seen, aiutd docs crashed in run-test: delete-directory cannot delete .git of the temp repo, Directory not empty. Cause not seen, likely a git process still writing. The temp folder is now removed with rm -r -f through remove-tree, which never raises. First compile failed (open-output-nowhere is not loaded in update.rkt), now open-output-string. Not yet seen running.

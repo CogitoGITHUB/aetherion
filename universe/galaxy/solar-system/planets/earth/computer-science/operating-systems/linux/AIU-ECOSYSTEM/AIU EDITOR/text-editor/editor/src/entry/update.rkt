@@ -594,7 +594,7 @@
   (with-handlers ([void void])
     (display-to-file screen (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name ".txt")) #:exists (quote truncate)))
   (live "deleting temp folder")
-  (delete-directory/files dir)
+  (remove-tree dir)
   (live "building report")
   (define shown (first-n (string-split screen "\n" #:trim? #f) 24))
   (list name seconds ok?
@@ -619,6 +619,12 @@
 (define (arg-value args flag)
   (define m (member flag args))
   (and m (pair? (cdr m)) (cadr m)))
+
+;; remove-tree deletes a folder with rm, which survives a git process still writing into it, and never raises.
+(define (remove-tree p . rest)
+  (with-handlers ([void void])
+    (parameterize ([current-output-port (open-output-string)] [current-error-port (open-output-string)])
+      (system* (find-executable-path "rm") "-r" "-f" (if (path? p) (path->string p) p)))))
 
 ;; do-docs runs the test of every feature file and writes aiutd-tutorial.aiu and ai-starting-point.md from the passing ones; answers 0 or 1.
 (define (do-docs)
