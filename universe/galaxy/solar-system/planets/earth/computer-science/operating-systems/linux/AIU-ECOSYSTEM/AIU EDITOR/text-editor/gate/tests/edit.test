@@ -1,6 +1,6 @@
 test edit
 level 1
 file test.aiu
-keys space f Z Z space s space s
+keys space f Z Z escape space s
 expect file contains ZZtitle start
 expect seconds-under 30
