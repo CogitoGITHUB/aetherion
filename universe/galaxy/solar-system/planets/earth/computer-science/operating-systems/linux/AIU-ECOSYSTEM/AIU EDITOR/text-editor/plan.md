@@ -269,3 +269,5 @@ Todo clean (2026-11-01): removed the done todos from todo.aiu: banner, update, t
 
 
 CLI docs (2026-11-01): aiutd docs now writes a Commands of aiutd section (cli-section in update.rkt). The trace line is not checked against the verb. Not seen running.
+
+Trace paint reverted (2026-11-01): level 2 got an extra red test in every run after the repaint timer, so live.rkt is back to before it. Not proven the cause.
