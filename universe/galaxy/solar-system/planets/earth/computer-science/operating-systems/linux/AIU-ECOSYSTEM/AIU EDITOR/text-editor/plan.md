@@ -50,3 +50,5 @@ Found by aiutd update (2026-11-01): nu refuses a PWD with a trailing slash; capt
 Found by aiutd update (2026-11-01): setting PWD from racket did not satisfy nu (trailing slash); every child now runs through sh -c cd DIR && exec, which sets a clean PWD. aiutd update skips raco make when no .rkt under editor/src is newer than ~/.aiu-build-stamp (raco alone costs 30 to 45 s with no change); delete the stamp to force a compile.
 
 Found by aiutd update (2026-11-01): comment-lint was red with 9 debts in undo.rkt (definitions with no comment of their own; a shared comment above a group does not count). Fixed. The gate takes 125 to 148 s: next, time each stage separately and show the slowest three.
+
+Per stage timing (2026-11-01): gate/check.nu prints TIME stage ms for each stage; aiutd update logs them as gate:stage in ~/.aiu-timings.log and shows the three slowest with the previous run. The gate takes about 145 s of a 180 s update, so the slowest stages are the first thing to cut.

@@ -184,6 +184,13 @@
                  (not (regexp-match? #rx"registered twice" l))))
           (string-split text "\n")))
 
+;; parse-times reads the TIME lines of the gate and answers a list of (stage seconds).
+(define (parse-times text)
+  (for/list ([l (in-list (string-split text "\n"))]
+             #:when (regexp-match? #px"^TIME \\S+ [0-9]+$" (string-trim l)))
+    (define p (string-split (string-trim l)))
+    (list (cadr p) (/ (round (/ (string->number (caddr p)) 100.0)) 10.0))))
+
 ;; do-update compiles each file, then runs the gate from level 2, times all of it, and answers 0 or 1.
 (define (do-update level)
   (cond
@@ -198,6 +205,7 @@
      (define raco (raco-path))
      (define records (list))
      (define fail-lines (list))
+     (define stage-times (list))
      (define ok #t)
      (let ()
        (define t (current-inexact-milliseconds))
@@ -220,18 +228,23 @@
        (define green? (regexp-match? #rx"light gate: green" g-text))
        (define bad (filter (lambda (l) (regexp-match? #px"^(COMMENT|FAIL)|light gate: red" l)) g-lines))
        (set! records (append records (list (list "gate" (secs t1) green?))))
+       (set! stage-times (parse-times g-text))
        (unless green?
          (set! ok #f)
          (set! fail-lines (append (first-n bad 12) (if (null? bad) (first-n g-lines 8) (last-n g-lines 2))))))
      (define total (secs t-all))
      (define all (append records (list (list "total" total ok))))
      (define lines (for/list ([r (in-list all)]) (step-line (car r) (cadr r) (caddr r))))
+     (define slowest
+       (for/list ([t (in-list (first-n (sort stage-times > #:key cadr) 3))])
+         (step-line (string-append "gate:" (car t)) (cadr t) #t)))
      (for ([r (in-list all)]) (log-step! level (car r) (cadr r)))
+     (for ([t (in-list stage-times)]) (log-step! level (string-append "gate:" (car t)) (cadr t)))
      (define notes
        (append (if (< level 2) (list "gate                    skipped at level 1") (list))
                (if (= level 3) (list "timing                  not built yet") (list))))
      (emit (list "AIUTD UPDATE" (format "LEVEL ~a  ~a  ~a s" level (if ok "GREEN" "RED") total))
-           (append lines notes fail-lines))
+           (append lines slowest notes fail-lines))
      (if ok 0 1)]))
 
 ;; run answers the verb: update works, the other tool verbs say they are not built yet.

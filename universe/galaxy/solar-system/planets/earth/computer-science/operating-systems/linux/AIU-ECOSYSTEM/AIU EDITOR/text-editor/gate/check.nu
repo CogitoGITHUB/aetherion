@@ -104,10 +104,11 @@ def main [ --list ] {
     $env.LC_ALL = $utf8
     print $"the gate's locale: ($utf8) — the project path holds Æ, and a child under the C locale receives it as ??therion"
 
-    let results = ($STAGES | each {|s| run-one $s })
+    let results = ($STAGES | each {|s| let t0 = (date now); let r = (run-one $s); $r | merge {ms: ((((date now) - $t0) / 1ms) | into int)} })
 
     for r in $results {
         print $"--- ($r.name)"
+        print $"TIME ($r.name) ($r.ms)"
         print $r.out
         # A stage that exits nonzero with nothing to say must not vanish: the
         # dispatcher prints the reason the child gave, or says the child gave
