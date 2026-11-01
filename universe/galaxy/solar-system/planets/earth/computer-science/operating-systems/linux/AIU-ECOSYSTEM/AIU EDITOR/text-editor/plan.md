@@ -159,3 +159,6 @@ Old docs deleted (2026-11-01, owner request): their todo items were compared wit
 
 
 Old docs carried over (2026-11-01, owner): README.md lines 1 to 265 and README-AI.md lines 56 to 333 copied from commit bb3679b2^ into docs/parts/old-human-guide.md and old-ai-notes.md, appended to ai-starting-point.md by aiutd docs. Next: turn the human guide into feature files with tests (home keys, block cursor, bar, tabs, focus, find, colour), then todo.aiu generation, then level 3.
+
+
+More tests (2026-11-01): write-tab and backspace added from the old key tables, kept only if green: [ write-tab backspace ]. Not covered, screens unknown: bar, tabs, focus, find, home keys, block cursor, move layer. Next: read those screens with a frame dump to write expectations, todo.aiu generation, level 3.
