@@ -191,6 +191,20 @@
     (define p (string-split (string-trim l)))
     (list (cadr p) (/ (round (/ (string->number (caddr p)) 100.0)) 10.0))))
 
+;; level-1-stages are the quick gate stages, about 20 s together.
+(define level-1-stages "naming,one-way,language-split,comment-lint,notation-check,dashboard-check,secret-check,git-check")
+
+;; level-2-stages add the medium stages, about 60 s more.
+(define level-2-stages (string-append level-1-stages ",paren-check,plugin-check,send-check,route-check,explorer-check,security-gate"))
+
+;; stage-args answers the arguments that pick the gate stages of a level; level 3 runs all.
+(define (stage-args level)
+  (cond [(= level 1) (list "--only" level-1-stages)] [(= level 2) (list "--only" level-2-stages)] [else (list)]))
+
+;; stage-label names the stage set of a level for the report.
+(define (stage-label level)
+  (cond [(= level 1) "quick stages"] [(= level 2) "quick and medium stages"] [else "all 17 stages"]))
+
 ;; parse-stages reads the gate output and answers one list per stage: name, seconds, exit code, output lines.
 (define (parse-stages text)
   (define tail-rx #px"^(stages that checked nothing|NOTHING-TO-CHECK above|light gate:)")
@@ -245,11 +259,11 @@
        (unless (= code 0)
          (set! ok #f)
          (set! fail-lines (first-n (real-lines text) 12))))
-     (when (and ok (>= level 2))
+     (when (and ok (>= level 1))
        (define t1 (current-inexact-milliseconds))
        (define nu (find-executable-path "nu"))
        (define-values (g-code g-text)
-         (if nu (capture editor-root nu (list "gate/check.nu")) (values 1 "nu was not found")))
+         (if nu (capture editor-root nu (append (list "gate/check.nu") (stage-args level))) (values 1 "nu was not found")))
        (define g-lines (real-lines g-text))
        (with-handlers ([void void])
          (display-to-file g-text (build-path (find-system-path (quote home-dir)) ".aiu-last-gate.txt") #:exists (quote truncate)))
@@ -270,7 +284,7 @@
      (for ([r (in-list all)]) (log-step! level (car r) (cadr r)))
      (for ([t (in-list stage-times)]) (log-step! level (string-append "gate:" (car t)) (cadr t)))
      (define notes
-       (append (if (< level 2) (list "gate                    skipped at level 1") (list))
+       (append (list (format "stages                  ~a" (stage-label level)))
                (if (= level 3) (list "timing                  not built yet") (list))))
      (emit (list "AIUTD UPDATE" (format "LEVEL ~a  ~a  ~a s" level (if ok "GREEN" "RED") total))
            (append lines slowest notes fail-lines))

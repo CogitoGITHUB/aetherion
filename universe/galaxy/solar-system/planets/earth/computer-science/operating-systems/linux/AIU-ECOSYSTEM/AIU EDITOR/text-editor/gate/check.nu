@@ -83,7 +83,7 @@ def ensure-utf8-locale [] {
 
 # main runs every stage and prints each one's output plus the verdict; with
 # --list it only names the stages and the scripts they run.
-def main [ --list ] {
+def main [ --list, --only: string = "" ] {
     if $list {
         print $"the light gate has ($STAGES | length) stages:"
         for s in $STAGES {
@@ -104,7 +104,9 @@ def main [ --list ] {
     $env.LC_ALL = $utf8
     print $"the gate's locale: ($utf8) — the project path holds Æ, and a child under the C locale receives it as ??therion"
 
-    let results = ($STAGES | each {|s| let t0 = (date now); let r = (run-one $s); $r | merge {ms: ((((date now) - $t0) / 1ms) | into int)} })
+    let names = ($only | split row "," | where {|n| $n != ""})
+    let chosen = (if ($names | is-empty) { $STAGES } else { $STAGES | where {|s| $s.name in $names } })
+    let results = ($chosen | each {|s| let t0 = (date now); let r = (run-one $s); $r | merge {ms: ((((date now) - $t0) / 1ms) | into int)} })
 
     for r in $results {
         print $"--- ($r.name)"
