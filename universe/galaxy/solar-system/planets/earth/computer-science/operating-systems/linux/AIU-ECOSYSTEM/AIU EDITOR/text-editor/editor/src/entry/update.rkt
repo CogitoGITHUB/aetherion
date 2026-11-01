@@ -401,6 +401,11 @@
     [s (list (< seconds (string->number (cadr s))) (substring l 7))]
     [else (list #f (string-append "unknown line: " l))]))
 
+;; visible shows every control character of a text as a caret and a letter, so an escape shows as ^[.
+(define (visible s)
+  (regexp-replace* (pregexp "[\u0001-\u0008\u000b-\u001f]") s
+                   (lambda (m) (string-append "^" (string (integer->char (+ 64 (char->integer (string-ref m 0)))))))))
+
 ;; wrap-text cuts one line into pieces of at most 90 characters.
 (define (wrap-text l)
   (if (<= (string-length l) 90) (list l) (cons (substring l 0 90) (wrap-text (substring l 90)))))
@@ -463,7 +468,7 @@
     (for/list ([l (in-list lines)] #:when (string-prefix? l "expect "))
       (judge l screen file-text seconds)))
   (define ok? (and (pair? verdicts) (andmap car verdicts)))
-  (define why (if ok? (list) (append (diagnose code-file out out1) (list "    file head, first 6 lines:") (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split file-text "\n" #:trim? #f) 6)))))))
+  (define why (if ok? (list) (append (diagnose code-file out out1) (list "    file head, first 6 lines:") (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))))
   (with-handlers ([void void])
     (display-to-file screen (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name ".txt")) #:exists (quote truncate)))
   (delete-directory/files dir)
