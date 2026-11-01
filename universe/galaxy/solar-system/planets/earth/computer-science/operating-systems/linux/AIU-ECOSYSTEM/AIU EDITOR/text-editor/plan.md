@@ -198,3 +198,6 @@ Settled frame (2026-11-01): seen, late popup frames of space were counted as the
 
 
 Settle race fix (2026-11-01): seen, wait-frame hung 20 s because the frame was read into acc before the trace line was noticed, so base already counted it. Now the trace line is checked before each chunk is appended. Not yet seen running.
+
+
+Settle popup fix (2026-11-01): seen, after z the first frame after the trace line was still a late popup frame of space (frames 2 to 6), so record and replay judged different frames. The last key now waits for a frame whose plain screen has no waiting after text. No timers. Not yet seen running.

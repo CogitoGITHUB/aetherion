@@ -485,13 +485,20 @@
   (define buf (make-bytes 4096))
   (define (trace-lines) (with-handlers ([void (lambda (e) 0)]) (length (regexp-match* (byte-regexp (bytes 10)) (file->bytes (trace-file))))))
   (define (frames) (length (regexp-match* marker (get-output-bytes acc))))
-  (define (wait-frame n [tl #f])
+  (define (popup-last?)
+    (define all (get-output-bytes acc))
+    (define ps (regexp-match-positions* marker all))
+    (and (pair? ps)
+         (let* ([e (car (list-ref ps (- (length ps) 1)))]
+                [s (if (null? (cdr ps)) 0 (cdr (list-ref ps (- (length ps) 2))))])
+           (regexp-match? #rx"waiting after" (plain-screen (bytes->string/utf-8 (subbytes all s e) #\?))))))
+  (define (wait-frame n [tl #f] [settle? #f])
     (define base #f)
     (define deadline (+ (current-inexact-milliseconds) 20000))
     (let loop ()
       (cond
         [(and tl (not base) (> (trace-lines) tl)) (set! base (frames)) (loop)]
-        [(and (> (frames) n) (or (not tl) (and base (> (frames) base)))) #t]
+        [(and (> (frames) n) (or (not tl) (and base (> (frames) base))) (or (not settle?) (not (popup-last?)))) #t]
         [else
          (define left (- deadline (current-inexact-milliseconds)))
          (cond
@@ -515,7 +522,7 @@
              (begin (live (format "send key ~a" i)) (write-string (car cs) si))
              (flush-output si)
              (cond
-               [(wait-frame n tl)
+               [(wait-frame n tl (null? (cdr cs)))
                 (begin (live (format "frame after key ~a" i)) (save-to (build-path dir (format "s~a.bin" i))))
                 (loop (cdr cs) (+ i 1))]
                [else (live (format "NO FRAME after key ~a in 20 s" i)) (format "none: no frame after key ~a" i)])]))))
