@@ -626,6 +626,13 @@
     (parameterize ([current-output-port (open-output-string)] [current-error-port (open-output-string)])
       (system* (find-executable-path "rm") "-r" "-f" (if (path? p) (path->string p) p)))))
 
+;; parts-text answers the text of every docs/parts markdown fragment, in name order, for the AI file.
+(define (parts-text)
+  (define d (build-path editor-root "docs" "parts"))
+  (if (directory-exists? d)
+      (string-join (for/list ([p (in-list (sort (filter (lambda (q) (regexp-match? #rx"[.]md$" (path->string q))) (directory-list d #:build? #t)) string<? #:key path->string))]) (file->string p)) "\n")
+      ""))
+
 ;; do-docs runs the test of every feature file and writes aiutd-tutorial.aiu and ai-starting-point.md from the passing ones; answers 0 or 1.
 (define (do-docs)
   (define fdir (and editor-root (build-path editor-root "editor" "src" "features")))
@@ -664,7 +671,7 @@
                 (for/list ([r (in-list good)]) (string-append "| " (car r) " | " (cadr r) " | " (cadddr r) " |")))
         "\n"))
      (display-to-file (string-append aiu "\n") (build-path editor-root "aiutd-tutorial.aiu") #:exists (quote truncate))
-     (display-to-file (string-append md "\n") (build-path editor-root "ai-starting-point.md") #:exists (quote truncate))
+     (display-to-file (string-append md "\n" (parts-text) "\n") (build-path editor-root "ai-starting-point.md") #:exists (quote truncate))
      (define ok (andmap (lambda (r) (list-ref r 5)) rows))
      (for ([r (in-list rows)]) (log-step! 2 (string-append "doc:" (car r)) (list-ref r 4)))
      (define lines (for/list ([r (in-list rows)]) (step-line (string-append "doc:" (car r)) (list-ref r 4) (list-ref r 5))))

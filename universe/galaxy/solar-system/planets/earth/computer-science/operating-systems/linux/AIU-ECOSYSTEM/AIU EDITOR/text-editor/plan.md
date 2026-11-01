@@ -150,3 +150,6 @@ Temp folder fix (2026-11-01): seen, aiutd docs crashed in run-test: delete-direc
 
 
 Docs written (2026-11-01): aiutd docs green, aiutd-tutorial.aiu and ai-starting-point.md committed. Not seen: opening the tutorial in the editor. Next: todo.aiu generation, then the README renames.
+
+
+Docs parts (2026-11-01): seen, aiutd test --level 2 --repeat 5 gave runs 25 failed 0 (cursors and edit SLOW once each under load, cause not seen). docs/parts/*.md are appended to ai-starting-point.md by aiutd docs; docs/parts/ai-rules.md holds the hard rules. README.md and README-AI.md are untouched and unread for this step. Next: read README.md, move its hand-written parts into docs/parts, then the renames; level 3 not run.
