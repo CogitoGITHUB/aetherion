@@ -33,3 +33,6 @@ Owner decision. Give this file to any AI first. Update it in the same step as an
 - Trace patch of 2026-11-01 was REFUSED: anchor `(repaint session viewport)` occurs 6 times in live.rkt, `(define result (act-on session pending))` once. Use the key-loop one only, or edit by line range after reading.
 - Nushell: one bash -c, single quotes outside, none inside, nothing after the closing quote. Git with explicit paths only. No backup files. Lazy modules only; nothing on the start path. Nothing runs while the owner types.
 - Do not rename the READMEs until step 5: code and gate may refer to them.
+
+## Output rule (owner, 2026-11-01)
+Every aiutd command prints: one empty line, a banner, one empty line. The banner is a title block of an .aiu page built in memory and drawn by notation view at the terminal width, like the dashboard. todo.aiu (written by hand once, then generated) holds all planned features. Steps 0 and 1 are done.
