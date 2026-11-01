@@ -257,3 +257,6 @@ Focus write centre (2026-11-01): w and i in focus mode now centre the edited blo
 
 
 Focus write pad (2026-11-01): seen, a block near the page top was not centred in focus write because the first line clamps at 1. bv-focus-pad adds blank lines above it. Not seen running, not seen on a phone.
+
+
+Focus kinds (2026-11-01): focus mode shows the chain of box types of the lit box on the line above it. Level 2 titles are not built, they need AIU NOTATION. Not seen running, not seen on a phone.

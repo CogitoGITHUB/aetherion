@@ -201,6 +201,13 @@
        next)]
     [else (set-box! free-block #f) (bv-center from to visible)]))
 
+;; bv-kind-line answers the line shown in focus mode: the box types from the page top down to the lit box in grey on the line above it, and an empty line elsewhere.
+(define (bv-kind-line got target range i)
+  (if (and (> (car range) 0) (= i (- (car range) 1)))
+      (let ([chain (let loop ([b target] [acc (list)])
+                     (if b (loop (bv-parent (page-blocks got) b) (cons (block-name b) acc)) acc))])
+        (string-append "\u001b[90m" (string-join chain " > ") "\u001b[0m"))
+      ""))
 ;; bv-command-view-up scrolls the view up by 3 lines.
 (define (bv-command-view-up session words)
   (set-box! top-line (max 1 (- (unbox top-line) 3)))
@@ -229,7 +236,7 @@
   (and range
        (list (string-join
               (for/list ([l (in-list lines)] [i (in-naturals)])
-                (let ([lit? (or (<= (car range) i (cdr range)) (ormap (lambda (r) (<= (car r) i (cdr r))) (bv-multi-lit session got ranges)))]) (if (and (getenv "AIU_FOCUS_COLOURS") (not lit?)) "" (string-append (if lit? "\u001b[97m" "\u001b[90m") (bv-plain l) "\u001b[0m"))))
+                (let ([lit? (or (<= (car range) i (cdr range)) (ormap (lambda (r) (<= (car r) i (cdr r))) (bv-multi-lit session got ranges)))]) (if (and (getenv "AIU_FOCUS_COLOURS") (not lit?)) (bv-kind-line got target range i) (string-append (if lit? "\u001b[97m" "\u001b[90m") (bv-plain l) "\u001b[0m"))))
               "\n")
              (the-point session)
              (bv-place (add1 (car range)) (add1 (cdr range)) (max 1 (- height 1))))))
