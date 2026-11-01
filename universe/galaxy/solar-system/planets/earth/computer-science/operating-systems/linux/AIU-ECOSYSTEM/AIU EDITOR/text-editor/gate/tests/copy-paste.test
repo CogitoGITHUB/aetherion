@@ -1,0 +1,6 @@
+test copy-paste
+level 2
+file test.aiu
+keys space v s s s space y escape space p space s
+expect file contains tittitle start
+expect seconds-under 40

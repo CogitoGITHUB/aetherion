@@ -86,3 +86,5 @@ Flake cause (2026-11-01): under load escape and the next key arrived in one read
 Inline trace (2026-11-01): aiutd test runs the editor with AIU_TRACE set and a failed test prints the last 10 trace lines of its own run, so a flaky test explains itself. Open flake: test:edit fails about 1 in 10 runs, the s of space s lands in the page as text, cause not yet seen.
 
 Compact trace (2026-11-01): trace lines in a failed test show the pending keys and the ms only, so no table wrap hides them. Seen in a failed edit run: the file head was ZZZZ033qtitle start, the quit escape is still typed as text.
+
+Tests step 6 (2026-11-01): gate/tests/cursors.test (space c, down adds a cursor on the next line, f writes, Z typed at both) and gate/tests/copy-paste.test (space v selects 3 characters, space y copies, escape, space p pastes). Expectations come from README-AI sections 21 and 23, never tried by hand. Undo test not written yet, it needs saved commits.
