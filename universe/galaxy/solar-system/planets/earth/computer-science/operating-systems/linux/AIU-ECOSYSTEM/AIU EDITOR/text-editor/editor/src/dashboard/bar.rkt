@@ -416,3 +416,27 @@
   (hash-set! commands name (multi-stub name)))
 
 (provide multi-table)
+
+;; clip-table holds the real commands of copy, cut and paste; clip.rkt fills it when it is loaded.
+(define clip-table (make-hash))
+
+;; clip-path is the copy and paste module beside this file, or false.
+(define clip-path
+  (let ([src (variable-reference->module-source (#%variable-reference))])
+    (and (path? src)
+         (let-values ([(base name dir?) (split-path src)])
+           (and (path? base) (simplify-path (build-path base "clip.rkt")))))))
+
+;; clip-stub makes a command that loads the copy and paste module on first use and then runs the real command.
+(define (clip-stub name)
+  (lambda (session words)
+    (with-handlers ([void (lambda (e) (cons #t (format "clip failed: ~a" (if (exn? e) (exn-message e) e))))])
+      (when clip-path (dynamic-require clip-path #f))
+      (let ([f (hash-ref clip-table name #f)])
+        (if f (f session words) (cons #t "copy and paste are not available"))))))
+
+;; The copy, cut and paste commands enter the command table as stubs, so the keys and the gate see them at once.
+(for ([name (in-list (list "copy" "cut" "paste"))])
+  (hash-set! commands name (clip-stub name)))
+
+(provide clip-table)

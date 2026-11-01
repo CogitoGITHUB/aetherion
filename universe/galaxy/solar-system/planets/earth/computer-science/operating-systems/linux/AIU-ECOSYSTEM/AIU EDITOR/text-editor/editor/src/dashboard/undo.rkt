@@ -223,7 +223,7 @@
             (append (list top)
                     (map (lambda (l) (body-line l width)) tree)
                     (list (body-line (ud-cut "h t back forward   n s branch   a w e jump   arrows move" inner) width)
-                          (body-line (ud-cut "m mark  u unmark  d diff  l live  k keep  esc back" inner) width)
+                          (body-line (ud-cut "m u d mark unmark diff  y copy  l live  enter keep  esc" inner) width)
                           bottom)))]))]))
 
 ;; ud-text answers the text of a node, read from git once.

@@ -716,7 +716,7 @@
    (hash-set! commands name
               (let ([orig (hash-ref commands name)])
                 (lambda (session words)
-                  (if (and (pair? (unbox extra-cursors))
+                  (if (and (or (pair? (unbox extra-cursors)) (unbox main-anchor))
                            (equal? (unbox multi-file) (session-file session))
                            (unbox multi-edit-hook))
                       ((unbox multi-edit-hook) name orig session words)
@@ -741,3 +741,11 @@
 
 ;; The pieces multi.rkt needs from this module.
 (provide bv-kind-match? bv-inside bv-drawn)
+
+;; Leaving the write layer drops the selections: the extra cursors stay, so a second round of writing can follow.
+(hash-set! commands "leave-write"
+           (let ([orig (hash-ref commands "leave-write")])
+             (lambda (session words)
+               (let ([r (orig session words)])
+                 (multi-drop-selections!)
+                 r))))

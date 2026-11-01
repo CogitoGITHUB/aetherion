@@ -1,4 +1,4 @@
-AI: READ SECTION 22 (RULE AND NEXT PLANS) FIRST, then 21, 20, 19 and 18 at the end. Then section 0.
+AI: READ SECTION 22 (RULE AND NEXT PLANS) AND 23 FIRST, then 21, 20, 19 and 18 at the end. Then section 0.
 
 # AIU EDITOR: guide for AI agents
 
@@ -250,7 +250,7 @@ Run from the `text-editor` folder.
 
 | Task | Command |
 |---|---|
-| Compile | `PLTCOMPILEDROOTS="$HOME/aiu-compiled" raco make editor/src/entry/cli.rkt editor/src/dashboard/undo.rkt editor/src/dashboard/multi.rkt` (full path of raco: `/root/home/shape/opt/racket-full/bin/raco`) |
+| Compile | `PLTCOMPILEDROOTS="$HOME/aiu-compiled" raco make editor/src/entry/cli.rkt editor/src/dashboard/undo.rkt editor/src/dashboard/multi.rkt editor/src/dashboard/clip.rkt` (full path of raco: `/root/home/shape/opt/racket-full/bin/raco`) |
 | Gate | `nu gate/check.nu` (17 stages) |
 | Open a file | `aiutd FILE` |
 | Home screen | `aiutd` |
@@ -586,7 +586,7 @@ Autosave and the automatic undo commit are gone. A keystroke only edits and mark
 
 ## 20. Undo mode (space u), drawn like vundo, kept in git (2026-10-31 night)
 
-Space u opens the undo layer (it replaced the more-rows key; the command level-up still exists, unbound). Code: `dashboard/undo.rkt`, loaded on first use through the stubs at the end of `bar.rkt` (`undo-stub`, `undo-table`, `undo-rows-hook`); the keys are `undo-keys` in `keymaps.rkt`; the panel is drawn at the bottom by `bar-plan-of` in place of the bar. Build it with `raco make editor/src/entry/cli.rkt editor/src/dashboard/undo.rkt editor/src/dashboard/multi.rkt` (undo.rkt is not in `compile-deps` of `cli.rkt`; compile it by hand after changing it).
+Space u opens the undo layer (it replaced the more-rows key; the command level-up still exists, unbound). Code: `dashboard/undo.rkt`, loaded on first use through the stubs at the end of `bar.rkt` (`undo-stub`, `undo-table`, `undo-rows-hook`); the keys are `undo-keys` in `keymaps.rkt`; the panel is drawn at the bottom by `bar-plan-of` in place of the bar. Build it with `raco make editor/src/entry/cli.rkt editor/src/dashboard/undo.rkt editor/src/dashboard/multi.rkt editor/src/dashboard/clip.rkt` (undo.rkt is not in `compile-deps` of `cli.rkt`; compile it by hand after changing it).
 
 - The nodes are the commits of the branch aiu-undo that touch the open file. Opening the layer first saves and commits unsaved work (`shadow-commit-now!`), so every state is a node. A tree is drawn horizontally: first child on the row of its parent, other branches below with a branch mark.
 - A save commits on top of the CURRENT node of the file (kept in `<gitdir>/aiu-undo-cur-<key>`, key from `shadow-key`), so a save after an undo makes a branch. A tip that would be lost is kept as `refs/aiu-undo-old/<commit>`. The tree is read with `git rev-list --parents aiu-undo --glob=refs/aiu-undo-old/* -- FILE`.
@@ -599,7 +599,7 @@ Todo for this section: copy and paste inside the editor does not exist yet (see 
 
 ## 21. Multiple cursors and selection mode (2026-11-01)
 
-Code: `dashboard/multi.rkt` (commands and drawing hooks, loaded on first use through the stubs at the end of `bar.rkt`: `multi-stub`, `multi-table`), the state in boxes of `commands.rkt` (`extra-cursors`, `main-anchor`, `multi-raw-view`, `multi-file`, the hooks, `multi-live?`, `multi-clear!`), the wrappers at the end of `blockview.rkt` (`type`, `delete` and the four moves run for every cursor while extra cursors exist; `block-edit` and `block-text` clear them; escape in visual clears them), the drawing in `repaint-now` of `live.rkt` (`live-multi-overlay`, the raw view) and `bv-view-overlay` (`bv-multi-lit`). Build with `raco make editor/src/entry/cli.rkt editor/src/dashboard/undo.rkt editor/src/dashboard/multi.rkt`.
+Code: `dashboard/multi.rkt` (commands and drawing hooks, loaded on first use through the stubs at the end of `bar.rkt`: `multi-stub`, `multi-table`), the state in boxes of `commands.rkt` (`extra-cursors`, `main-anchor`, `multi-raw-view`, `multi-file`, the hooks, `multi-live?`, `multi-clear!`), the wrappers at the end of `blockview.rkt` (`type`, `delete` and the four moves run for every cursor while extra cursors exist; `block-edit` and `block-text` clear them; escape in visual clears them), the drawing in `repaint-now` of `live.rkt` (`live-multi-overlay`, the raw view) and `bv-view-overlay` (`bv-multi-lit`). Build with `raco make editor/src/entry/cli.rkt editor/src/dashboard/undo.rkt editor/src/dashboard/multi.rkt editor/src/dashboard/clip.rkt`.
 
 - There is NO limit on the number of cursors. Typing and backspace make one hot path request for each cursor, so the cost grows with the count; measure it with many cursors.
 - Cursor layer (space c): t and h add a cursor on the next or previous block of the picked kind, down and up add one on the line below or above, j adds the next match of the selected text or of the word under the main cursor (the word becomes selected), v adds every match, r drops the last extra cursor, z clears them all, f opens the write layer (typing and backspace then apply to every cursor, from the last to the first), s starts the selections, a p e c k l x o d pick the kind, escape goes back to visual and keeps the cursors; a second escape in visual clears them.
@@ -616,8 +616,8 @@ State: undo mode (section 20) and multiple cursors with selection mode (section 
 ### 22.1 Order of work
 
 1. Try by hand and fix what the owner reports: cursor layer (space c), select layer (space v), undo layer (space u). First check: type with 5 cursors and say if it lags (one hot path request per cursor per key).
-2. Copy and paste (the owner asked for it right after selection works). Design: a register ring kept in memory in a lazy module `dashboard/clip.rkt` (stub commands at the end of bar.rkt like undo and multi). Copy takes the text of every selection (several selections are joined with a newline and kept as a list, so paste can give one piece to each cursor when the counts match). Cut copies then deletes. Paste inserts at every cursor, from the last to the first. Typing or backspace over a selection replaces it. Also send the copy to the terminal clipboard with the OSC 52 escape so it reaches the phone clipboard. Keys (ask before binding, Dvorak, plain letters are mostly taken): proposed space y copy, space p paste, space d cut, in visual and in select; show them in the popup groups.
-3. Update undo mode with copy and paste: in the undo layer a copy key puts the text of the old version in the register, and l (live file) pastes it at once at the old live point if the owner says so; the return to the same node and point stays. Also bind enter for keep: read the key names in `routes/keyboard.rkt` first.
+2. DONE (section 23, built 2026-11-01, not tried by hand): copy and paste. Design: a register ring kept in memory in a lazy module `dashboard/clip.rkt` (stub commands at the end of bar.rkt like undo and multi). Copy takes the text of every selection (several selections are joined with a newline and kept as a list, so paste can give one piece to each cursor when the counts match). Cut copies then deletes. Paste inserts at every cursor, from the last to the first. Typing or backspace over a selection replaces it. Also send the copy to the terminal clipboard with the OSC 52 escape so it reaches the phone clipboard. Keys (ask before binding, Dvorak, plain letters are mostly taken): proposed space y copy, space p paste, space d cut, in visual and in select; show them in the popup groups.
+3. DONE in part (section 23: y copies in the undo layer, enter keeps, then l and tab p paste): update undo mode with copy and paste: in the undo layer a copy key puts the text of the old version in the register, and l (live file) pastes it at once at the old live point if the owner says so; the return to the same node and point stays. Also bind enter for keep: read the key names in `routes/keyboard.rkt` first.
 4. One batched hot path op for many cursors (Rust, `multi-edit`: a list of offsets and a text, answered in one round) if step 1 shows lag. Needs `cargo build` of the hot path and a README note.
 5. Cursors while a block is edited (today they are dropped), block cursor at the block start, selection of a block as one unit for cut and paste, paste of a block between pages.
 6. Marks and bookmarks (section 13) and the jumplist, now that cursors and the register exist. Ask the owner the three open questions of 13.9 first, all in one message.
@@ -631,3 +631,16 @@ State: undo mode (section 20) and multiple cursors with selection mode (section 
 - Every new module is lazy: stubs at the end of bar.rkt, a table filled by the module, the path found with variable-reference->module-source. Compile it by hand (raco make with its path) until it is in compile-deps.
 - Scripts: one bash -c block, single quotes outside, no single quote inside, nothing after the closing quote, paths relative, no backup files, README updates in the same script, git with explicit paths only (section 16), plan in README first (this rule).
 - The owner reads on a phone and pays for every round: ask for ALL reads in one request, wrapped with fold -w 100, never cut -c.
+
+## 23. Copy, cut, paste and typing over a selection (2026-11-01, built, NOT tried by hand)
+
+Code: `dashboard/clip.rkt` (lazy, stubs at the end of `bar.rkt`: `clip-stub`, `clip-table`), the ring of the last 50 copies is kept in memory only. Build with `raco make editor/src/entry/cli.rkt editor/src/dashboard/undo.rkt editor/src/dashboard/multi.rkt editor/src/dashboard/clip.rkt`.
+
+- Copy (space y in visual and select, y in select, y in the undo layer): the text of every selection, one piece each. With no selection: the block under the point of a page, else the line. It also goes to the terminal clipboard with OSC 52 (best effort: the terminal or the AIU multiplexer may swallow it; check that).
+- Cut (space d): copy then take the selections out; it needs a selection.
+- Paste (space p, tab p in the write layer): one piece for each cursor when the counts match, the one piece for every cursor when there is one, else all pieces joined by newlines at every cursor. A cursor that selects something has it replaced. Cursors end after their text, selections are dropped.
+- Typing and backspace over a selection replace it (multi.rkt, `mu-edit-text`): space space in the select layer opens the write layer with the selections kept. Leaving the write layer drops the selections and keeps the extra cursors. Space v in the select layer now drops the selections like escape.
+- Undo mode: y copies the block or line at the point of the old version (move the point with the arrows, the lit block shows what is taken), enter keeps the version (same as k), l goes to the live file, then tab p pastes.
+- Not done: choosing an older copy from the ring (plan: space P cycles), a visible list of the ring, paste of a block as a unit between pages, copy of a selection made inside the undo layer, persistence of the ring between sessions.
+
+Next plans, in order: 1 owner tries cursors, selection, copy, cut, paste and undo by hand and reports. 2 check that OSC 52 reaches the phone clipboard through the multiplexer. 3 the ring: cycle and list. 4 batched hot path op for many cursors if typing lags. 5 the rest of section 22.

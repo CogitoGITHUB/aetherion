@@ -81,6 +81,9 @@
     ("space f" "write-mode")
     ("space v" "select-mode")
     ("space c" "cursor-mode")
+    ("space y" "copy")
+    ("space p" "paste")
+    ("space d" "cut")
     ("space s" "save")
     ("space q" "quit") ("q" "quit")
     ("space u" "undo-mode")
@@ -106,6 +109,7 @@
 (define insert-keys
   '(("tab tab" "mode")
     ("tab s" "save")
+    ("tab p" "paste")
     ("tab b" "blocks")
     ("escape" "leave-write")
     ("up" "move-up")
@@ -117,14 +121,14 @@
 ;; select-keys are the keys of the select layer: the trigger's sequences,
 ;; and the selected text is what they act on.
 (define select-keys
-  (list (list "space space" "mode") (list "space v" "visual-mode")
+  (list (list "space space" "mode") (list "space v" "sel-cancel")
         (list "n" "sel-left") (list "s" "sel-right") (list "left" "sel-left") (list "right" "sel-right")
         (list "up" "sel-up") (list "down" "sel-down") (list "w" "sel-word") (list "b" "sel-word-back")
         (list "h" "sel-block-back") (list "t" "sel-block-forward")
         (list "a" "kind-any") (list "p" "kind-paragraph") (list "e" "kind-section") (list "c" "kind-code")
         (list "k" "kind-comment") (list "l" "kind-title") (list "x" "kind-todo") (list "o" "kind-todo-open")
         (list "d" "kind-todo-done")
-        (list "j" "sel-next-match") (list "v" "sel-all-matches") (list "r" "sel-drop")
+        (list "y" "copy") (list "space y" "copy") (list "space d" "cut") (list "space p" "paste") (list "j" "sel-next-match") (list "v" "sel-all-matches") (list "r" "sel-drop")
         (list "escape" "sel-cancel")))
 
 ;; cursor-keys are the keys of the cursor layer: t and h add a cursor on the next or previous block of the picked
@@ -155,7 +159,7 @@
         (list "n" "undo-up") (list "s" "undo-down")
         (list "a" "undo-branch-back") (list "w" "undo-branch-forward") (list "e" "undo-tip")
         (list "m" "undo-mark") (list "u" "undo-unmark") (list "d" "undo-diff")
-        (list "l" "undo-live") (list "k" "undo-keep")
+        (list "l" "undo-live") (list "k" "undo-keep") (list "return" "undo-keep") (list "y" "copy")
         (list "up" "move-up") (list "down" "move-down") (list "left" "move-left") (list "right" "move-right")
         (list "escape" "undo-cancel")))
 

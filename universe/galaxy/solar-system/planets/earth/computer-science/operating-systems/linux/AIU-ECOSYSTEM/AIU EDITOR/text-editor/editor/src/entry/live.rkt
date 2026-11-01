@@ -240,6 +240,7 @@
         (list "sel-block-forward" "select" "block after") (list "sel-block-back" "select" "block before")
         (list "sel-next-match" "select" "next match") (list "sel-all-matches" "select" "all matches")
         (list "sel-drop" "select" "drop last") (list "sel-cancel" "select" "drop selection")
+        (list "copy" "edit" "copy") (list "cut" "edit" "cut") (list "paste" "edit" "paste")
         (list "undo-back" "undo" "back") (list "undo-forward" "undo" "forward")
         (list "undo-up" "undo" "branch above") (list "undo-down" "undo" "branch below")
         (list "undo-branch-back" "undo" "last branch point") (list "undo-branch-forward" "undo" "next branch point")

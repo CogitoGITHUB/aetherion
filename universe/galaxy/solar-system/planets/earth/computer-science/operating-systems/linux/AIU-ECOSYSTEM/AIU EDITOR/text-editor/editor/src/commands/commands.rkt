@@ -522,3 +522,11 @@
 
 (provide extra-cursors main-anchor multi-raw-view multi-file multi-lit-hook multi-text-hook
          multi-edit-hook multi-live? multi-raw? multi-clear!)
+
+;; multi-drop-selections! takes every selection away and keeps the extra cursors.
+(define (multi-drop-selections!)
+  (set-box! main-anchor #f)
+  (set-box! extra-cursors (map (lambda (c) (cons (car c) #f)) (unbox extra-cursors)))
+  (set-box! multi-raw-view #f))
+
+(provide multi-drop-selections!)

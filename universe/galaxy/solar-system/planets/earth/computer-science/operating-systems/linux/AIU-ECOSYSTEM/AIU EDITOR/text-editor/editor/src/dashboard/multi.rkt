@@ -306,16 +306,26 @@
   (set-layer! session "visual")
   (cons #t "selection dropped"))
 
-;; mu-edit-text runs a typing or deleting command at every cursor, from the last one to the first, so no
-;; offset moves under a cursor that is still to be done; then every cursor is put where it belongs.
-(define (mu-edit-text orig session words)
+;; mu-cut-range! takes a range of text out of the buffer through the normal edit request.
+(define (mu-cut-range! session lo hi)
+  (when (> hi lo)
+    (ask session "delete-at" (hasheq (quote at) (number->string lo) (quote count) (number->string (- hi lo))))))
+
+;; mu-edit-text runs a typing or deleting command at every cursor, from the last one to the first, so no offset
+;; moves under a cursor that is still to be done. A cursor that selects something has the selection taken out
+;; first: a delete stops there, typing goes in its place. Then every cursor is put where it belongs.
+(define (mu-edit-text name orig session words)
   (let* ([cs (sort (mu-cursors session) > #:key (lambda (c) (vector-ref c 0)))]
          [res (for/list ([c (in-list cs)])
-                (let ([h (vector-ref c 0)])
-                  (move-to session h)
-                  (orig session words)
+                (let* ([h (vector-ref c 0)] [a (vector-ref c 1)]
+                       [sel? (and a (not (= a h)))]
+                       [lo (if sel? (min a h) h)]
+                       [hi (if sel? (max a h) h)])
+                  (when sel? (mu-cut-range! session lo hi))
+                  (move-to session lo)
+                  (unless (and sel? (string=? name "delete")) (orig session words))
                   (let ([p (the-point session)])
-                    (vector p (- p h) (vector-ref c 2)))))])
+                    (vector p (- p hi) (vector-ref c 2)))))])
     (let loop ([asc (reverse res)] [shift 0] [out (list)])
       (if (null? asc)
           (mu-store! session out)
@@ -335,10 +345,10 @@
                  (vector (f bs (vector-ref c 0)) (vector-ref c 1) (vector-ref c 2))))
     (cons #t "moved")))
 
-;; mu-edit is the hook the wrapped type, delete and move commands call while extra cursors exist.
+;; mu-edit is the hook the wrapped type, delete and move commands call while extra cursors or a selection exist.
 (define (mu-edit name orig session words)
   (if (member name (list "type" "delete"))
-      (mu-edit-text orig session words)
+      (mu-edit-text name orig session words)
       (mu-move-all name session)))
 
 ;; mu-lit answers the line ranges to light in the drawn page for the cursors and the selections: the block
