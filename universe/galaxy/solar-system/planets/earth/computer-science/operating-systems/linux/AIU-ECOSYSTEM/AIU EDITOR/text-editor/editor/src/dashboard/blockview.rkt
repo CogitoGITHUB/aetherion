@@ -182,6 +182,12 @@
   (set-box! top-line next)
   next)
 
+;; bv-center answers the first line to show so that the lines from to to sit in the middle of the window; a block taller than the window shows from its first line.
+(define (bv-center from to visible)
+  (define next (if (>= (- to from) visible) from (max 1 (- (quotient (+ from to) 2) (quotient visible 2)))))
+  (set-box! top-line next)
+  next)
+
 ;; bv-view-overlay answers the drawing with the block at the point lit, the
 ;; point and the first line to show, or nothing when no block can be lit.
 (define (bv-view-overlay session raw width height got)
@@ -195,7 +201,7 @@
                 (let ([lit? (or (<= (car range) i (cdr range)) (ormap (lambda (r) (<= (car r) i (cdr r))) (bv-multi-lit session got ranges)))]) (if (and (getenv "AIU_FOCUS_COLOURS") (not lit?)) "" (string-append (if lit? "\u001b[97m" "\u001b[90m") (bv-plain l) "\u001b[0m"))))
               "\n")
              (the-point session)
-             (bv-follow (add1 (car range)) (add1 (cdr range)) (max 1 (- height 1))))))
+             (bv-center (add1 (car range)) (add1 (cdr range)) (max 1 (- height 1))))))
 
 ;; bv-edit-overlay answers the drawing with the block being edited shown as raw
 ;; text, with its start and end lines, and every other block drawn. The raw lines

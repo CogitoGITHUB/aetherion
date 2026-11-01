@@ -219,3 +219,6 @@ Colour expects (2026-11-01): seen, frames after space z carry 15 grey codes, fra
 
 
 Grey default and focus hide (2026-11-01): owner wants, in normal visual mode, all text grey and the block at the point white, always on. space z focus mode shows only that block, every other line empty. Done in bv-view-overlay. Not seen on a phone.
+
+
+Centre box (2026-11-01): owner wants the lit box always in the middle of the screen. bv-center replaces bv-follow in bv-view-overlay only. Open: keys to scroll the screen only, with the lit box pinned to the bottom edge when scrolling up and the top edge when scrolling down, and a mode with no lit box. Not seen on a phone.
