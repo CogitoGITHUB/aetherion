@@ -104,3 +104,5 @@ Frame driven driver (2026-11-01, owner: no timers): aiutd test sends one key, wa
 Trace driven wait (2026-11-01): the frame driver failed all 5 tests, keys still arrived batched. The driver now sends the next key only after the editor wrote a new trace line for the previous key AND drew a frame. Risk: background frames (git refresh) may still count. The test must end in visual mode because q alone quits only there.
 
 Frames per key (2026-11-01): the mode list of a failed test shows (frames N), the finished frames in the snapshot after each key, and the undo marker is now undo: with a colon. Seen in live.rkt: the key loop writes the trace line before it repaints, so a background frame between them may be taken as the answer to a key. Not yet seen which keys of test:undo get no frame of their own.
+
+Frames file (2026-11-01): aiutd test writes ~/.aiu-last-test-NAME-frames.txt, the last frame after each key, before the temp folder is deleted. Seen: ~/.aiu-last-test-NAME.txt holds only the mid frame taken after the last key, so it never showed the frame after space u. Snapshots lag one key behind in the mode list; not yet fixed.

@@ -554,6 +554,8 @@
   (define why (if ok? (list) (append (diagnose code-file out out1) (trace-since trace-start) (list "    mode after each key:") (key-modes dir (string-split (string-join (line-values lines "keys") " "))) (list "    file head, first 6 lines:") (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))))
   (with-handlers ([void void])
     (display-to-file screen (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name ".txt")) #:exists (quote truncate)))
+  (with-handlers ([void void])
+    (display-to-file (string-join (for/list ([i (in-naturals)] #:when (file-exists? (build-path dir (format "s~a.bin" i)))) (string-append "=== after key " (number->string i) "\n" (plain-screen (last-frame (bytes->string/utf-8 (file->bytes (build-path dir (format "s~a.bin" i))) #\?))))) "\n") (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name "-frames.txt")) #:exists (quote truncate)))
   (delete-directory/files dir)
   (define shown (first-n (string-split screen "\n" #:trim? #f) 24))
   (list name seconds ok?
