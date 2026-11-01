@@ -437,7 +437,7 @@
     (let* ([ls (string-split scr "\n" #:trim? #f)]
            [tail (let loop ([l ls]) (cond [(null? l) (list)] [(regexp-match? #rx"╭─ [a-z]+ [a-z]+ \\[|╭─ [a-z]+ \\[" (car l)) l] [else (loop (cdr l))]))])
       (string-append "    after " n ": " (if m (cadr m) "no mode line") " | "
-                     (string-join (map string-trim (first-n (if (pair? tail) (cdr tail) tail) 2)) " / ")))))
+                     (let ([s (string-join (map string-trim (first-n (if (pair? tail) (cdr tail) tail) 2)) " / ")]) (if (> (string-length s) 70) (substring s 0 70) s))))))
 
 ;; wrap-text cuts one line into pieces of at most 90 characters.
 (define (wrap-text l)
@@ -473,6 +473,7 @@
   (define out (path->string (build-path dir "out.bin")))
   (define out1 (path->string (build-path dir "mid.bin")))
   (call-with-output-file keys-file #:exists (quote truncate) (lambda (o) (write-string input o)))
+  (when (member "repo git" lines) (capture dir (find-executable-path "git") (list "init" "-q")))
   (define trace-start (trace-size))
   (define t0 (current-inexact-milliseconds))
   (define chunks

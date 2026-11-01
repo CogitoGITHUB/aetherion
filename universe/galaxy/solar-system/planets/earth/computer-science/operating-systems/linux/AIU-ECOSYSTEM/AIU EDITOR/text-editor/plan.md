@@ -94,3 +94,5 @@ Mode per key (2026-11-01): the driver copies the output after every fed key, and
 Undo test (2026-11-01): gate/tests/undo.test types Z, saves, opens the undo layer, steps back with h and keeps with k, and expects the file to lose the Z. From README-AI section 20, never tried by hand. Flake note: cursors and edit each failed once under load, 0 of 10 afterwards, to be rechecked at level 3.
 
 Undo test red (2026-11-01): test:undo passed alone once, then failed in the level 2 run (file still has Z, keys u h k were read). The mode per key list now also shows the two lines under the mode line, where the undo panel is drawn. The first pass may have been empty: no positive check yet that the undo layer opened.
+
+Repo directive (2026-11-01): a test file may say repo git, then the driver runs git init in its temporary folder only. undo.rkt answers not in a git repository for a page outside a repo, which is the likely cause of the red undo test (not yet seen on screen). Panel lines in the failure report are capped at 70 characters.
