@@ -522,7 +522,7 @@
              (begin (live (format "send key ~a" i)) (write-string (car cs) si))
              (flush-output si)
              (cond
-               [(wait-frame n tl (null? (cdr cs)))
+               [(wait-frame n tl)
                 (begin (live (format "frame after key ~a" i)) (save-to (build-path dir (format "s~a.bin" i))))
                 (loop (cdr cs) (+ i 1))]
                [else (live (format "NO FRAME after key ~a in 20 s" i)) (format "none: no frame after key ~a" i)])]))))
@@ -589,7 +589,7 @@
   (define code-file (path->string (build-path dir "code.txt")))
   (drive-editor dir (path->string copy) chunks out out1 code-file)
   (define seconds (begin (live "driver returned") (secs t0)))
-  (define raw (if (file-exists? out1) (file->bytes out1) #""))
+  (define raw (if (file-exists? out) (file->bytes out) #""))
   (live "plain screen")
   (define screen (plain-screen (last-frame (bytes->string/utf-8 raw #\?))))
   (define file-text (with-handlers ([void (lambda (e) "")]) (file->string copy)))

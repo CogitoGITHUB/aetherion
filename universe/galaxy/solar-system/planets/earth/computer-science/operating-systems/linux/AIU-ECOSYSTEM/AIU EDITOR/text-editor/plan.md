@@ -201,3 +201,6 @@ Settle race fix (2026-11-01): seen, wait-frame hung 20 s because the frame was r
 
 
 Settle popup fix (2026-11-01): seen, after z the first frame after the trace line was still a late popup frame of space (frames 2 to 6), so record and replay judged different frames. The last key now waits for a frame whose plain screen has no waiting after text. No timers. Not yet seen running.
+
+
+Settle final-frame fix (2026-11-01): seen, with AIU_FRAMES frames 2 to 7 after space z were popup frames and the popup-free frames 8 and 9 never came within 20 s after z, so the popup wait hung. The judge now reads the last frame of the full output after q. Not seen: whether frame 8 follows q. Open: plain-screen strips colours, so a colour-only feature gives the recorder no diff.
