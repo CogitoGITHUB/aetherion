@@ -335,6 +335,7 @@
 ;; one line mode line are all hidden and the page has the whole screen.
 (define (command-focus-toggle session words)
   (set-box! focus-on (not (unbox focus-on)))
+  (if (unbox focus-on) (putenv "AIU_FOCUS_COLOURS" "1") (environment-variables-set! (current-environment-variables) #"AIU_FOCUS_COLOURS" #f))
   (cons #t (if (unbox focus-on) "focus: on" "focus: off")))
 
 ;; The commands are added to the command table when this module is loaded, so the

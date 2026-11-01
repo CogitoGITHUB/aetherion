@@ -186,3 +186,6 @@ Testing paused (2026-11-01, owner): no more test work until the focus mode colou
 
 
 NEXT FEATURE (2026-11-01, owner): focus mode colours. Box the cursor is in: lines, text and title white; every other box grey. Then a focus level that hides boxes outside the highlights. Step 1 narrow read of where the lit box is drawn: grep focus-on, bv-view-overlay, and fn sgr in AIU NOTATION (boxview.rs, view.rs). Step 2 one patch. Testing stays paused until it works.
+
+
+Focus colours (2026-11-01): first compile failed, focus-colours unbound in bar.rkt (box in commands.rkt not visible). Now space z sets the environment variable AIU_FOCUS_COLOURS and bv-view-overlay reads it: lit box white, rest grey. Not yet seen running. Next: the hide level.
