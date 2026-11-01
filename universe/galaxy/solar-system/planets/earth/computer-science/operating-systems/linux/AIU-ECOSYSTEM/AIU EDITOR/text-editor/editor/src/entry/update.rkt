@@ -447,12 +447,13 @@
   (define acc (open-output-bytes))
   (define marker (byte-regexp (regexp-quote (bytes-append (bytes 27) #"[?2026l"))))
   (define buf (make-bytes 4096))
+  (define (trace-lines) (with-handlers ([void (lambda (e) 0)]) (length (regexp-match* (byte-regexp (bytes 10)) (file->bytes (trace-file))))))
   (define (frames) (length (regexp-match* marker (get-output-bytes acc))))
-  (define (wait-frame n)
+  (define (wait-frame n [tl #f])
     (define deadline (+ (current-inexact-milliseconds) 20000))
     (let loop ()
       (cond
-        [(> (frames) n) #t]
+        [(and (> (frames) n) (or (not tl) (> (trace-lines) tl))) #t]
         [else
          (define left (- deadline (current-inexact-milliseconds)))
          (cond
@@ -472,10 +473,11 @@
             [(null? cs) #f]
             [else
              (define n (frames))
+             (define tl (trace-lines))
              (write-string (car cs) si)
              (flush-output si)
              (cond
-               [(wait-frame n)
+               [(wait-frame n tl)
                 (save-to (build-path dir (format "s~a.bin" i)))
                 (loop (cdr cs) (+ i 1))]
                [else (format "none: no frame after key ~a" i)])]))))

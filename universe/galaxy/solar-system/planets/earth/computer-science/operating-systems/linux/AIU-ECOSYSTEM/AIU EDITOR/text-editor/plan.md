@@ -100,3 +100,5 @@ Repo directive (2026-11-01): a test file may say repo git, then the driver runs 
 Undo message (2026-11-01): with repo git the undo test still fails, space u leaves the mode at visual general. The mode per key list now shows any undo message found on the screen after each key. Cause not yet seen.
 
 Frame driven driver (2026-11-01, owner: no timers): aiutd test sends one key, waits for the next finished frame (ESC[?2026l), snapshots, sends the next, then q. No pacing sleeps. A 20 s deadline per key only reports a hang. Risk: the git row refresh 4 s after start may count as a frame. Earlier settle patch never applied.
+
+Trace driven wait (2026-11-01): the frame driver failed all 5 tests, keys still arrived batched. The driver now sends the next key only after the editor wrote a new trace line for the previous key AND drew a frame. Risk: background frames (git refresh) may still count. The test must end in visual mode because q alone quits only there.
