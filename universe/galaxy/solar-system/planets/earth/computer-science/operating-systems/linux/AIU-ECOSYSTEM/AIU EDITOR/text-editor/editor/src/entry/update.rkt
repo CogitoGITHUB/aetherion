@@ -1,7 +1,8 @@
 #lang racket/base
-;; One job: the aiutd tool verbs (update, test, docs, trace), one answer each,
-;; every answer framed by two empty lines and a banner drawn by the notation
-;; view. Loaded on first use, never at start.
+;; One job: the aiutd tool verbs (update, test, docs, trace). Every answer is
+;; two empty lines, a banner, the details, the banner again, two empty lines.
+;; The banner is drawn by the notation view. Every step is timed, logged to
+;; ~/.aiu-timings.log and compared with the run before. Loaded on first use.
 ;;
 ;; Usage: aiutd update [--level N]
 
@@ -48,14 +49,19 @@
       (apply system*/exit-code exe args)))
   (values code (get-output-string out)))
 
+;; width-cache keeps the terminal width after the first question.
+(define width-cache #f)
+
 ;; term-width answers the terminal width, at most 70, or 56 when it is unknown.
 (define (term-width)
-  (define sh (find-executable-path "sh"))
-  (define-values (code text)
-    (if sh (capture (current-directory) sh (list "-c" "stty size < /dev/tty")) (values 1 "")))
-  (define parts (string-split (string-trim text)))
-  (define n (and (= code 0) (= (length parts) 2) (string->number (cadr parts))))
-  (if (and n (> n 20)) (min n 70) 56))
+  (unless width-cache
+    (define sh (find-executable-path "sh"))
+    (define-values (code text)
+      (if sh (capture (current-directory) sh (list "-c" "stty size < /dev/tty")) (values 1 "")))
+    (define parts (string-split (string-trim text)))
+    (define n (and (= code 0) (= (length parts) 2) (string->number (cadr parts))))
+    (set! width-cache (if (and n (> n 20)) (min n 70) 56)))
+  width-cache)
 
 ;; banner-text draws the lines as a title block with the notation view, or as
 ;; plain lines when the notation program is missing or refuses.
@@ -81,7 +87,7 @@
       (list s)
       (cons (substring s 0 w) (wrap-line (substring s w) w))))
 
-;; emit prints two empty lines, the banner, an empty line, the detail lines, two empty lines.
+;; emit prints two empty lines, the banner, the details, the banner again, two empty lines.
 (define (emit head details)
   (newline)
   (newline)
@@ -91,6 +97,8 @@
     (for ([l (in-list (wrap-line d (term-width)))])
       (write-string l)
       (newline)))
+  (newline)
+  (write-string (banner-text head))
   (newline)
   (newline))
 
@@ -110,7 +118,37 @@
 (define (secs t0)
   (/ (round (* 10 (/ (- (current-inexact-milliseconds) t0) 1000.0))) 10.0))
 
-;; compile-files are the files raco make builds, the same list the README gave.
+;; log-path is the file that keeps every timing of every run.
+(define log-path (build-path (find-system-path (quote home-dir)) ".aiu-timings.log"))
+
+;; previous-secs answers the last logged seconds of a step, or false.
+(define (previous-secs name)
+  (and (file-exists? log-path)
+       (for/fold ([found #f]) ([l (in-list (file->lines log-path))])
+         (define p (string-split l))
+         (if (and (>= (length p) 4) (equal? (list-ref p 2) name))
+             (string->number (list-ref p 3))
+             found))))
+
+;; log-step! appends one line: the clock, the level, the step name, the seconds.
+(define (log-step! level name s)
+  (with-handlers ([void void])
+    (call-with-output-file log-path #:exists (quote append)
+      (lambda (o) (fprintf o "~a ~a ~a ~a\n" (current-seconds) level name s)))))
+
+;; pad fills a name with spaces to a column.
+(define (pad s)
+  (string-append s (make-string (max 1 (- 24 (string-length s))) #\space)))
+
+;; step-line shows a step with its seconds, the seconds of the run before, and SLOW when it grew.
+(define (step-line name s ok?)
+  (define prev (previous-secs name))
+  (define slow? (and prev (> s 2) (> s (* 1.5 prev))))
+  (format "~a~a ~a s~a~a" (pad name) (if ok? "ok  " "FAIL") s
+          (if prev (format "   prev ~a s" prev) "")
+          (if slow? "   SLOW" "")))
+
+;; compile-files are the files raco make builds, one by one so each one is timed.
 (define compile-files
   (list "editor/src/entry/cli.rkt" "editor/src/dashboard/undo.rkt"
         "editor/src/dashboard/multi.rkt" "editor/src/dashboard/clip.rkt"
@@ -130,7 +168,7 @@
                  (not (regexp-match? #rx"registered twice" l))))
           (string-split text "\n")))
 
-;; do-update compiles, then runs the gate from level 2, and answers 0 or 1.
+;; do-update compiles each file, then runs the gate from level 2, times all of it, and answers 0 or 1.
 (define (do-update level)
   (cond
     [(not editor-root)
@@ -140,36 +178,42 @@
      (unless (getenv "PLTCOMPILEDROOTS")
        (putenv "PLTCOMPILEDROOTS"
                (path->string (build-path (find-system-path (quote home-dir)) "aiu-compiled"))))
-     (define t0 (current-inexact-milliseconds))
+     (define t-all (current-inexact-milliseconds))
      (define raco (raco-path))
-     (define-values (c-code c-text)
-       (if raco (capture editor-root raco (cons "make" compile-files)) (values 1 "raco was not found")))
-     (define c-lines (real-lines c-text))
-     (define c-secs (secs t0))
-     (cond
-       [(not (= c-code 0))
-        (emit (list "AIUTD UPDATE" (format "LEVEL ~a  RED" level))
-              (cons (format "compile    FAIL  ~a s" c-secs) (first-n c-lines 12)))
-        1]
-       [(< level 2)
-        (emit (list "AIUTD UPDATE" (format "LEVEL ~a  GREEN" level))
-              (list (format "compile    ok    ~a s" c-secs) "gate       skipped at level 1"))
-        0]
-       [else
-        (define nu (find-executable-path "nu"))
-        (define t1 (current-inexact-milliseconds))
-        (define-values (g-code g-text)
-          (if nu (capture editor-root nu (list "gate/check.nu")) (values 1 "nu was not found")))
-        (define g-lines (real-lines g-text))
-        (define green? (regexp-match? #rx"light gate: green" g-text))
-        (define bad (filter (lambda (l) (regexp-match? #px"^(COMMENT|FAIL)|light gate: red" l)) g-lines))
-        (emit (list "AIUTD UPDATE" (format "LEVEL ~a  ~a" level (if green? "GREEN" "RED")))
-              (append
-               (list (format "compile    ok    ~a s" c-secs)
-                     (format "gate       ~a  ~a s" (if green? "green" "RED") (secs t1)))
-               (if (= level 3) (list "timing     not built yet") (list))
-               (if green? (list) (append (first-n bad 12) (last-n g-lines 2)))))
-        (if green? 0 1)])]))
+     (define records (list))
+     (define fail-lines (list))
+     (define ok #t)
+     (for ([f (in-list compile-files)] #:break (not ok))
+       (define t (current-inexact-milliseconds))
+       (define-values (code text)
+         (if raco (capture editor-root raco (list "make" f)) (values 1 "raco was not found")))
+       (define name (string-append "compile:" (path->string (file-name-from-path f))))
+       (set! records (append records (list (list name (secs t) (= code 0)))))
+       (unless (= code 0)
+         (set! ok #f)
+         (set! fail-lines (first-n (real-lines text) 12))))
+     (when (and ok (>= level 2))
+       (define t1 (current-inexact-milliseconds))
+       (define nu (find-executable-path "nu"))
+       (define-values (g-code g-text)
+         (if nu (capture editor-root nu (list "gate/check.nu")) (values 1 "nu was not found")))
+       (define g-lines (real-lines g-text))
+       (define green? (regexp-match? #rx"light gate: green" g-text))
+       (define bad (filter (lambda (l) (regexp-match? #px"^(COMMENT|FAIL)|light gate: red" l)) g-lines))
+       (set! records (append records (list (list "gate" (secs t1) green?))))
+       (unless green?
+         (set! ok #f)
+         (set! fail-lines (append (first-n bad 12) (last-n g-lines 2)))))
+     (define total (secs t-all))
+     (define all (append records (list (list "total" total ok))))
+     (define lines (for/list ([r (in-list all)]) (step-line (car r) (cadr r) (caddr r))))
+     (for ([r (in-list all)]) (log-step! level (car r) (cadr r)))
+     (define notes
+       (append (if (< level 2) (list "gate                    skipped at level 1") (list))
+               (if (= level 3) (list "timing                  not built yet") (list))))
+     (emit (list "AIUTD UPDATE" (format "LEVEL ~a  ~a  ~a s" level (if ok "GREEN" "RED") total))
+           (append lines notes fail-lines))
+     (if ok 0 1)]))
 
 ;; run answers the verb: update works, the other tool verbs say they are not built yet.
 (define (run args)
