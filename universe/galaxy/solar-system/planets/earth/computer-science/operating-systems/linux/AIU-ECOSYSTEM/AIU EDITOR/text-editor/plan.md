@@ -260,3 +260,6 @@ Focus write pad (2026-11-01): seen, a block near the page top was not centred in
 
 
 Focus kinds (2026-11-01): focus mode shows the chain of box types of the lit box on the line above it. Level 2 titles are not built, they need AIU NOTATION. Not seen running, not seen on a phone.
+
+
+Trace paint (2026-11-01): key-loop now times the repaint and writes a paint line to the trace log when AIU_TRACE is set. Not seen running.
