@@ -305,3 +305,19 @@ todo: open key tables of undo, cursor and select layers in the docs
 Planned, see plan.md.
 paragraph end
 section end
+
+section start
+title start
+Focus mode
+title end
+
+paragraph start
+todo: open focus mode colours: every box and its text grey, the box the cursor is in white
+Replaces the highlight of the current box. The lines, the text and the title of the box I am in turn white and everything outside it turns grey. Owner request 2026-11-01.
+paragraph end
+
+paragraph start
+todo: open focus mode level that hides the boxes outside my highlights
+A new level of focus mode: boxes outside the highlighted ones are not drawn at all. Owner request 2026-11-01.
+paragraph end
+section end
