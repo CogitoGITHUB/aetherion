@@ -124,3 +124,5 @@ Todo added (2026-11-01, owner): focus mode colours and a hide level, see todo.ai
 Repo directive fix (2026-11-01): seen, git rev-parse HEAD exits 128 in a repo with no commit, so commit-script exits 0 silently and undo has no versions. repo git now also makes one initial commit in the temp folder.
 
 Undo test green (2026-11-01): seen, undo.test keys space f Y escape space s space f Z escape space s space u h k, expect file contains Ytitle start, 9.5 s. Causes of the earlier reds: the repo had no commit (fixed in the repo directive), there was no older node before Z, and a final escape after k rolled the keep back. The editor was fine.
+
+Undo race (2026-11-01): seen in ~/.aiu-undo-error.txt: cannot lock ref refs/heads/aiu-undo, reference already exists. The save worker and the synchronous commit of space u both create the branch. commit-safe! now holds a commit lock so only one commit runs at a time. Not yet seen running.

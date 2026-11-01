@@ -114,11 +114,14 @@ END
         (subprocess-wait sp)
         (when (regexp-match? #rx"[^ \r\n]" e) (log-error! e))))))
 
+;; commit-lock lets only one undo commit run at a time, so two commits never create the branch together.
+(define commit-lock (make-semaphore 1))
+
 ;; commit-safe! commits one file and turns any error into a line in the error file.
 (define (commit-safe! full)
   (with-handlers ([(lambda (e) #t)
                    (lambda (e) (log-error! (if (exn? e) (exn-message e) "unknown error")))])
-    (commit-file! full)))
+    (call-with-semaphore commit-lock (lambda () (commit-file! full)))))
 
 ;; run-worker waits until the notes stop for quiet-ms, commits them, and ends when idle.
 (define (run-worker)
