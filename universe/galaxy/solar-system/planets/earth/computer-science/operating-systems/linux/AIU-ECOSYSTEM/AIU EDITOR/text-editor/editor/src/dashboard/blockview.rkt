@@ -470,7 +470,9 @@
 ;; block-overlay answers what the live screen draws for a page: the text, the
 ;; point and the first line, or nothing when the plain screen should be used.
 (define (block-overlay session raw width height)
-  (define r (block-overlay-base session raw width height))
+  (define r0 (block-overlay-base session raw width height))
+  (define pg (and (not r0) (getenv "AIU_FOCUS_COLOURS") (string=? (the-layer session) "write") (page-of (session-file session) (session-journal session))))
+  (define r (or r0 (and pg (page? pg) (bv-view-overlay session raw width height pg))))
   (define got (and r (getenv "AIU_FOCUS_COLOURS") (string=? (the-layer session) "write") (unbox edit-start) (page-of (session-file session) (session-journal session))))
   (cond
     [(and got (page? got))
