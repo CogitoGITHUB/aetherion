@@ -332,3 +332,19 @@ todo: open aiutd record must take the settled frame, not the first one
 Seen: space z draws frames 2 to 6 with the popup and frame 7 is the settled one. Re-record write-tab and backspace with aiutd record. Owner 2026-11-01: no more test work until a feature works.
 paragraph end
 section end
+
+section start
+title start
+Focus box types
+title end
+
+paragraph start
+todo: open focus mode shows the box types around the lit box
+In focus mode, show the kinds of boxes around the lit box. Level 2 shows the title of that box type. Owner request 2026-11-01.
+paragraph end
+
+paragraph start
+todo: open notation requires a title for every box type
+So that focus level 2 can show a title for each box type, the notation system has to require a title for every box type. This changes AIU NOTATION, a sibling folder, so it is a decision to take there and not a patch from the editor. Owner request 2026-11-01.
+paragraph end
+section end

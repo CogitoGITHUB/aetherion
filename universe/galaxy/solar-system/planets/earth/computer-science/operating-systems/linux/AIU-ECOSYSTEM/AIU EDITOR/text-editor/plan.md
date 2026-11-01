@@ -240,3 +240,5 @@ Err source (2026-11-01): seen, pin-view replay ended on err-wire-lost from join/
 
 
 Focus typing and pin level 2 (2026-11-01): seen, typing with i or w in focus mode redrew the whole page, because bv-edit-overlay and bv-text-overlay return before + block + after drawn normally. block-overlay now wraps block-overlay-base and blanks the lines outside the edited block in focus mode, shifting the cursor offset by the bytes removed. The first pin (title) defaults to keep-in-focus. Not seen: bv-text-overlay body, running on a phone.
+
+Todo focus box types (2026-11-01): added a section to todo.aiu. Focus can also show the box types around the lit box. Level 2 can show the title of that box type. The notation system would then need to require a title for every box type. The notation folder is not edited from here. Not built.
