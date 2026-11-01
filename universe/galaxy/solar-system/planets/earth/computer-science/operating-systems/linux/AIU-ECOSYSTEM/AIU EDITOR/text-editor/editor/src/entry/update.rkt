@@ -683,6 +683,15 @@
         (if (pair? expects) expects (list "nothing changed on screen or in the file, nothing written")))
   (if ok 0 1))
 
+;; howto-section answers the tutorial section built from docs/parts/how-to-make-tests.md, or nothing when the file is missing.
+(define (howto-section)
+  (define p (build-path editor-root "docs" "parts" "how-to-make-tests.md"))
+  (if (file-exists? p)
+      (string-append "section start\ntitle start\nHow to make tests\ntitle end\n\nparagraph start\n"
+                     (string-join (filter (lambda (l) (and (not (regexp-match? #rx"^#" l)) (not (string=? (string-trim l) "")))) (string-split (file->string p) "\n")) " ")
+                     "\nparagraph end\n\nsection end\n")
+      ""))
+
 ;; do-docs runs the test of every feature file and writes aiutd-tutorial.aiu and ai-starting-point.md from the passing ones; answers 0 or 1.
 (define (do-docs)
   (define fdir (and editor-root (build-path editor-root "editor" "src" "features")))
@@ -720,7 +729,7 @@
                       "| feature | keys | test notes |" "|---|---|---|")
                 (for/list ([r (in-list good)]) (string-append "| " (car r) " | " (cadr r) " | " (cadddr r) " |")))
         "\n"))
-     (display-to-file (string-append aiu "\n") (build-path editor-root "aiutd-tutorial.aiu") #:exists (quote truncate))
+     (display-to-file (string-append aiu "\n" (howto-section) "\n") (build-path editor-root "aiutd-tutorial.aiu") #:exists (quote truncate))
      (display-to-file (string-append md "\n" (parts-text) "\n") (build-path editor-root "ai-starting-point.md") #:exists (quote truncate))
      (define ok (andmap (lambda (r) (list-ref r 5)) rows))
      (for ([r (in-list rows)]) (log-step! 2 (string-append "doc:" (car r)) (list-ref r 4)))

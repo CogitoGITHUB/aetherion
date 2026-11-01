@@ -168,3 +168,6 @@ More tests (2026-11-01): focus-hide, focus-back, find-escape from the probe scre
 
 
 Record (2026-11-01, owner: tests must not be written by hand): aiutd record NAME KEYS runs the keys in the real editor, compares screen and file with a no-keys baseline run and writes the test and feature from the difference, kept only when green. Keys must end in visual mode. focus-back was a weak test and is removed. Seen: bar and tabs keys leave the mode unchanged, find needs escape. Not yet seen running.
+
+
+Launcher fix (2026-11-01): seen, /usr/local/bin/aiutd has its own verb list and did not know record, so aiutd record opened the editor on a file called record. Verb added there. The tutorial now gets the how-to-make-tests section from docs/parts. Not yet seen running.
