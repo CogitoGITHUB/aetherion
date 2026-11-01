@@ -254,3 +254,6 @@ Lacks substring (2026-11-01): seen, every w re-record was red with file lacks ki
 
 
 Focus write centre (2026-11-01): w and i in focus mode now centre the edited block like the visual view (bv-focus-top in block-overlay). Line numbers assumed 1-based. Not seen running, not seen on a phone.
+
+
+Focus write pad (2026-11-01): seen, a block near the page top was not centred in focus write because the first line clamps at 1. bv-focus-pad adds blank lines above it. Not seen running, not seen on a phone.

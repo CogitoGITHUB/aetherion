@@ -467,6 +467,19 @@
            (+ head-bytes pre-bytes at-bytes)
            (bv-follow row row (max 1 (- height 1))))]))
 
+;; bv-focus-pad puts the edited block in the middle of the window: blank lines are added above it when it sits near the page top, and the cursor offset moves by the bytes added. A block taller than the window is left alone.
+(define (bv-focus-pad range height res)
+  (define visible (max 1 (- height 1)))
+  (define from (+ (car range) 1))
+  (define h (+ (- (cdr range) (car range)) 1))
+  (define want (quotient (- visible h) 2))
+  (cond
+    [(>= h visible) res]
+    [else
+     (define pad (max 0 (- want (- from 1))))
+     (list (string-append (make-string pad #\newline) (car res))
+           (+ (cadr res) pad)
+           (max 1 (- from want)))]))
 ;; bv-focus-top answers the first line to show for an edited block in focus mode: the block sits in the middle of the window like in the visual view, and a block taller than the window keeps the old first line so the cursor stays on screen.
 (define (bv-focus-top r range height)
   (define visible (max 1 (- height 1)))
@@ -493,9 +506,9 @@
         (define na (max 0 (- (length lines) (cdr range) 1)))
         (define total (length out))
         (define lost (for/sum ([l (in-list out)] [i (in-range nb)]) (bytes-length (string->bytes/utf-8 l))))
-        (list (string-join (for/list ([l (in-list out)] [i (in-naturals)]) (if (or (< i nb) (>= i (- total na))) "" l)) "\n")
+        (bv-focus-pad range height (list (string-join (for/list ([l (in-list out)] [i (in-naturals)]) (if (or (< i nb) (>= i (- total na))) "" l)) "\n")
               (- (cadr r) lost)
-              (bv-focus-top r range height))]
+              (bv-focus-top r range height)))]
        [else r])]
     [else r]))
 
