@@ -454,9 +454,9 @@
             (for/list ([c (in-list chunks)] [i (in-naturals)])
               (define f (path->string (build-path dir (format "k~a.bin" i))))
               (call-with-output-file f #:exists (quote truncate) (lambda (o) (write-string c o)))
-              (format "cat ~a; sleep 0.4; " f)))))
+              (format "cat ~a; sleep ~a; " f (if (equal? c "\u001b") "1.5" "0.4"))))))
   (define command
-    (format "( ~a sleep 4; cp ~a ~a; printf \\033; sleep 0.8; printf q; sleep 1 ) | timeout 20 script -qec \"aiutd ~a\" /dev/null > ~a 2>&1"
+    (format "( ~a sleep 4; cp ~a ~a; printf \\\\033; sleep 0.8; printf q; sleep 1 ) | timeout 20 script -qec \"aiutd ~a\" /dev/null > ~a 2>&1"
             feed out out1 (path->string copy) out))
   (define code-file (path->string (build-path dir "code.txt")))
   (capture dir (find-executable-path "sh") (list "-c" (string-append command "; echo $? > " code-file)))

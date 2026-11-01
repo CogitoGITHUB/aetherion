@@ -80,3 +80,5 @@ Visible controls (2026-11-01): the file head of a failed test shows control char
 Run count (2026-11-01): aiutd test prints a line runs N failed M after the report, so repeated runs show how flaky a test is.
 
 Flake hunt (2026-11-01): test:edit fails about 2 in 12 runs, keys land in the page as text (file head ZZZZ s 033q). The test filter matches the file name only (it matched the folder text-editor before). A repeat run stops at the first failing round. The trace logs the first 3 pending keys.
+
+Flake cause (2026-11-01): under load escape and the next key arrived in one read (27 32) and became an Alt chord. The driver now waits 1.5 s after an escape key. The quit escape was the text 033 because the shell stripped the backslash, now sent as a real escape.
