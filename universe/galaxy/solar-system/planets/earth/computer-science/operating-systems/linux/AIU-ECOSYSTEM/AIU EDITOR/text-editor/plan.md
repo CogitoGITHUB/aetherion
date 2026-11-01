@@ -72,3 +72,5 @@ Trace (2026-11-01, step 4b): live.rkt key-loop calls trace-key! after act-on. It
 Tables (2026-11-01): every report is a boxed table, columns step, stat, secs, prev. Rows come from step-line, any other detail line is a full width box under its row, the total row is last. Written by table-lines in update.rkt, applied inside emit.
 
 Compile timing (2026-11-01): a skipped compile (under 1 s) is not logged, so the next real build is compared with the last real build and no false SLOW shows.
+
+Test selection (2026-11-01): aiutd test --only NAME runs the tests whose file name contains NAME, --repeat N runs them N times, to catch flaky tests. test:edit timed out once in three runs (exit 124), cause not yet seen.

@@ -486,8 +486,13 @@
   (define wanted (filter (lambda (p) (<= (test-level p) level)) files))
   (for/list ([p (in-list wanted)]) (run-test p)))
 
+;; arg-value answers the word after a flag in the arguments, or #f when the flag is missing.
+(define (arg-value args flag)
+  (define m (member flag args))
+  (and m (pair? (cdr m)) (cadr m)))
+
 ;; do-test runs every test file of the level or below, reports each with its time, answers 0 or 1.
-(define (do-test level)
+(define (do-test level only repeat)
   (define dir (and editor-root (build-path editor-root "gate" "tests")))
   (define files
     (if (and dir (directory-exists? dir))
@@ -497,7 +502,8 @@
         (list)))
   (define wanted (filter (lambda (p) (<= (test-level p) level)) files))
   (define t-all (current-inexact-milliseconds))
-  (define results (for/list ([p (in-list wanted)]) (run-test p)))
+  (define picked (if only (filter (lambda (p) (regexp-match? (regexp-quote only) (path->string p))) wanted) wanted))
+  (define results (append* (for/list ([i (in-range repeat)]) (for/list ([p (in-list picked)]) (run-test p)))))
   (define total (secs t-all))
   (define ok (and (pair? results) (andmap caddr results)))
   (for ([r (in-list results)]) (log-step! level (string-append "test:" (car r)) (cadr r)))
@@ -516,7 +522,7 @@
   (exit
    (cond
      [(equal? verb "update") (do-update (level-of args))]
-     [(equal? verb "test") (do-test (level-of args))]
+     [(equal? verb "test") (do-test (level-of args) (arg-value args "--only") (max 1 (or (string->number (or (arg-value args "--repeat") "1")) 1)))]
      [else
       (emit (list "AIUTD" (string-upcase verb)) (list "not built yet, see plan.md"))
       0])))
