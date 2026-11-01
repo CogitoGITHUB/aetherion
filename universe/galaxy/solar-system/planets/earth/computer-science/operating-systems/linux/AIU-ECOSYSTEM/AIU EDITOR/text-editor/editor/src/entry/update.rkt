@@ -638,7 +638,8 @@
       ""))
 
 ;; record-lines answers the printable, stable lines of a text: no clock, at most 78 characters, with letters.
-(define (record-lines s)
+(define (record-lines s0)
+  (define s (regexp-replace* #px"[│╭╮╰╯├┤┬┴┼─]+" s0 " "))
   (remove-duplicates
    (filter (lambda (l) (and (>= (string-length l) 6) (<= (string-length l) 78) (regexp-match? #px"[A-Za-z]{3}" l) (regexp-match? #px"^[[:print:]]+$" l) (not (regexp-match? #px"[0-9]:[0-9][0-9]" l))))
            (map string-trim (string-split s "\n")))))

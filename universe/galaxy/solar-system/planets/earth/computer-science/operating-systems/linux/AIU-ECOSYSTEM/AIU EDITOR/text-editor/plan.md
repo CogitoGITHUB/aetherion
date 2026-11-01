@@ -171,3 +171,6 @@ Record (2026-11-01, owner: tests must not be written by hand): aiutd record NAME
 
 
 Launcher fix (2026-11-01): seen, /usr/local/bin/aiutd has its own verb list and did not know record, so aiutd record opened the editor on a file called record. Verb added there. The tutorial now gets the how-to-make-tests section from docs/parts. Not yet seen running.
+
+
+Record fix (2026-11-01): seen, aiutd record focus-on wrote nothing (nothing changed). Likely cause, not seen: record-lines dropped every line with box characters. They are now stripped first. Not yet seen running.
