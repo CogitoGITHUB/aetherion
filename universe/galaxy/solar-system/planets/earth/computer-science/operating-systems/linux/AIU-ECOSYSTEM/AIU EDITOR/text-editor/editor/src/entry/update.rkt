@@ -436,7 +436,7 @@
     (define m (regexp-match #px"╭─ ([a-z]+( [a-z]+)?) \\[" scr))
     (let* ([ls (string-split scr "\n" #:trim? #f)]
            [tail (let loop ([l ls]) (cond [(null? l) (list)] [(regexp-match? #rx"╭─ [a-z]+ [a-z]+ \\[|╭─ [a-z]+ \\[" (car l)) l] [else (loop (cdr l))]))])
-      (string-append "    after " n ": " (if m (cadr m) "no mode line") (let ([u (regexp-match #px"undo[^│╮╯]{3,60}" scr)]) (if u (string-append " [" (car u) "]") "")) " | "
+      (string-append "    after " n " (frames " (number->string (length (regexp-match* (byte-regexp (regexp-quote (bytes-append (bytes 27) #"[?2026l"))) raw))) "): " (if m (cadr m) "no mode line") (let ([u (regexp-match #px"undo:[^│╮╯]{3,60}" scr)]) (if u (string-append " [" (car u) "]") "")) " | "
                      (let ([s (string-join (map string-trim (first-n (if (pair? tail) (cdr tail) tail) 2)) " / ")]) (if (> (string-length s) 70) (substring s 0 70) s))))))
 
 ;; drive-editor runs the editor in a pty, sends one key per finished frame, saves a snapshot after each key and the exit code.
