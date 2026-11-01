@@ -321,3 +321,14 @@ todo: open focus mode level that hides the boxes outside my highlights
 A new level of focus mode: boxes outside the highlighted ones are not drawn at all. Owner request 2026-11-01.
 paragraph end
 section end
+
+section start
+title start
+Testing paused
+title end
+
+paragraph start
+todo: open aiutd record must take the settled frame, not the first one
+Seen: space z draws frames 2 to 6 with the popup and frame 7 is the settled one. Re-record write-tab and backspace with aiutd record. Owner 2026-11-01: no more test work until a feature works.
+paragraph end
+section end

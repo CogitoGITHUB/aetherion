@@ -180,3 +180,6 @@ Record why (2026-11-01): seen, aiutd record focus-on recorded noisy expectations
 
 
 Frame summary (2026-11-01): seen, aiutd record focus-on took its expectations from the space popup: space z draws about 5 frames (mode list: 2 after space, 7 after z) and the driver snapshots the first, a half-redrawn one. With AIU_FRAMES set the test run writes ~/aiu-frames-summary.txt, one line per frame. Not yet seen running. Next: pick the settled frame from that summary without timers.
+
+
+Testing paused (2026-11-01, owner): no more test work until the focus mode colours feature works. Open: the recorder takes frame 2 (popup) but frame 7 is settled (seen in the frames summary); write-tab and backspace are hand written; bar and tabs have no tests. Next: focus mode colours from todo.aiu.
