@@ -155,8 +155,8 @@ def run-one [stage] {
             {name: $stage.name, code: 0, out: $why}
         } else {
             let script = $"($gate_dir)/($stage.script)"
-            let r = (try { run-external (racket_bin) $script ...$files | complete }
-                     catch {|e| {stdout: $"(racket_bin) could not run: ($e)", exit_code: 3} })
+            let r = (try { run_racket [$script ...$files] }
+                     catch {|e| {stdout: $"Racket could not run: ($e)", exit_code: 3} })
             {name: $stage.name, code: $r.exit_code, out: ($r.stdout | str trim)}
         }
     } else if $stage.kind == "text" {

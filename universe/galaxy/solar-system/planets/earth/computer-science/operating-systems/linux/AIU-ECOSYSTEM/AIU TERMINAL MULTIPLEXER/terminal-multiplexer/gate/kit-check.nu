@@ -396,13 +396,12 @@ def proof_feed_and_door [held] {
             "the feed holds a line that is not a record"
         }
     } | where {|p| $p != null })
-    let racket = (racket_bin)
     let door = ($package_src | path join "narration" | path join "wait-door.rkt")
     let voice = ($package_src | path join "narration" | path join "narration.rkt")
     let opener = '(require (file "' + $door + '") (file "' + $voice + '")) '
     let opening = '(define r (open-run "kit-check")) '
     let blank_wait = '(wait-for r "the feed" #:why "" #:how "the check") (void)'
-    let blank = (^$racket -e ($opener + $opening + $blank_wait) | complete)
+    let blank = (run_racket ["-e" ($opener + $opening + $blank_wait)])
     let refused = (if ($blank.exit_code != 0) {
         []
     } else {
@@ -415,7 +414,7 @@ def proof_feed_and_door [held] {
     })
     let why = "the check needs a wait to prove the door"
     let kept_wait = '(wait-for r "the feed" #:why "' + $why + '" #:how "the check") (void)'
-    let kept = (^$racket -e ($opener + $opening + $kept_wait) | complete)
+    let kept = (run_racket ["-e" ($opener + $opening + $kept_wait)])
     let ran = (if ($kept.exit_code == 0) {
         [] } else { ["the wait with a reason did not run"] })
     let announced = (if ($kept.stdout | str contains "WAIT") {

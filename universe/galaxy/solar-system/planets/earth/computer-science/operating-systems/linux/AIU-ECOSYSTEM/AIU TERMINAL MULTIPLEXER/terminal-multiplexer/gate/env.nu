@@ -40,6 +40,21 @@ export def racket_bin [] {
     home_dir | path join "opt" | path join "racket-full" | path join "bin" | path join "racket"
 }
 
+# run_racket runs Racket with a UTF-8 locale, and answers what `complete` does:
+# the stdout, the stderr and the exit code.
+#
+# The phone's environment has LANG empty and LC_CTYPE=POSIX, and Racket then
+# turns the Æ in this workspace's path into "??", so every absolute path inside
+# the tree is refused (measured 2026-11-01: file-exists? answered #f for a file
+# that is there, and paren-check and the sixth kit proof were red for it while
+# their proofs were sound). The locale is set for this one call and nowhere
+# else, so no other program's environment is changed.
+export def run_racket [args: list] {
+    with-env {LC_ALL: "C.UTF-8", LANG: "C.UTF-8"} {
+        run-external (racket_bin) ...$args | complete
+    }
+}
+
 # rkt_files lists every Racket file in the package, one path per entry.
 export def rkt_files [] {
     glob $"($package_src)/**/*.rkt"
