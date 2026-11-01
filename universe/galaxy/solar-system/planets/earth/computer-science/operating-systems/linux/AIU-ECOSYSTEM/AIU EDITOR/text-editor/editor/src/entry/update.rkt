@@ -439,8 +439,11 @@
       (string-append "    after " n " (frames " (number->string (length (regexp-match* (byte-regexp (regexp-quote (bytes-append (bytes 27) #"[?2026l"))) raw))) "): " (if m (cadr m) "no mode line") (let ([u (regexp-match #px"undo:[^│╮╯]{3,60}" scr)]) (if u (string-append " [" (car u) "]") "")) " | "
                      (let ([s (string-join (map string-trim (first-n (if (pair? tail) (cdr tail) tail) 2)) " / ")]) (if (> (string-length s) 70) (substring s 0 70) s))))))
 
-;; live prints one progress line to the screen at once, so a hang shows its last step.
-(define (live msg) (eprintf "  live ~a\n" msg) (flush-output (current-error-port)))
+;; live-last holds the clock of the last live line.
+(define live-last (box (current-inexact-milliseconds)))
+
+;; live prints one line with the seconds since the previous line, so a hang shows its last step.
+(define (live msg) (let ([now (current-inexact-milliseconds)]) (eprintf "  live +~as ~a\n" (real->decimal-string (/ (- now (unbox live-last)) 1000.0) 1) msg) (set-box! live-last now)) (flush-output (current-error-port)))
 
 ;; drive-editor runs the editor in a pty, sends one key per finished frame, saves a snapshot after each key and the exit code.
 (define (drive-editor dir copy chunks out out1 code-file)
@@ -546,7 +549,7 @@
                    [else (list)]))))
   (define code-file (path->string (build-path dir "code.txt")))
   (drive-editor dir (path->string copy) chunks out out1 code-file)
-  (define seconds (secs t0))
+  (define seconds (begin (live "driver returned") (secs t0)))
   (define raw (if (file-exists? out1) (file->bytes out1) #""))
   (define screen (plain-screen (last-frame (bytes->string/utf-8 raw #\?))))
   (define file-text (with-handlers ([void (lambda (e) "")]) (file->string copy)))
@@ -558,7 +561,7 @@
   (with-handlers ([void void])
     (display-to-file screen (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name ".txt")) #:exists (quote truncate)))
   (with-handlers ([void void])
-    (display-to-file (string-join (for/list ([i (in-naturals)] #:when (file-exists? (build-path dir (format "s~a.bin" i)))) (string-append "=== after key " (number->string i) "\n" (plain-screen (last-frame (bytes->string/utf-8 (file->bytes (build-path dir (format "s~a.bin" i))) #\?))))) "\n") (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name "-frames.txt")) #:exists (quote truncate)))
+    (display-to-file (string-join (for/list ([i (in-range (length chunks))] #:when (file-exists? (build-path dir (format "s~a.bin" i)))) (string-append "=== after key " (number->string i) "\n" (plain-screen (last-frame (bytes->string/utf-8 (file->bytes (build-path dir (format "s~a.bin" i))) #\?))))) "\n") (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name "-frames.txt")) #:exists (quote truncate)))
   (delete-directory/files dir)
   (define shown (first-n (string-split screen "\n" #:trim? #f) 24))
   (list name seconds ok?

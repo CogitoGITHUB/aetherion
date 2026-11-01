@@ -110,3 +110,5 @@ Frames file (2026-11-01): aiutd test writes ~/.aiu-last-test-NAME-frames.txt, th
 Edit test keys (2026-11-01): edit.test ends with escape then space s, as the passing runs did. It was found uncommitted in the working tree and is now committed. Seen: edit 10 of 10 ok and cursors 10 of 10 ok under the frame driver. Open: test:undo, the undo layer did not open after space u in the red runs, cause not yet seen. A test must end in visual mode, an undo-open test that ended inside the undo layer hung the run and needed a restart.
 
 Live output (2026-11-01, owner): the driver prints a live line at every step (send key N, frame after key N, NO FRAME, send q, wait for exit, draining output, saving) so a hang shows its last step on screen. Not yet seen running.
+
+Frames loop fix (2026-11-01): the frames file loop used in-naturals and never ended, which hung every test after commit a27bc726. It now runs over the number of keys. Live lines show seconds since the previous line. Not yet seen running.
