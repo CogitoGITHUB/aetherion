@@ -109,6 +109,7 @@ def main [ --list ] {
     for r in $results {
         print $"--- ($r.name)"
         print $"TIME ($r.name) ($r.ms)"
+        print $"CODE ($r.name) ($r.code)"
         print $r.out
         # A stage that exits nonzero with nothing to say must not vanish: the
         # dispatcher prints the reason the child gave, or says the child gave

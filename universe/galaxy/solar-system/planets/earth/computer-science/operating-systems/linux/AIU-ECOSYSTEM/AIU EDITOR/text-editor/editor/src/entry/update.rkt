@@ -191,6 +191,32 @@
     (define p (string-split (string-trim l)))
     (list (cadr p) (/ (round (/ (string->number (caddr p)) 100.0)) 10.0))))
 
+;; parse-stages reads the gate output and answers one list per stage: name, seconds, exit code, output lines.
+(define (parse-stages text)
+  (define tail-rx #px"^(stages that checked nothing|NOTHING-TO-CHECK above|light gate:)")
+  (define blocks
+    (let loop ([ls (string-split text "\n")] [cur #f] [acc (list)])
+      (cond
+        [(null? ls) (reverse (if cur (cons (reverse cur) acc) acc))]
+        [(regexp-match? #rx"^--- " (car ls))
+         (loop (cdr ls) (list (car ls)) (if cur (cons (reverse cur) acc) acc))]
+        [cur (loop (cdr ls) (cons (car ls) cur) acc)]
+        [else (loop (cdr ls) cur acc)])))
+  (for/list ([b (in-list blocks)])
+    (define (field tag)
+      (for/or ([l (in-list (cdr b))])
+        (define m (regexp-match (pregexp (string-append "^" tag " [^ ]+ ([0-9]+)$")) (string-trim l)))
+        (and m (string->number (cadr m)))))
+    (define ms (or (field "TIME") 0))
+    (define code (or (field "CODE") 1))
+    (define body
+      (filter (lambda (l)
+                (and (not (string=? (string-trim l) ""))
+                     (not (regexp-match? #px"^(TIME|CODE) " (string-trim l)))
+                     (not (regexp-match? tail-rx l))))
+              (cdr b)))
+    (list (substring (car b) 4) (/ (round (/ ms 100.0)) 10.0) code body)))
+
 ;; do-update compiles each file, then runs the gate from level 2, times all of it, and answers 0 or 1.
 (define (do-update level)
   (cond
@@ -225,19 +251,22 @@
        (define-values (g-code g-text)
          (if nu (capture editor-root nu (list "gate/check.nu")) (values 1 "nu was not found")))
        (define g-lines (real-lines g-text))
+       (with-handlers ([void void])
+         (display-to-file g-text (build-path (find-system-path (quote home-dir)) ".aiu-last-gate.txt") #:exists (quote truncate)))
        (define green? (regexp-match? #rx"light gate: green" g-text))
        (define bad (filter (lambda (l) (regexp-match? #px"^(COMMENT|FAIL)|light gate: red" l)) g-lines))
        (set! records (append records (list (list "gate" (secs t1) green?))))
-       (set! stage-times (parse-times g-text))
+       (set! stage-times (parse-stages g-text))
        (unless green?
          (set! ok #f)
-         (set! fail-lines (append (first-n bad 12) (if (null? bad) (first-n g-lines 8) (last-n g-lines 2))))))
+         (set! fail-lines (if (null? stage-times) (first-n g-lines 12) (list)))))
      (define total (secs t-all))
      (define all (append records (list (list "total" total ok))))
      (define lines (for/list ([r (in-list all)]) (step-line (car r) (cadr r) (caddr r))))
      (define slowest
-       (for/list ([t (in-list (first-n (sort stage-times > #:key cadr) 3))])
-         (step-line (string-append "gate:" (car t)) (cadr t) #t)))
+       (append*
+       (for/list ([t (in-list stage-times)])
+         (cons (step-line (string-append "gate:" (car t)) (cadr t) (= (caddr t) 0)) (if (= (caddr t) 0) (list) (map (lambda (l) (string-append "    | " l)) (first-n (cadddr t) 15)))))))
      (for ([r (in-list all)]) (log-step! level (car r) (cadr r)))
      (for ([t (in-list stage-times)]) (log-step! level (string-append "gate:" (car t)) (cadr t)))
      (define notes

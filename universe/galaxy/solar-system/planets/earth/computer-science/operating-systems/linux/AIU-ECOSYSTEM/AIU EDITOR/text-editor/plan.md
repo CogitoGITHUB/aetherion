@@ -52,3 +52,5 @@ Found by aiutd update (2026-11-01): setting PWD from racket did not satisfy nu (
 Found by aiutd update (2026-11-01): comment-lint was red with 9 debts in undo.rkt (definitions with no comment of their own; a shared comment above a group does not count). Fixed. The gate takes 125 to 148 s: next, time each stage separately and show the slowest three.
 
 Per stage timing (2026-11-01): gate/check.nu prints TIME stage ms for each stage; aiutd update logs them as gate:stage in ~/.aiu-timings.log and shows the three slowest with the previous run. The gate takes about 145 s of a 180 s update, so the slowest stages are the first thing to cut.
+
+Readable report (2026-11-01): aiutd update level 2 lists all 17 gate stages with their seconds; a failing stage is expanded under its line with its own output (first 15 lines). check.nu prints CODE stage n next to TIME. The whole gate output of the last run is in ~/.aiu-last-gate.txt. Tests built later must report the same way: one line per test, failure detail under it.
