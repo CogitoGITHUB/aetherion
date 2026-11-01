@@ -22,8 +22,11 @@
 (module+ main
   (define args (vector->list (current-command-line-arguments)))
   (define edit? (and (pair? args) (string=? (car args) "edit")))
+  (define tool? (and (pair? args) (member (car args) (list "update" "test" "docs" "trace")) #t))
   (when edit?
     (quick-show (and (pair? (cdr args)) (cadr args))))
-  (if (and edit? (terminal-port? (current-input-port)))
+  (if tool?
+      ((dynamic-require (sibling "update.rkt") (quote run)) args)
+      (if (and edit? (terminal-port? (current-input-port)))
       ((dynamic-require (sibling "lean.rkt") (quote lean-edit)) (cdr args))
-      ((dynamic-require (sibling "cli-full.rkt") (quote main)))))
+      ((dynamic-require (sibling "cli-full.rkt") (quote main))))))

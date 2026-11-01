@@ -22,7 +22,7 @@ Owner decision. Give this file to any AI first. Update it in the same step as an
 |---|---|---|
 | 0 | read .aiu syntax, launcher script, gate, how docs are referenced in code and gate | next |
 | 1 | todo.aiu from all planned items of both READMEs (sections 8, 10, 12, 13, 14, 15, 22, 23, 24) | open |
-| 2 | feature registry + `aiutd update` (compile, gate level, commit) | open |
+| 2 | feature registry + `aiutd update` (compile, gate level, commit) | update.rkt built: compile and gate by level; registry and commit open |
 | 3 | trace (AIU_TRACE) in live.rkt | open, first patch refused |
 | 4 | headless driver + `aiutd test --level` + first feature tests (move, write, save) | open |
 | 5 | `aiutd docs`: generate tutorial.aiu and ai-starting-point.md, then git mv the READMEs and fix references in code and gate | open |
