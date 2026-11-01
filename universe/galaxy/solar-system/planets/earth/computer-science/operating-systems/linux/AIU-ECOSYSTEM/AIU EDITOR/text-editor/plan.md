@@ -234,3 +234,6 @@ Floating box (2026-11-01): owner wants the view to keep scrolling with g and r w
 
 
 Pin layer (2026-11-01): space o opens pin mode. Pins are boxes drawn on the top or bottom screen edge once their block scrolls out of the window; the first block is pinned by default. Keys a add, d delete, h t select, u b edge, n s order, x hide, f keep in focus (default hidden in focus). Open: the block kind accessor for a real title pin, a focus level 2 setting, baked tables not regenerated. Not seen running.
+
+
+Err source (2026-11-01): seen, pin-view replay ended on err-wire-lost from join/live-wire.rkt line 91 and the red table did not show it. A red test or record now prints the err- name on the final screen, its source file, line and 8 lines of context. Not yet seen running. Open: why the wire is lost after the pin layer.

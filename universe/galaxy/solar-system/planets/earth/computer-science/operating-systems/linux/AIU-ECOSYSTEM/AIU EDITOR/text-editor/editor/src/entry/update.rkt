@@ -552,6 +552,26 @@
 (define (wrap-text l)
   (if (<= (string-length l) 90) (list l) (cons (substring l 0 90) (wrap-text (substring l 90)))))
 
+;; err-where answers the lines that name an err- code on the screen, the source file and line that holds it and the lines around it.
+(define (err-where scr)
+  (define m (regexp-match #px"err-[a-z]+(-[a-z]+)*" scr))
+  (cond
+    [(not m) (list)]
+    [else
+     (define name (car m))
+     (define root (path->string (build-path editor-root "editor" "src")))
+     (define rkts (with-handlers ([void (lambda (e) (list))]) (find-files (lambda (p) (regexp-match? #rx"[.]rkt$" (path->string p))) (build-path editor-root "editor" "src"))))
+     (define hit
+       (for/or ([p (in-list rkts)])
+         (define ls (with-handlers ([void (lambda (e) (list))]) (file->lines p)))
+         (for/first ([l (in-list ls)] [i (in-naturals 0)] #:when (regexp-match? (regexp (string-append "\"" (regexp-quote name) "\"")) l))
+           (list p ls i))))
+     (if hit
+         (append (list (string-append "    error " name " comes from " (substring (path->string (car hit)) (string-length root)) " line " (number->string (+ 1 (caddr hit))) ":"))
+                 (for/list ([l (in-list (let* ([ls (cadr hit)] [i (caddr hit)] [lo (max 0 (- i 4))] [hi (min (length ls) (+ i 5))]) (take (drop ls lo) (- hi lo))))])
+                   (string-append "    e " (let ([t (string-trim l)]) (if (> (string-length t) 70) (substring t 0 70) t)))))
+         (list (string-append "    error " name " shown on screen, but no source file holds that name")))]))
+
 ;; diagnose answers the lines that explain a failed test: exit code, mid frame, last frame.
 (define (diagnose code-file out out1)
   (define code (with-handlers ([void (lambda (e) "unknown")]) (string-trim (file->string code-file))))
@@ -605,10 +625,10 @@
       (judge l screen file-text seconds rawf)))
   (define ok? (and (pair? verdicts) (andmap car verdicts)))
   (live "diagnosing")
-  (define why-full (if ok? (list) (append (filter (lambda (l) (not (regexp-match? #rx"^    >" l))) (diagnose code-file out out1)) (trace-since trace-start) (list "    mode after each key:") (map (lambda (l) (car (regexp-split #rx" [|] " l))) (key-modes dir (string-split (string-join (line-values lines "keys") " ")))) (append (if (member "repo git" lines) (cons "    undo commits of the temp repo:" (map (lambda (l) (string-append "    c " l)) (first-n (string-split (let-values ([(c o) (capture dir (find-executable-path "git") (list "log" "--format=%h %s" "aiu-undo"))]) o) "\n") 6))) (list)) (list "    file head, first 6 lines:")) (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))))
+  (define why-full (if ok? (list) (append (filter (lambda (l) (not (regexp-match? #rx"^    >" l))) (append (diagnose code-file out out1) (err-where screen))) (trace-since trace-start) (list "    mode after each key:") (map (lambda (l) (car (regexp-split #rx" [|] " l))) (key-modes dir (string-split (string-join (line-values lines "keys") " ")))) (append (if (member "repo git" lines) (cons "    undo commits of the temp repo:" (map (lambda (l) (string-append "    c " l)) (first-n (string-split (let-values ([(c o) (capture dir (find-executable-path "git") (list "log" "--format=%h %s" "aiu-undo"))]) o) "\n") 6))) (list)) (list "    file head, first 6 lines:")) (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))))
   (with-handlers ([void void])
     (display-to-file screen (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name ".txt")) #:exists (quote truncate)))
-  (define why (let ([c (filter (lambda (l) (and (regexp-match? #rx"cause:" l) (not (regexp-match? #rx"exit code 0" l)))) why-full)]) (if (pair? c) (list (car c)) (list))))
+  (define why (let ([c (filter (lambda (l) (or (regexp-match? #rx"^    (error|e) " l) (and (regexp-match? #rx"cause:" l) (not (regexp-match? #rx"exit code 0" l))))) why-full)]) (if (pair? c) c (list))))
   (when (member "record" lines)
     (with-handlers ([void void])
       (display-to-file screen (build-path (find-system-path (quote home-dir)) ".aiu-record-screen.txt") #:exists (quote truncate))
