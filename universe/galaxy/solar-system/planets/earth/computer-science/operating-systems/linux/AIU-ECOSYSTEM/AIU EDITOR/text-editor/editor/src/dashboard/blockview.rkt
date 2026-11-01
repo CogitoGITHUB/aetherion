@@ -467,6 +467,14 @@
            (+ head-bytes pre-bytes at-bytes)
            (bv-follow row row (max 1 (- height 1))))]))
 
+;; bv-focus-top answers the first line to show for an edited block in focus mode: the block sits in the middle of the window like in the visual view, and a block taller than the window keeps the old first line so the cursor stays on screen.
+(define (bv-focus-top r range height)
+  (define visible (max 1 (- height 1)))
+  (define from (+ (car range) 1))
+  (define to (+ (cdr range) 1))
+  (if (>= (- to from) visible)
+      (caddr r)
+      (max 1 (- (quotient (+ from to) 2) (quotient visible 2)))))
 ;; block-overlay answers what the live screen draws for a page: the text, the
 ;; point and the first line, or nothing when the plain screen should be used.
 (define (block-overlay session raw width height)
@@ -487,7 +495,7 @@
         (define lost (for/sum ([l (in-list out)] [i (in-range nb)]) (bytes-length (string->bytes/utf-8 l))))
         (list (string-join (for/list ([l (in-list out)] [i (in-naturals)]) (if (or (< i nb) (>= i (- total na))) "" l)) "\n")
               (- (cadr r) lost)
-              (caddr r))]
+              (bv-focus-top r range height))]
        [else r])]
     [else r]))
 

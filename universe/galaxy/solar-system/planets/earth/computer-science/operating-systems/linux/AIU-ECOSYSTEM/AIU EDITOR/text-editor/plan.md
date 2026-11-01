@@ -251,3 +251,6 @@ No space f (2026-11-01): owner wants space f deleted. i (block-text) and w (bloc
 
 
 Lacks substring (2026-11-01): seen, every w re-record was red with file lacks kind: default, because w types into the line and the file then holds QQkind: default, which contains the old text. The recorder now skips a lacks expect when a keyed line still contains the text. Not seen running.
+
+
+Focus write centre (2026-11-01): w and i in focus mode now centre the edited block like the visual view (bv-focus-top in block-overlay). Line numbers assumed 1-based. Not seen running, not seen on a phone.
