@@ -141,3 +141,6 @@ Live lines gated (2026-11-01): seen, aiutd update --level 2 GREEN in 141.3 s wit
 
 
 Feature registry and aiutd docs (2026-11-01): editor/src/features/NAME.feature, plain lines: name, test, keys, doc (one or more), ai. aiutd docs runs each feature test and writes aiutd-tutorial.aiu and ai-starting-point.md in the text-editor folder from the passing ones. The READMEs are untouched, no code or gate refers to them (grep seen empty). Not yet seen running. Next: run aiutd docs, read both files, open the tutorial with aiutd, then todo.aiu generation and the README renames.
+
+
+Docs fix (2026-11-01): seen, the generated tutorial said Keys: t next block, move.feature now says keys t. Seen, aiutd docs logged nothing to ~/.aiu-timings.log; it now logs each doc step. Seen: aiutd docs takes 25 s because it runs the 5 tests again. Not seen: whether opening aiutd-tutorial.aiu in the editor is slow. Next: run aiutd docs, commit the two generated files, then todo.aiu generation and README renames.

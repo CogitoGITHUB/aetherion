@@ -660,6 +660,7 @@
      (display-to-file (string-append aiu "\n") (build-path editor-root "aiutd-tutorial.aiu") #:exists (quote truncate))
      (display-to-file (string-append md "\n") (build-path editor-root "ai-starting-point.md") #:exists (quote truncate))
      (define ok (andmap (lambda (r) (list-ref r 5)) rows))
+     (for ([r (in-list rows)]) (log-step! 2 (string-append "doc:" (car r)) (list-ref r 4)))
      (define lines (for/list ([r (in-list rows)]) (step-line (string-append "doc:" (car r)) (list-ref r 4) (list-ref r 5))))
      (emit (list "AIUTD DOCS" (format "~a  ~a of ~a features written  ~a s" (if ok "GREEN" "RED") (length good) (length rows) (secs t0)))
            lines)
