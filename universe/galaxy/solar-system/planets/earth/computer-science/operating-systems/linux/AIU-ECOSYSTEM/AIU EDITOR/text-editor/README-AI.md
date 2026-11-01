@@ -300,6 +300,7 @@ line above every definition.
 | open | after copy and paste exists: update undo mode (section 20) so that copy in an old version and paste in the live file use it |
 | open | try by hand: undo mode (space u): h t, n s, a w e, m u d, l, k, escape, and the tree after a branch |
 | open | NEXT PLANS: see section 22 (the full ordered list); selection mode then copy and paste come first |
+| open | test harness and trace: see section 24 (plan written, nothing built) |
 | done | first paint 0.8 s, lazy send, background home scan, gate green with 17 stages |
 
 ## 9. Traps
@@ -644,3 +645,12 @@ Code: `dashboard/clip.rkt` (lazy, stubs at the end of `bar.rkt`: `clip-stub`, `c
 - Not done: choosing an older copy from the ring (plan: space P cycles), a visible list of the ring, paste of a block as a unit between pages, copy of a selection made inside the undo layer, persistence of the ring between sessions.
 
 Next plans, in order: 1 owner tries cursors, selection, copy, cut, paste and undo by hand and reports. 2 check that OSC 52 reaches the phone clipboard through the multiplexer. 3 the ring: cycle and list. 4 batched hot path op for many cursors if typing lags. 5 the rest of section 22.
+
+## 24. PLAN: test harness and trace (owner request 2026-11-01, written before building)
+
+The owner wants the editor to have ways for the AI to test properly and verbosely. The gate does not feel keypresses or see the screen. Two parts, both lazy and off by default, nothing runs on a keystroke unless switched on:
+
+1. TRACE (AIU_TRACE=1 in the environment of aiutd): the real editor appends one line per event to ~/.aiu-trace.log, never to the screen. Events: key received (names), command run (name, ok), hot path request (op, ms), paint (ms, rows), git or subprocess started (what), thread started, layer change, unsaved change, notification text, errors. Each key ends with a summary line: layer, point, cursors, selections, unsaved, total ms from key to paint. The owner can switch it on for a slow session and send the tail of the log.
+2. HEADLESS DRIVER (`aiutd test SCRIPT`, loaded on demand like cli-full): runs the real key loop against a copy of a test file in a temporary git repository (so the real repository and the undo branch are never touched), with a virtual terminal of a given size, and captures every paint as plain text (escape codes stripped, reverse video shown as brackets so selections and lit blocks are visible). A script is a plain text file: key NAMES (space, v, n, escape, return, tab, up...), text to type, and checks. Checks: assert layer NAME, assert point N, assert text contains X, assert screen contains X, assert cursors N, assert selections N, assert unsaved yes or no, assert git log count N, assert max-ms N (the slowest key). Verbose by default: after every key print the key, the command, the layer, the point, the cursors and the elapsed ms, and on request dump the screen. At the end: a table of pass and fail with the first failing screen shown in full, and a latency summary (median and worst key). Exit code is zero only when all checks pass.
+3. TEST SCRIPTS live in `gate/tests/*.txt` (names to be chosen) and cover: moving, write and save, git commit on save, cursors (add, type with 5 cursors, timing), selection (text and blocks), copy, cut, paste, typing over a selection, undo tree (branch, back, forward, keep, l and return to the same node), and the timing of a held h and t. `nu gate/tests.nu` runs them all and prints one summary; it is NOT part of the 17 stage gate and runs only when the owner asks.
+4. Build order: trace first (small, helps at once), then the driver, then the scripts for sections 20 to 23, then a README note in sections 5 and 7. Ask for ALL reads in one request before building (what is needed: how cli-full runs a scripted session, how live-session takes its input and output, the terminal-size parameter, how paint prints).
