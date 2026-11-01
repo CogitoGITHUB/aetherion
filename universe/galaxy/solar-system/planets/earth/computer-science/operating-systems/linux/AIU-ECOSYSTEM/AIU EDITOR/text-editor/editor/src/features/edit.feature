@@ -1,5 +1,5 @@
-name Writing and saving
+name edit
 test edit
-keys space f, escape, space s
-doc Space f opens the write layer, typing adds text, escape leaves it, space s saves the file.
-ai gate/tests/edit.test, keys space f Z Z escape space s, expects the file to contain ZZtitle start.
+keys w Z Z escape space s
+doc Recorded from a real run of the keys w Z Z escape space s.
+ai gate/tests/edit.test, recorded by aiutd record from the observed screen and file changes.
