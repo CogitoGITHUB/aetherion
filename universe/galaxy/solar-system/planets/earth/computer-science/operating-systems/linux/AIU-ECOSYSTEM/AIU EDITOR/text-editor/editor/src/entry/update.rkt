@@ -465,7 +465,15 @@
 (define live-last (box (current-inexact-milliseconds)))
 
 ;; live prints one line with the seconds since the previous line, so a hang shows its last step.
-(define (live msg) (let ([now (current-inexact-milliseconds)]) (eprintf "  live +~as ~a\n" (real->decimal-string (/ (- now (unbox live-last)) 1000.0) 1) msg) (set-box! live-last now)) (flush-output (current-error-port)))
+(define (live msg) (when (live-wanted? msg) (live-print msg)))
+
+;; live-wanted? says whether a live line shows: step lines always, the per key driver lines only when AIU_LIVE is set.
+(define (live-wanted? msg)
+  (or (getenv "AIU_LIVE")
+      (not (regexp-match? #px"^(send key|frame after|send q|wait for exit|editor exited|output drained|driver returned|plain screen|judging|diagnosing|deleting temp|building report)" msg))))
+
+;; live-print writes one live line with the seconds since the previous printed line.
+(define (live-print msg) (let ([now (current-inexact-milliseconds)]) (eprintf "  live +~as ~a\n" (real->decimal-string (/ (- now (unbox live-last)) 1000.0) 1) msg) (set-box! live-last now)) (flush-output (current-error-port)))
 
 ;; drive-editor runs the editor in a pty, sends one key per finished frame, saves a snapshot after each key and the exit code.
 (define (drive-editor dir copy chunks out out1 code-file)
@@ -605,7 +613,7 @@
               string<? #:key path->string)
         (list)))
   (define wanted (filter (lambda (p) (<= (test-level p) level)) files))
-  (for/list ([p (in-list wanted)]) (live (format "test ~a start" (path->string p))) (let ([r (run-test p)]) (live (format "test ~a done" (car r))) r)))
+  (for/list ([p (in-list wanted)]) (live (format "test ~a start" (file-name-from-path p))) (let ([r (run-test p)]) (live (format "test ~a done" (car r))) r)))
 
 ;; arg-value answers the word after a flag in the arguments, or #f when the flag is missing.
 (define (arg-value args flag)

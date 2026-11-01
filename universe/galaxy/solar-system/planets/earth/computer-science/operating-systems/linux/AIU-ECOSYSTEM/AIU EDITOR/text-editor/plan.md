@@ -135,3 +135,6 @@ Undo open fix (2026-11-01): seen in undo.rkt ud-start!: the open committed only 
 
 
 Live lines in update (2026-11-01): aiutd update prints a live line before and after the compile, before and after each gate stage (one nu call per stage at levels 1 and 2, one call at level 3) and before and after each test, with seconds since the previous line, on stderr. Written by gate-run in update.rkt. Not yet seen running. Next: run aiutd update --level 2 without a pipe, then gate the driver live lines behind an env variable.
+
+
+Live lines gated (2026-11-01): seen, aiutd update --level 2 GREEN in 141.3 s with live lines, 5 of 5 tests ok (compile 36.5 s, gate 79.2 s). The per key driver lines now show only with AIU_LIVE set; compile, gate stage, test start and done lines and NO FRAME always show. Not yet seen running. Next: feature registry, aiutd docs, todo.aiu generation, README renames; level 3 and repeat checks for flakes.
