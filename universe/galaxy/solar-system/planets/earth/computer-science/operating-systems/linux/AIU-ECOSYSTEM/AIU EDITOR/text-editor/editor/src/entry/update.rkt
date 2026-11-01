@@ -84,7 +84,7 @@
 
 ;; wrap-line cuts a line into pieces of at most w characters.
 (define (wrap-line s w)
-  (if (<= (string-length s) w)
+  (if (or (< w 1) (<= (string-length s) w))
       (list s)
       (cons (substring s 0 w) (wrap-line (substring s w) w))))
 

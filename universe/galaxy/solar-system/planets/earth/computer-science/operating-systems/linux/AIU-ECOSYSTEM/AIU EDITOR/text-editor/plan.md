@@ -114,3 +114,5 @@ Live output (2026-11-01, owner): the driver prints a live line at every step (se
 Frames loop fix (2026-11-01): the frames file loop used in-naturals and never ended, which hung every test after commit a27bc726. It now runs over the number of keys. Live lines show seconds since the previous line. Not yet seen running.
 
 Frames block removed (2026-11-01): the hang is after driver returned, the in-naturals diagnosis was wrong. The frames file block is gone and live lines mark each step after the driver. Not yet seen running.
+
+wrap-line fix (2026-11-01): wrap-line looped forever when the width was 0 or less, which hung the report after live line building report. Suspected cause, not seen: term-width answers 0 when no tty (timeout). wrap-line now returns the line whole for width under 1.
