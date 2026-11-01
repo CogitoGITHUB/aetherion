@@ -76,3 +76,5 @@ Compile timing (2026-11-01): a skipped compile (under 1 s) is not logged, so the
 Test selection (2026-11-01): aiutd test --only NAME runs the tests whose file name contains NAME, --repeat N runs them N times, to catch flaky tests. test:edit timed out once in three runs (exit 124), cause not yet seen.
 
 Visible controls (2026-11-01): the file head of a failed test shows control characters as caret letters. test:edit failed 1 in 5 runs with exit 0 and a file head ZZZZs033qtitle start, cause not yet seen.
+
+Run count (2026-11-01): aiutd test prints a line runs N failed M after the report, so repeated runs show how flaky a test is.

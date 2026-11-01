@@ -519,6 +519,7 @@
             (append*
              (for/list ([r (in-list results)])
                (cons (step-line (string-append "test:" (car r)) (cadr r) (caddr r)) (cadddr r))))))
+  (printf "runs ~a  failed ~a\n" (length results) (length (filter (lambda (r) (not (caddr r))) results)))
   (if ok 0 1))
 
 ;; run answers the verb: update and test work, the other tool verbs say they are not built yet.
