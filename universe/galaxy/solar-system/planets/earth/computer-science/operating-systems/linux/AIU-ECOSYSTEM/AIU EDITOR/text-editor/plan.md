@@ -213,3 +213,6 @@ Short tables (2026-11-01): owner wants only important lines. Test tables now pri
 
 
 Frame colours (2026-11-01): seen, the focus-colours test judges plain text and cannot see colours. AIU_FRAMES summary now counts grey (90m) and white (97m) codes per frame. Not yet seen running.
+
+
+Colour expects (2026-11-01): seen, frames after space z carry 15 grey codes, frames before 0. judge now takes the raw last frame and understands expect colour grey|white; the recorder writes it when a colour appears only with the keys. Not yet seen running.

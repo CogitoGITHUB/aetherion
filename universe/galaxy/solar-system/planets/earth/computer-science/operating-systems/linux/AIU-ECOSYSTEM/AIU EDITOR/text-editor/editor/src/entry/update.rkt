@@ -412,7 +412,11 @@
   (or (and (pair? v) (string->number (car v))) 2))
 
 ;; judge checks one expect line against the screen, the file text and the seconds; answers (ok? text).
-(define (judge l screen file-text seconds)
+;; colour-rx answers the regexp of the escape code for grey or white text.
+(define (colour-rx c) (regexp (if (equal? c "grey") "\u001b\\[90m" "\u001b\\[97m")))
+
+;; judge checks one expect line, colour lines against the raw last frame.
+(define (judge l screen file-text seconds [rawf ""])
   (define m (regexp-match #px"^expect (screen|file) (contains|lacks) (.*)$" l))
   (define s (regexp-match #px"^expect seconds-under ([0-9.]+)$" l))
   (cond
@@ -420,6 +424,7 @@
        (define has? (regexp-match? (regexp (regexp-quote (cadddr m))) hay))
        (define ok? (if (equal? (caddr m) "contains") has? (not has?)))
        (list ok? (substring l 7))]
+    [(regexp-match? #px"^expect colour (grey|white)$" l) (list (regexp-match? (colour-rx (cadr (regexp-match #px"^expect colour (grey|white)$" l))) rawf) (substring l 7))]
     [s (list (< seconds (string->number (cadr s))) (substring l 7))]
     [else (list #f (string-append "unknown line: " l))]))
 
@@ -591,12 +596,13 @@
   (define seconds (begin (live "driver returned") (secs t0)))
   (define raw (if (file-exists? out) (file->bytes out) #""))
   (live "plain screen")
-  (define screen (plain-screen (last-frame (bytes->string/utf-8 raw #\?))))
+  (define rawf (last-frame (bytes->string/utf-8 raw #\?)))
+  (define screen (plain-screen rawf))
   (define file-text (with-handlers ([void (lambda (e) "")]) (file->string copy)))
   (live "judging")
   (define verdicts
     (for/list ([l (in-list lines)] #:when (string-prefix? l "expect "))
-      (judge l screen file-text seconds)))
+      (judge l screen file-text seconds rawf)))
   (define ok? (and (pair? verdicts) (andmap car verdicts)))
   (live "diagnosing")
   (define why-full (if ok? (list) (append (filter (lambda (l) (not (regexp-match? #rx"^    >" l))) (diagnose code-file out out1)) (trace-since trace-start) (list "    mode after each key:") (map (lambda (l) (car (regexp-split #rx" [|] " l))) (key-modes dir (string-split (string-join (line-values lines "keys") " ")))) (append (if (member "repo git" lines) (cons "    undo commits of the temp repo:" (map (lambda (l) (string-append "    c " l)) (first-n (string-split (let-values ([(c o) (capture dir (find-executable-path "git") (list "log" "--format=%h %s" "aiu-undo"))]) o) "\n") 6))) (list)) (list "    file head, first 6 lines:")) (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))))
@@ -606,6 +612,7 @@
   (when (member "record" lines)
     (with-handlers ([void void])
       (display-to-file screen (build-path (find-system-path (quote home-dir)) ".aiu-record-screen.txt") #:exists (quote truncate))
+      (display-to-file rawf (build-path (find-system-path (quote home-dir)) ".aiu-record-raw.txt") #:exists (quote truncate))
       (display-to-file file-text (build-path (find-system-path (quote home-dir)) ".aiu-record-file.txt") #:exists (quote truncate))))
   (when (getenv "AIU_FRAMES")
     (with-handlers ([void void])
@@ -680,9 +687,11 @@
   (run-test base-path)
   (define bs (grab ".aiu-record-screen.txt"))
   (define bf (grab ".aiu-record-file.txt"))
+  (define braw (grab ".aiu-record-raw.txt"))
   (run-test tpath)
   (define ks (grab ".aiu-record-screen.txt"))
   (define kf (grab ".aiu-record-file.txt"))
+  (define kraw (grab ".aiu-record-raw.txt"))
   (define bsl (record-lines bs))
   (define ksl (record-lines ks))
   (define bfl (record-lines bf))
@@ -691,7 +700,8 @@
     (append (for/list ([l (in-list (first-n (filter (lambda (x) (not (member x bsl))) ksl) 3))]) (string-append "expect screen contains " l))
             (for/list ([l (in-list (first-n (filter (lambda (x) (not (member x ksl))) bsl) 3))]) (string-append "expect screen lacks " l))
             (for/list ([l (in-list (first-n (filter (lambda (x) (not (member x bfl))) kfl) 2))]) (string-append "expect file contains " l))
-            (for/list ([l (in-list (first-n (filter (lambda (x) (not (member x kfl))) bfl) 2))]) (string-append "expect file lacks " l))))
+            (for/list ([l (in-list (first-n (filter (lambda (x) (not (member x kfl))) bfl) 2))]) (string-append "expect file lacks " l))
+            (for/list ([c (in-list (list "grey" "white"))] #:when (and (regexp-match? (colour-rx c) kraw) (not (regexp-match? (colour-rx c) braw)))) (string-append "expect colour " c))))
   (define ok
     (and (pair? expects)
          (begin
