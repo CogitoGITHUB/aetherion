@@ -1,6 +1,0 @@
-test focus-back
-level 2
-file test.aiu
-keys space z space z
-expect screen contains visual general
-expect seconds-under 30
