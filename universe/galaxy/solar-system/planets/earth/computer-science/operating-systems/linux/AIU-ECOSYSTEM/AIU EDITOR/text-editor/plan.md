@@ -165,3 +165,6 @@ More tests (2026-11-01): write-tab and backspace added from the old key tables, 
 
 
 More tests (2026-11-01): focus-hide, focus-back, find-escape from the probe screens, kept only if green: [ focus-back ]. Seen: bar and tabs keys leave mode visual general and q does not quit there (probe hung 17 s), screens unknown, no tests. Next: read the bar and tabs code for what space b and space t do, todo.aiu generation, level 3.
+
+
+Record (2026-11-01, owner: tests must not be written by hand): aiutd record NAME KEYS runs the keys in the real editor, compares screen and file with a no-keys baseline run and writes the test and feature from the difference, kept only when green. Keys must end in visual mode. focus-back was a weak test and is removed. Seen: bar and tabs keys leave the mode unchanged, find needs escape. Not yet seen running.

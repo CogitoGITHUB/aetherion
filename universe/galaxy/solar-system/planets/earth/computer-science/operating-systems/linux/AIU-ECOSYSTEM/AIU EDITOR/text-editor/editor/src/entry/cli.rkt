@@ -22,7 +22,7 @@
 (module+ main
   (define args (vector->list (current-command-line-arguments)))
   (define edit? (and (pair? args) (string=? (car args) "edit")))
-  (define tool? (and (pair? args) (member (car args) (list "update" "test" "docs" "trace")) #t))
+  (define tool? (and (pair? args) (member (car args) (list "update" "test" "docs" "trace" "record")) #t))
   (when edit?
     (quick-show (and (pair? (cdr args)) (cadr args))))
   (if tool?

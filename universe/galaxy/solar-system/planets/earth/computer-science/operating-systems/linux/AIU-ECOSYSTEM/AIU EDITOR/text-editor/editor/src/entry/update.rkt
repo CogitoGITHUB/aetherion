@@ -593,6 +593,10 @@
   (define why (if ok? (list) (append (filter (lambda (l) (not (regexp-match? #rx"^    >" l))) (diagnose code-file out out1)) (trace-since trace-start) (list "    mode after each key:") (map (lambda (l) (car (regexp-split #rx" [|] " l))) (key-modes dir (string-split (string-join (line-values lines "keys") " ")))) (append (if (member "repo git" lines) (cons "    undo commits of the temp repo:" (map (lambda (l) (string-append "    c " l)) (first-n (string-split (let-values ([(c o) (capture dir (find-executable-path "git") (list "log" "--format=%h %s" "aiu-undo"))]) o) "\n") 6))) (list)) (list "    file head, first 6 lines:")) (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))))
   (with-handlers ([void void])
     (display-to-file screen (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name ".txt")) #:exists (quote truncate)))
+  (when (member "record" lines)
+    (with-handlers ([void void])
+      (display-to-file screen (build-path (find-system-path (quote home-dir)) ".aiu-record-screen.txt") #:exists (quote truncate))
+      (display-to-file file-text (build-path (find-system-path (quote home-dir)) ".aiu-record-file.txt") #:exists (quote truncate))))
   (live "deleting temp folder")
   (remove-tree dir)
   (live "building report")
@@ -632,6 +636,52 @@
   (if (directory-exists? d)
       (string-join (for/list ([p (in-list (sort (filter (lambda (q) (regexp-match? #rx"[.]md$" (path->string q))) (directory-list d #:build? #t)) string<? #:key path->string))]) (file->string p)) "\n")
       ""))
+
+;; record-lines answers the printable, stable lines of a text: no clock, at most 78 characters, with letters.
+(define (record-lines s)
+  (remove-duplicates
+   (filter (lambda (l) (and (>= (string-length l) 6) (<= (string-length l) 78) (regexp-match? #px"[A-Za-z]{3}" l) (regexp-match? #px"^[[:print:]]+$" l) (not (regexp-match? #px"[0-9]:[0-9][0-9]" l))))
+           (map string-trim (string-split s "\n")))))
+
+;; do-record runs keys in the real editor against a no-keys baseline, writes the test and feature from what changed, keeps them only when green.
+(define (do-record words)
+  (define name (car words))
+  (define keys (string-join (cdr words) " "))
+  (define tdir (build-path editor-root "gate" "tests"))
+  (define tpath (build-path tdir (string-append name ".test")))
+  (define pg (let ([v (line-values (test-lines (build-path tdir "move.test")) "file")]) (if (pair? v) (car v) "test.aiu")))
+  (define base-path "/tmp/aiutd-base.test")
+  (define home (find-system-path (quote home-dir)))
+  (define (grab n) (with-handlers ([void (lambda (e) "")]) (file->string (build-path home n))))
+  (display-to-file (format "test ~a-base\nlevel 2\nfile ~a\nrecord\nexpect seconds-under 60\n" name pg) base-path #:exists (quote truncate))
+  (display-to-file (format "test ~a\nlevel 2\nfile ~a\nrecord\nkeys ~a\nexpect seconds-under 30\n" name pg keys) tpath #:exists (quote truncate))
+  (run-test base-path)
+  (define bs (grab ".aiu-record-screen.txt"))
+  (define bf (grab ".aiu-record-file.txt"))
+  (run-test tpath)
+  (define ks (grab ".aiu-record-screen.txt"))
+  (define kf (grab ".aiu-record-file.txt"))
+  (define bsl (record-lines bs))
+  (define ksl (record-lines ks))
+  (define bfl (record-lines bf))
+  (define kfl (record-lines kf))
+  (define expects
+    (append (for/list ([l (in-list (first-n (filter (lambda (x) (not (member x bsl))) ksl) 3))]) (string-append "expect screen contains " l))
+            (for/list ([l (in-list (first-n (filter (lambda (x) (not (member x ksl))) bsl) 3))]) (string-append "expect screen lacks " l))
+            (for/list ([l (in-list (first-n (filter (lambda (x) (not (member x bfl))) kfl) 2))]) (string-append "expect file contains " l))
+            (for/list ([l (in-list (first-n (filter (lambda (x) (not (member x kfl))) bfl) 2))]) (string-append "expect file lacks " l))))
+  (define ok
+    (and (pair? expects)
+         (begin
+           (display-to-file (format "test ~a\nlevel 2\nfile ~a\nkeys ~a\n~a\nexpect seconds-under 30\n" name pg keys (string-join expects "\n")) tpath #:exists (quote truncate))
+           (caddr (run-test tpath)))))
+  (cond
+    [ok (display-to-file (format "name ~a\ntest ~a\nkeys ~a\ndoc Recorded from a real run of the keys ~a.\nai gate/tests/~a.test, recorded by aiutd record from the observed screen and file changes.\n" name name keys keys name)
+                         (build-path editor-root "editor" "src" "features" (string-append name ".feature")) #:exists (quote truncate))]
+    [else (when (file-exists? tpath) (delete-file tpath))])
+  (emit (list "AIUTD RECORD" (format "~a  ~a" (if ok "GREEN" "RED") name))
+        (if (pair? expects) expects (list "nothing changed on screen or in the file, nothing written")))
+  (if ok 0 1))
 
 ;; do-docs runs the test of every feature file and writes aiutd-tutorial.aiu and ai-starting-point.md from the passing ones; answers 0 or 1.
 (define (do-docs)
@@ -712,6 +762,7 @@
    (cond
      [(equal? verb "update") (do-update (level-of args))]
      [(equal? verb "docs") (do-docs)]
+     [(equal? verb "record") (let* ([m (member "record" args)] [w (if m (cdr m) args)]) (if (>= (length w) 2) (do-record w) (begin (emit (list "AIUTD RECORD" "RED") (list "usage: aiutd record NAME KEYS")) 1)))]
      [(equal? verb "test") (do-test (level-of args) (arg-value args "--only") (max 1 (or (string->number (or (arg-value args "--repeat") "1")) 1)))]
      [else
       (emit (list "AIUTD" (string-upcase verb)) (list "not built yet, see plan.md"))
