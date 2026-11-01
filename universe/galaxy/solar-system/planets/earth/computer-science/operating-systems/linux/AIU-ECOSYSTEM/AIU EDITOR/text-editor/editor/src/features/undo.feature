@@ -1,5 +1,5 @@
-name Undo layer
+name undo
 test undo
-keys space u, h, k
-doc Space u opens the undo layer, h steps back to an older saved version, k keeps it as the file.
-ai gate/tests/undo.test, needs repo git, expects Ytitle start kept and YZtitle start gone. A test must end in visual mode.
+keys w Y escape space s space u escape w Z escape space s space u h k
+doc Recorded from a real run of the keys w Y escape space s space u escape w Z escape space s space u h k.
+ai gate/tests/undo.test, recorded by aiutd record from the observed screen and file changes.
