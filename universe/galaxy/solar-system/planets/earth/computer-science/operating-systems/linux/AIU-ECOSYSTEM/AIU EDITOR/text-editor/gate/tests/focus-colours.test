@@ -1,0 +1,10 @@
+test focus-colours
+level 2
+file test.aiu
+keys space z
+expect screen contains kind: default
+expect screen contains tags: test editor introduction
+expect screen contains otherwise. The mode line at the bottom shows where you are, for example
+expect screen lacks [  [title[  [ [
+expect screen lacks trigger SPC
+expect seconds-under 30
