@@ -1,12 +1,9 @@
 test focus-type
 level 2
 file test.aiu
-keys space z space f Q Q escape space s
-expect screen contains ! stray text (outside any block): text outside any named block
-expect screen contains otherwise. The mode line at the bottom shows where you are, for example
-expect screen contains visual general.
+keys space z w Q Q escape space s
 expect screen lacks kind: default
 expect screen lacks tags: test editor introduction
-expect screen lacks trigger SPC
-expect file contains QQtitle start
+expect screen lacks comment
+expect file contains QQkind: default
 expect seconds-under 30
