@@ -68,6 +68,7 @@ that way.
 | The screen selection (the biomechanical model) | Implemented and verified: the multiplexer side, the view that scrolls with the page keys, and the pick that restarts over the fresh text; the editor's side is owed |
 | The Android clipboard: the pick out, the phone's text in | In part: the copy-out key is verified on this phone; the paste-in key names the missing Termux:API add-on and pastes the day it is installed |
 | The kit conformance | Implemented and verified: the six proofs run as a gate stage |
+| The read-only watch attach | Implemented and verified: a watcher draws the session and says it watches, its send and control are refused by name on the holder's own wire, and letting it go leaves the session as it was |
 | The done line | In progress: the shared checklist records every item's state honestly; the editor's own halves and the owner's deletion of the checklist are owed |
 
 The owner switched the priority to this program on 2026-10-21: it is the foundation under
@@ -316,13 +317,21 @@ stands: the screen asks the holder for the state before it answers, so the agent
 told an old picture. Without a screen attached there is nothing to drive, and the holder
 says so by name.
 
+**The read-only watcher (item 60).** A client can attach as a watcher — `client --op watch`
+— and it draws the session from the same state and the same records as the screen, with the
+mode row saying `WATCH/…` and its hints row saying it cannot change the session. Its keys do
+nothing, it never resizes the session, and its `send` and `control` are refused by name on
+the holder's wire before any op is dispatched: the rule is one predicate over the op
+(`src/holder/watch.rs`), so a new changing op is added in one place. A watcher is let go by
+a detach like any other client, and the session and its shells go on untouched.
+
 ## Public interface
 
 The holder's socket, one JSON object per line, both ways:
 
 | Op | What it does |
 |---|---|
-| `attach` | the client joins the session and starts receiving the records |
+| `attach` | the client joins the session and starts receiving the records; the role says whether it is the screen or a read-only watcher |
 | `detach` | the client leaves; the session goes on |
 | `state` | the direction, the tabs and the panes, as data |
 | `read` | the records after a sequence number, from the log |
@@ -346,7 +355,7 @@ The client's own options:
 
 ```bash
 client --state-dir DIR --op screen [--agent-program PATH] [--editor-program PATH]
-client --state-dir DIR --op screen|editor [--editor-mcp-arg WORD]...
+client --state-dir DIR --op screen|watch|editor [--editor-mcp-arg WORD]...
 client --state-dir DIR --op state|read|send|open|resize|rename|close ...
 holder --state-dir DIR [--sessions-dir DIR] [--log-limit BYTES] [--layout FILE]
 ```
@@ -525,9 +534,9 @@ finds no Racket file in the package (the package is Rust only since the move int
 does not have; the choice between dropping the two stages and porting the proofs is the
 owner's, and `TODO.org` item 64 carries it.
 
-The Rust tests: `cargo test --offline` (128 tests: 72 in the client, 37 in the holder, 18 in the bake, and 1 in
-`tests/handshake.rs`, which runs the real client against a holder socket the test serves
-by hand).
+The Rust tests: `cargo test --offline` (135 tests: 74 in the client, 41 in the holder, 18 in the bake,
+1 in `tests/handshake.rs`, which runs the real client against a holder socket the test serves
+by hand, and 1 in `tests/watch.rs`, which starts the real holder and speaks its wire).
 
 The phone proofs, each a Nu script that prints its evidence:
 
@@ -541,6 +550,7 @@ The phone proofs, each a Nu script that prints its evidence:
 | `tools/sessions-probe/probe.nu` | the sessions stand, a created one lives on its own, the client switches to it, a killed one is gone for good, and a session cannot kill itself | 13 |
 | `tools/rewind-probe/probe.nu` | a pane shows the text as it stood at a chosen record, and looking back leaves the live pane and its shell alone | 13 |
 | `tools/journal-probe/probe.nu` | the log stays inside its written bound, the trim keeps whole records and says what it let go, and the session's files are 0600 in a 0700 dir | 12 |
+| `tools/watch-probe/probe.nu` | a watcher draws the session and says it watches, its keys change nothing, and letting it go leaves the session able to be driven | 8 |
 | `tools/tiny-binary-probe/` | the build and start times that decided the route | measured |
 
 What is not verified: the key routing with the editor in a pane, and the clipboard's
@@ -575,7 +585,8 @@ Android clipboard, has its copy-out half verified and its read half waiting for 
 add-on. Item 25 — the agent's words run in the holder, with no token and no attached screen —
 is stopped at `CONTRACT-CHANGE-REQUEST-01.org` until the owner picks a shape, and the group G
 items that depend on it (26, 27, 28, 30, 32 to 36, 58) wait behind it. Item 60, the read-only
-watch attach, is next, since item 48 unlocked it.
+watch attach, landed: a watcher draws the session, cannot change it, and is let go without
+touching it. Item 61, the web client, waits only on items 60 and 48 and is next.
 
 ### Later plans
 

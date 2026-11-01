@@ -56,7 +56,7 @@ fn main() {
 /// A switch is the same call on the next session's socket, so the owner moves
 /// between sessions without leaving the client, and every wait ends on the
 /// filesystem event that creates the socket (TODO item 49).
-fn run_screen(state_dir: &Path, options: &Options) -> Result<i32, String> {
+fn run_screen(state_dir: &Path, options: &Options, watch: bool) -> Result<i32, String> {
     let socket_path = state_dir.join("holder.sock");
     eprintln!(
         "client: waiting for the holder's socket at {}",
@@ -72,6 +72,7 @@ fn run_screen(state_dir: &Path, options: &Options) -> Result<i32, String> {
     let answer = screen::session(
         fd,
         CLIENT_NAME,
+        watch,
         options.agent_program.clone(),
         options.editor_program.clone(),
         options.editor_mcp.clone(),
@@ -88,7 +89,7 @@ fn run_screen(state_dir: &Path, options: &Options) -> Result<i32, String> {
         }
         screen::Ending::Switch(to) => {
             eprintln!("client: switching to the session at {}", to.display());
-            run_screen(&to, options)
+            run_screen(&to, options, watch)
         }
     }
 }
@@ -112,12 +113,13 @@ fn run(args: &[String]) -> Result<i32, String> {
 
     let fd = wire::connect(&socket_path)?;
 
-    if options.op == "screen" {
+    if options.op == "screen" || options.op == "watch" {
         // The screen is its own life: it attaches, draws the panes, and answers
         // the keys until the owner leaves. A switch moves it to another
-        // session, and that is the same life on the other socket.
+        // session, and that is the same life on the other socket. A watcher is
+        // the same screen with the changing half taken away (TODO item 60).
         wire::close(fd);
-        return run_screen(&options.state_dir, &options);
+        return run_screen(&options.state_dir, &options, options.op == "watch");
     }
 
     wire::ask(fd, &options.request())?;
@@ -336,7 +338,7 @@ impl Options {
                 }
                 "--help" => {
                     println!(
-                        "client --state-dir DIR [--op state|attach|detach|read|send|send-agent|editor|screen] [--data TEXT] [--pane NAME] [--agent-program PROGRAM] [--editor-mcp-arg WORD] [--since N] [--count N]"
+                        "client --state-dir DIR [--op state|attach|detach|read|send|send-agent|editor|screen|watch] [--data TEXT] [--pane NAME] [--agent-program PROGRAM] [--editor-mcp-arg WORD] [--since N] [--count N]"
                     );
                     std::process::exit(0);
                 }

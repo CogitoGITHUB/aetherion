@@ -158,6 +158,10 @@ pub struct Screen {
     pending: Option<String>,
     /// fresh says the state arrived: the pending request may be answered.
     fresh: bool,
+    /// watch says this screen watches the session and cannot change it
+    /// (TODO item 60): the drawing says so, the keys change nothing, and the
+    /// holder refuses a change from this connection by name.
+    watch: bool,
 }
 
 impl Screen {
@@ -199,6 +203,31 @@ impl Screen {
             editor_mcp,
             pending: None,
             fresh: false,
+            watch: false,
+        }
+    }
+
+    /// set_watch makes this screen a watcher: it is drawn from the same state
+    /// and says so in the mode row, and it changes nothing (TODO item 60).
+    pub fn set_watch(&mut self, watch: bool) {
+        self.watch = watch;
+    }
+
+    /// watch_filter answers what a watching screen does with one action:
+    /// leaving is done, and every action that would change the session is
+    /// refused with the rule in the message. The holder refuses the same
+    /// things on its own, so the rule holds on both sides of the wire.
+    pub fn watch_filter(&mut self, action: Action) -> Option<Action> {
+        if !self.watch {
+            return Some(action);
+        }
+        match action {
+            Action::Quit => Some(Action::Quit),
+            _ => {
+                self.message = "this client watches the session: it cannot change it"
+                    .to_string();
+                None
+            }
         }
     }
 
@@ -598,7 +627,12 @@ impl Screen {
         // The message the client answers with stands next to the mode:
         // the row is cut at the end, so what the owner must read is at
         // the front.
-        let mut line = format!("-- {} L{} -- ", self.mode_name(), self.level);
+        let name = if self.watch {
+            format!("WATCH/{}", self.mode_name())
+        } else {
+            self.mode_name().to_string()
+        };
+        let mut line = format!("-- {} L{} -- ", name, self.level);
         if !self.workspace_name.is_empty() {
             line.push_str(&format!("ws:{} ", self.workspace_name));
             if !self.project_name.is_empty() {
@@ -627,6 +661,9 @@ impl Screen {
 
     /// hints_line answers the row that says what the keys do in this mode.
     fn hints_line(&self) -> String {
+        if self.watch {
+            return "this client watches the session: it cannot change it".to_string();
+        }
         match self.mode {
             Mode::Visual => {
                 let pending = self.keymap.pending_keys();
@@ -950,14 +987,6 @@ impl Screen {
                 let name = format!("pane-{}", self.panes.len() + 1);
                 let tab = self.focused_tab();
                 self.open_pane(name, "/bin/sh".to_string(), tab)
-            }
-            Command::PaneClose => {
-                let pane = self.focused_pane();
-                Action::Request(json!({
-                    "op": "close",
-                    "kind": "pane",
-                    "name": pane
-                }))
             }
             Command::PaneClose => {
                 let pane = self.focused_pane();
@@ -1536,8 +1565,8 @@ impl Screen {
                 self.copy_lines(pane, first, last);
                 Action::Nothing
             }
-            ["paste", pane] => self.paste_into(pane),
             ["paste", "agent"] => self.paste_to_agent(),
+            ["paste", pane] => self.paste_into(pane),
             ["clipboard", "out"] => {
                 // The pick, and nothing else: the command line never takes a
                 // region the point did not mark.
@@ -2056,6 +2085,7 @@ fn put(out: &mut String, row: u16, left: u16, text: &str) {
 pub fn session(
     fd: libc::c_int,
     client_name: &str,
+    watch: bool,
     agent_program: String,
     editor_program: String,
     editor_mcp: Vec<String>,
@@ -2066,6 +2096,7 @@ pub fn session(
     let mut screen = Screen::empty(agent_program, editor_program, editor_mcp);
     screen.set_level(config.config().level);
     screen.set_tab_bar(config.config().tab_bar);
+    screen.set_watch(watch);
     // A config file that is there and was not used says so where the owner
     // reads it, and the screen runs on what the last good one said.
     if let Some(why) = config.problem() {
@@ -2077,7 +2108,7 @@ pub fn session(
         &json!({
             "op": "attach",
             "client": client_name,
-            "role": "screen",
+            "role": if watch { "watch" } else { "screen" },
             "event-contract": crate::EVENT_CONTRACT,
             "holder-contract": crate::HOLDER_CONTRACT
         }),
@@ -2098,20 +2129,24 @@ pub fn session(
         if size.0 != screen.cols || size.1 != screen.rows {
             screen.cols = size.0;
             screen.rows = size.1;
-            // The rows the panes get: the window minus the screen's own
-            // furniture. The holder gives every program the size of the
-            // place it is drawn in, so the two cannot drift apart.
-            let (_, area_rows) = screen.area();
-            wire::ask(
-                fd,
-                &json!({
-                    "op": "resize",
-                    "client": client_name,
-                    "cols": size.0,
-                    "rows": size.1,
-                    "area-rows": area_rows
-                }),
-            )?;
+            // A watcher draws at its own size and asks for nothing: the
+            // session's size belongs to the screen that types (TODO item 60).
+            if !watch {
+                // The rows the panes get: the window minus the screen's own
+                // furniture. The holder gives every program the size of the
+                // place it is drawn in, so the two cannot drift apart.
+                let (_, area_rows) = screen.area();
+                wire::ask(
+                    fd,
+                    &json!({
+                        "op": "resize",
+                        "client": client_name,
+                        "cols": size.0,
+                        "rows": size.1,
+                        "area-rows": area_rows
+                    }),
+                )?;
+            }
         }
 
         // The keys are only read once the screen knows the panes: a key that
@@ -2207,6 +2242,14 @@ pub fn session(
                 continue;
             }
             for action in screen.key(&buffer[..got]) {
+                // A watcher watches: every key that would change the session
+                // is answered with the rule, and only leaving is done
+                // (TODO item 60). The holder refuses the same things on its
+                // own, so the rule holds even if a request slips past here.
+                let action = match screen.watch_filter(action) {
+                    Some(one) => one,
+                    None => continue,
+                };
                 match action {
                     Action::Nothing => {}
                     Action::Send(bytes) => {
@@ -2673,5 +2716,35 @@ mod tests {
             }
             _ => panic!("the paste is one request"),
         }
+    }
+
+    #[test]
+    fn a_watching_screen_says_so_and_changes_nothing() {
+        let mut screen = a_screen();
+        screen.set_watch(true);
+        let drawing = screen.draw();
+        assert!(drawing.contains("WATCH/"), "the mode row says it watches: {:?}", drawing);
+        // Every action that would change the session is taken away, and the
+        // message says the rule; leaving is still done.
+        let left = screen.watch_filter(Action::Quit);
+        assert!(matches!(left, Some(Action::Quit)), "leaving is not a change");
+        let taken = screen.watch_filter(Action::Send(b"rm -rf /".to_vec()));
+        assert!(taken.is_none(), "a watcher's send is taken away");
+        assert!(
+            screen.message.contains("cannot change it"),
+            "the message names the rule: {:?}",
+            screen.message
+        );
+    }
+
+    #[test]
+    fn a_screen_that_is_not_watching_keeps_every_action() {
+        let mut screen = a_screen();
+        let sent = screen.watch_filter(Action::Send(b"echo hi".to_vec()));
+        match sent {
+            Some(Action::Send(bytes)) => assert_eq!(bytes, b"echo hi"),
+            _ => panic!("the owner's own key is not taken away"),
+        }
+        assert!(screen.message.is_empty(), "no message is made up: {:?}", screen.message);
     }
 }

@@ -18,7 +18,8 @@
   - keymap.rs — the keymap: the keys that mean what, as one table the
     dispatcher and the keymap explorer both read
   - screen.rs — the screen: the panes drawn on one terminal, the mode line,
-    the tab bar, the explorer panel, and the redraw
+    the tab bar, the explorer panel, the redraw, and the watcher that
+    draws the same and changes nothing
   - select.rs — the selection: the point, the ring of marks and the text
     between them
   - workspace.rs — the workspace panel: the shared workspace as the

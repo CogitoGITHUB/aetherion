@@ -16,6 +16,8 @@
     model's own data given back
   - layout.rs — the layout file: the panes a session holds, by name
   - wire.rs — the session's wire: one JSON object per line, both ways
+  - watch.rs — the watcher's rule: which ops a read-only client may ask,
+    as one predicate the holder refuses by name
   - workspace.rs — the workspace seam of the holder: the shared engine asked,
     and the facts given back
   - editor.rs — the editor's own answer: the editor's own server asked over

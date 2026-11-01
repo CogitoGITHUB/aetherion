@@ -53,6 +53,8 @@
     and the model's own data given back
   - src/holder/layout.rs — the layout file: the panes a session holds, by name
   - src/holder/wire.rs — the session's wire: one JSON object per line, both ways
+  - src/holder/watch.rs — the watcher's rule: which ops a read-only client may
+    ask, as one predicate the holder refuses by name
   - src/holder/workspace.rs — the workspace seam of the holder: the shared
     engine asked, and the facts given back
   - src/holder/editor.rs — the editor's own answer: the editor's own server
@@ -109,3 +111,6 @@
   - tests/handshake.rs — the versioned handshake: a client and a holder that
     disagree refuse each other by name, with both versions said and with what
     to do next
+  - tests/watch.rs — the read-only watch attach: a watcher sees the session,
+    its send and control are refused by name, and letting it go leaves the
+    session untouched

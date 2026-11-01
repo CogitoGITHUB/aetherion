@@ -20,6 +20,7 @@ mod geometry;
 mod layout;
 mod log;
 mod sessions;
+mod watch;
 mod workspace;
 
 #[path = "../agents/bundle.rs"]
@@ -898,6 +899,32 @@ fn answer(session: &mut Session, at: usize, line: &str) -> Result<bool, String> 
         .and_then(|value| value.as_str())
         .unwrap_or("")
         .to_string();
+
+    // A watcher sees the session and never changes it (TODO item 60). The
+    // rule is one predicate over the op, and the refusal names both the op
+    // and the rule: a watcher that asks for a change is refused here, before
+    // the dispatch, so no op can reach a change by a second path.
+    if session.clients[at].role == "watch" {
+        if let Some(why) = watch::refusal(&request) {
+            let record = session.record(Fields {
+                kind: "fail",
+                who: "holder",
+                what: "a watcher's request was refused",
+                why: &why,
+                how: "the client attached as a watcher, so its op was compared with the \
+                      ops that change the session",
+                inputs: json!({ "op": op, "client": client_name(&request) }),
+                outputs: json!({}),
+                result: json!({
+                    "rule": "a watcher sees the records and the drawing; it cannot change \
+                             the session"
+                }),
+            });
+            session.write(&record);
+            answer_client(session, at, &record);
+            return Ok(true);
+        }
+    }
 
     match op.as_str() {
         "attach" => attach(session, at, &request),
@@ -1874,10 +1901,9 @@ fn session_command(session: &mut Session, at: usize, request: &Value) -> Result<
         "rename" => rename_session(session, at, &name),
         "kill" => kill_session(session, at, &name),
         "show" => show_pane(session, at, &name),
-        "kill" => kill_session(session, at, &name),
         other => {
             a_fail(session, at, "the session command was refused",
-                format!("{} is not one of create, rename or kill", other),
+                format!("{} is not one of create, rename, kill or show", other),
                 json!({ "what": other, "name": name }));
             Ok(true)
         }
