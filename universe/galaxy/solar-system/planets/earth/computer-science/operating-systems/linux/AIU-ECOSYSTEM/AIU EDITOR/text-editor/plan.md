@@ -263,3 +263,6 @@ Focus kinds (2026-11-01): focus mode shows the chain of box types of the lit box
 
 
 Trace paint (2026-11-01): key-loop now times the repaint and writes a paint line to the trace log when AIU_TRACE is set. Not seen running.
+
+
+Todo clean (2026-11-01): removed the done todos from todo.aiu: banner, update, test levels, headless driver, trace, recorder settled frame, focus colours, focus hide level, focus box types. Kept the notation title todo, it belongs to AIU NOTATION.

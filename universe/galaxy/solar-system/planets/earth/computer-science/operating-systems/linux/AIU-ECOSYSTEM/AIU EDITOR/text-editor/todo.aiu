@@ -14,31 +14,6 @@ Self test and self docs (plan.md)
 title end
 
 paragraph start
-todo: open banner output: every aiutd command prints an empty line, a title block drawn by notation view, an empty line
-Planned, see plan.md.
-paragraph end
-
-paragraph start
-todo: open aiutd update: compile, tests at a level, docs, commit with explicit paths
-Planned, see plan.md.
-paragraph end
-
-paragraph start
-todo: open aiutd test --level 1 2 3 with verbose output, one test per feature
-Planned, see plan.md.
-paragraph end
-
-paragraph start
-todo: open headless driver: real key loop, virtual terminal, screen as text, assertions
-Planned, see plan.md.
-paragraph end
-
-paragraph start
-todo: open trace with AIU_TRACE: key, command, hot path request, paint, ms per key
-Planned, see plan.md.
-paragraph end
-
-paragraph start
 todo: open aiutd docs: write aiutd-tutorial.aiu and ai-starting-point.md from passing tests, the old docs are already retired
 Planned, see plan.md.
 paragraph end
@@ -311,15 +286,6 @@ title start
 Focus mode
 title end
 
-paragraph start
-todo: open focus mode colours: every box and its text grey, the box the cursor is in white
-Replaces the highlight of the current box. The lines, the text and the title of the box I am in turn white and everything outside it turns grey. Owner request 2026-11-01.
-paragraph end
-
-paragraph start
-todo: open focus mode level that hides the boxes outside my highlights
-A new level of focus mode: boxes outside the highlighted ones are not drawn at all. Owner request 2026-11-01.
-paragraph end
 section end
 
 section start
@@ -327,21 +293,12 @@ title start
 Testing paused
 title end
 
-paragraph start
-todo: open aiutd record must take the settled frame, not the first one
-Seen: space z draws frames 2 to 6 with the popup and frame 7 is the settled one. Re-record write-tab and backspace with aiutd record. Owner 2026-11-01: no more test work until a feature works.
-paragraph end
 section end
 
 section start
 title start
 Focus box types
 title end
-
-paragraph start
-todo: open focus mode shows the box types around the lit box
-In focus mode, show the kinds of boxes around the lit box. Level 2 shows the title of that box type. Owner request 2026-11-01.
-paragraph end
 
 paragraph start
 todo: open notation requires a title for every box type
