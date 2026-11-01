@@ -62,3 +62,5 @@ Test driver (2026-11-01, step 4 started): aiutd test [--level N] runs gate/tests
 Diagnosis (2026-11-01): a failed test prints its exit code, whether the mid frame exists and the last frame wrapped at 90 columns. The test timeout is 20 s. edit.test also saves with space s.
 
 Key pacing (2026-11-01): the test driver feeds every key as its own chunk, 0.4 s apart, after a 1.5 s lead, because escape followed at once by another byte is read as an Alt chord.
+
+File head (2026-11-01): a failed test prints the first 6 lines of the page file after the run, and no longer prints the screen twice.
