@@ -9,7 +9,7 @@
          "../commands/commands.rkt"
          "../notation/document.rkt"
          "../notation/host.rkt"
-         (only-in "blockview.rkt" bv-kind-match? bv-inside bv-drawn)
+         (only-in "blockview.rkt" blockview-kind-match? blockview-inside blockview-drawn)
          (only-in "bar.rkt" multi-table)
          (only-in "notify.rkt" notify!)
          (only-in "multi-draw.rkt" multi-lit multi-text-overlay))
@@ -54,7 +54,7 @@
 (define (multi-blocks session)
   (let ([got (page-of (session-file session) (session-journal session))])
     (and (page? got)
-         (sort (filter bv-kind-match? (bv-drawn (page-blocks got))) < #:key block-start))))
+         (sort (filter blockview-kind-match? (blockview-drawn (page-blocks got))) < #:key block-start))))
 
 ;; multi-add-line adds a cursor one line below the lowest cursor (step 1) or above the highest one (step -1).
 (define (multi-add-line session step)
@@ -191,7 +191,7 @@
          [sel? (and a (not (= a h)))])
     (cond
       [(not sel?)
-       (let ([b (or (bv-inside blocks h)
+       (let ([b (or (blockview-inside blocks h)
                     (if forward?
                         (for/first ([x (in-list blocks)] #:when (>= (block-start x) h)) x)
                         (for/first ([x (in-list (reverse blocks))] #:when (<= (block-end x) h)) x)))])

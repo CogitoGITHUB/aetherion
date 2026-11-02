@@ -40,25 +40,25 @@
         (set-box! view-cache (list raw width drawn))
         drawn)))
 
-;; bv-aiu? answers whether the session edits a page of the notation.
-(define (bv-aiu? session)
+;; blockview-aiu? answers whether the session edits a page of the notation.
+(define (blockview-aiu? session)
   (string-suffix? (path->string (session-file session)) ".aiu"))
 
-;; bv-width answers the width of the terminal, the width the screen draws at.
-(define (bv-width)
+;; blockview-width answers the width of the terminal, the width the screen draws at.
+(define (blockview-width)
   (let-values ([(w h) (terminal-size)])
     w))
 
-;; bv-light answers a line in reverse video. The line may carry colours of its
+;; blockview-light answers a line in reverse video. The line may carry colours of its
 ;; own, so reverse video is put back after each reset.
-(define (bv-light line)
+(define (blockview-light line)
   (string-append "\u001b[7m"
                  (regexp-replace* #px"\u001b\\[0?m" line "\u001b[0m\u001b[7m")
                  "\u001b[0m"))
 
-;; bv-follow answers the first line to show so that the lines from to to are in
+;; blockview-follow answers the first line to show so that the lines from to to are in
 ;; the window. A block taller than the window shows from its first line.
-(define (bv-follow from to visible)
+(define (blockview-follow from to visible)
   (define shown (unbox top-line))
   (define next
     (cond
@@ -75,8 +75,8 @@
 ;; free-block holds #t after a scroll key, then the start line of the block the scroll belongs to, or #f when the view is centred.
 (define free-block (box #f))
 
-;; bv-place answers the first line to show: after a scroll key the view stays where it was moved but the lit block stays on screen, otherwise the block is centred.
-(define (bv-place from to visible)
+;; blockview-place answers the first line to show: after a scroll key the view stays where it was moved but the lit block stays on screen, otherwise the block is centred.
+(define (blockview-place from to visible)
   (define fbv (unbox free-block))
   (set-box! lit-range (cons from to))
   (cond
@@ -86,53 +86,53 @@
             [next (max 1 (unbox top-line))])
        (set-box! top-line next)
        next)]
-    [else (set-box! free-block #f) (bv-center from to visible)]))
+    [else (set-box! free-block #f) (blockview-center from to visible)]))
 
-;; bv-kind-line answers the line shown in focus mode: the box types from the page top down to the lit box in grey on the line above it, and an empty line elsewhere.
-(define (bv-kind-line got target range i)
+;; blockview-kind-line answers the line shown in focus mode: the box types from the page top down to the lit box in grey on the line above it, and an empty line elsewhere.
+(define (blockview-kind-line got target range i)
   (if (and (> (car range) 0) (= i (- (car range) 1)))
       (let ([chain (let loop ([b target] [acc (list)])
-                     (if b (loop (bv-parent (page-blocks got) b) (cons (block-name b) acc)) acc))])
+                     (if b (loop (blockview-parent (page-blocks got) b) (cons (block-name b) acc)) acc))])
         (string-append "\u001b[90m" (string-join chain " > ") "\u001b[0m"))
       ""))
-;; bv-command-view-up scrolls the view up by 3 lines.
-(define (bv-command-view-up session words)
+;; blockview-command-view-up scrolls the view up by 3 lines.
+(define (blockview-command-view-up session words)
   (set-box! top-line (max 1 (- (unbox top-line) 3)))
   (set-box! free-block #t)
   (cons #t "view up"))
 
-;; bv-command-view-down scrolls the view down by 3 lines.
-(define (bv-command-view-down session words)
+;; blockview-command-view-down scrolls the view down by 3 lines.
+(define (blockview-command-view-down session words)
   (set-box! top-line (+ (unbox top-line) 3))
   (set-box! free-block #t)
   (cons #t "view down"))
 
-;; bv-center answers the first line to show so that the lines from to to sit in the middle of the window; a block taller than the window shows from its first line.
-(define (bv-center from to visible)
+;; blockview-center answers the first line to show so that the lines from to to sit in the middle of the window; a block taller than the window shows from its first line.
+(define (blockview-center from to visible)
   (define next (if (>= (- to from) visible) from (max 1 (- (quotient (+ from to) 2) (quotient visible 2)))))
   (set-box! top-line next)
   next)
 
-;; bv-command-leave-write saves, then goes back to the visual layer.
-(define (bv-command-leave-write session words)
+;; blockview-command-leave-write saves, then goes back to the visual layer.
+(define (blockview-command-leave-write session words)
   ((hash-ref commands "save") session words)
   (set-layer! session "visual")
   (cons #t "saved"))
 
-;; bv-near answers the path of a module found from the folder of this one, or false.
-(define (bv-near . parts)
+;; blockview-near answers the path of a module found from the folder of this one, or false.
+(define (blockview-near . parts)
   (let ([src (variable-reference->module-source (#%variable-reference))])
     (and (path? src)
          (let-values ([(base file dir?) (split-path src)])
            (and (path? base) (simplify-path (apply build-path base parts)))))))
 
-;; bv-after-write runs once when the write layer is left: the git row and strip are marked old
+;; blockview-after-write runs once when the write layer is left: the git row and strip are marked old
 ;; through edit-hook, and one undo commit is noted in a thread. Nothing runs while typing.
-(define (bv-after-write file)
+(define (blockview-after-write file)
   (with-handlers ([void void])
-    (let ([hp (bv-near (quote up) "join" "hot-path.rkt")])
+    (let ([hp (blockview-near (quote up) "join" "hot-path.rkt")])
       (when hp ((unbox (dynamic-require hp (quote edit-hook))))))
-    (let ([sh (bv-near "shadow.rkt")])
+    (let ([sh (blockview-near "shadow.rkt")])
       (when (and sh file)
         (thread (lambda ()
                   (with-handlers ([void void])
@@ -140,27 +140,27 @@
 
 ;; The four keys are added to the command table when this module is loaded, so
 ;; the keys find them and the gate sees the same table the editor does.
-(hash-set! commands "view-up" bv-command-view-up)
-(hash-set! commands "view-down" bv-command-view-down)
-(hash-set! commands "pin-mode" bv-command-pin-mode)
-(hash-set! commands "pin-add" bv-command-pin-add)
-(hash-set! commands "pin-delete" bv-command-pin-delete)
-(hash-set! commands "pin-next" bv-command-pin-next)
-(hash-set! commands "pin-prev" bv-command-pin-prev)
-(hash-set! commands "pin-top" bv-command-pin-top)
-(hash-set! commands "pin-bottom" bv-command-pin-bottom)
-(hash-set! commands "pin-hide" bv-command-pin-hide)
-(hash-set! commands "pin-keep" bv-command-pin-keep)
-(hash-set! commands "pin-earlier" bv-command-pin-earlier)
-(hash-set! commands "pin-later" bv-command-pin-later)
-(hash-set! commands "leave-write" (lambda (session words) (let ([r (bv-command-leave-write session words)]) (set-box! unsaved #f) (bv-after-write (session-file session)) r)))
+(hash-set! commands "view-up" blockview-command-view-up)
+(hash-set! commands "view-down" blockview-command-view-down)
+(hash-set! commands "pin-mode" blockview-command-pin-mode)
+(hash-set! commands "pin-add" blockview-command-pin-add)
+(hash-set! commands "pin-delete" blockview-command-pin-delete)
+(hash-set! commands "pin-next" blockview-command-pin-next)
+(hash-set! commands "pin-prev" blockview-command-pin-prev)
+(hash-set! commands "pin-top" blockview-command-pin-top)
+(hash-set! commands "pin-bottom" blockview-command-pin-bottom)
+(hash-set! commands "pin-hide" blockview-command-pin-hide)
+(hash-set! commands "pin-keep" blockview-command-pin-keep)
+(hash-set! commands "pin-earlier" blockview-command-pin-earlier)
+(hash-set! commands "pin-later" blockview-command-pin-later)
+(hash-set! commands "leave-write" (lambda (session words) (let ([r (blockview-command-leave-write session words)]) (set-box! unsaved #f) (blockview-after-write (session-file session)) r)))
 
 ;; The block view, for the live screen above it.
 (provide
          drawn-view)
 
-;; bv-todo-state answers done or open for the todo on a block, or false when the block holds no todo. The state is the first word after todo: and no word means open.
-(define (bv-todo-state b)
+;; blockview-todo-state answers done or open for the todo on a block, or false when the block holds no todo. The state is the first word after todo: and no word means open.
+(define (blockview-todo-state b)
   (define found
     (filter (lambda (d) (member (decl-keyword d) (list "todo" "todo:")))
             (block-decls b)))
@@ -170,17 +170,17 @@
      (define words (string-split (format "~a" (decl-value (car found)))))
      (if (and (pair? words) (string=? (car words) "done")) "done" "open")]))
 
-;; bv-kind-match? asks whether a block is of the kind the kind layer picked.
-(define (bv-kind-match? b)
+;; blockview-kind-match? asks whether a block is of the kind the kind layer picked.
+(define (blockview-kind-match? b)
   (define want (unbox kind-filter))
   (cond
     [(string=? want "any") #t]
-    [(string=? want "todo") (and (bv-todo-state b) #t)]
-    [(string=? want "todo open") (equal? (bv-todo-state b) "open")]
-    [(string=? want "todo done") (equal? (bv-todo-state b) "done")]
+    [(string=? want "todo") (and (blockview-todo-state b) #t)]
+    [(string=? want "todo open") (equal? (blockview-todo-state b) "open")]
+    [(string=? want "todo done") (equal? (blockview-todo-state b) "done")]
     [else (string=? (block-name b) want)]))
 
-(provide bv-ranges bv-aiu? bv-parent)
+(provide blockview-ranges blockview-aiu? blockview-parent)
 
 ;; The save command is wrapped: it saves, clears unsaved, then runs the git refresh and one undo commit.
 ;; Nothing else saves or commits; typing only marks the file unsaved.
@@ -189,22 +189,22 @@
              (lambda (session words)
                (let ([r (orig session words)])
                  (set-box! unsaved #f)
-                 (bv-after-write (session-file session))
+                 (blockview-after-write (session-file session))
                  r))))
 
-;; bv-multi-cache keeps the lit ranges of the last drawing, keyed by its ranges table.
-(define bv-multi-cache (box #f))
+;; blockview-multi-cache keeps the lit ranges of the last drawing, keyed by its ranges table.
+(define blockview-multi-cache (box #f))
 
-;; bv-multi-lit answers the line ranges the extra cursors and the selections light, besides the block at the point.
-(define (bv-multi-lit session got ranges)
+;; blockview-multi-lit answers the line ranges the extra cursors and the selections light, besides the block at the point.
+(define (blockview-multi-lit session got ranges)
   (cond
     [(not (multi-live? session)) (list)]
     [else
-     (let ([c (unbox bv-multi-cache)])
+     (let ([c (unbox blockview-multi-cache)])
        (if (and c (eq? (car c) ranges))
            (cdr c)
            (let ([r ((unbox multi-lit-hook) got ranges (the-point session))])
-             (set-box! bv-multi-cache (cons ranges r))
+             (set-box! blockview-multi-cache (cons ranges r))
              r)))]))
 
 ;; The commands that edit or move the point run for every cursor while there are extra cursors: multi.rkt
@@ -231,7 +231,7 @@
                    (orig session words)))))
 
 ;; The pieces multi.rkt needs from this module.
-(provide bv-kind-match? bv-inside bv-drawn)
+(provide blockview-kind-match? blockview-inside blockview-drawn)
 
 ;; Leaving the write layer drops the selections: the extra cursors stay, so a second round of writing can follow.
 (hash-set! commands "leave-write"
@@ -241,4 +241,4 @@
                  (multi-drop-selections!)
                  r))))
 
-(provide bv-follow bv-kind-line bv-multi-lit bv-place bv-plain bv-prefix bv-target bv-kids bv-width edit-mode edit-start edit-lo free-block lit-range top-line (struct-out bv-box))
+(provide blockview-follow blockview-kind-line blockview-multi-lit blockview-place blockview-plain blockview-prefix blockview-target blockview-kids blockview-width edit-mode edit-start edit-lo free-block lit-range top-line (struct-out blockview-box))

@@ -5,30 +5,30 @@
 
 (provide block-overlay)
 
-;; bv-view-overlay answers the drawing with the block at the point lit, the
+;; blockview-view-overlay answers the drawing with the block at the point lit, the
 ;; point and the first line to show, or nothing when no block can be lit.
-(define (bv-view-overlay-base session raw width height got)
+(define (blockview-view-overlay-base session raw width height got)
   (define lines (string-split (drawn-view session raw width) "\n" #:trim? #f))
-  (define ranges (bv-ranges got lines))
-  (define target (bv-target (page-blocks got) (the-point session) ranges))
+  (define ranges (blockview-ranges got lines))
+  (define target (blockview-target (page-blocks got) (the-point session) ranges))
   (define range (and target (hash-ref ranges (block-start target))))
   (and range
        (list (string-join
               (for/list ([l (in-list lines)] [i (in-naturals)])
-                (let ([lit? (or (<= (car range) i (cdr range)) (ormap (lambda (r) (<= (car r) i (cdr r))) (bv-multi-lit session got ranges)))]) (if (and (getenv "AIU_FOCUS_COLOURS") (not lit?)) (bv-kind-line got target range i) (string-append (if lit? "\u001b[97m" "\u001b[90m") (bv-plain l) "\u001b[0m"))))
+                (let ([lit? (or (<= (car range) i (cdr range)) (ormap (lambda (r) (<= (car r) i (cdr r))) (blockview-multi-lit session got ranges)))]) (if (and (getenv "AIU_FOCUS_COLOURS") (not lit?)) (blockview-kind-line got target range i) (string-append (if lit? "\u001b[97m" "\u001b[90m") (blockview-plain l) "\u001b[0m"))))
               "\n")
              (the-point session)
-             (bv-place (add1 (car range)) (add1 (cdr range)) (max 1 (- height 1))))))
+             (blockview-place (add1 (car range)) (add1 (cdr range)) (max 1 (- height 1))))))
 
-;; bv-view-overlay answers the floating drawing with every shown pin copied onto its screen edge when its block has scrolled out of the window.
-(define (bv-view-overlay session raw width height got)
+;; blockview-view-overlay answers the floating drawing with every shown pin copied onto its screen edge when its block has scrolled out of the window.
+(define (blockview-view-overlay session raw width height got)
   (define lines (string-split (drawn-view session raw width) "\n" #:trim? #f))
-  (define ranges (bv-ranges got lines))
+  (define ranges (blockview-ranges got lines))
   (define bl (page-blocks got))
-  (define target (bv-target bl (the-point session) ranges))
+  (define target (blockview-target bl (the-point session) ranges))
   (set-box! cur-start (and target (block-start target)))
   (when (pair? bl) (set-box! first-start (block-start (car bl))))
-  (define r (bv-view-overlay-float session raw width height got))
+  (define r (blockview-view-overlay-float session raw width height got))
   (define focus? (and (getenv "AIU_FOCUS_COLOURS") #t))
   (cond
     [(and r (pair? (pins-now)))
@@ -54,15 +54,15 @@
             (define colour (if (= i (unbox pin-sel)) "\u001b[97m" "\u001b[90m"))
             (for ([j (in-range k)])
               (define idx (+ (car rng) j))
-              (vector-set! v (+ start j) (if (< idx (vector-length lv)) (string-append colour (bv-plain (vector-ref lv idx)) "\u001b[0m") "")))
+              (vector-set! v (+ start j) (if (< idx (vector-length lv)) (string-append colour (blockview-plain (vector-ref lv idx)) "\u001b[0m") "")))
             (loop (cdr all) (add1 i) (if top? (+ to k) to) (if top? bo (+ bo k)))]
            [else (loop (cdr all) (add1 i) to bo)])))
      (list (string-join (vector->list v) "\n") (cadr r) top)]
     [else r]))
 
-;; bv-view-overlay answers the base drawing, and after a scroll key it copies the lit block onto the bottom edge of the window when the block is below it, or the top edge when it is above it.
-(define (bv-view-overlay-float session raw width height got)
-  (define r (bv-view-overlay-base session raw width height got))
+;; blockview-view-overlay answers the base drawing, and after a scroll key it copies the lit block onto the bottom edge of the window when the block is below it, or the top edge when it is above it.
+(define (blockview-view-overlay-float session raw width height got)
+  (define r (blockview-view-overlay-base session raw width height got))
   (define rng (unbox lit-range))
   (cond
     [(and r (unbox free-block) rng)
@@ -87,19 +87,19 @@
      (list (string-join (vector->list v) "\n") (cadr r) top)]
     [else r]))
 
-;; bv-edit-overlay answers the drawing with the block being edited shown as raw
+;; blockview-edit-overlay answers the drawing with the block being edited shown as raw
 ;; text, with its start and end lines, and every other block drawn. The raw lines
 ;; sit behind the left edge of the box that holds the block, and a line wider than
 ;; the screen is cut at a space with the edge drawn on every part, so the boxes
 ;; around stay in place. It answers the point and the first line to show, or
 ;; nothing when the block can no longer be found.
-(define (bv-edit-overlay session raw width height got)
+(define (blockview-edit-overlay session raw width height got)
   (define start (unbox edit-start))
   (define b
     (for/first ([x (in-list (page-blocks got))] #:when (= (block-start x) start))
       x))
   (define lines (string-split (drawn-view session raw width) "\n" #:trim? #f))
-  (define range (and b (hash-ref (bv-ranges got lines) start #f)))
+  (define range (and b (hash-ref (blockview-ranges got lines) start #f)))
   (cond
     [(not range)
      (set-box! edit-start #f)
@@ -107,10 +107,10 @@
     [else
      (define bs (string->bytes/utf-8 raw))
      (define end (min (block-end b) (bytes-length bs)))
-     (define edge (bv-prefix (block-depth b)))
+     (define edge (blockview-prefix (block-depth b)))
      (define before (take lines (car range)))
      (define after (drop lines (min (length lines) (add1 (cdr range)))))
-     (define wb (max 12 (- (string-length (bv-plain (list-ref lines (car range)))) (* 4 (block-depth b)))))
+     (define wb (max 12 (- (string-length (blockview-plain (list-ref lines (car range)))) (* 4 (block-depth b)))))
      (define tail (apply string-append (for/list ([i (in-range (block-depth b))]) " │")))
      (define cw wb)
      (define rel (max 0 (min (- (the-point session) start) (- end start))))
@@ -124,10 +124,10 @@
          (if (or (<= i start) (= (bytes-ref bs (sub1 i)) 10)) (max i start) (loop (sub1 i)))))
      (define col
        (string-length (bytes->string/utf-8 (subbytes bs line-start (+ start rel)) #\?)))
-     (define parts (for/list ([l (in-list text-lines)]) (bv-chunks l cw)))
+     (define parts (for/list ([l (in-list text-lines)]) (blockview-chunks l cw)))
      (define shown
        (for*/list ([(l ps) (in-parallel text-lines parts)] [p (in-list ps)])
-         (string-append edge (bv-pad (substring l (car p) (cdr p)) cw) tail)))
+         (string-append edge (blockview-pad (substring l (car p) (cdr p)) cw) tail)))
      (define mine (list-ref parts k))
      (define ci
        (or (for/first ([p (in-list mine)] [n (in-naturals)]
@@ -152,10 +152,10 @@
      (define row (+ (length before) 1 idx))
      (list (string-join (append before shown after) "\n")
            (+ head-bytes pre-bytes at-bytes)
-           (bv-follow row row (max 1 (- height 1))))]))
+           (blockview-follow row row (max 1 (- height 1))))]))
 
-;; bv-focus-pad puts the edited block in the middle of the window: blank lines are added above it when it sits near the page top, and the cursor offset moves by the bytes added. A block taller than the window is left alone.
-(define (bv-focus-pad range height res)
+;; blockview-focus-pad puts the edited block in the middle of the window: blank lines are added above it when it sits near the page top, and the cursor offset moves by the bytes added. A block taller than the window is left alone.
+(define (blockview-focus-pad range height res)
   (define visible (max 1 (- height 1)))
   (define from (+ (car range) 1))
   (define h (+ (- (cdr range) (car range)) 1))
@@ -167,8 +167,8 @@
      (list (string-append (make-string pad #\newline) (car res))
            (+ (cadr res) pad)
            (max 1 (- from want)))]))
-;; bv-focus-top answers the first line to show for an edited block in focus mode: the block sits in the middle of the window like in the visual view, and a block taller than the window keeps the old first line so the cursor stays on screen.
-(define (bv-focus-top r range height)
+;; blockview-focus-top answers the first line to show for an edited block in focus mode: the block sits in the middle of the window like in the visual view, and a block taller than the window keeps the old first line so the cursor stays on screen.
+(define (blockview-focus-top r range height)
   (define visible (max 1 (- height 1)))
   (define from (+ (car range) 1))
   (define to (+ (cdr range) 1))
@@ -180,12 +180,12 @@
 (define (block-overlay session raw width height)
   (define r0 (block-overlay-base session raw width height))
   (define pg (and (not r0) (getenv "AIU_FOCUS_COLOURS") (string=? (the-layer session) "write") (page-of (session-file session) (session-journal session))))
-  (define r (or r0 (and pg (page? pg) (bv-view-overlay session raw width height pg))))
+  (define r (or r0 (and pg (page? pg) (blockview-view-overlay session raw width height pg))))
   (define got (and r (getenv "AIU_FOCUS_COLOURS") (string=? (the-layer session) "write") (unbox edit-start) (page-of (session-file session) (session-journal session))))
   (cond
     [(and got (page? got))
      (define lines (string-split (drawn-view session raw width) "\n" #:trim? #f))
-     (define range (hash-ref (bv-ranges got lines) (unbox edit-start) #f))
+     (define range (hash-ref (blockview-ranges got lines) (unbox edit-start) #f))
      (cond
        [range
         (define out (string-split (car r) "\n" #:trim? #f))
@@ -193,9 +193,9 @@
         (define na (max 0 (- (length lines) (cdr range) 1)))
         (define total (length out))
         (define lost (for/sum ([l (in-list out)] [i (in-range nb)]) (bytes-length (string->bytes/utf-8 l))))
-        (bv-focus-pad range height (list (string-join (for/list ([l (in-list out)] [i (in-naturals)]) (if (or (< i nb) (>= i (- total na))) "" l)) "\n")
+        (blockview-focus-pad range height (list (string-join (for/list ([l (in-list out)] [i (in-naturals)]) (if (or (< i nb) (>= i (- total na))) "" l)) "\n")
               (- (cadr r) lost)
-              (bv-focus-top r range height)))]
+              (blockview-focus-top r range height)))]
        [else r])]
     [else r]))
 
@@ -210,8 +210,8 @@
      #f]
     [(and writing? (unbox edit-start))
        (if (string=? (unbox edit-mode) "text")
-           (bv-text-overlay session raw width height got)
-           (bv-edit-overlay session raw width height got))]
+           (blockview-text-overlay session raw width height got)
+           (blockview-edit-overlay session raw width height got))]
     [writing? #f]
-    [else (bv-view-overlay session raw width height got)]))
+    [else (blockview-view-overlay session raw width height got)]))
 

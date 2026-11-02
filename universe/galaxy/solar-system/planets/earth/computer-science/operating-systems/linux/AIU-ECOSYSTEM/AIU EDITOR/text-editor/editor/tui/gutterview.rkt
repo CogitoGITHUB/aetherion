@@ -41,7 +41,7 @@
   (define marks (make-hash))
   (when (and (pair? hunks) (page? got))
     (define blocks (page-blocks got))
-    (define ranges (bv-ranges got lines))
+    (define ranges (blockview-ranges got lines))
     (define drawn
       (sort (filter (lambda (b) (and (leaf? blocks b) (hash-ref ranges (block-start b) #f))) blocks)
             < #:key block-start-line))

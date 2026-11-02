@@ -11,7 +11,7 @@
          "../notation/host.rkt"
          (only-in racket/string string-join)
          (only-in net/base64 base64-encode)
-         (only-in "blockview.rkt" bv-inside bv-drawn)
+         (only-in "blockview.rkt" blockview-inside blockview-drawn)
          (only-in "bar.rkt" clip-table)
          (only-in "notify.rkt" notify!))
 
@@ -59,7 +59,7 @@
 ;; cp-fallback answers the text copied when nothing is selected: the block under the point of a page, or the line.
 (define (cp-fallback session bs)
   (let* ([got (page-of (session-file session) (session-journal session))]
-         [b (and (page? got) (bv-inside (bv-drawn (page-blocks got)) (the-point session)))])
+         [b (and (page? got) (blockview-inside (blockview-drawn (page-blocks got)) (the-point session)))])
     (if b
         (cp-slice bs (block-start b) (block-end b))
         (let ([lb (cp-line-bounds bs (the-point session))])

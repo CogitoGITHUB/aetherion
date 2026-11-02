@@ -1,7 +1,7 @@
 #lang racket/base
 ;; One job: draw the cursors and the selections of multi.rkt - the lit block ranges in the drawn page and the reverse video overlay on the raw text.
 
-(require "text-motion.rkt" "../commands/commands.rkt" "../notation/document.rkt" "../notation/host.rkt" (only-in "blockview.rkt" bv-inside))
+(require "text-motion.rkt" "../commands/commands.rkt" "../notation/document.rkt" "../notation/host.rkt" (only-in "blockview.rkt" blockview-inside))
 
 (provide multi-lit multi-text-overlay)
 
@@ -20,7 +20,7 @@
                                #:when (and (>= (block-start b) lo) (<= (block-end b) hi)))
                       (hash-ref ranges (block-start b))))]
                  [else
-                  (let ([b (bv-inside blocks h)])
+                  (let ([b (blockview-inside blocks h)])
                     (if b (list (hash-ref ranges (block-start b))) (list)))]))))))
 
 ;; multi-visible-lines answers the (start . end) of each visible line of the raw text.

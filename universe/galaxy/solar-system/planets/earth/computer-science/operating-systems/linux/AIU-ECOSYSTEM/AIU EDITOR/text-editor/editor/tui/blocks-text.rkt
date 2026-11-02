@@ -3,19 +3,19 @@
 
 (require racket/list racket/string "../commands/commands.rkt" "../machine/terminal.rkt" "../notation/document.rkt" "../notation/host.rkt" "pins.rkt" "blocks-kind.rkt" "blockview.rkt" "blocks-edit.rkt")
 
-(provide bv-pad bv-chunks bv-text-overlay)
+(provide blockview-pad blockview-chunks blockview-text-overlay)
 
-;; bv-pad answers a string padded with spaces on the right to n characters.
-(define (bv-pad s n)
+;; blockview-pad answers a string padded with spaces on the right to n characters.
+(define (blockview-pad s n)
   (if (< (string-length s) n)
       (string-append s (make-string (- n (string-length s)) #\space))
       s))
 
-;; bv-chunks answers how one line of text is cut into parts of at most cw
+;; blockview-chunks answers how one line of text is cut into parts of at most cw
 ;; characters, as pairs of the first and the end character of each part. A part
 ;; ends after a space when there is one, so a word is split only when it is
 ;; longer than a part.
-(define (bv-chunks line cw)
+(define (blockview-chunks line cw)
   (define len (string-length line))
   (let loop ([i 0] [out null])
     (cond
@@ -28,20 +28,20 @@
              (+ i cw)))
        (loop cut (cons (cons i cut) out))])))
 
-;; bv-text-overlay answers the drawing with the text lines of the block being
+;; blockview-text-overlay answers the drawing with the text lines of the block being
 ;; edited shown raw inside the drawn box of the block: the top edge, the bottom
 ;; edge and every other block stay drawn, and the start and end lines stay hidden.
 ;; A text line wider than the box is cut at a space into parts, and the left edge
 ;; of the box is drawn on every part, so the box stays clean. Nothing when the
 ;; block can no longer be found.
-(define (bv-text-overlay session raw width height got)
+(define (blockview-text-overlay session raw width height got)
   (define start (unbox edit-start))
   (define b
     (for/first ([x (in-list (page-blocks got))] #:when (= (block-start x) start))
       x))
   (define lines (string-split (drawn-view session raw width) "\n" #:trim? #f))
-  (define range (and b (hash-ref (bv-ranges got lines) start #f)))
-  (define span (and b range (bv-content raw b)))
+  (define range (and b (hash-ref (blockview-ranges got lines) start #f)))
+  (define span (and b range (blockview-content raw b)))
   (cond
     [(not span)
      (set-box! edit-start #f)
@@ -50,10 +50,10 @@
      (define bs (string->bytes/utf-8 raw))
      (define lo (car span))
      (define hi (cdr span))
-     (define edge (string-append (bv-prefix (block-depth b)) "│ "))
-     (define plain (list->vector (map bv-plain lines)))
+     (define edge (string-append (blockview-prefix (block-depth b)) "│ "))
+     (define plain (list->vector (map blockview-plain lines)))
      (define bottom-rx
-       (regexp (string-append "^" (regexp-quote (bv-prefix (block-depth b))) "╰")))
+       (regexp (string-append "^" (regexp-quote (blockview-prefix (block-depth b))) "╰")))
      (define bottom
        (or (for/first ([i (in-range (add1 (car range)) (add1 (cdr range)))]
                        #:when (regexp-match? bottom-rx (vector-ref plain i)))
@@ -61,7 +61,7 @@
            (cdr range)))
      (define before (take lines (add1 (car range))))
      (define after (drop lines bottom))
-     (define wb (max 12 (- (string-length (bv-plain (list-ref lines (car range)))) (* 4 (block-depth b)))))
+     (define wb (max 12 (- (string-length (blockview-plain (list-ref lines (car range)))) (* 4 (block-depth b)))))
      (define tail (apply string-append (for/list ([i (in-range (block-depth b))]) " │")))
      (define cw (max 8 (- wb 4)))
      (define rel (max 0 (min (- (the-point session) lo) (- hi lo))))
@@ -75,10 +75,10 @@
          (if (or (<= i lo) (= (bytes-ref bs (sub1 i)) 10)) (max i lo) (loop (sub1 i)))))
      (define col
        (string-length (bytes->string/utf-8 (subbytes bs line-start (+ lo rel)) #\?)))
-     (define parts (for/list ([l (in-list text-lines)]) (bv-chunks l cw)))
+     (define parts (for/list ([l (in-list text-lines)]) (blockview-chunks l cw)))
      (define shown
        (for*/list ([(l ps) (in-parallel text-lines parts)] [p (in-list ps)])
-         (string-append edge (bv-pad (substring l (car p) (cdr p)) cw) " │" tail)))
+         (string-append edge (blockview-pad (substring l (car p) (cdr p)) cw) " │" tail)))
      (define mine (list-ref parts k))
      (define ci
        (or (for/first ([p (in-list mine)] [n (in-naturals)]
@@ -103,23 +103,23 @@
      (define row (+ (length before) 1 idx))
      (list (string-join (append before shown after) "\n")
            (+ head-bytes pre-bytes at-bytes)
-           (bv-follow row row (max 1 (- height 1))))]))
+           (blockview-follow row row (max 1 (- height 1))))]))
 
-;; bv-command-text opens only the text of the lit block in the write layer. The
+;; blockview-command-text opens only the text of the lit block in the write layer. The
 ;; block stays drawn in its own box and its start and end lines stay hidden. A
 ;; block that holds other blocks, or has no text line, opens as raw text like w.
-(define (bv-command-text session words)
-  (define got (and (bv-aiu? session)
+(define (blockview-command-text session words)
+  (define got (and (blockview-aiu? session)
                    (page-of (session-file session) (session-journal session))))
   (define raw (session-text session))
   (define target
     (and (page? got)
-         (bv-target (page-blocks got) (the-point session)
-                    (bv-ranges got (string-split (drawn-view session raw (bv-width)) "\n" #:trim? #f)))))
+         (blockview-target (page-blocks got) (the-point session)
+                    (blockview-ranges got (string-split (drawn-view session raw (blockview-width)) "\n" #:trim? #f)))))
   (define span
     (and target
-         (null? (bv-kids (page-blocks got) target))
-         (bv-content raw target)))
+         (null? (blockview-kids (page-blocks got) target))
+         (blockview-content raw target)))
   (cond
     [span
      (set-layer! session "write")
@@ -129,7 +129,7 @@
      (move-to session (car span))
      (cons #t (format "editing the text of the ~a block: escape draws the page again"
                       (block-name target)))]
-    [else (bv-command-edit session words)]))
+    [else (blockview-command-edit session words)]))
 
 ;; Opening the text edit drops the extra cursors: the block edit is one place.
-(hash-set! commands "block-text" (lambda (session words) (multi-clear!) (bv-command-text session words)))
+(hash-set! commands "block-text" (lambda (session words) (multi-clear!) (blockview-command-text session words)))

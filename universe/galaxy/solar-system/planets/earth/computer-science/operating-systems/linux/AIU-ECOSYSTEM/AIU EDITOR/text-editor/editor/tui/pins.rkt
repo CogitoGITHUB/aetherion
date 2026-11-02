@@ -24,14 +24,14 @@
 (define (pin-update! f)
   (set-box! pins (for/list ([p (in-list (pins-now))] [j (in-naturals)]) (if (= j (unbox pin-sel)) (f p) p))))
 
-;; bv-command-pin-mode enters the pin layer.
-(define (bv-command-pin-mode session words)
+;; blockview-command-pin-mode enters the pin layer.
+(define (blockview-command-pin-mode session words)
   (pins-now)
   (set-layer! session "pin")
   (cons #t "layer: pin"))
 
-;; bv-command-pin-add pins the block at the point at the top and selects it.
-(define (bv-command-pin-add session words)
+;; blockview-command-pin-add pins the block at the point at the top and selects it.
+(define (blockview-command-pin-add session words)
   (define all (pins-now))
   (cond
     [(not (unbox cur-start)) (cons #t "pin: no block")]
@@ -40,8 +40,8 @@
           (set-box! pin-sel (length all))
           (cons #t "pin: added")]))
 
-;; bv-command-pin-delete deletes the selected pin, the first block too.
-(define (bv-command-pin-delete session words)
+;; blockview-command-pin-delete deletes the selected pin, the first block too.
+(define (blockview-command-pin-delete session words)
   (define all (pins-now))
   (cond
     [(null? all) (cons #t "pin: none")]
@@ -51,35 +51,35 @@
      (set-box! pin-sel (max 0 (min i (- (length all) 2))))
      (cons #t "pin: deleted")]))
 
-;; bv-command-pin-next selects the next pin.
-(define (bv-command-pin-next session words)
+;; blockview-command-pin-next selects the next pin.
+(define (blockview-command-pin-next session words)
   (define n (length (pins-now)))
   (when (> n 0) (set-box! pin-sel (modulo (add1 (unbox pin-sel)) n)))
   (cons #t "pin: next"))
 
-;; bv-command-pin-prev selects the previous pin.
-(define (bv-command-pin-prev session words)
+;; blockview-command-pin-prev selects the previous pin.
+(define (blockview-command-pin-prev session words)
   (define n (length (pins-now)))
   (when (> n 0) (set-box! pin-sel (modulo (+ (unbox pin-sel) n -1) n)))
   (cons #t "pin: previous"))
 
-;; bv-command-pin-top puts the selected pin on the top edge.
-(define (bv-command-pin-top session words)
+;; blockview-command-pin-top puts the selected pin on the top edge.
+(define (blockview-command-pin-top session words)
   (pin-update! (lambda (p) (list (car p) "top" (caddr p) (cadddr p))))
   (cons #t "pin: top"))
 
-;; bv-command-pin-bottom puts the selected pin on the bottom edge.
-(define (bv-command-pin-bottom session words)
+;; blockview-command-pin-bottom puts the selected pin on the bottom edge.
+(define (blockview-command-pin-bottom session words)
   (pin-update! (lambda (p) (list (car p) "bottom" (caddr p) (cadddr p))))
   (cons #t "pin: bottom"))
 
-;; bv-command-pin-hide hides or shows the selected pin.
-(define (bv-command-pin-hide session words)
+;; blockview-command-pin-hide hides or shows the selected pin.
+(define (blockview-command-pin-hide session words)
   (pin-update! (lambda (p) (list (car p) (cadr p) (not (caddr p)) (cadddr p))))
   (cons #t "pin: hide toggled"))
 
-;; bv-command-pin-keep keeps the selected pin visible in focus mode, or hides it there again.
-(define (bv-command-pin-keep session words)
+;; blockview-command-pin-keep keeps the selected pin visible in focus mode, or hides it there again.
+(define (blockview-command-pin-keep session words)
   (pin-update! (lambda (p) (list (car p) (cadr p) (caddr p) (not (cadddr p)))))
   (cons #t "pin: keep in focus toggled"))
 
@@ -91,14 +91,14 @@
     (set-box! pins (vector->list v))
     (set-box! pin-sel b)))
 
-;; bv-command-pin-earlier moves the selected pin one step earlier in the stack of its edge.
-(define (bv-command-pin-earlier session words)
+;; blockview-command-pin-earlier moves the selected pin one step earlier in the stack of its edge.
+(define (blockview-command-pin-earlier session words)
   (pin-swap! (unbox pin-sel) (- (unbox pin-sel) 1))
   (cons #t "pin: earlier"))
 
-;; bv-command-pin-later moves the selected pin one step later in the stack of its edge.
-(define (bv-command-pin-later session words)
+;; blockview-command-pin-later moves the selected pin one step later in the stack of its edge.
+(define (blockview-command-pin-later session words)
   (pin-swap! (unbox pin-sel) (+ (unbox pin-sel) 1))
   (cons #t "pin: later"))
 
-(provide pins pin-sel cur-start first-start pins-now pin-update! bv-command-pin-mode bv-command-pin-add bv-command-pin-delete bv-command-pin-next bv-command-pin-prev bv-command-pin-top bv-command-pin-bottom bv-command-pin-hide bv-command-pin-keep pin-swap! bv-command-pin-earlier bv-command-pin-later)
+(provide pins pin-sel cur-start first-start pins-now pin-update! blockview-command-pin-mode blockview-command-pin-add blockview-command-pin-delete blockview-command-pin-next blockview-command-pin-prev blockview-command-pin-top blockview-command-pin-bottom blockview-command-pin-hide blockview-command-pin-keep pin-swap! blockview-command-pin-earlier blockview-command-pin-later)
