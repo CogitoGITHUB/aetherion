@@ -35,6 +35,7 @@
          "../notation/host.rkt"
          "../notation/where.rkt"
          "../tui/blockview.rkt"
+         "../tui/blocks-move.rkt"
          "../tui/menu.rkt"
          "../tui/bar.rkt"
          "../tui/tabs.rkt"
