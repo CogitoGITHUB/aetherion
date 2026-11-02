@@ -188,13 +188,13 @@
 
 ;; expecting says that the scan of this opening has not finished yet, so the
 ;; page says it is scanning from its first paint.
-(define expecting (box #t))
+(define expecting (box (not (getenv "AIU_HOME_NOSCAN"))))
 
 ;; home-rescan! scans in a thread and answers at once, so the keys stay live.
 ;; When the scan lands it is kept in memory and in the home folder, and done is
 ;; called so the screen paints it. A scan already running is not started twice.
 (define (home-rescan! done)
-  (unless (unbox running)
+  (unless (or (unbox running) (getenv "AIU_HOME_NOSCAN"))
     (set-box! running #t)
     (thread
      (lambda ()

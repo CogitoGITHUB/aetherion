@@ -279,3 +279,5 @@ Re-recorded (2026-11-02): centre-box, float-view, move and scroll-view, stale si
 Todo clean (2026-11-02): removed the aiutd docs section from todo.aiu, done and committed. Next: home keys 1 to 9 and space q.
 
 Recorder base (2026-11-02): when the keys start with space h the base run opens the home screen too, so home tests diff against the dashboard. Not seen running.
+
+Record commits and home scan off (2026-11-02): green aiutd record commits its own test and feature files; the test driver sets AIU_HOME_NOSCAN so the home scan cannot add a frame. Not seen running.

@@ -484,7 +484,7 @@
 (define (drive-editor dir copy chunks out out1 code-file)
   (define sh (find-executable-path "sh"))
   (define-values (sp so si se)
-    (subprocess #f #f (quote stdout) sh "-c" (string-append "AIU_TRACE=1 exec script -qec \"aiutd " copy "\" /dev/null")))
+    (subprocess #f #f (quote stdout) sh "-c" (string-append "AIU_TRACE=1 AIU_HOME_NOSCAN=1 exec script -qec \"aiutd " copy "\" /dev/null")))
   (define acc (open-output-bytes))
   (define marker (byte-regexp (regexp-quote (bytes-append (bytes 27) #"[?2026l"))))
   (define buf (make-bytes 4096))
@@ -769,6 +769,7 @@
     [else (when (file-exists? tpath) (delete-file tpath))])
   (emit (list "AIUTD RECORD" (format "~a  ~a" (if ok "GREEN" "RED") name))
         (if ok expects (append (if (pair? expects) (list) (append (list "nothing changed on screen or in the file, nothing written") (no-change-why keys ksl bsl))) (unbox rec-why))))
+  (when ok (let ([g (find-executable-path "git")] [t (string-append "gate/tests/" name ".test")] [f (string-append "editor/src/features/" name ".feature")]) (let-values ([(c1 o1) (capture editor-root g (list "add" "--" t f))]) (void)) (let-values ([(c2 o2) (capture editor-root g (list "commit" "-q" "-m" (string-append "test: " name " recorded") "--" t f))]) (void))))
   (if ok 0 1))
 
 ;; howto-section answers the tutorial section built from docs/parts/how-to-make-tests.md, or nothing when the file is missing.
