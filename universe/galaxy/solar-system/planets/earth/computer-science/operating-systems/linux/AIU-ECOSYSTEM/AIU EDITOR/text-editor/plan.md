@@ -310,3 +310,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - 2026-11-02 step 8 retry 3: here-dir to step-line moved from entry/update.rkt to entry/update-table.rkt
 - 2026-11-02 step 9 update split: trace-file to key-modes moved from entry/update.rkt to entry/update-trace.rkt
 - 2026-11-02 step 9 retry: key-bytes to key-modes (screen text, judge, trace) moved from entry/update.rkt to entry/update-screen.rkt
+- 2026-11-02 step 10 update split: last-evidence to evidence-lines moved from entry/update.rkt to entry/update-evidence.rkt
