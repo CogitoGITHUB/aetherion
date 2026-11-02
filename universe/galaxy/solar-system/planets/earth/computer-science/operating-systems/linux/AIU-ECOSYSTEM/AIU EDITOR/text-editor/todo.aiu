@@ -288,3 +288,14 @@ todo: open notation requires a title for every box type
 So that focus level 2 can show a title for each box type, the notation system has to require a title for every box type. This changes AIU NOTATION, a sibling folder, so it is a decision to take there and not a patch from the editor. Owner request 2026-11-01.
 paragraph end
 section end
+
+section start
+title start
+Tab management and the key table
+title end
+
+paragraph start
+todo: tab management needs more features. There is no workspace management, no project management and no keys for them. These need real work: open, switch, close and list workspaces and projects, each with keys. Owner request 2026-11-02.
+todo: the mode line shows the available keys but only the keys alone. It needs a full table of every key with what it does, per layer. Owner request 2026-11-02.
+paragraph end
+section end
