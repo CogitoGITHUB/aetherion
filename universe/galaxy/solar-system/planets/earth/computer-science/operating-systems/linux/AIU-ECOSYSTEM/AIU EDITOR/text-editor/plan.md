@@ -329,3 +329,5 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - blockview: cut tui/blocks-edit.rkt (block-guard, bv-clamp!, bv-step, up/down, bv-command-edit, bv-content, bv-hi, bv-first-content) with the block-up, block-down, block-edit keys and the block-edit wrapper
 - dispatch: cut dispatch-agent (send/audit/agent verbs); update.rkt leftover read
 - dispatch: cut dispatch-keys, dispatch-tasks, dispatch-bake
+- commands: read commands.rkt, loaders and crossing names for the session file and the multi file
+- commands: cut commands-edit, commands-layer, commands-page (handlers; they never require commands.rkt)
