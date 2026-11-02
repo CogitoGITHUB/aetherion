@@ -36,7 +36,7 @@
          "../notation/document.rkt"
          "../notation/host.rkt"
          "live.rkt"
-         "plugin-verbs.rkt" "dispatch-git.rkt" "dispatch-agent.rkt"
+         "plugin-verbs.rkt" "dispatch-git.rkt" "dispatch-agent.rkt" "dispatch-checkpoint.rkt"
          )
 
 ;; input-is-a-terminal? answers whether the standard input is a
@@ -218,41 +218,6 @@
            (if (hash-ref rust 'good #f) "yes" "NO")
            (hash-ref rust 'ms 0)
            (hash-ref rust 'log "-"))))
-
-;; checkpoint-verb makes a checkpoint of a tree: the state the tree is put
-;; back to when an agent does something the human did not want. The first
-;; word is the tree, the rest is the why.
-(define (checkpoint-verb args)
-  (define root (if (null? args) "." (car args)))
-  (define why (string-join (if (null? args) '() (cdr args)) " "))
-  (define made (checkpoint (path->complete-path root) why))
-  (if made
-      (print-line (format "checkpoint: ~a" made))
-      (print-line "a checkpoint needs a why: say what the agent was about to do")))
-
-;; rollback-verb puts a tree back to a checkpoint.
-(define (rollback-verb args)
-  (define root (if (null? args) "." (car args)))
-  (define commit (if (null? args) "" (cadr args)))
-  (define answer (rollback (path->complete-path root) commit))
-  (if (car answer)
-      (print-line (format "the tree is back at ~a" (car answer)))
-      (print-line (format "the rollback was refused: ~a" (cdr answer)))))
-
-;; stop-verb throws or clears the stop switch: while it is thrown, every
-;; agent session for this project stops.
-(define (stop-verb args)
-  (define what (if (null? args) "stop" (car args)))
-  (cond
-    [(string=? what "stop")
-     (throw-switch)
-     (print-line "the stop switch is thrown: every agent session for this project stops")]
-    [(string=? what "start")
-     (clear-switch)
-     (print-line "the stop switch is cleared: the agent sessions may run again")]
-    [else
-     (print-line (format "the stop switch is ~a" (if (stopped?) "thrown" "clear")))]))
-
 
 ;; edit-file opens the file the user named and runs the editing session.
 (define (edit-file args)

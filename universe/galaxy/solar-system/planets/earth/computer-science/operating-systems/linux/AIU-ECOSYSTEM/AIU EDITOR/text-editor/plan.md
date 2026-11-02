@@ -321,3 +321,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - blockview cut: blocks-text.rkt (pad, chunks, text overlay, block-text key with its multi-clear wrapper) and blocks-view.rkt (view overlays, block-overlay) out of blockview.rkt
 - dispatch cut: dispatch-git.rkt (git, git-diff, git-history verbs) out of dispatch.rkt
 - dispatch: cut dispatch-agent.rkt (send, audit, agent, permit verbs), crossing names first
+- dispatch: cut dispatch-checkpoint.rkt (checkpoint, rollback, stop verbs)
