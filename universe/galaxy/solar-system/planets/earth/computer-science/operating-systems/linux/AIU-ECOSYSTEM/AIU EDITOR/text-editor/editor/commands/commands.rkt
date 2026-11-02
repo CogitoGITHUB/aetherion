@@ -18,21 +18,9 @@
          "../journal/replay.rkt"
          "../notation/document.rkt"
          "../notation/host.rkt"
-         "../notation/where.rkt")
-
-;; session is the state of one editing session: the file being edited, the
-;; journal that holds the work not saved yet, and the point — where the
-;; cursor stands — and the selection, which is the region around the
-;; point when a selection is on. The point and the selection are boxes,
-;; because a command changes them.
-(struct session (file journal point selection layer level view-top) #:transparent)
-
-;; name<? orders two names, whether they are symbols or strings: the table
-;; of commands is keyed by strings and the answers come back keyed by
-;; symbols, and both must read in the same order.
-(define (name<? a b)
-  (string<? (if (symbol? a) (symbol->string a) a)
-            (if (symbol? b) (symbol->string b) b)))
+         "../notation/where.rkt"
+         "session.rkt"
+         "multi-boxes.rkt")
 
 ;; command-insert-words puts the rest of the line into the text at the
 ;; end of the buffer. The text is not written to the file yet: the
@@ -320,105 +308,6 @@
       (cons #t "")
       (run-command-words session (car words) (cdr words))))
 
-;; ask sends one request to the hot path for this session and answers the
-;; response. The file and the journal are added to every request: the hot
-;; path holds no session of its own.
-(define (ask session op args)
-  (ask-hot op (hash-set (hash-set args 'file (path->string (session-file session)))
-                         'journal (path->string (session-journal session)))))
-
-;; session-text answers the text of the buffer as it stands, for the painter:
-;; the saved file with the journal's unsaved edits on top.
-(define (session-text session)
-  (define answer (ask session "show" (hasheq)))
-  (if (response-ok answer) (hash-ref (response-data answer) 'text "") ""))
-
-;; answer-line turns one answer from the hot path into one line of text,
-;; with the names in a fixed order, so two answers read the same way.
-(define (answer-line answer)
-  (define data (response-data answer))
-  (if (response-ok answer)
-      (string-join
-       (for/list ([key (sort (hash-keys data) name<?)])
-         (format "~a=~a" key (hash-ref data key)))
-       " ")
-      (format "FAIL ~a" (hash-ref data 'what "the hot path refused the request"))))
-
-;; make-session makes the session of one file: the file itself, the
-;; journal that holds the work that is not saved yet, the point, the
-;; selection and the layer the editor is in. Nothing else is kept, so the
-;; session is the only thing that carries the state between commands.
-(define (make-session file journal)
-  (session file journal (box 0) (box #f) (box "visual") (box 2) (box 0)))
-
-;; the-layer answers the layer the editor is in: "visual", "write" or
-;; "select".
-(define (the-layer session)
-  (unbox (session-layer session)))
-
-;; set-layer! puts the editor in a layer, and answers the layer.
-(define (set-layer! session layer)
-  (set-box! (session-layer session) layer)
-  layer)
-
-;; the-level answers how much of the editor's own furniture is drawn:
-;; level 1 is the mode line and the status, level 2 adds the rest of the
-;; pieces, level 3 adds the hints, and level 0 draws nothing at all.
-(define (the-level session)
-  (unbox (session-level session)))
-
-;; set-level! puts the level and answers it.
-(define (set-level! session level)
-  (set-box! (session-level session) level)
-  level)
-
-;; the-view-top answers the first line the view shows: a rendered page is
-;; taller than the screen, so the view scrolls on its own, beside the point.
-(define (the-view-top session)
-  (unbox (session-view-top session)))
-
-;; set-view-top! puts the view at one line and answers it; a line before the
-;; top of the page is the top of the page, and there is no timer in it.
-(define (set-view-top! session line)
-  (set-box! (session-view-top session) (max 0 line))
-  (the-view-top session))
-
-;; the-point answers where the cursor stands in this session.
-(define (the-point session)
-  (unbox (session-point session)))
-
-;; move-to puts the cursor at a place, and answers the new place.
-(define (move-to session at)
-  (set-box! (session-point session) at)
-  at)
-
-;; the-selection answers the selection of this session, or nothing when
-;; no selection is on.
-(define (the-selection session)
-  (unbox (session-selection session)))
-
-;; select-from puts the start of the selection at a place, and turns the
-;; selection on. The selection is a REGION: it runs from that place to
-;; the cursor, and the region is the buffer area's.
-(define (select-from session at)
-  (set-box! (session-selection session) (start-region at))
-  at)
-
-;; select-off turns the selection off.
-(define (select-off session)
-  (set-box! (session-selection session) #f)
-  #f)
-
-;; selection-text answers the text of the selection, or the empty text
-;; when there is no selection. The hot path holds the text, so it is
-;; asked for the region.
-(define (selection-text session)
-  (define answer
-    (region-text (lambda (op args) (ask session op args)) (the-selection session)))
-  (if (hash? answer)
-      (hash-ref answer 'text "")
-      ""))
-
 ;; The command table, for every area above this one.
 (provide commands
          session
@@ -472,51 +361,7 @@
 ;; The editor pieces that the undo layer needs: the hot path request, the text, the layer, the point and the file.
 (provide ask session-text set-layer! the-point session-file)
 
-;; extra-cursors holds the cursors besides the point, each as (head . anchor); the anchor is false when that
-;; cursor selects nothing. There is no limit on how many there are.
-(define extra-cursors (box (list)))
 
-;; main-anchor is where the selection of the point began, or false.
-(define main-anchor (box #f))
-
-;; multi-raw-view is true while the select layer shows the raw text instead of the drawn page.
-(define multi-raw-view (box #f))
-
-;; multi-file is the file the cursors and the selections above belong to.
-(define multi-file (box #f))
-
-;; multi-lit-hook answers the line ranges the cursors and selections light in the drawn page; multi.rkt sets it.
-(define multi-lit-hook (box (lambda (got ranges point) (list))))
-
-;; multi-text-hook answers the escape text that draws cursors and selections over the raw text; multi.rkt sets it.
-(define multi-text-hook (box (lambda (raw top visible offset left width layer point) "")))
-
-;; multi-edit-hook runs an edit or a move for every cursor; multi.rkt sets it.
-(define multi-edit-hook (box #f))
-
-;; multi-live? asks whether the cursors and the selections of this session are in use.
-(define (multi-live? session)
-  (and (equal? (unbox multi-file) (session-file session))
-       (or (pair? (unbox extra-cursors)) (and (unbox main-anchor) #t) (unbox multi-raw-view))
-       #t))
-
-;; multi-raw? asks whether the raw text is shown for the selection of this session.
-(define (multi-raw? session)
-  (and (unbox multi-raw-view) (equal? (unbox multi-file) (session-file session)) #t))
-
-;; multi-clear! drops every extra cursor and every selection.
-(define (multi-clear!)
-  (set-box! extra-cursors (list))
-  (set-box! main-anchor #f)
-  (set-box! multi-raw-view #f))
-
+;; The multi-cursor state boxes live in multi-boxes.rkt; they are passed on from here.
 (provide extra-cursors main-anchor multi-raw-view multi-file multi-lit-hook multi-text-hook
-         multi-edit-hook multi-live? multi-raw? multi-clear!)
-
-;; multi-drop-selections! takes every selection away and keeps the extra cursors.
-(define (multi-drop-selections!)
-  (set-box! main-anchor #f)
-  (set-box! extra-cursors (map (lambda (c) (cons (car c) #f)) (unbox extra-cursors)))
-  (set-box! multi-raw-view #f))
-
-(provide multi-drop-selections!)
+         multi-edit-hook multi-live? multi-raw? multi-clear! multi-drop-selections!)

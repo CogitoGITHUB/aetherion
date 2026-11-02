@@ -322,3 +322,5 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - dispatch cut: dispatch-git.rkt (git, git-diff, git-history verbs) out of dispatch.rkt
 - dispatch: cut dispatch-agent.rkt (send, audit, agent, permit verbs), crossing names first
 - dispatch: cut dispatch-checkpoint.rkt (checkpoint, rollback, stop verbs)
+- commands: read commands.rkt, plan cut of session.rkt (session struct, accessors) and multi-boxes.rkt (multi-* boxes at the end)
+- commands: cutting session.rkt (session struct, accessors, ask) and multi-boxes.rkt (multi-* boxes); commands.rkt re-provides every name
