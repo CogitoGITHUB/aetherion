@@ -584,6 +584,77 @@
          "    last frame at the end:")
    (map (lambda (l) (string-append "    > " l)) (apply append (map wrap-text tail)))))
 
+;; last-evidence keeps the evidence lines of the latest test run, so the record report can show them.
+(define last-evidence (box (list)))
+
+;; count-bytes answers how many times a byte pattern occurs in a byte string.
+(define (count-bytes pat raw)
+  (length (regexp-match* (byte-regexp (regexp-quote pat)) raw)))
+
+;; trace-tail answers up to n of the trace lines written after the byte offset start, as report lines.
+(define (trace-tail start n)
+  (with-handlers ([void (lambda (e) (list "    trace of this run: unreadable"))])
+    (let* ([bs (call-with-input-file (trace-file) (lambda (i) (file-position i start) (read-bytes 100000 i)))]
+           [ls (if (bytes? bs) (string-split (bytes->string/utf-8 bs #\?) "\n") (list))])
+      (cons (format "    trace of this run, last ~a of ~a lines (go-on #f ends a session):" n (length ls))
+            (map (lambda (l)
+                   (define m (regexp-match #px"^[0-9.]+ act-on ([0-9]+)[0-9.]* ms pending (.*) go-on (.*)$" l))
+                   (string-append "    t " (if m (format "keys ~a ~ams go-on ~a" (caddr m) (cadr m) (cadddr m)) l)))
+                 (last-n ls n))))))
+
+;; key-frame-has? says whether the frame saved after key i shows the text.
+(define (key-frame-has? dir i txt)
+  (define raw (with-handlers ([void (lambda (e) #"")]) (file->bytes (build-path dir (format "s~a.bin" i)))))
+  (regexp-match? (regexp-quote txt) (plain-screen (last-frame (bytes->string/utf-8 raw #\?)))))
+
+;; evidence-lines answers the lines that tell where a run went wrong: sessions, frames, expected text, trace and one NEXT line.
+(define (evidence-lines dir out lines verdicts screen trace-start)
+  (define raw (with-handlers ([void (lambda (e) #"")]) (file->bytes out)))
+  (define text (bytes->string/utf-8 raw #\?))
+  (define code (with-handlers ([void (lambda (e) "unknown")]) (string-trim (file->string (build-path dir "code.txt")))))
+  (define starts (count-bytes (bytes-append (bytes 27) #"[?1049h") raw))
+  (define ends (count-bytes (bytes-append (bytes 27) #"[?1049l") raw))
+  (define parts (let ([p (regexp-split (regexp-quote "\u001b[?2026h") text)]) (if (pair? p) (cdr p) p)))
+  (define odd (filter (lambda (p) (not (regexp-match? #rx"^\u001b\\[H" p))) parts))
+  (define last-odd? (and (pair? parts) (not (regexp-match? #rx"^\u001b\\[H" (last parts)))))
+  (define names (string-split (string-join (line-values lines "keys") " ")))
+  (define everything (plain-screen text))
+  (define no-fail? (andmap car verdicts))
+  (define missing
+    (for/list ([v (in-list verdicts)] #:when (and (not (car v)) (regexp-match? #px"^screen contains " (cadr v))))
+      (substring (cadr v) (string-length "screen contains "))))
+  (define lacks-failed?
+    (for/or ([v (in-list verdicts)]) (and (not (car v)) (regexp-match? #px"^screen lacks " (cadr v)))))
+  (define key-rows (map (lambda (l) (string-append "    " (string-trim (car (regexp-split #rx" [|] " l))))) (key-modes dir names)))
+  (define frame-rows
+    (for/list ([ip (in-list (last-n (for/list ([p (in-list parts)] [i (in-naturals 1)]) (cons i p)) 8))])
+      (define t (plain-screen (cdr ip)))
+      (define m (regexp-match #px"╭─ ([a-z]+( [a-z]+)?) \\[" t))
+      (format "    frame ~a starts ~a len ~a mode ~a" (car ip) (visible (substring (cdr ip) 0 (min 6 (string-length (cdr ip))))) (string-length t) (if m (cadr m) "none"))))
+  (define missing-lines
+    (for/list ([t (in-list missing)])
+      (define after (for/list ([n (in-list names)] [i (in-naturals 0)] #:when (key-frame-has? dir i t)) (format "~a ~a" i n)))
+      (format "    expected text ~s: seen after keys [~a]; anywhere in the output: ~a" t (string-join after ", ") (if (regexp-match? (regexp-quote t) everything) "yes" "NO, never drawn"))))
+  (define next
+    (cond
+      [(not (equal? code "0")) (string-append "    NEXT: the run ended with " code ", not 0: read the cause line, then the trace and the last frames above")]
+      [last-odd? "    NEXT: the final frame does not start with ESC[H, so last-frame skips it and the report shows an older screen: fix last-frame in update.rkt"]
+      [(for/or ([t (in-list missing)]) (not (regexp-match? (regexp-quote t) everything)))
+       "    NEXT: an expected text was never drawn in this run: read the key bindings, the mode rows and the trace above"]
+      [(pair? missing) "    NEXT: the expected text was drawn after some key but is gone at the end: a later key or session replaced it, see the seen after keys lists"]
+      [lacks-failed? "    NEXT: a text that must be gone is still on the last frame: the key that should remove it did nothing, see the mode rows and the trace"]
+      [no-fail? (format "    NEXT: nothing failed to draw; sessions started ~a, ended ~a. If the keys should open another page and only one session started, no page opened: read the go-on values in the trace" starts ends)]
+      [else "    NEXT: read the failed lines above against the screen seen"]))
+  (append
+   (list (format "    evidence: sessions started ~a, ended ~a, frames drawn ~a, frames without ESC[H start ~a, exit ~a" starts ends (length parts) (length odd) code)
+         "    frames per key and the mode after it:")
+   key-rows
+   (list "    last frames of the whole run:")
+   frame-rows
+   missing-lines
+   (trace-tail trace-start 20)
+   (list next)))
+
 ;; run-test runs one test file on a copy of its page in a temporary folder; answers (name seconds ok? detail-lines).
 (define (run-test path)
   (define lines (test-lines path))
@@ -625,6 +696,8 @@
       (judge l screen file-text seconds rawf)))
   (define ok? (and (pair? verdicts) (andmap car verdicts)))
   (live "diagnosing")
+  (define evidence (if (or (not ok?) (member "record" lines)) (evidence-lines dir out lines verdicts screen trace-start) (list)))
+  (set-box! last-evidence evidence)
   (define why-full (if ok? (list) (append (filter (lambda (l) (not (regexp-match? #rx"^    >" l))) (append (diagnose code-file out out1) (err-where screen))) (trace-since trace-start) (list "    mode after each key:") (map (lambda (l) (car (regexp-split #rx" [|] " l))) (key-modes dir (string-split (string-join (line-values lines "keys") " ")))) (append (if (member "repo git" lines) (cons "    undo commits of the temp repo:" (map (lambda (l) (string-append "    c " l)) (first-n (string-split (let-values ([(c o) (capture dir (find-executable-path "git") (list "log" "--format=%h %s" "aiu-undo"))]) o) "\n") 6))) (list)) (list "    file head, first 6 lines:")) (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))))
   (with-handlers ([void void])
     (display-to-file screen (build-path (find-system-path (quote home-dir)) (string-append ".aiu-last-test-" name ".txt")) #:exists (quote truncate)))
@@ -649,7 +722,7 @@
   (list name seconds ok?
         (append (list (string-append "    keys " (string-join (line-values lines "keys") " ")))
                 (for/list ([v (in-list verdicts)] #:unless (car v))
-                  (string-append "    " (if (car v) "ok   " "FAIL ") (cadr v))) (if ok? (list) (seen-lines shown verdicts file-text))
+                  (string-append "    " (if (car v) "ok   " "FAIL ") (cadr v))) (if ok? (list) (append (seen-lines shown verdicts file-text) evidence))
                 why)))
 
 ;; seen-lines answers the lines that show a failed test what the screen held, with row numbers, and the file head when a file expectation failed.
@@ -768,7 +841,7 @@
                          (build-path editor-root "editor" "src" "features" (string-append name ".feature")) #:exists (quote truncate))]
     [else (when (file-exists? tpath) (delete-file tpath))])
   (emit (list "AIUTD RECORD" (format "~a  ~a" (if ok "GREEN" "RED") name))
-        (if ok expects (append (if (pair? expects) (list) (append (list "nothing changed on screen or in the file, nothing written") (no-change-why keys ksl bsl))) (unbox rec-why))))
+        (if ok expects (append (if (pair? expects) (list) (append (list "nothing changed on screen or in the file, nothing written") (no-change-why keys ksl bsl) (unbox last-evidence))) (unbox rec-why))))
   (when ok (let ([g (find-executable-path "git")] [t (string-append "gate/tests/" name ".test")] [f (string-append "editor/src/features/" name ".feature")]) (let-values ([(c1 o1) (capture editor-root g (list "add" "--" t f))]) (void)) (let-values ([(c2 o2) (capture editor-root g (list "commit" "-q" "-m" (string-append "test: " name " recorded") "--" t f))]) (void))))
   (if ok 0 1))
 
