@@ -339,3 +339,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - tabs.rkt: cut tabs-folders (path helpers) and tabs-commands (tab commands)
 - multi.rkt: cut multi-draw (lit ranges and text overlay)
 - undo.rkt: cut undo-tree (nodes, kids, load, layout, parent, next)
+- blockview.rkt: cut blockview-boxes (box geometry, ranges, inside, parent)
