@@ -1,7 +1,7 @@
 #lang racket/base
 ;; One job: the lean edit, the live session without the agent side. It loads
 ;; only what a person needs to read and write a page: the commands, the keys,
-;; the screen and the home screen. The send, the audit and the checkpoint code
+;; the screen. The send, the audit and the checkpoint code
 ;; load when the send key is first pressed. Scripted runs and every other verb
 ;; use cli-full.rkt, which loads everything.
 

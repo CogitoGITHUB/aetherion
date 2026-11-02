@@ -916,7 +916,7 @@
 ;; cli-section answers the generated tutorial section that lists the commands of aiutd, one line each.
 (define (cli-section)
   (string-append "section start\ntitle start\nCommands of aiutd\ntitle end\n\nparagraph start\n"
-                 (string-join (list "aiutd FILE opens the file in the editor, and aiutd alone opens the home screen."
+                 (string-join (list "aiutd FILE opens the file in the editor, and aiutd alone says a file is needed."
                                     "aiutd update runs the compile, the tests at a level and the docs."
                                     "aiutd test --level N runs the tests in gate/tests at that level."
                                     "aiutd record NAME KEYS records a test from a real run of the keys."

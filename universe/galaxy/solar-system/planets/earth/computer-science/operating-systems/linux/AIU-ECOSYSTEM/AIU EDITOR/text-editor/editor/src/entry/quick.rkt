@@ -101,7 +101,7 @@
 
 ;; quick-show paints the file at once and takes the keys off the screen: the
 ;; terminal does not echo them and does not wait for a return, so they queue
-;; for the editor. With no file it paints the name of the home screen. Nothing
+;; for the editor. With no file it paints a short loading text. Nothing
 ;; happens when the program is not on a terminal.
 (define (quick-show file)
   (when (and (terminal-port? (current-input-port))
@@ -114,7 +114,7 @@
       (if file
           (or (and (regexp-match? #rx"[.]aiu$" (if (path? file) (path->string file) file)) (boxed-lines file cols)) (regexp-split #rx"\n" (head-of file)))
           (list "AIU EDITOR" "" "opening the page")))
-    (write-string (frame lines rows cols (or file "AIU home")))
+    (write-string (frame lines rows cols (or file "AIU editor")))
     (flush-output)))
 
 ;; quick-restore gives the terminal its echo and its line mode back, once.

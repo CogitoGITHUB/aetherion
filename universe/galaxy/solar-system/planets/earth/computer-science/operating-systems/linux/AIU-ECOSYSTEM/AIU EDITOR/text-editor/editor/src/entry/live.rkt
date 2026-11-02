@@ -372,7 +372,6 @@
     (and
          (string-suffix? name ".aiu")
          (not (multi-raw? session)) (block-overlay session raw width height)))
-  (define home #f)
   (define plain-text
     (cond
           [(or writing? (multi-raw? session)) raw]
@@ -402,8 +401,8 @@
           (if (bar-plan-line? plan) (format "~a  ~a  ~a:~a~a" (file-name-from-path (session-file session))
                   (format "~a [~a]~a" (mode-label (the-layer session)) (unbox kind-filter) (if (unbox unsaved) "  unsaved: SPC s" "")) row column where) (bar-plan-text plan))
           writing?
-          (or (and home #t) (and menu #t) (and overlay #t) (and (not writing?) (not (multi-raw? session)) (string-suffix? name ".aiu")))
-          #:offset (bar-plan-top plan) #:left (bar-plan-left plan) #:full full-width #:overlay (string-append (bar-plan-overlay plan) (live-multi-overlay session raw top height (bar-plan-top plan) (bar-plan-left plan) width (and (not home) (not menu) (not overlay) (or writing? (not (string-suffix? name ".aiu")) (multi-raw? session)) #t)) (notify-overlay width height (+ 1 (bar-plan-top plan))))))
+          (or (and menu #t) (and overlay #t) (and (not writing?) (not (multi-raw? session)) (string-suffix? name ".aiu")))
+          #:offset (bar-plan-top plan) #:left (bar-plan-left plan) #:full full-width #:overlay (string-append (bar-plan-overlay plan) (live-multi-overlay session raw top height (bar-plan-top plan) (bar-plan-left plan) width (and (not menu) (not overlay) (or writing? (not (string-suffix? name ".aiu")) (multi-raw? session)) #t)) (notify-overlay width height (+ 1 (bar-plan-top plan))))))
   (flush-output))
 
 ;; viewport-top answers the first line shown at the top of the screen: the
@@ -465,7 +464,7 @@
               (walk (outcome-rest result))]
              [else (void)])])))))
 
-;; trace-session! appends one line to the trace log when AIU_TRACE is set: the file a session opens and whether it is the home screen.
+;; trace-session! appends one line to the trace log when AIU_TRACE is set: the file a session opens in one line.
 (define (trace-session! file)
   (when (getenv "AIU_TRACE")
     (with-handlers ([void void])

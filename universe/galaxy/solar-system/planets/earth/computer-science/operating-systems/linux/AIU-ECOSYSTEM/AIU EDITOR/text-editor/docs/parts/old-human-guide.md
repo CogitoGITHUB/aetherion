@@ -121,20 +121,6 @@ Move layer (reached with m):
 |---|---|
 | h, t | swap the lit block with the one before or after it |
 | escape | back to the visual layer |
-## 6. Home screen
-
-`aiutd` with no file opens the home screen. It is an AIU page built in memory by
-`editor/src/dashboard/home.rkt` and drawn by the notation view, so it looks like
-every other page: a title of kind dashboard, a paragraph of keys and scan age,
-a paragraph of pages, a paragraph of work and git, and a comment that holds one
-paragraph for each open todo the scan found. Every line is scanned from the
-folder named by `AIU_ROOT`.
-
-It shows the last scan at once, kept in `~/.aiu-home-scan.rktd` outside the
-project tree, then scans in a thread and paints the result when it lands.
-Untracked files are not counted in the git rows, because walking them is slow.
-Commands that need a file do nothing on this screen.
-
 ## Block editing
 
 On an .aiu page in the visual layer the block under the cursor is lit. Up and
@@ -196,17 +182,9 @@ Nothing is saved or committed while you type. An edit op (type, delete, delete-a
 
 No timer. `paint-ready` (`box.rkt`) is set by `live-session` right after the first full paint; `git-refresh-maybe` (bar.rkt) and `gutter-refresh-maybe` (gutter.rkt) do nothing until it is true, and one more repaint is started in a thread so they begin at once. Rule from the owner: once the page is shown and can be worked on, everything else may run in the background. Any older text in this file about waiting 4 s is obsolete.
 
-## Dashboard key
-
-Space h in the visual layer runs `home-open` (`commands.rkt`): it sets `home-request` and returns false, which ends the round of `live-session`; `file-session` (`lean.rkt`) then opens the home screen with `home-session` in the same terminal. A page picked there opens as a normal session. The popup lists it as dashboard in the view group.
-
-## Dashboard page
-
-`home-text` (`home.rkt`) builds the home page: title, a code block with the real keys (1 to 9, space ?, space /, space q), a code block with one page per line (`page-rows d 9`), the work paragraph and the open todos. The old text about space r (scan again) is gone because that key was deleted.
-
 ## Bar
 
-Space b opens the bar layer, and the popup lists its keys. The bar has five parts: the layer, the time, git, the date and the keys. It stands at the bottom or the top as a box, or on the sides as strips with the letters upright: docked beside the page, or floating over it. With both sides the layer, git and the keys are on the left, and the time and the date on the right. A screen under 14 rows and the home screen keep the one old line. The time is read at each paint, and git is asked in a thread every 20 seconds, never in a paint.
+Space b opens the bar layer, and the popup lists its keys. The bar has five parts: the layer, the time, git, the date and the keys. It stands at the bottom or the top as a box, or on the sides as strips with the letters upright: docked beside the page, or floating over it. With both sides the layer, git and the keys are on the left, and the time and the date on the right. A screen under 14 rows keeps the one old line. The time is read at each paint, and git is asked in a thread every 20 seconds, never in a paint.
 
 | Key | Does |
 |---|---|

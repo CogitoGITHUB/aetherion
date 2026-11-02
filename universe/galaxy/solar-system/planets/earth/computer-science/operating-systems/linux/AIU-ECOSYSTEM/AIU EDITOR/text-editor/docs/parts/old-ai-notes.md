@@ -28,14 +28,13 @@ screen, down from 2.1 s. Editor ready about 2 s. A quit typed at once quits.
 |---|---|---|
 | first paint | `entry/quick.rkt` | `racket/base` only. Draws the file head, turns echo and line mode off so keys queue, gives them back at exit. |
 | loader | `entry/cli.rkt` | requires only `quick.rkt`. `compile-deps` submodule builds the rest. Loads `lean.rkt` or `cli-full.rkt` with `dynamic-require`. |
-| live edit | `entry/lean.rkt` | on a terminal with the edit verb. Commands, keys, screen, home screen. No send, audit, checkpoint, plugin, mcp. |
+| live edit | `entry/lean.rkt` | on a terminal with the edit verb. Commands, keys, screen. No send, audit, checkpoint, plugin, mcp. |
 | every other verb | `entry/cli-full.rkt` | scripted runs (input not a terminal) and all other verbs. The gate proofs read this one. |
 | agent side | `send/send.rkt` | loaded by the stub of the send key on first press; it puts the real command in the table. |
-| home screen | `dashboard/home.rkt` | shows the kept scan at once, scans in a thread after the first paint, repaints itself. Does not start the hot path. |
 
 Rules for changes:
 
-- Never add a require for send, audit, checkpoint, plugins, mcp, `json`, `net/url` or `racket/port` to `quick.rkt`, `cli.rkt`, `lean.rkt`, `live.rkt` or `home.rkt` without measuring. A heavy feature loads on first use, the way the send stub does.
+- Never add a require for send, audit, checkpoint, plugins, mcp, `json`, `net/url` or `racket/port` to `quick.rkt`, `cli.rkt`, `lean.rkt`, `live.rkt` without measuring. A heavy feature loads on first use, the way the send stub does.
 - Anything slow after the first paint runs in a thread and repaints itself. Nothing waits for a scan.
 - A change to the start path ends with the timing run below, and the first paint must stay under 1 s.
 
@@ -145,14 +144,6 @@ Nothing is saved or committed while you type. An edit op (type, delete, delete-a
 
 No timer. `paint-ready` (`box.rkt`) is set by `live-session` right after the first full paint; `git-refresh-maybe` (bar.rkt) and `gutter-refresh-maybe` (gutter.rkt) do nothing until it is true, and one more repaint is started in a thread so they begin at once. Rule from the owner: once the page is shown and can be worked on, everything else may run in the background. Any older text in this file about waiting 4 s is obsolete.
 
-## Dashboard key
-
-Space h in the visual layer runs `home-open` (`commands.rkt`): it sets `home-request` and returns false, which ends the round of `live-session`; `file-session` (`lean.rkt`) then opens the home screen with `home-session` in the same terminal. A page picked there opens as a normal session. The popup lists it as dashboard in the view group.
-
-## Dashboard page
-
-`home-text` (`home.rkt`) builds the home page: title, a code block with the real keys (1 to 9, space ?, space /, space q), a code block with one page per line (`page-rows d 9`), the work paragraph and the open todos. The old text about space r (scan again) is gone because that key was deleted.
-
 ## Bar
 
 Code: `editor/src/dashboard/bar.rkt` (state `bar-place`, `bar-saved`, `bar-style`, `bar-count`; `bar-plan-of`, `bar-rows`, `strip-lines`, `git-refresh-maybe`; the commands `bar-mode`, `bar-level-mode`, `bar-place-next`, `bar-bottom`, `bar-top`, `bar-left`, `bar-right`, `bar-sides`, `bar-style`, `bar-hide`, `bar-less`, `bar-more`). The keys are in `keymaps.rkt` (`bar-keys`, `bar-level-keys`; layers `bar` and `bar-level`, entered with space b). `explorer.rkt` requires `bar.rkt` so the gate sees the commands. `live.rkt` asks for one `bar-plan` in `repaint-now`: the page width and height are the screen minus the columns and rows of the plan, and `screen.rkt` `paint` takes `#:offset`, `#:left`, `#:full` and `#:overlay`. The popup also opens by itself in the layers bar and bar-level. A paint reads no file and asks no page; git runs only in a thread. The blocks command is no longer on space b: type it, or use tab b in the write layer.
@@ -230,7 +221,7 @@ line above every definition.
 
 | State | Item |
 |---|---|
-| open | cut the 1.3 s between first paint and ready: `json` (protocol.rkt) and `racket/port` (terminal.rkt, live.rkt, home.rkt) load at start |
+| open | cut the 1.3 s between first paint and ready: `json` (protocol.rkt) and `racket/port` (terminal.rkt, live.rkt) load at start |
 | open | lower the priority of the background scan so typing never stutters; the scan takes about 8 s on 2 cores |
 | open | try the home keys by hand: 1 to 9, space q |
 | open | try by hand that a page picked on the home screen opens as a normal session |
