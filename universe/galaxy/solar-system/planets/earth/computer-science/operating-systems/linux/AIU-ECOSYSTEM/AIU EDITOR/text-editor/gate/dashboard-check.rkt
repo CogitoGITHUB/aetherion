@@ -13,8 +13,8 @@
 ;; an absolute one on this Racket.
 
 (require racket/string
-         "../editor/src/dashboard/dashboard.rkt"
-         "../editor/src/dashboard/pieces.rkt")
+         "../editor/src/tui/dashboard.rkt"
+         "../editor/src/tui/pieces.rkt")
 
 ;; drawn-edges answers the edges the drawing knows: the four sides and
 ;; floating. A piece on any other edge would be dropped.

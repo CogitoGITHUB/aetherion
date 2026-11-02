@@ -32,7 +32,7 @@
 (define focus-on (box #f))
 
 ;; bar-order are the parts in the order the level adds them.
-(define bar-order (list "mode" "time" "save" "date" "keys"))
+(define bar-order (list "mode" "keys" "time" "save" "date"))
 
 ;; bar-places are the places the place key goes through.
 (define bar-places (list "bottom" "top" "left" "right" "sides"))
@@ -151,6 +151,13 @@
        (set-box! git-busy #f)
        (when changed? (again))))))
 
+;; layer-keys-line answers the keys of a layer as one row of key names, cut to the width.
+(define (layer-keys-line layer width)
+  (define names (remove-duplicates (for/list ([b (in-list (keys-of layer))]) (string-join (map bar-kname (sequence-of (car b))) " "))))
+  (define all (string-join names "  "))
+  (define room (max 1 width))
+  (if (> (string-length all) room) (string-append (substring all 0 (max 0 (- room 1))) "…") all))
+
 ;; bar-rows answers the rows of the bar as a box of the full width: the layer and
 ;; the file on the top edge with the time and the date, the trigger row, and the
 ;; git row. A part that is not in names is left out.
@@ -164,7 +171,7 @@
     (string-join (filter values (list (and (has? "time") (clock-time)) (and (has? "date") (clock-date)))) "  "))
   (define middle
     (append (if (has? "keys")
-                (list (body-line (format "trigger ~a~a" (bar-kname trig) waiting) width))
+                (list (body-line (string-append (format "trigger ~a~a" (bar-kname trig) waiting) "  " (layer-keys-line layer (max 1 (- width 30)))) width))
                 null)
             (if (and (has? "save") (unbox unsaved))
                 (list (edge-line "├" "┤" "save" "" width) (body-line "unsaved  SPC s saves" width))
@@ -211,19 +218,19 @@
 (struct bar-plan (left right top bottom text overlay line?) #:transparent)
 
 ;; bar-plan-of answers the plan for one paint. The width and the height are those
-;; of the whole screen. The home screen and a screen under 14 rows keep the old
+;; of the whole screen. A screen under 14 rows keeps the old
 ;; one line mode line; the tabs need 16 rows. Focus mode takes everything away.
 ;; The tabs and the bar can stand at the same edge, apart or sharing one line.
-(define (bar-plan-of session pending width height home? again)
+(define (bar-plan-of session pending width height again)
   (define layer (the-layer session))
   (define file (session-file session))
   (define short (let ([n (file-name-from-path file)]) (if n (path->string n) (path->string file))))
   (define dir (path->string (or (path-only (path->complete-path file)) (current-directory))))
-  (define want (if home? "line" (unbox bar-place)))
+  (define want (unbox bar-place))
   (define place (if (and (member want (list "bottom" "top")) (< height 14)) "line" want))
   (define names (take bar-order (min (length bar-order) (max 0 (unbox bar-count)))))
   (define tabs-on?
-    (and (not home?) (>= height 16) (not (string=? (unbox tab-place) "hidden"))))
+    (and (>= height 16) (not (string=? (unbox tab-place) "hidden"))))
   (cond
     [(unbox focus-on) (bar-plan 0 0 0 0 "" "" #f)]
     [else

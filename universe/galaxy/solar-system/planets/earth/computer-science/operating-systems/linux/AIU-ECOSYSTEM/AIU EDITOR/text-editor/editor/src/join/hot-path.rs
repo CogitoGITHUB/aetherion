@@ -6,7 +6,7 @@
 
 #[path = "../buffer/buffer.rs"]
 mod buffer;
-#[path = "../dashboard/dashboard.rs"]
+#[path = "../tui/dashboard.rs"]
 mod dashboard;
 #[path = "../input/read.rs"]
 mod input;

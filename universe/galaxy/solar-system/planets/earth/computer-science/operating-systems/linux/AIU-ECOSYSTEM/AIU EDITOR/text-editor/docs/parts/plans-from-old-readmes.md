@@ -79,7 +79,7 @@ The letter after space m or space j is read as the next key in a waiting sequenc
 
 | Step | Work | Done when |
 |---|---|---|
-| 1 | `dashboard/marks.rkt`: the data (racket/base only), `place-of` (block to place), `find-place` (place to block, the fallback order of 13.3), the file read and write | a script proof in the gate: set a place, move the block, find it again |
+| 1 | `tui/marks.rkt`: the data (racket/base only), `place-of` (block to place), `find-place` (place to block, the fallback order of 13.3), the file read and write | a script proof in the gate: set a place, move the block, find it again |
 | 2 | commands `mark-set`, `mark-jump`, `mark-delete`, keys by loop in `keymaps.rkt`, menu rows, notifications | space m a then space j a works by hand |
 | 3 | jumplist: push on every jump, `jump-back`, `jump-forward`, last-jump mark | back and forward work across tabs |
 | 4 | global marks and named bookmarks, the fzf list `mark-list` and `bookmark-jump` | a bookmark opens its file in a tab at its block |

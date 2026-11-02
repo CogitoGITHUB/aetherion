@@ -143,7 +143,7 @@ In the visual layer plain keys pick what h and t move between: a any block, p pa
 
 ## Notifications
 
-Code: `editor/src/dashboard/notify.rkt` (racket/base and box.rkt only). `notify!` takes a level (info, warn, error) and a text; the box stays 2, 3 or 5 seconds, an identical text replaces the old one, at most 3 show. `notify-overlay` is added to the overlay of the paint in `repaint-now` (`live.rkt`), below a top bar or tabs, and a thread repaints through `notify-repaint` when one expires. An unbound key says no key and the keys of the sequence, with the sub-mode. Errors are drawn red.
+Code: `editor/src/tui/notify.rkt` (racket/base and box.rkt only). `notify!` takes a level (info, warn, error) and a text; the box stays 2, 3 or 5 seconds, an identical text replaces the old one, at most 3 show. `notify-overlay` is added to the overlay of the paint in `repaint-now` (`live.rkt`), below a top bar or tabs, and a thread repaints through `notify-repaint` when one expires. An unbound key says no key and the keys of the sequence, with the sub-mode. Errors are drawn red.
 
 ## Paint without flicker
 
@@ -156,7 +156,7 @@ In the visual layer the SPC popup has a box named pick with the keys a p e c k l
 ## State after the session of 2026-10-31
 
 - Gate green, 17 stages. Kind layer removed: the picks are plain keys in visual (a p e c k l x o d), sub-modes visual general, visual navigation, visual selection, shown in the bar, the side strip, the one line and the SPC popup (a pick box and the sub-mode in the title).
-- Notifications: `dashboard/notify.rkt`, an unbound key shows a warn box top right instead of printing over the page.
+- Notifications: `tui/notify.rkt`, an unbound key shows a warn box top right instead of printing over the page.
 - Paint no longer sends the clear code: it homes the cursor, erases each line and wraps the frame in ?2026h and ?2026l (`screen.rkt`). Only `quick.rkt` clears, once. The timing loop that waits for the clear code still sees the first paint only.
 - `quick.rkt` draws an .aiu page as boxes through the notation binary (`boxed-lines`, subprocess only, raw text when it fails) and says nothing about loading. Keys typed meanwhile queue and run when the editor is ready.
 - machine/small.rkt exists but nothing requires it. The start path uses racket/path and racket/port. The swap felt slow on the phone, so measure a keypress before trying it again.
@@ -169,7 +169,7 @@ In the visual layer the SPC popup has a box named pick with the keys a p e c k l
 
 ## Git strip
 
-`dashboard/gutter.rkt` keeps the hunks of `git diff -U0` for the open file, asked in a thread (4 s after the first ask, then every 15 s or when the file changes). `dashboard/gutterview.rkt` puts one column at the left of every drawn line of an .aiu page: plus for added, equals for changed, minus for removed, on the lines of each leaf block that a hunk touches (`bv-ranges`, exported by `blockview.rkt`, maps blocks to drawn lines). `repaint-now` in `live.rkt` takes one column off the page width for it. Lines are matched by the saved file, so unsaved edits can shift a mark until the next refresh. A removal between two blocks puts a minus on the first drawn line of the block after the gap (git reports it at the line before the gap), a removal inside a block marks the block equals. A swap of two blocks shows as plus on one block and minus at the gap, because git describes it that way. Only glyphs, no colour.
+`tui/gutter.rkt` keeps the hunks of `git diff -U0` for the open file, asked in a thread (4 s after the first ask, then every 15 s or when the file changes). `tui/gutterview.rkt` puts one column at the left of every drawn line of an .aiu page: plus for added, equals for changed, minus for removed, on the lines of each leaf block that a hunk touches (`bv-ranges`, exported by `blockview.rkt`, maps blocks to drawn lines). `repaint-now` in `live.rkt` takes one column off the page width for it. Lines are matched by the saved file, so unsaved edits can shift a mark until the next refresh. A removal between two blocks puts a minus on the first drawn line of the block after the gap (git reports it at the line before the gap), a removal inside a block marks the block equals. A swap of two blocks shows as plus on one block and minus at the gap, because git describes it that way. Only glyphs, no colour.
 
 ## Save and commit by hand
 
@@ -238,7 +238,7 @@ The rows show paths relative to the folder searched, and the top of the screen p
 ## 7. Build and check
 
 ~~~
-PLTCOMPILEDROOTS="$HOME/aiu-compiled" raco make editor/src/entry/cli.rkt editor/src/dashboard/undo.rkt editor/src/dashboard/multi.rkt editor/src/dashboard/clip.rkt
+PLTCOMPILEDROOTS="$HOME/aiu-compiled" raco make editor/src/entry/cli.rkt editor/src/tui/undo.rkt editor/src/tui/multi.rkt editor/src/tui/clip.rkt
 nu gate/check.nu
 ~~~
 

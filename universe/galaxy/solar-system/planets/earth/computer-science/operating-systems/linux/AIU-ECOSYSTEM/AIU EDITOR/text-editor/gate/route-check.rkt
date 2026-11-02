@@ -17,7 +17,7 @@
          racket/set
          "../editor/src/routes/routes.rkt"
          "../editor/src/commands/commands.rkt"
-         "../editor/src/dashboard/explorer.rkt")
+         "../editor/src/tui/explorer.rkt")
 
 ;; known-commands answers the names the command table holds, as a set, so
 ;; the check can ask about a command name in one step.

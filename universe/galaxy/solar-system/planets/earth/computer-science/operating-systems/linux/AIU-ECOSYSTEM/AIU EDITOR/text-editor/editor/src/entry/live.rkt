@@ -34,14 +34,14 @@
          "../notation/document.rkt"
          "../notation/host.rkt"
          "../notation/where.rkt"
-         "../dashboard/blockview.rkt"
-         "../dashboard/bar.rkt"
-         "../dashboard/tabs.rkt"
-         "../dashboard/finder.rkt"
-         "../dashboard/notify.rkt"
-         (only-in "../dashboard/box.rkt" paint-ready)
-         "../dashboard/gutter.rkt"
-         "../dashboard/gutterview.rkt"
+         "../tui/blockview.rkt"
+         "../tui/bar.rkt"
+         "../tui/tabs.rkt"
+         "../tui/finder.rkt"
+         "../tui/notify.rkt"
+         (only-in "../tui/box.rkt" paint-ready)
+         "../tui/gutter.rkt"
+         "../tui/gutterview.rkt"
          (only-in "../machine/directories.rkt" journal-path-for))
 
 ;; live-session runs the live session on a file: the terminal goes raw, the keys
@@ -359,7 +359,7 @@
 (define (repaint-now session viewport)
   (define-values (full-width full-height) (terminal-size))
   (define plan
-    (bar-plan-of session (unbox pending-keys) full-width full-height #f
+    (bar-plan-of session (unbox pending-keys) full-width full-height
                  void))
   (define gut? (and (string-suffix? (path->string (session-file session)) ".aiu")))
   (when (and gut? (not (unbox unsaved))) (gutter-refresh-maybe (session-file session) (lambda () ((unbox notify-repaint)))))

@@ -8,7 +8,7 @@
 (require racket/path racket/port
          "../machine/directories.rkt"
          "../commands/commands.rkt"
-         "../dashboard/explorer.rkt"
+         "../tui/explorer.rkt"
          "live.rkt")
 
 ;; here is the folder of this file, so the send module can be found by name.

@@ -203,8 +203,8 @@
 
 ;; compile-files are the files raco make builds in ONE call: one call per file cost 32 s each, five calls 172 s, one call 34 s.
 (define compile-files
-  (list "editor/src/entry/cli.rkt" "editor/src/dashboard/undo.rkt"
-        "editor/src/dashboard/multi.rkt" "editor/src/dashboard/clip.rkt"
+  (list "editor/src/entry/cli.rkt" "editor/src/tui/undo.rkt"
+        "editor/src/tui/multi.rkt" "editor/src/tui/clip.rkt"
         "editor/src/entry/update.rkt"))
 
 ;; raco-path answers the raco next to the running racket, or the one on the path.
