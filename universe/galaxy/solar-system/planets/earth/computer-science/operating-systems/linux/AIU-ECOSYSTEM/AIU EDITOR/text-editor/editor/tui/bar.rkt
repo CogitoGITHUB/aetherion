@@ -102,7 +102,7 @@
 
 ;; multi-table holds the real commands of the cursors and the selection; multi.rkt fills it when it is loaded.
 (define multi-table
-  (lazy-layer! (#%variable-reference) "multi.rkt" "cursors" "cursors are not available"
+  (lazy-layer! (#%variable-reference) "multi/multi.rkt" "cursors" "cursors are not available"
                (list "cursor-mode" "cur-leave" "cur-below" "cur-above" "cur-next-block" "cur-prev-block"
                      "cur-next-match" "cur-all-matches" "cur-drop" "cur-clear" "select-mode"
                      "sel-left" "sel-right" "sel-up" "sel-down" "sel-word" "sel-word-back"

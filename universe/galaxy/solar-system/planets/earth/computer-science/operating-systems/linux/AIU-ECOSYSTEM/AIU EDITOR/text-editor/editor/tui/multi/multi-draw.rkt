@@ -1,7 +1,7 @@
 #lang racket/base
 ;; One job: draw the cursors and the selections of multi.rkt - the lit block ranges in the drawn page and the reverse video overlay on the raw text.
 
-(require "text-motion.rkt" "../commands/commands.rkt" "../notation/document.rkt" "../notation/host.rkt" (only-in "blockview.rkt" blockview-inside))
+(require "../text-motion.rkt" "../../commands/commands.rkt" "../../notation/document.rkt" "../../notation/host.rkt" (only-in "../blockview.rkt" blockview-inside))
 
 (provide multi-lit multi-text-overlay)
 
