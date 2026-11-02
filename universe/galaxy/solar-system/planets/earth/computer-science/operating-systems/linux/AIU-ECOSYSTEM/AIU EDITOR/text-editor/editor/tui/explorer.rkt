@@ -22,7 +22,7 @@
          "../commands/commands.rkt"
          "../routes/keymaps.rkt"
          "blocks/blockview.rkt"
-         "bar.rkt"
+         "bar/bar.rkt"
          "tabs/finder.rkt")
 
 ;; explorer-lines answers the lines of the panel: every layer with the

@@ -10,7 +10,7 @@
          "../../notation/document.rkt"
          "../../notation/host.rkt"
          (only-in "../blocks/blockview.rkt" blockview-kind-match? blockview-inside blockview-drawn)
-         (only-in "../bar.rkt" multi-table)
+         (only-in "../bar/bar.rkt" multi-table)
          (only-in "../notify.rkt" notify!)
          (only-in "multi-draw.rkt" multi-lit multi-text-overlay))
 

@@ -1,8 +1,8 @@
 #lang racket/base
 ;; One job: the git facts of the bar. Git is asked in a thread every twenty seconds, never in a paint.
 (require racket/list racket/string
-         "box.rkt"
-         "tabs/tabs.rkt")
+         "../box.rkt"
+         "../tabs/tabs.rkt")
 
 ;; git-info holds the last git answer.
 (define git-info (box #f))

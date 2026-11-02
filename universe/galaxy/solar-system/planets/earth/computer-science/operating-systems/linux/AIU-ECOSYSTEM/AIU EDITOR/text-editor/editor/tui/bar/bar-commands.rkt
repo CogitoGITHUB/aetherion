@@ -3,11 +3,11 @@
 (require racket/list
          racket/string
          racket/path
-         "../commands/commands.rkt"
-         "../commands/lazy-stub.rkt"
-         "../routes/keymaps.rkt"
-         "box.rkt"
-         "tabs/tabs.rkt"
+         "../../commands/commands.rkt"
+         "../../commands/lazy-stub.rkt"
+         "../../routes/keymaps.rkt"
+         "../box.rkt"
+         "../tabs/tabs.rkt"
          "bar-clock.rkt"
          "bar-git.rkt"
          "bar-state.rkt")

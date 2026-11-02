@@ -9,7 +9,7 @@
          (only-in racket/string string-trim string-split)
          (only-in "../../commands/commands.rkt"
                   commands ask session-text set-layer! the-point session-file unsaved move-to)
-         (only-in "../bar.rkt" undo-table undo-rows-hook)
+         (only-in "../bar/bar.rkt" undo-table undo-rows-hook)
          (only-in "../box.rkt" edge-line rule-line body-line)
          (only-in "../shadow.rkt" shadow-commit-now! shadow-key))
 

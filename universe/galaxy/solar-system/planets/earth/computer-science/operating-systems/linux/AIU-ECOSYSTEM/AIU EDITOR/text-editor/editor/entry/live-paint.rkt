@@ -21,7 +21,7 @@
          "../tui/blocks/blockview.rkt" "../tui/blocks/blocks-edit.rkt" "../tui/blocks/blocks-view.rkt"
          "../tui/blocks/blocks-move.rkt"
          "../tui/menu.rkt"
-         "../tui/bar.rkt"
+         "../tui/bar/bar.rkt"
          "../tui/tabs/tabs.rkt"
          "../tui/tabs/finder.rkt"
          "../tui/notify.rkt"

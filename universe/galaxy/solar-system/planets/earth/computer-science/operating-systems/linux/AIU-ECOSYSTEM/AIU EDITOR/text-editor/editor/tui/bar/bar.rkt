@@ -11,11 +11,11 @@
 (require racket/list
          racket/string
          racket/path
-         "../commands/commands.rkt"
-         "../commands/lazy-stub.rkt"
-         "../routes/keymaps.rkt"
-         "box.rkt"
-         "tabs/tabs.rkt"
+         "../../commands/commands.rkt"
+         "../../commands/lazy-stub.rkt"
+         "../../routes/keymaps.rkt"
+         "../box.rkt"
+         "../tabs/tabs.rkt"
          "bar-clock.rkt"
          "bar-git.rkt"
          "bar-state.rkt"
@@ -92,7 +92,7 @@
 
 ;; undo-table holds the real commands of the undo layer; undo.rkt fills it when it is loaded.
 (define undo-table
-  (lazy-layer! (#%variable-reference) "undo/undo.rkt" "undo" "undo is not available"
+  (lazy-layer! (#%variable-reference) "../undo/undo.rkt" "undo" "undo is not available"
                (list "undo-mode" "undo-back" "undo-forward" "undo-up" "undo-down"
                      "undo-branch-back" "undo-branch-forward" "undo-tip" "undo-mark"
                      "undo-unmark" "undo-diff" "undo-live" "undo-keep" "undo-cancel")))
@@ -102,7 +102,7 @@
 
 ;; multi-table holds the real commands of the cursors and the selection; multi.rkt fills it when it is loaded.
 (define multi-table
-  (lazy-layer! (#%variable-reference) "multi/multi.rkt" "cursors" "cursors are not available"
+  (lazy-layer! (#%variable-reference) "../multi/multi.rkt" "cursors" "cursors are not available"
                (list "cursor-mode" "cur-leave" "cur-below" "cur-above" "cur-next-block" "cur-prev-block"
                      "cur-next-match" "cur-all-matches" "cur-drop" "cur-clear" "select-mode"
                      "sel-left" "sel-right" "sel-up" "sel-down" "sel-word" "sel-word-back"
@@ -111,7 +111,7 @@
 
 ;; clip-table holds the real commands of copy, cut and paste; clip.rkt fills it when it is loaded.
 (define clip-table
-  (lazy-layer! (#%variable-reference) "clip.rkt" "clip" "copy and paste are not available"
+  (lazy-layer! (#%variable-reference) "../clip.rkt" "clip" "copy and paste are not available"
                (list "copy" "cut" "paste")))
 
 (provide undo-table undo-rows-hook multi-table clip-table)
