@@ -311,3 +311,6 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - 2026-11-02 step 9 update split: trace-file to key-modes moved from entry/update.rkt to entry/update-trace.rkt
 - 2026-11-02 step 9 retry: key-bytes to key-modes (screen text, judge, trace) moved from entry/update.rkt to entry/update-screen.rkt
 - 2026-11-02 step 10 update split: last-evidence to evidence-lines moved from entry/update.rkt to entry/update-evidence.rkt
+- 2026-11-02 step 11 update split: arg-value to do-docs (record and docs) moved from entry/update.rkt to entry/update-record.rkt
+- 2026-11-02 step 11 retry: run-test moves together with arg-value..do-docs into entry/update-record.rkt (run-test was unbound there)
+- 2026-11-02 step 11 third try: live-last to do-docs (live print, drive-editor, run-test, record, docs) move together to entry/update-drive.rkt; the block needs nothing from the rest of update.rkt
