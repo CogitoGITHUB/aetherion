@@ -42,9 +42,9 @@
 ;; tab-scanning holds whether a thread is listing the folders now.
 (define tab-scanning (box #f))
 
-;; tb-mark-row answers the text of one row: the names in order with a dot before
+;; tabs-mark-row answers the text of one row: the names in order with a dot before
 ;; the active one, cut from the left so the active one stays in view.
-(define (tb-mark-row names active inner)
+(define (tabs-mark-row names active inner)
   (define cells
     (for/list ([n (in-list names)] [i (in-naturals)])
       (if (eqv? i active) (string-append "● " n) n)))
@@ -55,18 +55,18 @@
         (loop (add1 s))
         (text s))))
 
-;; tb-scan-maybe lists the workspaces and the projects in a thread, once for each
+;; tabs-scan-maybe lists the workspaces and the projects in a thread, once for each
 ;; root, and calls again when they are known, so the bar is painted anew.
-(define (tb-scan-maybe root again)
+(define (tabs-scan-maybe root again)
   (define key (path->string root))
   (define have (unbox tab-lists))
   (unless (or (unbox tab-scanning) (and have (string=? (car have) key)))
     (set-box! tab-scanning #t)
     (thread
      (lambda ()
-       (define up (tb-parent root))
-       (define ws (if up (tb-dirs up) null))
-       (define ps (tb-dirs root))
+       (define up (tabs-parent root))
+       (define ws (if up (tabs-dirs up) null))
+       (define ps (tabs-dirs root))
        (set-box! tab-lists (list key ws ps))
        (set-box! tab-scanning #f)
        (again)))))
@@ -82,19 +82,19 @@
 (define (tab-rows file width again)
   (define level (min 3 (max 1 (unbox tab-count))))
   (define files (unbox tab-files))
-  (define labels (tb-labels files))
+  (define labels (tabs-labels files))
   (define at (index-of files (unbox tab-current)))
   (define inner (max 1 (- width 4)))
-  (define root (tb-root file))
-  (when (>= level 2) (tb-scan-maybe root again))
+  (define root (tabs-root file))
+  (when (>= level 2) (tabs-scan-maybe root again))
   (define have (unbox tab-lists))
   (define ready (and have (string=? (car have) (path->string root))))
-  (define project (tb-project file root))
-  (define tabs-text (tb-mark-row labels at inner))
+  (define project (tabs-project file root))
+  (define tabs-text (tabs-mark-row labels at inner))
   (define project-text
-    (if ready (tb-mark-row (caddr have) (index-of (caddr have) project) inner) "reading folders"))
+    (if ready (tabs-mark-row (caddr have) (index-of (caddr have) project) inner) "reading folders"))
   (define workspace-text
-    (if ready (tb-mark-row (cadr have) (index-of (cadr have) (tb-last root)) inner) "reading folders"))
+    (if ready (tabs-mark-row (cadr have) (index-of (cadr have) (tabs-last root)) inner) "reading folders"))
   (define sections
     (append (if (>= level 3) (list (cons "workspace" workspace-text)) null)
             (if (>= level 2) (list (cons "project" project-text)) null)
@@ -111,8 +111,8 @@
          tab-rows
          tab-place
          tab-joined
-         tb-root
-         tb-project-dir)
+         tabs-root
+         tabs-project-dir)
 
 ;; tab-git-text holds the git row as text, set by the git thread of the bar, so
 ;; the tab bar shows it at every level.

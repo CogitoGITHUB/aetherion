@@ -5,32 +5,32 @@
 
 (provide)
 
-;; tb-go! makes a file the active tab and ends the round of the live session, so
+;; tabs-go! makes a file the active tab and ends the round of the live session, so
 ;; the session opens that file next.
-(define (tb-go! target)
+(define (tabs-go! target)
   (set-box! tab-current target)
   (set-box! tab-switch target)
   (cons #f ""))
 
-;; tb-step goes to the tab before (-1) or after (1) the active one, and round.
-(define (tb-step delta)
+;; tabs-step goes to the tab before (-1) or after (1) the active one, and round.
+(define (tabs-step delta)
   (define files (unbox tab-files))
   (define i (index-of files (unbox tab-current)))
   (if (or (not i) (< (length files) 2))
       (cons #t "one tab")
-      (tb-go! (list-ref files (modulo (+ i delta) (length files))))))
+      (tabs-go! (list-ref files (modulo (+ i delta) (length files))))))
 
 ;; command-tab-prev goes to the tab before.
-(define (command-tab-prev session words) (tb-step -1))
+(define (command-tab-prev session words) (tabs-step -1))
 
 ;; command-tab-next goes to the tab after.
-(define (command-tab-next session words) (tb-step 1))
+(define (command-tab-next session words) (tabs-step 1))
 
 ;; command-tab-open opens the next page of the folder of the active file that is
 ;; not open yet, as a new tab.
 (define (command-tab-open session words)
   (define file (path->string (path->complete-path (session-file session))))
-  (define dir (tb-parent file))
+  (define dir (tabs-parent file))
   (define names
     (if dir
         (with-handlers ([(lambda (e) #t) (lambda (e) null)])
@@ -44,7 +44,7 @@
     [(null? fresh) (cons #t "no other page in this folder")]
     [else
      (set-box! tab-files (append (unbox tab-files) (list (car fresh))))
-     (tb-go! (car fresh))]))
+     (tabs-go! (car fresh))]))
 
 ;; command-tab-close closes the active tab and goes to the one beside it. The
 ;; last tab stays.
@@ -57,10 +57,10 @@
      (define i (or (index-of files cur) 0))
      (define rest (remove cur files))
      (set-box! tab-files rest)
-     (tb-go! (list-ref rest (min i (sub1 (length rest)))))]))
+     (tabs-go! (list-ref rest (min i (sub1 (length rest)))))]))
 
-;; tb-put-place! stands the tab bar at a place and keeps the place for the hide key.
-(define (tb-put-place! p)
+;; tabs-put-place! stands the tab bar at a place and keeps the place for the hide key.
+(define (tabs-put-place! p)
   (set-box! tab-place p)
   (set-box! tab-saved p))
 
@@ -68,14 +68,14 @@
 ;; hidden bar comes back first.
 (define (command-tab-place-next session words)
   (define now (if (string=? (unbox tab-place) "hidden") (unbox tab-saved) (unbox tab-place)))
-  (tb-put-place! (if (string=? now "top") "bottom" "top"))
+  (tabs-put-place! (if (string=? now "top") "bottom" "top"))
   (cons #t (format "tabs: ~a" (unbox tab-place))))
 
 ;; command-tab-top stands the tab bar at the top.
-(define (command-tab-top session words) (tb-put-place! "top") (cons #t "tabs: top"))
+(define (command-tab-top session words) (tabs-put-place! "top") (cons #t "tabs: top"))
 
 ;; command-tab-bottom stands the tab bar at the bottom.
-(define (command-tab-bottom session words) (tb-put-place! "bottom") (cons #t "tabs: bottom"))
+(define (command-tab-bottom session words) (tabs-put-place! "bottom") (cons #t "tabs: bottom"))
 
 ;; command-tab-join switches between a shared edge and two boxes when the tab bar
 ;; and the bar stand at the same edge.

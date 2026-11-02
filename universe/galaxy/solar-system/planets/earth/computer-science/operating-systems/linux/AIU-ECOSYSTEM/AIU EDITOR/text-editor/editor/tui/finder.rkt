@@ -112,7 +112,7 @@
 (define (scope-dir scope file root)
   (cond
     [(string=? scope "file") (or (path-only (string->path file)) (current-directory))]
-    [(string=? scope "project") (tb-project-dir file root)]
+    [(string=? scope "project") (tabs-project-dir file root)]
     [else root]))
 
 (require "../notation/location.rkt")
@@ -125,7 +125,7 @@
 ;; the live session, which then opens the file and jumps to the line.
 (define (find-run session scope kind)
   (define file (path->string (path->complete-path (session-file session))))
-  (define root (tb-root file))
+  (define root (tabs-root file))
   (define dir (scope-dir scope file root))
   (define name (let ([n (file-name-from-path file)]) (if n (path->string n) file)))
   (set-layer! session "visual")
