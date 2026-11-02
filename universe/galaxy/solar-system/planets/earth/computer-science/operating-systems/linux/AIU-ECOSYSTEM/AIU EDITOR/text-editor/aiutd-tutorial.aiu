@@ -4,6 +4,21 @@ tags: docs aiutd generated
 AIUTD TUTORIAL
 title end
 
+section start
+title start
+Select, copy and paste
+title end
+
+paragraph start
+Space v starts a selection, s extends it, space y copies, escape leaves the layer, space p pastes at the cursor.
+paragraph end
+
+paragraph start
+Keys: space v, space y, space p
+paragraph end
+
+section end
+
 comment start
 Written by aiutd docs from the feature files whose tests pass. Do not edit by hand.
 comment end
@@ -19,21 +34,6 @@ paragraph end
 
 paragraph start
 Keys: space f, backspace
-paragraph end
-
-section end
-
-section start
-title start
-Select, copy and paste
-title end
-
-paragraph start
-Space v starts a selection, s extends it, space y copies, escape leaves the layer, space p pastes at the cursor.
-paragraph end
-
-paragraph start
-Keys: space v, space y, space p
 paragraph end
 
 section end

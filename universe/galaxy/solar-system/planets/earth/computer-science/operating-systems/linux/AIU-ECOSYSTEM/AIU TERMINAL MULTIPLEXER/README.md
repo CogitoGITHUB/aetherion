@@ -395,8 +395,28 @@ No timer anywhere: every wait ends on an event — a record, a socket answer, a 
 
 ## Usage
 
+The one command is `aiumux` (installed at `/usr/local/bin/aiumux`, the script
+registered at `terminal-multiplexer/tools/aiumux.nu`). It builds when the source
+is newer than the binaries, starts the holder when no holder holds the session,
+and draws the screen:
+
 ```bash
-cd "AIU TERMINAL MULTIPLEXER/multiplexer"
+aiumux                  # join the session named main, starting it if it is down
+aiumux work             # the session called work
+aiumux ls               # the sessions that stand, and which one a holder holds
+aiumux --start          # start it with no screen: an agent drives it through the MCP
+aiumux kill main        # end the holder; the session's own files stay
+aiumux --rebuild        # build again, then do what was asked
+```
+
+The state root is the one the MCP registration names:
+`~/.local/state/aiu-multiplexer/`, with `target/` for the binaries and
+`sessions/` for one directory per session; `--state-root DIR` moves it.
+
+Under it are the three programs, and the probes run them directly:
+
+```bash
+cd "AIU TERMINAL MULTIPLEXER/terminal-multiplexer/multiplexer"
 CARGO_TARGET_DIR=/tmp/opencode/mux-target cargo build --offline
 
 # the holder owns the session; the log keeps to 4 MiB unless --log-limit says less

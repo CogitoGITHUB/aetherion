@@ -340,3 +340,29 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - multi.rkt: cut multi-draw (lit ranges and text overlay)
 - undo.rkt: cut undo-tree (nodes, kids, load, layout, parent, next)
 - blockview.rkt: cut blockview-boxes (box geometry, ranges, inside, parent)
+- read pass: dashboard removal usages
+- read pass 2: dashboard removal code
+- 2026-11-02 PLAN remove the piece-placement dashboard: dashboard.rkt/.rs, pieces.rkt, dashboard-check, dashboard verb, gate stage, capability, Rust op OP_DASHBOARD; session-state and agent-status are used nowhere else
+- 2026-11-02 dashboard removed, level 2 green, committed
+- read pass: todo format and update-drive.rkt split
+- read pass: update-drive.rkt split
+- 2026-11-02 PLAN split update-drive.rkt into update-drive-live, -pty, -why, -run, -record, -docs; the old file keeps run-all-tests, arg-value and the one provide
+- 2026-11-02 update-drive.rkt split, level 2 green, committed
+- read pass: bar.rkt menu.rkt multi.rkt undo.rkt for natural cuts
+- read pass: bar.rkt full, lazy-layer, users of its exports
+- 2026-11-02 PLAN split bar.rkt into bar-state.rkt (boxes), bar-rows.rkt (bar rows and strips), bar-commands.rkt (bar and focus commands); bar.rkt keeps the plan and the lazy tables
+- 2026-11-02 todo added: keybindings check, subject subfolders, keys per category, one test file per source file
+- 2026-11-02 bar.rkt split, level 2 green, committed
+- 2026-11-02 todo added: AIU NOTATION in its own subfolder
+- read pass: notation folder contents and links to the AIU NOTATION repo
+- read pass: notation binary path in quick, update-table, finder, hot-path.rs
+- 2026-11-02 PLAN editor/notation/location.rkt: one answer for where the notation binary is; quick.rkt, update-table.rkt, finder.rkt ask it; hot-path.rs copy stays
+- 2026-11-02 notation location.rkt done, level 2 green, committed
+- read pass: mu- prefix rename to multi-
+- 2026-11-02 PLAN rename prefix mu- to multi- in all .rkt files; abort if a name clashes or a test, feature, rs or nu file uses mu-
+- 2026-11-02 prefix mu- renamed to multi-, level 2 green, committed
+- read pass: ud- prefix rename to undo-
+- 2026-11-02 PLAN rename prefix ud- to undo- in the three undo files; abort if a new name is an already defined identifier or a non-rkt file uses ud-
+- read pass: undo-mark clash
+- 2026-11-02 PLAN ud- to undo- rename, variable ud-mark becomes undo-marked because audit/accept.rkt defines undo-mark
+- 2026-11-02 prefix ud- renamed to undo-, level 2 green, committed
