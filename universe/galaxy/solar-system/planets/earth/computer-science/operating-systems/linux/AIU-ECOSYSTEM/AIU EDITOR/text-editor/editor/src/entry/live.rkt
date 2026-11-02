@@ -62,6 +62,7 @@
       (unless (home-screen) (wire-start))
       (let next-round ([file file] [journal journal])
         (define session (make-session file journal))
+    (trace-session! file)
         ;; The viewport is the first text line shown at the top of the screen. It
         ;; changes only when the point leaves the window, so a moving point does
         ;; not drag the page under it.
@@ -457,7 +458,7 @@
           [else
            (define trace-t0 (current-inexact-milliseconds))
            (define result (act-on session pending))
-           (trace-key! pending trace-t0 result)
+           (trace-key! pending trace-t0 result session)
              (set-box! pending-keys (if (eq? (outcome-rest result) (quote wait)) (map car (key-runs pending)) (list)))
            (repaint session viewport)
            (cond
@@ -467,13 +468,20 @@
               (walk (outcome-rest result))]
              [else (void)])])))))
 
+;; trace-session! appends one line to the trace log when AIU_TRACE is set: the file a session opens and whether it is the home screen.
+(define (trace-session! file)
+  (when (getenv "AIU_TRACE")
+    (with-handlers ([void void])
+      (call-with-output-file (build-path (find-system-path (quote home-dir)) ".aiu-trace.log") #:exists (quote append)
+        (lambda (o) (fprintf o "~a session file ~a home ~a\n" (current-inexact-milliseconds) file (and (home-screen) #t)))))))
+
 ;; trace-key! appends one line to the trace log when AIU_TRACE is set, and does nothing otherwise.
-(define (trace-key! pending t0 result)
+(define (trace-key! pending t0 result session)
   (when (getenv "AIU_TRACE")
     (with-handlers ([void void])
       (call-with-output-file (build-path (find-system-path (quote home-dir)) ".aiu-trace.log") #:exists (quote append)
         (lambda (o)
-          (fprintf o "~a act-on ~a ms pending ~s go-on ~a\n" (current-inexact-milliseconds) (- (current-inexact-milliseconds) t0) (if (> (length pending) 3) (take pending 3) pending) (outcome-go-on? result)))))))
+          (fprintf o "~a act-on ~a ms pending ~s go-on ~a layer ~a home ~a rest ~a\n" (current-inexact-milliseconds) (- (current-inexact-milliseconds) t0) (if (> (length pending) 3) (take pending 3) pending) (outcome-go-on? result) (the-layer session) (and (home-screen) #t) (let ([r (outcome-rest result)]) (if (list? r) (length r) r))))))))
 
 ;; longest-binding answers how many leading keys of the buffer form a binding:
 ;; the longest run of them the layer binds. Zero when the layer binds none of

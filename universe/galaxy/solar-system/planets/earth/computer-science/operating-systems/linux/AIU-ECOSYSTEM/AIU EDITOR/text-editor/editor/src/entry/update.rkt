@@ -537,7 +537,7 @@
   (define (wait-session s0 e0 tl)
     (define line (key-line tl))
     (cond
-      [(not (and line (regexp-match? #rx"go-on #f$" line))) #t]
+      [(not (and line (regexp-match? #rx"go-on #f( |$)" line))) #t]
       [else
        (define t-key (current-inexact-milliseconds))
        (define deadline (+ t-key 20000))
@@ -653,6 +653,17 @@
   (define raw (with-handlers ([void (lambda (e) #"")]) (file->bytes (build-path dir (format "s~a.bin" i)))))
   (regexp-match? (regexp-quote txt) (plain-screen (last-frame (bytes->string/utf-8 raw #\?)))))
 
+;; key-heads answers one line per fed key: the first three readable lines of the frame saved after that key.
+(define (key-heads dir names)
+  (for/list ([n (in-list names)] [i (in-naturals 0)])
+    (define raw (with-handlers ([void (lambda (e) #"")]) (file->bytes (build-path dir (format "s~a.bin" i)))))
+    (define scr (plain-screen (last-frame (bytes->string/utf-8 raw #\?))))
+    (define ls
+      (filter (lambda (l) (regexp-match? #px"[A-Za-z]{3}" l))
+              (map (lambda (l) (string-trim (regexp-replace* #px"[│╭╮╰╯├┤┬┴┼─●]+" l " "))) (string-split scr "\n"))))
+    (format "    screen after ~a ~a: ~a" i n
+            (string-join (map (lambda (l) (if (> (string-length l) 28) (substring l 0 28) l)) (first-n ls 3)) " / "))))
+
 ;; evidence-lines answers the lines that tell where a run went wrong: sessions, frames, expected text, trace and one NEXT line.
 (define (evidence-lines dir out lines verdicts screen trace-start)
   (define raw (with-handlers ([void (lambda (e) #"")]) (file->bytes out)))
@@ -695,6 +706,7 @@
    (list (format "    evidence: sessions started ~a, ended ~a, frames drawn ~a, frames without ESC[H start ~a, exit ~a" starts ends (length parts) (length odd) code)
          "    frames per key and the mode after it:")
    key-rows
+   (key-heads dir names)
    (list "    last frames of the whole run:")
    frame-rows
    missing-lines
