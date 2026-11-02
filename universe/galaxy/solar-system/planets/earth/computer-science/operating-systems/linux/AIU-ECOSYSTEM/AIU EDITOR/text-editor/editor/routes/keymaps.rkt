@@ -99,6 +99,7 @@
     ("space n" "next-block")
     ("space e" "block-end")
     ("space o" "pin-mode")
+      ("up" "block-up") ("down" "block-down") ("left" "move-left") ("right" "move-right")
     ("escape" "visual-mode")
     ("backspace" "delete")))
 
@@ -138,7 +139,7 @@
 ;; cursor, z clears them, f opens the write layer for all of them, s starts the selections, escape goes back.
 (define cursor-keys
   (list (list "t" "cur-next-block") (list "h" "cur-prev-block")
-        (list "down" "cur-below") (list "up" "cur-above")
+        (list "down" "cur-below") (list "up" "cur-above") (list "left" "move-left") (list "right" "move-right")
         (list "j" "cur-next-match") (list "v" "cur-all-matches") (list "r" "cur-drop") (list "z" "cur-clear")
         (list "f" "write-mode") (list "s" "select-mode")
         (list "a" "kind-any") (list "p" "kind-paragraph") (list "e" "kind-section") (list "c" "kind-code")
@@ -150,7 +151,7 @@
 ;; the one before or after it, and escape goes back to the visual layer.
 (define move-keys
   (list (list "h" "block-move-up")
-        (list "t" "block-move-down")
+        (list "t" "block-move-down") (list "up" "block-move-up") (list "down" "block-move-down")
         (list "escape" "visual-mode")))
 
 
@@ -175,7 +176,7 @@
         (list "r" "bar-right")
         (list "s" "bar-sides")
         (list "d" "bar-style")
-        (list "x" "bar-hide")
+        (list "x" "bar-hide") (list "left" "bar-left") (list "right" "bar-right") (list "up" "bar-top") (list "down" "bar-bottom")
         (list "v" "bar-level-mode")
         (list "escape" "visual-mode")))
 
@@ -183,7 +184,7 @@
 ;; t shows one more, and escape goes back to the bar layer.
 (define bar-level-keys
   (list (list "h" "bar-less")
-        (list "t" "bar-more")
+        (list "t" "bar-more") (list "left" "bar-less") (list "right" "bar-more")
         (list "escape" "bar-mode")))
 ;; tab-keys are the keys of the tab layer: h and left go to the tab before, t and
 ;; right to the tab after, o opens the next page of the folder, c closes the tab,
@@ -191,7 +192,7 @@
 ;; level adjuster.
 (define tab-keys
   (list (list "h" "tab-prev")
-        (list "t" "tab-next")
+        (list "t" "tab-next") (list "left" "tab-prev") (list "right" "tab-next")
         (list "o" "tab-open")
         (list "c" "tab-close")
         (list "p" "tab-place-next")
@@ -206,7 +207,7 @@
 ;; shows one more, and escape goes back to the tab layer.
 (define tab-level-keys
   (list (list "h" "tab-less")
-        (list "t" "tab-more")
+        (list "t" "tab-more") (list "left" "tab-less") (list "right" "tab-more")
         (list "escape" "tab-mode")))
 ;; find-keys are the keys of the find layer: the first key is the scope (f the
 ;; file, p the project, w the workspace) and the second is the kind (t text, b
@@ -229,7 +230,7 @@
 (define pin-keys
   (list (list "a" "pin-add") (list "d" "pin-delete") (list "h" "pin-prev") (list "t" "pin-next")
         (list "u" "pin-top") (list "b" "pin-bottom") (list "n" "pin-earlier") (list "s" "pin-later")
-        (list "x" "pin-hide") (list "f" "pin-keep") (list "escape" "visual-mode")))
+        (list "x" "pin-hide") (list "left" "pin-prev") (list "up" "pin-prev") (list "right" "pin-next") (list "down" "pin-next") (list "f" "pin-keep") (list "escape" "visual-mode")))
 
 ;; The tables are put in with list, not with cons and not with a quote:
 ;; a quoted list would hold the NAMES of the tables, and a cons would be

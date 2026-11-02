@@ -389,3 +389,6 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - 2026-11-02 bar files moved to editor/tui/bar, level 2 green, committed
 - check: which planned items are missing from todo.aiu
 - 2026-11-02 todo added: per-frame state line, Rust tests in the gate, errortrace run, gutter folder
+- read pass: keybindings check
+- read pass: keybinding audit script
+- patch: arrow keys in every layer that lacks them (keymaps.rkt)
