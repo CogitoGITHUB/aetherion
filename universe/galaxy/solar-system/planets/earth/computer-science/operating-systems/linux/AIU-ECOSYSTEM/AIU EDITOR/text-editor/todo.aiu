@@ -299,3 +299,15 @@ todo: tab management needs more features. There is no workspace management, no p
 todo: the mode line shows the available keys but only the keys alone. It needs a full table of every key with what it does, per layer. Owner request 2026-11-02.
 paragraph end
 section end
+
+section start
+title start
+INSANELY IMPORTANT: the .aiu-memory file
+title end
+
+paragraph start
+todo: a .aiu-memory file kept in the directory the owner works in (workspace or project). It remembers the open tabs, workspaces and projects, so nothing is lost when aiutd exits and everything comes back when it is opened in that directory again. Owner request 2026-11-02, top priority.
+todo: feature 1 of .aiu-memory: the work placement is never lost on exit. Open tabs, their order, the current tab, the cursor and view place of each, and the open workspaces and projects are saved and restored.
+todo: feature 2 of .aiu-memory: workspace settings. A directory or workspace can say which projects it holds and which files and tabs open by themselves when aiutd starts there. The format and the rules need thinking first: where the file lives, what it holds, and how it relates to the plain text .aiu format. It must not use .org files and must not edit AIU NOTATION.
+paragraph end
+section end
