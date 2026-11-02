@@ -331,3 +331,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - dispatch: cut dispatch-keys, dispatch-tasks, dispatch-bake
 - commands: read commands.rkt, loaders and crossing names for the session file and the multi file
 - commands: cut commands-edit, commands-layer, commands-page (handlers; they never require commands.rkt)
+- update.rkt: cut update-gate (stages, parse, gate-run) and update-build (compile helpers, do-update)
