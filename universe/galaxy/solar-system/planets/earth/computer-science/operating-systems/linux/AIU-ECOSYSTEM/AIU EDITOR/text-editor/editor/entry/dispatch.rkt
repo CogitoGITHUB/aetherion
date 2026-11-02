@@ -36,7 +36,7 @@
          "../notation/document.rkt"
          "../notation/host.rkt"
          "live.rkt"
-         "plugin-verbs.rkt" "dispatch-git.rkt" "dispatch-agent.rkt" "dispatch-checkpoint.rkt"
+         "plugin-verbs.rkt" "dispatch-git.rkt" "dispatch-agent.rkt" "dispatch-keys.rkt" "dispatch-tasks.rkt" "dispatch-bake.rkt" "dispatch-checkpoint.rkt"
          )
 
 ;; input-is-a-terminal? answers whether the standard input is a
@@ -88,136 +88,6 @@
             (define text (cdr answer))
             (unless (string=? text "") (print-line text))
             (when (car answer) (loop)))))))
-
-;; routes-walk runs the routing walk and prints one line per key: which
-;; layer saw the key and what it meant there. The keys are the ones given
-;; on the command line, or every key the editor binds when none are
-;; given, plus the reserved prefix, so the walk always shows the whole
-;; shape. The program-claims are the keys the focused program wants; they
-;; are given as the words before the layer.
-(define (routes-walk args)
-  (define layer (if (null? args) "visual" (car args)))
-  (define claims (if (null? args) '() (cdr args)))
-  (define keys (if (null? args)
-                   (append (list reserved-prefix)
-                           (map car (keys-of layer)))
-                   (list reserved-prefix)))
-  (print-line (format "layer: ~a  program claims: ~a  reserved prefix: ~a"
-                       layer
-                       (if (null? claims) "none" (string-join claims " "))
-                       reserved-prefix))
-  (for-each (lambda (answer) (print-line (route-line answer)))
-            (route-walk keys claims layer)))
-
-;; tasks-verb answers the task table: one line per task, the name and
-;; the doc line of the task, so the list and the help read the same way.
-(define (tasks-verb args)
-  (if (null? args)
-      (for-each print-line (task-lines))
-      (print-line "the editor: tasks takes no arguments")))
-
-;; task-verb runs tasks against a file. The first word is the file, and
-;; after it come the runs: a task name and the words that are its
-;; arguments. A "--" between two runs starts the next one, so several
-;; runs in one invocation are a sequence and they run in the order they
-;; were given. A "--dry-run" word opens the dry-run scope, where a task
-;; that acts prints what it would do and changes nothing.
-(define (task-verb args)
-  (cond
-    [(null? args)
-     (print-line "the editor: task needs a file")]
-    [else
-     (define dry (member "--dry-run" args))
-     (define words (if dry (remove "--dry-run" args) args))
-     (define file (path->complete-path (car words)))
-     (define session (make-session file (journal-path-for file)))
-     (define groups (split-runs (cdr words)))
-     (define answers
-       (parameterize ([dry-run? (and dry #t)])
-         (run-tasks session groups)))
-     (for-each print-line answers)]))
-
-;; split-runs splits the words of an invocation into the runs of a
-;; sequence. A "--" starts the next run; the words before it are the
-;; name of the first task and its arguments. The runs come back in the
-;; order they were given.
-(define (split-runs words)
-  (let loop ([rest words] [current '()] [runs '()])
-    (cond
-      [(null? rest)
-       (if (null? current) (reverse runs) (reverse (cons (reverse current) runs)))]
-      [(string=? (car rest) "--")
-       (loop (cdr rest) '() (if (null? current) runs (cons (reverse current) runs)))]
-      [else (loop (cdr rest) (cons (car rest) current) runs)])))
-
-;; keys-verb answers what the bytes of a key are and what they mean.
-;; The bytes are given as hex, because a key may be any byte at all: the
-;; walk answers the name of each key, the layer that saw it, and the
-;; command it runs there. The layer may be named after the bytes, and it
-;; is the visual layer without one.
-(define (keys-verb args)
-  (define layer (if (null? args) "visual" (car args)))
-  (define hexes (if (null? args) '() (cdr args)))
-  (for-each
-   (lambda (hex)
-     (define names (key-names (hex->bytes hex)))
-     (if (null? names)
-         (print-line (format "~a -> no key" hex))
-         (for-each
-          (lambda (name)
-            (define answer (route-of-key name '() layer))
-            (print-line (format "~a -> ~a ~a"
-                                name
-                                (first answer)
-                                (if (string=? (second answer) "") "-" (second answer)))))
-          names)))
-   hexes))
-
-;; dashboard-verb draws the dashboard and prints it, one line per row of
-;; the screen. The file is the one being edited; without a file the
-;; dashboard shows the editor alone.
-(define (dashboard-verb args)
-  (define file (if (null? args) "" (car args)))
-  (define level (dashboard-level (if (< (length args) 2) "" (cadr args))))
-  (define path (path->complete-path (if (string=? file "") "untitled" file)))
-  (define journal (journal-path-for path))
-  (define state (session-state (path->string path) (path->string journal)))
-  (for-each print-line (draw-dashboard (pieces-at level) state level)))
-
-;; dashboard-level answers the level the dashboard is drawn at: the level
-;; the owner names, and the second level when nobody names one.
-(define (dashboard-level said)
-  (define level (and (not (string=? said "")) (string->number said)))
-  (if (and level (<= 0 level) (<= level 3)) level 2))
-
-;; baked-good? asks whether the baked module holds the tables it was
-;; given: the bake is good when what it wrote is what it was given.
-(define (baked-good? path)
-  (with-handlers ([exn:fail? (lambda (why) #f)])
-    (define tables (dynamic-require (make-resolved-module-path path) 'baked-tables))
-    (equal? tables keymaps)))
-
-;; bake-verb bakes the config: the tables become first-class defaults in
-;; a generated module, the bake checks the result, and the last good is
-;; kept only when the check says yes. A bake that is not good never
-;; ships.
-(define (bake-verb args)
-  (define result (bake keymaps baked-good?))
-  (define path (car result))
-  (define good (cadr result))
-  (define rust (caddr result))
-  (print-line (format "baked: ~a" path))
-  (if good
-      (print-line (format "the bake is good and is now the last good: ~a" (last-good)))
-      (print-line (format "the bake is NOT good; the last good stays: ~a"
-                          (or (last-good) "there is none"))))
-  ;; the RUST half is said too: a half that was not built is named, and
-  ;; it is never silent
-  (print-line
-   (format "the hot path was built: ~a (in ~a ms; the build said what it said in ~a)"
-           (if (hash-ref rust 'good #f) "yes" "NO")
-           (hash-ref rust 'ms 0)
-           (hash-ref rust 'log "-"))))
 
 ;; edit-file opens the file the user named and runs the editing session.
 (define (edit-file args)
