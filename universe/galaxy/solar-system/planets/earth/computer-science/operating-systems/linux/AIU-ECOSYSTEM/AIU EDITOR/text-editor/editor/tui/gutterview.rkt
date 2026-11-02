@@ -2,7 +2,7 @@
 ;; gutterview.rkt: puts one column at the left of every line of a drawn page,
 ;; with the git mark of the block that line belongs to, or a space.
 (require racket/string
-         "blockview.rkt"
+         "blocks/blockview.rkt"
          "gutter.rkt"
          "../commands/commands.rkt"
          "../notation/host.rkt"

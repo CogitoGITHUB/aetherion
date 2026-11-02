@@ -1,7 +1,7 @@
 #lang racket/base
 ;; One job: draw the text of a block inside its box and open that text for editing (the block-text key).
 
-(require racket/list racket/string "../commands/commands.rkt" "../machine/terminal.rkt" "../notation/document.rkt" "../notation/host.rkt" "pins.rkt" "blocks-kind.rkt" "blockview.rkt" "blocks-edit.rkt")
+(require racket/list racket/string "../../commands/commands.rkt" "../../machine/terminal.rkt" "../../notation/document.rkt" "../../notation/host.rkt" "../pins.rkt" "blocks-kind.rkt" "blockview.rkt" "blocks-edit.rkt")
 
 (provide blockview-pad blockview-chunks blockview-text-overlay)
 

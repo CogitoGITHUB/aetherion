@@ -6,9 +6,9 @@
 
 (require racket/list
          racket/string
-         "../commands/commands.rkt"
-         "../notation/document.rkt"
-         "../notation/host.rkt"
+         "../../commands/commands.rkt"
+         "../../notation/document.rkt"
+         "../../notation/host.rkt"
          "blockview.rkt")
 
 ;; blockview-clamp! puts the point back inside the block being edited.

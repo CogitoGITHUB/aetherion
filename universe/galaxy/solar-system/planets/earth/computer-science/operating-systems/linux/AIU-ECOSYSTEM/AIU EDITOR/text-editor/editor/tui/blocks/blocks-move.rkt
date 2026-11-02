@@ -1,6 +1,6 @@
 #lang racket/base
 ;; One job: moving the lit block up or down among its siblings, and the move keys.
-(require racket/list racket/string "../commands/commands.rkt" "../machine/terminal.rkt" "../notation/document.rkt" "../notation/host.rkt" "blockview.rkt")
+(require racket/list racket/string "../../commands/commands.rkt" "../../machine/terminal.rkt" "../../notation/document.rkt" "../../notation/host.rkt" "blockview.rkt")
 
 ;; blockview-siblings answers the blocks that sit beside a block under the same parent,
 ;; in page order. Answers and titles are left out, so they never move.

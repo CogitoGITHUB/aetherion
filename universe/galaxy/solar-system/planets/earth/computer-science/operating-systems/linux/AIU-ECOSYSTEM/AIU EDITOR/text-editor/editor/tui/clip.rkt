@@ -11,7 +11,7 @@
          "../notation/host.rkt"
          (only-in racket/string string-join)
          (only-in net/base64 base64-encode)
-         (only-in "blockview.rkt" blockview-inside blockview-drawn)
+         (only-in "blocks/blockview.rkt" blockview-inside blockview-drawn)
          (only-in "bar.rkt" clip-table)
          (only-in "notify.rkt" notify!))
 

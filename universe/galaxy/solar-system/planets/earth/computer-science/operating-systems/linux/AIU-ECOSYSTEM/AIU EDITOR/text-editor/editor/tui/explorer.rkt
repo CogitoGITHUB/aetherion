@@ -21,7 +21,7 @@
          racket/string
          "../commands/commands.rkt"
          "../routes/keymaps.rkt"
-         "blockview.rkt"
+         "blocks/blockview.rkt"
          "bar.rkt"
          "tabs/finder.rkt")
 

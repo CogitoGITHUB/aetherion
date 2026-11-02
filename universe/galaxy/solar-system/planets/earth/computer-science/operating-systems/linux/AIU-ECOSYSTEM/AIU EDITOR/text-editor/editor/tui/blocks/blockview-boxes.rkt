@@ -1,7 +1,7 @@
 #lang racket/base
 ;; One job: the geometry of the drawn page - which lines each block fills, the box tree, the block under a point and the parent of a block.
 
-(require racket/list racket/string "../notation/document.rkt" "../notation/host.rkt")
+(require racket/list racket/string "../../notation/document.rkt" "../../notation/host.rkt")
 
 (provide blockview-plain (struct-out blockview-box) blockview-prefix blockview-end blockview-boxes blockview-kids blockview-seen blockview-assign blockview-ranges blockview-drawn blockview-inside blockview-target blockview-parent)
 
