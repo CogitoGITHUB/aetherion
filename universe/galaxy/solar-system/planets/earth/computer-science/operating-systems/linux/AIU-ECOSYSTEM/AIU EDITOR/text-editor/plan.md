@@ -366,3 +366,26 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - read pass: undo-mark clash
 - 2026-11-02 PLAN ud- to undo- rename, variable ud-mark becomes undo-marked because audit/accept.rkt defines undo-mark
 - 2026-11-02 prefix ud- renamed to undo-, level 2 green, committed
+- 2026-11-02 rule: push after every commit
+- read pass: tb- prefix rename to tabs-
+- 2026-11-02 PLAN rename prefix tb- to tabs- in the four tab and finder files; abort on a clash or a non-rkt file using tb-
+- 2026-11-02 prefix tb- renamed to tabs-, level 2 green, committed
+- read pass: bv- prefix rename to blockview-
+- 2026-11-02 PLAN rename prefix bv- to blockview- in the 12 block and multi files; abort on a clash or a non-rkt file using bv-
+- 2026-11-02 prefix bv- renamed to blockview-, level 2 green, committed
+- 2026-11-02 prefix renames all done (multi, undo, tabs, blockview); next: folder moves of editor/tui into feature folders
+- read pass: folder moves of tui; lazy-stub, dynamic-require, lints, requires of the undo group
+- 2026-11-02 PLAN folder moves inside editor/tui, one folder per patch with a generic mover: undo first, then tabs, multi, bar, blocks
+- 2026-11-02 undo files moved to editor/tui/undo, level 2 green, committed
+- 2026-11-02 PLAN move tabs, tabs-commands, tabs-folders, finder into editor/tui/tabs
+- 2026-11-02 tabs files moved to editor/tui/tabs, level 2 green, committed
+- 2026-11-02 PLAN move multi, multi-draw into editor/tui/multi; guard against files that build sibling paths at run time
+- 2026-11-02 multi files moved to editor/tui/multi, level 2 green, committed
+- 2026-11-02 PLAN move blockview, blockview-boxes, blocks-edit/kind/move/text/view into editor/tui/blocks; fix the two run-time paths in blockview.rkt (one level deeper)
+- 2026-11-02 todo changed: notation files get notation in their names, no subfolder
+- 2026-11-02 PLAN move block files into editor/tui/blocks again; mover already rewrote the shadow.rkt path, only hot-path.rkt path needs one more up
+- 2026-11-02 block files moved to editor/tui/blocks, level 2 green, committed
+- 2026-11-02 PLAN move bar, bar-clock, bar-commands, bar-git, bar-rows, bar-state into editor/tui/bar; lazy-layer path literals are rewritten by the mover
+- 2026-11-02 bar files moved to editor/tui/bar, level 2 green, committed
+- check: which planned items are missing from todo.aiu
+- 2026-11-02 todo added: per-frame state line, Rust tests in the gate, errortrace run, gutter folder

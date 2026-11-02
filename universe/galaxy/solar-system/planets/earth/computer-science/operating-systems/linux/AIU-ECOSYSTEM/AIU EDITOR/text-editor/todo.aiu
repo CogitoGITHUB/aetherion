@@ -339,11 +339,24 @@ section end
 
 section start
 title start
-AIU NOTATION in its own subfolder
+AIU NOTATION files carry notation in their names
 title end
 
 paragraph start
-todo: put everything that belongs to AIU NOTATION (its modules, checks, tests and docs inside the editor) into one subfolder, so it can be replaced in one move when AIU NOTATION is updated. Do not edit AIU NOTATION itself.
-todo: do this together with the subject subfolders, and keep the one-way rule: the editor requires the notation folder, never the other way round.
+todo: every file of the editor that belongs to AIU NOTATION (its modules, checks, tests and docs) gets notation in its file name, because these files sit in many folders. Then one search for notation finds all of them when AIU NOTATION is updated. Do not edit AIU NOTATION itself.
+todo: do this together with the subject subfolders, and keep the one-way rule: the editor requires the notation files, never the other way round.
+paragraph end
+section end
+
+section start
+title start
+Still to do: tests, gate and tui leftovers
+title end
+
+paragraph start
+todo: test system per-frame state line. The test system should show the editor state on each frame, so a failed test says what the state was at every step.
+todo: Rust tests in the gate. The Rust side of the editor gets its own tests, run by the gate stages like the Racket ones.
+todo: errortrace run. Run the editor under errortrace once and fix what it finds. The details are in plan.md.
+todo: gutter files. gutter.rkt and gutterview.rkt are loose in editor/tui. Give the gutter its own folder, and give each file its own test file.
 paragraph end
 section end
