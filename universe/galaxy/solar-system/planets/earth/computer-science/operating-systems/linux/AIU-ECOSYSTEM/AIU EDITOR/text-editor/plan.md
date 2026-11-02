@@ -332,3 +332,6 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - commands: read commands.rkt, loaders and crossing names for the session file and the multi file
 - commands: cut commands-edit, commands-layer, commands-page (handlers; they never require commands.rkt)
 - update.rkt: cut update-gate (stages, parse, gate-run) and update-build (compile helpers, do-update)
+- live/tabs/multi/undo: read for the last cut pass
+- live.rkt: read for the cut
+- live.rkt: cut live-paint (repaint, viewport, overlay) and live-keys (key loop, act-on, run-it)
