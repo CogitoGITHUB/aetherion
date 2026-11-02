@@ -1,0 +1,11 @@
+test home-open
+level 2
+file test.aiu
+keys space h escape
+expect screen contains kind: dashboard
+expect screen contains tags: dashboard home pages todos git
+expect screen contains 1 to 9   open that page
+expect screen lacks kind: default
+expect screen lacks tags: test editor introduction
+expect screen lacks comment
+expect seconds-under 30
