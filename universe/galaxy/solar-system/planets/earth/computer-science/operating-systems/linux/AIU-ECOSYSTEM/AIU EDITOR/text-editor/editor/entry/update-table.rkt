@@ -19,15 +19,10 @@
 (define editor-root
   (find-up here-dir (lambda (d) (directory-exists? (build-path d "gate")))))
 
+(require "../notation/location.rkt")
+
 ;; notation-bin answers the notation program as a string, or false.
-(define (notation-bin)
-  (define named (getenv "AIU_NOTATION_BIN"))
-  (define tail (list "AIU NOTATION" "notation system" "notation" "target" "debug" "notation"))
-  (cond
-    [(and named (not (string=? named "")) (file-exists? named)) named]
-    [else
-     (define d (find-up here-dir (lambda (d) (file-exists? (apply build-path d tail)))))
-     (and d (path->string (apply build-path d tail)))]))
+(define (notation-bin) (notation-bin-from here-dir))
 
 ;; capture runs a program in a folder and answers its exit code and all its output.
 (define (capture dir exe args)

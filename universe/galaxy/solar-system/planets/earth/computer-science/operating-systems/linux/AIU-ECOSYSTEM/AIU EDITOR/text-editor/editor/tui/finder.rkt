@@ -115,14 +115,11 @@
     [(string=? scope "project") (tb-project-dir file root)]
     [else root]))
 
-;; notation-bin answers the notation binary: the one AIU_NOTATION_BIN names, else the
-;; one built under the notation project beside the workspace root.
+(require "../notation/location.rkt")
+
+;; notation-bin answers the notation binary: the one found from the root, else the place it would be built.
 (define (notation-bin root)
-  (define named (getenv "AIU_NOTATION_BIN"))
-  (if (and named (not (string=? named "")))
-      named
-      (path->string
-       (build-path root "AIU NOTATION" "notation system" "notation" "target" "debug" "notation"))))
+  (or (notation-bin-from root) (path->string (apply build-path root notation-tail))))
 
 ;; find-run runs one search and opens the pick as a tab. A pick ends the round of
 ;; the live session, which then opens the file and jumps to the line.

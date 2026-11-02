@@ -73,17 +73,12 @@
                                               out))])))
                  (format "\u001b[~a;1H\u001b[7m~a\u001b[27m" rows mode)))
 
-;; notation-path answers the notation binary, from AIU_NOTATION_BIN or the folder
-;; of the ecosystem found by walking up from the current folder, or false.
+(require "../notation/location.rkt")
+
+;; notation-path answers the notation binary as a path, or false.
 (define (notation-path)
-  (define named (getenv "AIU_NOTATION_BIN"))
-  (if (and named (not (string=? named "")))
-      (string->path named)
-      (let loop ([d (current-directory)] [k 0])
-        (define c (build-path d "AIU NOTATION" "notation system" "notation" "target" "debug" "notation"))
-        (cond [(file-exists? c) c]
-              [(> k 6) #f]
-              [else (let-values ([(base name dir?) (split-path d)]) (if (path? base) (loop base (add1 k)) #f))]))))
+  (define s (notation-bin-from (current-directory)))
+  (and s (string->path s)))
 
 ;; boxed-lines answers the page drawn as boxes by the notation binary, as
 ;; lines, or false when it cannot be drawn. Only subprocess is used.
