@@ -303,3 +303,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - 2026-11-02 step 4 bar split: clock to tui/bar-clock.rkt, git (git-info to git-refresh-maybe, git-stale!) to tui/bar-git.rkt, bar.rkt requires both
 - 2026-11-02 step 5 pins split: pins boxes, pins-now, pin-update!, pin-swap!, bv-command-pin-* moved from tui/blockview.rkt to tui/pins.rkt, blockview requires it
 - 2026-11-02 step 6 undo split: git and small helpers ud-git-exe to ud-blen moved from tui/undo.rkt to tui/undo-git.rkt
+- 2026-11-02 step 7 cursors split: byte motion mu-cont? to mu-word-at moved from tui/multi.rkt to tui/text-motion.rkt
