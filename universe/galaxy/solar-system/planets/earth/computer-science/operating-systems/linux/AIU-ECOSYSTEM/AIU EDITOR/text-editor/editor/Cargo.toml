@@ -12,7 +12,7 @@ edition = "2021"
 # the file wire.
 [[bin]]
 name = "hot-path"
-path = "src/join/hot-path.rs"
+path = "join/hot-path.rs"
 
 [dependencies]
 # The shared read-only Git layer, by path: one Git model for this program

@@ -22,12 +22,12 @@
          racket/path
          racket/string
          racket/system
-         "../editor/src/machine/directories.rkt"
-         "../editor/src/machine/run.rkt"
-         "../editor/src/plugins/loader.rkt"
-         "../editor/src/plugins/manifest.rkt"
-         "../editor/src/plugins/pm.rkt"
-         "../editor/src/plugins/seam.rkt")
+         "../editor/machine/directories.rkt"
+         "../editor/machine/run.rkt"
+         "../editor/plugins/loader.rkt"
+         "../editor/plugins/manifest.rkt"
+         "../editor/plugins/pm.rkt"
+         "../editor/plugins/seam.rkt")
 
 ;; plugin-name is the name of the plugin the proofs use.
 (define plugin-name "gate-plugin")

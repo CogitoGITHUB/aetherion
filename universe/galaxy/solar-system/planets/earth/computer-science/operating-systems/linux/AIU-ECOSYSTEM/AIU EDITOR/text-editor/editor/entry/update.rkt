@@ -203,9 +203,9 @@
 
 ;; compile-files are the files raco make builds in ONE call: one call per file cost 32 s each, five calls 172 s, one call 34 s.
 (define compile-files
-  (list "editor/src/entry/cli.rkt" "editor/src/tui/undo.rkt"
-        "editor/src/tui/multi.rkt" "editor/src/tui/clip.rkt"
-        "editor/src/entry/update.rkt"))
+  (list "editor/entry/cli.rkt" "editor/tui/undo.rkt"
+        "editor/tui/multi.rkt" "editor/tui/clip.rkt"
+        "editor/entry/update.rkt"))
 
 ;; raco-path answers the raco next to the running racket, or the one on the path.
 (define (raco-path)
@@ -217,11 +217,11 @@
 ;; stamp-path is the file whose time says when the last good compile ended.
 (define stamp-path (build-path (find-system-path (quote home-dir)) ".aiu-build-stamp"))
 
-;; sources-newer? says whether any .rkt file under editor/src is newer than the stamp, or the stamp is missing.
+;; sources-newer? says whether any .rkt file under editor is newer than the stamp, or the stamp is missing.
 (define (sources-newer?)
   (define stamp (and (file-exists? stamp-path) (file-or-directory-modify-seconds stamp-path)))
   (or (not stamp)
-      (for/or ([p (in-directory (build-path editor-root "editor" "src"))])
+      (for/or ([p (in-directory (build-path editor-root "editor"))])
         (and (regexp-match? #rx"[.]rkt$" (path->string p))
              (> (file-or-directory-modify-seconds p) stamp)))))
 
@@ -605,8 +605,8 @@
     [(not m) (list)]
     [else
      (define name (car m))
-     (define root (path->string (build-path editor-root "editor" "src")))
-     (define rkts (with-handlers ([void (lambda (e) (list))]) (find-files (lambda (p) (regexp-match? #rx"[.]rkt$" (path->string p))) (build-path editor-root "editor" "src"))))
+     (define root (path->string (build-path editor-root "editor")))
+     (define rkts (with-handlers ([void (lambda (e) (list))]) (find-files (lambda (p) (regexp-match? #rx"[.]rkt$" (path->string p))) (build-path editor-root "editor"))))
      (define hit
        (for/or ([p (in-list rkts)])
          (define ls (with-handlers ([void (lambda (e) (list))]) (file->lines p)))
@@ -833,7 +833,7 @@
 
 ;; no-change-why answers the lines that explain a record with no change: where each key is bound, where its command is defined, whether the screens match and the key trace.
 (define (no-change-why keys ksl bsl)
-  (define src (build-path editor-root "editor" "src"))
+  (define src (build-path editor-root "editor"))
   (define src-text (path->string src))
   (define km (with-handlers ([void (lambda (e) (list))]) (file->lines (build-path src "routes" "keymaps.rkt"))))
   (define rkts (with-handlers ([void (lambda (e) (list))]) (find-files (lambda (p) (regexp-match? #rx"[.]rkt$" (path->string p))) src)))
@@ -897,11 +897,11 @@
            (let ([r (run-test tpath)]) (set-box! rec-why (cadddr r)) (caddr r)))))
   (cond
     [ok (display-to-file (format "name ~a\ntest ~a\nkeys ~a\ndoc Recorded from a real run of the keys ~a.\nai gate/tests/~a.test, recorded by aiutd record from the observed screen and file changes.\n" name name keys keys name)
-                         (build-path editor-root "editor" "src" "features" (string-append name ".feature")) #:exists (quote truncate))]
+                         (build-path editor-root "editor" "features" (string-append name ".feature")) #:exists (quote truncate))]
     [else (if old-test (display-to-file old-test tpath #:exists (quote truncate)) (when (file-exists? tpath) (delete-file tpath)))])
   (emit (list "AIUTD RECORD" (format "~a  ~a" (if ok "GREEN" "RED") name))
         (if ok expects (append (if (pair? expects) (list) (append (list "nothing changed on screen or in the file, nothing written") (no-change-why keys ksl bsl) (unbox last-evidence))) (unbox rec-why))))
-  (when ok (let ([g (find-executable-path "git")] [t (string-append "gate/tests/" name ".test")] [f (string-append "editor/src/features/" name ".feature")]) (let-values ([(c1 o1) (capture editor-root g (list "add" "--" t f))]) (void)) (let-values ([(c2 o2) (capture editor-root g (list "commit" "-q" "-m" (string-append "test: " name " recorded") "--" t f))]) (void))))
+  (when ok (let ([g (find-executable-path "git")] [t (string-append "gate/tests/" name ".test")] [f (string-append "editor/features/" name ".feature")]) (let-values ([(c1 o1) (capture editor-root g (list "add" "--" t f))]) (void)) (let-values ([(c2 o2) (capture editor-root g (list "commit" "-q" "-m" (string-append "test: " name " recorded") "--" t f))]) (void))))
   (if ok 0 1))
 
 ;; howto-section answers the tutorial section built from docs/parts/how-to-make-tests.md, or nothing when the file is missing.
@@ -926,7 +926,7 @@
                  "\nparagraph end\n\nsection end\n"))
 ;; do-docs runs the test of every feature file and writes aiutd-tutorial.aiu and ai-starting-point.md from the passing ones; answers 0 or 1.
 (define (do-docs)
-  (define fdir (and editor-root (build-path editor-root "editor" "src" "features")))
+  (define fdir (and editor-root (build-path editor-root "editor" "features")))
   (cond
     [(not (and fdir (directory-exists? fdir)))
      (emit (list "AIUTD DOCS" "RED") (list "the features folder was not found"))

@@ -12,9 +12,9 @@
 (require racket/list
          racket/set
          racket/string
-         "../editor/src/commands/commands.rkt"
-         "../editor/src/tui/explorer.rkt"
-         "../editor/src/routes/keymaps.rkt")
+         "../editor/commands/commands.rkt"
+         "../editor/tui/explorer.rkt"
+         "../editor/routes/keymaps.rkt")
 
 ;; panel-commands answers the commands the panel names: the commands of
 ;; the table that are in the panel's lines.

@@ -18,9 +18,9 @@
 
 (require racket/list
          racket/string
-         "../editor/src/routes/keyboard.rkt"
-         "../editor/src/routes/keymaps.rkt"
-         "../editor/src/routes/routes.rkt")
+         "../editor/routes/keyboard.rkt"
+         "../editor/routes/keymaps.rkt"
+         "../editor/routes/routes.rkt")
 
 ;; bytes-of answers the bytes of one key, the way a terminal sends them:
 ;; the hot path is asked for the bytes of each key of the sequence, and

@@ -26,9 +26,9 @@
          racket/port
          racket/string
          racket/tcp
-         "../editor/src/buffer/selection.rkt"
-         "../editor/src/send/bundle.rkt"
-         "../editor/src/send/opencode-adapter.rkt")
+         "../editor/buffer/selection.rkt"
+         "../editor/send/bundle.rkt"
+         "../editor/send/opencode-adapter.rkt")
 
 ;; session-id is the session the stub hands out: one session, one turn.
 (define session-id "ses_gate")

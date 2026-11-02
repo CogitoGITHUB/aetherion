@@ -15,9 +15,9 @@
 
 (require racket/list
          racket/set
-         "../editor/src/routes/routes.rkt"
-         "../editor/src/commands/commands.rkt"
-         "../editor/src/tui/explorer.rkt")
+         "../editor/routes/routes.rkt"
+         "../editor/commands/commands.rkt"
+         "../editor/tui/explorer.rkt")
 
 ;; known-commands answers the names the command table holds, as a set, so
 ;; the check can ask about a command name in one step.

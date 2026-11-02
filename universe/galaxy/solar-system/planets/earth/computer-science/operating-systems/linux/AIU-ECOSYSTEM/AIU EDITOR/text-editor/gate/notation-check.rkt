@@ -19,8 +19,8 @@
          racket/list
          racket/path
          racket/string
-         "../editor/src/notation/document.rkt"
-         "../editor/src/notation/host.rkt")
+         "../editor/notation/document.rkt"
+         "../editor/notation/host.rkt")
 
 ;; project-dir is the editor's directory: the one that holds the package and
 ;; the gate. The search walks up from where the check runs.
@@ -28,7 +28,7 @@
   (let loop ([at (simplify-path (current-directory))])
     (define up (simplify-path (build-path at "..")))
     (cond
-      [(and (directory-exists? (build-path at "editor" "src"))
+      [(and (directory-exists? (build-path at "editor"))
             (directory-exists? (build-path at "gate")))
        at]
       [(string=? (path->string at) (path->string up)) at]

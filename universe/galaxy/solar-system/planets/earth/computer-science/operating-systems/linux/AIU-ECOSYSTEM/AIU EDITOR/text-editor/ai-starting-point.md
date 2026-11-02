@@ -28,7 +28,7 @@
 
 ## How to make tests (never write them by hand)
 
-A test is recorded from a real run, not typed. Run: aiutd record NAME KEYS where KEYS are key names (space, escape, tab, return, up, down, left, right, backspace) or single characters, for example: aiutd record focus-on space z. The command runs the keys in the real editor, compares the screen and the file with a run of no keys, writes gate/tests/NAME.test and editor/src/features/NAME.feature from what changed, and keeps them only when the new test passes. The keys must end in visual mode, or the run hangs for 15 s. Then run aiutd docs, which writes this tutorial from the passing features. Check with aiutd test --level 2 --only NAME and aiutd update --level 2.
+A test is recorded from a real run, not typed. Run: aiutd record NAME KEYS where KEYS are key names (space, escape, tab, return, up, down, left, right, backspace) or single characters, for example: aiutd record focus-on space z. The command runs the keys in the real editor, compares the screen and the file with a run of no keys, writes gate/tests/NAME.test and editor/features/NAME.feature from what changed, and keeps them only when the new test passes. The keys must end in visual mode, or the run hangs for 15 s. Then run aiutd docs, which writes this tutorial from the passing features. Check with aiutd test --level 2 --only NAME and aiutd update --level 2.
 
 
 ## AI notes from the old docs (copied 2026-11-01, rules, lazy contract, keys by layer, traps, gate)
@@ -80,7 +80,7 @@ reports a number far too high. Time keys typed at once instead: `printf " q" | s
 
 ## Block cursor and block edit
 
-Code: `editor/src/tui/blockview.rkt`. The live screen asks it, in `live.rkt`,
+Code: `editor/tui/blockview.rkt`. The live screen asks it, in `live.rkt`,
 for `block-overlay` (what to draw), `block-guard` (wraps every command) and
 `drawn-view` (the notation drawing, kept for the same text and width). The keys
 are in `keymaps.rkt`: h and t are `block-up` and `block-down`, w is
@@ -126,7 +126,7 @@ Code: `kind-filter` (a box, end of `commands.rkt`) holds any, a block name, todo
 
 ## Notifications
 
-Code: `editor/src/tui/notify.rkt` (racket/base and box.rkt only). `notify!` takes a level (info, warn, error) and a text; the box stays 2, 3 or 5 seconds, an identical text replaces the old one, at most 3 show. `notify-overlay` is added to the overlay of the paint in `repaint-now` (`live.rkt`), below a top bar or tabs, and a thread repaints through `notify-repaint` when one expires. An unbound key says no key and the keys of the sequence, with the sub-mode. Errors are drawn red.
+Code: `editor/tui/notify.rkt` (racket/base and box.rkt only). `notify!` takes a level (info, warn, error) and a text; the box stays 2, 3 or 5 seconds, an identical text replaces the old one, at most 3 show. `notify-overlay` is added to the overlay of the paint in `repaint-now` (`live.rkt`), below a top bar or tabs, and a thread repaints through `notify-repaint` when one expires. An unbound key says no key and the keys of the sequence, with the sub-mode. Errors are drawn red.
 
 ## Paint without flicker
 
@@ -178,11 +178,11 @@ No timer. `paint-ready` (`box.rkt`) is set by `live-session` right after the fir
 
 ## Bar
 
-Code: `editor/src/tui/bar.rkt` (state `bar-place`, `bar-saved`, `bar-style`, `bar-count`; `bar-plan-of`, `bar-rows`, `strip-lines`, `git-refresh-maybe`; the commands `bar-mode`, `bar-level-mode`, `bar-place-next`, `bar-bottom`, `bar-top`, `bar-left`, `bar-right`, `bar-sides`, `bar-style`, `bar-hide`, `bar-less`, `bar-more`). The keys are in `keymaps.rkt` (`bar-keys`, `bar-level-keys`; layers `bar` and `bar-level`, entered with space b). `explorer.rkt` requires `bar.rkt` so the gate sees the commands. `live.rkt` asks for one `bar-plan` in `repaint-now`: the page width and height are the screen minus the columns and rows of the plan, and `screen.rkt` `paint` takes `#:offset`, `#:left`, `#:full` and `#:overlay`. The popup also opens by itself in the layers bar and bar-level. A paint reads no file and asks no page; git runs only in a thread. The blocks command is no longer on space b: type it, or use tab b in the write layer.
+Code: `editor/tui/bar.rkt` (state `bar-place`, `bar-saved`, `bar-style`, `bar-count`; `bar-plan-of`, `bar-rows`, `strip-lines`, `git-refresh-maybe`; the commands `bar-mode`, `bar-level-mode`, `bar-place-next`, `bar-bottom`, `bar-top`, `bar-left`, `bar-right`, `bar-sides`, `bar-style`, `bar-hide`, `bar-less`, `bar-more`). The keys are in `keymaps.rkt` (`bar-keys`, `bar-level-keys`; layers `bar` and `bar-level`, entered with space b). `explorer.rkt` requires `bar.rkt` so the gate sees the commands. `live.rkt` asks for one `bar-plan` in `repaint-now`: the page width and height are the screen minus the columns and rows of the plan, and `screen.rkt` `paint` takes `#:offset`, `#:left`, `#:full` and `#:overlay`. The popup also opens by itself in the layers bar and bar-level. A paint reads no file and asks no page; git runs only in a thread. The blocks command is no longer on space b: type it, or use tab b in the write layer.
 
 ## Tabs and focus
 
-Code: `editor/src/tui/tabs.rkt` (state `tab-files`, `tab-current`, `tab-switch`, `tab-place`, `tab-count`, `tab-joined`; `tab-rows`, `tb-scan-maybe`; the commands `tab-mode`, `tab-level-mode`, `tab-prev`, `tab-next`, `tab-open`, `tab-close`, `tab-place-next`, `tab-top`, `tab-bottom`, `tab-join`, `tab-hide`, `tab-less`, `tab-more`), `box.rkt` (the box drawing shared with the bar) and `bar.rkt` (`bar-plan-of` makes one plan from the bar and the tabs; `focus-on`, `focus-toggle`). Keys in `keymaps.rkt` (`tab-keys`, `tab-level-keys`; layers tab and tab-level, entered with space t; space z is focus-toggle). A tab command sets `tab-switch` and returns false, which ends the round of `key-loop`; `live-session` (`next-round`) then opens that file with its own journal in the same terminal, the hot path and the wire staying up. `live-session` calls `tab-show!` for every file. The bar and the tabs at one edge are stacked (tabs first) and shared with `join-edge` when `tab-joined`; the tabs need 16 rows, the bar 14. The folders of the workspace and the project rows are listed in a thread once for each root (`tab-lists`); a paint reads no folder. Both bars start with every level shown: `tab-count` is 3 and `bar-count` is 5. Focus mode makes a plan of nothing: no bar, no tabs, no one line. No heavy require was added.
+Code: `editor/tui/tabs.rkt` (state `tab-files`, `tab-current`, `tab-switch`, `tab-place`, `tab-count`, `tab-joined`; `tab-rows`, `tb-scan-maybe`; the commands `tab-mode`, `tab-level-mode`, `tab-prev`, `tab-next`, `tab-open`, `tab-close`, `tab-place-next`, `tab-top`, `tab-bottom`, `tab-join`, `tab-hide`, `tab-less`, `tab-more`), `box.rkt` (the box drawing shared with the bar) and `bar.rkt` (`bar-plan-of` makes one plan from the bar and the tabs; `focus-on`, `focus-toggle`). Keys in `keymaps.rkt` (`tab-keys`, `tab-level-keys`; layers tab and tab-level, entered with space t; space z is focus-toggle). A tab command sets `tab-switch` and returns false, which ends the round of `key-loop`; `live-session` (`next-round`) then opens that file with its own journal in the same terminal, the hot path and the wire staying up. `live-session` calls `tab-show!` for every file. The bar and the tabs at one edge are stacked (tabs first) and shared with `join-edge` when `tab-joined`; the tabs need 16 rows, the bar 14. The folders of the workspace and the project rows are listed in a thread once for each root (`tab-lists`); a paint reads no folder. Both bars start with every level shown: `tab-count` is 3 and `bar-count` is 5. Focus mode makes a plan of nothing: no bar, no tabs, no one line. No heavy require was added.
 
 ## Colour
 
@@ -190,7 +190,7 @@ The notation drawing (`boxview.rs`, `view.rs`, function `sgr`) drops every colou
 
 ## Find
 
-Code: `editor/src/tui/finder.rkt` (`finder-script`, `run-picker`, `parse-pick`, `find-run`, `find-jump`, `line-start-offset`; the commands `find-mode` and `find-<scope>-<kind>`). Keys in `keymaps.rkt` (`find-keys`, layer find, entered with space /). A search builds one shell line (`rg` into `fzf`), `run-picker` restores the terminal (`restore-settings`, leave the alternate screen), runs it with `/bin/sh -c` and takes the terminal back (`raw-mode`). A pick sets `tab-switch` and `find-jump` and returns false, which ends the round of `key-loop`; `live-session` opens the file as a tab and moves the point to the line. Scopes: the folder of the file, the project folder (`tb-project-dir`), the workspace root (`tb-root`). `explorer.rkt` requires `finder.rkt` so the gate sees the commands. The rows are relative to the folder searched (the file scope searches its own file name from its folder), and fzf shows a preview made by a small sh script that `run-picker` writes to /tmp for the run and deletes after (`preview-script`, `preview-path`): an .aiu page drawn by `notation view` at the width of the preview (the binary is `notation-bin`, passed to the script as AIU_PREVIEW_NB, which `find-run` sets), any other file as the lines around the picked line with numbers and a mark. The preview stands at the top, 60 percent. Nothing runs in a paint.
+Code: `editor/tui/finder.rkt` (`finder-script`, `run-picker`, `parse-pick`, `find-run`, `find-jump`, `line-start-offset`; the commands `find-mode` and `find-<scope>-<kind>`). Keys in `keymaps.rkt` (`find-keys`, layer find, entered with space /). A search builds one shell line (`rg` into `fzf`), `run-picker` restores the terminal (`restore-settings`, leave the alternate screen), runs it with `/bin/sh -c` and takes the terminal back (`raw-mode`). A pick sets `tab-switch` and `find-jump` and returns false, which ends the round of `key-loop`; `live-session` opens the file as a tab and moves the point to the line. Scopes: the folder of the file, the project folder (`tb-project-dir`), the workspace root (`tb-root`). `explorer.rkt` requires `finder.rkt` so the gate sees the commands. The rows are relative to the folder searched (the file scope searches its own file name from its folder), and fzf shows a preview made by a small sh script that `run-picker` writes to /tmp for the run and deletes after (`preview-script`, `preview-path`): an .aiu page drawn by `notation view` at the width of the preview (the binary is `notation-bin`, passed to the script as AIU_PREVIEW_NB, which `find-run` sets), any other file as the lines around the picked line with numbers and a mark. The preview stands at the top, 60 percent. Nothing runs in a paint.
 
 ## 3. Environment
 
@@ -221,7 +221,7 @@ Run from the `text-editor` folder.
 
 | Task | Command |
 |---|---|
-| Compile | `PLTCOMPILEDROOTS="$HOME/aiu-compiled" raco make editor/src/entry/cli.rkt editor/src/tui/undo.rkt editor/src/tui/multi.rkt editor/src/tui/clip.rkt` (full path of raco: `/root/home/shape/opt/racket-full/bin/raco`) |
+| Compile | `PLTCOMPILEDROOTS="$HOME/aiu-compiled" raco make editor/entry/cli.rkt editor/tui/undo.rkt editor/tui/multi.rkt editor/tui/clip.rkt` (full path of raco: `/root/home/shape/opt/racket-full/bin/raco`) |
 | Gate | `nu gate/check.nu` (17 stages) |
 | Open a file | `aiutd FILE` |
 | Home screen | `aiutd` |
@@ -367,7 +367,7 @@ The gate runs under nushell: `nu gate/check.nu`.
 
 ## 5. Keys
 
-The trigger is space, and tab in the write layer. Nothing needs a modifier key. SPC is the space key. Every key below is read from `editor/src/routes/keymaps.rkt`.
+The trigger is space, and tab in the write layer. Nothing needs a modifier key. SPC is the space key. Every key below is read from `editor/routes/keymaps.rkt`.
 
 Visual layer (the page is read):
 
@@ -448,7 +448,7 @@ In the visual layer plain keys pick what h and t move between: a any block, p pa
 
 ## Notifications
 
-Code: `editor/src/tui/notify.rkt` (racket/base and box.rkt only). `notify!` takes a level (info, warn, error) and a text; the box stays 2, 3 or 5 seconds, an identical text replaces the old one, at most 3 show. `notify-overlay` is added to the overlay of the paint in `repaint-now` (`live.rkt`), below a top bar or tabs, and a thread repaints through `notify-repaint` when one expires. An unbound key says no key and the keys of the sequence, with the sub-mode. Errors are drawn red.
+Code: `editor/tui/notify.rkt` (racket/base and box.rkt only). `notify!` takes a level (info, warn, error) and a text; the box stays 2, 3 or 5 seconds, an identical text replaces the old one, at most 3 show. `notify-overlay` is added to the overlay of the paint in `repaint-now` (`live.rkt`), below a top bar or tabs, and a thread repaints through `notify-repaint` when one expires. An unbound key says no key and the keys of the sequence, with the sub-mode. Errors are drawn red.
 
 ## Paint without flicker
 
@@ -543,7 +543,7 @@ The rows show paths relative to the folder searched, and the top of the screen p
 ## 7. Build and check
 
 ~~~
-PLTCOMPILEDROOTS="$HOME/aiu-compiled" raco make editor/src/entry/cli.rkt editor/src/tui/undo.rkt editor/src/tui/multi.rkt editor/src/tui/clip.rkt
+PLTCOMPILEDROOTS="$HOME/aiu-compiled" raco make editor/entry/cli.rkt editor/tui/undo.rkt editor/tui/multi.rkt editor/tui/clip.rkt
 nu gate/check.nu
 ~~~
 

@@ -9,8 +9,8 @@
 ;; It is a dev script, not part of the package: it lives in tools/.
 
 (require racket/system
-         "../editor/src/join/load.rkt"
-         "../editor/src/machine/directories.rkt")
+         "../editor/join/load.rkt"
+         "../editor/machine/directories.rkt")
 
 ;; now-ms is the clock this probe reads: milliseconds, inexact.
 (define (now-ms)

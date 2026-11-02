@@ -21,9 +21,9 @@
          racket/list
          racket/port
          racket/string
-         "../editor/src/machine/directories.rkt"
-         "../editor/src/security/redact.rkt"
-         "../editor/src/send/bundle.rkt")
+         "../editor/machine/directories.rkt"
+         "../editor/security/redact.rkt"
+         "../editor/send/bundle.rkt")
 
 ;; the-secret is the line the check puts into a real bundle: it names a
 ;; credential and holds a token that has the shape of one.

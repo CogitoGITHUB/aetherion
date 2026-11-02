@@ -24,12 +24,12 @@
          racket/port
          racket/string
          racket/system
-         "../editor/src/entry/capabilities.rkt"
-         "../editor/src/entry/dispatch.rkt"
-         "../editor/src/entry/documents.rkt"
-         "../editor/src/entry/mcp.rkt"
-         "../editor/src/machine/directories.rkt"
-         "../editor/src/narration/wait-door.rkt")
+         "../editor/entry/capabilities.rkt"
+         "../editor/entry/dispatch.rkt"
+         "../editor/entry/documents.rkt"
+         "../editor/entry/mcp.rkt"
+         "../editor/machine/directories.rkt"
+         "../editor/narration/wait-door.rkt")
 
 ;; project-dir is the editor's directory: the one that holds the package
 ;; and the gate. The search walks up from where the check runs, because
@@ -38,7 +38,7 @@
   (let loop ([at (simplify-path (current-directory))])
     (define up (simplify-path (build-path at "..")))
     (cond
-      [(and (directory-exists? (build-path at "editor" "src"))
+      [(and (directory-exists? (build-path at "editor"))
             (directory-exists? (build-path at "gate")))
        at]
       [(string=? (path->string at) (path->string up)) at]
@@ -46,7 +46,7 @@
 
 ;; cli-path is the CLI the skill's examples run.
 (define cli-path
-  (build-path project-dir "editor" "src" "entry" "cli.rkt"))
+  (build-path project-dir "editor" "entry" "cli.rkt"))
 
 ;; skill-path is the skill file: the examples come from it.
 (define skill-path
@@ -179,7 +179,7 @@
       (set! problems (cons (format "the declaration lies about ~a" liar) problems))
       #t)
   ;; and the server really asks that question before it runs anything
-  (unless (string-contains? (file->string (build-path project-dir "editor" "src" "entry" "mcp.rkt"))
+  (unless (string-contains? (file->string (build-path project-dir "editor" "entry" "mcp.rkt"))
                              "declaration-agrees?")
     (set! problems (cons "the server does not re-check the declaration" problems)))
   problems)

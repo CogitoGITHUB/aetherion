@@ -84,7 +84,7 @@ def main [] {
     let file_count = ($files | length)
 
     if ($file_count == 0) {
-        print "NOTHING-TO-CHECK one-way — no Racket files exist under editor/src yet"
+        print "NOTHING-TO-CHECK one-way — no Racket files exist under editor yet"
         exit 0
     }
 

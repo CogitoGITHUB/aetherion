@@ -62,7 +62,7 @@ The gate runs under nushell: `nu gate/check.nu`.
 
 ## 5. Keys
 
-The trigger is space, and tab in the write layer. Nothing needs a modifier key. SPC is the space key. Every key below is read from `editor/src/routes/keymaps.rkt`.
+The trigger is space, and tab in the write layer. Nothing needs a modifier key. SPC is the space key. Every key below is read from `editor/routes/keymaps.rkt`.
 
 Visual layer (the page is read):
 
@@ -143,7 +143,7 @@ In the visual layer plain keys pick what h and t move between: a any block, p pa
 
 ## Notifications
 
-Code: `editor/src/tui/notify.rkt` (racket/base and box.rkt only). `notify!` takes a level (info, warn, error) and a text; the box stays 2, 3 or 5 seconds, an identical text replaces the old one, at most 3 show. `notify-overlay` is added to the overlay of the paint in `repaint-now` (`live.rkt`), below a top bar or tabs, and a thread repaints through `notify-repaint` when one expires. An unbound key says no key and the keys of the sequence, with the sub-mode. Errors are drawn red.
+Code: `editor/tui/notify.rkt` (racket/base and box.rkt only). `notify!` takes a level (info, warn, error) and a text; the box stays 2, 3 or 5 seconds, an identical text replaces the old one, at most 3 show. `notify-overlay` is added to the overlay of the paint in `repaint-now` (`live.rkt`), below a top bar or tabs, and a thread repaints through `notify-repaint` when one expires. An unbound key says no key and the keys of the sequence, with the sub-mode. Errors are drawn red.
 
 ## Paint without flicker
 
@@ -238,7 +238,7 @@ The rows show paths relative to the folder searched, and the top of the screen p
 ## 7. Build and check
 
 ~~~
-PLTCOMPILEDROOTS="$HOME/aiu-compiled" raco make editor/src/entry/cli.rkt editor/src/tui/undo.rkt editor/src/tui/multi.rkt editor/src/tui/clip.rkt
+PLTCOMPILEDROOTS="$HOME/aiu-compiled" raco make editor/entry/cli.rkt editor/tui/undo.rkt editor/tui/multi.rkt editor/tui/clip.rkt
 nu gate/check.nu
 ~~~
 

@@ -28,7 +28,7 @@
 ;; package-src is the directory the areas live in, one level below the
 ;; project directory.
 (define package-src
-  (build-path project-dir "editor" "src"))
+  (build-path project-dir "editor"))
 
 ;; walk answers every file under a directory, in a fixed order, so the
 ;; check reads the same files in the same order every time.

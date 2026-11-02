@@ -21,9 +21,9 @@
          racket/port
          racket/string
          racket/system
-         "../editor/src/join/transport.rkt"
-         "../editor/src/join/protocol.rkt"
-         "../editor/src/machine/directories.rkt")
+         "../editor/join/transport.rkt"
+         "../editor/join/protocol.rkt"
+         "../editor/machine/directories.rkt")
 
 ;; the-name is the name the check gives its own repository and its own
 ;; commits, so the check never depends on a git configuration on this
