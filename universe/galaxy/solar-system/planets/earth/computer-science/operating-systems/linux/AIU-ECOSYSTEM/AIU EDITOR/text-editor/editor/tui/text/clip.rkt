@@ -13,7 +13,7 @@
          (only-in net/base64 base64-encode)
          (only-in "../blocks/blockview.rkt" blockview-inside blockview-drawn)
          (only-in "../bar/bar.rkt" clip-table)
-         (only-in "../float/notify.rkt" notify!))
+         (only-in "../notify/notify.rkt" notify!))
 
 ;; cp-ring keeps the copies, newest first; each copy is a list of pieces of text.
 (define cp-ring (list))

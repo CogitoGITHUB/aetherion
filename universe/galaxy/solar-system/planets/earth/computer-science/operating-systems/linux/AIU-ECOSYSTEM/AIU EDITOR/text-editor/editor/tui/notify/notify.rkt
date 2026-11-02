@@ -4,7 +4,7 @@
 ;; top right corner through the overlay of a paint, and a thread removes each
 ;; one when its time is up and asks for a repaint. Only racket/base and the
 ;; box drawing are loaded, so the first paint is not touched.
-(require racket/string "box.rkt")
+(require racket/string "../float/box.rkt")
 
 ;; notify-repaint holds the function that repaints the screen; the live
 ;; session puts it here.

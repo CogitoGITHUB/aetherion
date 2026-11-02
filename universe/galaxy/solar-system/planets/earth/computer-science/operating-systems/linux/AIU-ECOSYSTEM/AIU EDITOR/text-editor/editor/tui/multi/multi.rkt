@@ -11,7 +11,7 @@
          "../../notation/host.rkt"
          (only-in "../blocks/blockview.rkt" blockview-kind-match? blockview-inside blockview-drawn)
          (only-in "../bar/bar.rkt" multi-table)
-         (only-in "../float/notify.rkt" notify!)
+         (only-in "../notify/notify.rkt" notify!)
          (only-in "multi-draw.rkt" multi-lit multi-text-overlay))
 
 ;; multi-say shows a short message in a notification box.

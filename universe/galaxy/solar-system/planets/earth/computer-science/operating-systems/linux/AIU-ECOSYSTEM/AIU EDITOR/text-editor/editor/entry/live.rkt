@@ -40,7 +40,7 @@
          "../tui/bar/bar.rkt"
          "../tui/tabs/tabs.rkt" "../tui/tabs/tabs-commands.rkt"
          "../tui/tabs/finder.rkt"
-         "../tui/float/notify.rkt"
+         "../tui/notify/notify.rkt"
          (only-in "../tui/float/box.rkt" paint-ready)
          "../tui/gutter/gutter.rkt"
          "../tui/gutter/gutterview.rkt"
