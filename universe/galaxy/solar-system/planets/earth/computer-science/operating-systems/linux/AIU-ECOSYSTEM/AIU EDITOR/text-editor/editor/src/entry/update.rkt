@@ -649,8 +649,16 @@
   (list name seconds ok?
         (append (list (string-append "    keys " (string-join (line-values lines "keys") " ")))
                 (for/list ([v (in-list verdicts)] #:unless (car v))
-                  (string-append "    " (if (car v) "ok   " "FAIL ") (cadr v)))
+                  (string-append "    " (if (car v) "ok   " "FAIL ") (cadr v))) (if ok? (list) (seen-lines shown verdicts file-text))
                 why)))
+
+;; seen-lines answers the lines that show a failed test what the screen held, with row numbers, and the file head when a file expectation failed.
+(define (seen-lines shown verdicts file-text)
+  (append (list "    screen seen:")
+          (apply append (for/list ([l (in-list shown)] [i (in-naturals 1)]) (wrap-text (format "    ~a ~a" i l))))
+          (if (ormap (lambda (v) (and (not (car v)) (regexp-match? #rx"^file " (cadr v)))) verdicts)
+              (cons "    file head:" (map (lambda (l) (string-append "    f " l)) (apply append (map wrap-text (first-n (string-split (visible file-text) "\n" #:trim? #f) 6)))))
+              (list))))
 
 ;; run-all-tests runs every test file of the level or below and answers the list of results.
 (define (run-all-tests level)
