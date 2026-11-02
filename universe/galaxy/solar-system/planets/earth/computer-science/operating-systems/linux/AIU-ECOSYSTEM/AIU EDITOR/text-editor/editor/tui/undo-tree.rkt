@@ -3,45 +3,45 @@
 
 (require "undo-git.rkt" (only-in racket/string string-split))
 
-(provide (struct-out ud-node) ud-nodes ud-kids ud-roots ud-order ud-pos ud-rows-count ud-cols-count ud-prefer ud-texts
-         ud-older? ud-load-tree! ud-place! ud-layout! ud-parent-of ud-next-of ud-newest)
+(provide (struct-out undo-node) undo-nodes undo-kids undo-roots undo-order undo-pos undo-rows-count undo-cols-count undo-prefer undo-texts
+         undo-older? undo-load-tree! undo-place! undo-layout! undo-parent-of undo-next-of undo-newest)
 
-;; ud-node is one version of the file: the commit, its parent in the history of the file, its time and message.
-(struct ud-node (id parent time subject))
-;; ud-nodes holds every node by commit id; ud-kids the children of a node, oldest first.
-(define ud-nodes (make-hash))
-;; ud-kids holds the children of each node, oldest first.
-(define ud-kids (make-hash))
-;; ud-roots and ud-order hold the node ids: the nodes without a parent, and all nodes oldest first.
-(define ud-roots (list))
-;; ud-order holds all node ids, oldest first.
-(define ud-order (list))
-;; ud-pos holds the place of each node on the grid as (column . row); the two counts are its size.
-(define ud-pos (make-hash))
-;; ud-rows-count is the number of rows of the node grid.
-(define ud-rows-count 1)
-;; ud-cols-count is the number of columns of the node grid.
-(define ud-cols-count 1)
-;; ud-prefer remembers, for each node, the child that forward goes to.
-(define ud-prefer (make-hash))
-;; ud-texts keeps the text of each node once it was read.
-(define ud-texts (make-hash))
+;; undo-node is one version of the file: the commit, its parent in the history of the file, its time and message.
+(struct undo-node (id parent time subject))
+;; undo-nodes holds every node by commit id; undo-kids the children of a node, oldest first.
+(define undo-nodes (make-hash))
+;; undo-kids holds the children of each node, oldest first.
+(define undo-kids (make-hash))
+;; undo-roots and undo-order hold the node ids: the nodes without a parent, and all nodes oldest first.
+(define undo-roots (list))
+;; undo-order holds all node ids, oldest first.
+(define undo-order (list))
+;; undo-pos holds the place of each node on the grid as (column . row); the two counts are its size.
+(define undo-pos (make-hash))
+;; undo-rows-count is the number of rows of the node grid.
+(define undo-rows-count 1)
+;; undo-cols-count is the number of columns of the node grid.
+(define undo-cols-count 1)
+;; undo-prefer remembers, for each node, the child that forward goes to.
+(define undo-prefer (make-hash))
+;; undo-texts keeps the text of each node once it was read.
+(define undo-texts (make-hash))
 
-;; ud-older? orders two node ids by time, then by id.
-(define (ud-older? a b)
-  (let ([ta (ud-node-time (hash-ref ud-nodes a))] [tb (ud-node-time (hash-ref ud-nodes b))])
+;; undo-older? orders two node ids by time, then by id.
+(define (undo-older? a b)
+  (let ([ta (undo-node-time (hash-ref undo-nodes a))] [tb (undo-node-time (hash-ref undo-nodes b))])
     (if (= ta tb) (string<? a b) (< ta tb))))
 
-;; ud-load-tree! reads the history of the file from git and builds the nodes and their children.
-(define (ud-load-tree! top rel)
-  (hash-clear! ud-nodes)
-  (hash-clear! ud-kids)
-  (hash-clear! ud-texts)
-  (hash-clear! ud-prefer)
-  (set! ud-roots (list))
-  (set! ud-order (list))
-  (let ([revs (ud-git top "rev-list" "--parents" "--topo-order" "aiu-undo" "--glob=refs/aiu-undo-old/*" "--" rel)]
-        [meta (ud-git top "log" "--format=%H%x09%at%x09%s" "aiu-undo" "--glob=refs/aiu-undo-old/*" "--" rel)]
+;; undo-load-tree! reads the history of the file from git and builds the nodes and their children.
+(define (undo-load-tree! top rel)
+  (hash-clear! undo-nodes)
+  (hash-clear! undo-kids)
+  (hash-clear! undo-texts)
+  (hash-clear! undo-prefer)
+  (set! undo-roots (list))
+  (set! undo-order (list))
+  (let ([revs (undo-git top "rev-list" "--parents" "--topo-order" "aiu-undo" "--glob=refs/aiu-undo-old/*" "--" rel)]
+        [meta (undo-git top "log" "--format=%H%x09%at%x09%s" "aiu-undo" "--glob=refs/aiu-undo-old/*" "--" rel)]
         [info (make-hash)])
     (when meta
       (for ([line (in-list (regexp-split #rx"\n" meta))])
@@ -53,50 +53,50 @@
         (let ([w (string-split line)])
           (when (pair? w)
             (let ([i (hash-ref info (car w) (cons 0 ""))])
-              (hash-set! ud-nodes (car w)
-                         (ud-node (car w) (if (pair? (cdr w)) (cadr w) #f) (car i) (cdr i))))))))
-    (for ([(id n) (in-hash ud-nodes)])
-      (let ([p (ud-node-parent n)])
-        (if (and p (hash-ref ud-nodes p #f))
-            (hash-set! ud-kids p (cons id (hash-ref ud-kids p (list))))
-            (set! ud-roots (cons id ud-roots)))))
-    (for ([k (in-list (hash-keys ud-kids))])
-      (hash-set! ud-kids k (sort (hash-ref ud-kids k) ud-older?)))
-    (set! ud-roots (sort ud-roots ud-older?))
-    (set! ud-order (sort (hash-keys ud-nodes) ud-older?))))
+              (hash-set! undo-nodes (car w)
+                         (undo-node (car w) (if (pair? (cdr w)) (cadr w) #f) (car i) (cdr i))))))))
+    (for ([(id n) (in-hash undo-nodes)])
+      (let ([p (undo-node-parent n)])
+        (if (and p (hash-ref undo-nodes p #f))
+            (hash-set! undo-kids p (cons id (hash-ref undo-kids p (list))))
+            (set! undo-roots (cons id undo-roots)))))
+    (for ([k (in-list (hash-keys undo-kids))])
+      (hash-set! undo-kids k (sort (hash-ref undo-kids k) undo-older?)))
+    (set! undo-roots (sort undo-roots undo-older?))
+    (set! undo-order (sort (hash-keys undo-nodes) undo-older?))))
 
-;; ud-place! puts a node and its subtree on the grid: the first child stays on the row of its parent,
+;; undo-place! puts a node and its subtree on the grid: the first child stays on the row of its parent,
 ;; the others go to new rows below. It answers the last row the subtree used.
-(define (ud-place! pos id col row)
+(define (undo-place! pos id col row)
   (hash-set! pos id (cons col row))
-  (let loop ([ks (hash-ref ud-kids id (list))] [first? #t] [last row])
+  (let loop ([ks (hash-ref undo-kids id (list))] [first? #t] [last row])
     (cond [(null? ks) last]
           [else
            (let* ([r (if first? row (add1 last))]
-                  [m (ud-place! pos (car ks) (add1 col) r)])
+                  [m (undo-place! pos (car ks) (add1 col) r)])
              (loop (cdr ks) #f (max last m)))])))
 
-;; ud-layout! places every node and keeps the size of the grid.
-(define (ud-layout!)
+;; undo-layout! places every node and keeps the size of the grid.
+(define (undo-layout!)
   (let ([pos (make-hash)])
-    (let loop ([rs ud-roots] [row 0])
+    (let loop ([rs undo-roots] [row 0])
       (unless (null? rs)
-        (loop (cdr rs) (add1 (ud-place! pos (car rs) 0 row)))))
-    (set! ud-pos pos)
-    (set! ud-rows-count (add1 (for/fold ([m 0]) ([(k v) (in-hash pos)]) (max m (cdr v)))))
-    (set! ud-cols-count (add1 (for/fold ([m 0]) ([(k v) (in-hash pos)]) (max m (car v)))))))
+        (loop (cdr rs) (add1 (undo-place! pos (car rs) 0 row)))))
+    (set! undo-pos pos)
+    (set! undo-rows-count (add1 (for/fold ([m 0]) ([(k v) (in-hash pos)]) (max m (cdr v)))))
+    (set! undo-cols-count (add1 (for/fold ([m 0]) ([(k v) (in-hash pos)]) (max m (car v)))))))
 
-;; ud-parent-of answers the parent of a node, or false.
-(define (ud-parent-of id)
-  (let ([p (ud-node-parent (hash-ref ud-nodes id))])
-    (and p (hash-ref ud-nodes p #f) p)))
+;; undo-parent-of answers the parent of a node, or false.
+(define (undo-parent-of id)
+  (let ([p (undo-node-parent (hash-ref undo-nodes id))])
+    (and p (hash-ref undo-nodes p #f) p)))
 
-;; ud-next-of answers the child that forward goes to: the one last used, else the newest.
-(define (ud-next-of id)
-  (let ([ks (hash-ref ud-kids id (list))] [pref (hash-ref ud-prefer id #f)])
+;; undo-next-of answers the child that forward goes to: the one last used, else the newest.
+(define (undo-next-of id)
+  (let ([ks (hash-ref undo-kids id (list))] [pref (hash-ref undo-prefer id #f)])
     (cond [(null? ks) #f]
           [(and pref (member pref ks)) pref]
           [else (car (reverse ks))])))
 
-;; ud-newest answers the newest node.
-(define (ud-newest) (car (reverse ud-order)))
+;; undo-newest answers the newest node.
+(define (undo-newest) (car (reverse undo-order)))
