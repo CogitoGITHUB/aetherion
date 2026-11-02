@@ -10,8 +10,8 @@
          (only-in "../../commands/commands.rkt"
                   commands ask session-text set-layer! the-point session-file unsaved move-to)
          (only-in "../bar/bar.rkt" undo-table undo-rows-hook)
-         (only-in "../box.rkt" edge-line rule-line body-line)
-         (only-in "../shadow.rkt" shadow-commit-now! shadow-key))
+         (only-in "../float/box.rkt" edge-line rule-line body-line)
+         (only-in "../float/shadow.rkt" shadow-commit-now! shadow-key))
 
 
 ;; undo-active is true while the undo layer is open.

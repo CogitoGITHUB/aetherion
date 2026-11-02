@@ -11,7 +11,7 @@
          "../../machine/terminal.rkt"
          "../../notation/document.rkt"
          "../../notation/host.rkt"
-         "../pins.rkt" "blocks-kind.rkt" "blockview-boxes.rkt")
+         "../float/pins.rkt" "blocks-kind.rkt" "blockview-boxes.rkt")
 
 ;; edit-start holds the start offset of the block being edited, or nothing.
 (define edit-start (box #f))
@@ -132,7 +132,7 @@
   (with-handlers ([void void])
     (let ([hp (blockview-near (quote up) (quote up) "join" "hot-path.rkt")])
       (when hp ((unbox (dynamic-require hp (quote edit-hook))))))
-    (let ([sh (blockview-near "../shadow.rkt")])
+    (let ([sh (blockview-near "../float/shadow.rkt")])
       (when (and sh file)
         (thread (lambda ()
                   (with-handlers ([void void])

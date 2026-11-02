@@ -6,14 +6,14 @@
 ;; to the terminal clipboard with the OSC 52 escape. Loaded on first use through the stubs at the end of bar.rkt.
 ;; Nothing here runs while typing.
 
-(require "../commands/commands.rkt"
-         "../notation/document.rkt"
-         "../notation/host.rkt"
+(require "../../commands/commands.rkt"
+         "../../notation/document.rkt"
+         "../../notation/host.rkt"
          (only-in racket/string string-join)
          (only-in net/base64 base64-encode)
-         (only-in "blocks/blockview.rkt" blockview-inside blockview-drawn)
-         (only-in "bar/bar.rkt" clip-table)
-         (only-in "notify.rkt" notify!))
+         (only-in "../blocks/blockview.rkt" blockview-inside blockview-drawn)
+         (only-in "../bar/bar.rkt" clip-table)
+         (only-in "../float/notify.rkt" notify!))
 
 ;; cp-ring keeps the copies, newest first; each copy is a list of pieces of text.
 (define cp-ring (list))

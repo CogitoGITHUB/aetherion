@@ -6,7 +6,7 @@
          "../../commands/commands.rkt"
          "../../commands/lazy-stub.rkt"
          "../../routes/keymaps.rkt"
-         "../box.rkt"
+         "../float/box.rkt"
          "../tabs/tabs.rkt"
          "bar-clock.rkt"
          "bar-git.rkt"

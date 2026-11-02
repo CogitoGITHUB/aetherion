@@ -36,12 +36,12 @@
          "../notation/where.rkt"
          "../tui/blocks/blockview.rkt" "../tui/blocks/blocks-edit.rkt" "../tui/blocks/blocks-view.rkt"
          "../tui/blocks/blocks-move.rkt"
-         "../tui/menu.rkt"
+         "../tui/float/menu.rkt"
          "../tui/bar/bar.rkt"
          "../tui/tabs/tabs.rkt" "../tui/tabs/tabs-commands.rkt"
          "../tui/tabs/finder.rkt"
-         "../tui/notify.rkt"
-         (only-in "../tui/box.rkt" paint-ready)
+         "../tui/float/notify.rkt"
+         (only-in "../tui/float/box.rkt" paint-ready)
          "../tui/gutter/gutter.rkt"
          "../tui/gutter/gutterview.rkt"
          (only-in "../machine/directories.rkt" journal-path-for)

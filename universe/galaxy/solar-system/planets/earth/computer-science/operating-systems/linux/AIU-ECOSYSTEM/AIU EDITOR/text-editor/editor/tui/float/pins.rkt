@@ -1,6 +1,6 @@
 #lang racket/base
 ;; One job: the pins of the block view. A pin keeps a block on a screen edge when it has scrolled out of the window.
-(require "../commands/commands.rkt")
+(require "../../commands/commands.rkt")
 
 ;; pins holds the pinned boxes, each a list of the block start line, the place top or bottom, hidden and keep-in-focus; unset until first used.
 (define pins (box (quote unset)))

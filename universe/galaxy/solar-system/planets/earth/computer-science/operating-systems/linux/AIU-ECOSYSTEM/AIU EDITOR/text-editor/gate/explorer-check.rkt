@@ -13,7 +13,7 @@
          racket/set
          racket/string
          "../editor/commands/commands.rkt"
-         "../editor/tui/explorer.rkt"
+         "../editor/tui/float/explorer.rkt"
          "../editor/routes/keymaps.rkt")
 
 ;; panel-commands answers the commands the panel names: the commands of

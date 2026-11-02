@@ -2,8 +2,8 @@
 ;; One job: the key menu of the live screen. It reads the key tables and draws the
 ;; popup of the keys that can follow, the modes box, and the float that centres it.
 (require racket/list racket/string
-         "../commands/commands.rkt"
-         "../routes/keymaps.rkt")
+         "../../commands/commands.rkt"
+         "../../routes/keymaps.rkt")
 
 ;; kname answers the name of a key as shown: the space key is SPC.
 (define (kname s) (if (string=? s "space") "SPC" s))

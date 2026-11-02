@@ -14,7 +14,7 @@
          "../../commands/commands.rkt"
          "../../commands/lazy-stub.rkt"
          "../../routes/keymaps.rkt"
-         "../box.rkt"
+         "../float/box.rkt"
          "../tabs/tabs.rkt"
          "bar-clock.rkt"
          "bar-git.rkt"
@@ -111,7 +111,7 @@
 
 ;; clip-table holds the real commands of copy, cut and paste; clip.rkt fills it when it is loaded.
 (define clip-table
-  (lazy-layer! (#%variable-reference) "../clip.rkt" "clip" "copy and paste are not available"
+  (lazy-layer! (#%variable-reference) "../text/clip.rkt" "clip" "copy and paste are not available"
                (list "copy" "cut" "paste")))
 
 (provide undo-table undo-rows-hook multi-table clip-table)

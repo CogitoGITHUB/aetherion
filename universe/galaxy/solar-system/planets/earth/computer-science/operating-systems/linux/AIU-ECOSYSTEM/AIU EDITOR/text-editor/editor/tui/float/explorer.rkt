@@ -19,11 +19,11 @@
 
 (require racket/list
          racket/string
-         "../commands/commands.rkt"
-         "../routes/keymaps.rkt"
-         "blocks/blockview.rkt"
-         "bar/bar.rkt"
-         "tabs/finder.rkt")
+         "../../commands/commands.rkt"
+         "../../routes/keymaps.rkt"
+         "../blocks/blockview.rkt"
+         "../bar/bar.rkt"
+         "../tabs/finder.rkt")
 
 ;; explorer-lines answers the lines of the panel: every layer with the
 ;; keys it binds and the command each key runs, and then the commands

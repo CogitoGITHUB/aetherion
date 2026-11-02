@@ -5,13 +5,13 @@
 ;; holds the commands and the drawing hooks. There is no limit on the number of cursors. Loaded on first use through
 ;; the stubs at the end of bar.rkt. Nothing here runs while typing unless extra cursors exist.
 
-(require "../text-motion.rkt"
+(require "../text/text-motion.rkt"
          "../../commands/commands.rkt"
          "../../notation/document.rkt"
          "../../notation/host.rkt"
          (only-in "../blocks/blockview.rkt" blockview-kind-match? blockview-inside blockview-drawn)
          (only-in "../bar/bar.rkt" multi-table)
-         (only-in "../notify.rkt" notify!)
+         (only-in "../float/notify.rkt" notify!)
          (only-in "multi-draw.rkt" multi-lit multi-text-overlay))
 
 ;; multi-say shows a short message in a notification box.

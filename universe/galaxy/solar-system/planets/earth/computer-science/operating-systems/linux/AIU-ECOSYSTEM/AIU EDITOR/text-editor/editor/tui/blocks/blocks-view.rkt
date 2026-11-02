@@ -1,7 +1,7 @@
 #lang racket/base
 ;; One job: draw the block view overlays (lit block, floating block, edit box) over the live screen.
 
-(require racket/list racket/string "../../commands/commands.rkt" "../../machine/terminal.rkt" "../../notation/document.rkt" "../../notation/host.rkt" "../pins.rkt" "blocks-kind.rkt" "blockview.rkt" "blocks-text.rkt")
+(require racket/list racket/string "../../commands/commands.rkt" "../../machine/terminal.rkt" "../../notation/document.rkt" "../../notation/host.rkt" "../float/pins.rkt" "blocks-kind.rkt" "blockview.rkt" "blocks-text.rkt")
 
 (provide block-overlay)
 

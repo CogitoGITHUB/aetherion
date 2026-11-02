@@ -5,7 +5,7 @@
 
 ;; kept holds the hunks of the file in kept-file: lists of first line, last
 ;; line and mark.
-(require (only-in "../box.rkt" paint-ready))
+(require (only-in "../float/box.rkt" paint-ready))
 
 ;; kept holds the hunks of the file in kept-file.
 (define kept (box null))
