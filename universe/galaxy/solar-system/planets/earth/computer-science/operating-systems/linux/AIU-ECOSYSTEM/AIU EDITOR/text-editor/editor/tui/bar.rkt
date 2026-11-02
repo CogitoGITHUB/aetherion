@@ -15,7 +15,7 @@
          "../commands/lazy-stub.rkt"
          "../routes/keymaps.rkt"
          "box.rkt"
-         "tabs.rkt"
+         "tabs/tabs.rkt"
          "bar-clock.rkt"
          "bar-git.rkt"
          "bar-state.rkt"

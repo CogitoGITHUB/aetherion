@@ -1,7 +1,7 @@
 #lang racket/base
 ;; One job: the tab commands - change tab, open, close, move and hide the tab bar. They are added to the command table when this module is loaded.
 
-(require racket/list racket/string racket/path "../commands/commands.rkt" "tabs.rkt" "tabs-folders.rkt")
+(require racket/list racket/string racket/path "../../commands/commands.rkt" "tabs.rkt" "tabs-folders.rkt")
 
 (provide)
 

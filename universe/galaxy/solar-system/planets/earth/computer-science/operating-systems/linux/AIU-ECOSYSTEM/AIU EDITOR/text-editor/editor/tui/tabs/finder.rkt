@@ -10,8 +10,8 @@
 (require racket/list
          racket/string
          racket/path
-         "../commands/commands.rkt"
-         "../machine/terminal.rkt"
+         "../../commands/commands.rkt"
+         "../../machine/terminal.rkt"
          "tabs.rkt")
 
 ;; find-jump holds the line the next opened file jumps to, or nothing.
@@ -115,7 +115,7 @@
     [(string=? scope "project") (tabs-project-dir file root)]
     [else root]))
 
-(require "../notation/location.rkt")
+(require "../../notation/location.rkt")
 
 ;; notation-bin answers the notation binary: the one found from the root, else the place it would be built.
 (define (notation-bin root)

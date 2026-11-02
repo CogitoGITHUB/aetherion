@@ -9,8 +9,8 @@
 (require racket/list
          racket/string
          racket/path
-         "../commands/commands.rkt"
-         "box.rkt" "tabs-folders.rkt")
+         "../../commands/commands.rkt"
+         "../box.rkt" "tabs-folders.rkt")
 
 ;; tab-files holds the open files, as complete paths in text, in the order opened.
 (define tab-files (box (list)))

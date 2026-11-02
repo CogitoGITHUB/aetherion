@@ -38,8 +38,8 @@
          "../tui/blocks-move.rkt"
          "../tui/menu.rkt"
          "../tui/bar.rkt"
-         "../tui/tabs.rkt" "../tui/tabs-commands.rkt"
-         "../tui/finder.rkt"
+         "../tui/tabs/tabs.rkt" "../tui/tabs/tabs-commands.rkt"
+         "../tui/tabs/finder.rkt"
          "../tui/notify.rkt"
          (only-in "../tui/box.rkt" paint-ready)
          "../tui/gutter.rkt"

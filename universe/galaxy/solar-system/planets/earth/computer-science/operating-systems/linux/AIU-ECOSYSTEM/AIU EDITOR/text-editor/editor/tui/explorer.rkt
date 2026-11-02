@@ -23,7 +23,7 @@
          "../routes/keymaps.rkt"
          "blockview.rkt"
          "bar.rkt"
-         "finder.rkt")
+         "tabs/finder.rkt")
 
 ;; explorer-lines answers the lines of the panel: every layer with the
 ;; keys it binds and the command each key runs, and then the commands

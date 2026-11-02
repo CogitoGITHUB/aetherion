@@ -22,8 +22,8 @@
          "../tui/blocks-move.rkt"
          "../tui/menu.rkt"
          "../tui/bar.rkt"
-         "../tui/tabs.rkt"
-         "../tui/finder.rkt"
+         "../tui/tabs/tabs.rkt"
+         "../tui/tabs/finder.rkt"
          "../tui/notify.rkt"
          (only-in "../tui/box.rkt" paint-ready)
          "../tui/gutter.rkt"
