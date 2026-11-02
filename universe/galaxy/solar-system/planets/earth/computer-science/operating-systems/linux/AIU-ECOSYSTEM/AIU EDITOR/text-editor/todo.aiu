@@ -10,18 +10,6 @@ comment end
 
 section start
 title start
-Self test and self docs (plan.md)
-title end
-
-paragraph start
-todo: open aiutd docs: write aiutd-tutorial.aiu and ai-starting-point.md from passing tests, the old docs are already retired
-Planned, see plan.md.
-paragraph end
-
-section end
-
-section start
-title start
 Try by hand and fix
 title end
 
