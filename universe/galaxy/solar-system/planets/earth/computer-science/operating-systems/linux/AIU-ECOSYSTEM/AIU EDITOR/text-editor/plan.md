@@ -314,3 +314,5 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - 2026-11-02 step 11 update split: arg-value to do-docs (record and docs) moved from entry/update.rkt to entry/update-record.rkt
 - 2026-11-02 step 11 retry: run-test moves together with arg-value..do-docs into entry/update-record.rkt (run-test was unbound there)
 - 2026-11-02 step 11 third try: live-last to do-docs (live print, drive-editor, run-test, record, docs) move together to entry/update-drive.rkt; the block needs nothing from the rest of update.rkt
+- 2026-11-02 step 12 blockview split: bv-todo-state, bv-kind-match?, bv-kind-setter and the kind key table move from tui/blockview.rkt to tui/blocks-kind.rkt
+- 2026-11-02 step 12 changed: only bv-kind-setter and the kind-* keys move to tui/blocks-kind.rkt; bv-todo-state and bv-kind-match? stay in blockview.rkt because moving them breaks test:cursors (cause not yet known)

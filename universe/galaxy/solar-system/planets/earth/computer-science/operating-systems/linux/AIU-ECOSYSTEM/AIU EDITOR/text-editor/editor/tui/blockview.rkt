@@ -11,7 +11,7 @@
          "../machine/terminal.rkt"
          "../notation/document.rkt"
          "../notation/host.rkt"
-         "pins.rkt")
+         "pins.rkt" "blocks-kind.rkt")
 
 ;; edit-start holds the start offset of the block being edited, or nothing.
 (define edit-start (box #f))
@@ -834,23 +834,6 @@
     [(string=? want "todo done") (equal? (bv-todo-state b) "done")]
     [else (string=? (block-name b) want)]))
 
-;; bv-kind-setter answers a command that picks one kind and says which.
-(define (bv-kind-setter want)
-  (lambda (session words)
-    (set-box! kind-filter want)
-    (cons #t (format "kind: ~a" want))))
-
-(for-each
- (lambda (pair) (hash-set! commands (car pair) (bv-kind-setter (cdr pair))))
- (list (cons "kind-any" "any")
-       (cons "kind-paragraph" "paragraph")
-       (cons "kind-section" "section")
-       (cons "kind-code" "code")
-       (cons "kind-comment" "comment")
-       (cons "kind-title" "title")
-       (cons "kind-todo" "todo")
-       (cons "kind-todo-open" "todo open")
-       (cons "kind-todo-done" "todo done")))
 (provide bv-ranges)
 
 ;; The save command is wrapped: it saves, clears unsaved, then runs the git refresh and one undo commit.
