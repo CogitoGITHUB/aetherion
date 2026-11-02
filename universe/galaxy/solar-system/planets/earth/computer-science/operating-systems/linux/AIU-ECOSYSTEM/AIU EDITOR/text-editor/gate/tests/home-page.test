@@ -1,0 +1,13 @@
+test home-page
+level 2
+file test.aiu
+keys space h 1 t escape
+expect screen contains kind: plan
+expect screen contains tags: todo aiutd planned
+expect screen contains leaves it when its tests pass.
+expect screen lacks kind: dashboard
+expect screen lacks tags: dashboard home pages todos git
+expect screen lacks 1 to 9   open that page
+expect colour grey
+expect colour white
+expect seconds-under 30
