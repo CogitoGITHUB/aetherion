@@ -9,7 +9,7 @@
 (define compile-files
   (list "editor/entry/cli.rkt" "editor/tui/undo/undo.rkt"
         "editor/tui/multi/multi.rkt" "editor/tui/text/clip.rkt"
-        "editor/entry/update.rkt"))
+        "editor/entry/update/update.rkt"))
 
 ;; raco-path answers the raco next to the running racket, or the one on the path.
 (define (raco-path)

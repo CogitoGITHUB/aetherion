@@ -19,7 +19,7 @@
 (define editor-root
   (find-up here-dir (lambda (d) (directory-exists? (build-path d "gate")))))
 
-(require "../notation/location.rkt")
+(require "../../notation/location.rkt")
 
 ;; notation-bin answers the notation program as a string, or false.
 (define (notation-bin) (notation-bin-from here-dir))

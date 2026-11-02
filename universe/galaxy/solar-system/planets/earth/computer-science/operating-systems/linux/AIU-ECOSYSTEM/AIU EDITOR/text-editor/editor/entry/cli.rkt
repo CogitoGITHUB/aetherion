@@ -26,7 +26,7 @@
   (when edit?
     (quick-show (and (pair? (cdr args)) (cadr args))))
   (if tool?
-      ((dynamic-require (sibling "update.rkt") (quote run)) args)
+      ((dynamic-require (sibling "update/update.rkt") (quote run)) args)
       (if (and edit? (terminal-port? (current-input-port)))
       ((dynamic-require (sibling "lean.rkt") (quote lean-edit)) (cdr args))
       ((dynamic-require (sibling "cli-full.rkt") (quote main))))))

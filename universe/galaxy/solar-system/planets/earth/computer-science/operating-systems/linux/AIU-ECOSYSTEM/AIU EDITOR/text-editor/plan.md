@@ -395,3 +395,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - read pass: gutter/ folder move, mover check
 - move gutter.rkt and gutterview.rkt into editor/tui/gutter/; next: sort the other editor folders into subject subfolders
 - sort loose editor/tui files into tui/float and tui/text; next: editor/entry into subfolders after reading its run-time path code
+- move the update-* files of editor/entry into editor/entry/update/; next: sort commands, machine, send, notation by subject
