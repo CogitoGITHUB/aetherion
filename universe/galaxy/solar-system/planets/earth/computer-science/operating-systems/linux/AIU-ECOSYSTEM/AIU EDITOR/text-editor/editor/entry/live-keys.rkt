@@ -26,8 +26,8 @@
          "../tui/tabs/finder.rkt"
          "../tui/notify.rkt"
          (only-in "../tui/box.rkt" paint-ready)
-         "../tui/gutter.rkt"
-         "../tui/gutterview.rkt"
+         "../tui/gutter/gutter.rkt"
+         "../tui/gutter/gutterview.rkt"
          (only-in "../machine/directories.rkt" journal-path-for))
 (require "live-paint.rkt")
 

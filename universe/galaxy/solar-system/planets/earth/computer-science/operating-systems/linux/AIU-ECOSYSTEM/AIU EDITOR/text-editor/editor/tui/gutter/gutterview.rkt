@@ -2,11 +2,11 @@
 ;; gutterview.rkt: puts one column at the left of every line of a drawn page,
 ;; with the git mark of the block that line belongs to, or a space.
 (require racket/string
-         "blocks/blockview.rkt"
+         "../blocks/blockview.rkt"
          "gutter.rkt"
-         "../commands/commands.rkt"
-         "../notation/host.rkt"
-         "../notation/document.rkt")
+         "../../commands/commands.rkt"
+         "../../notation/host.rkt"
+         "../../notation/document.rkt")
 
 ;; mark-of answers the mark of the lines first to last: the mark of the one
 ;; hunk that touches them, equals when several do or when a removal sits inside

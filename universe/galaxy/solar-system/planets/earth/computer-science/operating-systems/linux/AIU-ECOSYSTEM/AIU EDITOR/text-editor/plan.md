@@ -392,3 +392,5 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - read pass: keybindings check
 - read pass: keybinding audit script
 - patch: arrow keys in every layer that lacks them (keymaps.rkt)
+- read pass: gutter/ folder move, mover check
+- move gutter.rkt and gutterview.rkt into editor/tui/gutter/; next: sort the other editor folders into subject subfolders
