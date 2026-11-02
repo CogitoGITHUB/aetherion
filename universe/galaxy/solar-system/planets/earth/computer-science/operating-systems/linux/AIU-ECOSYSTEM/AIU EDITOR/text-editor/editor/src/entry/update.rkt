@@ -513,6 +513,50 @@
             (cond [(eof-object? k) #f]
                   [else (when (and tl (not base) (> (trace-lines) tl)) (set! base (frames))) (write-bytes buf acc 0 k) (loop)])]
            [else #f])])))
+    ;; starts-now counts the times the editor entered its screen so far; every session enters once.
+  (define (starts-now)
+    (length (regexp-match* (byte-regexp (regexp-quote (bytes-append (bytes 27) #"[?1049h"))) (get-output-bytes acc))))
+
+  ;; ends-now counts the times the editor left its screen so far.
+  (define (ends-now)
+    (length (regexp-match* (byte-regexp (regexp-quote (bytes-append (bytes 27) #"[?1049l"))) (get-output-bytes acc))))
+
+  ;; key-line answers the trace line that the key sent at line count tl wrote, or false.
+  (define (key-line tl)
+    (with-handlers ([void (lambda (e) #f)])
+      (let ([ls (string-split (file->string (trace-file)) "\n")])
+        (and (> (length ls) tl) (list-ref ls tl)))))
+
+  ;; frames-after-start counts the frames drawn since the last screen enter.
+  (define (frames-after-start)
+    (define all (get-output-bytes acc))
+    (define ps (regexp-match-positions* (byte-regexp (regexp-quote (bytes-append (bytes 27) #"[?1049h"))) all))
+    (if (null? ps) 0 (length (regexp-match* marker (subbytes all (cdr (last ps)))))))
+
+  ;; wait-session answers true when the key did not end its session, when the next session has drawn its first frame, when the editor ended and no session followed within 2 s, or when a tab round in the same terminal went quiet.
+  (define (wait-session s0 e0 tl)
+    (define line (key-line tl))
+    (cond
+      [(not (and line (regexp-match? #rx"go-on #f$" line))) #t]
+      [else
+       (define t-key (current-inexact-milliseconds))
+       (define deadline (+ t-key 20000))
+       (define left-at #f)
+       (define last-data t-key)
+       (let loop ()
+         (define now (current-inexact-milliseconds))
+         (when (and (not left-at) (> (ends-now) e0)) (set! left-at now))
+         (cond
+           [(and (> (starts-now) s0) (> (frames-after-start) 0)) #t]
+           [(and left-at (= (starts-now) s0) (> (- now left-at) 2000)) #t]
+           [(and (not left-at) (= (starts-now) s0) (> (- now t-key) 1200) (> (- now last-data) 400)) #t]
+           [(> now deadline) #f]
+           [(sync/timeout 0.2 so)
+            (define k (read-bytes-avail! buf so))
+            (cond [(eof-object? k) #t]
+                  [else (write-bytes buf acc 0 k) (set! last-data now) (loop)])]
+           [else (loop)]))]))
+
   (define (save-to path)
     (call-with-output-file path #:exists (quote truncate) (lambda (o) (write-bytes (get-output-bytes acc) o))))
   (define note
@@ -524,10 +568,12 @@
             [else
              (define n (frames))
              (define tl (trace-lines))
+        (define s0 (starts-now))
+        (define e0 (ends-now))
              (begin (live (format "send key ~a" i)) (write-string (car cs) si))
              (flush-output si)
              (cond
-               [(wait-frame n tl)
+               [(and (wait-frame n tl) (wait-session s0 e0 tl))
                 (begin (live (format "frame after key ~a" i)) (save-to (build-path dir (format "s~a.bin" i))))
                 (loop (cdr cs) (+ i 1))]
                [else (live (format "NO FRAME after key ~a in 20 s" i)) (format "none: no frame after key ~a" i)])]))))
@@ -807,6 +853,7 @@
   (define keys (string-join (cdr words) " "))
   (define tdir (build-path editor-root "gate" "tests"))
   (define tpath (build-path tdir (string-append name ".test")))
+  (define old-test (and (file-exists? tpath) (file->string tpath)))
   (define pg (let ([v (line-values (test-lines (build-path tdir "move.test")) "file")]) (if (pair? v) (car v) "test.aiu")))
   (define base-path "/tmp/aiutd-base.test")
   (define home (find-system-path (quote home-dir)))
@@ -840,7 +887,7 @@
   (cond
     [ok (display-to-file (format "name ~a\ntest ~a\nkeys ~a\ndoc Recorded from a real run of the keys ~a.\nai gate/tests/~a.test, recorded by aiutd record from the observed screen and file changes.\n" name name keys keys name)
                          (build-path editor-root "editor" "src" "features" (string-append name ".feature")) #:exists (quote truncate))]
-    [else (when (file-exists? tpath) (delete-file tpath))])
+    [else (if old-test (display-to-file old-test tpath #:exists (quote truncate)) (when (file-exists? tpath) (delete-file tpath)))])
   (emit (list "AIUTD RECORD" (format "~a  ~a" (if ok "GREEN" "RED") name))
         (if ok expects (append (if (pair? expects) (list) (append (list "nothing changed on screen or in the file, nothing written") (no-change-why keys ksl bsl) (unbox last-evidence))) (unbox rec-why))))
   (when ok (let ([g (find-executable-path "git")] [t (string-append "gate/tests/" name ".test")] [f (string-append "editor/src/features/" name ".feature")]) (let-values ([(c1 o1) (capture editor-root g (list "add" "--" t f))]) (void)) (let-values ([(c2 o2) (capture editor-root g (list "commit" "-q" "-m" (string-append "test: " name " recorded") "--" t f))]) (void))))
