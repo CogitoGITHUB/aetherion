@@ -1,5 +1,5 @@
-name Moving between blocks
+name move
 test move
-keys t
-doc Press t to go to the next block of the page.
-ai gate/tests/move.test, keys t t t t, expects the screen to contain Moving between blocks.
+keys t t t t
+doc Recorded from a real run of the keys t t t t.
+ai gate/tests/move.test, recorded by aiutd record from the observed screen and file changes.

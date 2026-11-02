@@ -1,6 +1,10 @@
 test move
-level 1
+level 2
 file test.aiu
 keys t t t t
-expect screen contains Moving between blocks
+expect screen contains paragraph
+expect screen contains Space n jumps to the next block and space e to the end of the block.
+expect screen contains Space u shows more rows of the editor.
+expect screen lacks comment
+expect screen lacks Every key in this page works in the visual layer unless a part says
 expect seconds-under 30

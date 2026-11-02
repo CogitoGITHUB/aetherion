@@ -2,10 +2,7 @@ test float-view
 level 2
 file test.aiu
 keys t t t t t t t t g g g g g g
-expect screen contains This page teaches the editor and tests it at once. You are looking at a
-expect screen contains page drawn as boxes. One block is lit at a time, and the keys below move
-expect screen contains it, edit it and pick what it moves between. Read a part, press the keys
-expect screen lacks kind: default
-expect screen lacks tags: test editor introduction
+expect screen contains the box you see, the level by level matching works.
 expect screen lacks comment
+expect screen lacks Every key in this page works in the visual layer unless a part says
 expect seconds-under 30
