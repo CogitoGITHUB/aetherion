@@ -738,7 +738,7 @@
   (define base-path "/tmp/aiutd-base.test")
   (define home (find-system-path (quote home-dir)))
   (define (grab n) (with-handlers ([void (lambda (e) "")]) (file->string (build-path home n))))
-  (display-to-file (format "test ~a-base\nlevel 2\nfile ~a\nrecord\nexpect seconds-under 60\n" name pg) base-path #:exists (quote truncate))
+  (display-to-file (format "test ~a-base\nlevel 2\nfile ~a\nrecord\n~aexpect seconds-under 60\n" name pg (if (string-prefix? keys "space h") "keys space h escape\n" "")) base-path #:exists (quote truncate))
   (display-to-file (format "test ~a\nlevel 2\nfile ~a\nrecord\nkeys ~a\nexpect seconds-under 30\n" name pg keys) tpath #:exists (quote truncate))
   (run-test base-path)
   (define bs (grab ".aiu-record-screen.txt"))

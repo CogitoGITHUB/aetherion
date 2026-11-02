@@ -277,3 +277,5 @@ Test shows the screen (2026-11-02): a failed aiutd test now prints the screen it
 Re-recorded (2026-11-02): centre-box, float-view, move and scroll-view, stale since the default title pin (55cfac36).
 
 Todo clean (2026-11-02): removed the aiutd docs section from todo.aiu, done and committed. Next: home keys 1 to 9 and space q.
+
+Recorder base (2026-11-02): when the keys start with space h the base run opens the home screen too, so home tests diff against the dashboard. Not seen running.
