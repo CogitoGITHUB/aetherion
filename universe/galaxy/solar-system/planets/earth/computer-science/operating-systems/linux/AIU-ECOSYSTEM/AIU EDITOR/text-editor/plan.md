@@ -398,3 +398,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - move the update-* files of editor/entry into editor/entry/update/; next: sort commands, machine, send, notation by subject
 - read pass: notification files, mechanism into tui/notify/, each type into its group
 - notify mechanism into editor/tui/notify/; next: each notification type into its group file (clip, multi, keys)
+- notification types into their groups: clip-notes, multi-notes, key-notes; todo: notification history last

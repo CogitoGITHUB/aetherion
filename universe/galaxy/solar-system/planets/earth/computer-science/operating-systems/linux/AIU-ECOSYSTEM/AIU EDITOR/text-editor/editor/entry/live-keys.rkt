@@ -24,7 +24,7 @@
          "../tui/bar/bar.rkt"
          "../tui/tabs/tabs.rkt"
          "../tui/tabs/finder.rkt"
-         "../tui/notify/notify.rkt"
+         "../tui/keys/key-notes.rkt"
          (only-in "../tui/float/box.rkt" paint-ready)
          "../tui/gutter/gutter.rkt"
          "../tui/gutter/gutterview.rkt"
@@ -145,7 +145,7 @@
         ;; writing and the page a reader is reading cannot change under the
         ;; key. The key is taken and nothing is said: the mode line already
         ;; names the layer, and a message over the page would break the frame.
-        (notify! "warn" (format "no key: ~a in ~a" (string-join names " ") (mode-label layer)))
+        (key-note-none names (mode-label layer))
         (outcome (drop-bytes buffer (list (car runs))) #t)]
        [(text-of (car names))
         ;; In the write layer a key that carries text IS the text: a space is
@@ -155,7 +155,7 @@
        [else
         ;; The first key means nothing to anybody: it is said out loud
         ;; and the rest of the bytes are kept.
-        (notify! "warn" (format "no key: ~a in ~a" (string-join names " ") (mode-label layer)))
+        (key-note-none names (mode-label layer))
         (outcome (drop-bytes buffer (list (car runs))) #t)])]))
 
 ;; run-it runs one command and answers whether the session goes on. Nothing is

@@ -13,7 +13,7 @@
          (only-in net/base64 base64-encode)
          (only-in "../blocks/blockview.rkt" blockview-inside blockview-drawn)
          (only-in "../bar/bar.rkt" clip-table)
-         (only-in "../notify/notify.rkt" notify!))
+         "clip-notes.rkt")
 
 ;; cp-ring keeps the copies, newest first; each copy is a list of pieces of text.
 (define cp-ring (list))
@@ -82,19 +82,18 @@
       (write-string (string-append "\u001b]52;c;" (bytes->string/latin-1 (base64-encode bs #"")) "\u0007"))
       (flush-output))))
 
-;; cp-said answers the words for a number of pieces.
-(define (cp-said n) (format "~a piece~a" n (if (= n 1) "" "s")))
+
 
 ;; cp-copy copies the selections, or the block or line at the point.
 (define (cp-copy session)
   (let ([pieces (cp-pieces session)])
     (cond [(andmap (lambda (p) (string=? p "")) pieces)
-           (notify! "info" "nothing to copy")
+           (clip-note-nothing-to-copy)
            (cons #t "nothing")]
           [else
            (cp-keep! pieces)
            (cp-osc52! pieces)
-           (notify! "info" (string-append "copied " (cp-said (length pieces))))
+           (clip-note-copied (length pieces))
            (cons #t "copied")])))
 
 ;; cp-replace! replaces the range of every cursor by a text, from the last cursor to the first so no offset moves
@@ -129,7 +128,7 @@
   (let ([rs (cp-selected session)])
     (cond
       [(null? rs)
-       (notify! "info" "select something first: space v")
+       (clip-note-select-first)
        (cons #t "nothing")]
       [else
        (let* ([bs (cp-bytes session)]
@@ -138,14 +137,14 @@
          (cp-keep! pieces)
          (cp-osc52! pieces)
          (cp-replace! session its (map (lambda (c) "") its))
-         (notify! "info" (string-append "cut " (cp-said (length pieces))))
+         (clip-note-cut (length pieces))
          (cons #t "cut"))])))
 
 ;; cp-paste puts the newest copy at every cursor, replacing what a cursor selects.
 (define (cp-paste session)
   (cond
     [(null? cp-ring)
-     (notify! "info" "nothing copied yet")
+     (clip-note-nothing-copied)
      (cons #t "nothing")]
     [else
      (let* ([pieces (car cp-ring)]
@@ -156,7 +155,7 @@
                          [(= m 1) (for/list ([i (in-range k)]) (car pieces))]
                          [else (let ([all (string-join pieces "\n")]) (for/list ([i (in-range k)]) all))])])
        (cp-replace! session its texts)
-       (notify! "info" (format "pasted at ~a cursor~a" k (if (= k 1) "" "s")))
+       (clip-note-pasted k)
        (cons #t "pasted"))]))
 
 ;; cp-reg! adds one command to the table of this module.

@@ -360,3 +360,12 @@ todo: errortrace run. Run the editor under errortrace once and fix what it finds
 todo: gutter files. gutter.rkt and gutterview.rkt are loose in editor/tui. Give the gutter its own folder, and give each file its own test file.
 paragraph end
 section end
+
+section start
+title start
+NOTIFICATION HISTORY
+title end
+paragraph start
+todo: notification history. A command shows the last notifications of the active session in a box (level, text and time), kept in a small ring in the notify mechanism. Not urgent at all, do it last.
+paragraph end
+section end

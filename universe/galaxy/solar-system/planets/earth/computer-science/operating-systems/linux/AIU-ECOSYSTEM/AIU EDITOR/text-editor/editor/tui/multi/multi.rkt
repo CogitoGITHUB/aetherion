@@ -11,11 +11,10 @@
          "../../notation/host.rkt"
          (only-in "../blocks/blockview.rkt" blockview-kind-match? blockview-inside blockview-drawn)
          (only-in "../bar/bar.rkt" multi-table)
-         (only-in "../notify/notify.rkt" notify!)
+         "multi-notes.rkt"
          (only-in "multi-draw.rkt" multi-lit multi-text-overlay))
 
-;; multi-say shows a short message in a notification box.
-(define (multi-say text) (notify! "info" text))
+
 
 ;; multi-bytes answers the text of the session as bytes; every offset is a byte offset.
 (define (multi-bytes session) (string->bytes/utf-8 (session-text session)))
@@ -64,9 +63,9 @@
          [heads (map (lambda (c) (vector-ref c 0)) cs)]
          [edge (if (> step 0) (apply max heads) (apply min heads))]
          [new (if (> step 0) (multi-down bs edge) (multi-up bs edge))])
-    (cond [(= new edge) (multi-say "no line there") (cons #t "none")]
+    (cond [(= new edge) (multi-note-no-line) (cons #t "none")]
           [else (multi-store! session (cons (vector new #f #f) cs))
-                (multi-say (format "cursors: ~a" (multi-total)))
+                (multi-note-cursors (multi-total))
                 (cons #t "added")])))
 
 ;; multi-add-block adds a cursor at the start of the next block (or the one before) of the picked kind.
@@ -84,9 +83,9 @@
                      (let ([m (apply min heads)])
                        (for/first ([x (in-list (reverse blocks))] #:when (< (block-start x) m)) x)))])
          (cond [b (multi-store! session (cons (vector (block-start b) #f #f) cs))
-                  (multi-say (format "cursors: ~a" (multi-total)))
+                  (multi-note-cursors (multi-total))
                   (cons #t "added")]
-               [else (multi-say "no block there") (cons #t "none")]))])))
+               [else (multi-note-no-block) (cons #t "none")]))])))
 
 ;; multi-needle answers the text to look for: the selected text of the main cursor, or the word under it,
 ;; which then becomes selected. False when there is neither.
@@ -108,22 +107,22 @@
   (multi-begin! session)
   (let* ([bs (multi-bytes session)] [needle (multi-needle session bs)])
     (cond
-      [(not needle) (multi-say "no word here") (cons #t "none")]
+      [(not needle) (multi-note-no-word) (cons #t "none")]
       [else
        (let* ([cs (multi-cursors session)]
               [from (apply max (map (lambda (c) (max (vector-ref c 0) (or (vector-ref c 1) 0))) cs))]
               [m (regexp-match-positions (byte-regexp (regexp-quote needle)) bs (min from (bytes-length bs)))])
          (cond [m (multi-store! session (cons (vector (cdar m) (caar m) #f) cs))
-                  (multi-say (format "cursors: ~a" (multi-total)))
+                  (multi-note-cursors (multi-total))
                   (cons #t "added")]
-               [else (multi-say "no more matches") (cons #t "none")]))])))
+               [else (multi-note-no-more-matches) (cons #t "none")]))])))
 
 ;; multi-add-all adds a cursor with a selection on every place that holds the needle.
 (define (multi-add-all session)
   (multi-begin! session)
   (let* ([bs (multi-bytes session)] [needle (multi-needle session bs)])
     (cond
-      [(not needle) (multi-say "no word here") (cons #t "none")]
+      [(not needle) (multi-note-no-word) (cons #t "none")]
       [else
        (let* ([ms (regexp-match-positions* (byte-regexp (regexp-quote needle)) bs)]
               [cs (multi-cursors session)]
@@ -131,28 +130,28 @@
               [added (for/list ([m (in-list ms)] #:unless (member (cdr m) have))
                        (vector (cdr m) (car m) #f))])
          (multi-store! session (append cs added))
-         (multi-say (format "cursors: ~a" (multi-total)))
+         (multi-note-cursors (multi-total))
          (cons #t "added"))])))
 
 ;; multi-drop takes the last extra cursor away.
 (define (multi-drop session)
   (let ([ex (unbox extra-cursors)])
-    (cond [(null? ex) (multi-say "only the main cursor is left") (cons #t "none")]
+    (cond [(null? ex) (multi-note-only-main) (cons #t "none")]
           [else (set-box! extra-cursors (reverse (cdr (reverse ex))))
-                (multi-say (format "cursors: ~a" (multi-total)))
+                (multi-note-cursors (multi-total))
                 (cons #t "dropped")])))
 
 ;; multi-clear drops every extra cursor and every selection.
 (define (multi-clear session)
   (multi-clear!)
-  (multi-say "cursors cleared")
+  (multi-note-cleared)
   (cons #t "cleared"))
 
 ;; multi-cursor-mode opens the cursor layer.
 (define (multi-cursor-mode session)
   (multi-begin! session)
   (set-layer! session "cursor")
-  (multi-say "cursor: t h blocks, arrows lines, j match, v all, r drop, z clear, f write, s select")
+  (multi-note-cursor-help)
   (cons #t "layer: cursor"))
 
 ;; multi-cursor-leave goes back to the visual layer and keeps the cursors.
@@ -168,7 +167,7 @@
                (vector (vector-ref c 0) (or (vector-ref c 1) (vector-ref c 0)) (vector-ref c 2))))
   (set-box! multi-raw-view #f)
   (set-layer! session "select")
-  (multi-say "select: n s w b arrows text, h t blocks, a p e c k l x o d pick, j v matches, r drop")
+  (multi-note-select-help)
   (cons #t "layer: select"))
 
 ;; multi-extend moves the head of every cursor with a function of the text and the head; the anchor stays,
