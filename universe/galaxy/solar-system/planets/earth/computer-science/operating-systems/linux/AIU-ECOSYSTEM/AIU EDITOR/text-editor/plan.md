@@ -301,3 +301,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - 2026-11-02 block cursor tests: recorded block-text (i Q Q escape space s), block-back (t t t h), block-picks (p t t e t c t k t)
 - 2026-11-02 step 3 menu split: kname kseq cell-pad grid enter-key menu-* moved from entry/live.rkt to tui/menu.rkt, live.rkt requires it
 - 2026-11-02 step 4 bar split: clock to tui/bar-clock.rkt, git (git-info to git-refresh-maybe, git-stale!) to tui/bar-git.rkt, bar.rkt requires both
+- 2026-11-02 step 5 pins split: pins boxes, pins-now, pin-update!, pin-swap!, bv-command-pin-* moved from tui/blockview.rkt to tui/pins.rkt, blockview requires it
