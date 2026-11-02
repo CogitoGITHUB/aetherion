@@ -319,3 +319,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - 2026-11-02 step 13 blockview split: bv-siblings, bv-move and the move commands with their three keys move to tui/blocks-move.rkt, loaded by live.rkt; bv-parent stays and bv-aiu? is provided
 - blockview cut: blocks-text.rkt (pad, chunks, text overlay, block-text key) and blocks-view.rkt (view overlays, block-overlay) out of blockview.rkt
 - blockview cut: blocks-text.rkt (pad, chunks, text overlay, block-text key with its multi-clear wrapper) and blocks-view.rkt (view overlays, block-overlay) out of blockview.rkt
+- dispatch cut: dispatch-git.rkt (git, git-diff, git-history verbs) out of dispatch.rkt
