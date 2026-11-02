@@ -25,9 +25,6 @@ pub const OP_JOURNAL: &str = "journal";
 /// unsaved edits put back on top, the pending count and the records.
 pub const OP_REPLAY: &str = "replay";
 
-/// OP_DASHBOARD draws the dashboard: the pieces are placed on a screen and
-/// the screen comes back as one text, the lines separated by newlines.
-pub const OP_DASHBOARD: &str = "dashboard";
 
 /// OP_KEYS answers the keys in a run of bytes: the name of each key and
 /// how many bytes it took. The meaning side holds the keymaps, so it

@@ -12,7 +12,6 @@
          "../commands/tasks.rkt"
          "../devloop/bake.rkt"
          "../devloop/last-good.rkt"
-         "../tui/dashboard.rkt"
          "../routes/keyboard.rkt"
          "../routes/keymaps.rkt"
          "../routes/routes.rkt"

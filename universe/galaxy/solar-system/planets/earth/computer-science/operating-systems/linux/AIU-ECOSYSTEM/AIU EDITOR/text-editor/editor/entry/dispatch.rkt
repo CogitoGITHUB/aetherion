@@ -18,7 +18,6 @@
          "../commands/tasks.rkt"
          "../devloop/bake.rkt"
          "../devloop/last-good.rkt"
-         "../tui/dashboard.rkt"
          "../routes/keyboard.rkt"
          "../routes/keymaps.rkt"
          "../checkpoint/checkpoint.rkt"
@@ -102,7 +101,6 @@
         "task" task-verb
         "tasks" tasks-verb
         "keys" keys-verb
-        "dashboard" dashboard-verb
         "git" git-verb
         "git-diff" git-diff-verb
         "git-history" git-history-verb

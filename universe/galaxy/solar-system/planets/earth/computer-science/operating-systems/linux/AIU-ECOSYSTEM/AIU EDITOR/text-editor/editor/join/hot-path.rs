@@ -6,8 +6,6 @@
 
 #[path = "../buffer/buffer.rs"]
 mod buffer;
-#[path = "../tui/dashboard.rs"]
-mod dashboard;
 #[path = "../input/read.rs"]
 mod input;
 #[path = "../journal/journal.rs"]
@@ -289,26 +287,6 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
                 ],
             )
         }
-        rust_exports::OP_DASHBOARD => {
-            let width = wire_json::arg(request, "width")
-                .trim()
-                .parse::<usize>()
-                .unwrap_or(80);
-            let height = wire_json::arg(request, "height")
-                .trim()
-                .parse::<usize>()
-                .unwrap_or(24);
-            let count = wire_json::arg(request, "count")
-                .trim()
-                .parse::<usize>()
-                .unwrap_or(0);
-            let pieces = dashboard::parse_pieces(&request.args, count);
-            let screen = dashboard::draw(&pieces, width, height);
-            (
-                true,
-                vec![("screen".to_string(), screen.join("\n"))],
-            )
-        }
         rust_exports::OP_KEYS => {
             let bytes = input::from_hex(&wire_json::arg(request, "bytes"));
             let mut reader = input::new_reader();
@@ -439,7 +417,7 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
             vec![
                 ("kind".to_string(), "err-unknown-op".to_string()),
                 ("what".to_string(), format!("there is no operation named {}", op)),
-                ("what_to_do".to_string(), "ask for one of: open, insert, save, show, journal, replay, dashboard".to_string()),
+                ("what_to_do".to_string(), "ask for one of: open, insert, save, show, journal, replay".to_string()),
             ],
         ),
     }

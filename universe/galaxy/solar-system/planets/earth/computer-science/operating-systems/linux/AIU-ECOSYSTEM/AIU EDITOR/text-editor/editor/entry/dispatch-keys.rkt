@@ -1,5 +1,5 @@
 #lang racket/base
-;; One job: the routes, keys and dashboard verbs of the argv dispatch, each printing what the layers and the screen answer.
+;; One job: the routes and keys verbs of the argv dispatch, each printing what the layers and the screen answer.
 
 (require racket/list
          racket/path
@@ -12,7 +12,6 @@
          "../commands/tasks.rkt"
          "../devloop/bake.rkt"
          "../devloop/last-good.rkt"
-         "../tui/dashboard.rkt"
          "../routes/keyboard.rkt"
          "../routes/keymaps.rkt"
          "../routes/routes.rkt"
@@ -21,7 +20,7 @@
          "../notation/document.rkt"
          "../notation/host.rkt")
 
-(provide routes-walk keys-verb dashboard-verb)
+(provide routes-walk keys-verb)
 
 ;; routes-walk runs the routing walk and prints one line per key: which
 ;; layer saw the key and what it meant there. The keys are the ones given
@@ -65,20 +64,3 @@
                                 (if (string=? (second answer) "") "-" (second answer)))))
           names)))
    hexes))
-
-;; dashboard-verb draws the dashboard and prints it, one line per row of
-;; the screen. The file is the one being edited; without a file the
-;; dashboard shows the editor alone.
-(define (dashboard-verb args)
-  (define file (if (null? args) "" (car args)))
-  (define level (dashboard-level (if (< (length args) 2) "" (cadr args))))
-  (define path (path->complete-path (if (string=? file "") "untitled" file)))
-  (define journal (journal-path-for path))
-  (define state (session-state (path->string path) (path->string journal)))
-  (for-each print-line (draw-dashboard (pieces-at level) state level)))
-
-;; dashboard-level answers the level the dashboard is drawn at: the level
-;; the owner names, and the second level when nobody names one.
-(define (dashboard-level said)
-  (define level (and (not (string=? said "")) (string->number said)))
-  (if (and level (<= 0 level) (<= level 3)) level 2))

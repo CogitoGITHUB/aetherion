@@ -13,7 +13,7 @@
     (list (cadr p) (/ (round (/ (string->number (caddr p)) 100.0)) 10.0))))
 
 ;; level-1-stages are the quick gate stages, about 20 s together.
-(define level-1-stages "naming,one-way,language-split,comment-lint,notation-check,dashboard-check,secret-check,git-check")
+(define level-1-stages "naming,one-way,language-split,comment-lint,notation-check,secret-check,git-check")
 
 ;; level-2-stages add the medium stages, about 60 s more.
 (define level-2-stages (string-append level-1-stages ",paren-check,plugin-check,send-check,route-check,explorer-check,security-gate"))

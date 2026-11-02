@@ -28,7 +28,6 @@
   (list (capability "routes" #f "walk the routing: every key, every layer")
         (capability "keys" #f "list the keys and what each one means")
         (capability "tasks" #f "list the task table")
-        (capability "dashboard" #f "show the dashboard and every piece of it")
         (capability "agent" #f "show the agent's state and its pins")
         (capability "audit" #f "show the audit: what changed, and who changed it")
         (capability "task" #t "run one task of the task table")
