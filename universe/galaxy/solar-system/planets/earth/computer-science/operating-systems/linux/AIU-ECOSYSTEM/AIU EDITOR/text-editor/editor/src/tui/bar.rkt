@@ -12,6 +12,7 @@
          racket/string
          racket/path
          "../commands/commands.rkt"
+         "../commands/lazy-stub.rkt"
          "../routes/keymaps.rkt"
          "box.rkt"
          "tabs.rkt")
@@ -369,82 +370,27 @@
          bar-plan-of)
 
 ;; undo-table holds the real commands of the undo layer; undo.rkt fills it when it is loaded.
-(define undo-table (make-hash))
+(define undo-table
+  (lazy-layer! (#%variable-reference) "undo.rkt" "undo" "undo is not available"
+               (list "undo-mode" "undo-back" "undo-forward" "undo-up" "undo-down"
+                     "undo-branch-back" "undo-branch-forward" "undo-tip" "undo-mark"
+                     "undo-unmark" "undo-diff" "undo-live" "undo-keep" "undo-cancel")))
 
 ;; undo-rows-hook answers the rows of the undo panel for a width and a height; undo.rkt sets it.
 (define undo-rows-hook (box (lambda (width height) null)))
 
-;; undo-path is the undo module beside this file, or false.
-(define undo-path
-  (let ([src (variable-reference->module-source (#%variable-reference))])
-    (and (path? src)
-         (let-values ([(base name dir?) (split-path src)])
-           (and (path? base) (simplify-path (build-path base "undo.rkt")))))))
-
-;; undo-stub makes a command that loads the undo module on first use and then runs the real command.
-(define (undo-stub name)
-  (lambda (session words)
-    (with-handlers ([void (lambda (e) (cons #t (format "undo failed: ~a" (if (exn? e) (exn-message e) e))))])
-      (when undo-path (dynamic-require undo-path #f))
-      (let ([f (hash-ref undo-table name #f)])
-        (if f (f session words) (cons #t "undo is not available"))))))
-
-;; The undo commands enter the command table as stubs, so the keys and the gate see them at once.
-(for ([name (in-list (list "undo-mode" "undo-back" "undo-forward" "undo-up" "undo-down"
-                           "undo-branch-back" "undo-branch-forward" "undo-tip" "undo-mark"
-                           "undo-unmark" "undo-diff" "undo-live" "undo-keep" "undo-cancel"))])
-  (hash-set! commands name (undo-stub name)))
-
-(provide undo-table undo-rows-hook)
-
 ;; multi-table holds the real commands of the cursors and the selection; multi.rkt fills it when it is loaded.
-(define multi-table (make-hash))
-
-;; multi-path is the multi cursor module beside this file, or false.
-(define multi-path
-  (let ([src (variable-reference->module-source (#%variable-reference))])
-    (and (path? src)
-         (let-values ([(base name dir?) (split-path src)])
-           (and (path? base) (simplify-path (build-path base "multi.rkt")))))))
-
-;; multi-stub makes a command that loads the multi cursor module on first use and then runs the real command.
-(define (multi-stub name)
-  (lambda (session words)
-    (with-handlers ([void (lambda (e) (cons #t (format "cursors failed: ~a" (if (exn? e) (exn-message e) e))))])
-      (when multi-path (dynamic-require multi-path #f))
-      (let ([f (hash-ref multi-table name #f)])
-        (if f (f session words) (cons #t "cursors are not available"))))))
-
-;; The cursor and selection commands enter the command table as stubs, so the keys and the gate see them at once.
-(for ([name (in-list (list "cursor-mode" "cur-leave" "cur-below" "cur-above" "cur-next-block" "cur-prev-block"
-                           "cur-next-match" "cur-all-matches" "cur-drop" "cur-clear" "select-mode"
-                           "sel-left" "sel-right" "sel-up" "sel-down" "sel-word" "sel-word-back"
-                           "sel-block-forward" "sel-block-back" "sel-next-match" "sel-all-matches"
-                           "sel-drop" "sel-cancel"))])
-  (hash-set! commands name (multi-stub name)))
-
-(provide multi-table)
+(define multi-table
+  (lazy-layer! (#%variable-reference) "multi.rkt" "cursors" "cursors are not available"
+               (list "cursor-mode" "cur-leave" "cur-below" "cur-above" "cur-next-block" "cur-prev-block"
+                     "cur-next-match" "cur-all-matches" "cur-drop" "cur-clear" "select-mode"
+                     "sel-left" "sel-right" "sel-up" "sel-down" "sel-word" "sel-word-back"
+                     "sel-block-forward" "sel-block-back" "sel-next-match" "sel-all-matches"
+                     "sel-drop" "sel-cancel")))
 
 ;; clip-table holds the real commands of copy, cut and paste; clip.rkt fills it when it is loaded.
-(define clip-table (make-hash))
+(define clip-table
+  (lazy-layer! (#%variable-reference) "clip.rkt" "clip" "copy and paste are not available"
+               (list "copy" "cut" "paste")))
 
-;; clip-path is the copy and paste module beside this file, or false.
-(define clip-path
-  (let ([src (variable-reference->module-source (#%variable-reference))])
-    (and (path? src)
-         (let-values ([(base name dir?) (split-path src)])
-           (and (path? base) (simplify-path (build-path base "clip.rkt")))))))
-
-;; clip-stub makes a command that loads the copy and paste module on first use and then runs the real command.
-(define (clip-stub name)
-  (lambda (session words)
-    (with-handlers ([void (lambda (e) (cons #t (format "clip failed: ~a" (if (exn? e) (exn-message e) e))))])
-      (when clip-path (dynamic-require clip-path #f))
-      (let ([f (hash-ref clip-table name #f)])
-        (if f (f session words) (cons #t "copy and paste are not available"))))))
-
-;; The copy, cut and paste commands enter the command table as stubs, so the keys and the gate see them at once.
-(for ([name (in-list (list "copy" "cut" "paste"))])
-  (hash-set! commands name (clip-stub name)))
-
-(provide clip-table)
+(provide undo-table undo-rows-hook multi-table clip-table)
