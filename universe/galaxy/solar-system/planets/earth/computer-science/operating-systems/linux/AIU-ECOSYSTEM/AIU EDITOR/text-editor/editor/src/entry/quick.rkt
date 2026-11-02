@@ -113,7 +113,7 @@
     (define lines
       (if file
           (or (and (regexp-match? #rx"[.]aiu$" (if (path? file) (path->string file) file)) (boxed-lines file cols)) (regexp-split #rx"\n" (head-of file)))
-          (list "AIU DASHBOARD" "" "loading the home screen")))
+          (list "AIU EDITOR" "" "opening the page")))
     (write-string (frame lines rows cols (or file "AIU home")))
     (flush-output)))
 

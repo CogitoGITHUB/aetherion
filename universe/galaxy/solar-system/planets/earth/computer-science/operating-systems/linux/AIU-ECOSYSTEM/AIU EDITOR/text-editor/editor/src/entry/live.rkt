@@ -50,7 +50,7 @@
 ;; terminal with that file, so the hot path and the screen stay up while the tabs
 ;; change. The work not saved yet of every file stays in its own journal.
 (define (live-session file journal)
-  (unless (home-screen) (tab-show! (path->string file)))
+  (tab-show! (path->string file))
   (raw-mode)
   (display "\u001b[?1049h")
   (dynamic-wind
@@ -59,7 +59,7 @@
       ;; The hot path is started once here, before the first frame, and kept
       ;; for the whole session: a key asks the child that is already running
       ;; instead of paying a program start for every letter.
-      (unless (home-screen) (wire-start))
+      (wire-start)
       (let next-round ([file file] [journal journal])
         (define session (make-session file journal))
     (trace-session! file)
@@ -74,20 +74,17 @@
           (when ln
             (set-box! find-jump #f)
             (move-to session (line-start-offset (session-text session) ln))))
-        (set-box! home-repaint (lambda () (repaint session viewport)))
         (set-box! notify-repaint (lambda () (repaint session viewport)))
         (set-box! edit-hook (lambda () (gutter-stale!) (git-stale!))) (set-box! dirty-hook (lambda () (set-box! unsaved #t)))
         (repaint session viewport)
         (set-box! paint-ready #t)
         (thread (lambda () (repaint session viewport)))
-        (start-home-scan)
         (key-loop session (current-input-port) viewport)
         (define next (unbox tab-switch))
         (when next
           (set-box! tab-switch #f)
           (next-round (string->path next) (journal-path-for (string->path next))))))
     (lambda ()
-      (set-box! home-repaint void)
       (wire-stop)
       (display "\u001b[?25h")
       (display "\u001b[?1049l")
@@ -208,7 +205,7 @@
         (list "undo-mode" "view" "undo tree") (list "level-up" "page" "more rows")
         (list "next-block" "blocks" "next")
         (list "block-end" "blocks" "block end") (list "blocks" "blocks" "list")
-        (list "focus-toggle" "view" "focus") (list "explorer" "view" "explorer") (list "home-open" "view" "dashboard")
+        (list "focus-toggle" "view" "focus") (list "explorer" "view" "explorer")
         (list "block-up" "move" "block up") (list "view-up" "move" "view up") (list "view-down" "move" "view down") (list "pin-mode" "view" "pin-mode") (list "pin-add" "view" "pin-add") (list "pin-delete" "view" "pin-delete") (list "pin-next" "view" "pin-next") (list "pin-prev" "view" "pin-prev") (list "pin-top" "view" "pin-top") (list "pin-bottom" "view" "pin-bottom") (list "pin-hide" "view" "pin-hide") (list "pin-keep" "view" "pin-keep") (list "pin-earlier" "view" "pin-earlier") (list "pin-later" "view" "pin-later") (list "block-down" "move" "block down")
         (list "move-left" "move" "left") (list "move-right" "move" "right")
         (list "move-up" "move" "up") (list "move-down" "move" "down")
@@ -362,9 +359,9 @@
 (define (repaint-now session viewport)
   (define-values (full-width full-height) (terminal-size))
   (define plan
-    (bar-plan-of session (unbox pending-keys) full-width full-height (and (home-screen) #t)
-                 (lambda () ((unbox home-repaint)))))
-  (define gut? (and (not (home-screen)) (string-suffix? (path->string (session-file session)) ".aiu")))
+    (bar-plan-of session (unbox pending-keys) full-width full-height #f
+                 void))
+  (define gut? (and (string-suffix? (path->string (session-file session)) ".aiu")))
   (when (and gut? (not (unbox unsaved))) (gutter-refresh-maybe (session-file session) (lambda () ((unbox notify-repaint)))))
   (define width (- full-width (bar-plan-left plan) (bar-plan-right plan) (if gut? 1 0)))
   (define height (+ 1 (- full-height (bar-plan-top plan) (bar-plan-bottom plan))))
@@ -372,16 +369,16 @@
   (define writing? (string=? (the-layer session) "write"))
   (define raw (session-text session))
   (define overlay
-    (and (not (home-screen))
+    (and
          (string-suffix? name ".aiu")
          (not (multi-raw? session)) (block-overlay session raw width height)))
-  (define home (home-screen))
+  (define home #f)
   (define plain-text
-    (cond [home (string-join (home (the-level session) (unbox home-explorer)) "\n")]
+    (cond
           [(or writing? (multi-raw? session)) raw]
           [else (page-view session raw width)]))
   (define pending (unbox pending-keys))
-  (define menu (and (not home) (or (pair? pending) (member (the-layer session) (list "bar" "bar-level" "tab" "tab-level" "find" "pin"))) (menu-float (menu-text (the-layer session) pending (min width 66)) width)))
+  (define menu (and (or (pair? pending) (member (the-layer session) (list "bar" "bar-level" "tab" "tab-level" "find" "pin"))) (menu-float (menu-text (the-layer session) pending (min width 66)) width)))
   (define text0 (if overlay (car overlay) plain-text))
   (define text (if (and gut? (not writing?) (not (multi-raw? session))) (gutter-apply session text0) text0))
   (define-values (row column) (point-line raw (the-point session)))
@@ -473,7 +470,7 @@
   (when (getenv "AIU_TRACE")
     (with-handlers ([void void])
       (call-with-output-file (build-path (find-system-path (quote home-dir)) ".aiu-trace.log") #:exists (quote append)
-        (lambda (o) (fprintf o "~a session file ~a home ~a\n" (current-inexact-milliseconds) file (and (home-screen) #t)))))))
+        (lambda (o) (fprintf o "~a session file ~a\n" (current-inexact-milliseconds) file))))))
 
 ;; trace-key! appends one line to the trace log when AIU_TRACE is set, and does nothing otherwise.
 (define (trace-key! pending t0 result session)
@@ -481,7 +478,7 @@
     (with-handlers ([void void])
       (call-with-output-file (build-path (find-system-path (quote home-dir)) ".aiu-trace.log") #:exists (quote append)
         (lambda (o)
-          (fprintf o "~a act-on ~a ms pending ~s go-on ~a layer ~a home ~a rest ~a\n" (current-inexact-milliseconds) (- (current-inexact-milliseconds) t0) (if (> (length pending) 3) (take pending 3) pending) (outcome-go-on? result) (the-layer session) (and (home-screen) #t) (let ([r (outcome-rest result)]) (if (list? r) (length r) r))))))))
+          (fprintf o "~a act-on ~a ms pending ~s go-on ~a layer ~a rest ~a\n" (current-inexact-milliseconds) (- (current-inexact-milliseconds) t0) (if (> (length pending) 3) (take pending 3) pending) (outcome-go-on? result) (the-layer session) (let ([r (outcome-rest result)]) (if (list? r) (length r) r))))))))
 
 ;; longest-binding answers how many leading keys of the buffer form a binding:
 ;; the longest run of them the layer binds. Zero when the layer binds none of
@@ -504,16 +501,7 @@
 ;; of a sequence waits for the next key; and otherwise the FIRST key alone is
 ;; acted on, with the rest of the bytes kept for the next round.
 (define (act-on session buffer)
-  (define runs (key-runs buffer))
-  (define digit (and (home-screen) (pair? runs) (text-of (car (car runs)))))
-  (define picked
-    (and digit
-         (regexp-match? #px"^[1-9]$" digit)
-         ((home-pick) (string->number digit))))
-  (if picked
-      (begin (set-box! home-chosen picked)
-             (outcome (list) #f))
-      (act-on-file session buffer)))
+  (act-on-file session buffer))
 
 ;; act-on-file runs the keys of a session that has a file.
 (define (act-on-file session buffer)
@@ -564,9 +552,7 @@
 ;; worse, break the frame it landed in. The commands still answer; the live
 ;; session chooses not to say the answer out loud.
 (define (run-it session line)
-  (if (home-screen)
-      (home-run session line)
-      (block-guard session line (lambda () (run-it-file session line)))))
+  (block-guard session line (lambda () (run-it-file session line))))
 
 ;; run-it-file runs one command on a session that has a file.
 (define (run-it-file session line)
@@ -577,7 +563,7 @@
 ;; a space, so the live session hands the words over whole. It is silent for
 ;; the same reason run-it is: the paint is the answer.
 (define (run-it-words session name words)
-  (if (home-screen) #t (run-it-words-file session name words)))
+  (run-it-words-file session name words))
 
 ;; run-it-words-file runs one command, its words already split, on a session that has a file.
 (define (run-it-words-file session name words)
@@ -592,52 +578,7 @@
       '()
       (drop buffer taken)))
 
-;; home-screen, when set, is a function from the level to the lines of the
-;; dashboard: the session paints those lines instead of a file.
-(define home-screen (make-parameter #f))
-
-;; The home screen keeps four things: the panel flag, the page the person
-;; chose, the function that answers the nth page, and the function that scans
-;; again.
-(define home-explorer (box #f))
-;; home-chosen holds the page the person picked on the home screen.
-(define home-chosen (box #f))
-;; home-pick answers the path of the nth page of the home screen.
-(define home-pick (make-parameter (lambda (n) #f)))
-;; home-refresh scans the home screen again.
-(define home-refresh (make-parameter void))
-
-;; home-repaint holds the function that paints the open home session, and void
-;; when none is open, so a scan that lands late paints nothing.
-(define home-repaint (box void))
-
-;; home-repaint-later paints the home session, if one is still open.
-(define (home-repaint-later)
-  ((unbox home-repaint)))
-
-;; start-home-scan starts the scan of the home screen in a thread. It runs
-;; after the first paint, so the screen is there before the scan begins.
-(define (start-home-scan)
-  (when (home-screen)
-    ((home-refresh) home-repaint-later)))
-
-;; home-run runs one command on the home screen. Only the commands that need
-;; no file run: the level keys, quit and the visual layer. The panel and the
-;; scan are answered here. Everything else is taken and nothing is done, so a
-;; command that needs a file cannot fail on a screen that has none.
-(define (home-run session line)
-  (define words (string-split line))
-  (define name (if (null? words) "" (car words)))
-  (cond
-    [(member name (list "level-up" "quit" "visual-mode"))
-     (car (run-command session line))]
-    [(string=? name "explorer")
-     (set-box! home-explorer (not (unbox home-explorer)))
-     #t]
-    [else #t]))
-
-;; The live session, for the entry above it.
-(provide live-session home-screen home-pick home-refresh home-chosen home-explorer)
+(provide live-session)
 
 ;; live-multi-overlay answers the escape text that draws the extra cursors and the selections over the raw text,
 ;; or nothing when the screen does not show the raw text or no cursor or selection is in use.

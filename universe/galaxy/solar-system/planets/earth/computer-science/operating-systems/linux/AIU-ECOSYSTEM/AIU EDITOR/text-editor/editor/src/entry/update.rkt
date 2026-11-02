@@ -484,7 +484,7 @@
 (define (drive-editor dir copy chunks out out1 code-file)
   (define sh (find-executable-path "sh"))
   (define-values (sp so si se)
-    (subprocess #f #f (quote stdout) sh "-c" (string-append "AIU_TRACE=1 AIU_HOME_NOSCAN=1 exec script -qec \"aiutd " copy "\" /dev/null")))
+    (subprocess #f #f (quote stdout) sh "-c" (string-append "AIU_TRACE=1 exec script -qec \"aiutd " copy "\" /dev/null")))
   (define acc (open-output-bytes))
   (define marker (byte-regexp (regexp-quote (bytes-append (bytes 27) #"[?2026l"))))
   (define buf (make-bytes 4096))
@@ -870,7 +870,7 @@
   (define base-path "/tmp/aiutd-base.test")
   (define home (find-system-path (quote home-dir)))
   (define (grab n) (with-handlers ([void (lambda (e) "")]) (file->string (build-path home n))))
-  (display-to-file (format "test ~a-base\nlevel 2\nfile ~a\nrecord\n~aexpect seconds-under 60\n" name pg (if (string-prefix? keys "space h") "keys space h escape\n" "")) base-path #:exists (quote truncate))
+  (display-to-file (format "test ~a-base\nlevel 2\nfile ~a\nrecord\n~aexpect seconds-under 60\n" name pg "") base-path #:exists (quote truncate))
   (display-to-file (format "test ~a\nlevel 2\nfile ~a\nrecord\nkeys ~a\nexpect seconds-under 30\n" name pg keys) tpath #:exists (quote truncate))
   (run-test base-path)
   (define bs (grab ".aiu-record-screen.txt"))
@@ -884,13 +884,12 @@
   (define ksl (record-lines ks))
   (define bfl (record-lines bf))
   (define kfl (record-lines kf))
-  (define home-pick? (regexp-match? #px"^space h [1-9]( |$)" keys))
   (define expects
-    (append (for/list ([l (in-list (if home-pick? (list) (first-n (filter (lambda (x) (not (member x bsl))) ksl) 3)))]) (string-append "expect screen contains " l))
+    (append (for/list ([l (in-list (first-n (filter (lambda (x) (not (member x bsl))) ksl) 3))]) (string-append "expect screen contains " l))
             (for/list ([l (in-list (first-n (filter (lambda (x) (and (regexp-match? #rx" " x) (not (for/or ([k (in-list ksl)]) (string-contains? k x))))) bsl) 3))]) (string-append "expect screen lacks " l))
             (for/list ([l (in-list (first-n (filter (lambda (x) (not (member x bfl))) kfl) 2))]) (string-append "expect file contains " l))
             (for/list ([l (in-list (first-n (filter (lambda (x) (not (for/or ([k (in-list kfl)]) (string-contains? k x)))) bfl) 2))]) (string-append "expect file lacks " l))
-            (for/list ([c (in-list (list "grey" "white"))] #:when (and (not home-pick?) (regexp-match? (colour-rx c) kraw) (not (regexp-match? (colour-rx c) braw)))) (string-append "expect colour " c))))
+            (for/list ([c (in-list (list "grey" "white"))] #:when (and (regexp-match? (colour-rx c) kraw) (not (regexp-match? (colour-rx c) braw)))) (string-append "expect colour " c))))
   (define ok
     (and (pair? expects)
          (begin

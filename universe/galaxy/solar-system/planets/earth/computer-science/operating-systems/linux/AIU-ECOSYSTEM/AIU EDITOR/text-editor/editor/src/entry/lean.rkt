@@ -9,7 +9,6 @@
          "../machine/directories.rkt"
          "../commands/commands.rkt"
          "../dashboard/explorer.rkt"
-         "../dashboard/home.rkt"
          "live.rkt")
 
 ;; here is the folder of this file, so the send module can be found by name.
@@ -34,31 +33,13 @@
   (define file (path->complete-path path))
   (define journal (journal-path-for file))
   (ensure-dir (build-path (state-dir) "journal"))
-  (live-session file journal)
-  (when (unbox home-request)
-    (set-box! home-request #f)
-    (home-session)))
+  (live-session file journal))
 
-;; home-session runs the home screen. A page picked there opens in the live
-;; session when the home screen ends.
-(define (home-session)
-  (define file (path->complete-path "dashboard"))
-  (define journal (journal-path-for file))
-  (ensure-dir (build-path (state-dir) "journal"))
-  (set-box! home-chosen #f)
-  (parameterize ([home-screen home-lines]
-                 [home-pick home-page]
-                 [home-refresh home-rescan!])
-    (live-session file journal))
-  (define chosen (unbox home-chosen))
-  (when chosen
-    (set-box! home-chosen #f)
-    (file-session chosen)))
 
-;; lean-edit runs the edit verb: the home screen with no file, else the file.
+;; lean-edit runs the edit verb: it opens the file, and says a file is needed when none is named.
 (define (lean-edit args)
   (if (null? args)
-      (home-session)
+      (display "aiutd needs a file: aiutd FILE\n")
       (file-session (car args))))
 
 ;; The lean edit, for the entry above it.
