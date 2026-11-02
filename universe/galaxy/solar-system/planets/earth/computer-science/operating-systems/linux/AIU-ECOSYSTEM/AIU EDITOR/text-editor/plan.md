@@ -335,3 +335,5 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - live/tabs/multi/undo: read for the last cut pass
 - live.rkt: read for the cut
 - live.rkt: cut live-paint (repaint, viewport, overlay) and live-keys (key loop, act-on, run-it)
+- tabs.rkt: read for the cut
+- tabs.rkt: cut tabs-folders (path helpers) and tabs-commands (tab commands)
