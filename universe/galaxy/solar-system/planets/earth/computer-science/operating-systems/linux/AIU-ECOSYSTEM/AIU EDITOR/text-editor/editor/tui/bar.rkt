@@ -92,7 +92,7 @@
 
 ;; undo-table holds the real commands of the undo layer; undo.rkt fills it when it is loaded.
 (define undo-table
-  (lazy-layer! (#%variable-reference) "undo.rkt" "undo" "undo is not available"
+  (lazy-layer! (#%variable-reference) "undo/undo.rkt" "undo" "undo is not available"
                (list "undo-mode" "undo-back" "undo-forward" "undo-up" "undo-down"
                      "undo-branch-back" "undo-branch-forward" "undo-tip" "undo-mark"
                      "undo-unmark" "undo-diff" "undo-live" "undo-keep" "undo-cancel")))
