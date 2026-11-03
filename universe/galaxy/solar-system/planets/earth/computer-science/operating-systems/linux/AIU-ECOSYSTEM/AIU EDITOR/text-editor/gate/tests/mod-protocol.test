@@ -1,0 +1,6 @@
+test mod-protocol
+level 2
+module editor/join/protocol.rkt
+call (let ([o (open-output-string)]) (write-request o "ping" (hasheq)) (write-response o #t (hasheq)) (let ([i (open-input-string (get-output-string o))]) (let* ([q (read-request i)] [r (read-response i)]) (list (request-op q) (request-args q) (response-ok r) (response-data r) (read-request (open-input-string "")) (read-response (open-input-string ""))))))
+expect result equals ("ping" #hasheq() #t #hasheq() #f #f)
+expect seconds-under 20

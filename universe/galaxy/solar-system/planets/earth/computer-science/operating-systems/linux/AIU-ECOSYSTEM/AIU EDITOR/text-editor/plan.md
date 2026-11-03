@@ -413,3 +413,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - todo: border all the time (also with bars hidden, joined with the bars when shown), right after the restructure; read pass: the last script opened the editor
 - launcher knows record-module; module tests: aiutd record-module, first batch recorded; todo item for the rest of the source files
 - re-record mod-notify with a real answer (the first one was empty); read pass: provide lines of untested modules for the next module-test batch
+- module-test batch 2: err raise render selection redact security cancel events protocol keyboard
