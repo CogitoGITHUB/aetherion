@@ -1,0 +1,6 @@
+test mod-update-drive-record
+level 2
+module editor/entry/update/update-drive-record.rkt
+call (record-lines "│ hello world │\nab\n12:30 clock time\nSome Text here\nSome Text here")
+expect result equals ("hello world" "Some Text here")
+expect seconds-under 20
