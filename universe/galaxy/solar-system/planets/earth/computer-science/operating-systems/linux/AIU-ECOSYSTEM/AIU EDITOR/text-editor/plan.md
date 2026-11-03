@@ -419,3 +419,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - module-test batch 4: document where session blockview-boxes blocks-text finder screen update-gate transport update-evidence
 - module-test batch 4b: update-evidence with bytes pattern
 - module-test batch 5: bar-state undo-git undo-tree last-good
+- module-test batch 6: update-drive-why
