@@ -1,0 +1,6 @@
+test mod-multi-draw
+level 2
+module editor/tui/multi/multi-draw.rkt
+call (multi-text-overlay "ab\ncd" 1 5 0 0 20 "write" 0)
+expect result equals ""
+expect seconds-under 20

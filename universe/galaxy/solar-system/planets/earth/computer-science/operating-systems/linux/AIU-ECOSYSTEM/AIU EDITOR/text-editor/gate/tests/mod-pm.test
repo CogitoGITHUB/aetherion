@@ -1,0 +1,6 @@
+test mod-pm
+level 2
+module editor/plugins/pm.rkt
+call (pm-command (string->path "/x/pm"))
+expect result equals ("/x/pm")
+expect seconds-under 20
