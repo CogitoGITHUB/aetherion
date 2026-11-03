@@ -1,0 +1,6 @@
+test mod-run
+level 2
+module editor/machine/run.rkt
+call (list (shell-quote "a b") (shell-quote ""))
+expect result equals ("'a b'" "''")
+expect seconds-under 20

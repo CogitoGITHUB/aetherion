@@ -1,0 +1,6 @@
+test mod-accept
+level 2
+module editor/audit/accept.rkt
+call (undo-mark "." (hasheq (quote path) "/tmp/aiu-no-such-file"))
+expect result equals (#f "there is nothing to undo: /tmp/aiu-no-such-file is not there")
+expect seconds-under 20
