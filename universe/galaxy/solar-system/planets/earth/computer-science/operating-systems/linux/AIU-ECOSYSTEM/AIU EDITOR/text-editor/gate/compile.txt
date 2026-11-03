@@ -1,0 +1,6 @@
+# One job: the compile table. A line is LEVEL then one file that raco make builds at that level and above.
+1 editor/entry/cli.rkt
+1 editor/tui/undo/undo.rkt
+1 editor/tui/multi/multi.rkt
+1 editor/tui/text/clip.rkt
+1 editor/entry/update/update.rkt

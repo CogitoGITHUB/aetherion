@@ -6,10 +6,10 @@
 (provide do-update)
 
 ;; compile-files are the files raco make builds in ONE call: one call per file cost 32 s each, five calls 172 s, one call 34 s.
-(define compile-files
-  (list "editor/entry/cli.rkt" "editor/tui/undo/undo.rkt"
-        "editor/tui/multi/multi.rkt" "editor/tui/text/clip.rkt"
-        "editor/entry/update/update.rkt"))
+;; compile-files-of answers the files raco make builds at a level, read from gate/compile.txt: every line LEVEL FILE with a level at most n.
+(define (compile-files-of n)
+  (for/list ([l (in-list (file->lines (build-path editor-root "gate" "compile.txt")))] #:when (regexp-match? #px"^[0-9]+ " l) #:when (<= (string->number (car (string-split l))) n))
+    (cadr (string-split l))))
 
 ;; compile-jobs answers the raco make worker count: AIU_COMPILE_JOBS if set, else the smaller of the cores and the free memory divided by 3000 MB, at least 1.
 (define (compile-jobs)
@@ -68,7 +68,7 @@
        (define stale? (sources-newer?))
        (define-values (code text)
          (cond [(not stale?) (values 0 "")]
-               [raco (begin (live "compile start") (let-values ([(c t) (capture editor-root raco (append (list "make" "-j" (compile-jobs)) compile-files))]) (live (format "compile done code ~a" c)) (values c t)))]
+               [raco (begin (live "compile start") (let-values ([(c t) (capture editor-root raco (append (list "make" "-j" (compile-jobs)) (compile-files-of level)))]) (live (format "compile done code ~a" c)) (values c t)))]
                [else (values 1 "raco was not found")]))
        (when (and stale? (= code 0)) (touch-stamp!))
        (set! records (append records (list (list "compile" (secs t) (= code 0)))))
