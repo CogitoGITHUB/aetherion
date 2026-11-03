@@ -40,9 +40,10 @@
   (define name (car words))
   (define keys (string-join (cdr words) " "))
   (define tdir (build-path editor-root "gate" "tests"))
-  (define tpath (build-path tdir (string-append name ".test")))
+  (define (found-test n) (let ([f (find-files (lambda (q) (regexp-match? (regexp (string-append "/" n "[.]test$")) (path->string q))) (build-path editor-root "editor"))]) (if (pair? f) (car f) (build-path tdir (string-append n ".test")))))
+  (define tpath (found-test name))
   (define old-test (and (file-exists? tpath) (file->string tpath)))
-  (define pg (let ([v (line-values (test-lines (build-path tdir "move.test")) "file")]) (if (pair? v) (car v) "test.aiu")))
+  (define pg (let ([v (line-values (test-lines (found-test "move")) "file")]) (if (pair? v) (car v) "test.aiu")))
   (define base-path "/tmp/aiutd-base.test")
   (define home (find-system-path (quote home-dir)))
   (define (grab n) (with-handlers ([void (lambda (e) "")]) (file->string (build-path home n))))
@@ -77,7 +78,7 @@
     [else (if old-test (display-to-file old-test tpath #:exists (quote truncate)) (when (file-exists? tpath) (delete-file tpath)))])
   (emit (list "AIUTD RECORD" (format "~a  ~a" (if ok "GREEN" "RED") name))
         (if ok expects (append (if (pair? expects) (list) (append (list "nothing changed on screen or in the file, nothing written") (no-change-why keys ksl bsl) (unbox last-evidence))) (unbox rec-why))))
-  (when ok (let ([g (find-executable-path "git")] [t (string-append "gate/tests/" name ".test")] [f (string-append "editor/features/" name ".feature")]) (let-values ([(c1 o1) (capture editor-root g (list "add" "--" t f))]) (void)) (let-values ([(c2 o2) (capture editor-root g (list "commit" "-q" "-m" (string-append "test: " name " recorded") "--" t f))]) (void))))
+  (when ok (let ([g (find-executable-path "git")] [t (path->string (find-relative-path (simple-form-path editor-root) (simple-form-path tpath)))] [f (string-append "editor/features/" name ".feature")]) (let-values ([(c1 o1) (capture editor-root g (list "add" "--" t f))]) (void)) (let-values ([(c2 o2) (capture editor-root g (list "commit" "-q" "-m" (string-append "test: " name " recorded") "--" t f))]) (void))))
   (if ok 0 1))
 
 

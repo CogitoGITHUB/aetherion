@@ -40,7 +40,7 @@
        (for/list ([p (in-list files)])
          (define ls (test-lines p))
          (define (one k) (let ([v (line-values ls k)]) (if (pair? v) (car v) "")))
-         (define tpath (build-path editor-root "gate" "tests" (string-append (one "test") ".test")))
+         (define tpath (let ([f (find-files (lambda (q) (regexp-match? (regexp (string-append "/" (one "test") "[.]test$")) (path->string q))) (build-path editor-root "editor"))]) (if (pair? f) (car f) (build-path editor-root "gate" "tests" (string-append (one "test") ".test")))))
          (define r (if (file-exists? tpath) (run-test tpath) (list (one "test") 0.0 #f (list "test file missing"))))
          (list (one "name") (one "keys") (line-values ls "doc") (one "ai") (cadr r) (caddr r))))
      (define good (filter (lambda (r) (list-ref r 5)) rows))

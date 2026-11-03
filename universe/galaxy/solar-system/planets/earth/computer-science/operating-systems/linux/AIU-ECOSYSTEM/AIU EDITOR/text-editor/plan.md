@@ -508,3 +508,7 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - hot-path-bin default moves from /tmp/editor-target to ~/aiu-cargo-target
 - hot-path-bin default now ~/aiu-cargo-target/debug/hot-path, build copied from /tmp/editor-target
 - ai-starting-point.md rewritten with the full working rules for the next AI
+- move recorded .test files out of gate/tests to the group of the source they test
+- read the test runner lookup before moving the key tests
+- map the 18 key tests to groups: text, blocks, float, multi, undo, tabs; runner and record lookup patched
+- 18 key tests moved from gate/tests into editor/tui groups (text, blocks, float, multi, undo, tabs); record and docs find tests anywhere under editor
