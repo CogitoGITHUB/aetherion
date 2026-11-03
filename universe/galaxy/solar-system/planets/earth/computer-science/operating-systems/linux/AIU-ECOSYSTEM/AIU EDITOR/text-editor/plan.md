@@ -430,3 +430,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - module-test batch 14: multi-boxes dispatch; skipped (hot path, child process or terminal): commands-edit update-drive-pty cli-full lean
 - module-test batch 15: racket-entry plugin-verbs; update-module skipped (runs a child racket)
 - module-test batch 16: blocks-keys pins-keys multi-keys (key tables)
+- module-test batch 17: key-notes multi-notes menu; plugin-verbs skipped (exports only verbs that call pm)
