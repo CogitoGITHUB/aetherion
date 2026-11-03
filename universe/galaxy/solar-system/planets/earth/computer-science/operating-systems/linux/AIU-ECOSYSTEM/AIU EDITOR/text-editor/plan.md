@@ -424,3 +424,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - module-test batch 8: accept retry, manifest, run (shell-quote only)
 - module-test batch 9: wait-door host; locks and stop-switch skipped (touch the disk)
 - module-test batch 10: bar-git update-drive-record update-drive-docs; narration dispatch-keys live-wire skipped (print, clock or child process)
+- module-test batch 11: update-drive-live tasks; live-paint dispatch-tasks terminal lazy-stub skipped (session, terminal or dynamic-require)
