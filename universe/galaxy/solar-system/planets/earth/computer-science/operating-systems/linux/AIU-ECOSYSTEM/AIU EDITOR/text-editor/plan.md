@@ -449,3 +449,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - aiutd update starts the tests in a thread before the gate, so both run at once
 - AIU_ONLY env filter in run-all-tests so aiutd update can run one test
 - compile -j sized with nproc cores, not racket processor-count (swap thrash on 2 cores)
+- compile -j auto: min(nproc, MemAvailable/3000 MB), min 1, AIU_COMPILE_JOBS overrides

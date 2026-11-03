@@ -11,6 +11,13 @@
         "editor/tui/multi/multi.rkt" "editor/tui/text/clip.rkt"
         "editor/entry/update/update.rkt"))
 
+;; compile-jobs answers the raco make worker count: AIU_COMPILE_JOBS if set, else the smaller of the cores and the free memory divided by 3000 MB, at least 1.
+(define (compile-jobs)
+  (define env (getenv "AIU_COMPILE_JOBS"))
+  (define m (with-handlers ([void (lambda (x) #f)]) (regexp-match #rx"MemAvailable: *([0-9]+)" (file->string "/proc/meminfo"))))
+  (define mb (if m (quotient (string->number (cadr m)) 1024) 3000))
+  (or env (number->string (max 1 (min (cores) (quotient mb 3000))))))
+
 ;; raco-path answers the raco next to the running racket, or the one on the path.
 (define (raco-path)
   (define e (find-system-path (quote exec-file)))
@@ -61,7 +68,7 @@
        (define stale? (sources-newer?))
        (define-values (code text)
          (cond [(not stale?) (values 0 "")]
-               [raco (begin (live "compile start") (let-values ([(c t) (capture editor-root raco (append (list "make" "-j" (number->string (cores))) compile-files))]) (live (format "compile done code ~a" c)) (values c t)))]
+               [raco (begin (live "compile start") (let-values ([(c t) (capture editor-root raco (append (list "make" "-j" (compile-jobs)) compile-files))]) (live (format "compile done code ~a" c)) (values c t)))]
                [else (values 1 "raco was not found")]))
        (when (and stale? (= code 0)) (touch-stamp!))
        (set! records (append records (list (list "compile" (secs t) (= code 0)))))
