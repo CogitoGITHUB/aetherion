@@ -1,14 +1,14 @@
 #lang racket/base
 ;; make-live.rkt -- writes one starter page per file type into types/.
 ;; Why: a starter page generated from the type cannot drift from the type, and it explains the type in plain words.
-;; Called by: a person, from "notation system/": racket notation/src/filetypes/make-live.rkt
+;; Called by: a person, from "notation system/": racket notation/filetypes/make-live.rkt
 (require racket/file
          racket/runtime-path
          racket/string
          "filetypes.rkt")
 
 ;; The folder the starter pages are written to.
-(define-runtime-path live-dir "../../../../types")
+(define-runtime-path live-dir "../../../types")
 
 ;; The text each type shows. Per type: "title" (a string), "intro" and one entry per section title.
 ;; An entry is a list; a string in it is a paragraph, a list (code LANGUAGE TEXT) is a code block.

@@ -4,8 +4,8 @@
 d=$(cd "$(dirname "$0")" && pwd)
 ns=$(cd "$d/../.." && pwd)
 w=$(bash "$d/preview-fit.sh" --width)
-p="$ns/notation/src/parser/parser.rs"
-r="$ns/notation/src/elements/register.rkt"
+p="$ns/notation/parser/parser.rs"
+r="$ns/notation/elements/register.rkt"
 l="$ns/gate/register-lint.nu"
 n=$1
 mode=name

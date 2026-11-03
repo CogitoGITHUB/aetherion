@@ -4,10 +4,10 @@
 # Argument: blocks, types, blocks-only or types-only; the first two add the entry new-block or new-type.
 d=$(cd "$(dirname "$0")" && pwd)
 ns=$(cd "$d/../../.." && pwd)
-t="$ns/notation/src/filetypes/types"
+t="$ns/notation/filetypes/types"
 # Prints the block names of BLOCK_NAMES in parser.rs.
 names_blocks() {
-  awk "/BLOCK_NAMES/{p=1;next} p&&/];/{exit} p" "$ns/notation/src/parser/parser.rs" | grep -o "\"[a-z-]*\"" | tr -d "\""
+  awk "/BLOCK_NAMES/{p=1;next} p&&/];/{exit} p" "$ns/notation/parser/parser.rs" | grep -o "\"[a-z-]*\"" | tr -d "\""
 }
 # Prints the names of the type modules (a file or a folder with type.rkt).
 names_types() {
