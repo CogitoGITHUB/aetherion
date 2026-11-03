@@ -35,7 +35,7 @@
 
 ;; do-record-module runs the expression twice, writes gate/tests/mod-NAME.test from the answer and keeps it only when the new test passes; answers 0 or 1.
 (define (do-record-module name modpath expr)
-  (define tpath (build-path editor-root "gate" "tests" (string-append "mod-" name ".test")))
+  (define tpath (build-path editor-root (regexp-replace #rx"[.]rkt$" modpath ".test")))
   (define (red . ls) (emit (list "AIUTD RECORD-MODULE" "RED") ls) 1)
   (cond
     [(not (regexp-match? #px"^[a-z0-9-]+$" name)) (red "the name holds only lower case letters, digits and minus signs")]
