@@ -1,16 +1,16 @@
 #lang racket/base
-;; One job: the test-beside-module check, every Racket file under editor has a .test beside it or a skip note in plan.md.
+;; One job: the test-beside-module check, every Racket file under editor has a .test beside it or a skip note in gate/skipped.txt.
 (require racket/file racket/list racket/string racket/path racket/runtime-path)
 
 (define-runtime-path here "..")
 
 (define root (simplify-path (path->complete-path here)))
 
-;; skipped-files answers the editor paths that plan.md names on a line that says skipped.
+;; skipped-files answers the editor paths that gate/skipped.txt names on a line that says skipped.
 (define (skipped-files)
-  (define plan (build-path root "plan.md"))
+  (define plan (build-path root "gate" "skipped.txt"))
   (if (file-exists? plan)
-      (append* (for/list ([l (in-list (file->lines plan))] #:when (string-contains? l "skipped"))
+      (append* (for/list ([l (in-list (file->lines plan))] #:when (string-contains? l "editor/"))
                  (regexp-match* #px"editor/[^ ]+[.]rkt" l)))
       (list)))
 
@@ -32,6 +32,6 @@
 (cond
   [(null? gone) (printf "PASS test-check: every editor file has a test beside it or a skip note\n")]
   [else
-   (printf "FAIL test-check: ~a files have no test beside them and no skip note in plan.md\n" (length gone))
-   (for ([f (in-list gone)]) (printf "  ~a: record one with aiutd record-module NAME ~a EXPRESSION, or add it to a skipped line of plan.md\n" f f))
+   (printf "FAIL test-check: ~a files have no test beside them and no skip note in gate/skipped.txt\n" (length gone))
+   (for ([f (in-list gone)]) (printf "  ~a: record one with aiutd record-module NAME ~a EXPRESSION, or add it to a line of gate/skipped.txt\n" f f))
    (exit 1)])

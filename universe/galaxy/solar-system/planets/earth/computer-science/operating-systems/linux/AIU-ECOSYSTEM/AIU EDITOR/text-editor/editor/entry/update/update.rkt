@@ -39,5 +39,5 @@
      [(equal? verb "record") (let* ([m (member "record" args)] [w (if m (cdr m) args)]) (if (>= (length w) 2) (do-record w) (begin (emit (list "AIUTD RECORD" "RED") (list "usage: aiutd record NAME KEYS")) 1)))]
      [(equal? verb "test") (do-test (level-of args) (arg-value args "--only") (max 1 (or (string->number (or (arg-value args "--repeat") "1")) 1)))]
      [else
-      (emit (list "AIUTD" (string-upcase verb)) (list "not built yet, see plan.md"))
+      (emit (list "AIUTD" (string-upcase verb)) (list "not built yet"))
       0])))
