@@ -40,7 +40,7 @@
        (unless (null? all)
          (define p (car all))
          (define rng (hash-ref ranges (car p) #f))
-         (define shown? (and rng (not (caddr p)) (or (not focus?) (cadddr p))))
+         (define shown? (and rng (not (caddr p)) (or (not focus?) (cadddr p)) (not (and (equal? (car p) (unbox first-start)) (pair? (unbox title-rows))))))
          (define k (if rng (+ (- (cdr rng) (car rng)) 1) 0))
          (define inside? (and rng (>= (car rng) lo) (<= (cdr rng) hi)))
          (cond
@@ -55,6 +55,8 @@
            [else (loop (cdr all) (add1 i) to bo)])))
      (list (string-join (vector->list v) "\n") (cadr r) top)]
     [else r]))
+
+(require (only-in "../bar/bar-state.rkt" title-rows))
 
 (define (blockview-view-overlay-float session raw width height got)
   (define r (blockview-view-overlay-base session raw width height got))

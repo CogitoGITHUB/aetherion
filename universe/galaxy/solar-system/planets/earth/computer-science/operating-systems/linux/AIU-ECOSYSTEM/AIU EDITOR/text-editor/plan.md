@@ -495,3 +495,9 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - kit-check: run the six proofs as parallel threads, per-thread exit-code file
 - re-record mod-tasks and mod-update-gate after the comment strip and gate cut
 - one-way lint: par-each and skip files without a require
+- border all the time: bar-plan-of adds top and bottom rule and side lines when no bar or strip supplies them
+- file box: own top and bottom rule between tab box and mode box
+- title box above the page box: title-rows box in bar-state, drawn by bar-plan-of, fed from live-paint, hidden by the title pin
+- title pin: no floating title pin while the title box is drawn above the page
+- title pin skipped while the title box is drawn above the page
+- title box hides while the cursor is on the title block so it can be selected and edited in the page

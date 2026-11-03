@@ -17,4 +17,6 @@
 (define (bar-kname s) (if (string=? s "space") "SPC" s))
 
 
-(provide bar-place bar-saved bar-style bar-count focus-on bar-order bar-places bar-kname)
+(define title-rows (box (list)))
+
+(provide title-rows bar-place bar-saved bar-style bar-count focus-on bar-order bar-places bar-kname)

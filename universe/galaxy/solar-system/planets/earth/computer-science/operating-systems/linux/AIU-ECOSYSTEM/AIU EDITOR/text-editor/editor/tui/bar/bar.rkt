@@ -42,8 +42,8 @@
        (cond [(and (pair? t) (pair? b) (unbox tab-joined))
               (append (drop-right t 1) (list (join-edge (car b))) (cdr b))]
              [else (append t b)]))
-     (define top-lines (group "top"))
-     (define bottom-lines (if (pair? undo-lines) undo-lines (group "bottom")))
+     (define top-lines (append (group "top") (unbox title-rows) (list (rule-line "╭" "╮" width))))
+     (define bottom-lines (let ([g0 (if (pair? undo-lines) undo-lines (group "bottom"))]) (if (and (null? undo-lines) (string=? place "line")) g0 (cons (rule-line "╰" "╯" width) g0))))
      (define top-n (length top-lines))
      (define sh (max 3 (- height top-n (length bottom-lines))))
      (define left-names
@@ -62,10 +62,12 @@
      (define drawn
        (string-append (draw-at top-lines 1 1)
                       (if (null? lines-l) "" (draw-at lines-l (+ top-n 1) 1))
-                      (if (null? lines-r) "" (draw-at lines-r (+ top-n 1) (max 1 (- width 4))))))
+                      (if (null? lines-r) "" (draw-at lines-r (+ top-n 1) (max 1 (- width 4))))
+                      (if (null? lines-l) (draw-at (for/list ([i (in-range sh)]) "│") (+ top-n 1) 1) "")
+                      (if (null? lines-r) (draw-at (for/list ([i (in-range sh)]) "│") (+ top-n 1) width) "")))
      (define line? (and (string=? place "line") (null? undo-lines)))
-     (bar-plan (if (and docked? (pair? lines-l)) 5 0)
-               (if (and docked? (pair? lines-r)) 5 0)
+     (bar-plan (cond [(and docked? (pair? lines-l)) 5] [(null? lines-l) 1] [else 0])
+               (cond [(and docked? (pair? lines-r)) 5] [(null? lines-r) 1] [else 0])
                top-n
                (if line? 1 (length bottom-lines))
                (string-join bottom-lines "\n")
