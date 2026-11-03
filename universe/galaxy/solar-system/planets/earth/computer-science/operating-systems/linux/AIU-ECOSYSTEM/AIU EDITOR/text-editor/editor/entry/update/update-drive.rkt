@@ -8,7 +8,7 @@
   (define files
     (if (and dir (directory-exists? dir))
         (sort (filter (lambda (p) (regexp-match? #rx"[.]test$" (path->string p)))
-                      (directory-list dir #:build? #t))
+                      (find-files (lambda (q) (regexp-match? #rx"[.]test$" (path->string q))) dir))
               string<? #:key path->string)
         (list)))
   (define wanted (filter (lambda (p) (<= (test-level p) level)) files))
