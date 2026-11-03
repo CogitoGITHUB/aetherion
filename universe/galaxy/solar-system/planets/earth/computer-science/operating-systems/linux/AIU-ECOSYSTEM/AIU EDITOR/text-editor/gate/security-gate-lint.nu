@@ -8,7 +8,7 @@ def security_dir [] {
 
 def predicate_names [files] {
     $files | each {|p|
-        open --raw $p | lines | where {|l| ($l | str trim) | str starts-with "(define (" } | each {|l|
+        open --raw $p | lines | where {|l| $l | str starts-with "(define (" } | each {|l|
             let inside = $l | str replace --regex '^\(define \(' ''
             let name = $inside | str trim | split row " " | first
             {name: $name, file: $p}
@@ -17,7 +17,8 @@ def predicate_names [files] {
 }
 
 def callers_of [name files] {
-    $files | where {|p| (open --raw $p | str contains "(name ") }
+    let needle = $"\(($name) "
+    $files | where {|t| $t.text | str contains $needle } | each {|t| $t.file }
 }
 
 def main [] {
@@ -35,6 +36,7 @@ def main [] {
     }
 
     let all_racket = ((glob $"($package_src)/**/*.rkt") | lines)
+    let texts = ($all_racket | where {|f| ($f | path dirname) != $dir } | each {|f| {file: $f, text: (open --raw $f)} })
     let predicates = predicate_names $rule_files
 
     if ($predicates | is-empty) {
@@ -44,12 +46,12 @@ def main [] {
 
     let uncalled = ($predicates | where {|p|
         let outside = ($all_racket | where {|f| ($f | path dirname) != $dir })
-        (callers_of $p.name $outside | is-empty)
+        (callers_of $p.name $texts | is-empty)
     })
 
     for p in $predicates {
         let outside = ($all_racket | where {|f| ($f | path dirname) != $dir })
-        let who = (callers_of $p.name $outside | each {|f| $f | path relative-to $project_root })
+        let who = (callers_of $p.name $texts | each {|f| $f | path relative-to $project_root })
         if ($who | is-empty) {
             print $"CALLER ($p.name) — no file calls it yet"
         } else {
