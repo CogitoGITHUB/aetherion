@@ -2,6 +2,7 @@
 
 (require racket/list
          racket/string
+         "../editor/join/live-wire.rkt"
          "../editor/routes/keyboard.rkt"
          "../editor/routes/keymaps.rkt"
          "../editor/routes/routes.rkt")
@@ -67,6 +68,7 @@
                         names layer got wanted)))))
 
 (define (main)
+  (wire-start)
   (define keys
     (for*/list ([layer (in-list editor-layers)]
                 [binding (in-list (keys-of layer))])
@@ -81,10 +83,12 @@
       (begin
         (printf "OK key-check — ~a keys checked, the decoder and the keymaps agree on every one\n"
                 (length keys))
+        (wire-stop)
         (exit 0))
       (begin
         (for-each (lambda (fault) (printf "KEY — ~a\n" fault)) faults)
         (printf "KEY — ~a faults in ~a keys\n" (length faults) (length keys))
+        (wire-stop)
         (exit 1))))
 
 (module+ main

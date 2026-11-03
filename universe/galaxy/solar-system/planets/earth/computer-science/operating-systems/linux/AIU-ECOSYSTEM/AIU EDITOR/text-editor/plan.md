@@ -480,3 +480,12 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - skill examples: editor/src to editor in SKILL.md
 - security-gate: read files once, match real predicate name
 - security-gate: read files once, real names, column-0 defines
+- key-check: time module loads vs main to find the 26 s
+- key-check: time its phases, loads are 1.5 s but whole is 20 s
+- key-check: read sequence-of key-bytes key-names hex->bytes, 8 s and 7 s in two loops
+- key-check: each key-bytes and key-names is one ask-hot round trip, read ask-hot and the Rust handlers to batch or parallelize
+- key-check: read ask-hot-raw and the keys handler to see why a call costs 40 ms
+- key-check: calls spawn the hot-path binary each time (no current-wire), read live-wire.rkt to open one wire for the gate
+- key-check: read wire-start and wire-stop, then patch main to use one live wire
+- key-check: open one live wire with wire-start and wire-stop so each key is not a process spawn
+- key-check: verify level 3 and commit the live-wire patch
