@@ -442,3 +442,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - tests run in parallel: module tests in a worker pool beside the key-test chain, raco make -j (update-drive-run.rkt)
 - tests: one pool sized by processor-count (AIU_JOBS overrides), a trace log per test, gate stages concurrent
 - test pool default 2 x cores (AIU_JOBS overrides); editors mostly wait
+- levels: gate/levels.txt is the one level table, update-gate.rkt reads it

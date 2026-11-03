@@ -13,10 +13,15 @@
     (list (cadr p) (/ (round (/ (string->number (caddr p)) 100.0)) 10.0))))
 
 ;; level-1-stages are the quick gate stages, about 20 s together.
-(define level-1-stages "naming,one-way,language-split,comment-lint,notation-check,secret-check,git-check")
+;; level-stages-text answers the gate stages of a level and the levels below it, joined by commas, read from gate/levels.txt.
+(define (level-stages-text n)
+  (define f (build-path editor-root "gate" "levels.txt"))
+  (string-join (for/list ([l (in-list (file->lines f))] #:when (regexp-match? #px"^[0-9]+ " l) #:when (<= (string->number (car (string-split l))) n)) (cadr (string-split l))) ","))
+
+(define level-1-stages (level-stages-text 1))
 
 ;; level-2-stages add the medium stages, about 60 s more.
-(define level-2-stages (string-append level-1-stages ",paren-check,plugin-check,send-check,route-check,explorer-check,security-gate,test-check"))
+(define level-2-stages (level-stages-text 2))
 
 ;; stage-args answers the arguments that pick the gate stages of a level; level 3 runs all.
 (define (stage-args level)
