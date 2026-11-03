@@ -1,0 +1,6 @@
+test mod-session
+level 2
+module editor/commands/session.rkt
+call (let ([s (make-session (string->path "/tmp/x.txt") (string->path "/tmp/x.j"))] [r (dynamic-require (path->complete-path "editor/join/protocol.rkt") (quote response))]) (list (the-layer s) (set-layer! s "write") (the-level s) (set-level! s 3) (set-view-top! s -4) (move-to s 7) (the-point s) (the-selection s) (name<? (quote a) "b") (answer-line (r #t (hasheq (quote b) 2 (quote a) 1))) (answer-line (r #f (hasheq)))))
+expect result equals ("visual" "write" 2 3 0 7 7 #f #t "a=1 b=2" "FAIL the hot path refused the request")
+expect seconds-under 20

@@ -1,0 +1,6 @@
+test mod-screen
+level 2
+module editor/drawing/screen.rkt
+call (list clear-screen (cursor-to 3 4) (call-with-values (lambda () (point-line "ab\ncd" 4)) list) (call-with-values (lambda () (point-line "ab\ncd" 3)) list))
+expect result equals ("\e[2J\e[H" "\e[3;4H" (2 1) (2 0))
+expect seconds-under 20
