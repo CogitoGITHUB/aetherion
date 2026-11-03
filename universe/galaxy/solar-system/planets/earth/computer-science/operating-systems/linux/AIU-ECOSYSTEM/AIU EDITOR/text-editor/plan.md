@@ -537,3 +537,10 @@ Open questions for him, asked only when step 1 is read: which keys, whether a sp
 - tab layer keys never reached: find where tab-keys is registered as a layer
 - tab-move needs a recorded test: read module-answer and the test page folder
 - tab order as a pure function tabs-order-moved in tabs.rkt, module test recorded next to it, tab move committed
+PLAN split view (first priority, replaces plan steps 7 to 9)
+S1. Read live-paint.rkt, page-view, repaint, view-of and the session record once. Write down how one page is painted and what a session holds.
+S2. editor/tui/split/split-layout.rkt: pure tree of panes (split-right, split-down), each pane holds a session reference; pure functions split-pane, close-pane, pane-rects for a screen width and height. Module test recorded.
+S3. editor/tui/split/split-commands.rkt and split-keys.rkt: pane-split-right, pane-split-down, pane-close, pane-focus-left, pane-focus-right, pane-focus-up, pane-focus-down. Layer on a space key. Key test recorded.
+S4. Paint: each pane draws its page in its own box with its own rules, never merged; title box and pin only on the focused pane; bar and mode box stay single. Delete and re-record screen tests that show the frame.
+S5. A new pane takes any page from any workspace or project through the tab bar; the level selector acts on the focused pane. Same file in two panes shares one session, cursor and scroll per pane.
+S6. Keep the layout between sessions in the state dir, restored after first paint.
