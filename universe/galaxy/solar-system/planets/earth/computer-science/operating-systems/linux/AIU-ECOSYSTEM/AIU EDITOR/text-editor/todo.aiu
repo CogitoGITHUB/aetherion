@@ -381,6 +381,15 @@ section end
 
 section start
 title start
+TEST FILE PER SOURCE FILE
+title end
+paragraph start
+todo: test file per source file. A key test drives the live editor, so most modules cannot have one. Module tests are recorded with aiutd record-module NAME MODULE-PATH EXPRESSION (one file, one test, gate/tests/mod-NAME.test). A first batch is recorded; the rest of the Racket files follow, the live and tui files with key tests from aiutd record. The Rust files get their tests with the Rust tests in the gate item.
+paragraph end
+section end
+
+section start
+title start
 COPY AND PASTE MECHANISM
 title end
 paragraph start

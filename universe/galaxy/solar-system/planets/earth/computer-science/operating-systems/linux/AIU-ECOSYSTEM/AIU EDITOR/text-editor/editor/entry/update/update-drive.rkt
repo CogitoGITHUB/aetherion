@@ -1,6 +1,6 @@
 #lang racket/base
 ;; One job: the door of the drive modules: running every test of a level, and the one provide that gives every part to the rest of the editor.
-(require racket/system racket/string racket/list racket/file racket/path "update-table.rkt" "update-screen.rkt" "update-evidence.rkt" "update-drive-live.rkt" "update-drive-pty.rkt" "update-drive-why.rkt" "update-drive-run.rkt" "update-drive-record.rkt" "update-drive-docs.rkt")
+(require racket/system racket/string racket/list racket/file racket/path "update-table.rkt" "update-screen.rkt" "update-evidence.rkt" "update-drive-live.rkt" "update-drive-pty.rkt" "update-drive-why.rkt" "update-drive-run.rkt" "update-drive-record.rkt" "update-drive-docs.rkt" "update-module.rkt")
 
 ;; run-all-tests runs every test file of the level or below and answers the list of results.
 (define (run-all-tests level)
@@ -20,4 +20,4 @@
   (and m (pair? (cdr m)) (cadr m)))
 
 
-(provide (all-from-out "update-drive-live.rkt") (all-from-out "update-drive-pty.rkt") (all-from-out "update-drive-why.rkt") (all-from-out "update-drive-run.rkt") (all-from-out "update-drive-record.rkt") (all-from-out "update-drive-docs.rkt") run-all-tests arg-value)
+(provide (all-from-out "update-drive-live.rkt") (all-from-out "update-drive-pty.rkt") (all-from-out "update-drive-why.rkt") (all-from-out "update-drive-run.rkt") (all-from-out "update-drive-record.rkt") (all-from-out "update-drive-docs.rkt") (all-from-out "update-module.rkt") run-all-tests arg-value)

@@ -411,3 +411,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - read pass: module test kind (record-module) so every source file gets its own recorded test; runner, parser, verbs
 - module tests: aiutd record-module, first batch recorded; todo item for the rest of the source files
 - todo: border all the time (also with bars hidden, joined with the bars when shown), right after the restructure; read pass: the last script opened the editor
+- launcher knows record-module; module tests: aiutd record-module, first batch recorded; todo item for the rest of the source files

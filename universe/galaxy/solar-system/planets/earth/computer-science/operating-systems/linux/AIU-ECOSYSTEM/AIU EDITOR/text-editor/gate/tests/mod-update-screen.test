@@ -1,0 +1,6 @@
+test mod-update-screen
+level 2
+module editor/entry/update/update-screen.rkt
+call (list (key-bytes "space") (key-bytes "up") (plain-screen "\u001b[7mab\u001b[27m") (line-values (list "keys a b" "type x") "keys"))
+expect result equals (" " "\e[A" "[ab]" ("a b"))
+expect seconds-under 20

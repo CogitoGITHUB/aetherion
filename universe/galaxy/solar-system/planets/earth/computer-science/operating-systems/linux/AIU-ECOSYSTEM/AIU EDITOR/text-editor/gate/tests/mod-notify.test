@@ -1,0 +1,6 @@
+test mod-notify
+level 2
+module editor/tui/notify/notify.rkt
+call (notify-overlay 80 24 1)
+expect result equals ""
+expect seconds-under 20

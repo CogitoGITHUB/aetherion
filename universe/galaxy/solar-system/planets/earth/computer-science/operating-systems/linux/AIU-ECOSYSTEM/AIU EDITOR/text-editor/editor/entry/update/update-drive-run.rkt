@@ -1,9 +1,13 @@
 #lang racket/base
 ;; One job: running one test file on a copy of its page and answering the verdict.
-(require racket/system racket/string racket/list racket/file racket/path "update-table.rkt" "update-screen.rkt" "update-evidence.rkt" "update-drive-live.rkt" "update-drive-pty.rkt" "update-drive-why.rkt")
+(require racket/system racket/string racket/list racket/file racket/path "update-table.rkt" "update-screen.rkt" "update-evidence.rkt" "update-drive-live.rkt" "update-drive-pty.rkt" "update-drive-why.rkt" "update-module.rkt")
 
-;; run-test runs one test file on a copy of its page in a temporary folder; answers (name seconds ok? detail-lines).
+;; run-test runs one test file: a module test when the file names a module, a key test otherwise.
 (define (run-test path)
+  (if (pair? (line-values (test-lines path) "module")) (run-module-test path) (run-key-test path)))
+
+;; run-key-test runs one test file on a copy of its page in a temporary folder; answers (name seconds ok? detail-lines).
+(define (run-key-test path)
   (define lines (test-lines path))
   (define name (let ([v (line-values lines "test")]) (if (pair? v) (car v) "unnamed")))
   (define page (let ([v (line-values lines "file")]) (if (pair? v) (car v) "test.aiu")))

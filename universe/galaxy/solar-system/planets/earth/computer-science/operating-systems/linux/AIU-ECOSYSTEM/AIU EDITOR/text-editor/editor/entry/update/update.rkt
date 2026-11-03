@@ -44,6 +44,7 @@
    (cond
      [(equal? verb "update") (do-update (level-of args))]
      [(equal? verb "docs") (do-docs)]
+       [(equal? verb "record-module") (let* ([m (member "record-module" args)] [w (if m (cdr m) args)]) (if (>= (length w) 3) (do-record-module (car w) (cadr w) (string-join (cddr w) " ")) (begin (emit (list "AIUTD RECORD-MODULE" "RED") (list "usage: aiutd record-module NAME MODULE-PATH EXPRESSION")) 1)))]
      [(equal? verb "record") (let* ([m (member "record" args)] [w (if m (cdr m) args)]) (if (>= (length w) 2) (do-record w) (begin (emit (list "AIUTD RECORD" "RED") (list "usage: aiutd record NAME KEYS")) 1)))]
      [(equal? verb "test") (do-test (level-of args) (arg-value args "--only") (max 1 (or (string->number (or (arg-value args "--repeat") "1")) 1)))]
      [else
