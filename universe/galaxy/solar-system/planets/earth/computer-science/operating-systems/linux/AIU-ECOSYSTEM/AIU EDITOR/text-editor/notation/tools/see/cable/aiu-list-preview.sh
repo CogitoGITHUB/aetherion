@@ -5,7 +5,7 @@ d=$(cd "$(dirname "$0")" && pwd)
 ns=$(cd "$d/../../.." && pwd)
 export AIU_NOTATION_ROOT=$ns
 w=$(bash "$d/../preview-fit.sh" --width)
-src="$ns/notation"
+src=""
 t="$src/filetypes/types"
 kind=$1
 name=${2%%;*}
@@ -54,5 +54,5 @@ block)
   } | fold -s -w "$w"
   echo
   echo "== STARTER PAGE"
-  bash "$d/../preview-fit.sh" "$ns/../types/$name.aiu" ;;
+  bash "$d/../preview-fit.sh" "/types/$name.aiu" ;;
 esac

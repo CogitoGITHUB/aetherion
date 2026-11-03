@@ -6,22 +6,22 @@ ns=$(cd "$d/../../.." && pwd)
 export AIU_NOTATION_ROOT=$ns
 w=$(bash "$d/../preview-fit.sh" --width)
 if [ "$1" != "new-type" ]; then
-  bash "$d/../preview-fit.sh" "$ns/../types/$1.aiu" --contracts
+  bash "$d/../preview-fit.sh" "/types/$1.aiu" --contracts
   exit 0
 fi
-t="$ns/notation/filetypes/types"
+t="/filetypes/types"
 {
   echo "NEW FILE TYPE"
   echo "Enter asks for a name, writes the module from the template, and runs aiu update. Then set the description and the allowed blocks in the new file."
   echo
   echo "== WHERE"
-  echo "notation/filetypes/types/NAME.rkt"
+  echo "filetypes/types/NAME.rkt"
   echo
   echo "== THE TYPE RECORD (filetypes/type.rkt)"
   grep -n -E "struct|^\(define|^\(provide" "$t/../type.rkt" | head -12
   echo
   echo "== BLOCKS YOU MAY LIST (parser.rs)"
-  awk "/BLOCK_NAMES/{p=1} p{print} p&&/];/{exit}" "$ns/notation/parser/parser.rs"
+  awk "/BLOCK_NAMES/{p=1} p{print} p&&/];/{exit}" "/parser/parser.rs"
   echo
   echo "== TYPES THAT EXIST NOW"
   grep -h "file-type \"" "$t"/*.rkt "$t"/*/type.rkt 2>/dev/null

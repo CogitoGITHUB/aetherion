@@ -269,7 +269,7 @@ def list-package [root: string, racket: string] {
 # gate-package runs the light gate from the package folder with the right environment.
 def gate-package [root: string, bin: string] {
   cd $root
-  with-env {LC_ALL: "C.UTF-8", AIU_NOTATION_BIN: $bin} { ^nu gate/check.nu }
+  with-env {LC_ALL: "C.UTF-8", AIU_NOTATION_BIN: $bin} { ^aiutd update --level 1 }
 }
 
 # new-page copies the starter page of a file type to a new file and checks the copy.

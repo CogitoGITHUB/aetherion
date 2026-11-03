@@ -85,7 +85,7 @@ def parse-document [file: string] {
 def do-check [file: string] {
   let document = (parse-document $file)
   cd $project_root
-  let result = (^$"(racket-path)" notation/entry/cli.rkt check $document | complete)
+  let result = (^$"(racket-path)" ($"($project_root)/entry/cli.rkt") check $document | complete)
   print $result.stdout
   if ($result.stderr | str trim) != "" {
     print $result.stderr
@@ -119,7 +119,7 @@ def do-roundtrip [file: string] {
 def do-json [file: string] {
   cd $project_root
   with-env {AIU_NOTATION_BIN: (binary-path)} {
-    let result = (^$"(racket-path)" notation/entry/cli.rkt json $file | complete)
+    let result = (^$"(racket-path)" ($"($project_root)/entry/cli.rkt") json $file | complete)
     print $result.stdout
     if ($result.stderr | str trim) != "" {
       print $result.stderr
@@ -133,7 +133,7 @@ def do-json [file: string] {
 def do-from-json [file: string] {
   cd $project_root
   with-env {AIU_NOTATION_BIN: (binary-path)} {
-    let result = (^$"(racket-path)" notation/entry/cli.rkt from-json $file | complete)
+    let result = (^$"(racket-path)" ($"($project_root)/entry/cli.rkt") from-json $file | complete)
     print $result.stdout
     if ($result.stderr | str trim) != "" {
       print $result.stderr

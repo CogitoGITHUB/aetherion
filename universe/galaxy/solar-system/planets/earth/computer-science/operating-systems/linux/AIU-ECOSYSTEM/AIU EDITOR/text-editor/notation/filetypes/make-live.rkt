@@ -8,7 +8,7 @@
          "filetypes.rkt")
 
 ;; The folder the starter pages are written to.
-(define-runtime-path live-dir "../../../types")
+(define-runtime-path live-dir "../types")
 
 ;; The text each type shows. Per type: "title" (a string), "intro" and one entry per section title.
 ;; An entry is a list; a string in it is a paragraph, a list (code LANGUAGE TEXT) is a code block.
