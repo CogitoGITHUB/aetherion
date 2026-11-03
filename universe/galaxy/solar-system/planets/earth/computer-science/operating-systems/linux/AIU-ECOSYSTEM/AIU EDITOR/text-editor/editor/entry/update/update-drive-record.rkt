@@ -16,7 +16,7 @@
 (define (no-change-why keys ksl bsl)
   (define src (build-path editor-root "editor"))
   (define src-text (path->string src))
-  (define km (with-handlers ([void (lambda (e) (list))]) (file->lines (build-path src "routes" "keymaps.rkt"))))
+  (define km (with-handlers ([void (lambda (e) (list))]) (append* (for/list ([p (in-list (cons (build-path src "routes" "keymaps.rkt") (find-files (lambda (q) (regexp-match? #rx"/(multi|undo|blocks|bar|tabs|finder|pins)-keys[.]rkt$" (path->string q))) src)))]) (for/list ([l (in-list (file->lines p))] [i (in-naturals 1)]) (cons (string-append (path->string (find-relative-path src p)) " line " (number->string i)) l))))))
   (define rkts (with-handlers ([void (lambda (e) (list))]) (find-files (lambda (p) (regexp-match? #rx"[.]rkt$" (path->string p))) src)))
   (define names
     (let loop ([t (string-split keys)])
@@ -24,8 +24,8 @@
             [(and (equal? (car t) "space") (pair? (cdr t))) (cons (string-append "space " (cadr t)) (loop (cddr t)))]
             [else (cons (car t) (loop (cdr t)))])))
   (define (where k)
-    (define rx (regexp (string-append "[(]\"" (regexp-quote k) "\" \"([^\"]+)\"[)]")))
-    (define hit (for/first ([l (in-list km)] [i (in-naturals 1)] #:when (regexp-match? rx l)) (cons i (cadr (regexp-match rx l)))))
+    (define rx (regexp (string-append "[(](?:list )?\"" (regexp-quote k) "\" \"([^\"]+)\"[)]")))
+    (define hit (for/first ([e (in-list km)] #:when (regexp-match? rx (cdr e))) (cons (car e) (cadr (regexp-match rx (cdr e))))))
     (cond
       [(not hit) (list (string-append "    key " k ": NOT BOUND in routes/keymaps.rkt"))]
       [else
@@ -35,7 +35,7 @@
            (define ls (with-handlers ([void (lambda (e) (list))]) (file->lines p)))
            (for/first ([l (in-list ls)] [i (in-naturals 1)] #:when (regexp-match? crx l))
              (string-append (substring (path->string p) (string-length src-text)) " line " (number->string i)))))
-       (list (string-append "    key " k ": routes/keymaps.rkt line " (number->string (car hit)) " runs " (cdr hit) ", defined in " (or def "NOWHERE, no hash-set! commands found")))]))
+       (list (string-append "    key " k ": " (car hit) " runs " (cdr hit) ", defined in " (or def "NOWHERE, no hash-set! commands found")))]))
   (append (list (string-append "    screen lines identical to baseline: " (if (equal? ksl bsl) "yes" "no")))
           (apply append (map where names))
           (trace-since (max 0 (- (trace-size) 6000)))))

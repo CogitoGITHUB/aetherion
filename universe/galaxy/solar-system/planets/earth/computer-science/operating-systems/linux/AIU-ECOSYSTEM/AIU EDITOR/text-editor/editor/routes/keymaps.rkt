@@ -26,7 +26,14 @@
 
 (require racket/list
          racket/string
-         "../devloop/start.rkt")
+         "../devloop/start.rkt"
+         "../tui/undo/undo-keys.rkt"
+         "../tui/multi/multi-keys.rkt"
+         "../tui/blocks/blocks-keys.rkt"
+         "../tui/bar/bar-keys.rkt"
+         "../tui/tabs/tabs-keys.rkt"
+         "../tui/tabs/finder-keys.rkt"
+         "../tui/float/pins-keys.rkt")
 
 ;; reserved-prefix is the key the multiplexer keeps for itself. It applies
 ;; everywhere, so the editor never binds it: a binding that collides with
@@ -121,116 +128,13 @@
     ("right" "move-right")
     ("backspace" "delete")))
 
-;; select-keys are the keys of the select layer: the trigger's sequences,
-;; and the selected text is what they act on.
-(define select-keys
-  (list (list "space space" "mode") (list "space v" "sel-cancel")
-        (list "n" "sel-left") (list "s" "sel-right") (list "left" "sel-left") (list "right" "sel-right")
-        (list "up" "sel-up") (list "down" "sel-down") (list "w" "sel-word") (list "b" "sel-word-back")
-        (list "h" "sel-block-back") (list "t" "sel-block-forward")
-        (list "a" "kind-any") (list "p" "kind-paragraph") (list "e" "kind-section") (list "c" "kind-code")
-        (list "k" "kind-comment") (list "l" "kind-title") (list "x" "kind-todo") (list "o" "kind-todo-open")
-        (list "d" "kind-todo-done")
-        (list "y" "copy") (list "space y" "copy") (list "space d" "cut") (list "space p" "paste") (list "j" "sel-next-match") (list "v" "sel-all-matches") (list "r" "sel-drop")
-        (list "escape" "sel-cancel")))
-
-;; cursor-keys are the keys of the cursor layer: t and h add a cursor on the next or previous block of the picked
-;; kind, the arrows add one on the line below or above, j adds the next match, v every match, r drops the last
-;; cursor, z clears them, f opens the write layer for all of them, s starts the selections, escape goes back.
-(define cursor-keys
-  (list (list "t" "cur-next-block") (list "h" "cur-prev-block")
-        (list "down" "cur-below") (list "up" "cur-above") (list "left" "move-left") (list "right" "move-right")
-        (list "j" "cur-next-match") (list "v" "cur-all-matches") (list "r" "cur-drop") (list "z" "cur-clear")
-        (list "f" "write-mode") (list "s" "select-mode")
-        (list "a" "kind-any") (list "p" "kind-paragraph") (list "e" "kind-section") (list "c" "kind-code")
-        (list "k" "kind-comment") (list "l" "kind-title") (list "x" "kind-todo") (list "o" "kind-todo-open")
-        (list "d" "kind-todo-done")
-        (list "escape" "cur-leave")))
-
-;; move-keys are the keys of the move layer: h and t swap the lit block with
-;; the one before or after it, and escape goes back to the visual layer.
-(define move-keys
-  (list (list "h" "block-move-up")
-        (list "t" "block-move-down") (list "up" "block-move-up") (list "down" "block-move-down")
-        (list "escape" "visual-mode")))
 
 
-;; undo-keys are the keys of the undo layer (Dvorak): h and t go back and forward, n and s switch branch,
-;; a w e jump, m u d mark, unmark and diff, l goes to the live file, k keeps the version, escape rolls back.
-(define undo-keys
-  (list (list "h" "undo-back") (list "t" "undo-forward")
-        (list "n" "undo-up") (list "s" "undo-down")
-        (list "a" "undo-branch-back") (list "w" "undo-branch-forward") (list "e" "undo-tip")
-        (list "m" "undo-mark") (list "u" "undo-unmark") (list "d" "undo-diff")
-        (list "l" "undo-live") (list "k" "undo-keep") (list "return" "undo-keep") (list "y" "copy")
-        (list "up" "move-up") (list "down" "move-down") (list "left" "move-left") (list "right" "move-right")
-        (list "escape" "undo-cancel")))
 
-;; bar-keys are the keys of the bar layer: the places of the bar, the style, the
-;; hide key and the key that enters the level adjuster.
-(define bar-keys
-  (list (list "p" "bar-place-next")
-        (list "b" "bar-bottom")
-        (list "u" "bar-top")
-        (list "l" "bar-left")
-        (list "r" "bar-right")
-        (list "s" "bar-sides")
-        (list "d" "bar-style")
-        (list "x" "bar-hide") (list "left" "bar-left") (list "right" "bar-right") (list "up" "bar-top") (list "down" "bar-bottom")
-        (list "v" "bar-level-mode")
-        (list "escape" "visual-mode")))
 
-;; bar-level-keys are the keys of the level adjuster: h hides one part of the bar,
-;; t shows one more, and escape goes back to the bar layer.
-(define bar-level-keys
-  (list (list "h" "bar-less")
-        (list "t" "bar-more") (list "left" "bar-less") (list "right" "bar-more")
-        (list "escape" "bar-mode")))
-;; tab-keys are the keys of the tab layer: h and left go to the tab before, t and
-;; right to the tab after, o opens the next page of the folder, c closes the tab,
-;; p, u and b place the bar, j joins it to the bar, x hides it and v enters the
-;; level adjuster.
-(define tab-keys
-  (list (list "h" "tab-prev")
-        (list "t" "tab-next") (list "left" "tab-prev") (list "right" "tab-next")
-        (list "o" "tab-open")
-        (list "c" "tab-close")
-        (list "p" "tab-place-next")
-        (list "u" "tab-top")
-        (list "b" "tab-bottom")
-        (list "j" "tab-join")
-        (list "x" "tab-hide")
-        (list "v" "tab-level-mode")
-        (list "escape" "visual-mode")))
 
-;; tab-level-keys are the keys of the tab level adjuster: h hides one level, t
-;; shows one more, and escape goes back to the tab layer.
-(define tab-level-keys
-  (list (list "h" "tab-less")
-        (list "t" "tab-more") (list "left" "tab-less") (list "right" "tab-more")
-        (list "escape" "tab-mode")))
-;; find-keys are the keys of the find layer: the first key is the scope (f the
-;; file, p the project, w the workspace) and the second is the kind (t text, b
-;; block types, d todos, n file names).
-(define find-keys
-  (list (list "f t" "find-file-text")
-        (list "f b" "find-file-blocks")
-        (list "f d" "find-file-todos")
-        (list "p t" "find-project-text")
-        (list "p b" "find-project-blocks")
-        (list "p d" "find-project-todos")
-        (list "p n" "find-project-files")
-        (list "w t" "find-workspace-text")
-        (list "w b" "find-workspace-blocks")
-        (list "w d" "find-workspace-todos")
-        (list "w n" "find-workspace-files")
-        (list "escape" "visual-mode")))
-;; keymaps is the whole table: a layer name and the keys of that layer.
-;; pin-keys are the keys of the pin layer: a adds the block at the point, d deletes the selected pin, h and t select, u and b put it on the top or bottom edge, n and s reorder, x hides, f keeps it in focus mode, escape leaves.
-(define pin-keys
-  (list (list "a" "pin-add") (list "d" "pin-delete") (list "h" "pin-prev") (list "t" "pin-next")
-        (list "u" "pin-top") (list "b" "pin-bottom") (list "n" "pin-earlier") (list "s" "pin-later")
-        (list "x" "pin-hide") (list "left" "pin-prev") (list "up" "pin-prev") (list "right" "pin-next") (list "down" "pin-next") (list "f" "pin-keep") (list "escape" "visual-mode")))
+
+
 
 ;; The tables are put in with list, not with cons and not with a quote:
 ;; a quoted list would hold the NAMES of the tables, and a cons would be

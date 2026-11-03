@@ -401,3 +401,7 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - notification types into their groups: clip-notes, multi-notes, key-notes; todo: notification history last
 - read pass: sort commands, machine, send, notation, narration, entry, audit, checkpoint, join into subject subfolders
 - sort: entry/dispatch, entry/live, commands/sets; send, lean, cli stay (run-time paths); next: keys into category folders, notation names, test file per source file
+- read pass: key sets into category folders (bake, record tool, lint direction, key-check)
+- read pass: one-way lint rules before moving the key sets into category folders
+- read pass: one-way lint state and area law before moving key sets into category folders
+- key sets into group folders (undo, multi, blocks, bar, tabs, float); record tool reads them; todo: one-way lint is inert

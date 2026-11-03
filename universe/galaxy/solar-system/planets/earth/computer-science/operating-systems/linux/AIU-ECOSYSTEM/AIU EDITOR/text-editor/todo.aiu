@@ -363,6 +363,15 @@ section end
 
 section start
 title start
+ONE-WAY LINT CHECKS NOTHING
+title end
+paragraph start
+todo: the one-way lint prints NOTHING-TO-CHECK, so it enforces nothing. Find why it sees no Racket files (the project path holds the letter AE), put tui into its area table at its true place (entry and routes already require tui, and the key tables now live in tui folders), and make it fail for real on an upward require.
+paragraph end
+section end
+
+section start
+title start
 NOTIFICATION HISTORY
 title end
 paragraph start
