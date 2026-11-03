@@ -52,9 +52,10 @@ def main [] {
         exit 0
     }
 
-    let pairs = ($files | each {|p|
+    let pairs = ($files | par-each --keep-order {|p|
         let from = (area-of $p)
-        let paths = (require-paths (clean-text (open --raw $p)))
+        let raw = (open --raw $p)
+        let paths = (if ($raw | str contains "(require") { require-paths (clean-text $raw) } else { [] })
         $paths | each {|q|
             let to = (target-area $p $q)
             let up = (if ($to == null) { true } else { (area_index $to) > (area_index $from) })

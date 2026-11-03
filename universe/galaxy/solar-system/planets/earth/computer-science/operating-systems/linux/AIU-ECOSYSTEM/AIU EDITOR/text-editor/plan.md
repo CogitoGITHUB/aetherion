@@ -494,3 +494,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - kit-check: run the skill examples in parallel, capped by AIU_JOBS default 4
 - kit-check: run the six proofs as parallel threads, per-thread exit-code file
 - re-record mod-tasks and mod-update-gate after the comment strip and gate cut
+- one-way lint: par-each and skip files without a require
