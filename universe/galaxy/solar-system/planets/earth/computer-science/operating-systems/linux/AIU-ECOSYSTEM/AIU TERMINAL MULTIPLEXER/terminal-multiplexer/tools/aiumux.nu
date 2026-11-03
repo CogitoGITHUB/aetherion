@@ -204,7 +204,8 @@ def main [
         if (holds $dir) {
             print $"aiumux: ($name) stands; the pid is in ($dir | path join 'holder.pid')"
         } else {
-            print $"aiumux: ($name) was started with no screen; if it is not there, read ($dir | path join 'holder.out')"
+            print $"aiumux: ($name) was started with no screen"
+            print $"aiumux: if it is not there, read ($dir | path join 'holder.out')"
         }
         return
     }
