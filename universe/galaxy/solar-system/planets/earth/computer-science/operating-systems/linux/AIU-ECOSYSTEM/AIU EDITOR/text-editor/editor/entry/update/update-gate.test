@@ -2,5 +2,5 @@ test mod-update-gate
 level 2
 module editor/entry/update/update-gate.rkt
 call (list (parse-times "TIME a 1500\nx") (stage-label 1) (stage-label 2) (stage-label 3) (stage-args 1) (stage-args 3) (parse-stages "--- a\nTIME a 1200\nCODE a 0\nhello"))
-expect result equals ((("a" 1.5)) "quick stages" "quick and medium stages" "all 17 stages" ("--only" "naming,one-way,language-split,comment-lint,notation-check,secret-check,git-check") () (("a" 1.2 0 ("hello"))))
+expect result equals ((("a" 1.5)) "quick stages" "quick and medium stages" "all 12 stages" ("--only" "one-way,language-split,notation-check,secret-check,git-check") () (("a" 1.2 0 ("hello"))))
 expect seconds-under 20
