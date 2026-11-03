@@ -53,7 +53,7 @@
   (define named (getenv "AIU_HOT_PATH_BIN"))
   (define bin (if (and named (not (string=? named "")))
                   (path->complete-path named)
-                  (build-path "/tmp" "editor-target" "debug" "hot-path")))
+                  (build-path (find-system-path (quote home-dir)) "aiu-cargo-target" "debug" "hot-path")))
   (if (file-exists? bin)
       bin
       (error-of 'err-no-hot-path "the editor" (path->string bin)

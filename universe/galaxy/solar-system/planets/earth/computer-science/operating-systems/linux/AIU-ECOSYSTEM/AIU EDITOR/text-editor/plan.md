@@ -530,3 +530,10 @@ Rule: each step ships alone, compiles, has its own recorded test in editor/tui/t
 12. Tests: one recorded test per step (tab-move, tab-to-project, project-move, workspace-move, level-selector, pane-split, pane-focus, pane-close, two-panes-screen). Delete and re-record screen tests that show the frame.
 13. Last: bar level for pane count and the level selector, hidden when there is one pane.
 Open questions for him, asked only when step 1 is read: which keys, whether a split pane may show an empty project.
+- finding: workspace and project rows are folder scans (tabs-dirs, tabs-parent), tab-files is one flat list; tab move between projects needs a per-project tab list first (plan step 3 changes)
+- plan step 2: tab-move-left (a) and tab-move-right (e) in the tab layer, order of tab-files, recorded test tab-move
+- tab-move test recorded with keys space t o a escape, moved into editor/tui/tabs
+- tab-move record red: find which keys open the tab layer and how many tabs the test page has
+- tab layer keys never reached: find where tab-keys is registered as a layer
+- tab-move needs a recorded test: read module-answer and the test page folder
+- tab order as a pure function tabs-order-moved in tabs.rkt, module test recorded next to it, tab move committed

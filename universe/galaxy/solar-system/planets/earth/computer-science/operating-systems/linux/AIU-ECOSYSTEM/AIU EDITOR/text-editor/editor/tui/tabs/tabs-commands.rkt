@@ -88,6 +88,19 @@
   (set-layer! session "tab-level")
   (cons #t "layer: tab-level"))
 
+(define (tabs-move! delta)
+  (define files (unbox tab-files))
+  (define moved (tabs-order-moved files (unbox tab-current) delta))
+  (cond
+    [(equal? moved files) (cons #t "the tab cannot move further")]
+    [else (set-box! tab-files moved) (cons #t (if (< delta 0) "tab moved left" "tab moved right"))]))
+
+(define (command-tab-move-left session words) (tabs-move! -1))
+
+(define (command-tab-move-right session words) (tabs-move! 1))
+
+(hash-set! commands "tab-move-left" command-tab-move-left)
+(hash-set! commands "tab-move-right" command-tab-move-right)
 (hash-set! commands "tab-mode" command-tab-mode)
 (hash-set! commands "tab-level-mode" command-tab-level-mode)
 (hash-set! commands "tab-prev" command-tab-prev)

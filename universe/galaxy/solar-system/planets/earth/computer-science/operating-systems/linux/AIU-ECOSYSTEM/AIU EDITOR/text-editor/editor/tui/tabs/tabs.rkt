@@ -49,6 +49,16 @@
        (set-box! tab-scanning #f)
        (again)))))
 
+(define (tabs-order-moved files current delta)
+  (define at (index-of files current))
+  (define to (and at (+ at delta)))
+  (if (or (not at) (< to 0) (>= to (length files)))
+      files
+      (let ([v (list->vector files)])
+        (vector-set! v at (vector-ref v to))
+        (vector-set! v to (list-ref files at))
+        (vector->list v))))
+
 (define (tab-show! file)
   (unless (member file (unbox tab-files))
     (set-box! tab-files (append (unbox tab-files) (list file))))
@@ -80,7 +90,7 @@
                      (list (edge-line "├" "┤" (car s) "" width) (body-line (cdr s) width))))
           (list (rule-line "╰" "╯" width))))
 
-(provide tab-files tab-current tab-saved tab-count tab-show!
+(provide tabs-order-moved tab-files tab-current tab-saved tab-count tab-show!
          tab-switch
          tab-rows
          tab-place

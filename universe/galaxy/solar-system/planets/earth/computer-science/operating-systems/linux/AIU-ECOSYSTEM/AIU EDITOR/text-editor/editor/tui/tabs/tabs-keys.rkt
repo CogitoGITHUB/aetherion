@@ -4,6 +4,8 @@
   (list (list "h" "tab-prev")
         (list "t" "tab-next") (list "left" "tab-prev") (list "right" "tab-next")
         (list "o" "tab-open")
+        (list "a" "tab-move-left")
+        (list "e" "tab-move-right")
         (list "c" "tab-close")
         (list "p" "tab-place-next")
         (list "u" "tab-top")
