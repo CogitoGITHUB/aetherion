@@ -415,3 +415,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - re-record mod-notify with a real answer (the first one was empty); read pass: provide lines of untested modules for the next module-test batch
 - module-test batch 2: err raise render selection redact security cancel events protocol keyboard
 - module-test batch 2b: raise and render through dynamic-require of err.rkt
+- module-test batch 3: bar-clock text-motion tabs-folders bundle small print-console routes capabilities documents seam replay

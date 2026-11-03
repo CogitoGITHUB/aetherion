@@ -1,0 +1,6 @@
+test mod-tabs-folders
+level 2
+module editor/tui/tabs/tabs-folders.rkt
+call (list (tabs-last "/a/x/f.txt") (tabs-last 5) (path->string (tabs-parent "/a/x/f.txt")) (tabs-labels (list "/a/x/f.txt" "/b/y/f.txt" "/c/g.txt")) tabs-skipped)
+expect result equals ("f.txt" "" "/a/x/" ("x/f.txt" "y/f.txt" "g.txt") ("compiled" "node_modules" "target" "aiu-compiled"))
+expect seconds-under 20
