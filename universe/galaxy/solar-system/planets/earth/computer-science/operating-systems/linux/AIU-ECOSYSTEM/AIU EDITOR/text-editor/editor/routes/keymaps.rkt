@@ -9,11 +9,12 @@
          "../tui/bar/bar-keys.rkt"
          "../tui/tabs/tabs-keys.rkt"
          "../tui/tabs/finder-keys.rkt"
-         "../tui/float/pins-keys.rkt")
+         "../tui/float/pins-keys.rkt"
+         "../tui/split/split-keys.rkt")
 
 (define reserved-prefix "f1")
 
-(define editor-layers '("visual" "write" "select" "move" "undo" "cursor" "bar" "bar-level" "tab" "tab-level" "find" "pin"))
+(define editor-layers '("visual" "write" "select" "move" "undo" "cursor" "bar" "bar-level" "tab" "tab-level" "find" "pin" "pane"))
 
 (define trigger-of
   (list (cons "visual" "space")
@@ -24,7 +25,7 @@
           (cons "bar-level" "space")
           (cons "tab" "space")
           (cons "tab-level" "space")
-          (cons "find" "space") (cons "undo" "space") (cons "cursor" "space") (cons "pin" "space")))
+          (cons "find" "space") (cons "undo" "space") (cons "cursor" "space") (cons "pin" "space") (cons "pane" "space")))
 
 (define normal-keys
   '(("w" "block-edit")
@@ -63,7 +64,7 @@
     ("space k" "check")
     ("space n" "next-block")
     ("space e" "block-end")
-    ("space o" "pin-mode")
+    ("space o" "pin-mode") ("space w" "pane-mode")
       ("up" "block-up") ("down" "block-down") ("left" "move-left") ("right" "move-right")
     ("escape" "visual-mode")
     ("backspace" "delete")))
@@ -98,7 +99,7 @@
             (list "bar-level" bar-level-keys)
             (list "tab" tab-keys)
             (list "tab-level" tab-level-keys)
-            (list "find" find-keys) (list "undo" undo-keys) (list "cursor" cursor-keys) (list "pin" pin-keys))))
+            (list "find" find-keys) (list "undo" undo-keys) (list "cursor" cursor-keys) (list "pin" pin-keys) (list "pane" split-keys))))
 
 (define (keys-of layer)
   (define found (assoc layer keymaps))
@@ -117,7 +118,7 @@
     (and (> (length wanted) (length names))
          (equal? (take wanted (length names)) names))))
 
-(provide move-keys
+(provide split-keys move-keys
          bar-keys
          bar-level-keys
          tab-keys

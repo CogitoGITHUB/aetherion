@@ -21,7 +21,7 @@
          "../../tui/blocks/blocks-move.rkt"
          "../../tui/float/menu.rkt"
          "../../tui/bar/bar.rkt"
-         "../../tui/tabs/tabs.rkt" "../../tui/tabs/tabs-commands.rkt"
+         "../../tui/tabs/tabs.rkt" "../../tui/tabs/tabs-commands.rkt" "../../tui/split/split-commands.rkt"
          "../../tui/tabs/finder.rkt"
          "../../tui/notify/notify.rkt"
          (only-in "../../tui/float/box.rkt" paint-ready)

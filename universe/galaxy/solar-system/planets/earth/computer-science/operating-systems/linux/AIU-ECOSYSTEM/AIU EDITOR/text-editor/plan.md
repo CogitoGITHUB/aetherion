@@ -547,3 +547,5 @@ S6. Keep the layout between sessions in the state dir, restored after first pain
 - S1: reading live-paint.rkt, session.rkt and the live key loop for the split view
 - S2: editor/tui/split/split-layout.rkt pure pane tree (single, split, close, ids, rects, neighbour) with module test
 - S2b: pane ratio per split, resize, swap, flip (placement), turn (right/down), equalise in split-layout.rkt; test re-recorded; S3 commands and keys use them
+- S3: split-state.rkt (tree, focus), split-commands.rkt, split-keys.rkt, layer registered in keymaps.rkt
+- S3: split-state, split-commands, split-keys written, layer pane on space w, module test split-state; menu rows and paint come with S4
