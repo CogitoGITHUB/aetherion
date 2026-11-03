@@ -1,0 +1,6 @@
+test mod-split-layout
+level 2
+module editor/tui/split/split-layout.rkt
+call (let* ([t (split-layout-split (split-layout-single 1) 1 2 "right")] [u (split-layout-split t 2 3 "down")]) (list t (split-layout-rects u 0 0 80 24) (split-layout-neighbour u 3 "up" 80 24) (split-layout-neighbour u 1 "right" 80 24) (split-layout-neighbour u 3 "left" 80 24) (split-layout-neighbour u 1 "left" 80 24) (split-layout-close u 2) (split-layout-ids u)))
+expect result equals (("split" "right" ("pane" 1) ("pane" 2)) ((1 0 0 40 24) (2 40 0 40 12) (3 40 12 40 12)) 2 2 1 #f ("split" "right" ("pane" 1) ("pane" 3)) (1 2 3))
+expect seconds-under 20

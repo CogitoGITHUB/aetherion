@@ -544,3 +544,5 @@ S3. editor/tui/split/split-commands.rkt and split-keys.rkt: pane-split-right, pa
 S4. Paint: each pane draws its page in its own box with its own rules, never merged; title box and pin only on the focused pane; bar and mode box stay single. Delete and re-record screen tests that show the frame.
 S5. A new pane takes any page from any workspace or project through the tab bar; the level selector acts on the focused pane. Same file in two panes shares one session, cursor and scroll per pane.
 S6. Keep the layout between sessions in the state dir, restored after first paint.
+- S1: reading live-paint.rkt, session.rkt and the live key loop for the split view
+- S2: editor/tui/split/split-layout.rkt pure pane tree (single, split, close, ids, rects, neighbour) with module test
