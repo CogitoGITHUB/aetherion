@@ -1,9 +1,4 @@
 #lang racket/base
-;; undo.rkt: the undo layer, drawn like vundo. The nodes of the tree are the commits of the branch
-;; aiu-undo that touch the open file; a node with more than one child is a branch point. Moving in the
-;; tree shows that version in the page at once. k keeps the version, escape rolls back, l goes back to
-;; the live text (to paste) and remembers the node and the point, so the next space u comes back there.
-;; Loaded on first use through the stubs at the end of bar.rkt. Nothing here runs while typing.
 
 (require "undo-git.rkt" "undo-tree.rkt"
          (only-in racket/string string-trim string-split)
@@ -14,41 +9,26 @@
          (only-in "../float/shadow.rkt" shadow-commit-now! shadow-key))
 
 
-;; undo-active is true while the undo layer is open.
 (define undo-active #f)
-;; undo-file is the complete path of the file, undo-top the git folder top, undo-rel the path in the repository.
 (define undo-file #f)
-;; undo-top is the top folder of the git repository that holds the file.
 (define undo-top #f)
-;; undo-rel is the path of the file inside the git repository.
 (define undo-rel #f)
-;; undo-curf is the file in the git folder that holds the current node of this file.
 (define undo-curf #f)
-;; undo-cur is the node shown, undo-home the node the file was at when the layer opened, undo-marked the marked node.
 (define undo-cur #f)
-;; undo-home is the node the file was at when the layer opened.
 (define undo-home #f)
-;; undo-marked is the node marked with m, for the diff.
 (define undo-marked #f)
-;; undo-orig-text and undo-orig-point are the live text and point when the layer opened.
 (define undo-orig-text "")
-;; undo-orig-point is the live point when the layer opened.
 (define undo-orig-point 0)
-;; undo-diff holds the lines of a diff while the diff view shows, else nothing.
 (define undo-diff (list))
-;; undo-resume remembers for each file the node and the point where l left, for the next entry.
 (define undo-resume (make-hash))
 
-;; undo-glyph answers the sign of one node: a filled circle for the node shown, a diamond for the marked one.
 (define (undo-glyph id)
   (cond [(equal? id undo-cur) #\●]
         [(equal? id undo-marked) #\◆]
         [else #\○]))
 
-;; undo-put! sets one character of the grid.
 (define (undo-put! cells r x ch) (hash-set! cells (cons r x) ch))
 
-;; undo-draw answers the grid of the tree as a hash from (row . x) to a character.
 (define (undo-draw)
   (let ([cells (make-hash)])
     (for ([(id p) (in-hash undo-pos)])
@@ -67,7 +47,6 @@
                   (undo-put! cells kr (+ x 2) #\─))))))))
     cells))
 
-;; undo-tree-lines answers the rows of the tree around the node shown, cut to the width of the panel.
 (define (undo-tree-lines inner rows)
   (let* ([cells (undo-draw)]
          [p (hash-ref undo-pos undo-cur)]
@@ -80,7 +59,6 @@
        (for/list ([x (in-range x0 (+ x0 inner))])
          (hash-ref cells (cons r x) #\space))))))
 
-;; undo-rows answers the rows of the panel at the bottom of the screen; bar.rkt asks it in every paint.
 (define (undo-rows width height)
   (cond
     [(or (not undo-active) (not undo-cur) (not (hash-ref undo-pos undo-cur #f))) (list)]
@@ -108,11 +86,9 @@
                           (body-line (undo-cut "m u d mark unmark diff  y copy  l live  enter keep  esc" inner) width)
                           bottom)))]))]))
 
-;; undo-text answers the text of a node, read from git once.
 (define (undo-text id)
   (hash-ref! undo-texts id (lambda () (or (undo-git undo-top "show" (string-append id ":" undo-rel)) ""))))
 
-;; undo-set-text! replaces the whole text of the page through the normal edit requests.
 (define (undo-set-text! session text)
   (let ([n (undo-blen (session-text session))])
     (when (> n 0)
@@ -120,21 +96,17 @@
     (when (> (string-length text) 0)
       (ask session "insert-at" (hasheq (quote at) "0" (quote text) text)))))
 
-;; undo-go! shows a node: its text goes into the page and the point stays where it was, kept inside the text.
 (define (undo-go! session id)
   (set! undo-cur id)
   (undo-set-text! session (undo-text id))
   (move-to session (min (the-point session) (undo-blen (undo-text id)))))
 
-;; undo-read-cur answers the current node of the file as git keeps it, or false.
 (define (undo-read-cur)
   (with-handlers ([void (lambda (e) #f)])
     (and undo-curf (file-exists? undo-curf)
          (let ([s (string-trim (call-with-input-file undo-curf undo-slurp))])
            (and (hash-ref undo-nodes s #f) s)))))
 
-;; undo-start! opens the undo layer: it saves and commits unsaved work first, reads the tree, and comes back
-;; to the node and point where l left, if there is one.
 (define (undo-start! session)
   (let* ([file (path->string (path->complete-path (session-file session)))]
          [dir (let-values ([(base name d?) (split-path file)]) (if (path? base) (path->string base) "."))]
@@ -177,19 +149,16 @@
             (set-layer! session "undo")
             (cons #t "undo: h t move, k keep, escape back")]))])))
 
-;; undo-back goes to the parent of the node shown.
 (define (undo-back session)
   (let ([p (undo-parent-of undo-cur)])
     (cond [p (hash-set! undo-prefer p undo-cur) (undo-go! session p) (cons #t "undo: back")]
           [else (cons #t "undo: this is the oldest version")])))
 
-;; undo-forward goes to the child that forward follows.
 (define (undo-forward session)
   (let ([n (undo-next-of undo-cur)])
     (cond [n (undo-go! session n) (cons #t "undo: forward")]
           [else (cons #t "undo: this is the end of the branch")])))
 
-;; undo-sibling moves to the branch above (step -1) or below (step 1) at a branch point.
 (define (undo-sibling session step)
   (let* ([p (undo-parent-of undo-cur)]
          [sibs (if p (hash-ref undo-kids p (list)) undo-roots)]
@@ -201,34 +170,28 @@
            (cons #t "undo: other branch")]
           [else (cons #t "undo: no branch there")])))
 
-;; undo-branch-back goes back to the last branch point.
 (define (undo-branch-back session)
   (let loop ([id (undo-parent-of undo-cur)])
     (cond [(not id) (cons #t "undo: no branch point before this")]
           [(> (length (hash-ref undo-kids id (list))) 1) (undo-go! session id) (cons #t "undo: branch point")]
           [else (loop (undo-parent-of id))])))
 
-;; undo-branch-forward goes forward to the next branch point.
 (define (undo-branch-forward session)
   (let loop ([id (undo-next-of undo-cur)])
     (cond [(not id) (cons #t "undo: no branch point ahead")]
           [(> (length (hash-ref undo-kids id (list))) 1) (undo-go! session id) (cons #t "undo: branch point")]
           [else (loop (undo-next-of id))])))
 
-;; undo-tip goes forward to the end of the branch.
 (define (undo-tip session)
   (let loop ([id undo-cur])
     (let ([n (undo-next-of id)])
       (cond [n (loop n)]
             [else (undo-go! session id) (cons #t "undo: end of the branch")]))))
 
-;; undo-mark! marks the node shown for the diff.
 (define (undo-mark! session) (set! undo-marked undo-cur) (cons #t "undo: marked"))
 
-;; undo-unmark! takes the mark away.
 (define (undo-unmark! session) (set! undo-marked #f) (cons #t "undo: unmarked"))
 
-;; undo-show-diff shows the diff between the marked node, or the parent, and the node shown.
 (define (undo-show-diff session)
   (let ([base (or undo-marked (undo-parent-of undo-cur))])
     (cond
@@ -242,15 +205,12 @@
          (set! undo-diff (map (lambda (l) (regexp-replace* #rx"\t" l "    ")) lines))
          (cons #t (if (null? lines) "undo: no difference" "undo: diff, any key closes it")))])))
 
-;; undo-restore! puts the live text and point back, as they were when the layer opened.
 (define (undo-restore! session)
   (unless (equal? (session-text session) undo-orig-text)
     (undo-set-text! session undo-orig-text))
   (move-to session (min undo-orig-point (undo-blen undo-orig-text)))
   (set-box! unsaved #f))
 
-;; undo-live goes to the live file to paste: the node and the point are remembered, the live text comes
-;; back and the write layer opens at the old point.
 (define (undo-live session)
   (hash-set! undo-resume undo-file (cons undo-cur (the-point session)))
   (undo-restore! session)
@@ -258,7 +218,6 @@
   ((hash-ref commands "write-mode") session (list))
   (cons #t "undo: live file, escape saves, space u comes back to the same node and point"))
 
-;; undo-keep keeps the version shown: it becomes the current node and the file, and the layer closes.
 (define (undo-keep session)
   (with-handlers ([void (lambda (e) (void))])
     (call-with-output-file undo-curf
@@ -270,7 +229,6 @@
   ((hash-ref commands "visual-mode") session (list))
   (cons #t "undo: version kept"))
 
-;; undo-cancel rolls back to the live text and closes the layer.
 (define (undo-cancel session)
   (undo-restore! session)
   (set! undo-active #f)
@@ -278,15 +236,12 @@
   ((hash-ref commands "visual-mode") session (list))
   (cons #t "undo: rolled back"))
 
-;; undo-reg! adds one command to the undo table. A command other than the first needs the layer open,
-;; and the diff view is closed before it runs.
 (define (undo-reg! name f open-needed?)
   (hash-set! undo-table name
              (lambda (session words)
                (cond [(and open-needed? (not undo-active)) (cons #t "undo: not open")]
                      [else (set! undo-diff (list)) (f session)]))))
 
-;; The commands of the layer, added when this module is loaded.
 (undo-reg! "undo-mode" undo-start! #f)
 (undo-reg! "undo-back" undo-back #t)
 (undo-reg! "undo-forward" undo-forward #t)

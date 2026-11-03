@@ -1,19 +1,4 @@
 #lang racket/base
-;; One job: the notation check — the editor reads AIU NOTATION pages through
-;; the notation engine, and this stage proves it on real pages.
-;; Registered in plan/package-tree.org; lands with TODO item 21.
-;;
-;; The four proofs, each one real:
-;;   1. every starter page of the notation project parses through the seam,
-;;      with the first block a title and no fault;
-;;   2. a page with text outside any block answers the faults it has, with the
-;;      line and the thing to do;
-;;   3. every block sits inside the text: the offsets are bytes that exist;
-;;   4. a document that is not version 1 is refused by name, never read as if
-;;      it were version 1.
-;;
-;; The check runs from the project directory, so the package and the notation
-;; project are reached by relative paths.
 
 (require racket/file
          racket/list
@@ -22,8 +7,6 @@
          "../editor/notation/document.rkt"
          "../editor/notation/host.rkt")
 
-;; project-dir is the editor's directory: the one that holds the package and
-;; the gate. The search walks up from where the check runs.
 (define project-dir
   (let loop ([at (simplify-path (current-directory))])
     (define up (simplify-path (build-path at "..")))
@@ -34,23 +17,15 @@
       [(string=? (path->string at) (path->string up)) at]
       [else (loop up)])))
 
-;; types-dir is the notation project's starter pages: the kinds the notation
-;; ships, and the pages a person actually opens first.
 (define types-dir
   (simplify-path (build-path project-dir ".." ".." "AIU NOTATION" "types")))
 
-;; scratch-journal is the journal the check asks with: no session is opened,
-;; so nothing is written and the journal stays empty.
 (define scratch-journal
   (build-path (find-system-path 'temp-dir) "notation-check.journal"))
 
-;; page-file? answers whether a path is a page of the notation: the extension
-;; is the whole test.
 (define (page-file? path)
   (string-suffix? (path->string path) ".aiu"))
 
-;; starter-pages answers the pages of the notation project, sorted, so the
-;; check reads the same way every run.
 (define (starter-pages)
   (if (directory-exists? types-dir)
       (sort (filter page-file?
@@ -59,16 +34,12 @@
             (lambda (a b) (string<? (path->string a) (path->string b))))
       '()))
 
-;; outside-text? answers whether a block's offsets are outside a text: a start
-;; before the first byte, an end past the last, or an empty block.
 (define (outside-text? block text)
   (or (< (block-start block) 0)
       (>= (block-start block) (string-length text))
       (> (block-end block) (string-length text))
       (>= (block-start block) (block-end block))))
 
-;; page-faults-of answers what is wrong with a page that parsed, or nothing
-;; when it is in order: a title first, no fault, every block inside the text.
 (define (page-faults-of path got text)
   (define blocks (page-blocks got))
   (define faults (page-faults got))
@@ -89,18 +60,12 @@
              (block-start (car outside)) (block-end (car outside))
              (string-length text))]))
 
-;; check-page answers what is wrong with one page, or nothing when it is in
-;; order. A page that cannot be read is a fault of its own, and the refusal is
-;; printed as the reason.
 (define (check-page path)
   (define got (page-of path scratch-journal))
   (if (page? got)
       (page-faults-of path got (file->string path))
       (format "the page ~a cannot be read: ~a" path (page-refusal-text got))))
 
-;; check-planted answers what is wrong with the proof of a planted fault: a
-;; page with text outside every block must answer at least one fault, and the
-;; fault must name its line and what to do.
 (define (check-planted)
   (define planted
     (build-path (find-system-path 'temp-dir) "notation-planted.aiu"))
@@ -121,9 +86,6 @@
         (format "the fault of the planted page names nothing to do: ~a" (fault-what f))]
        [else #f])]))
 
-;; check-render answers what is wrong with the view: the render of a starter
-;; page carries no block marker, and it carries the page's own words. This is
-;; the proof that the view hides the syntax and the write layer does not.
 (define (check-render page)
   (define rendered (render-of page scratch-journal))
   (define lines (string-split rendered "\n"))
@@ -139,8 +101,6 @@
      (format "the view of ~a still carries the marker ~s" page (car markers))]
     [else #f]))
 
-;; check-version answers what is wrong with the version guard: a document that
-;; is not version 1 is refused, and the refusal says something.
 (define (check-version)
   (define got (read-page "NOTATION-DOCUMENT 2\nend\n"))
   (cond
@@ -148,9 +108,6 @@
     [(string=? got "") "the refusal of a NOTATION-DOCUMENT 2 says nothing"]
     [else #f]))
 
-;; main runs the proofs and answers what is wrong, one line per fault; it exits
-;; non-zero when a fault is found, and says NOTHING-TO-CHECK when the notation
-;; project's pages are not there.
 (define (main)
   (define pages (starter-pages))
   (cond
@@ -171,6 +128,5 @@
            (printf "NOTATION — ~a faults\n" (length faults))
            (exit 1)))]))
 
-;; The check, for the dispatcher above.
 (module+ main
   (main))

@@ -1,12 +1,4 @@
 #lang racket/base
-;; One job: loading a plugin — asking pm whether the package is there,
-;; starting the plugin, and calling it across the seam.
-;;
-;; A plugin that is not installed is refused BY NAME. A plugin that
-;; fails to load never takes the editor down: the editor runs without
-;; it and says so.
-;;
-;; Registered in plan/package-tree.org; lands with TODO item 17.
 
 (require json
          racket/file
@@ -18,16 +10,10 @@
          "pm.rkt"
          "seam.rkt")
 
-;; request-file is where the request of a call is written.
 (define request-file (build-path (state-dir) "plugin-request.json"))
 
-;; answer-file is where the plugin writes its answer. The two files live
-;; in the state directory, because an answer must survive a crash.
 (define answer-file (build-path (state-dir) "plugin-answer.json"))
 
-;; plugin-state answers what the editor knows about one plugin: the
-;; manifest, the fields the manifest misses, and the package it came
-;; from.
 (define (plugin-state name)
   (define manifest (read-manifest name))
   (define missing (manifest-missing manifest))
@@ -38,9 +24,6 @@
         'missing missing
         'package (and manifest (hash-ref manifest 'package #f))))
 
-;; plugin-verdict asks pm about the package of a plugin and answers
-;; what pm said. When pm cannot be asked, the answer says that, and it
-;; never guesses that the package is there.
 (define (plugin-verdict state)
   (define manifest (hash-ref state 'manifest #f))
   (define package (and manifest (hash-ref manifest 'package #f)))
@@ -56,9 +39,6 @@
          "pm says the package is there and verified"
          (format "pm says no: ~a" (string-trim (hash-ref answer 'err ""))))]))
 
-;; call-plugin asks one plugin one seam call and answers its answer.
-;; The request goes to a file and the answer comes from a file: no
-;; session crosses the boundary.
 (define (call-plugin name call args)
   (define state (plugin-state name))
   (cond
@@ -88,22 +68,18 @@
                'answer answer
                'code (hash-ref result 'code -1)))]))
 
-;; load-plugin asks a plugin to describe itself, and answers what it
-;; provides. A plugin that is not there is refused by name.
 (define (load-plugin name)
   (define answer (call-plugin name "describe" (hasheq)))
   (if (hash-ref answer 'ok #f)
       answer
       (hash 'ok #f 'error (hash-ref answer 'error "the plugin did not answer"))))
 
-;; missing-text answers what a plugin's manifest misses, in words.
 (define (missing-text state)
   (define missing (hash-ref state 'missing '()))
   (if (null? missing)
       "the manifest is whole"
       (string-join (map symbol->string missing) ", ")))
 
-;; The loader, for the areas above it.
 (provide request-file
          answer-file
          plugin-state

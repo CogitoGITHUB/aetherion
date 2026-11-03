@@ -1,12 +1,9 @@
 #lang racket/base
-;; One job: the lines that explain a failed test: the error source, the last frame and the screen seen.
 (require racket/system racket/string racket/list racket/file racket/path "update-table.rkt" "update-screen.rkt" "update-evidence.rkt")
 
-;; wrap-text cuts one line into pieces of at most 90 characters.
 (define (wrap-text l)
   (if (<= (string-length l) 90) (list l) (cons (substring l 0 90) (wrap-text (substring l 90)))))
 
-;; err-where answers the lines that name an err- code on the screen, the source file and line that holds it and the lines around it.
 (define (err-where scr)
   (define m (regexp-match #px"err-[a-z]+(-[a-z]+)*" scr))
   (cond
@@ -26,7 +23,6 @@
                    (string-append "    e " (let ([t (string-trim l)]) (if (> (string-length t) 70) (substring t 0 70) t)))))
          (list (string-append "    error " name " shown on screen, but no source file holds that name")))]))
 
-;; diagnose answers the lines that explain a failed test: exit code, mid frame, last frame.
 (define (diagnose code-file out out1)
   (define code (with-handlers ([void (lambda (e) "unknown")]) (string-trim (file->string code-file))))
   (define raw (with-handlers ([void (lambda (e) #"")]) (file->bytes out)))
@@ -38,7 +34,6 @@
          "    last frame at the end:")
    (map (lambda (l) (string-append "    > " l)) (apply append (map wrap-text tail)))))
 
-;; seen-lines answers the lines that show a failed test what the screen held, with row numbers, and the file head when a file expectation failed.
 (define (seen-lines shown verdicts file-text)
   (append (list "    screen seen:")
           (apply append (for/list ([l (in-list shown)] [i (in-naturals 1)]) (wrap-text (format "    ~a ~a" i l))))

@@ -1,20 +1,14 @@
 #lang racket/base
-;; One job: draw the text of a block inside its box and open that text for editing (the block-text key).
 
 (require racket/list racket/string "../../commands/commands.rkt" "../../machine/terminal.rkt" "../../notation/document.rkt" "../../notation/host.rkt" "../float/pins.rkt" "blocks-kind.rkt" "blockview.rkt" "blocks-edit.rkt")
 
 (provide blockview-pad blockview-chunks blockview-text-overlay)
 
-;; blockview-pad answers a string padded with spaces on the right to n characters.
 (define (blockview-pad s n)
   (if (< (string-length s) n)
       (string-append s (make-string (- n (string-length s)) #\space))
       s))
 
-;; blockview-chunks answers how one line of text is cut into parts of at most cw
-;; characters, as pairs of the first and the end character of each part. A part
-;; ends after a space when there is one, so a word is split only when it is
-;; longer than a part.
 (define (blockview-chunks line cw)
   (define len (string-length line))
   (let loop ([i 0] [out null])
@@ -28,12 +22,6 @@
              (+ i cw)))
        (loop cut (cons (cons i cut) out))])))
 
-;; blockview-text-overlay answers the drawing with the text lines of the block being
-;; edited shown raw inside the drawn box of the block: the top edge, the bottom
-;; edge and every other block stay drawn, and the start and end lines stay hidden.
-;; A text line wider than the box is cut at a space into parts, and the left edge
-;; of the box is drawn on every part, so the box stays clean. Nothing when the
-;; block can no longer be found.
 (define (blockview-text-overlay session raw width height got)
   (define start (unbox edit-start))
   (define b
@@ -105,9 +93,6 @@
            (+ head-bytes pre-bytes at-bytes)
            (blockview-follow row row (max 1 (- height 1))))]))
 
-;; blockview-command-text opens only the text of the lit block in the write layer. The
-;; block stays drawn in its own box and its start and end lines stay hidden. A
-;; block that holds other blocks, or has no text line, opens as raw text like w.
 (define (blockview-command-text session words)
   (define got (and (blockview-aiu? session)
                    (page-of (session-file session) (session-journal session))))
@@ -131,5 +116,4 @@
                       (block-name target)))]
     [else (blockview-command-edit session words)]))
 
-;; Opening the text edit drops the extra cursors: the block edit is one place.
 (hash-set! commands "block-text" (lambda (session words) (multi-clear!) (blockview-command-text session words)))

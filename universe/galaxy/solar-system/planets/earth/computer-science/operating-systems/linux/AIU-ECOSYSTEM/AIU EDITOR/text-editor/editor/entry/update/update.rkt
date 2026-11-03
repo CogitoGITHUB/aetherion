@@ -1,17 +1,9 @@
 #lang racket/base
-;; One job: the aiutd tool verbs (update, test, docs, trace). Every answer is
-;; two empty lines, a banner, the details, the banner again, two empty lines.
-;; The banner is drawn by the notation view. Every step is timed, logged to
-;; ~/.aiu-timings.log and compared with the run before. Loaded on first use.
-;;
-;; Usage: aiutd update [--level N]
 
 (require racket/system racket/string racket/list racket/file racket/path "update-table.rkt" "update-screen.rkt" "update-evidence.rkt" "update-drive.rkt" "update-build.rkt")
 
-;; The entry for cli.rkt.
 (provide run)
 
-;; do-test runs every test file of the level or below, reports each with its time, answers 0 or 1.
 (define (do-test level only repeat)
   (define dir (and editor-root (build-path editor-root "gate" "tests")))
   (define files
@@ -37,7 +29,6 @@
   (printf "runs ~a  failed ~a\n" (length results) (length (filter (lambda (r) (not (caddr r))) results)))
   (if ok 0 1))
 
-;; run answers the verb: update and test work, the other tool verbs say they are not built yet.
 (define (run args)
   (define verb (car args))
   (exit

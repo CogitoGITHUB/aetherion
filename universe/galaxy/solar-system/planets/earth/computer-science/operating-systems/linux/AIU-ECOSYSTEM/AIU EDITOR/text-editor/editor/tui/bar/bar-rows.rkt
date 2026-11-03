@@ -1,5 +1,4 @@
 #lang racket/base
-;; One job: the drawing of the bar rows and the side strips as lines of text.
 (require racket/list
          racket/string
          racket/path
@@ -13,16 +12,12 @@
          "bar-state.rkt")
 
 
-;; layer-keys-line answers the keys of a layer as one row of key names, cut to the width.
 (define (layer-keys-line layer width)
   (define names (remove-duplicates (for/list ([b (in-list (keys-of layer))]) (string-join (map bar-kname (sequence-of (car b))) " "))))
   (define all (string-join names "  "))
   (define room (max 1 width))
   (if (> (string-length all) room) (string-append (substring all 0 (max 0 (- room 1))) "…") all))
 
-;; bar-rows answers the rows of the bar as a box of the full width: the layer and
-;; the file on the top edge with the time and the date, the trigger row, and the
-;; git row. A part that is not in names is left out.
 (define (bar-rows layer short pending g width names)
   (define (has? n) (member n names))
   (define trig (let ([t (assoc layer trigger-of)]) (if t (cdr t) "-")))
@@ -42,8 +37,6 @@
       null
       (append (list (edge-line "╭" "╮" title stamp width)) middle (list (rule-line "╰" "╯" width)))))
 
-;; cell-chars answers the text of one part of a side strip, to be drawn one
-;; letter to a row.
 (define (cell-chars name layer g)
   (cond
     [(string=? name "mode") (format "~a ~a" (mode-label layer) (unbox kind-filter))]
@@ -52,9 +45,6 @@
     [(string=? name "save") "SAVE"]
     [else (let ([t (assoc layer trigger-of)]) (bar-kname (if t (cdr t) "-")))]))
 
-;; strip-lines answers the rows of a side strip, five columns wide: one cell for
-;; each part, the letters upright, a line between the cells. A docked strip runs
-;; the full height it is given, a floating one is as tall as its cells.
 (define (strip-lines names layer g height docked?)
   (cond
     [(null? names) null]

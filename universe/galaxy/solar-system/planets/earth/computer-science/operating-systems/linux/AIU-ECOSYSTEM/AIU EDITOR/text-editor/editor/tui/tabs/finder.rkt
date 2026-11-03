@@ -1,11 +1,4 @@
 #lang racket/base
-;; One job: the finder. It runs fzf over a scope (the file, the project or the
-;; workspace) for one kind of search (text, block types, todos or file names). The
-;; rows show paths relative to the folder searched, and a preview at the top
-;; shows the page formatted, or the file around the picked line. The terminal is given back to fzf while it
-;; runs and taken again after it; a pick opens as a tab and the point jumps to its
-;; line. Nothing is searched in a paint, and fzf is loaded only when a find key is
-;; pressed.
 
 (require racket/list
          racket/string
@@ -14,20 +7,14 @@
          "../../machine/terminal.rkt"
          "tabs.rkt")
 
-;; find-jump holds the line the next opened file jumps to, or nothing.
 (define find-jump (box #f))
 
 ;; globs-skipped are the folders the finder never searches, as rg options.
 (define globs-skipped
   "-g \"!.git\" -g \"!compiled\" -g \"!target\" -g \"!node_modules\" -g \"!aiu-compiled\"")
 
-;; preview-path is where the preview script is written while fzf runs.
 (define preview-path "/tmp/aiu-find-preview.sh")
 
-;; preview-script answers the text of the preview program. A page (.aiu) is drawn by
-;; the notation binary at the width of the preview, the way the editor draws it; any
-;; other file shows the lines around the picked line with their numbers and a mark on
-;; the picked one, or its head when the row has no line.
 (define preview-script
   (string-join
    (list "f=\"$1\""
@@ -48,9 +35,6 @@
          "")
    "\n"))
 
-;; finder-script answers the shell text of one search: it goes to the folder, lists
-;; the candidates with rg and hands them to fzf with the preview. The folder is the
-;; first argument and the file name the second.
 (define (finder-script scope kind)
   (define file? (string=? scope "file"))
   (define target (if file? "\"$2\"" "."))
@@ -68,8 +52,6 @@
                  " | fzf --prompt \"" scope " " kind "> \" --delimiter : --preview \"sh "
                  preview-path " {1} {2}\" --preview-window \"up,60%,wrap\""))
 
-;; run-picker gives the terminal to fzf and answers what was picked, or an empty
-;; text. The screen and the settings of the terminal are put back after it.
 (define (run-picker dir name script)
   (call-with-output-file preview-path #:exists (quote truncate)
     (lambda (p) (write-string preview-script p)))
@@ -92,23 +74,18 @@
   (flush-output)
   text)
 
-;; parse-pick answers the complete path and the line of a pick: a row of rg is the
-;; path, the line and the text; a file name is the path alone.
 (define (parse-pick dir text)
   (define m (regexp-match #rx"^(.*?):([0-9]+):" text))
   (define rel (if m (cadr m) text))
   (values (path->complete-path rel dir)
           (and m (string->number (caddr m)))))
 
-;; line-start-offset answers the byte offset of the start of a line of a text, the
-;; first line being 1.
 (define (line-start-offset text n)
   (let loop ([ls (string-split text "\n" #:trim? #f)] [k 1] [at 0])
     (if (or (null? ls) (>= k n))
         at
         (loop (cdr ls) (add1 k) (+ at (bytes-length (string->bytes/utf-8 (car ls))) 1)))))
 
-;; scope-dir answers the folder a scope searches for the file of a session.
 (define (scope-dir scope file root)
   (cond
     [(string=? scope "file") (or (path-only (string->path file)) (current-directory))]
@@ -117,12 +94,9 @@
 
 (require "../../notation/location.rkt")
 
-;; notation-bin answers the notation binary: the one found from the root, else the place it would be built.
 (define (notation-bin root)
   (or (notation-bin-from root) (path->string (apply build-path root notation-tail))))
 
-;; find-run runs one search and opens the pick as a tab. A pick ends the round of
-;; the live session, which then opens the file and jumps to the line.
 (define (find-run session scope kind)
   (define file (path->string (path->complete-path (session-file session))))
   (define root (tabs-root file))
@@ -146,17 +120,13 @@
            (cons #f "")]
           [else (cons #t "that file is not there")])])]))
 
-;; make-find answers the command of one scope and one kind.
 (define (make-find scope kind)
   (lambda (session words) (find-run session scope kind)))
 
-;; command-find-mode enters the find layer.
 (define (command-find-mode session words)
   (set-layer! session "find")
   (cons #t "layer: find"))
 
-;; The commands are added to the command table when this module is loaded, so the
-;; keys find them and the gate sees the same table the editor does.
 (hash-set! commands "find-mode" command-find-mode)
 (hash-set! commands "find-file-text" (make-find "file" "text"))
 (hash-set! commands "find-file-blocks" (make-find "file" "blocks"))
@@ -170,6 +140,5 @@
 (hash-set! commands "find-workspace-todos" (make-find "workspace" "todos"))
 (hash-set! commands "find-workspace-files" (make-find "workspace" "files"))
 
-;; The finder, for the live session above it.
 (provide find-jump
          line-start-offset)

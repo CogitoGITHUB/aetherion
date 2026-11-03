@@ -1,37 +1,29 @@
 #lang racket/base
-;; One job: the gate of the aiutd tool - the stage lists of each level, reading the gate output and running the stages.
 
 (require racket/system racket/string racket/list racket/file racket/path "update-table.rkt" "update-screen.rkt" "update-evidence.rkt" "update-drive.rkt")
 
 (provide gate-run parse-stages parse-times stage-label stage-args level-1-stages level-2-stages)
 
-;; parse-times reads the TIME lines of the gate and answers a list of (stage seconds).
 (define (parse-times text)
   (for/list ([l (in-list (string-split text "\n"))]
              #:when (regexp-match? #px"^TIME \\S+ [0-9]+$" (string-trim l)))
     (define p (string-split (string-trim l)))
     (list (cadr p) (/ (round (/ (string->number (caddr p)) 100.0)) 10.0))))
 
-;; level-1-stages are the quick gate stages, about 20 s together.
-;; level-stages-text answers the gate stages of a level and the levels below it, joined by commas, read from gate/levels.txt.
 (define (level-stages-text n)
   (define f (build-path editor-root "gate" "levels.txt"))
   (string-join (for/list ([l (in-list (file->lines f))] #:when (regexp-match? #px"^[0-9]+ " l) #:when (<= (string->number (car (string-split l))) n)) (cadr (string-split l))) ","))
 
 (define level-1-stages (level-stages-text 1))
 
-;; level-2-stages add the medium stages, about 60 s more.
 (define level-2-stages (level-stages-text 2))
 
-;; stage-args answers the arguments that pick the gate stages of a level; level 3 runs all.
 (define (stage-args level)
   (cond [(= level 1) (list "--only" level-1-stages)] [(= level 2) (list "--only" level-2-stages)] [else (list)]))
 
-;; stage-label names the stage set of a level for the report.
 (define (stage-label level)
   (cond [(= level 1) "quick stages"] [(= level 2) "quick and medium stages"] [else (format "all ~a stages" (length (string-split (level-stages-text 3) ",")))]))
 
-;; parse-stages reads the gate output and answers one list per stage: name, seconds, exit code, output lines.
 (define (parse-stages text)
   (define tail-rx #px"^(stages that checked nothing|NOTHING-TO-CHECK above|light gate:)")
   (define blocks
@@ -57,7 +49,6 @@
               (cdr b)))
     (list (substring (car b) 4) (/ (round (/ ms 100.0)) 10.0) code body)))
 
-;; gate-run runs the gate with one nu call per stage for levels 1 and 2, a live line before and after each, and answers code and output.
 (define (gate-run nu level)
   (define stages (cond [(= level 1) (string-split level-1-stages ",")] [(= level 2) (string-split level-2-stages ",")] [else #f]))
   (cond

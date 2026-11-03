@@ -1,8 +1,6 @@
 #lang racket/base
-;; One job: the pty driver: runs the editor in a terminal, sends one key per finished frame and saves what came out.
 (require racket/system racket/string racket/list racket/file racket/path "update-table.rkt" "update-screen.rkt" "update-evidence.rkt" "update-drive-live.rkt")
 
-;; drive-editor runs the editor in a pty, sends one key per finished frame, saves a snapshot after each key and the exit code.
 (define (drive-editor dir copy chunks out out1 code-file)
   (define sh (find-executable-path "sh"))
   (define-values (sp so si se)
@@ -35,27 +33,22 @@
             (cond [(eof-object? k) #f]
                   [else (when (and tl (not base) (> (trace-lines) tl)) (set! base (frames))) (write-bytes buf acc 0 k) (loop)])]
            [else #f])])))
-    ;; starts-now counts the times the editor entered its screen so far; every session enters once.
   (define (starts-now)
     (length (regexp-match* (byte-regexp (regexp-quote (bytes-append (bytes 27) #"[?1049h"))) (get-output-bytes acc))))
 
-  ;; ends-now counts the times the editor left its screen so far.
   (define (ends-now)
     (length (regexp-match* (byte-regexp (regexp-quote (bytes-append (bytes 27) #"[?1049l"))) (get-output-bytes acc))))
 
-  ;; key-line answers the trace line that the key sent at line count tl wrote, or false.
   (define (key-line tl)
     (with-handlers ([void (lambda (e) #f)])
       (let ([ls (string-split (file->string (trace-file)) "\n")])
         (and (> (length ls) tl) (list-ref ls tl)))))
 
-  ;; frames-after-start counts the frames drawn since the last screen enter.
   (define (frames-after-start)
     (define all (get-output-bytes acc))
     (define ps (regexp-match-positions* (byte-regexp (regexp-quote (bytes-append (bytes 27) #"[?1049h"))) all))
     (if (null? ps) 0 (length (regexp-match* marker (subbytes all (cdr (last ps)))))))
 
-  ;; wait-session answers true when the key did not end its session, when the next session has drawn its first frame, when the editor ended and no session followed within 2 s, or when a tab round in the same terminal went quiet.
   (define (wait-session s0 e0 tl)
     (define line (key-line tl))
     (cond

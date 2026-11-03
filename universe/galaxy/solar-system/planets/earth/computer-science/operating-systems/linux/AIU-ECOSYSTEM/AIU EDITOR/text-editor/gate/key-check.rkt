@@ -1,20 +1,4 @@
 #lang racket/base
-;; One job: the key check — every key in the keymaps is a key the hot
-;; path can name, and every name it produces is one the keymaps know.
-;; Registered in plan/package-tree.org; lands with TODO item 6.
-;;
-;; The two sides must agree: the decoding is Rust and the keymaps are
-;; Racket, and a key that one side names and the other does not is a
-;; key that never runs. The check asks the hot path how each key is
-;; spelled and then what those bytes are, and the name that comes back
-;; must be the name that went in.
-;;
-;; A key may be a SEQUENCE of keys, so the check walks each key of the
-;; sequence and puts the bytes of all of them together.
-;;
-;; The check runs from the gate directory, so the package is reached by a
-;; relative path: a module path that holds a space cannot be opened by
-;; an absolute one on this Racket.
 
 (require racket/list
          racket/string
@@ -22,9 +6,6 @@
          "../editor/routes/keymaps.rkt"
          "../editor/routes/routes.rkt")
 
-;; bytes-of answers the bytes of one key, the way a terminal sends them:
-;; the hot path is asked for the bytes of each key of the sequence, and
-;; the bytes are put together.
 (define (bytes-of key)
   (define parts
     (for/list ([name (in-list (sequence-of key))])
@@ -33,9 +14,6 @@
       #f
       (string-join parts "")))
 
-;; check-key answers what is wrong with one key, or nothing when the key
-;; is in order. The two sides must agree on the name, and the name must
-;; be one the keymap holds.
 (define (check-key layer key)
   (define hex (bytes-of key))
   (cond
@@ -53,11 +31,6 @@
         (format "the key ~a of the layer ~a is not in the keymap" key layer)]
        [else #f])]))
 
-;; text-faults answers what is wrong with the write layer's text, or nothing
-;; when it is right. A key that carries text must answer that text and not
-;; its own name, and the write layer's routing must hand that text on. This
-;; is the check that catches a space typed into the file as the word
-;; "space", and a return typed as the word "return".
 (define (text-faults)
   (define wanted '(("space" . " ") ("return" . "\n") ("a" . "a") ("tab" . #f)))
   (filter values
@@ -75,10 +48,6 @@
                   (format "the write layer routes ~a to ~s, and the text is ~s" key meaning text)]
                  [else #f])]))))
 
-;; prefix-faults answers what is wrong with the rule that decides when a key
-;; waits for the next one, or nothing when it is right. The comparison is
-;; between key NAMES: "b" is one key, "backspace" is another, and reading them
-;; as text makes typing a "b" wait for a key that never comes.
 (define (prefix-faults)
   (define cases
     (list (list "write" (list "tab") #t)
@@ -97,8 +66,6 @@
                 (format "the prefix of ~a in the layer ~a answers ~a, and it must answer ~a"
                         names layer got wanted)))))
 
-;; main checks the keys and the write layer's text, and answers what is wrong,
-;; one line per fault. It exits non-zero when a fault is found.
 (define (main)
   (define keys
     (for*/list ([layer (in-list editor-layers)]
@@ -120,6 +87,5 @@
         (printf "KEY — ~a faults in ~a keys\n" (length faults) (length keys))
         (exit 1))))
 
-;; The check, for the dispatcher above.
 (module+ main
   (main))

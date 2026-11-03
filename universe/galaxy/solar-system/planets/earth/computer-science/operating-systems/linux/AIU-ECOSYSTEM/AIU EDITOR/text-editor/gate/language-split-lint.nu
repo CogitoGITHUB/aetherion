@@ -1,25 +1,11 @@
 #!/usr/bin/env nu
-# One job: only join/ may cross Rust and Racket.
-# Registered in plan/package-tree.org.
-#
-# It checks every .rs and every .rkt file in the package for a reference to the
-# other language. A reference outside join/ is a failure; join/ is where the
-# crossing is allowed to live. It starts checking for real as soon as Rust
-# files exist — no edit to the dispatcher is needed.
-#
-# Style note: no bare parenthesis inside an interpolation string and no "not";
-# this phone's Nu parses both badly, so membership is tested positively.
 
 use ./env.nu *
 
-# in_join says whether a path lies under join/, the one area where a Rust file
-# may name Racket and the reverse.
 def in_join [p] {
     ($p | path relative-to $project_root) =~ "join/"
 }
 
-# rust_crossings returns each Rust file that names a .rkt file outside join/,
-# one record per offender.
 def rust_crossings [rs] {
     $rs | each {|p|
         let text = open --raw $p
@@ -29,8 +15,6 @@ def rust_crossings [rs] {
     } | where {|e| $e != null }
 }
 
-# racket_crossings returns each Racket file that names a .rs file, one record
-# per offender.
 def racket_crossings [rkt] {
     $rkt | each {|p|
         let text = open --raw $p
@@ -40,8 +24,6 @@ def racket_crossings [rkt] {
     } | where {|e| $e != null }
 }
 
-# main checks every .rs and .rkt file for a reference to the other language
-# outside join/ and exits non-zero when any such crossing exists.
 def main [] {
     let rs = (glob $"($package_dir)/**/*.rs") | lines
     let rkt = (glob $"($package_dir)/**/*.rkt") | lines

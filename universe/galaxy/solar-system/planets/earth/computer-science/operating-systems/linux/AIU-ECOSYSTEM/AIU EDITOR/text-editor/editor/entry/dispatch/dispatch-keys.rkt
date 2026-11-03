@@ -1,5 +1,4 @@
 #lang racket/base
-;; One job: the routes and keys verbs of the argv dispatch, each printing what the layers and the screen answer.
 
 (require racket/list
          racket/path
@@ -22,12 +21,6 @@
 
 (provide routes-walk keys-verb)
 
-;; routes-walk runs the routing walk and prints one line per key: which
-;; layer saw the key and what it meant there. The keys are the ones given
-;; on the command line, or every key the editor binds when none are
-;; given, plus the reserved prefix, so the walk always shows the whole
-;; shape. The program-claims are the keys the focused program wants; they
-;; are given as the words before the layer.
 (define (routes-walk args)
   (define layer (if (null? args) "visual" (car args)))
   (define claims (if (null? args) '() (cdr args)))
@@ -42,11 +35,6 @@
   (for-each (lambda (answer) (print-line (route-line answer)))
             (route-walk keys claims layer)))
 
-;; keys-verb answers what the bytes of a key are and what they mean.
-;; The bytes are given as hex, because a key may be any byte at all: the
-;; walk answers the name of each key, the layer that saw it, and the
-;; command it runs there. The layer may be named after the bytes, and it
-;; is the visual layer without one.
 (define (keys-verb args)
   (define layer (if (null? args) "visual" (car args)))
   (define hexes (if (null? args) '() (cdr args)))

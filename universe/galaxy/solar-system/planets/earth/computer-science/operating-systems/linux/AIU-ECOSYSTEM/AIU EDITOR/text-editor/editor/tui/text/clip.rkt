@@ -1,10 +1,4 @@
 #lang racket/base
-;; clip.rkt: copy, cut and paste with a ring of copies. Copy takes the text of every selection (several
-;; selections make several pieces); with no selection it takes the block under the point of a page, or the line.
-;; Paste gives one piece to each cursor when the counts match, the one piece to every cursor when there is one,
-;; and all pieces joined by newlines otherwise; a cursor that selects something has it replaced. A copy also goes
-;; to the terminal clipboard with the OSC 52 escape. Loaded on first use through the stubs at the end of bar.rkt.
-;; Nothing here runs while typing.
 
 (require "../../commands/commands.rkt"
          "../../notation/document.rkt"
@@ -15,40 +9,30 @@
          (only-in "../bar/bar.rkt" clip-table)
          "clip-notes.rkt")
 
-;; cp-ring keeps the copies, newest first; each copy is a list of pieces of text.
 (define cp-ring (list))
 
-;; cp-first answers the first n items of a list.
 (define (cp-first n l) (if (or (<= n 0) (null? l)) (list) (cons (car l) (cp-first (sub1 n) (cdr l)))))
 
-;; cp-bytes answers the text of the session as bytes; every offset is a byte offset.
 (define (cp-bytes session) (string->bytes/utf-8 (session-text session)))
 
-;; cp-slice answers the text between two byte offsets.
 (define (cp-slice bs lo hi)
   (bytes->string/utf-8 (subbytes bs (min lo (bytes-length bs)) (min hi (bytes-length bs))) #\?))
 
-;; cp-blen answers the length of a text in bytes.
 (define (cp-blen s) (bytes-length (string->bytes/utf-8 s)))
 
-;; cp-items answers every cursor as a vector of its head, its anchor and whether it is the main one, from the
-;; first place to the last.
 (define (cp-items session)
   (let* ([mine? (equal? (unbox multi-file) (session-file session))]
          [main (vector (the-point session) (and mine? (unbox main-anchor)) #t)]
          [more (if mine? (map (lambda (c) (vector (car c) (cdr c) #f)) (unbox extra-cursors)) (list))])
     (sort (cons main more) < #:key (lambda (c) (vector-ref c 0)))))
 
-;; cp-range answers the range a cursor selects as (low . high); the two are equal when it selects nothing.
 (define (cp-range c)
   (let ([h (vector-ref c 0)] [a (vector-ref c 1)])
     (if (and a (not (= a h))) (cons (min a h) (max a h)) (cons h h))))
 
-;; cp-selected answers the ranges that hold something, from the first place to the last.
 (define (cp-selected session)
   (filter (lambda (r) (< (car r) (cdr r))) (map cp-range (cp-items session))))
 
-;; cp-line-bounds answers the start and the end of the line an offset is on.
 (define (cp-line-bounds bs i)
   (let* ([n (bytes-length bs)]
          [p (min i n)]
@@ -56,7 +40,6 @@
          [le (let loop ([j p]) (if (or (>= j n) (= (bytes-ref bs j) 10)) j (loop (add1 j))))])
     (cons ls le)))
 
-;; cp-fallback answers the text copied when nothing is selected: the block under the point of a page, or the line.
 (define (cp-fallback session bs)
   (let* ([got (page-of (session-file session) (session-journal session))]
          [b (and (page? got) (blockview-inside (blockview-drawn (page-blocks got)) (the-point session)))])
@@ -65,17 +48,14 @@
         (let ([lb (cp-line-bounds bs (the-point session))])
           (cp-slice bs (car lb) (cdr lb))))))
 
-;; cp-pieces answers the pieces a copy takes.
 (define (cp-pieces session)
   (let* ([bs (cp-bytes session)] [rs (cp-selected session)])
     (if (null? rs)
         (list (cp-fallback session bs))
         (map (lambda (r) (cp-slice bs (car r) (cdr r))) rs))))
 
-;; cp-keep! puts a copy at the front of the ring.
 (define (cp-keep! pieces) (set! cp-ring (cp-first 50 (cons pieces cp-ring))))
 
-;; cp-osc52! sends a copy to the terminal clipboard; a terminal that does not know the escape ignores it.
 (define (cp-osc52! pieces)
   (let ([bs (string->bytes/utf-8 (string-join pieces "\n"))])
     (when (< (bytes-length bs) 60000)
@@ -84,7 +64,6 @@
 
 
 
-;; cp-copy copies the selections, or the block or line at the point.
 (define (cp-copy session)
   (let ([pieces (cp-pieces session)])
     (cond [(andmap (lambda (p) (string=? p "")) pieces)
@@ -96,8 +75,6 @@
            (clip-note-copied (length pieces))
            (cons #t "copied")])))
 
-;; cp-replace! replaces the range of every cursor by a text, from the last cursor to the first so no offset moves
-;; under one still to be done, and puts every cursor after its text, with no selection left.
 (define (cp-replace! session its texts)
   (let ([ranged (for/list ([c (in-list its)] [t (in-list texts)])
                   (let ([r (cp-range c)])
@@ -123,7 +100,6 @@
                  (if (vector-ref x 2) head main)
                  (if (vector-ref x 2) others (cons head others))))]))))
 
-;; cp-cut copies the selections and takes them out; it needs a selection.
 (define (cp-cut session)
   (let ([rs (cp-selected session)])
     (cond
@@ -140,7 +116,6 @@
          (clip-note-cut (length pieces))
          (cons #t "cut"))])))
 
-;; cp-paste puts the newest copy at every cursor, replacing what a cursor selects.
 (define (cp-paste session)
   (cond
     [(null? cp-ring)
@@ -158,11 +133,9 @@
        (clip-note-pasted k)
        (cons #t "pasted"))]))
 
-;; cp-reg! adds one command to the table of this module.
 (define (cp-reg! name f)
   (hash-set! clip-table name (lambda (session words) (f session))))
 
-;; The commands, added when this module is loaded.
 (cp-reg! "copy" cp-copy)
 (cp-reg! "cut" cp-cut)
 (cp-reg! "paste" cp-paste)

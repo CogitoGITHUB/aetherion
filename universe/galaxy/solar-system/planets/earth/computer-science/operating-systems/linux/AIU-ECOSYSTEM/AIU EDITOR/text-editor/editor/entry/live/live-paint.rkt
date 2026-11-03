@@ -1,5 +1,4 @@
 #lang racket/base
-;; One job: draw the live screen - the text, the bar, the menu, the cursors and the window of the view.
 
 (require racket/list
          racket/path racket/port
@@ -32,35 +31,19 @@
 
 (provide repaint page-view pending-keys viewport-top live-multi-overlay)
 
-;; page-view answers the text the view layer shows: an AIU NOTATION page
-;; rendered, with its block markers gone, so the page reads as a page; any
-;; other file is shown as its own text.
 (define (page-view session raw width)
   (define name (path->string (session-file session)))
   (if (string-suffix? name ".aiu")
       (drawn-view session raw width)
       raw))
 
-;; repaint draws the whole screen for the session as it stands: in the write
-;; layer the text from the first visible line with the cursor on the point; in
-;; every other layer the page as a reader sees it, with no cursor. The mode line
-;; sits on the last row and names the file, the layer, the line and the block
-;; the point is in — in the view too, so an arrow that moves the point says so
-;; even though the page itself stays put. The window moves only when the point
-;; would leave it.
-;; paint-lock lets one paint run at a time, because the keys and the scan thread
-;; both paint.
 (define paint-lock (make-semaphore 1))
 
-;; pending-keys holds the names of the keys typed so far while a sequence waits
-;; for its next key, and nothing otherwise.
 (define pending-keys (box (list)))
 
-;; repaint draws the screen under the paint lock.
 (define (repaint session viewport)
   (call-with-semaphore paint-lock (lambda () (repaint-now session viewport))))
 
-;; repaint-now draws the whole screen for the session as it stands.
 (define (repaint-now session viewport)
   (define-values (full-width full-height) (terminal-size))
   (define plan
@@ -90,7 +73,6 @@
     (if (or writing? (multi-raw? session)) (viewport-top viewport row (max 1 (- height 1)))
         (add1 (the-view-top session))))
   (define top (if overlay (caddr overlay) plain-top))
-  ;; text-shown is the screen text. With a menu open it is a blank screen with the menu floating in the middle, so the page is hidden behind it.
   (define text-shown
     (if menu (car (menu-screen menu top height)) text))
   (define where
@@ -110,10 +92,6 @@
           #:offset (bar-plan-top plan) #:left (bar-plan-left plan) #:full full-width #:overlay (string-append (bar-plan-overlay plan) (live-multi-overlay session raw top height (bar-plan-top plan) (bar-plan-left plan) width (and (not menu) (not overlay) (or writing? (not (string-suffix? name ".aiu")) (multi-raw? session)) #t)) (notify-overlay width height (+ 1 (bar-plan-top plan))))))
   (flush-output))
 
-;; viewport-top answers the first line shown at the top of the screen: the
-;; window is left alone while the point is inside it, and it moves just enough
-;; when the point leaves it. The answer is stored too, so the next key sees the
-;; window this key left, and a moving point never drags the page under itself.
 (define (viewport-top viewport row visible)
   (define shown (unbox viewport))
   (define next
@@ -124,8 +102,6 @@
   (set-box! viewport next)
   next)
 
-;; live-multi-overlay answers the escape text that draws the extra cursors and the selections over the raw text,
-;; or nothing when the screen does not show the raw text or no cursor or selection is in use.
 (define (live-multi-overlay session raw top height offset left width shown?)
   (if (and shown? (multi-live? session))
       ((unbox multi-text-hook) raw top (max 1 (- height 1)) offset left width (the-layer session) (the-point session))

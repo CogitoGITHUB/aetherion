@@ -1,16 +1,9 @@
 #lang racket/base
-;; One job: the git verbs of the argv dispatch: git, git-diff and git-history, each asking the shared layer and printing the facts.
 
 (require racket/list racket/path racket/string "../../narration/print-console.rkt" "../../join/hot-path.rkt" "../../join/protocol.rkt")
 
 (provide git-verb git-diff-verb git-history-verb)
 
-;; git-verb asks what Git says about the file, and prints the facts.
-;;
-;; The shared layer is asked over the seam, and it only reads: no
-;; repository, index, branch or worktree is changed, and the editor's
-;; buffer is never saved to find out. A file that is not inside a
-;; repository is refused by name, and the refusal is printed.
 (define (git-verb args)
   (define file (if (null? args) "" (car args)))
   (define path (path->complete-path (if (string=? file "") "untitled" file)))
@@ -20,13 +13,6 @@
     (print-line (format "~a: ~a" (symbol->string key)
                               (hash-ref data key)))))
 
-;; git-diff-verb asks what Git says differs in the file, and prints the
-;; hunks: the place of each hunk on both sides, and the lines that
-;; changed with the layer's own marks.
-;;
-;; The comparison is named in the answer, so the working tree against the
-;; index and the index against HEAD are never shown as one thing. The
-;; buffer is never saved to find out, and nothing is changed.
 (define (git-diff-verb args)
   (define file (if (null? args) "" (car args)))
   (define asked (if (or (null? args) (null? (cdr args))) "unstaged" (cadr args)))
@@ -51,12 +37,6 @@
         (print-line (format "the hunks: ~a" (hash-ref data 'git-diff-hunks "0")))
         (for-each print-line (string-split text "\n" #:trim? #f)))))
 
-;; git-history-verb asks what Git says happened in the repository, and
-;; prints the commits: the short id, the summary, the author and the
-;; date, and the files each commit touched.
-;;
-;; The layer reads the commits and gives them back; nothing here decides
-;; what a commit means, and nothing is changed.
 (define (git-history-verb args)
   (define file (if (null? args) "" (car args)))
   (define path (path->complete-path (if (string=? file "") "untitled" file)))

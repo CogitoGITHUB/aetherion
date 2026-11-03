@@ -1,29 +1,10 @@
-// One job: the Git facts the hot path answers with — the shared layer
-// asked, and the facts given back.
-//
-// The facts are the shared layer's own model, and they cross the seam as
-// the seam's shape asks: names and values, all strings. The editor's
-// status line and its gutter need facts, not a document, and the
-// multiplexer shows the same facts in its panel.
-//
-// The layer only reads. Nothing here can change a repository, an index,
-// a branch or a worktree, and the editor's buffer is never saved to find
-// out what Git says.
 
 use std::path::{Path, PathBuf};
 
 use git_inspection::command::Comparison;
 use git_inspection::Git;
 
-/// facts answers the Git facts of a file: the repository it is in, the
-/// branch, the distance from the upstream, the counts, the file's own
-/// state in the index and in the working tree, and how fresh it all is.
-///
-/// A path that is not inside a repository is refused by name, and the
-/// facts say so instead of pretending the tree is clean.
 pub fn facts(file: &Path) -> Vec<(String, String)> {
-    // The path is made whole first: the status names its files as the
-    // repository names them, and a path with a ".." in it is not that.
     let file = std::fs::canonicalize(file).unwrap_or_else(|_| file.to_path_buf());
     let file = file.as_path();
     let directory = match file.parent() {
@@ -55,8 +36,6 @@ pub fn facts(file: &Path) -> Vec<(String, String)> {
     out.push(("git-untracked".to_string(), status.counts.untracked.to_string()));
     out.push(("git-conflicts".to_string(), status.counts.conflicted.to_string()));
     out.push(("git-freshness".to_string(), status.freshness.name().to_string()));
-    // The file's own state: what the index holds of it, and what the
-    // working tree holds of it. The two are apart.
     let wanted = relative_to(git.root(), file);
     match status
         .files
@@ -77,18 +56,7 @@ pub fn facts(file: &Path) -> Vec<(String, String)> {
     out
 }
 
-/// diff answers the diff of one file: which comparison it is, how many
-/// hunks it holds, and the hunks themselves as text.
-///
-/// The comparison is named, so the working tree against the index and the
-/// index against HEAD are never shown as one thing. The marks are the
-/// layer's marks, so the editor and the multiplexer say the same thing
-/// about the same line.
 pub fn diff(file: &Path, asked: &str) -> Vec<(String, String)> {
-    // The comparison is named, and a name that is not one of the three
-    // is refused by name: the working tree against the index, the index
-    // against HEAD and the working tree against HEAD are three different
-    // things and are never shown as one.
     let comparison = match asked {
         "" | "unstaged" => Comparison::WorkingVsIndex,
         "staged" => Comparison::IndexVsHead,
@@ -154,12 +122,6 @@ pub fn diff(file: &Path, asked: &str) -> Vec<(String, String)> {
     ]
 }
 
-/// history answers the commits of the repository the file is in, newest
-/// first: the short id, the summary, the author and the date, and the
-/// files the commit touched.
-///
-/// The layer reads the commits and gives them back; nothing here decides
-/// what a commit means.
 pub fn history(file: &Path) -> Vec<(String, String)> {
     let file = std::fs::canonicalize(file).unwrap_or_else(|_| file.to_path_buf());
     let file = file.as_path();
@@ -199,8 +161,6 @@ pub fn history(file: &Path) -> Vec<(String, String)> {
     ]
 }
 
-/// relative_to answers a path as the repository names it: the paths of
-/// the status are relative to the root of the repository.
 fn relative_to(root: &Path, file: &Path) -> String {
     let root = std::fs::canonicalize(root)
         .unwrap_or_else(|_| root.to_path_buf())

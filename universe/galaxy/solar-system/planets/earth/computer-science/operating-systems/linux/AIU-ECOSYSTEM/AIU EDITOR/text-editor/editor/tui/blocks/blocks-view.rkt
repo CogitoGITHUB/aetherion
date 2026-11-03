@@ -1,12 +1,9 @@
 #lang racket/base
-;; One job: draw the block view overlays (lit block, floating block, edit box) over the live screen.
 
 (require racket/list racket/string "../../commands/commands.rkt" "../../machine/terminal.rkt" "../../notation/document.rkt" "../../notation/host.rkt" "../float/pins.rkt" "blocks-kind.rkt" "blockview.rkt" "blocks-text.rkt")
 
 (provide block-overlay)
 
-;; blockview-view-overlay answers the drawing with the block at the point lit, the
-;; point and the first line to show, or nothing when no block can be lit.
 (define (blockview-view-overlay-base session raw width height got)
   (define lines (string-split (drawn-view session raw width) "\n" #:trim? #f))
   (define ranges (blockview-ranges got lines))
@@ -20,7 +17,6 @@
              (the-point session)
              (blockview-place (add1 (car range)) (add1 (cdr range)) (max 1 (- height 1))))))
 
-;; blockview-view-overlay answers the floating drawing with every shown pin copied onto its screen edge when its block has scrolled out of the window.
 (define (blockview-view-overlay session raw width height got)
   (define lines (string-split (drawn-view session raw width) "\n" #:trim? #f))
   (define ranges (blockview-ranges got lines))
@@ -60,7 +56,6 @@
      (list (string-join (vector->list v) "\n") (cadr r) top)]
     [else r]))
 
-;; blockview-view-overlay answers the base drawing, and after a scroll key it copies the lit block onto the bottom edge of the window when the block is below it, or the top edge when it is above it.
 (define (blockview-view-overlay-float session raw width height got)
   (define r (blockview-view-overlay-base session raw width height got))
   (define rng (unbox lit-range))
@@ -87,12 +82,6 @@
      (list (string-join (vector->list v) "\n") (cadr r) top)]
     [else r]))
 
-;; blockview-edit-overlay answers the drawing with the block being edited shown as raw
-;; text, with its start and end lines, and every other block drawn. The raw lines
-;; sit behind the left edge of the box that holds the block, and a line wider than
-;; the screen is cut at a space with the edge drawn on every part, so the boxes
-;; around stay in place. It answers the point and the first line to show, or
-;; nothing when the block can no longer be found.
 (define (blockview-edit-overlay session raw width height got)
   (define start (unbox edit-start))
   (define b
@@ -154,7 +143,6 @@
            (+ head-bytes pre-bytes at-bytes)
            (blockview-follow row row (max 1 (- height 1))))]))
 
-;; blockview-focus-pad puts the edited block in the middle of the window: blank lines are added above it when it sits near the page top, and the cursor offset moves by the bytes added. A block taller than the window is left alone.
 (define (blockview-focus-pad range height res)
   (define visible (max 1 (- height 1)))
   (define from (+ (car range) 1))
@@ -167,7 +155,6 @@
      (list (string-append (make-string pad #\newline) (car res))
            (+ (cadr res) pad)
            (max 1 (- from want)))]))
-;; blockview-focus-top answers the first line to show for an edited block in focus mode: the block sits in the middle of the window like in the visual view, and a block taller than the window keeps the old first line so the cursor stays on screen.
 (define (blockview-focus-top r range height)
   (define visible (max 1 (- height 1)))
   (define from (+ (car range) 1))
@@ -175,8 +162,6 @@
   (if (>= (- to from) visible)
       (caddr r)
       (max 1 (- (quotient (+ from to) 2) (quotient visible 2)))))
-;; block-overlay answers what the live screen draws for a page: the text, the
-;; point and the first line, or nothing when the plain screen should be used.
 (define (block-overlay session raw width height)
   (define r0 (block-overlay-base session raw width height))
   (define pg (and (not r0) (getenv "AIU_FOCUS_COLOURS") (string=? (the-layer session) "write") (page-of (session-file session) (session-journal session))))
@@ -199,7 +184,6 @@
        [else r])]
     [else r]))
 
-;; block-overlay-base answers the live drawing of a page without the focus blanking of the lines around an edited block.
 (define (block-overlay-base session raw width height)
   (define got (page-of (session-file session) (session-journal session)))
   (define writing? (string=? (the-layer session) "write"))

@@ -1,24 +1,11 @@
 #!/usr/bin/env nu
-# One job: the security gate — the predicates are called, the writers are audited.
-# Registered in plan/package-tree.org.
-#
-# The editor's security area does not exist yet, so this stage has nothing to
-# check: it prints NOTHING-TO-CHECK and never PASS. A stage that checked
-# nothing must not look like a rule that held.
-#
-# When the area lands, this stage finds the predicates the area defines and
-# names, for each one, the files that call it. A predicate nobody calls is a
-# rule that protects nothing, so the stage says so and fails.
 
 use ./env.nu *
 
-# security_dir is the area that holds the rules, when it exists.
 def security_dir [] {
     $package_src | path join "security"
 }
 
-# predicate_names returns the names the rule files define, read from the
-# (define (name ...)) lines of every rule file.
 def predicate_names [files] {
     $files | each {|p|
         open --raw $p | lines | where {|l| ($l | str trim) | str starts-with "(define (" } | each {|l|
@@ -29,12 +16,10 @@ def predicate_names [files] {
     } | flatten
 }
 
-# callers_of returns the files outside the security area that call a name.
 def callers_of [name files] {
     $files | where {|p| (open --raw $p | str contains "(name ") }
 }
 
-# main reports, for every predicate of the security area, who calls it.
 def main [] {
     let dir = security_dir
 

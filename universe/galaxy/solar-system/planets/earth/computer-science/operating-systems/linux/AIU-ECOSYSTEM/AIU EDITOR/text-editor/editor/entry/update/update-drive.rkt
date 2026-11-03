@@ -1,8 +1,6 @@
 #lang racket/base
-;; One job: the door of the drive modules: running every test of a level, and the one provide that gives every part to the rest of the editor.
 (require racket/system racket/string racket/list racket/file racket/path "update-table.rkt" "update-screen.rkt" "update-evidence.rkt" "update-drive-live.rkt" "update-drive-pty.rkt" "update-drive-why.rkt" "update-drive-run.rkt" "update-drive-record.rkt" "update-drive-docs.rkt" "update-module.rkt")
 
-;; run-all-tests runs every test file of the level or below and answers the list of results.
 (define (run-all-tests level)
   (define dir (and editor-root (build-path editor-root "gate" "tests")))
   (define files
@@ -12,11 +10,9 @@
               string<? #:key path->string)
         (list)))
   (define only (getenv "AIU_ONLY"))
-  ;; wanted keeps the tests at or below the level, and only those matching AIU_ONLY when it is set.
   (define wanted (filter (lambda (p) (and (<= (test-level p) level) (or (not only) (regexp-match? (regexp-quote only) (path->string p))))) files))
   (run-tests-parallel wanted))
 
-;; arg-value answers the word after a flag in the arguments, or #f when the flag is missing.
 (define (arg-value args flag)
   (define m (member flag args))
   (and m (pair? (cdr m)) (cadr m)))

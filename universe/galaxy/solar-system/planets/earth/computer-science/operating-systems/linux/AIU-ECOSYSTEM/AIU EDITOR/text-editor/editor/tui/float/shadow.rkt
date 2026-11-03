@@ -1,42 +1,24 @@
 #lang racket/base
-;; shadow.rkt: undo commits. When a file is saved (space s, tab s, escape in the write layer) it is
-;; committed on the branch aiu-undo of the git repository that holds it. The branch is never checked
-;; out: the commit is built with git plumbing and a private temporary index file, so the real index,
-;; HEAD and work tree are never touched. Each file has a current node, kept in the git folder; a save
-;; commits on top of that node, so a save after an undo makes a branch, and a tip that would be lost
-;; is kept under refs/aiu-undo-old. The editor starts ONE niced sh process for each commit.
-;; Needs only racket/base and runs in threads.
 
-;; shadow-note! tells the worker that a file was saved; shadow-commit-now! commits at once and waits;
-;; shadow-key answers the name part of the current-node file of a path.
 (provide shadow-note! shadow-commit-now! shadow-key)
 
-;; quiet-ms is how long the files must stay unchanged before a commit is made.
 (define quiet-ms 500)
 
-;; lock guards the state below.
 (define lock (make-semaphore 1))
 
-;; pending holds the complete paths waiting for a commit, used as a set.
 (define pending (make-hash))
 
-;; last-note holds the time of the latest note in milliseconds.
 (define last-note 0)
 
-;; worker is the running worker thread, or false.
 (define worker #f)
 
-;; sh-exe is the shell program, or false.
 (define sh-exe (find-executable-path "sh"))
 
-;; nice-exe is the program that lowers the priority of a command, or false.
 (define nice-exe (find-executable-path "nice"))
 
-;; shadow-key turns a complete path into a name that is safe in a file name.
 (define (shadow-key full)
   (regexp-replace* #rx"[^A-Za-z0-9]" full "_"))
 
-;; commit-script is the shell program of one undo commit; it gets the saved file and its key as arguments.
 (define commit-script #<<END
 fail() { echo "$1" >&2; }
 g() { git -c commit.gpgsign=false -c user.name=aiu-undo -c user.email=aiu-undo@localhost "$@"; }
@@ -85,14 +67,12 @@ rm -f "$idx"
 END
   )
 
-;; log-error! writes a problem to a file, because nothing may be printed over the page.
 (define (log-error! text)
   (with-handlers ([void void])
     (call-with-output-file (build-path (find-system-path (quote home-dir)) ".aiu-undo-error.txt")
       (lambda (out) (write-string text out) (newline out))
       #:exists (quote truncate))))
 
-;; slurp reads a port to the end and answers the text.
 (define (slurp in)
   (let ([out (open-output-string)])
     (let loop ()
@@ -100,7 +80,6 @@ END
         (unless (eof-object? s) (write-string s out) (loop))))
     (get-output-string out)))
 
-;; commit-file! runs the commit script for one file and logs whatever it says on stderr.
 (define (commit-file! full)
   (when (and sh-exe (file-exists? full) (regexp-match? #rx"^/" full))
     (let-values ([(sp out in err)
@@ -114,16 +93,13 @@ END
         (subprocess-wait sp)
         (when (regexp-match? #rx"[^ \r\n]" e) (log-error! e))))))
 
-;; commit-lock lets only one undo commit run at a time, so two commits never create the branch together.
 (define commit-lock (make-semaphore 1))
 
-;; commit-safe! commits one file and turns any error into a line in the error file.
 (define (commit-safe! full)
   (with-handlers ([(lambda (e) #t)
                    (lambda (e) (log-error! (if (exn? e) (exn-message e) "unknown error")))])
     (call-with-semaphore commit-lock (lambda () (commit-file! full)))))
 
-;; run-worker waits until the notes stop for quiet-ms, commits them, and ends when idle.
 (define (run-worker)
   (let loop ()
     (sleep 0.25)
@@ -140,7 +116,6 @@ END
             [(null? due) (void)]
             [else (for-each commit-safe! due) (loop)]))))
 
-;; shadow-note! is called after a save, with the saved file; AIU_NO_UNDO switches it off.
 (define (shadow-note! file)
   (when (and sh-exe (not (getenv "AIU_NO_UNDO")) (or (string? file) (path? file)))
     (let ([full (path->string (path->complete-path file))])
@@ -151,7 +126,6 @@ END
          (set! last-note (current-inexact-milliseconds))
          (unless worker (set! worker (thread run-worker))))))))
 
-;; shadow-commit-now! commits a saved file at once and waits for the commit; the undo mode uses it.
 (define (shadow-commit-now! file)
   (when (and sh-exe (not (getenv "AIU_NO_UNDO")) (or (string? file) (path? file)))
     (commit-safe! (path->string (path->complete-path file)))))

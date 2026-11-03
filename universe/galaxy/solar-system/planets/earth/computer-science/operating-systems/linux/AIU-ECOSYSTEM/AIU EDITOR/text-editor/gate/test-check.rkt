@@ -2,10 +2,8 @@
 ;; One job: the test-beside-module check, every Racket file under editor has a .test beside it or a skip note in plan.md.
 (require racket/file racket/list racket/string racket/path racket/runtime-path)
 
-;; here is the text-editor folder, the parent of gate.
 (define-runtime-path here "..")
 
-;; root answers the complete path of the text-editor folder.
 (define root (simplify-path (path->complete-path here)))
 
 ;; skipped-files answers the editor paths that plan.md names on a line that says skipped.
@@ -16,7 +14,6 @@
                  (regexp-match* #px"editor/[^ ]+[.]rkt" l)))
       (list)))
 
-;; rkt-files answers every Racket file under editor, as a path from the text-editor folder, without compiled folders.
 (define (rkt-files)
   (for/list ([p (in-list (find-files (lambda (q) (regexp-match? #rx"[.]rkt$" (path->string q))) (build-path root "editor")))]
              #:unless (regexp-match? #rx"/compiled/" (path->string p)))

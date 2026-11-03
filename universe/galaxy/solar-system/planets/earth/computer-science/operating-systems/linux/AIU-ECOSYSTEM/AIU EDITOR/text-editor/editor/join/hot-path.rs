@@ -1,8 +1,3 @@
-// One job: the Rust side of the seam — one request file in, one answer file
-// out. It holds no session of its own: the meaning side starts it, sends
-// one request, reads one answer, and it goes. The state lives in the file
-// and in the journal; the buffer is rebuilt from them every time, so a
-// crash costs nothing (rule 01).
 
 #[path = "../buffer/buffer.rs"]
 mod buffer;
@@ -21,14 +16,6 @@ use std::env;
 use std::fs;
 use std::io::{BufRead, BufReader, Write};
 
-/// main reads the request, does the work, and writes the answer. The
-/// request file and the answer file are the two arguments: the wire is a
-/// pair of files, because this build hands a child nothing for a pipe.
-///
-/// `serve IN OUT` is the same wire kept open: the two files are named
-/// pipes, the child reads a request line and writes an answer line for as
-/// long as the editor is running. A live session starts it once, so a key
-/// costs no program start.
 fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() >= 4 && args[1] == "serve" {
@@ -70,10 +57,6 @@ fn main() {
     write_answer(&answer_path, ok, &data);
 }
 
-/// serve keeps the wire open: one request line in, one answer line out, for
-/// as long as the editor runs. The two paths are named pipes, so the child
-/// reads a file stream — the only kind this build hands a child — and the
-/// editor starts no program for a key.
 fn serve(request_path: &str, answer_path: &str) {
     let input = match fs::File::open(request_path) {
         Ok(file) => file,
@@ -119,8 +102,6 @@ fn serve(request_path: &str, answer_path: &str) {
     }
 }
 
-/// answer_for does the work the request asks for, and answers whether it
-/// worked and what it learned.
 fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
     let file = wire_json::arg(request, "file");
     let journal_path = wire_json::arg(request, "journal");
@@ -128,21 +109,14 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
 
     match op {
         rust_exports::OP_GIT_HISTORY => {
-            // The commits of the repository the file is in.
             let path = std::path::Path::new(&file);
             (true, git_facts::history(path))
         }        rust_exports::OP_GIT_DIFF => {
-            // The diff of one file, in the layer's own marks. The
-            // comparison is named by the caller: unstaged, staged or
-            // all.
             let path = std::path::Path::new(&file);
             let asked = wire_json::arg(request, "comparison");
             (true, git_facts::diff(path, &asked))
         }
         rust_exports::OP_NOTATION => {
-            // The page of an AIU NOTATION file, parsed by the notation crate
-            // in this process. The text as it stands is parsed, so unsaved
-            // edits in the journal are what the page shows.
             let text = current_text(&file, &journal_path);
             let document = notation::rust_exports::parse_document(&file, &text);
             (
@@ -151,18 +125,11 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
             )
         }
         rust_exports::OP_NOTATION_RENDER => {
-            // The page as a person reads it: the notation's plain render, so
-            // the markers are gone and the content stays. The same text the
-            // parse sees, unsaved edits included.
             let text = current_text(&file, &journal_path);
             let rendered = notation::plain::render_plain(&text);
             (true, vec![("text".to_string(), rendered)])
         }
         rust_exports::OP_NOTATION_VIEW => {
-            // The page as the notation's own view draws it: the same boxes and
-            // colours the `notation view` command prints, so the editor's view
-            // and tv's preview are one page. The text as it stands is what is
-            // drawn, unsaved edits included.
             let text = current_text(&file, &journal_path);
             let width = wire_json::arg(request, "width")
                 .trim()
@@ -185,8 +152,6 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
             }
         }
         rust_exports::OP_GIT => {
-            // The Git facts of the file's own directory. The shared layer
-            // is asked, and it only reads.
             let path = std::path::Path::new(&file);
             (true, git_facts::facts(path))
         }
@@ -200,9 +165,6 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
                 ("bytes".to_string(), buffer::byte_len(&state).to_string()),
                 ("pending".to_string(), pending.to_string()),
             ];
-            // The Git facts of the file are part of the file's state: the
-            // shared layer is asked, and it only reads. A file that is in
-            // no repository is refused by name, and the facts say so.
             for (name, value) in git_facts::facts(std::path::Path::new(&file)) {
                 facts.push((name, value));
             }
@@ -423,9 +385,6 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
     }
 }
 
-/// current_text answers the text as it stands: the saved file, with the
-/// journal's unsaved edits put back on top. A file that is not there yet
-/// reads as empty.
 fn current_text(file: &str, journal_path: &str) -> String {
     let saved = match fs::read_to_string(file) {
         Ok(text) => text,
@@ -435,8 +394,6 @@ fn current_text(file: &str, journal_path: &str) -> String {
     journal::replay(&saved, &records)
 }
 
-/// write_answer writes the answer as one line of JSON, and says on stderr
-/// when the answer file cannot be written.
 fn write_answer(answer_path: &str, ok: bool, data: &[(String, String)]) {
     let text = wire_json::write_response(ok, data);
     if let Err(why) = fs::write(answer_path, format!("{}\n", text)) {
@@ -445,9 +402,6 @@ fn write_answer(answer_path: &str, ok: bool, data: &[(String, String)]) {
     }
 }
 
-/// notation_view runs the notation's own view over one text: the same
-/// drawing the `notation view` command prints, so the editor's view and
-/// tv's preview are one page. A build that is not there is named.
 fn notation_view(text: &str, width: usize) -> Result<String, String> {
     let named = std::env::var("AIU_NOTATION_BIN").unwrap_or_default();
     let bin = if named.is_empty() {

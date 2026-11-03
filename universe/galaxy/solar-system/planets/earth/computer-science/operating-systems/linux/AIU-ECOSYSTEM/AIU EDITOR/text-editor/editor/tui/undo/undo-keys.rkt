@@ -1,8 +1,5 @@
 #lang racket/base
-;; undo-keys.rkt: One job: the keys of the undo layer, as data.
 
-;; undo-keys are the keys of the undo layer (Dvorak): h and t go back and forward, n and s switch branch,
-;; a w e jump, m u d mark, unmark and diff, l goes to the live file, k keeps the version, escape rolls back.
 (define undo-keys
   (list (list "h" "undo-back") (list "t" "undo-forward")
         (list "n" "undo-up") (list "s" "undo-down")

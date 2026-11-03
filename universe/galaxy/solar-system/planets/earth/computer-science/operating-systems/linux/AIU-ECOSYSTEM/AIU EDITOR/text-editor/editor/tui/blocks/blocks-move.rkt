@@ -1,9 +1,6 @@
 #lang racket/base
-;; One job: moving the lit block up or down among its siblings, and the move keys.
 (require racket/list racket/string "../../commands/commands.rkt" "../../machine/terminal.rkt" "../../notation/document.rkt" "../../notation/host.rkt" "blockview.rkt")
 
-;; blockview-siblings answers the blocks that sit beside a block under the same parent,
-;; in page order. Answers and titles are left out, so they never move.
 (define (blockview-siblings blocks b)
   (define parent (blockview-parent blocks b))
   (sort (filter (lambda (k)
@@ -13,8 +10,6 @@
                 blocks)
         < #:key block-start))
 
-;; blockview-move swaps the lit block with the sibling before (direction -1) or after
-;; (direction 1) it, by one delete-at and one insert-at. The point follows the block.
 (define (blockview-move session direction)
   (define got (and (blockview-aiu? session)
                    (page-of (session-file session) (session-journal session))))
@@ -50,15 +45,12 @@
         (move-to session (if (< direction 0) a0 (+ a0 (- b1 a1))))
         (cons #t (format "moved the ~a block ~a" (block-name cur) (if (< direction 0) "up" "down")))])]))
 
-;; blockview-command-move-up swaps the lit block with the one before it.
 (define (blockview-command-move-up session words)
   (blockview-move session -1))
 
-;; blockview-command-move-down swaps the lit block with the one after it.
 (define (blockview-command-move-down session words)
   (blockview-move session 1))
 
-;; blockview-command-move-mode puts the editor in the move layer.
 (define (blockview-command-move-mode session words)
   (set-layer! session "move")
   (cons #t "layer: move"))

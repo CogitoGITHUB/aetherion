@@ -1,19 +1,14 @@
 #lang racket/base
-;; One job: the git facts of the bar. Git is asked in a thread every twenty seconds, never in a paint.
 (require racket/list racket/string
          "../float/box.rkt"
          "../tabs/tabs.rkt")
 
-;; git-info holds the last git answer.
 (define git-info (box #f))
 
-;; git-stamp holds the second git was last asked.
 (define git-stamp (box 0))
 
-;; git-busy holds whether a thread is asking git now.
 (define git-busy (box #f))
 
-;; git-out answers what one git command prints in a folder, or nothing.
 (define (git-out dir args)
   (define git (find-executable-path "git"))
   (if git
@@ -26,9 +21,6 @@
           (if (string? s) s "")))
       ""))
 
-;; git-facts answers the git facts as a list: the branch, the changed files, the
-;; commits ahead, the commits behind and the last commit. Untracked files are not
-;; counted. A folder with no repository answers a text.
 (define (git-facts dir)
   (define st (string-split (git-out dir (list "status" "--porcelain" "-b" "-uno")) "\n"))
   (define head (if (null? st) "" (car st)))
@@ -50,7 +42,6 @@
            (stat-n #px"([0-9]+) insertion")
            (stat-n #px"([0-9]+) deletion"))]))
 
-;; git-text answers the git facts as one row of text.
 (define (git-text g)
   (cond
     [(not g) "reading git"]
@@ -68,8 +59,6 @@
                     (and (not (string=? (list-ref g 4) "")) (list-ref g 4))))
       "  ")]))
 
-;; git-letters answers the git facts as the letters of a side cell: the branch and
-;; the changed count.
 (define (git-letters g)
   (cond
     [(not g) "git"]
@@ -77,8 +66,6 @@
     [else (string-append (list-ref g 0)
                          (if (zero? (list-ref g 1)) "" (format "~~~a" (list-ref g 1))))]))
 
-;; git-refresh-maybe asks git in a thread when the last answer is twenty seconds
-;; old, and calls again when the answer changed, so the bar is painted anew.
 (define (git-refresh-maybe dir again)
   (when (and (unbox paint-ready) (not (unbox git-busy)) (>= (- (current-seconds) (unbox git-stamp)) 20))
     (set-box! git-busy #t)
@@ -95,7 +82,6 @@
        (set-box! git-busy #f)
        (when changed? (again))))))
 
-;; git-stale! makes the git row ask again at the next paint.
 (define (git-stale!) (set-box! git-stamp 1))
 
 (provide git-info git-stamp git-busy git-out git-facts git-text git-letters git-refresh-maybe git-stale!)

@@ -468,3 +468,9 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - read plugin-check failure: editor runs with the plugin absent
 - read proof-four in plugin-check and the kit-check cd failure
 - remove plugin-check gate (plugin system not built); find stale src/entry paths behind kit-check
+- find real cli.rkt path and every code place still building src/entry for kit-check
+- find source of editor/src/entry/cli.rkt string; check package_src exists for lints
+- fix env.nu package_src to editor (src folder is gone): one-way, security-gate, comment-lint were scanning nothing
+- remove comment-lint gate; strip whole-line comments from editor and gate (.rkt .nu .rs)
+- gates: require the command-registering modules in route-check and explorer-check
+- remove comment-lint gate; strip whole-line comments; commit gate require fix

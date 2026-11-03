@@ -1,8 +1,6 @@
 #lang racket/base
-;; One job: the module test, a test file that calls one expression in one module and compares the printed answer, and the recorder that writes such a file from a real run.
 (require racket/string racket/list racket/file "update-table.rkt" "update-screen.rkt")
 
-;; module-answer runs one expression in one module in a fresh racket; it answers the printed result or false, and all the output.
 (define (module-answer modpath expr)
   (define-values (code out)
     (capture editor-root (or (find-executable-path "racket") "racket")
@@ -10,10 +8,8 @@
   (define m (regexp-match #px"(?s:RESULT:(.*))$" out))
   (values (and (= code 0) m (string-trim (cadr m))) out))
 
-;; indent-cut answers a line cut to 100 characters and indented for the report.
 (define (indent-cut l) (string-append "    " (if (> (string-length l) 100) (substring l 0 100) l)))
 
-;; run-module-test runs one module test file and answers (name seconds ok? detail-lines), like the key tests do.
 (define (run-module-test path)
   (define lines (test-lines path))
   (define (one k) (let ([v (line-values lines k)]) (if (pair? v) (car v) "")))
@@ -33,7 +29,6 @@
                       [else (cons "    the call did not answer:" (map indent-cut (last-n (string-split out "\n") 8)))])
                 (if time-ok? (list) (list (format "    took ~a s, the limit is ~a s" seconds limit))))))
 
-;; do-record-module runs the expression twice, writes gate/tests/mod-NAME.test from the answer and keeps it only when the new test passes; answers 0 or 1.
 (define (do-record-module name modpath expr)
   (define tpath (build-path editor-root (regexp-replace #rx"[.]rkt$" modpath ".test")))
   (define (red . ls) (emit (list "AIUTD RECORD-MODULE" "RED") ls) 1)

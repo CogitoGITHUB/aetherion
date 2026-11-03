@@ -1,6 +1,4 @@
 #lang racket/base
-;; gutterview.rkt: puts one column at the left of every line of a drawn page,
-;; with the git mark of the block that line belongs to, or a space.
 (require racket/string
          "../blocks/blockview.rkt"
          "gutter.rkt"
@@ -8,9 +6,6 @@
          "../../notation/host.rkt"
          "../../notation/document.rkt")
 
-;; mark-of answers the mark of the lines first to last: the mark of the one
-;; hunk that touches them, equals when several do or when a removal sits inside
-;; the block, or false when none. A removal between blocks is not counted here.
 (define (mark-of hunks lo hi)
   (define hit
     (filter (lambda (h)
@@ -22,7 +17,6 @@
         [(and (null? (cdr hit)) (not (string=? (caddr (car hit)) "-"))) (caddr (car hit))]
         [else "="]))
 
-;; leaf? answers whether no other drawn block sits inside this block.
 (define (leaf? blocks b)
   (not (for/or ([c (in-list blocks)])
          (and (not (eq? c b))
@@ -30,10 +24,6 @@
               (> (block-start c) (block-start b))
               (<= (block-end c) (block-end b))))))
 
-;; gutter-apply answers the page text with the strip column at the left of
-;; every line. The marks go on every drawn line of a leaf block that a hunk
-;; touches. A removal between two blocks puts a minus on the first drawn line
-;; of the block after the gap, or of the last block when the gap is at the end.
 (define (gutter-apply session text)
   (define lines (string-split text "\n" #:trim? #f))
   (define hunks (gutter-hunks (session-file session)))

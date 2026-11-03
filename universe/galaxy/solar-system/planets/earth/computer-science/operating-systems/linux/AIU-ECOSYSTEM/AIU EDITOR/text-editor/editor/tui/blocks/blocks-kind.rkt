@@ -1,8 +1,6 @@
 #lang racket/base
-;; One job: the kind-* keys that pick which kind of block the block keys move between.
 (require "../../commands/commands.rkt")
 
-;; blockview-kind-setter answers a command that picks one kind and says which.
 (define (blockview-kind-setter want)
   (lambda (session words)
     (set-box! kind-filter want)

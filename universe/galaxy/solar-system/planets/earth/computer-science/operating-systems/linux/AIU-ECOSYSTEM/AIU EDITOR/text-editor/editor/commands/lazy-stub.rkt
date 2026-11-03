@@ -1,11 +1,6 @@
 #lang racket/base
-;; One job: the lazy command layers. A layer is a module that loads on the first
-;; press of one of its keys; until then its commands are small stubs in the table.
 (require "commands.rkt")
 
-;; lazy-layer! puts a stub in the command table for every name, and answers the
-;; table the real module fills when it loads. vref is the caller variable
-;; reference, so the module file is looked up beside the caller.
 (define (lazy-layer! vref file label missing names)
   (define table (make-hash))
   (define src (variable-reference->module-source vref))

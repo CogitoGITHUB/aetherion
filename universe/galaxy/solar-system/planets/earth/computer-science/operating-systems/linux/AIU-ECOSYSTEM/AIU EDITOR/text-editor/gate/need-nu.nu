@@ -1,24 +1,12 @@
 #!/usr/bin/env nu
-# One job: pinned Nu or exit 3; never fetches.
-# Registered in plan/package-tree.org.
-#
-# The gate needs one Nushell version, so this script states which one and
-# refuses anything else. It never downloads, never installs and never writes
-# outside /tmp. Exit 3 means "the toolchain is not here", which is a different
-# answer from a red gate, and a caller must not confuse the two.
 
 use ./env.nu *
 
-# The pinned version, as its two numbers: 0.116 is the Nu this phone runs.
 const REQUIRED_MAJOR = 0
-# The minor number of the pinned version; the patch number does not matter.
 const REQUIRED_MINOR = 116
 
-# main prints the running Nu version and exits 3 unless it is the pinned one,
-# recording the mismatch rather than installing anything.
 def main [] {
     let version = (nu --version | str trim)
-    # "0.116.0" -> [0 116 0]
     let parts = ($version | split row ".")
     let major = ($parts | get -o 0 | into int)
     let minor = ($parts | get -o 1 | into int)

@@ -1,30 +1,12 @@
-// One job: the key decoding — the raw bytes of a terminal become the
-// name of a key, the way the keymaps name it. The names are the ones the
-// meaning side uses: a plain key is its character, a key with a modifier
-// is prefixed with C-, M- or S-, and a named key is a word.
-//
-// The decoding is the hot path's job (rule 09): it is the side that sees
-// the bytes. The keymaps stay in Racket, and this file never holds a
-// key of its own.
-//
-// The kitty keyboard protocol is adopted, not invented: a key that
-// carries modifiers comes as one number, and the flags the terminal is
-// asked for are in kitty.rs.
 
 #[path = "kitty.rs"]
 mod kitty;
 
-/// Key is one key: the name the keymaps use, and the number of bytes it
-/// took from the stream. The bytes matter because a terminal sends more
-/// than one key at a time, and the reader must know where the next one
-/// starts.
 pub struct Key {
     pub name: String,
     pub length: usize,
 }
 
-/// named-keys are the keys that have a word of their own. The word is
-/// the name of the key, and the name is what the keymaps use.
 const NAMED_KEYS: [(&str, &str); 20] = [
     ("\x1b[A", "up"),
     ("\x1b[B", "down"),
@@ -48,9 +30,6 @@ const NAMED_KEYS: [(&str, &str); 20] = [
     ("\x1b[19~", "f8"),
 ];
 
-/// decode answers the first key in the bytes, or nothing when the bytes
-/// hold no whole key yet. A lone escape is the escape key, and the
-/// reader asks again when the next byte decides it.
 pub fn decode(bytes: &[u8]) -> Option<Key> {
     if bytes.is_empty() {
         return None;
@@ -65,8 +44,6 @@ pub fn decode(bytes: &[u8]) -> Option<Key> {
     }
     let first = bytes[0];
     if first == 0x1b {
-        // An escape on its own is the escape key; a second byte makes it
-        // the alt modifier, which the kitty flags report on their own.
         if bytes.len() == 1 {
             return Some(Key {
                 name: "escape".to_string(),
@@ -114,8 +91,6 @@ pub fn decode(bytes: &[u8]) -> Option<Key> {
     })
 }
 
-/// plain_name answers the name of one plain byte: the character itself,
-/// or a word for the few bytes that have one.
 fn plain_name(byte: u8) -> String {
     match byte {
         b' ' => "space".to_string(),
@@ -123,10 +98,6 @@ fn plain_name(byte: u8) -> String {
     }
 }
 
-/// decode_csi answers the key of a kitty control sequence: the sequence
-/// carries the key's code and its modifiers as two numbers, and the
-/// name is the character with the modifiers' prefix. The sequence is
-/// the protocol's own: ESC [ code ; modifiers u.
 pub fn decode_csi(body: &str) -> Option<Key> {
     let mut parts = body.split(';');
     let code: u32 = parts.next()?.parse().ok()?;
@@ -142,11 +113,6 @@ pub fn decode_csi(body: &str) -> Option<Key> {
     })
 }
 
-/// encode answers the bytes of a key name: the bytes a terminal sends
-/// for that key. The answer is the way round of the decoding, and it
-/// lives here with it, so the two can never drift apart: the check asks
-/// the hot path to name a key and then to spell it, and the names must
-/// come back the same.
 pub fn encode(name: &str) -> Option<Vec<u8>> {
     for (sequence, key) in NAMED_KEYS.iter() {
         if *key == name {
@@ -191,5 +157,4 @@ pub fn encode(name: &str) -> Option<Vec<u8>> {
     None
 }
 
-/// The decoding, for the hot path above it.
 pub use self::Key as DecodedKey;

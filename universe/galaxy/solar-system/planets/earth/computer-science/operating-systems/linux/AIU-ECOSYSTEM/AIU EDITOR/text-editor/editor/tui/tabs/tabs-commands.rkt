@@ -1,18 +1,14 @@
 #lang racket/base
-;; One job: the tab commands - change tab, open, close, move and hide the tab bar. They are added to the command table when this module is loaded.
 
 (require racket/list racket/string racket/path "../../commands/commands.rkt" "tabs.rkt" "tabs-folders.rkt")
 
 (provide)
 
-;; tabs-go! makes a file the active tab and ends the round of the live session, so
-;; the session opens that file next.
 (define (tabs-go! target)
   (set-box! tab-current target)
   (set-box! tab-switch target)
   (cons #f ""))
 
-;; tabs-step goes to the tab before (-1) or after (1) the active one, and round.
 (define (tabs-step delta)
   (define files (unbox tab-files))
   (define i (index-of files (unbox tab-current)))
@@ -20,14 +16,10 @@
       (cons #t "one tab")
       (tabs-go! (list-ref files (modulo (+ i delta) (length files))))))
 
-;; command-tab-prev goes to the tab before.
 (define (command-tab-prev session words) (tabs-step -1))
 
-;; command-tab-next goes to the tab after.
 (define (command-tab-next session words) (tabs-step 1))
 
-;; command-tab-open opens the next page of the folder of the active file that is
-;; not open yet, as a new tab.
 (define (command-tab-open session words)
   (define file (path->string (path->complete-path (session-file session))))
   (define dir (tabs-parent file))
@@ -46,8 +38,6 @@
      (set-box! tab-files (append (unbox tab-files) (list (car fresh))))
      (tabs-go! (car fresh))]))
 
-;; command-tab-close closes the active tab and goes to the one beside it. The
-;; last tab stays.
 (define (command-tab-close session words)
   (define files (unbox tab-files))
   (define cur (unbox tab-current))
@@ -59,59 +49,45 @@
      (set-box! tab-files rest)
      (tabs-go! (list-ref rest (min i (sub1 (length rest)))))]))
 
-;; tabs-put-place! stands the tab bar at a place and keeps the place for the hide key.
 (define (tabs-put-place! p)
   (set-box! tab-place p)
   (set-box! tab-saved p))
 
-;; command-tab-place-next moves the tab bar between the top and the bottom. A
-;; hidden bar comes back first.
 (define (command-tab-place-next session words)
   (define now (if (string=? (unbox tab-place) "hidden") (unbox tab-saved) (unbox tab-place)))
   (tabs-put-place! (if (string=? now "top") "bottom" "top"))
   (cons #t (format "tabs: ~a" (unbox tab-place))))
 
-;; command-tab-top stands the tab bar at the top.
 (define (command-tab-top session words) (tabs-put-place! "top") (cons #t "tabs: top"))
 
-;; command-tab-bottom stands the tab bar at the bottom.
 (define (command-tab-bottom session words) (tabs-put-place! "bottom") (cons #t "tabs: bottom"))
 
-;; command-tab-join switches between a shared edge and two boxes when the tab bar
-;; and the bar stand at the same edge.
 (define (command-tab-join session words)
   (set-box! tab-joined (not (unbox tab-joined)))
   (cons #t (if (unbox tab-joined) "tabs: joined" "tabs: apart")))
 
-;; command-tab-hide hides the tab bar, or shows it again where it stood.
 (define (command-tab-hide session words)
   (cond [(string=? (unbox tab-place) "hidden") (set-box! tab-place (unbox tab-saved))]
         [else (set-box! tab-saved (unbox tab-place))
               (set-box! tab-place "hidden")])
   (cons #t (format "tabs: ~a" (unbox tab-place))))
 
-;; command-tab-less hides one level of the tab bar; the tabs always stay.
 (define (command-tab-less session words)
   (set-box! tab-count (max 1 (sub1 (unbox tab-count))))
   (cons #t (format "tab level: ~a" (unbox tab-count))))
 
-;; command-tab-more shows one more level of the tab bar.
 (define (command-tab-more session words)
   (set-box! tab-count (min 3 (add1 (unbox tab-count))))
   (cons #t (format "tab level: ~a" (unbox tab-count))))
 
-;; command-tab-mode enters the tab layer.
 (define (command-tab-mode session words)
   (set-layer! session "tab")
   (cons #t "layer: tab"))
 
-;; command-tab-level-mode enters the level adjuster of the tab bar.
 (define (command-tab-level-mode session words)
   (set-layer! session "tab-level")
   (cons #t "layer: tab-level"))
 
-;; The commands are added to the command table when this module is loaded, so the
-;; keys find them and the gate sees the same table the editor does.
 (hash-set! commands "tab-mode" command-tab-mode)
 (hash-set! commands "tab-level-mode" command-tab-level-mode)
 (hash-set! commands "tab-prev" command-tab-prev)

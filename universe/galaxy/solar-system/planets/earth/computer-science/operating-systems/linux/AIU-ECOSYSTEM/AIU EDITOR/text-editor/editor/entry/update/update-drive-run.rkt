@@ -1,12 +1,9 @@
 #lang racket/base
-;; One job: running one test file on a copy of its page and answering the verdict.
 (require racket/system racket/string racket/list racket/file racket/path "update-table.rkt" "update-screen.rkt" "update-evidence.rkt" "update-drive-live.rkt" "update-drive-pty.rkt" "update-drive-why.rkt" "update-module.rkt")
 
-;; run-test runs one test file: a module test when the file names a module, a key test otherwise.
 (define (run-test path)
   (if (pair? (line-values (test-lines path) "module")) (run-module-test path) (run-key-test path)))
 
-;; run-key-test runs one test file on a copy of its page in a temporary folder; answers (name seconds ok? detail-lines).
 (define (run-key-test path)
   (define lines (test-lines path))
   (define name (let ([v (line-values lines "test")]) (if (pair? v) (car v) "unnamed")))
@@ -76,7 +73,6 @@
                   (string-append "    " (if (car v) "ok   " "FAIL ") (cadr v))) (if ok? (list) (append (seen-lines shown verdicts file-text) evidence))
                 why)))
 
-;; remove-tree deletes a folder with rm, which survives a git process still writing into it, and never raises.
 (define (remove-tree p . rest)
   (with-handlers ([void void])
     (parameterize ([current-output-port (open-output-string)] [current-error-port (open-output-string)])
@@ -87,14 +83,12 @@
 
 (require (only-in racket/future processor-count) (only-in racket/system system*) (only-in racket/string string-trim))
 
-;; cores answers how many cores this process may really use: nproc knows the limit, processor-count only sees the machine.
 (define (cores)
   (with-handlers ([void (lambda (x) (processor-count))])
     (let ([o (open-output-string)])
       (parameterize ([current-output-port o]) (system* (find-executable-path "nproc")))
       (or (string->number (string-trim (get-output-string o))) (processor-count)))))
 
-;; run-tests-parallel runs key tests one after another in one thread and module tests in a pool of workers beside it, and answers the results in the order of the paths.
 (define (run-tests-parallel paths)
   (define slots (make-vector (length paths) #f))
   (define idx (for/list ([p (in-list paths)] [i (in-naturals)]) (cons i p)))

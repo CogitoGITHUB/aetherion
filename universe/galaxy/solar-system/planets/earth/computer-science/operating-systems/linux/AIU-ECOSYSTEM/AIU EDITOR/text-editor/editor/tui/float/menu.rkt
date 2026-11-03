@@ -1,23 +1,15 @@
 #lang racket/base
-;; One job: the key menu of the live screen. It reads the key tables and draws the
-;; popup of the keys that can follow, the modes box, and the float that centres it.
 (require racket/list racket/string
          "../../commands/commands.rkt"
          "../../routes/keymaps.rkt")
 
-;; kname answers the name of a key as shown: the space key is SPC.
 (define (kname s) (if (string=? s "space") "SPC" s))
 
-;; kseq answers a key or a sequence of keys as shown.
 (define (kseq s) (string-join (map kname (sequence-of s)) " "))
 
-;; cell-pad answers a string padded with spaces on the right to n characters.
 (define (cell-pad s n)
   (string-append s (make-string (max 0 (- n (string-length s))) #\space)))
 
-;; grid answers the lines of a titled table: a top edge with the title, a header
-;; row, a line under it, one line for each row and a bottom edge, with a line
-;; between every column.
 (define (grid title headers rows)
   (define n (length headers))
   (define base
@@ -41,8 +33,6 @@
           (map row rows)
           (list (line "╰" "┴" "╯"))))
 
-;; enter-key answers the key of the visual layer that enters a layer: the key whose
-;; command name ends with the layer name and -mode. A dash when there is none.
 (define (enter-key l)
   (define hit
     (for/first ([b (in-list (keys-of "visual"))]
@@ -50,10 +40,6 @@
       b))
   (if hit (kseq (car hit)) "-"))
 
-;; menu-text answers the popup: table 1 holds the keys of the active layer that can
-;; follow the pending keys, two key and command pairs to a row; table 2 holds every
-;; mode with the key that enters it and its trigger. All of it is read from the key
-;; tables, nothing is written by hand.
 (define (menu-text layer pending width)
   (define following
     (for/list ([b (in-list (keys-of layer))]
@@ -89,7 +75,6 @@
            (menu-box (format "~a [~a] · ~a" (mode-label layer) (unbox kind-filter) after) (append pick-boxes group-boxes) width))
    "\n"))
 
-;; menu-groups is the table of the menu: each command with the group box it sits in and the words it shows.
 (define menu-groups
   (list (list "save" "file" "save") (list "quit" "file" "quit") (list "send" "file" "send")
         (list "check" "file" "check")
@@ -138,27 +123,21 @@
         (list "undo-cancel" "undo" "roll back")
         (list "leave-write" "leave" "save and leave") (list "mode" "leave" "other layer")))
 
-;; menu-group-order is the order of the group boxes; a group not named here comes last.
 (define menu-group-order
   (list "file" "page" "blocks" "view" "move" "edit" "kind" "todo" "go" "place" "style" "level" "keys" "leave"))
 
-;; menu-group-of answers the group box of a command; a command not in the table sits in keys.
 (define (menu-group-of cmd)
   (let ([e (assoc cmd menu-groups)]) (if e (cadr e) "keys")))
 
-;; menu-label-of answers the words shown for a command; a command not in the table shows its own name.
 (define (menu-label-of cmd)
   (let ([e (assoc cmd menu-groups)]) (if e (caddr e) cmd)))
 
-;; menu-group-rank answers the place of a group box in the order.
 (define (menu-group-rank g)
   (let ([i (index-of menu-group-order g)]) (or i (length menu-group-order))))
 
-;; menu-mode-key? asks whether a command enters one of the layers of the modes box, so its key shows there and not in the keys.
 (define (menu-mode-key? cmd layers)
   (for/or ([l (in-list layers)]) (string-suffix? cmd (string-append l "-mode"))))
 
-;; menu-box draws lines inside a box of the given total width, with the title on the top edge.
 (define (menu-box title lines width)
   (define inner (- width 4))
   (define head (string-append "╭─ " title " "))
@@ -167,7 +146,6 @@
           (for/list ([l (in-list lines)]) (string-append "│ " (cell-pad l inner) " │"))
           (list (string-append "╰" (make-string (- width 2) #\─) "╯"))))
 
-;; menu-mode-rows answers the headers and the rows of the modes table: one row for each mode with its key, or two modes side by side when the screen is wide enough. The first half of the modes stands on the left.
 (define (menu-mode-rows layers width)
   (define pairs (map (lambda (l) (list l (enter-key l))) layers))
   (define name-w (apply max (cons 4 (map (lambda (p) (string-length (car p))) pairs))))
@@ -184,7 +162,6 @@
                      (if (< i (length right)) (list-ref right i) (list "" "")))))]
     [else (cons (list "mode" "key") pairs)]))
 
-;; menu-table draws a table with a ruled line between every column and a header row, as wide as the given width. The spare width goes to the mode columns.
 (define (menu-table title headers rows width)
   (define n (length headers))
   (define natural
@@ -212,14 +189,12 @@
           (map row rows)
           (list (line "╰" "┴" "╯"))))
 
-;; menu-float centers the lines of a menu in a screen of the given width by putting spaces in front of every line.
 (define (menu-float text width)
   (define ls (string-split text "\n" #:trim? #f))
   (define widest (apply max (cons 0 (map string-length ls))))
   (define pad (make-string (max 0 (quotient (- width widest) 2)) #\space))
   (string-join (map (lambda (l) (string-append pad l)) ls) "\n"))
 
-;; menu-screen answers the screen text and the point for an open menu: blank rows with the menu in the middle of the rows shown, and the point at the start of the menu so nothing scrolls.
 (define (menu-screen menu top height)
   (define ms (string-split menu "\n" #:trim? #f))
   (define visible (max 1 (- height 1)))
@@ -230,7 +205,6 @@
   (cons (string-join (append (blank lead) (blank before) (take ms n) (blank (- visible n before))) "\n")
         (+ lead before)))
 
-;; menu-cells lays cells out in rows of equal columns that fit the inner width.
 (define (menu-cells cells inner)
   (define cw (+ 2 (apply max (cons 1 (map string-length cells)))))
   (define per (max 1 (quotient (+ inner 2) cw)))
@@ -243,5 +217,4 @@
              (loop (drop cs n)))])))
 
 
-;; Every definition above is given to the live screen.
 (provide kname kseq cell-pad grid enter-key menu-text menu-groups menu-group-order menu-group-of menu-label-of menu-group-rank menu-mode-key? menu-box menu-mode-rows menu-table menu-float menu-screen menu-cells)

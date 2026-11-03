@@ -1,5 +1,4 @@
 #lang racket/base
-;; One job: the commands that read the notation page - blocks, block, check, next-block, block-end and kind.
 
 (require racket/list
          racket/path
@@ -16,15 +15,10 @@
 
 (provide command-blocks command-block command-check command-next-block command-block-end command-kind)
 
-;; command-blocks answers the blocks of the page the session edits, one line
-;; each: the name, the lines it covers and its declarations. It is the page as
-;; a person reads it, and it is read through the notation engine.
 (define (command-blocks session words)
   (define got (page-of (session-file session) (session-journal session)))
   (cons #t (if (page? got) (blocks-text got) (page-refusal-text got))))
 
-;; command-block answers the block the point sits in: the innermost one, so a
-;; point inside a section's title answers the title and not the section.
 (define (command-block session words)
   (define got (page-of (session-file session) (session-journal session)))
   (if (page? got)
@@ -36,14 +30,10 @@
                   "the point is outside every block")))
       (cons #t (page-refusal-text got))))
 
-;; command-check answers the faults of the page: where each one is, what is
-;; wrong and what to do about it. A page with no fault says so.
 (define (command-check session words)
   (define got (page-of (session-file session) (session-journal session)))
   (cons #t (if (page? got) (faults-text got) (page-refusal-text got))))
 
-;; command-next-block moves the point to the start of the next block, and says
-;; where it landed.
 (define (command-next-block session words)
   (define got (page-of (session-file session) (session-journal session)))
   (if (page? got)
@@ -54,8 +44,6 @@
           [else (cons #t "the point is past the last block")]))
       (cons #t (page-refusal-text got))))
 
-;; command-block-end moves the point to the end of the block it is in, so a
-;; person can see where the block closes.
 (define (command-block-end session words)
   (define got (page-of (session-file session) (session-journal session)))
   (if (page? got)
@@ -66,9 +54,6 @@
           [else (cons #t "the point is outside every block")]))
       (cons #t (page-refusal-text got))))
 
-;; command-kind answers what kind of file this session edits: an AIU NOTATION
-;; page by its extension, or plain text. The extension is the whole test, and
-;; it is the notation format's own.
 (define (command-kind session words)
   (define name (path->string (session-file session)))
   (cons #t

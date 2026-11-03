@@ -1,18 +1,14 @@
 #lang racket/base
-;; One job: recording a test from real keys against a no-keys baseline.
 (require racket/system racket/string racket/list racket/file racket/path "update-table.rkt" "update-screen.rkt" "update-evidence.rkt" "update-drive-run.rkt")
 
-;; rec-why keeps the failure detail lines of the last record test run.
 (define rec-why (box (list)))
 
-;; record-lines answers the printable, stable lines of a text: no clock, at most 78 characters, with letters.
 (define (record-lines s0)
   (define s (regexp-replace* #px"[│╭╮╰╯├┤┬┴┼─]+" s0 " "))
   (remove-duplicates
    (filter (lambda (l) (and (>= (string-length l) 6) (<= (string-length l) 78) (regexp-match? #px"[A-Za-z]{3}" l) (regexp-match? #px"^[[:print:]]+$" l) (not (regexp-match? #px"[0-9]:[0-9][0-9]" l))))
            (map string-trim (string-split s "\n")))))
 
-;; no-change-why answers the lines that explain a record with no change: where each key is bound, where its command is defined, whether the screens match and the key trace.
 (define (no-change-why keys ksl bsl)
   (define src (build-path editor-root "editor"))
   (define src-text (path->string src))
@@ -40,7 +36,6 @@
           (apply append (map where names))
           (trace-since (max 0 (- (trace-size) 6000)))))
 
-;; do-record runs keys in the real editor against a no-keys baseline, writes the test and feature from what changed, keeps them only when green.
 (define (do-record words)
   (define name (car words))
   (define keys (string-join (cdr words) " "))

@@ -1,34 +1,27 @@
 #lang racket/base
-;; One job: the aiutd update verb - compile the editor in one call, run the gate, run the tests and report.
 
 (require racket/system racket/string racket/list racket/file racket/path "update-table.rkt" "update-screen.rkt" "update-evidence.rkt" "update-drive.rkt" "update-gate.rkt")
 
 (provide do-update)
 
-;; compile-files are the files raco make builds in ONE call: one call per file cost 32 s each, five calls 172 s, one call 34 s.
-;; compile-files-of answers the files raco make builds at a level, read from gate/compile.txt: every line LEVEL FILE with a level at most n.
 (define (compile-files-of n)
   (for/list ([l (in-list (file->lines (build-path editor-root "gate" "compile.txt")))] #:when (regexp-match? #px"^[0-9]+ " l) #:when (<= (string->number (car (string-split l))) n))
     (cadr (string-split l))))
 
-;; compile-jobs answers the raco make worker count: AIU_COMPILE_JOBS if set, else the smaller of the cores and the free memory divided by 3000 MB, at least 1.
 (define (compile-jobs)
   (define env (getenv "AIU_COMPILE_JOBS"))
   (define m (with-handlers ([void (lambda (x) #f)]) (regexp-match #rx"MemAvailable: *([0-9]+)" (file->string "/proc/meminfo"))))
   (define mb (if m (quotient (string->number (cadr m)) 1024) 3000))
   (or env (number->string (max 1 (min (cores) (quotient mb 3000))))))
 
-;; raco-path answers the raco next to the running racket, or the one on the path.
 (define (raco-path)
   (define e (find-system-path (quote exec-file)))
   (define exe (if (absolute-path? e) e (find-executable-path e)))
   (define near (and exe (build-path (path-only exe) "raco")))
   (if (and near (file-exists? near)) near (find-executable-path "raco")))
 
-;; stamp-path is the file whose time says when the last good compile ended.
 (define stamp-path (build-path (find-system-path (quote home-dir)) ".aiu-build-stamp"))
 
-;; sources-newer? says whether any .rkt file under editor is newer than the stamp, or the stamp is missing.
 (define (sources-newer?)
   (define stamp (and (file-exists? stamp-path) (file-or-directory-modify-seconds stamp-path)))
   (or (not stamp)
@@ -36,18 +29,15 @@
         (and (regexp-match? #rx"[.]rkt$" (path->string p))
              (> (file-or-directory-modify-seconds p) stamp)))))
 
-;; touch-stamp! writes the stamp file now.
 (define (touch-stamp!)
   (call-with-output-file stamp-path #:exists (quote truncate) (lambda (o) (write-string "ok" o))))
 
-;; real-lines drops empty lines and the harmless registered twice warnings.
 (define (real-lines text)
   (filter (lambda (l)
             (and (not (string=? (string-trim l) ""))
                  (not (regexp-match? #rx"registered twice" l))))
           (string-split text "\n")))
 
-;; do-update compiles each file, then runs the gate from level 2, times all of it, and answers 0 or 1.
 (define (do-update level)
   (cond
     [(not editor-root)

@@ -1,15 +1,12 @@
 #lang racket/base
-;; One job: writing the tutorial and the AI file from the passing feature tests.
 (require racket/system racket/string racket/list racket/file racket/path "update-table.rkt" "update-screen.rkt" "update-evidence.rkt" "update-drive-run.rkt")
 
-;; parts-text answers the text of every docs/parts markdown fragment, in name order, for the AI file.
 (define (parts-text)
   (define d (build-path editor-root "docs" "parts"))
   (if (directory-exists? d)
       (string-join (for/list ([p (in-list (sort (filter (lambda (q) (regexp-match? #rx"[.]md$" (path->string q))) (directory-list d #:build? #t)) string<? #:key path->string))]) (file->string p)) "\n")
       ""))
 
-;; howto-section answers the tutorial section built from docs/parts/how-to-make-tests.md, or nothing when the file is missing.
 (define (howto-section)
   (define p (build-path editor-root "docs" "parts" "how-to-make-tests.md"))
   (if (file-exists? p)
@@ -18,7 +15,6 @@
                      "\nparagraph end\n\nsection end\n")
       ""))
 
-;; cli-section answers the generated tutorial section that lists the commands of aiutd, one line each.
 (define (cli-section)
   (string-append "section start\ntitle start\nCommands of aiutd\ntitle end\n\nparagraph start\n"
                  (string-join (list "aiutd FILE opens the file in the editor, and aiutd alone says a file is needed."
@@ -29,7 +25,6 @@
                                     "aiutd trace is a tool verb, and the key trace is written to the trace log when AIU_TRACE is set.")
                               "\n")
                  "\nparagraph end\n\nsection end\n"))
-;; do-docs runs the test of every feature file and writes aiutd-tutorial.aiu and ai-starting-point.md from the passing ones; answers 0 or 1.
 (define (do-docs)
   (define fdir (and editor-root (build-path editor-root "editor" "features")))
   (cond

@@ -1,15 +1,11 @@
 #lang racket/base
-;; One job: the evidence of a failed test run: sessions, frames, expected text, trace lines and the NEXT line.
 (require racket/system racket/string racket/list racket/file racket/path "update-table.rkt" "update-screen.rkt")
 
-;; last-evidence keeps the evidence lines of the latest test run, so the record report can show them.
 (define last-evidence (box (list)))
 
-;; count-bytes answers how many times a byte pattern occurs in a byte string.
 (define (count-bytes pat raw)
   (length (regexp-match* (byte-regexp (regexp-quote pat)) raw)))
 
-;; trace-tail answers up to n of the trace lines written after the byte offset start, as report lines.
 (define (trace-tail start n)
   (with-handlers ([void (lambda (e) (list "    trace of this run: unreadable"))])
     (let* ([bs (call-with-input-file (trace-file) (lambda (i) (file-position i start) (read-bytes 100000 i)))]
@@ -20,12 +16,10 @@
                    (string-append "    t " (if m (format "keys ~a ~ams go-on ~a" (caddr m) (cadr m) (cadddr m)) l)))
                  (last-n ls n))))))
 
-;; key-frame-has? says whether the frame saved after key i shows the text.
 (define (key-frame-has? dir i txt)
   (define raw (with-handlers ([void (lambda (e) #"")]) (file->bytes (build-path dir (format "s~a.bin" i)))))
   (regexp-match? (regexp-quote txt) (plain-screen (last-frame (bytes->string/utf-8 raw #\?)))))
 
-;; key-heads answers one line per fed key: the first three readable lines of the frame saved after that key.
 (define (key-heads dir names)
   (for/list ([n (in-list names)] [i (in-naturals 0)])
     (define raw (with-handlers ([void (lambda (e) #"")]) (file->bytes (build-path dir (format "s~a.bin" i)))))
@@ -36,7 +30,6 @@
     (format "    screen after ~a ~a: ~a" i n
             (string-join (map (lambda (l) (if (> (string-length l) 28) (substring l 0 28) l)) (first-n ls 3)) " / "))))
 
-;; evidence-lines answers the lines that tell where a run went wrong: sessions, frames, expected text, trace and one NEXT line.
 (define (evidence-lines dir out lines verdicts screen trace-start)
   (define raw (with-handlers ([void (lambda (e) #"")]) (file->bytes out)))
   (define text (bytes->string/utf-8 raw #\?))
