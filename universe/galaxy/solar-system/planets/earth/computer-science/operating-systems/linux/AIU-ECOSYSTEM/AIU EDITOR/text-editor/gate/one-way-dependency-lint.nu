@@ -2,7 +2,7 @@
 
 use ./env.nu *
 
-const AREAS = ["errors" "narration" "machine" "security" "join" "devloop" "journal" "buffer" "notation" "plugins" "commands" "checkpoint" "routes" "input" "drawing" "models" "dashboard" "send" "picker" "audit" "entry"]
+const AREAS = ["errors" "narration" "machine" "security" "join" "devloop" "journal" "buffer" "bridge" "plugins" "commands" "checkpoint" "routes" "input" "drawing" "models" "dashboard" "send" "picker" "audit" "entry"]
 
 def area_index [name] {
     let key = (if $name == "tui" { "routes" } else { $name })
