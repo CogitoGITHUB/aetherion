@@ -230,7 +230,7 @@ Run from the `text-editor` folder.
 
 Stages: one-way, security-gate, language-split,
 comment-lint, route-check, explorer-check, key-check, notation-check,
-dashboard-check, secret-check, kit-check, plugin-check, send-check, git-check.
+dashboard-check, secret-check, kit-check, send-check, git-check.
 A stage that checks nothing says NOTHING-TO-CHECK. comment-lint wants a comment
 line above every definition.
 

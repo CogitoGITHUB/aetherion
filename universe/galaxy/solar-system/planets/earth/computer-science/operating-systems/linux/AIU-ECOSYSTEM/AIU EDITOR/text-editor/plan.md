@@ -465,3 +465,6 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - delete paren-check and load-check gates; read test format and record usage to convert the 8 feature gates to .test files
 - redo gate cleanup (naming, paren-check, load-check) including ai-starting-point.md reference
 - remove naming, paren-check, load-check gates and fix ai-starting-point.md line 231
+- read plugin-check failure: editor runs with the plugin absent
+- read proof-four in plugin-check and the kit-check cd failure
+- remove plugin-check gate (plugin system not built); find stale src/entry paths behind kit-check
