@@ -422,3 +422,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - module-test batch 6: update-drive-why
 - module-test batch 7: accept gutter pm multi-draw; locks skipped (provides nothing, touches the disk)
 - module-test batch 8: accept retry, manifest, run (shell-quote only)
+- module-test batch 9: wait-door host; locks and stop-switch skipped (touch the disk)
