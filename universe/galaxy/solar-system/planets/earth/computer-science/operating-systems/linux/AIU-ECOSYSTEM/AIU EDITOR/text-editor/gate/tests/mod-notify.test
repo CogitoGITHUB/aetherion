@@ -1,6 +1,6 @@
 test mod-notify
 level 2
 module editor/tui/notify/notify.rkt
-call (notify-overlay 80 24 1)
-expect result equals ""
+call (begin (notify! "info" "hello") (notify-overlay 80 24 1))
+expect result equals "\e[1;41H\e[97m╭─ info ───────────────────────────────╮\e[0m\e[2;41H\e[97m│ hello                                │\e[0m\e[3;41H\e[97m╰──────────────────────────────────────╯\e[0m"
 expect seconds-under 20

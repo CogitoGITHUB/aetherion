@@ -158,6 +158,10 @@ pub struct Screen {
     pending: Option<String>,
     /// fresh says the state arrived: the pending request may be answered.
     fresh: bool,
+    /// pending_focus is the pane this screen just asked for, by name: the
+    /// owner's own `pane new` is where the owner types next, so the focus
+    /// goes there as soon as the state that holds it arrives.
+    pending_focus: Option<String>,
     /// watch says this screen watches the session and cannot change it
     /// (TODO item 60): the drawing says so, the keys change nothing, and the
     /// holder refuses a change from this connection by name.
@@ -203,6 +207,7 @@ impl Screen {
             editor_mcp,
             pending: None,
             fresh: false,
+            pending_focus: None,
             watch: false,
         }
     }
@@ -352,6 +357,14 @@ impl Screen {
             self.focused = 0;
         }
         self.panes = panes;
+        // A pane this screen just asked for takes the focus: `pane new` is
+        // where the owner types next, and the mode line must say so.
+        if let Some(wanted) = self.pending_focus.clone() {
+            if let Some(at) = self.panes.iter().position(|pane| pane.name == wanted) {
+                self.focused = at;
+                self.pending_focus = None;
+            }
+        }
     }
 
     /// push_text puts what a pane's program said into that pane's memory.
@@ -1480,6 +1493,9 @@ impl Screen {
 
     /// open_pane asks the holder for a pane with a program in it.
     fn open_pane(&mut self, name: String, program: String, tab: String) -> Action {
+        // The focus follows the pane the owner asked for, once the holder has
+        // it: the answer is the state, and take_state moves the focus.
+        self.pending_focus = Some(name.clone());
         Action::Request(json!({
             "op": "open",
             "name": name,
@@ -2462,6 +2478,24 @@ mod tests {
         let drawing = screen.draw();
         assert!(drawing.contains("VISUAL") == false, "no mode row: {:?}", drawing);
         assert!(drawing.contains("[main]") == false, "no tab bar: {:?}", drawing);
+    }
+
+    #[test]
+    fn a_pane_the_owner_asked_for_takes_the_focus_when_the_state_arrives() {
+        let mut screen = a_screen();
+        screen.pending_focus = Some("pane-2".to_string());
+        screen.take_state(&json!({
+            "outputs": {
+                "session": "mux--bin-sh-1",
+                "tabs": ["main"],
+                "panes": [
+                    { "name": "main", "tab": "main", "weight": 1, "lines": [], "scroll": 0 },
+                    { "name": "pane-2", "tab": "main", "weight": 1, "lines": [], "scroll": 0 }
+                ]
+            }
+        }));
+        assert_eq!(screen.focused_pane(), "pane-2", "the new pane is where the owner types");
+        assert_eq!(screen.pending_focus, None, "the ask is spent");
     }
 
     #[test]
