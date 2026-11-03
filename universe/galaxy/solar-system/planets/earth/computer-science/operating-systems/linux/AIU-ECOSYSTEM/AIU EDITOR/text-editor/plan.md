@@ -452,3 +452,16 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - compile -j auto: min(nproc, MemAvailable/3000 MB), min 1, AIU_COMPILE_JOBS overrides
 - compile files come from gate/compile.txt by level (compile-files-of)
 - check.nu runs its gate stages with par-each --keep-order
+- do-update: gate stages and tests start together in one pool at level >= 2
+- measure level 2 update with AIU_ONLY=undo: tests and gate already overlap, find the slowest remaining step
+- check where runs/failed lines appear: u2.out versus aiutd test --only undo
+- time compile alone at level 2: find what the 54 s total is made of
+- gate naming stage takes 12 s, the longest single step: read it and cut it
+- naming stage is gate/banned-words-lint.nu at 12 s: read it and make it fast
+- remove naming gate (banned-words-lint.nu): stage, level entry, script
+- naming removal: level 2 gate failed, find the failing stage and README path
+- list every gate with its One job line, to decide which to delete
+- read plugin-check failure after naming removal
+- delete paren-check and load-check gates; read test format and record usage to convert the 8 feature gates to .test files
+- redo gate cleanup (naming, paren-check, load-check) including ai-starting-point.md reference
+- remove naming, paren-check, load-check gates and fix ai-starting-point.md line 231

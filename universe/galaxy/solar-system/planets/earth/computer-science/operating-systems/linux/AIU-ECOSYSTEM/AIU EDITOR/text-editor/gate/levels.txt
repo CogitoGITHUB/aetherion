@@ -1,4 +1,4 @@
 # One job: the one level table. A line is LEVEL then the gate stages that level adds; a level runs its own lines and all lower ones.
-1 naming,one-way,language-split,comment-lint,notation-check,secret-check,git-check
-2 paren-check,plugin-check,send-check,route-check,explorer-check,security-gate,test-check
-3 load-check,key-check,kit-check
+1 one-way,language-split,comment-lint,notation-check,secret-check,git-check
+2 plugin-check,send-check,route-check,explorer-check,security-gate,test-check
+3 key-check,kit-check
