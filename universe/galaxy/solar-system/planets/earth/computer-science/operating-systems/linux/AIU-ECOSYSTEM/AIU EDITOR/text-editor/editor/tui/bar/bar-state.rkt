@@ -17,6 +17,8 @@
 (define (bar-kname s) (if (string=? s "space") "SPC" s))
 
 
+(define split-panes-on (box #f))
+
 (define title-rows (box (list)))
 
-(provide title-rows bar-place bar-saved bar-style bar-count focus-on bar-order bar-places bar-kname)
+(provide split-panes-on title-rows bar-place bar-saved bar-style bar-count focus-on bar-order bar-places bar-kname)

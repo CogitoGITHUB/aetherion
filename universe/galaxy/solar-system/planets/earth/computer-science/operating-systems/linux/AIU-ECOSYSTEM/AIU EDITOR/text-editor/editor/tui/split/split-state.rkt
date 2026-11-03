@@ -2,7 +2,7 @@
 
 (require racket/list "split-layout.rkt")
 
-(provide split-tree split-focus split-state-split! split-state-close! split-state-focus! split-state-swap! split-state-resize! split-state-flip! split-state-turn! split-state-equalise!)
+(provide split-files split-state-file-set! split-state-file-of split-tree split-focus split-state-split! split-state-close! split-state-focus! split-state-swap! split-state-resize! split-state-flip! split-state-turn! split-state-equalise!)
 
 (define split-tree (box (split-layout-single 1)))
 
@@ -10,11 +10,20 @@
 
 (define split-last-id (box 1))
 
+(define split-files (box (hash)))
+
+(define (split-state-file-set! file)
+  (set-box! split-files (hash-set (unbox split-files) (unbox split-focus) file)))
+
+(define (split-state-file-of id)
+  (hash-ref (unbox split-files) id #f))
+
 (define split-screen-size 1000)
 
 (define (split-state-split! direction)
   (define id (add1 (unbox split-last-id)))
   (set-box! split-last-id id)
+  (set-box! split-files (hash-set (unbox split-files) id (split-state-file-of (unbox split-focus))))
   (set-box! split-tree (split-layout-split (unbox split-tree) (unbox split-focus) id direction))
   (set-box! split-focus id)
   id)
@@ -24,6 +33,7 @@
   (cond
     [(not rest) #f]
     [else
+     (set-box! split-files (hash-remove (unbox split-files) (unbox split-focus)))
      (set-box! split-tree rest)
      (set-box! split-focus (car (split-layout-ids rest)))
      #t]))

@@ -553,3 +553,7 @@ S6. Keep the layout between sessions in the state dir, restored after first pain
 S4a: split-paint.rkt pure: split-pane-box (own box per pane, heavy rules for the focused pane, light rules for the others, no colours) and split-compose (rows of all panes side by side), module test.
 S4b: wire into live-paint: with more than one pane, the focused pane gets its rect width and height, the other panes render their page statically from their own file; pane-files map id to file; focus change switches the session through the tab-switch round (cursor and scroll per pane come in S5).
 S4c: space w menu rows, bar level for the pane count, re-record the screen tests.
+- S4b read: tabs-go!, paint internals, ansi width helpers, tab-switch handling
+- S4b read: bar.rkt page rules and side lines, the full paint call in live-paint, view-of
+- S4b: bar.rkt page-frame box (rules and side lines off with several panes), pane overlay in live-paint, pane-files per pane id, focus change switches the page
+- S4b: panes drawn in live-paint: bar frame off with several panes, each pane its own box, heavy rules on the focused one, other panes static views with cache, focus change reopens that pane file; tests split-overlay and pane-split

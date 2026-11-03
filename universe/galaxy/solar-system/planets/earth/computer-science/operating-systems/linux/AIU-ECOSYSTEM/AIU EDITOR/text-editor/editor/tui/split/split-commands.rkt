@@ -1,8 +1,19 @@
 #lang racket/base
 
-(require "../../commands/commands.rkt" "split-state.rkt")
+(require "../../commands/commands.rkt" "../tabs/tabs.rkt" "split-state.rkt")
 
 (provide)
+
+(define (pane-focus-answer session done message refusal)
+  (define file (split-state-file-of (unbox split-focus)))
+  (define here (path->string (path->complete-path (session-file session))))
+  (cond
+    [(not done) (cons #t refusal)]
+    [(and file (not (equal? file here)))
+     (set-box! tab-current file)
+     (set-box! tab-switch file)
+     (cons #f "")]
+    [else (cons #t message)]))
 
 (define (pane-answer done message refusal)
   (cons #t (if done message refusal)))
@@ -20,15 +31,15 @@
   (cons #t "pane split down"))
 
 (define (command-pane-close session words)
-  (pane-answer (split-state-close!) "pane closed" "the last pane stays"))
+  (pane-focus-answer session (split-state-close!) "pane closed" "the last pane stays"))
 
-(define (command-pane-focus-left session words) (pane-answer (split-state-focus! "left") "pane left" "no pane on the left"))
+(define (command-pane-focus-left session words) (pane-focus-answer session (split-state-focus! "left") "pane left" "no pane on the left"))
 
-(define (command-pane-focus-right session words) (pane-answer (split-state-focus! "right") "pane right" "no pane on the right"))
+(define (command-pane-focus-right session words) (pane-focus-answer session (split-state-focus! "right") "pane right" "no pane on the right"))
 
-(define (command-pane-focus-up session words) (pane-answer (split-state-focus! "up") "pane up" "no pane above"))
+(define (command-pane-focus-up session words) (pane-focus-answer session (split-state-focus! "up") "pane up" "no pane above"))
 
-(define (command-pane-focus-down session words) (pane-answer (split-state-focus! "down") "pane down" "no pane below"))
+(define (command-pane-focus-down session words) (pane-focus-answer session (split-state-focus! "down") "pane down" "no pane below"))
 
 (define (command-pane-swap-left session words) (pane-answer (split-state-swap! "left") "pane moved left" "no pane on the left"))
 

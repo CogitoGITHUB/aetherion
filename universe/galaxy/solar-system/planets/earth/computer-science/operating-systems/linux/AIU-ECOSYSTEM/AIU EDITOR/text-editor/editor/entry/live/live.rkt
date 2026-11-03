@@ -21,7 +21,7 @@
          "../../tui/blocks/blocks-move.rkt"
          "../../tui/float/menu.rkt"
          "../../tui/bar/bar.rkt"
-         "../../tui/tabs/tabs.rkt" "../../tui/tabs/tabs-commands.rkt" "../../tui/split/split-commands.rkt"
+         "../../tui/tabs/tabs.rkt" "../../tui/tabs/tabs-commands.rkt" "../../tui/split/split-commands.rkt" "../../tui/split/split-state.rkt"
          "../../tui/tabs/finder.rkt"
          "../../tui/notify/notify.rkt"
          (only-in "../../tui/float/box.rkt" paint-ready)
@@ -40,6 +40,7 @@
       (wire-start)
       (let next-round ([file file] [journal journal])
         (define session (make-session file journal))
+        (split-state-file-set! (path->string (path->complete-path file)))
     (trace-session! file)
         (define viewport (box 1))
         (set-layer! session "visual")

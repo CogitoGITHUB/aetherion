@@ -29,7 +29,7 @@
          "../../tui/gutter/gutterview.rkt"
          (only-in "../../machine/directories.rkt" journal-path-for))
 
-(require (only-in "../../tui/bar/bar-state.rkt" title-rows) (only-in "../../tui/float/pins.rkt" pins-now first-start cur-start))
+(require (only-in "../../tui/bar/bar-state.rkt" title-rows split-panes-on) "../../tui/split/split-state.rkt" "../../tui/split/split-layout.rkt" "../../tui/split/split-overlay.rkt" "../../tui/split/split-view.rkt" (only-in "../../tui/float/pins.rkt" pins-now first-start cur-start))
 
 (provide repaint page-view pending-keys viewport-top live-multi-overlay)
 
@@ -60,21 +60,30 @@
 
 (define (repaint-now session viewport)
   (define-values (full-width full-height) (terminal-size))
-  (set-box! title-rows (title-box-of session full-width))
+  (define panes? (pair? (cdr (split-layout-ids (unbox split-tree)))))
+  (set-box! split-panes-on panes?)
+  (set-box! title-rows (if panes? (list) (title-box-of session full-width)))
   (define plan
     (bar-plan-of session (unbox pending-keys) full-width full-height
                  void))
   (define gut? (and (string-suffix? (path->string (session-file session)) ".aiu")))
   (when (and gut? (not (unbox unsaved))) (gutter-refresh-maybe (session-file session) (lambda () ((unbox notify-repaint)))))
-  (define width (- full-width (bar-plan-left plan) (bar-plan-right plan) (if gut? 1 0)))
-  (define height (+ 1 (- full-height (bar-plan-top plan) (bar-plan-bottom plan))))
+  (define region-width (- full-width (bar-plan-left plan) (bar-plan-right plan)))
+  (define region-rows (- full-height (bar-plan-top plan) (bar-plan-bottom plan)))
+  (define rects (split-layout-rects (unbox split-tree) 0 0 region-width region-rows))
+  (define focus-rect (or (assoc (unbox split-focus) rects) (list 1 0 0 region-width region-rows)))
+  (define width (if panes? (- (cadddr focus-rect) 2 (if gut? 1 0)) (- region-width (if gut? 1 0))))
+  (define height (if panes? (- region-rows (caddr focus-rect)) (+ 1 region-rows)))
+  (define render-height (if panes? (- (list-ref focus-rect 4) 1) height))
+  (define pane-offset-extra (if panes? (+ (caddr focus-rect) 1) 0))
+  (define pane-left-extra (if panes? (+ (cadr focus-rect) 1) 0))
   (define name (path->string (session-file session)))
   (define writing? (string=? (the-layer session) "write"))
   (define raw (session-text session))
   (define overlay
     (and
          (string-suffix? name ".aiu")
-         (not (multi-raw? session)) (block-overlay session raw width height)))
+         (not (multi-raw? session)) (block-overlay session raw width render-height)))
   (define plain-text
     (cond
           [(or writing? (multi-raw? session)) raw]
@@ -85,9 +94,19 @@
   (define text (if (and gut? (not writing?) (not (multi-raw? session))) (gutter-apply session text0) text0))
   (define-values (row column) (point-line raw (the-point session)))
   (define plain-top
-    (if (or writing? (multi-raw? session)) (viewport-top viewport row (max 1 (- height 1)))
+    (if (or writing? (multi-raw? session)) (viewport-top viewport row (max 1 (- render-height 1)))
         (add1 (the-view-top session))))
   (define top (max (if overlay (caddr overlay) plain-top) (let ([n (length (unbox title-rows))]) (if (> n 0) (+ n 2) 1))))
+  (define pane-overlay
+    (if panes?
+        (split-overlay-draw rects (unbox split-focus)
+          (lambda (id focused? inner-width inner-height)
+            (define here (path->string (path->complete-path (session-file session))))
+            (define file (if focused? here (or (split-state-file-of id) here)))
+            (cons (let ([n (file-name-from-path file)]) (if n (path->string n) file))
+                  (if focused? (list) (split-view-lines file inner-width inner-height))))
+          (bar-plan-top plan) (bar-plan-left plan))
+        ""))
   (define text-shown
     (if menu (car (menu-screen menu top height)) text))
   (define where
@@ -104,7 +123,7 @@
                   (format "~a [~a]~a" (mode-label (the-layer session)) (unbox kind-filter) (if (unbox unsaved) "  unsaved: SPC s" "")) row column where) (bar-plan-text plan))
           writing?
           (or (and menu #t) (and overlay #t) (and (not writing?) (not (multi-raw? session)) (string-suffix? name ".aiu")))
-          #:offset (bar-plan-top plan) #:left (bar-plan-left plan) #:full full-width #:overlay (string-append (bar-plan-overlay plan) (live-multi-overlay session raw top height (bar-plan-top plan) (bar-plan-left plan) width (and (not menu) (not overlay) (or writing? (not (string-suffix? name ".aiu")) (multi-raw? session)) #t)) (notify-overlay width height (+ 1 (bar-plan-top plan))))))
+          #:offset (+ (bar-plan-top plan) pane-offset-extra) #:left (+ (bar-plan-left plan) pane-left-extra) #:full full-width #:overlay (string-append (bar-plan-overlay plan) pane-overlay (live-multi-overlay session raw top (if panes? render-height height) (+ (bar-plan-top plan) pane-offset-extra) (+ (bar-plan-left plan) pane-left-extra) width (and (not menu) (not overlay) (or writing? (not (string-suffix? name ".aiu")) (multi-raw? session)) #t)) (notify-overlay width height (+ 1 (bar-plan-top plan))))))
   (flush-output))
 
 (define (viewport-top viewport row visible)
