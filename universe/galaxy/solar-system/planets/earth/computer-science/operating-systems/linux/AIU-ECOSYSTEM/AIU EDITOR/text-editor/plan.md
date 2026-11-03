@@ -477,3 +477,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - env.nu package_src to editor; read one-way and security-gate violations
 - one-way: add tui to AREAS below routes
 - one-way: env.nu package_src to editor, tui in AREAS
+- skill examples: editor/src to editor in SKILL.md

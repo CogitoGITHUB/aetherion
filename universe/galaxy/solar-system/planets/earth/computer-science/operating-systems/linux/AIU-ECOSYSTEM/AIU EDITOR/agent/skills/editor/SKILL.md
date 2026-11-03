@@ -44,9 +44,9 @@ These are runnable: they are the commands as they are typed, and each
 one answers on its own.
 
 ```
-racket editor/src/entry/cli.rkt routes
-racket editor/src/entry/cli.rkt keys
-racket editor/src/entry/cli.rkt audit
+racket editor/entry/cli.rkt routes
+racket editor/entry/cli.rkt keys
+racket editor/entry/cli.rkt audit
 ```
 
 ## The MCP calls
