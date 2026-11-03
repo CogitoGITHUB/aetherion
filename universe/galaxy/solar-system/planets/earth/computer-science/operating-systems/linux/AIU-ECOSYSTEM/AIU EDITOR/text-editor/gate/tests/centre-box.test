@@ -1,0 +1,6 @@
+test centre-box
+level 2
+file test.aiu
+keys t t t t t t
+expect screen contains paragraph
+expect seconds-under 30
