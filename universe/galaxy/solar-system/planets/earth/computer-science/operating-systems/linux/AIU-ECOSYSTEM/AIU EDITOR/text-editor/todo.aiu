@@ -10,6 +10,15 @@ comment end
 
 section start
 title start
+BORDER ALL THE TIME
+title end
+paragraph start
+todo: border all the time. The editor always draws a border around the page, also when the tab bar and the mode line are hidden. When they are shown, the bars are part of the border and the side lines connect to them. Do this right after the restructure (folders, keys, tests) is finished, before every other item.
+paragraph end
+section end
+
+section start
+title start
 Try by hand and fix
 title end
 

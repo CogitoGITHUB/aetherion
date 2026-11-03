@@ -407,3 +407,7 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - key sets into group folders (undo, multi, blocks, bar, tabs, float); record tool reads them; todo: one-way lint is inert
 - read pass: one test file per source file (format, how-to, coverage map)
 - todo: copy and paste mechanism improvements, placed before notification history
+- read pass: what a .test file can express, to give every source file its own test
+- read pass: module test kind (record-module) so every source file gets its own recorded test; runner, parser, verbs
+- module tests: aiutd record-module, first batch recorded; todo item for the rest of the source files
+- todo: border all the time (also with bars hidden, joined with the bars when shown), right after the restructure; read pass: the last script opened the editor
