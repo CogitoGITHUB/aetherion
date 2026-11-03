@@ -11,3 +11,5 @@
 # version control and make every diff unreadable. The Rust lane builds the
 /notation/target/notation system/notation/target/
 notation system/notation/target/
+compiled/
+target/
