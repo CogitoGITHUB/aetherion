@@ -78,8 +78,9 @@ pub fn held(session: &Path) -> bool {
     }
     match super::connect(&socket) {
         Ok(fd) => {
+            let answers = super::answers_holder(fd);
             super::close(fd);
-            true
+            answers
         }
         Err(_) => false,
     }
@@ -150,6 +151,24 @@ mod tests {
         std::fs::create_dir_all(dir.join("a-session")).unwrap();
         std::fs::write(dir.join("not-a-session"), "x").unwrap();
         assert_eq!(stands(&dir), vec!["a-session", "b-session"]);
+    }
+
+    #[test]
+    fn a_socket_a_dead_holder_left_behind_is_not_a_holder() {
+        let dir = a_scratch("stale");
+        let session = dir.join("stale");
+        std::fs::create_dir_all(&session).unwrap();
+        let socket = session.join("holder.sock");
+        // The listener nobody answers on: this is the socket a holder the
+        // phone killed leaves behind. The connection is made and the question
+        // that follows gets nothing, so the session is not held.
+        let fd = super::super::bind(&socket).expect("the scratch socket is bound");
+        let list = listing(&dir);
+        let sessions = list["sessions"].as_array().cloned().unwrap_or_default();
+        assert_eq!(sessions.len(), 1, "one session is listed");
+        assert_eq!(sessions[0]["held"], false, "nothing answers behind it");
+        super::super::close(fd);
+        let _ = std::fs::remove_file(&socket);
     }
 
     #[test]

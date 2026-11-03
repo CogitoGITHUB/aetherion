@@ -44,6 +44,7 @@ that way.
 | The session commands: list, create, rename, switch, kill | Implemented and verified: the holder answers all five, a killed session removes its own socket, pid and log, and a session cannot kill itself |
 | The versioned handshake at attach | Implemented and verified: both versions are compared, a mismatch is refused by name with both said and with what to do, and the client prints its build when it starts |
 | The rewind: a pane as it stood at a record | Implemented and verified: the record is chosen by its seq, the journal answers, and the live pane and its shell are untouched |
+| A session a killed holder left behind starts again | Implemented and verified: a connection is not proof on this phone, so the holder asks the socket for its state, and a socket that answers nothing is removed and bound again |
 | The journal's bounds and its privacy | Implemented and verified: a written bound, a trim record that says what it let go, and 0700/0600 on the session's own files |
 | The socket: a unix socket in the session's state directory | Implemented and verified |
 | The client: attaches, asks, reads, detaches, holds nothing | Implemented and verified |

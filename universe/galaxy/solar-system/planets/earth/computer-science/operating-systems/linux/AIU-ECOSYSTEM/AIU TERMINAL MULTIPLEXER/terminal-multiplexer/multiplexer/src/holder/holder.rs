@@ -263,20 +263,30 @@ fn run(args: &[String]) -> Result<(), String> {
     let pid_path = options.state_dir.join("holder.pid");
 
     if socket_path.exists() {
-        match connect(&socket_path) {
+        // A connection is not proof: this phone answers connect() on a socket
+        // a dead holder left behind, and then says nothing. The proof is an
+        // answer, so the question is asked before the session is called held.
+        let stale = match connect(&socket_path) {
             Ok(fd) => {
+                let answers = answers_holder(fd);
                 close(fd);
-                return Err(format!(
-                    "a holder already holds the session in {}",
-                    options.state_dir.display()
-                ));
+                !answers
             }
-            Err(_) => {
-                std::fs::remove_file(&socket_path).map_err(|why| {
-                    format!("the stale socket {} cannot be removed: {}", socket_path.display(), why)
-                })?;
-            }
+            Err(_) => true,
+        };
+        if !stale {
+            return Err(format!(
+                "a holder already holds the session in {}",
+                options.state_dir.display()
+            ));
         }
+        std::fs::remove_file(&socket_path).map_err(|why| {
+            format!(
+                "the stale socket {} cannot be removed: {}",
+                socket_path.display(),
+                why
+            )
+        })?;
     }
 
     let log = log::Log::open_with(&log_path, options.log_limit, log::KEEP_RECORDS)?;
@@ -2570,6 +2580,36 @@ fn bind(path: &Path) -> Result<c_int, String> {
         return Err(format!("the socket {} cannot listen", path.display()));
     }
     Ok(fd)
+}
+
+/// answers_holder asks the socket whether a holder is behind it: one state
+/// request, and an answer is the proof. A socket a dead holder left behind
+/// AT the connection on this phone (proot answers connect and then says
+/// nothing), so the question is asked instead of assumed. The read has its own
+/// bound: a socket that accepts and never answers is not a holder, and it must
+/// not hold the next one up for ever.
+fn answers_holder(fd: c_int) -> bool {
+    let bound = libc::timeval {
+        tv_sec: 2,
+        tv_usec: 0,
+    };
+    unsafe {
+        libc::setsockopt(
+            fd,
+            libc::SOL_SOCKET,
+            libc::SO_RCVTIMEO,
+            &bound as *const libc::timeval as *const libc::c_void,
+            std::mem::size_of::<libc::timeval>() as libc::socklen_t,
+        );
+    }
+    let request = json!({ "op": "state", "client": "multiplexer-holder/1" });
+    let mut line = request.to_string();
+    line.push('\n');
+    if write_to(fd, line.as_bytes()).is_err() {
+        return false;
+    }
+    let mut buffer = [0u8; 4096];
+    matches!(read_from(fd, &mut buffer), Ok(got) if got > 0)
 }
 
 /// connect opens a connection to a socket that is already there.
