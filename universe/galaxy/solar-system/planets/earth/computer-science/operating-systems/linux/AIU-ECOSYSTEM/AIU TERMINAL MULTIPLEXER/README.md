@@ -78,9 +78,12 @@ the complete workflow, so pm and the editor are paused until it works.
 This program's list stood done up to item 23 on 2026-10-22; the owner's groups after it
 (items 24 to 63) are the work that is left. Since then items 48, 49, 51 and 59 are done and
 deleted from the list; item 24 is done in part (the copy-out direction is verified, the paste-in
-waits for the Termux:API add-on); item 25 waits on the owner's answer to
-`CONTRACT-CHANGE-REQUEST-01.org`. The shared done line waits on the editor's own halves and on
-the owner's deletion of the shared checklist.
+waits for the Termux:API add-on). The AI items left the list on 2026-11-03, the owner's word
+("i dont have ai now"): items 25 to 28, 30 and 32 to 36 stand whole in
+`When ai available in system.md`, with item 25 still stopped at
+`CONTRACT-CHANGE-REQUEST-01.org` until the owner picks a shape. `TODO.org` now holds only what
+needs no agent. The shared done line waits on the editor's own halves and on the owner's deletion
+of the shared checklist.
 
 ## Architecture
 
@@ -603,11 +606,12 @@ commit that does the work, and an item a phone cannot finish is named in part wi
 owed. Done since the owner's groups were written: item 48 (the versioned handshake), item 49
 (the session commands), item 51 (the journal's rules) and item 59 (the rewind); item 24, the
 Android clipboard, has its copy-out half verified and its read half waiting for the Termux:API
-add-on. Item 25 — the agent's words run in the holder, with no token and no attached screen —
-is stopped at `CONTRACT-CHANGE-REQUEST-01.org` until the owner picks a shape, and the group G
-items that depend on it (26, 27, 28, 30, 32 to 36, 58) wait behind it. Item 60, the read-only
-watch attach, landed: a watcher draws the session, cannot change it, and is let go without
-touching it. Item 61, the web client, waits only on items 60 and 48 and is next.
+add-on. The AI items are not in that list: on 2026-11-03 the owner moved everything that needs
+an agent into `When ai available in system.md` — items 25, 26, 27, 28, 30 and 32 to 36 stand
+there whole, with item 25 stopped at `CONTRACT-CHANGE-REQUEST-01.org` until the owner picks a
+shape, and item 58 (watch-and-rerun) stayed in `TODO.org` because it needs no agent. Item 60,
+the read-only watch attach, landed: a watcher draws the session, cannot change it, and is let go
+without touching it. Item 61, the web client, waits only on items 60 and 48.
 
 ### Later plans
 

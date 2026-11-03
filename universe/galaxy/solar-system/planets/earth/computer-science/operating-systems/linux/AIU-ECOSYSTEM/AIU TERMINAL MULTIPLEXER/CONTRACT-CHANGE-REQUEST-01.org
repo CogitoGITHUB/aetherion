@@ -1,6 +1,9 @@
 #+TITLE: CONTRACT CHANGE REQUEST 01 — the agent's words run in the holder
 # One job: the one protocol change TODO item 25 needs, put to the owner before any code moves.
-# Status: open; the work stops here until the owner answers.
+# Status: open, on hold; the work stops here until the owner answers.
+# On 2026-11-03 the owner said "im not sure skip it .. leave it open for later .. i dont have ai now",
+# and moved every AI item of the program into =When ai available in system.md=; this request is
+# the first thing that file's item 25 waits for.
 
 * What the owner asked for (item 25, 2026-10-22)
 
