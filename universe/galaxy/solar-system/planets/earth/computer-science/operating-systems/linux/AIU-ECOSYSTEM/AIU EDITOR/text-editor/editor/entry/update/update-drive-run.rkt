@@ -83,7 +83,7 @@
       (system* (find-executable-path "rm") "-r" "-f" (if (path? p) (path->string p) p)))))
 
 
-(provide run-test remove-tree run-tests-parallel)
+(provide run-test remove-tree run-tests-parallel cores)
 
 (require (only-in racket/future processor-count) (only-in racket/system system*) (only-in racket/string string-trim))
 

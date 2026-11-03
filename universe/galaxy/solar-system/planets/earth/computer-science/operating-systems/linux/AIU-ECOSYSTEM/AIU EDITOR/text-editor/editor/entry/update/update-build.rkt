@@ -61,7 +61,7 @@
        (define stale? (sources-newer?))
        (define-values (code text)
          (cond [(not stale?) (values 0 "")]
-               [raco (begin (live "compile start") (let-values ([(c t) (capture editor-root raco (append (list "make" "-j" (number->string ((dynamic-require (quote racket/future) (quote processor-count))))) compile-files))]) (live (format "compile done code ~a" c)) (values c t)))]
+               [raco (begin (live "compile start") (let-values ([(c t) (capture editor-root raco (append (list "make" "-j" (number->string (cores))) compile-files))]) (live (format "compile done code ~a" c)) (values c t)))]
                [else (values 1 "raco was not found")]))
        (when (and stale? (= code 0)) (touch-stamp!))
        (set! records (append records (list (list "compile" (secs t) (= code 0)))))
