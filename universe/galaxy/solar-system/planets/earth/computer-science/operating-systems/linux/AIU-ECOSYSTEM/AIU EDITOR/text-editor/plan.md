@@ -578,3 +578,6 @@ S4c: space w menu rows, bar level for the pane count, re-record the screen tests
 - S8b: delete the todo item open bar, tabs, focus, find, red-only colour from todo.aiu
 - S9: todo cursor layer, select layer, undo layer, copy cut paste: check what exists first
 - S9b: delete the todo item cursor layer, select layer, undo layer, copy cut paste, already built and green
+- S10: check todo open split view: S4b pushed split view, test pane-split removed; check what is left
+- S10b: split view from two workspaces or projects: check split-commands for page source
+- S10c: delete todo open split view, covered by S4 and hops via tabs-go! setting the pane file
