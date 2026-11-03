@@ -474,3 +474,6 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - remove comment-lint gate; strip whole-line comments from editor and gate (.rkt .nu .rs)
 - gates: require the command-registering modules in route-check and explorer-check
 - remove comment-lint gate; strip whole-line comments; commit gate require fix
+- env.nu package_src to editor; read one-way and security-gate violations
+- one-way: add tui to AREAS below routes
+- one-way: env.nu package_src to editor, tui in AREAS

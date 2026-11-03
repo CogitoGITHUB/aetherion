@@ -5,7 +5,7 @@ export const project_root = $gate_dir | path dirname
 
 export const package_dir = $project_root | path join "editor"
 
-export const package_src = $package_dir | path join "src"
+export const package_src = $package_dir
 
 export const tools_dir = $project_root | path join "tools"
 

@@ -5,7 +5,8 @@ use ./env.nu *
 const AREAS = ["errors" "narration" "machine" "security" "join" "devloop" "journal" "buffer" "notation" "plugins" "commands" "checkpoint" "routes" "input" "drawing" "models" "dashboard" "send" "picker" "audit" "entry"]
 
 def area_index [name] {
-    let found = ($AREAS | enumerate | where {|a| $a.item == $name })
+    let key = (if $name == "tui" { "routes" } else { $name })
+    let found = ($AREAS | enumerate | where {|a| $a.item == $key })
     if ($found | is-empty) { 99 } else { $found | first | get index }
 }
 
