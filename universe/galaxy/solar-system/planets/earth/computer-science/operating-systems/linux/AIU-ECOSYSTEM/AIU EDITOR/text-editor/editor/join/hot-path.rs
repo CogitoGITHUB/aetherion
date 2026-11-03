@@ -407,7 +407,7 @@ fn notation_view(text: &str, width: usize) -> Result<String, String> {
     let bin = if named.is_empty() {
         std::path::PathBuf::from(concat!(
             env!("CARGO_MANIFEST_DIR"),
-            "/../../../AIU NOTATION/notation system/notation/target/debug/notation"
+            "/../notation/target/debug/notation"
         ))
     } else {
         std::path::PathBuf::from(named)

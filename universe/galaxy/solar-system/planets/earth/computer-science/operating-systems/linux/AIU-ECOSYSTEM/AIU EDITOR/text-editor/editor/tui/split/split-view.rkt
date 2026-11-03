@@ -1,6 +1,6 @@
 #lang racket/base
 
-(require racket/list racket/string "../../notation/host.rkt" (only-in "../../machine/directories.rkt" journal-path-for))
+(require racket/list racket/string "../../bridge/host.rkt" (only-in "../../machine/directories.rkt" journal-path-for))
 
 (provide split-view-lines)
 

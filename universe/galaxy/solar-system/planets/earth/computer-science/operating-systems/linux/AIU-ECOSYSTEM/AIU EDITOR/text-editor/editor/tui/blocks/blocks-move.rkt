@@ -1,5 +1,5 @@
 #lang racket/base
-(require racket/list racket/string "../../commands/commands.rkt" "../../machine/terminal.rkt" "../../notation/document.rkt" "../../notation/host.rkt" "blockview.rkt")
+(require racket/list racket/string "../../commands/commands.rkt" "../../machine/terminal.rkt" "../../bridge/document.rkt" "../../bridge/host.rkt" "blockview.rkt")
 
 (define (blockview-siblings blocks b)
   (define parent (blockview-parent blocks b))

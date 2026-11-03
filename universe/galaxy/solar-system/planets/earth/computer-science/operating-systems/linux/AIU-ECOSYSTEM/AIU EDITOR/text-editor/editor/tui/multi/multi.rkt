@@ -2,8 +2,8 @@
 
 (require "../text/text-motion.rkt"
          "../../commands/commands.rkt"
-         "../../notation/document.rkt"
-         "../../notation/host.rkt"
+         "../../bridge/document.rkt"
+         "../../bridge/host.rkt"
          (only-in "../blocks/blockview.rkt" blockview-kind-match? blockview-inside blockview-drawn)
          (only-in "../bar/bar.rkt" multi-table)
          "multi-notes.rkt"

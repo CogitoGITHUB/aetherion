@@ -58,7 +58,7 @@
                                               out))])))
                  (format "\u001b[~a;1H\u001b[7m~a\u001b[27m" rows mode)))
 
-(require "../notation/location.rkt")
+(require "../bridge/location.rkt")
 
 (define (notation-path)
   (define s (notation-bin-from (current-directory)))

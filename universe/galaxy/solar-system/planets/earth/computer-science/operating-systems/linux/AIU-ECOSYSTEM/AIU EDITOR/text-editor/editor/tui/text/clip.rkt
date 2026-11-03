@@ -1,8 +1,8 @@
 #lang racket/base
 
 (require "../../commands/commands.rkt"
-         "../../notation/document.rkt"
-         "../../notation/host.rkt"
+         "../../bridge/document.rkt"
+         "../../bridge/host.rkt"
          (only-in racket/string string-join)
          (only-in net/base64 base64-encode)
          (only-in "../blocks/blockview.rkt" blockview-inside blockview-drawn)

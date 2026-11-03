@@ -4,8 +4,8 @@
          racket/string
          "../../commands/commands.rkt"
          "../../machine/terminal.rkt"
-         "../../notation/document.rkt"
-         "../../notation/host.rkt"
+         "../../bridge/document.rkt"
+         "../../bridge/host.rkt"
          "../float/pins.rkt" "blocks-kind.rkt" "blockview-boxes.rkt")
 
 (define edit-start (box #f))

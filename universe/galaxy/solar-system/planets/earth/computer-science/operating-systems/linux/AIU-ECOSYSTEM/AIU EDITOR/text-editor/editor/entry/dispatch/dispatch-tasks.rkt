@@ -16,8 +16,8 @@
          "../../routes/routes.rkt"
          "../../join/hot-path.rkt"
          "../../join/protocol.rkt"
-         "../../notation/document.rkt"
-         "../../notation/host.rkt")
+         "../../bridge/document.rkt"
+         "../../bridge/host.rkt")
 
 (provide tasks-verb task-verb)
 

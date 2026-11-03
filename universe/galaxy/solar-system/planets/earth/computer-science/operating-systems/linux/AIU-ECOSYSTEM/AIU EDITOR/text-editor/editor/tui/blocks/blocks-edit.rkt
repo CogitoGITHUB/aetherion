@@ -3,8 +3,8 @@
 (require racket/list
          racket/string
          "../../commands/commands.rkt"
-         "../../notation/document.rkt"
-         "../../notation/host.rkt"
+         "../../bridge/document.rkt"
+         "../../bridge/host.rkt"
          "blockview.rkt")
 
 (define (blockview-clamp! session start)

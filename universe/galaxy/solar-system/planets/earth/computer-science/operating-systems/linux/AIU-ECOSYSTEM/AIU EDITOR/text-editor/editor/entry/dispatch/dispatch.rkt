@@ -25,8 +25,8 @@
          "../../routes/routes.rkt"
          "../../join/hot-path.rkt"
          "../../join/protocol.rkt"
-         "../../notation/document.rkt"
-         "../../notation/host.rkt"
+         "../../bridge/document.rkt"
+         "../../bridge/host.rkt"
          "../live/live.rkt"
          "../plugin-verbs.rkt" "dispatch-git.rkt" "dispatch-agent.rkt" "dispatch-keys.rkt" "dispatch-tasks.rkt" "dispatch-bake.rkt" "dispatch-checkpoint.rkt"
          )

@@ -1,6 +1,6 @@
 #lang racket/base
 
-(require racket/list racket/string "../../notation/document.rkt" "../../notation/host.rkt")
+(require racket/list racket/string "../../bridge/document.rkt" "../../bridge/host.rkt")
 
 (provide blockview-plain (struct-out blockview-box) blockview-prefix blockview-end blockview-boxes blockview-kids blockview-seen blockview-assign blockview-ranges blockview-drawn blockview-inside blockview-target blockview-parent)
 

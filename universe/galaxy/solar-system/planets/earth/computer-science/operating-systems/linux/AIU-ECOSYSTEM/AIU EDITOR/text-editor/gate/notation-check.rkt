@@ -4,8 +4,8 @@
          racket/list
          racket/path
          racket/string
-         "../editor/notation/document.rkt"
-         "../editor/notation/host.rkt")
+         "../editor/bridge/document.rkt"
+         "../editor/bridge/host.rkt")
 
 (define project-dir
   (let loop ([at (simplify-path (current-directory))])
@@ -18,7 +18,7 @@
       [else (loop up)])))
 
 (define types-dir
-  (simplify-path (build-path project-dir ".." ".." "AIU NOTATION" "types")))
+  (simplify-path (build-path project-dir "notation" "types")))
 
 (define scratch-journal
   (build-path (find-system-path 'temp-dir) "notation-check.journal"))

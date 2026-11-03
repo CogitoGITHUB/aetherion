@@ -3,8 +3,8 @@
          "../blocks/blockview.rkt"
          "gutter.rkt"
          "../../commands/commands.rkt"
-         "../../notation/host.rkt"
-         "../../notation/document.rkt")
+         "../../bridge/host.rkt"
+         "../../bridge/document.rkt")
 
 (define (mark-of hunks lo hi)
   (define hit

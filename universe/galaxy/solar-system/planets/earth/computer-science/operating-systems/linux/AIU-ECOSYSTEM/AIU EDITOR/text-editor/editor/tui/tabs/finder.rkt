@@ -92,7 +92,7 @@
     [(string=? scope "project") (tabs-project-dir file root)]
     [else root]))
 
-(require "../../notation/location.rkt")
+(require "../../bridge/location.rkt")
 
 (define (notation-bin root)
   (or (notation-bin-from root) (path->string (apply build-path root notation-tail))))

@@ -14,7 +14,7 @@
 (define editor-root
   (find-up here-dir (lambda (d) (directory-exists? (build-path d "gate")))))
 
-(require "../../notation/location.rkt")
+(require "../../bridge/location.rkt")
 
 (define (notation-bin) (notation-bin-from here-dir))
 

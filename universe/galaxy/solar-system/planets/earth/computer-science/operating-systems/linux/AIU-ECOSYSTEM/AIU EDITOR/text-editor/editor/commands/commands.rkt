@@ -7,9 +7,9 @@
          "../join/protocol.rkt"
          "../join/hot-path.rkt"
          "../journal/replay.rkt"
-         "../notation/document.rkt"
-         "../notation/host.rkt"
-         "../notation/where.rkt"
+         "../bridge/document.rkt"
+         "../bridge/host.rkt"
+         "../bridge/where.rkt"
          "session.rkt"
          "multi-boxes.rkt" "sets/commands-edit.rkt" "sets/commands-layer.rkt" "sets/commands-page.rkt")
 
