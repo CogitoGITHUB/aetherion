@@ -501,3 +501,10 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - title pin: no floating title pin while the title box is drawn above the page
 - title pin skipped while the title box is drawn above the page
 - title box hides while the cursor is on the title block so it can be selected and edited in the page
+- cargo target dir moved out of the tree to ~/aiu-cargo-target via ~/.cargo/config.toml
+- editor/target and editor/entry/compiled removed from the tree and git
+- check hot-path-bin and notation bin paths after the cargo target move
+- hot-path binary and notation binary locations after the cargo target move
+- hot-path-bin default moves from /tmp/editor-target to ~/aiu-cargo-target
+- hot-path-bin default now ~/aiu-cargo-target/debug/hot-path, build copied from /tmp/editor-target
+- ai-starting-point.md rewritten with the full working rules for the next AI
