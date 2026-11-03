@@ -29,7 +29,7 @@
 
 ;; stage-label names the stage set of a level for the report.
 (define (stage-label level)
-  (cond [(= level 1) "quick stages"] [(= level 2) "quick and medium stages"] [else "all 17 stages"]))
+  (cond [(= level 1) "quick stages"] [(= level 2) "quick and medium stages"] [else (format "all ~a stages" (length (string-split (level-stages-text 3) ",")))]))
 
 ;; parse-stages reads the gate output and answers one list per stage: name, seconds, exit code, output lines.
 (define (parse-stages text)

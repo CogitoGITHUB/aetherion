@@ -445,3 +445,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - levels: gate/levels.txt is the one level table, update-gate.rkt reads it
 - check.nu --level N reads gate/levels.txt
 - levels.txt: level 3 lists the last 3 stages, so the table holds all 17
+- stage-label counts stages from levels.txt; how-to-make-tests says module tests sit beside the module
