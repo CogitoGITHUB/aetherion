@@ -399,3 +399,5 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - read pass: notification files, mechanism into tui/notify/, each type into its group
 - notify mechanism into editor/tui/notify/; next: each notification type into its group file (clip, multi, keys)
 - notification types into their groups: clip-notes, multi-notes, key-notes; todo: notification history last
+- read pass: sort commands, machine, send, notation, narration, entry, audit, checkpoint, join into subject subfolders
+- sort: entry/dispatch, entry/live, commands/sets; send, lean, cli stay (run-time paths); next: keys into category folders, notation names, test file per source file

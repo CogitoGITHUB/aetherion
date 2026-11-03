@@ -1,7 +1,7 @@
 #lang racket/base
 ;; One job: the git verbs of the argv dispatch: git, git-diff and git-history, each asking the shared layer and printing the facts.
 
-(require racket/list racket/path racket/string "../narration/print-console.rkt" "../join/hot-path.rkt" "../join/protocol.rkt")
+(require racket/list racket/path racket/string "../../narration/print-console.rkt" "../../join/hot-path.rkt" "../../join/protocol.rkt")
 
 (provide git-verb git-diff-verb git-history-verb)
 

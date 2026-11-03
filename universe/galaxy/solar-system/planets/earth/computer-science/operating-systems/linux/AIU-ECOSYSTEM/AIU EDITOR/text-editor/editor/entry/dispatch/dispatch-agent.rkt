@@ -7,19 +7,19 @@
          racket/path
          racket/port
          racket/string
-         "../narration/print-console.rkt"
-         "../narration/narration.rkt"
-         "../machine/directories.rkt"
-         "../commands/commands.rkt"
-         "../checkpoint/checkpoint.rkt"
-         "../send/adapter.rkt"
-         "../send/bundle.rkt"
-         "../send/send.rkt"
-         "../send/opencode-adapter.rkt"
-         "../audit/audit.rkt"
-         "../audit/accept.rkt"
-         "../join/hot-path.rkt"
-         "../join/protocol.rkt")
+         "../../narration/print-console.rkt"
+         "../../narration/narration.rkt"
+         "../../machine/directories.rkt"
+         "../../commands/commands.rkt"
+         "../../checkpoint/checkpoint.rkt"
+         "../../send/adapter.rkt"
+         "../../send/bundle.rkt"
+         "../../send/send.rkt"
+         "../../send/opencode-adapter.rkt"
+         "../../audit/audit.rkt"
+         "../../audit/accept.rkt"
+         "../../join/hot-path.rkt"
+         "../../join/protocol.rkt")
 
 ;; send-verb sends what is selected to the named agent: it makes the
 ;; checkpoint, delivers the bundle and answers the whole truth of the

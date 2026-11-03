@@ -4,10 +4,10 @@
 ;; requires this file.
 
 (require racket/string
-         "../narration/print-console.rkt"
-         "../checkpoint/checkpoint.rkt"
-         "../checkpoint/rollback.rkt"
-         "../machine/stop-switch.rkt")
+         "../../narration/print-console.rkt"
+         "../../checkpoint/checkpoint.rkt"
+         "../../checkpoint/rollback.rkt"
+         "../../machine/stop-switch.rkt")
 
 ;; checkpoint-verb makes a checkpoint of a tree: the state the tree is put
 ;; back to when an agent does something the human did not want. The first

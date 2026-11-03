@@ -5,20 +5,20 @@
          racket/path
          racket/port
          racket/string
-         "../narration/print-console.rkt"
-         "../narration/narration.rkt"
-         "../machine/directories.rkt"
-         "../commands/commands.rkt"
-         "../commands/tasks.rkt"
-         "../devloop/bake.rkt"
-         "../devloop/last-good.rkt"
-         "../routes/keyboard.rkt"
-         "../routes/keymaps.rkt"
-         "../routes/routes.rkt"
-         "../join/hot-path.rkt"
-         "../join/protocol.rkt"
-         "../notation/document.rkt"
-         "../notation/host.rkt")
+         "../../narration/print-console.rkt"
+         "../../narration/narration.rkt"
+         "../../machine/directories.rkt"
+         "../../commands/commands.rkt"
+         "../../commands/tasks.rkt"
+         "../../devloop/bake.rkt"
+         "../../devloop/last-good.rkt"
+         "../../routes/keyboard.rkt"
+         "../../routes/keymaps.rkt"
+         "../../routes/routes.rkt"
+         "../../join/hot-path.rkt"
+         "../../join/protocol.rkt"
+         "../../notation/document.rkt"
+         "../../notation/host.rkt")
 
 (provide routes-walk keys-verb)
 

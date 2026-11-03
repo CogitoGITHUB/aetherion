@@ -9,7 +9,7 @@
          "../machine/directories.rkt"
          "../commands/commands.rkt"
          "../tui/float/explorer.rkt"
-         "live.rkt")
+         "live/live.rkt")
 
 ;; here is the folder of this file, so the send module can be found by name.
 (define here

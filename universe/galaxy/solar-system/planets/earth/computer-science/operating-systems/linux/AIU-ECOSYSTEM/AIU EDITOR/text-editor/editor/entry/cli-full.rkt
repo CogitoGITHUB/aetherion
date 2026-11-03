@@ -5,7 +5,7 @@
 ;;
 ;; Usage: racket cli.rkt edit FILE
 
-(require "dispatch.rkt"
+(require "dispatch/dispatch.rkt"
          "documents.rkt"
          "../devloop/start.rkt"
          "../narration/print-console.rkt")

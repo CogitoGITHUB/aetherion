@@ -4,15 +4,15 @@
 (require racket/list
          racket/path
          racket/string
-         "../buffer/selection.rkt"
-         "../join/protocol.rkt"
-         "../join/hot-path.rkt"
-         "../journal/replay.rkt"
-         "../notation/document.rkt"
-         "../notation/host.rkt"
-         "../notation/where.rkt"
-         "session.rkt"
-         "multi-boxes.rkt")
+         "../../buffer/selection.rkt"
+         "../../join/protocol.rkt"
+         "../../join/hot-path.rkt"
+         "../../journal/replay.rkt"
+         "../../notation/document.rkt"
+         "../../notation/host.rkt"
+         "../../notation/where.rkt"
+         "../session.rkt"
+         "../multi-boxes.rkt")
 
 (provide command-insert-words command-save command-journal command-replay command-move-up command-move-down command-move-left command-move-right command-type command-delete command-select)
 

@@ -31,7 +31,7 @@
          "../machine/directories.rkt"
          "../security/security.rkt"
          "capabilities.rkt"
-         "dispatch.rkt"
+         "dispatch/dispatch.rkt"
          "documents.rkt")
 
 ;; protocol-version is the MCP protocol the server speaks.

@@ -20,7 +20,7 @@
          "../notation/host.rkt"
          "../notation/where.rkt"
          "session.rkt"
-         "multi-boxes.rkt" "commands-edit.rkt" "commands-layer.rkt" "commands-page.rkt")
+         "multi-boxes.rkt" "sets/commands-edit.rkt" "sets/commands-layer.rkt" "sets/commands-page.rkt")
 
 ;; command-help answers the names in the table.
 (define (command-help session words)

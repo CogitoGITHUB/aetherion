@@ -25,7 +25,7 @@
          racket/string
          racket/system
          "../editor/entry/capabilities.rkt"
-         "../editor/entry/dispatch.rkt"
+         "../editor/entry/dispatch/dispatch.rkt"
          "../editor/entry/documents.rkt"
          "../editor/entry/mcp.rkt"
          "../editor/machine/directories.rkt"

@@ -5,30 +5,30 @@
          racket/path racket/port
          racket/path racket/port
          racket/string
-         "../narration/print-console.rkt"
-         "../commands/commands.rkt"
-         "../join/hot-path.rkt"
-         "../join/live-wire.rkt"
-         "../join/protocol.rkt"
-         "../drawing/screen.rkt"
-         "../machine/terminal.rkt"
-         "../routes/keyboard.rkt"
-         "../routes/keymaps.rkt"
-         "../routes/routes.rkt"
-         "../notation/document.rkt"
-         "../notation/host.rkt"
-         "../notation/where.rkt"
-         "../tui/blocks/blockview.rkt" "../tui/blocks/blocks-edit.rkt" "../tui/blocks/blocks-view.rkt"
-         "../tui/blocks/blocks-move.rkt"
-         "../tui/float/menu.rkt"
-         "../tui/bar/bar.rkt"
-         "../tui/tabs/tabs.rkt"
-         "../tui/tabs/finder.rkt"
-         "../tui/keys/key-notes.rkt"
-         (only-in "../tui/float/box.rkt" paint-ready)
-         "../tui/gutter/gutter.rkt"
-         "../tui/gutter/gutterview.rkt"
-         (only-in "../machine/directories.rkt" journal-path-for))
+         "../../narration/print-console.rkt"
+         "../../commands/commands.rkt"
+         "../../join/hot-path.rkt"
+         "../../join/live-wire.rkt"
+         "../../join/protocol.rkt"
+         "../../drawing/screen.rkt"
+         "../../machine/terminal.rkt"
+         "../../routes/keyboard.rkt"
+         "../../routes/keymaps.rkt"
+         "../../routes/routes.rkt"
+         "../../notation/document.rkt"
+         "../../notation/host.rkt"
+         "../../notation/where.rkt"
+         "../../tui/blocks/blockview.rkt" "../../tui/blocks/blocks-edit.rkt" "../../tui/blocks/blocks-view.rkt"
+         "../../tui/blocks/blocks-move.rkt"
+         "../../tui/float/menu.rkt"
+         "../../tui/bar/bar.rkt"
+         "../../tui/tabs/tabs.rkt"
+         "../../tui/tabs/finder.rkt"
+         "../../tui/keys/key-notes.rkt"
+         (only-in "../../tui/float/box.rkt" paint-ready)
+         "../../tui/gutter/gutter.rkt"
+         "../../tui/gutter/gutterview.rkt"
+         (only-in "../../machine/directories.rkt" journal-path-for))
 (require "live-paint.rkt")
 
 (provide key-loop trace-session!)
