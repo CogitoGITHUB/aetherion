@@ -30,6 +30,7 @@
              #:unless (member f skipped))
     f))
 
+;; gone holds the editor files that have no test beside them and no skip note.
 (define gone (missing))
 (cond
   [(null? gone) (printf "PASS test-check: every editor file has a test beside it or a skip note\n")]
