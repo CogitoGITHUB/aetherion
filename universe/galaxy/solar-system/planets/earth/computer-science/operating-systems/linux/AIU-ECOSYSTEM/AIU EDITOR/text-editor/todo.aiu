@@ -372,6 +372,15 @@ section end
 
 section start
 title start
+COPY AND PASTE MECHANISM
+title end
+paragraph start
+todo: copy and paste mechanism. The mechanism in editor/tui/text/clip.rkt (the ring of copies, paste per cursor, the OSC 52 clipboard, the notes in clip-notes.rkt) needs improvements. The owner decides what changes; related items are copy-cut-paste and the OSC 52 clipboard check. Give it its own test file.
+paragraph end
+section end
+
+section start
+title start
 NOTIFICATION HISTORY
 title end
 paragraph start

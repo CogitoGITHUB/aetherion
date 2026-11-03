@@ -405,3 +405,5 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - read pass: one-way lint rules before moving the key sets into category folders
 - read pass: one-way lint state and area law before moving key sets into category folders
 - key sets into group folders (undo, multi, blocks, bar, tabs, float); record tool reads them; todo: one-way lint is inert
+- read pass: one test file per source file (format, how-to, coverage map)
+- todo: copy and paste mechanism improvements, placed before notification history
