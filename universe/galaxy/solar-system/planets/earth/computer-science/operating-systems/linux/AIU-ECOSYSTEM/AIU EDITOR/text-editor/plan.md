@@ -576,3 +576,5 @@ S4c: space w menu rows, bar level for the pane count, re-record the screen tests
 - S7c: recorder skips lacks lines that are in the pinned title block; re-record centre-box float-view pin-view scroll-view
 - S8: todo open bar, tabs, focus, find, red-only colour: first check what colour and find code exists
 - S8b: delete the todo item open bar, tabs, focus, find, red-only colour from todo.aiu
+- S9: todo cursor layer, select layer, undo layer, copy cut paste: check what exists first
+- S9b: delete the todo item cursor layer, select layer, undo layer, copy cut paste, already built and green
