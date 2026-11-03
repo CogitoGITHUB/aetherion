@@ -1,0 +1,6 @@
+test mod-location
+level 2
+module editor/notation/location.rkt
+call notation-tail
+expect result equals ("AIU NOTATION" "notation system" "notation" "target" "debug" "notation")
+expect seconds-under 20
