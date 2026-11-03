@@ -41,13 +41,7 @@
 (define (main)
   (ensure-dir scratch-dir)
   (putenv "AIU_EDITOR_TOKEN" token)
-  (define problems '())
-  (set! problems (append problems (proof-envelope)))
-  (set! problems (append problems (proof-exit-codes)))
-  (set! problems (append problems (proof-gating)))
-  (set! problems (append problems (proof-skill)))
-  (set! problems (append problems (proof-plugin)))
-  (set! problems (append problems (proof-feed-and-door)))
+  (define problems (apply append (run-proofs (list proof-envelope proof-exit-codes proof-gating proof-skill proof-plugin proof-feed-and-door))))
   (if (null? problems)
       (begin
         (displayln "OK kit-check — the six proofs hold: the one envelope, the frozen codes, the gating, the skill examples, the read-only plugin, and the flushed feed with the wait door held")
@@ -56,6 +50,14 @@
         (for ([problem (in-list problems)]) (displayln (format "KIT — ~a" problem)))
         (displayln (format "KIT — ~a of the six proofs do not hold" (length problems)))
         (exit exit-cannot-run))))
+
+(define (run-proofs proofs)
+  (define results (make-vector (length proofs) (quote ())))
+  (define threads
+    (for/list ([proof (in-list proofs)] [at (in-naturals)])
+      (thread (lambda () (vector-set! results at (proof))))))
+  (for-each thread-wait threads)
+  (vector->list results))
 
 (define (proof-envelope)
   (define problems '())
@@ -154,7 +156,7 @@
   problems)
 
 (define (run-code command)
-  (define code-file (build-path scratch-dir "exit-code"))
+  (define code-file (build-path scratch-dir (format "exit-code-~a" (eq-hash-code (current-thread)))))
   (when (file-exists? code-file) (delete-file code-file))
   (system (format "~a; echo $? > ~a 2>/dev/null"
                   command (shell-quote (path->string code-file))))

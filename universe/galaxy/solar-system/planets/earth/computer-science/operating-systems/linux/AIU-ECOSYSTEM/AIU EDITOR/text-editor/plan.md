@@ -492,3 +492,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - kit-check: read it to find the 18 s
 - kit-check: system call at line 159 runs the skill examples, read 140-215 to run them in parallel
 - kit-check: run the skill examples in parallel, capped by AIU_JOBS default 4
+- kit-check: run the six proofs as parallel threads, per-thread exit-code file
