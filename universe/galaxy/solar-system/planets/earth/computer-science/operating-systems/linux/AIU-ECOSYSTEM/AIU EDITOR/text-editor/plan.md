@@ -581,3 +581,6 @@ S4c: space w menu rows, bar level for the pane count, re-record the screen tests
 - S10: check todo open split view: S4b pushed split view, test pane-split removed; check what is left
 - S10b: split view from two workspaces or projects: check split-commands for page source
 - S10c: delete todo open split view, covered by S4 and hops via tabs-go! setting the pane file
+- S11: todo border all the time: read the todo text and the bar page-frame code
+- S11b: border all the time: check bottom rule when place is line and bars hidden
+- S11c: delete todo border all the time, already drawn except line mode under 14 rows
