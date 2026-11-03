@@ -23,7 +23,7 @@
   (define wanted (filter (lambda (p) (<= (test-level p) level)) files))
   (define t-all (current-inexact-milliseconds))
   (define picked (if only (filter (lambda (p) (regexp-match? (regexp-quote only) (car (regexp-match #rx"[^/]*$" (path->string p))))) wanted) wanted))
-  (define results (let loop ([i 0] [acc (list)]) (if (or (>= i repeat) (and (> repeat 1) (ormap (lambda (r) (not (caddr r))) acc))) acc (loop (+ i 1) (append acc (for/list ([p (in-list picked)]) (run-test p)))))))
+  (define results (let loop ([i 0] [acc (list)]) (if (or (>= i repeat) (and (> repeat 1) (ormap (lambda (r) (not (caddr r))) acc))) acc (loop (+ i 1) (append acc (run-tests-parallel picked))))))
   (define total (secs t-all))
   (define ok (and (pair? results) (andmap caddr results)))
   (for ([r (in-list results)]) (log-step! level (string-append "test:" (car r)) (cadr r)))

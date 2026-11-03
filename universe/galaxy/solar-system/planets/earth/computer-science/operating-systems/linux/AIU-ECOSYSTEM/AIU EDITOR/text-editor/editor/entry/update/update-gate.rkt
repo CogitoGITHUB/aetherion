@@ -16,7 +16,7 @@
 (define level-1-stages "naming,one-way,language-split,comment-lint,notation-check,secret-check,git-check")
 
 ;; level-2-stages add the medium stages, about 60 s more.
-(define level-2-stages (string-append level-1-stages ",paren-check,plugin-check,send-check,route-check,explorer-check,security-gate"))
+(define level-2-stages (string-append level-1-stages ",paren-check,plugin-check,send-check,route-check,explorer-check,security-gate,test-check"))
 
 ;; stage-args answers the arguments that pick the gate stages of a level; level 3 runs all.
 (define (stage-args level)
@@ -62,10 +62,11 @@
        (live (format "gate all stages done code ~a" c))
        (values c t))]
     [else
+     (define started (for/list ([s (in-list stages)]) (let ([ch (make-channel)]) (thread (lambda () (let-values ([(c t) (capture editor-root nu (list "gate/check.nu" "--only" s))]) (channel-put ch (cons c t))))) ch)))
      (define results
        (for/list ([s (in-list stages)])
          (live (string-append "gate " s " start"))
-         (let-values ([(c t) (capture editor-root nu (list "gate/check.nu" "--only" s))])
+         (let-values ([(c t) (let ([r (channel-get (list-ref started (index-of stages s)))]) (values (car r) (cdr r)))])
            (live (format "gate ~a done code ~a" s c))
            (cons c t))))
      (define all-ok

@@ -12,7 +12,7 @@
               string<? #:key path->string)
         (list)))
   (define wanted (filter (lambda (p) (<= (test-level p) level)) files))
-  (for/list ([p (in-list wanted)]) (live (format "test ~a start" (file-name-from-path p))) (let ([r (run-test p)]) (live (format "test ~a done" (car r))) r)))
+  (run-tests-parallel wanted))
 
 ;; arg-value answers the word after a flag in the arguments, or #f when the flag is missing.
 (define (arg-value args flag)

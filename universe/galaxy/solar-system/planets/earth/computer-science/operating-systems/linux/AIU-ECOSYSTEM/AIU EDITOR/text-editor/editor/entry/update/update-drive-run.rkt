@@ -83,4 +83,36 @@
       (system* (find-executable-path "rm") "-r" "-f" (if (path? p) (path->string p) p)))))
 
 
-(provide run-test remove-tree)
+(provide run-test remove-tree run-tests-parallel)
+
+(require (only-in racket/future processor-count) (only-in racket/system system*) (only-in racket/string string-trim))
+
+;; cores answers how many cores this process may really use: nproc knows the limit, processor-count only sees the machine.
+(define (cores)
+  (with-handlers ([void (lambda (x) (processor-count))])
+    (let ([o (open-output-string)])
+      (parameterize ([current-output-port o]) (system* (find-executable-path "nproc")))
+      (or (string->number (string-trim (get-output-string o))) (processor-count)))))
+
+;; run-tests-parallel runs key tests one after another in one thread and module tests in a pool of workers beside it, and answers the results in the order of the paths.
+(define (run-tests-parallel paths)
+  (define slots (make-vector (length paths) #f))
+  (define idx (for/list ([p (in-list paths)] [i (in-naturals)]) (cons i p)))
+  (define (module? p) (pair? (line-values (test-lines p) "module")))
+  (define keys (filter (lambda (ip) (not (module? (cdr ip)))) idx))
+  (define mods (filter (lambda (ip) (module? (cdr ip))) idx))
+  (define (do! ip)
+    (define nm (path->string (cdr ip)))
+    (live (string-append "test " nm " start"))
+    (define r (with-handlers ([void (lambda (e) (list nm 0.0 #f (list (string-append "    the test crashed: " (if (exn? e) (exn-message e) "unknown")))))])
+                (let ([tf (build-path (find-system-path (quote home-dir)) (format ".aiu-trace-~a.log" (car ip)))]) (with-handlers ([void void]) (delete-file tf)) (parameterize ([current-trace-file tf]) (run-test (cdr ip))))))
+    (live (string-append "test " (if (pair? r) (car r) nm) " done"))
+    (vector-set! slots (car ip) r))
+  (define lock (make-semaphore 1))
+  (define todo (append keys mods))
+  (define (next!) (call-with-semaphore lock (lambda () (if (null? todo) #f (let ([x (car todo)]) (set! todo (cdr todo)) x)))))
+  (define workers (max 1 (let ([e (getenv "AIU_JOBS")]) (or (and e (string->number e)) (* 2 (cores))))))
+  (void)
+  (define pool (for/list ([w (in-range workers)]) (thread (lambda () (let loop () (define ip (next!)) (when ip (do! ip) (loop)))))))
+  (for-each thread-wait pool)
+  (vector->list slots))

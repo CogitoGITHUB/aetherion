@@ -6,7 +6,7 @@
 (define (drive-editor dir copy chunks out out1 code-file)
   (define sh (find-executable-path "sh"))
   (define-values (sp so si se)
-    (subprocess #f #f (quote stdout) sh "-c" (string-append "AIU_TRACE=1 exec script -qec \"aiutd " copy "\" /dev/null")))
+    (subprocess #f #f (quote stdout) sh "-c" (string-append "AIU_TRACE_FILE=\"" (path->string (trace-file)) "\" AIU_TRACE=1 exec script -qec \"aiutd " copy "\" /dev/null")))
   (define acc (open-output-bytes))
   (define marker (byte-regexp (regexp-quote (bytes-append (bytes 27) #"[?2026l"))))
   (define buf (make-bytes 4096))

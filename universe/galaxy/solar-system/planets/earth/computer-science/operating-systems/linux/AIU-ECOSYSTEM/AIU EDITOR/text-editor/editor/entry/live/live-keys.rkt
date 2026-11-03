@@ -82,14 +82,14 @@
 (define (trace-session! file)
   (when (getenv "AIU_TRACE")
     (with-handlers ([void void])
-      (call-with-output-file (build-path (find-system-path (quote home-dir)) ".aiu-trace.log") #:exists (quote append)
+      (call-with-output-file (or (let ([f (getenv "AIU_TRACE_FILE")]) (and f (string->path f))) (build-path (find-system-path (quote home-dir)) ".aiu-trace.log")) #:exists (quote append)
         (lambda (o) (fprintf o "~a session file ~a\n" (current-inexact-milliseconds) file))))))
 
 ;; trace-key! appends one line to the trace log when AIU_TRACE is set, and does nothing otherwise.
 (define (trace-key! pending t0 result session)
   (when (getenv "AIU_TRACE")
     (with-handlers ([void void])
-      (call-with-output-file (build-path (find-system-path (quote home-dir)) ".aiu-trace.log") #:exists (quote append)
+      (call-with-output-file (or (let ([f (getenv "AIU_TRACE_FILE")]) (and f (string->path f))) (build-path (find-system-path (quote home-dir)) ".aiu-trace.log")) #:exists (quote append)
         (lambda (o)
           (fprintf o "~a act-on ~a ms pending ~s go-on ~a layer ~a rest ~a\n" (current-inexact-milliseconds) (- (current-inexact-milliseconds) t0) (if (> (length pending) 3) (take pending 3) pending) (outcome-go-on? result) (the-layer session) (let ([r (outcome-rest result)]) (if (list? r) (length r) r))))))))
 

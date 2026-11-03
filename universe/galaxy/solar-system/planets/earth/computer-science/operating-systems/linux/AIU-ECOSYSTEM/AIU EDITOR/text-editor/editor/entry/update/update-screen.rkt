@@ -65,7 +65,10 @@
                    (lambda (m) (string-append "^" (string (integer->char (+ 64 (char->integer (string-ref m 0)))))))))
 
 ;; trace-file answers the path of the key trace log.
-(define (trace-file) (build-path (find-system-path (quote home-dir)) ".aiu-trace.log"))
+(define (trace-file) (or (current-trace-file) (build-path (find-system-path (quote home-dir)) ".aiu-trace.log")))
+
+;; current-trace-file holds the trace log of the test running in this thread, so tests side by side each read their own; false means the shared log.
+(define current-trace-file (make-parameter #f))
 
 ;; trace-size answers how many bytes the key trace log holds now, zero when it is missing.
 (define (trace-size) (with-handlers ([void (lambda (e) 0)]) (file-size (trace-file))))
@@ -98,4 +101,4 @@
                      (let ([s (string-join (map string-trim (first-n (if (pair? tail) (cdr tail) tail) 2)) " / ")]) (if (> (string-length s) 70) (substring s 0 70) s))))))
 
 
-(provide key-bytes line-values plain-screen last-frame test-lines test-level colour-rx judge visible trace-file trace-size compact-trace trace-since key-modes)
+(provide key-bytes line-values plain-screen last-frame test-lines test-level colour-rx judge visible trace-file current-trace-file trace-size compact-trace trace-since key-modes)

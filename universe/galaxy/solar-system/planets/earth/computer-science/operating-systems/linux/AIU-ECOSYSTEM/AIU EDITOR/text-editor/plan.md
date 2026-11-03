@@ -436,3 +436,9 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - tests found in any subfolder of gate/tests: do-test and run-all-tests use find-files; next: move tests into folders, gate check for a missing test
 - module tests live beside their module (box.rkt -> box.test); runner searches editor and gate/tests; record-module writes beside the module
 - gate stage test-check: every editor .rkt has a .test beside it or a skip note in plan.md
+- plan: one folder for update, test and gate with one shared level table (reading first)
+- level 2 gate list gets test-check (update-gate.rkt)
+- tests run in parallel: module tests in a worker pool beside the key-test chain, raco make -j (update-drive-run.rkt)
+- tests run in parallel: module tests in a worker pool beside the key-test chain, raco make -j (update-drive-run.rkt)
+- tests: one pool sized by processor-count (AIU_JOBS overrides), a trace log per test, gate stages concurrent
+- test pool default 2 x cores (AIU_JOBS overrides); editors mostly wait
