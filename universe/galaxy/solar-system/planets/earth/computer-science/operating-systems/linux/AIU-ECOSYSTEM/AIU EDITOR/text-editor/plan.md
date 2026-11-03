@@ -546,3 +546,4 @@ S5. A new pane takes any page from any workspace or project through the tab bar;
 S6. Keep the layout between sessions in the state dir, restored after first paint.
 - S1: reading live-paint.rkt, session.rkt and the live key loop for the split view
 - S2: editor/tui/split/split-layout.rkt pure pane tree (single, split, close, ids, rects, neighbour) with module test
+- S2b: pane ratio per split, resize, swap, flip (placement), turn (right/down), equalise in split-layout.rkt; test re-recorded; S3 commands and keys use them
