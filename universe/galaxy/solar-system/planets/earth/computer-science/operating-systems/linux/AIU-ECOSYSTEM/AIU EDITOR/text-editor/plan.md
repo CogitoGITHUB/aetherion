@@ -451,3 +451,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - compile -j sized with nproc cores, not racket processor-count (swap thrash on 2 cores)
 - compile -j auto: min(nproc, MemAvailable/3000 MB), min 1, AIU_COMPILE_JOBS overrides
 - compile files come from gate/compile.txt by level (compile-files-of)
+- check.nu runs its gate stages with par-each --keep-order
