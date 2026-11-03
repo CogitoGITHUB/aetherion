@@ -68,6 +68,8 @@
        (unless (= code 0)
          (set! ok #f)
          (set! fail-lines (first-n (real-lines text) 12))))
+     (define test-box (box (list)))
+     (define test-thread (and ok (>= level 1) (thread (lambda () (set-box! test-box (run-all-tests level))))))
      (when (and ok (>= level 1))
        (define t1 (current-inexact-milliseconds))
        (define nu (find-executable-path "nu"))
@@ -84,7 +86,7 @@
          (set! ok #f)
          (set! fail-lines (if (null? stage-times) (first-n g-lines 12) (list)))))
      (define total (secs t-all))
-     (define test-results (if (and ok (>= level 1)) (run-all-tests level) (list)))
+     (define test-results (if test-thread (begin (thread-wait test-thread) (unbox test-box)) (list)))
      (when (not (andmap caddr test-results)) (set! ok #f))
      (for ([r (in-list test-results)]) (log-step! level (string-append "test:" (car r)) (cadr r)))
      (define test-block
