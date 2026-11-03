@@ -417,3 +417,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - module-test batch 2b: raise and render through dynamic-require of err.rkt
 - module-test batch 3: bar-clock text-motion tabs-folders bundle small print-console routes capabilities documents seam replay
 - module-test batch 4: document where session blockview-boxes blocks-text finder screen update-gate transport update-evidence
+- module-test batch 4b: update-evidence with bytes pattern
