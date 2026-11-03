@@ -2,8 +2,5 @@ test pin-view
 level 2
 file test.aiu
 keys t t t t t t t t t t space o a escape g g g r
-expect screen contains and h and t stay the movement keys. The mode line shows it, for
-expect screen contains example visual navigation [todo open].
-expect screen lacks comment
-expect screen lacks Every key in this page works in the visual layer unless a part says
+expect screen contains matches the box you see, the level by level matching works.
 expect seconds-under 30

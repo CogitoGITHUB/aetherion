@@ -33,9 +33,9 @@
      (define g (unbox git-info))
      (define undo-lines (if (string=? layer "undo") ((unbox undo-rows-hook) width height) null))
      (define bar-lines
-       (if (member place (list "bottom" "top")) (bar-rows layer short pending g width names) null))
+       (if (member place (list "bottom" "top")) (let ([r (bar-rows layer short pending g width names)]) (if (> (length r) (- height 4)) (take r (- height 4)) r)) null))
      (define tab-lines
-       (if tabs-on? (tab-rows (path->string (path->complete-path file)) width again) null))
+       (if (and tabs-on? (<= (length bar-lines) 8)) (tab-rows (path->string (path->complete-path file)) width again) null))
      (define (group where)
        (define t (if (and tabs-on? (string=? (unbox tab-place) where)) tab-lines null))
        (define b (if (string=? place where) bar-lines null))

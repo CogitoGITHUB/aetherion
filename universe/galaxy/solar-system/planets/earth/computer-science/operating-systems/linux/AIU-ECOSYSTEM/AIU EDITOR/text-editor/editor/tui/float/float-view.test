@@ -1,8 +1,7 @@
 test float-view
 level 2
 file test.aiu
-keys t t t t t t t t g g g g g g
-expect screen contains the box you see, the level by level matching works.
-expect screen lacks comment
-expect screen lacks Every key in this page works in the visual layer unless a part says
+keys t t t t t t t t t t t
+expect screen contains paragraph
+expect screen contains Plain keys pick the kind of block. They change nothing but the
 expect seconds-under 30

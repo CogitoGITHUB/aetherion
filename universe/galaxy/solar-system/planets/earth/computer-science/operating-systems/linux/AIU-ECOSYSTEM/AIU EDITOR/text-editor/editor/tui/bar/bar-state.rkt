@@ -22,3 +22,7 @@
 (define title-rows (box (list)))
 
 (provide split-panes-on title-rows bar-place bar-saved bar-style bar-count focus-on bar-order bar-places bar-kname)
+
+(define name-prompt (box #f))
+
+(provide name-prompt)

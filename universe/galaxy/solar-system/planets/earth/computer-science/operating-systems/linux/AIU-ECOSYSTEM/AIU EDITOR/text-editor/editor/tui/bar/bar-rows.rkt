@@ -5,7 +5,7 @@
          "../../commands/commands.rkt"
          "../../commands/lazy-stub.rkt"
          "../../routes/keymaps.rkt"
-         "../float/box.rkt"
+         "../float/box.rkt" (only-in "bar-menu.rkt" menu-label-of menu-text)
          "../tabs/tabs.rkt"
          "bar-clock.rkt"
          "bar-git.rkt"
@@ -13,12 +13,29 @@
 
 
 (define (layer-keys-line layer width)
-  (define names (remove-duplicates (for/list ([b (in-list (keys-of layer))]) (string-join (map bar-kname (sequence-of (car b))) " "))))
+  (define names (remove-duplicates (for/list ([b (in-list (keys-of layer))]) (string-append (string-join (map bar-kname (sequence-of (car b))) " ") " " (menu-label-of (cadr b))))))
   (define all (string-join names "  "))
   (define room (max 1 width))
   (if (> (string-length all) room) (string-append (substring all 0 (max 0 (- room 1))) "…") all))
 
+(define (layer-key-rows layer width)
+  (define names (remove-duplicates (for/list ([b (in-list (keys-of layer))]) (string-append (string-join (map bar-kname (sequence-of (car b))) " ") " " (menu-label-of (cadr b))))))
+  (let loop ([rest names] [row ""] [acc null])
+    (cond [(null? rest) (reverse (if (string=? row "") acc (cons row acc)))]
+          [(string=? row "") (loop (cdr rest) (car rest) acc)]
+          [(> (+ (string-length row) 2 (string-length (car rest))) width) (loop rest "" (cons row acc))]
+          [else (loop (cdr rest) (string-append row "  " (car rest)) acc)])))
+
 (define (bar-rows layer short pending g width names)
+  (define p (unbox name-prompt))
+  (if p
+      (list (edge-line "╭" "╮" "name" "" width)
+            (body-line (format "name for the new ~a: ~a▏" (car p) (cadr p)) width)
+            (body-line (format "return creates   escape cancels   ~a" (cadddr p)) width)
+            (rule-line "╰" "╯" width))
+      (bar-rows-plain layer short pending g width names)))
+
+(define (bar-rows-plain layer short pending g width names)
   (define (has? n) (member n names))
   (define trig (let ([t (assoc layer trigger-of)]) (if t (cdr t) "-")))
   (define waiting
@@ -28,7 +45,7 @@
     (string-join (filter values (list (and (has? "time") (clock-time)) (and (has? "date") (clock-date)))) "  "))
   (define middle
     (append (if (has? "keys")
-                (list (body-line (string-append (format "trigger ~a~a" (bar-kname trig) waiting) "  " (layer-keys-line layer (max 1 (- width 30)))) width))
+                (if (or (pair? pending) (not (member layer (list "visual" "write")))) (map (lambda (r) (body-line r width)) (let ([ls (string-split (menu-text layer pending (max 20 (- width 4))) "\n" #:trim? #f)]) ls)) (list (body-line (format "trigger ~a~a  ·  press ~a for keys" (bar-kname trig) waiting (bar-kname trig)) width)))
                 null)
             (if (and (has? "save") (unbox unsaved))
                 (list (edge-line "├" "┤" "save" "" width) (body-line "unsaved  SPC s saves" width))

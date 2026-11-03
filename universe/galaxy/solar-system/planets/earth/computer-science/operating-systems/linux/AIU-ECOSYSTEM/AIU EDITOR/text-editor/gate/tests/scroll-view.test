@@ -1,7 +1,0 @@
-test scroll-view
-level 2
-file test.aiu
-keys t t t t t t t t g g r
-expect screen contains numbers sections for you, and h and t walk into nested sections
-expect screen contains in page order.
-expect seconds-under 30

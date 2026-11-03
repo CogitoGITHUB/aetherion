@@ -62,11 +62,11 @@
      (for/list ([g (in-list ordered)])
        (define cells
          (for/list ([p (in-list shown)] #:when (string=? (menu-group-of (cdr p)) g))
-           (string-append (cell-pad (car p) key-width) "  " (menu-label-of (cdr p)))))
+           (string-append (cell-pad (car p) key-width) " > " (menu-label-of (cdr p)))))
        (menu-box g (menu-cells cells (- width 8)) (- width 4)))))
   (define pick-cells
     (for/list ([b (in-list (keys-of "visual"))] #:when (and (regexp-match? #rx"^kind-" (cadr b)) (not (regexp-match? #rx" " (car b)))))
-      (string-append (car b) "  " (menu-label-of (cadr b)))))
+      (string-append (car b) " > " (menu-label-of (cadr b)))))
   (define pick-boxes
     (if (string=? layer "visual") (menu-box "pick · h t move between" (menu-cells pick-cells (- width 8)) (- width 4)) null))
   (define after     (if (null? pending) "keys" (format "keys after ~a" (string-join (map kname pending) " "))))
@@ -121,10 +121,19 @@
         (list "undo-tip" "undo" "branch end") (list "undo-mark" "undo" "mark") (list "undo-unmark" "undo" "unmark")
         (list "undo-diff" "undo" "diff") (list "undo-live" "undo" "live file") (list "undo-keep" "undo" "keep")
         (list "undo-cancel" "undo" "roll back")
+        (list "pane-focus-left" "focus" "left") (list "pane-focus-right" "focus" "right") (list "pane-focus-up" "focus" "up") (list "pane-focus-down" "focus" "down")
+        (list "pane-split-right" "split" "right") (list "pane-split-down" "split" "down") (list "pane-close" "split" "close pane")
+        (list "pane-swap-left" "swap" "move left") (list "pane-swap-right" "swap" "move right") (list "pane-swap-up" "swap" "move up") (list "pane-swap-down" "swap" "move down")
+        (list "pane-grow-width" "size" "wider") (list "pane-shrink-width" "size" "narrower") (list "pane-grow-height" "size" "taller") (list "pane-shrink-height" "size" "shorter")
+        (list "pane-flip" "layout" "mirror") (list "pane-turn" "layout" "turn split") (list "pane-equalise" "layout" "equal sizes")
+        (list "project-prev" "go" "project before") (list "project-next" "go" "project after") (list "workspace-prev" "go" "workspace before") (list "workspace-next" "go" "workspace after")
+        (list "project-move-left" "move" "project left") (list "project-move-right" "move" "project right") (list "project-close" "go" "hide project") (list "project-open" "go" "show hidden")
+        (list "workspace-move-left" "move" "workspace left") (list "workspace-move-right" "move" "workspace right") (list "workspace-close" "go" "hide workspace") (list "workspace-open" "go" "show hidden")
+        (list "project-new" "go" "new project") (list "project-remove" "go" "remove project") (list "workspace-new" "go" "new workspace") (list "workspace-remove" "go" "remove workspace")
         (list "leave-write" "leave" "save and leave") (list "mode" "leave" "other layer")))
 
 (define menu-group-order
-  (list "file" "page" "blocks" "view" "move" "edit" "kind" "todo" "go" "place" "style" "level" "keys" "leave"))
+  (list "file" "page" "blocks" "view" "move" "edit" "kind" "todo" "go" "place" "style" "level" "focus" "split" "swap" "size" "layout" "keys" "leave"))
 
 (define (menu-group-of cmd)
   (let ([e (assoc cmd menu-groups)]) (if e (cadr e) "keys")))

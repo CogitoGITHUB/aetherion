@@ -1,6 +1,6 @@
 #lang racket/base
 
-(require racket/list racket/string racket/path "../../commands/commands.rkt" "tabs.rkt" "tabs-folders.rkt")
+(require racket/list racket/string racket/path "../../commands/commands.rkt" "tabs.rkt" "tabs-folders.rkt" (only-in "../bar/bar-state.rkt" name-prompt))
 
 (provide)
 
@@ -114,3 +114,148 @@
 (hash-set! commands "tab-hide" command-tab-hide)
 (hash-set! commands "tab-less" command-tab-less)
 (hash-set! commands "tab-more" command-tab-more)
+
+(define (page-in dir depth)
+  (with-handlers ([(lambda (e) #t) (lambda (e) #f)])
+    (let ([es (sort (map path->string (directory-list dir)) string<?)])
+      (or (for/first ([n (in-list es)]
+                      #:when (and (regexp-match? #rx"[.]aiu$" n) (file-exists? (build-path dir n))))
+            (path->string (build-path dir n)))
+          (and (> depth 0)
+               (for/or ([n (in-list es)]
+                        #:when (and (directory-exists? (build-path dir n))
+                                    (not (char=? (string-ref n 0) #\.))
+                                    (not (member n tabs-skipped))))
+                 (page-in (build-path dir n) (sub1 depth))))))))
+
+(define (hop-step! names current dir-of delta label)
+  (define i (index-of names current))
+  (cond
+    [(or (not i) (< (length names) 2)) (cons #t (string-append "one " label))]
+    [else
+     (let loop ([k 1])
+       (cond
+         [(>= k (length names)) (cons #t (string-append "no page in any other " label))]
+         [else
+          (let* ([n (list-ref names (modulo (+ i (* k delta)) (length names)))]
+                 [page (page-in (dir-of n) 2)])
+            (cond
+              [page (tab-show! page) (tabs-go! page)]
+              [else (loop (add1 k))]))]))]))
+
+(define (project-hop session delta)
+  (define file (path->string (path->complete-path (session-file session))))
+  (define root (tabs-root file))
+  (hop-step! (tabs-arranged (tabs-dirs root) project-order project-hidden (tabs-project file root)) (tabs-project file root) (lambda (n) (build-path root n)) delta "project"))
+
+(define (workspace-hop session delta)
+  (define file (path->string (path->complete-path (session-file session))))
+  (define root (tabs-root file))
+  (define up (tabs-parent root))
+  (if up
+      (hop-step! (tabs-arranged (tabs-dirs up) workspace-order workspace-hidden (tabs-last root)) (tabs-last root) (lambda (n) (build-path up n)) delta "workspace")
+      (cons #t "no workspace folder")))
+
+(define (command-project-prev session words) (project-hop session -1))
+(define (command-project-next session words) (project-hop session 1))
+(define (command-workspace-prev session words) (workspace-hop session -1))
+(define (command-workspace-next session words) (workspace-hop session 1))
+(define (command-project-mode session words) (set-layer! session "project") (cons #t "layer: project"))
+(define (command-workspace-mode session words) (set-layer! session "workspace") (cons #t "layer: workspace"))
+
+(for ([p (list (cons "project-prev" command-project-prev) (cons "project-next" command-project-next) (cons "workspace-prev" command-workspace-prev) (cons "workspace-next" command-workspace-next) (cons "project-mode" command-project-mode) (cons "workspace-mode" command-workspace-mode))])
+  (hash-set! commands (car p) (cdr p)))
+
+(define (arrange-move! kind names order current delta)
+  (define moved (tabs-order-moved names current delta))
+  (cond
+    [(equal? moved names) (cons #t (string-append "the " kind " cannot move further"))]
+    [else (set-box! order moved) (cons #t (string-append kind (if (< delta 0) " moved left" " moved right")))]))
+
+(define (project-names session)
+  (define file (path->string (path->complete-path (session-file session))))
+  (define root (tabs-root file))
+  (values file root (tabs-project file root)))
+
+(define (command-project-move-left session words)
+  (define-values (file root cur) (project-names session))
+  (arrange-move! "project" (tabs-arranged (tabs-dirs root) project-order project-hidden cur) project-order cur -1))
+(define (command-project-move-right session words)
+  (define-values (file root cur) (project-names session))
+  (arrange-move! "project" (tabs-arranged (tabs-dirs root) project-order project-hidden cur) project-order cur 1))
+(define (command-workspace-move-left session words)
+  (define-values (file root cur) (project-names session))
+  (define up (tabs-parent root))
+  (if up (arrange-move! "workspace" (tabs-arranged (tabs-dirs up) workspace-order workspace-hidden (tabs-last root)) workspace-order (tabs-last root) -1) (cons #t "no workspace folder")))
+(define (command-workspace-move-right session words)
+  (define-values (file root cur) (project-names session))
+  (define up (tabs-parent root))
+  (if up (arrange-move! "workspace" (tabs-arranged (tabs-dirs up) workspace-order workspace-hidden (tabs-last root)) workspace-order (tabs-last root) 1) (cons #t "no workspace folder")))
+
+(define (command-project-close session words)
+  (define-values (file root cur) (project-names session))
+  (cond
+    [(< (length (tabs-arranged (tabs-dirs root) project-order project-hidden cur)) 2) (cons #t "the last project stays")]
+    [else (set-box! project-hidden (cons cur (unbox project-hidden))) (project-hop session 1)]))
+(define (command-workspace-close session words)
+  (define-values (file root cur) (project-names session))
+  (define up (tabs-parent root))
+  (cond
+    [(not up) (cons #t "no workspace folder")]
+    [(< (length (tabs-arranged (tabs-dirs up) workspace-order workspace-hidden (tabs-last root))) 2) (cons #t "the last workspace stays")]
+    [else (set-box! workspace-hidden (cons (tabs-last root) (unbox workspace-hidden))) (workspace-hop session 1)]))
+(define (command-project-open session words) (set-box! project-hidden (list)) (cons #t "all projects shown"))
+(define (command-workspace-open session words) (set-box! workspace-hidden (list)) (cons #t "all workspaces shown"))
+
+(for ([p (list (cons "project-move-left" command-project-move-left) (cons "project-move-right" command-project-move-right) (cons "workspace-move-left" command-workspace-move-left) (cons "workspace-move-right" command-workspace-move-right) (cons "project-close" command-project-close) (cons "workspace-close" command-workspace-close) (cons "project-open" command-project-open) (cons "workspace-open" command-workspace-open))])
+  (hash-set! commands (car p) (cdr p)))
+
+(define (ask-name! label cb)
+  (set-box! name-prompt (list label "" cb ""))
+  (cons #t "type the name"))
+
+(define (make-new! parent name label)
+  (define dir (build-path parent name))
+  (cond
+    [(or (directory-exists? dir) (file-exists? dir)) (cons #t (string-append "that " label " already exists"))]
+    [else
+     (with-handlers ([(lambda (e) #t) (lambda (e) (cons #t (string-append "could not create " label)))])
+       (make-directory dir)
+       (define page (build-path dir "page.aiu"))
+       (call-with-output-file page (lambda (o) (fprintf o "title start\nkind: default\ntags: page\n~a\ntitle end\n" (string-upcase name))))
+       (set-box! tab-lists #f)
+       (tab-show! (path->string page))
+       (tabs-go! (path->string page)))]))
+
+(define (remove-dir! dir hop label)
+  (define target (build-path (or (tabs-parent dir) (current-directory)) (string-append ".removed-" (tabs-last dir))))
+  (cond
+    [(or (directory-exists? target) (file-exists? target)) (cons #t (string-append label " already removed once: " (path->string target)))]
+    [else
+     (define r (hop))
+     (cond
+       [(car r) r]
+       [else
+        (with-handlers ([(lambda (e) #t) (lambda (e) (cons #t (string-append "could not remove " label)))])
+          (define prefix (string-append (path->string dir) "/"))
+          (rename-file-or-directory dir target)
+          (set-box! tab-files (filter (lambda (f) (not (string-prefix? f prefix))) (unbox tab-files)))
+          (set-box! tab-lists #f)
+          r)])]))
+
+(define (command-project-new session words)
+  (define-values (file root cur) (project-names session))
+  (ask-name! "project" (lambda (nm) (make-new! root nm "project"))))
+(define (command-workspace-new session words)
+  (define-values (file root cur) (project-names session))
+  (define up (tabs-parent root))
+  (if up (ask-name! "workspace" (lambda (nm) (make-new! up nm "workspace"))) (cons #t "no workspace folder")))
+(define (command-project-remove session words)
+  (define-values (file root cur) (project-names session))
+  (remove-dir! (build-path root cur) (lambda () (project-hop session 1)) "project"))
+(define (command-workspace-remove session words)
+  (define-values (file root cur) (project-names session))
+  (remove-dir! root (lambda () (workspace-hop session 1)) "workspace"))
+
+(for ([p (list (cons "project-new" command-project-new) (cons "workspace-new" command-workspace-new) (cons "project-remove" command-project-remove) (cons "workspace-remove" command-workspace-remove))])
+  (hash-set! commands (car p) (cdr p)))

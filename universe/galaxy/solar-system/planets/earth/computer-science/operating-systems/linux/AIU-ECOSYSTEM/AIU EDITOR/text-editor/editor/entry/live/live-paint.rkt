@@ -19,7 +19,7 @@
          "../../notation/where.rkt"
          "../../tui/blocks/blockview.rkt" "../../tui/blocks/blocks-edit.rkt" "../../tui/blocks/blocks-view.rkt"
          "../../tui/blocks/blocks-move.rkt"
-         "../../tui/float/menu.rkt"
+         "../../tui/bar/bar-menu.rkt"
          "../../tui/bar/bar.rkt"
          "../../tui/tabs/tabs.rkt"
          "../../tui/tabs/finder.rkt"
@@ -89,7 +89,7 @@
           [(or writing? (multi-raw? session)) raw]
           [else (page-view session raw width)]))
   (define pending (unbox pending-keys))
-  (define menu (and (or (pair? pending) (member (the-layer session) (list "bar" "bar-level" "tab" "tab-level" "find" "pin"))) (menu-float (menu-text (the-layer session) pending (min width 66)) width)))
+  (define menu (and #f (or (pair? pending) (member (the-layer session) (list "bar" "bar-level" "tab" "tab-level" "find" "pin"))) (menu-float (menu-text (the-layer session) pending (min width 66)) width)))
   (define text0 (if overlay (car overlay) plain-text))
   (define text (if (and gut? (not writing?) (not (multi-raw? session))) (gutter-apply session text0) text0))
   (define-values (row column) (point-line raw (the-point session)))

@@ -12,13 +12,24 @@
 
 (define tab-switch (box #f))
 
-(define tab-place (box "top"))
+(define tab-place (box "bottom"))
 
-(define tab-saved (box "top"))
+(define tab-saved (box "bottom"))
 
 (define tab-count (box 3))
 
 (define tab-joined (box #t))
+
+(define project-order (box #f))
+(define project-hidden (box (list)))
+(define workspace-order (box #f))
+(define workspace-hidden (box (list)))
+
+(define (tabs-arranged names order hidden current)
+  (define shown (filter (lambda (n) (or (equal? n current) (not (member n (unbox hidden))))) names))
+  (define o (or (unbox order) (list)))
+  (define known (filter (lambda (n) (member n shown)) o))
+  (append known (filter (lambda (n) (not (member n known))) shown)))
 
 (define tab-lists (box #f))
 
@@ -77,9 +88,9 @@
   (define project (tabs-project file root))
   (define tabs-text (tabs-mark-row labels at inner))
   (define project-text
-    (if ready (tabs-mark-row (caddr have) (index-of (caddr have) project) inner) "reading folders"))
+    (if ready (let ([l (tabs-arranged (caddr have) project-order project-hidden project)]) (tabs-mark-row l (index-of l project) inner)) "reading folders"))
   (define workspace-text
-    (if ready (tabs-mark-row (cadr have) (index-of (cadr have) (tabs-last root)) inner) "reading folders"))
+    (if ready (let ([l (tabs-arranged (cadr have) workspace-order workspace-hidden (tabs-last root))]) (tabs-mark-row l (index-of l (tabs-last root)) inner)) "reading folders"))
   (define sections
     (append (if (>= level 3) (list (cons "workspace" workspace-text)) null)
             (if (>= level 2) (list (cons "project" project-text)) null)
@@ -101,3 +112,5 @@
 (define tab-git-text (box "reading git"))
 
 (provide tab-git-text)
+(provide project-order project-hidden workspace-order workspace-hidden tabs-arranged)
+(provide tab-lists)

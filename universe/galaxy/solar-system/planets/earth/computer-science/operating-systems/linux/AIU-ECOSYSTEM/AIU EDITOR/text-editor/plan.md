@@ -557,3 +557,20 @@ S4c: space w menu rows, bar level for the pane count, re-record the screen tests
 - S4b read: bar.rkt page rules and side lines, the full paint call in live-paint, view-of
 - S4b: bar.rkt page-frame box (rules and side lines off with several panes), pane overlay in live-paint, pane-files per pane id, focus change switches the page
 - S4b: panes drawn in live-paint: bar frame off with several panes, each pane its own box, heavy rules on the focused one, other panes static views with cache, focus change reopens that pane file; tests split-overlay and pane-split
+- S4c: pane menu groups (focus split swap size layout) so SPC w shows labelled keys; then mode line hints
+- S4d: mode line key list shows labels from menu-label-of
+- S4e: mode line keys wrapped over rows instead of one cut line
+- S4f: bar shows grouped menu-text for pending keys and mode layers incl. pane; float menu off
+- S4g: bar table for every layer, rows written KEY > function
+- S4h: bar menu retracted to one line in visual and write layers, full table when SPC pending or in a mode layer
+- S4i: bar table uncapped, clamped to screen height, tabs hidden while expanded
+- S5: project and workspace layers (SPC j, SPC l) with prev/next hopping to the first page of the neighbour
+- S5b: move menu.rkt from float to bar dir as bar-menu.rkt
+- S5c: project and workspace layers get move, close, open, place, join, hide, level like tabs; menu test re-recorded as bar-menu
+- S5e: typed name prompt in the bar for project and workspace add
+- S5d+e: project and workspace add (typed name prompt in the bar) and remove (rename to .removed-NAME)
+- S6: tab bar default place bottom, joined with the mode line
+- S6b: new project and workspace pages start with a title block
+- S7: find which screen tests fail after the bar menu, project/workspace and tab default changes, then re-record them one by one
+- S7b: re-record centre-box float-view pin-view scroll-view after the bar changes
+- S7c: recorder skips lacks lines that are in the pinned title block; re-record centre-box float-view pin-view scroll-view

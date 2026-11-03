@@ -61,9 +61,10 @@
   (define ksl (record-lines ks))
   (define bfl (record-lines bf))
   (define kfl (record-lines kf))
+  (define titletext (with-handlers ([void (lambda (e) "")]) (let ([m (regexp-match #rx"title start\n(.*?)title end" (file->string pg))]) (if m (cadr m) ""))))
   (define expects
     (append (for/list ([l (in-list (first-n (filter (lambda (x) (not (member x bsl))) ksl) 3))]) (string-append "expect screen contains " l))
-            (for/list ([l (in-list (first-n (filter (lambda (x) (and (regexp-match? #rx" " x) (not (for/or ([k (in-list ksl)]) (string-contains? k x))))) bsl) 3))]) (string-append "expect screen lacks " l))
+            (for/list ([l (in-list (first-n (filter (lambda (x) (and (regexp-match? #rx" " x) (not (string-contains? titletext x)) (not (for/or ([k (in-list ksl)]) (string-contains? k x))))) bsl) 3))]) (string-append "expect screen lacks " l))
             (for/list ([l (in-list (first-n (filter (lambda (x) (not (member x bfl))) kfl) 2))]) (string-append "expect file contains " l))
             (for/list ([l (in-list (first-n (filter (lambda (x) (not (for/or ([k (in-list kfl)]) (string-contains? k x)))) bfl) 2))]) (string-append "expect file lacks " l))
             (for/list ([c (in-list (list "grey" "white"))] #:when (and (regexp-match? (colour-rx c) kraw) (not (regexp-match? (colour-rx c) braw)))) (string-append "expect colour " c))))

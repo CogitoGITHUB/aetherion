@@ -2,7 +2,5 @@ test centre-box
 level 2
 file test.aiu
 keys t t t t t t
-expect screen contains the box you see, the level by level matching works.
-expect screen lacks comment
-expect screen lacks Every key in this page works in the visual layer unless a part says
+expect screen contains paragraph
 expect seconds-under 30

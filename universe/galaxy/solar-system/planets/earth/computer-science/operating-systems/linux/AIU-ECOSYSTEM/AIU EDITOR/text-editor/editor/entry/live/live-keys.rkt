@@ -19,8 +19,8 @@
          "../../notation/where.rkt"
          "../../tui/blocks/blockview.rkt" "../../tui/blocks/blocks-edit.rkt" "../../tui/blocks/blocks-view.rkt"
          "../../tui/blocks/blocks-move.rkt"
-         "../../tui/float/menu.rkt"
-         "../../tui/bar/bar.rkt"
+         "../../tui/bar/bar-menu.rkt"
+         "../../tui/bar/bar.rkt" (only-in "../../tui/bar/bar-state.rkt" name-prompt)
          "../../tui/tabs/tabs.rkt"
          "../../tui/tabs/finder.rkt"
          "../../tui/keys/key-notes.rkt"
@@ -83,7 +83,7 @@
       [else (loop (sub1 k))])))
 
 (define (act-on session buffer)
-  (act-on-file session buffer))
+  (if (unbox name-prompt) (act-prompt session buffer) (act-on-file session buffer)))
 
 (define (act-on-file session buffer)
   (define runs (key-runs buffer))
@@ -127,3 +127,38 @@
   (if (>= taken (length buffer))
       '()
       (drop buffer taken)))
+
+(define (prompt-step! name)
+  (define p (unbox name-prompt))
+  (define label (car p))
+  (define buf (cadr p))
+  (define cb (caddr p))
+  (cond
+    [(equal? name "escape") (set-box! name-prompt #f) #t]
+    [(equal? name "backspace")
+     (set-box! name-prompt (list label (if (string=? buf "") buf (substring buf 0 (sub1 (string-length buf)))) cb ""))
+     #t]
+    [(equal? name "return")
+     (define nm (string-trim buf))
+     (cond
+       [(string=? nm "") (set-box! name-prompt (list label buf cb "type a name first")) #t]
+       [(regexp-match? #rx"[/]|^[.]" nm) (set-box! name-prompt (list label buf cb "no slash and no leading dot")) #t]
+       [else
+        (define r (cb nm))
+        (cond
+          [(car r) (set-box! name-prompt (list label buf cb (cdr r))) #t]
+          [else (set-box! name-prompt #f) #f])])]
+    [(text-of name)
+     (set-box! name-prompt (list label (string-append buf (text-of name)) cb ""))
+     #t]
+    [else #t]))
+
+(define (act-prompt session buffer)
+  (define runs (key-runs buffer))
+  (cond
+    [(null? runs) (outcome (quote wait) #t)]
+    [else
+     (define go
+       (for/fold ([go #t]) ([r (in-list runs)])
+         (if (and go (unbox name-prompt)) (prompt-step! (car r)) go)))
+     (outcome (drop-bytes buffer runs) go)]))

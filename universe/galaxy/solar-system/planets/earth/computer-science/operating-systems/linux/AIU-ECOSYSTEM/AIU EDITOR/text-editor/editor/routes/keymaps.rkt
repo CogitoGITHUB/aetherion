@@ -14,7 +14,7 @@
 
 (define reserved-prefix "f1")
 
-(define editor-layers '("visual" "write" "select" "move" "undo" "cursor" "bar" "bar-level" "tab" "tab-level" "find" "pin" "pane"))
+(define editor-layers '("visual" "write" "select" "move" "undo" "cursor" "bar" "bar-level" "tab" "tab-level" "find" "pin" "pane" "project" "workspace"))
 
 (define trigger-of
   (list (cons "visual" "space")
@@ -25,7 +25,11 @@
           (cons "bar-level" "space")
           (cons "tab" "space")
           (cons "tab-level" "space")
-          (cons "find" "space") (cons "undo" "space") (cons "cursor" "space") (cons "pin" "space") (cons "pane" "space")))
+          (cons "find" "space") (cons "undo" "space") (cons "cursor" "space") (cons "pin" "space") (cons "pane" "space") (cons "project" "space") (cons "workspace" "space")))
+
+(define project-keys (list (list "h" "project-prev") (list "t" "project-next") (list "left" "project-prev") (list "right" "project-next") (list "a" "project-move-left") (list "e" "project-move-right") (list "c" "project-close") (list "o" "project-open") (list "n" "project-new") (list "r" "project-remove") (list "p" "tab-place-next") (list "u" "tab-top") (list "b" "tab-bottom") (list "j" "tab-join") (list "x" "tab-hide") (list "v" "tab-level-mode") (list "escape" "visual-mode")))
+
+(define workspace-keys (list (list "h" "workspace-prev") (list "t" "workspace-next") (list "left" "workspace-prev") (list "right" "workspace-next") (list "a" "workspace-move-left") (list "e" "workspace-move-right") (list "c" "workspace-close") (list "o" "workspace-open") (list "n" "workspace-new") (list "r" "workspace-remove") (list "p" "tab-place-next") (list "u" "tab-top") (list "b" "tab-bottom") (list "j" "tab-join") (list "x" "tab-hide") (list "v" "tab-level-mode") (list "escape" "visual-mode")))
 
 (define normal-keys
   '(("w" "block-edit")
@@ -64,7 +68,7 @@
     ("space k" "check")
     ("space n" "next-block")
     ("space e" "block-end")
-    ("space o" "pin-mode") ("space w" "pane-mode")
+    ("space o" "pin-mode") ("space w" "pane-mode") ("space j" "project-mode") ("space l" "workspace-mode")
       ("up" "block-up") ("down" "block-down") ("left" "move-left") ("right" "move-right")
     ("escape" "visual-mode")
     ("backspace" "delete")))
@@ -99,7 +103,7 @@
             (list "bar-level" bar-level-keys)
             (list "tab" tab-keys)
             (list "tab-level" tab-level-keys)
-            (list "find" find-keys) (list "undo" undo-keys) (list "cursor" cursor-keys) (list "pin" pin-keys) (list "pane" split-keys))))
+            (list "find" find-keys) (list "undo" undo-keys) (list "cursor" cursor-keys) (list "pin" pin-keys) (list "pane" split-keys) (list "project" project-keys) (list "workspace" workspace-keys))))
 
 (define (keys-of layer)
   (define found (assoc layer keymaps))
