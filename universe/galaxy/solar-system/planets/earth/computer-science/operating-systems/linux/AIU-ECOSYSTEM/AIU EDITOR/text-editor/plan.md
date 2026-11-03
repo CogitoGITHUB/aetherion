@@ -512,3 +512,21 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - read the test runner lookup before moving the key tests
 - map the 18 key tests to groups: text, blocks, float, multi, undo, tabs; runner and record lookup patched
 - 18 key tests moved from gate/tests into editor/tui groups (text, blocks, float, multi, undo, tabs); record and docs find tests anywhere under editor
+- read todo.aiu to pick the next todo
+- work the tab bar todo (bar, tabs, focus, find, red-only colour)
+PLAN tab bar: workspace > project > tab, move, split, two on screen
+Rule: each step ships alone, compiles, has its own recorded test in editor/tui/tabs, commits with explicit paths, then the next.
+1. Read tabs.rkt, tabs-commands.rkt, tabs-folders.rkt, tabs-keys.rkt, bar-rows.rkt once. List every existing command and key (today: new tab, next tab, delete tab). Write the list here.
+2. Tab order inside a project: tab-move-left, tab-move-right, tab-move-first, tab-move-last. Keys in the tabs layer.
+3. Tab to other places: tab-move-to-next-project, tab-move-to-previous-project, tab-move-to-next-workspace, tab-move-to-previous-workspace. The tab keeps its file, cursor and undo journal.
+4. Project commands: project-new, project-delete, project-rename, project-move-left, project-move-right, project-move-to-next-workspace, project-move-to-previous-workspace. Deleting a project with open tabs asks once, saves first.
+5. Workspace commands: workspace-new, workspace-delete, workspace-rename, workspace-move-left, workspace-move-right. Same delete rule.
+6. Level selector: key to switch the tab bar target between tab, project and workspace, shown in the tab box. The same move and delete keys act on the chosen level, so no second key set.
+7. Layout model in editor/tui/tabs/layout-tree.rkt: a tree of panes, split-right and split-down nodes, each pane holds workspace, project and tab. Commands: pane-split-right, pane-split-down, pane-close, pane-focus-left, pane-focus-right, pane-focus-up, pane-focus-down, pane-swap, pane-equalise.
+8. Two workspaces or two projects on screen: a new pane starts as a copy of the focused pane view, then the level selector and tab commands change that pane only. The tab box shows the focused pane; the other panes show their own active tab name in their top rule.
+9. Painting: live-paint composes the panes, each in its own page box with its own rules, never merged, title box above the focused page only. Bar and mode box stay single at top and bottom. Pin layer and title box follow the focused pane.
+10. Sessions: panes showing the same file share one session and journal; cursor and scroll are per pane. A file open in two panes saves once.
+11. Keep layout between sessions in the state dir, restored lazily after first paint.
+12. Tests: one recorded test per step (tab-move, tab-to-project, project-move, workspace-move, level-selector, pane-split, pane-focus, pane-close, two-panes-screen). Delete and re-record screen tests that show the frame.
+13. Last: bar level for pane count and the level selector, hidden when there is one pane.
+Open questions for him, asked only when step 1 is read: which keys, whether a split pane may show an empty project.
