@@ -549,3 +549,7 @@ S6. Keep the layout between sessions in the state dir, restored after first pain
 - S2b: pane ratio per split, resize, swap, flip (placement), turn (right/down), equalise in split-layout.rkt; test re-recorded; S3 commands and keys use them
 - S3: split-state.rkt (tree, focus), split-commands.rkt, split-keys.rkt, layer registered in keymaps.rkt
 - S3: split-state, split-commands, split-keys written, layer pane on space w, module test split-state; menu rows and paint come with S4
+- S4 read: paint in drawing/screen.rkt, the key loop in live.rkt, how a session is made
+S4a: split-paint.rkt pure: split-pane-box (own box per pane, heavy rules for the focused pane, light rules for the others, no colours) and split-compose (rows of all panes side by side), module test.
+S4b: wire into live-paint: with more than one pane, the focused pane gets its rect width and height, the other panes render their page statically from their own file; pane-files map id to file; focus change switches the session through the tab-switch round (cursor and scroll per pane come in S5).
+S4c: space w menu rows, bar level for the pane count, re-record the screen tests.
