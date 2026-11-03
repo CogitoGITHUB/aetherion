@@ -447,3 +447,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - levels.txt: level 3 lists the last 3 stages, so the table holds all 17
 - stage-label counts stages from levels.txt; how-to-make-tests says module tests sit beside the module
 - aiutd update starts the tests in a thread before the gate, so both run at once
+- AIU_ONLY env filter in run-all-tests so aiutd update can run one test

@@ -11,7 +11,9 @@
                       (append (find-files (lambda (q) (regexp-match? #rx"[.]test$" (path->string q))) dir) (find-files (lambda (q) (regexp-match? #rx"[.]test$" (path->string q))) (build-path editor-root "editor"))))
               string<? #:key path->string)
         (list)))
-  (define wanted (filter (lambda (p) (<= (test-level p) level)) files))
+  (define only (getenv "AIU_ONLY"))
+  ;; wanted keeps the tests at or below the level, and only those matching AIU_ONLY when it is set.
+  (define wanted (filter (lambda (p) (and (<= (test-level p) level) (or (not only) (regexp-match? (regexp-quote only) (path->string p))))) files))
   (run-tests-parallel wanted))
 
 ;; arg-value answers the word after a flag in the arguments, or #f when the flag is missing.
