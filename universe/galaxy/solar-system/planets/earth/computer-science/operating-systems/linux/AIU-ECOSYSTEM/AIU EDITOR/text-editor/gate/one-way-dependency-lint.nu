@@ -44,7 +44,7 @@ def target-area [file required] {
 }
 
 def main [] {
-    let files = (glob $"($package_src)/**/*.rkt") | lines
+    let files = (glob $"($package_src)/**/*.rkt")
     let file_count = ($files | length)
 
     if ($file_count == 0) {

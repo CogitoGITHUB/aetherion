@@ -25,8 +25,8 @@ def racket_crossings [rkt] {
 }
 
 def main [] {
-    let rs = (glob $"($package_dir)/**/*.rs") | lines
-    let rkt = (glob $"($package_dir)/**/*.rkt") | lines
+    let rs = ((glob $"($package_dir)/**/*.rs") ++ (glob $"($notation_dir)/**/*.rs"))
+    let rkt = ((glob $"($package_dir)/**/*.rkt") ++ (glob $"($notation_dir)/**/*.rkt"))
     let checked = ($rs | length) + ($rkt | length)
 
     if ($checked == 0) {
