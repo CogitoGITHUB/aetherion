@@ -427,3 +427,4 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - module-test batch 11: update-drive-live tasks; live-paint dispatch-tasks terminal lazy-stub skipped (session, terminal or dynamic-require)
 - module-test batch 12: start location loader; skipped (git, disk, network or child process): http audit checkpoint bake update-drive-run quick
 - module-test batch 13: bar-keys commands-layer; skipped (agent, session with hot path): adapter send dispatch-agent commands-page
+- module-test batch 14: multi-boxes dispatch; skipped (hot path, child process or terminal): commands-edit update-drive-pty cli-full lean
