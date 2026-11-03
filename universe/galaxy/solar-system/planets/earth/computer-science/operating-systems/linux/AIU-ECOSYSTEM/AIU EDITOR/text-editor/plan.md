@@ -489,3 +489,6 @@ Record commits and home scan off (2026-11-02): green aiutd record commits its ow
 - key-check: read wire-start and wire-stop, then patch main to use one live wire
 - key-check: open one live wire with wire-start and wire-stop so each key is not a process spawn
 - key-check: verify level 3 and commit the live-wire patch
+- kit-check: read it to find the 18 s
+- kit-check: system call at line 159 runs the skill examples, read 140-215 to run them in parallel
+- kit-check: run the skill examples in parallel, capped by AIU_JOBS default 4

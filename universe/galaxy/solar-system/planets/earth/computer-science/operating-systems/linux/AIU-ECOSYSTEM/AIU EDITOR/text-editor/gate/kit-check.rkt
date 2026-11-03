@@ -146,8 +146,8 @@
   (define examples (skill-examples))
   (if (null? examples)
       (set! problems (cons "the skill holds no example to run" problems))
-      (for ([example (in-list examples)])
-        (define code (run-code example))
+      (for ([example (in-list examples)]
+            [code (in-list (run-parallel examples))])
         (unless (= code 0)
           (set! problems (cons (format "the example did not answer: ~a (code ~a)" example code)
                                problems)))))
@@ -161,6 +161,21 @@
   (if (file-exists? code-file)
       (string->number (string-trim (file->string code-file)))
       #f))
+
+(define (run-parallel commands)
+  (define jobs
+    (let ([named (string->number (or (getenv "AIU_JOBS") ""))])
+      (if (and named (> named 0)) named 4)))
+  (define slots (make-semaphore jobs))
+  (define results (make-vector (length commands) #f))
+  (define threads
+    (for/list ([command (in-list commands)] [at (in-naturals)])
+      (thread (lambda ()
+                (semaphore-wait slots)
+                (vector-set! results at (system/exit-code command))
+                (semaphore-post slots)))))
+  (for-each thread-wait threads)
+  (vector->list results))
 
 (define (starts-with? text prefix)
   (and (>= (string-length text) (string-length prefix))
