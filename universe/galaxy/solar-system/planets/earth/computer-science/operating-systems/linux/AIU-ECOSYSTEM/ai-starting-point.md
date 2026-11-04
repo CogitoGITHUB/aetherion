@@ -1,3 +1,4 @@
+- Rule from Shape: no bar drawing in Rust; bar_box only asks bar-lines-server.rkt (tabs, workspace, git, mode all from the editor Racket). Obey literally, delete Rust copies
 - Lessons: pane rows must be padded to the box width by visible width (escape_free_width in screen_paint_scroll.rs); his paste cuts lines at 80 columns, so a missing right edge in a paste can be the paste, check widths in code
 - Lessons: the multiplexer mode box comes from bar-lines-server.rkt run by client/screen_bar/screen_bar_racket.rs; after any change to a bar rkt file run raco make on bar-lines-server.rkt in the editor-code copy
 - Rule from Shape: the multiplexer bars come from the editor Racket code through tui/bar/bar-lines-server.rkt (one request line: layer TAB file TAB width, answer: bar rows then an empty line); both copies always identical
