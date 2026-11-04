@@ -1,0 +1,6 @@
+test mod-properties
+level 2
+module ../../AIU NOTATION/notation/model/properties.rkt
+call (list? property-keywords)
+expect result equals #t
+expect seconds-under 20

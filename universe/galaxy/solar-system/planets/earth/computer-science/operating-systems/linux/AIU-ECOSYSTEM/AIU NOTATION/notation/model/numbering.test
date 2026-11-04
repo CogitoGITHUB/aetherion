@@ -1,0 +1,6 @@
+test mod-numbering
+level 2
+module ../../AIU NOTATION/notation/model/numbering.rkt
+call (procedure? heading-numbers)
+expect result equals #t
+expect seconds-under 20

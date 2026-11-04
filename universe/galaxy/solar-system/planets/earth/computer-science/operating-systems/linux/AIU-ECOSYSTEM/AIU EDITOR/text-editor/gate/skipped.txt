@@ -62,7 +62,6 @@ editor/tui/text/clip-notes.rkt
 editor/tui/text/clip.rkt
 editor/tui/undo/undo-keys.rkt
 editor/tui/undo/undo.rkt
-../../AIU NOTATION/notation/data/aiu-text.rkt
 ../../AIU NOTATION/notation/diagnostics/report.rkt
 ../../AIU NOTATION/notation/elements/dispatch.rkt
 ../../AIU NOTATION/notation/elements/literals.rkt
@@ -89,15 +88,10 @@ editor/tui/undo/undo.rkt
 ../../AIU NOTATION/notation/filetypes/types/todo.rkt
 ../../AIU NOTATION/notation/generation/plan.rkt
 ../../AIU NOTATION/notation/generation/write.rkt
-../../AIU NOTATION/notation/literate/scan.rkt
 ../../AIU NOTATION/notation/literate/targets.rkt
 ../../AIU NOTATION/notation/machine/cancel.rkt
 ../../AIU NOTATION/notation/machine/directories.rkt
 ../../AIU NOTATION/notation/machine/locks.rkt
-../../AIU NOTATION/notation/model/addressing.rkt
-../../AIU NOTATION/notation/model/nodes.rkt
-../../AIU NOTATION/notation/model/numbering.rkt
-../../AIU NOTATION/notation/model/properties.rkt
 ../../AIU NOTATION/notation/narration/events.rkt
 ../../AIU NOTATION/notation/narration/narration.rkt
 ../../AIU NOTATION/notation/narration/print-console.rkt
