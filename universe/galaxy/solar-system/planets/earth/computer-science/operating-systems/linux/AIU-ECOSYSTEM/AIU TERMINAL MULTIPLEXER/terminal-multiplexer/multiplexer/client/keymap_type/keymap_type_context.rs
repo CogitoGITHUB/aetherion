@@ -1,5 +1,3 @@
-use super::*;
-
 /// Mode is whose keys these are.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum Mode {

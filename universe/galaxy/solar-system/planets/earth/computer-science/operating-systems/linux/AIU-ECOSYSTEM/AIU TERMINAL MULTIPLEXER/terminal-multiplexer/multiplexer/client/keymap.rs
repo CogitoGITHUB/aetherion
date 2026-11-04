@@ -53,7 +53,6 @@ mod keymap_resolve_state;
 pub(crate) use keymap_resolve_state::*;
 #[path = "keymap_resolve/keymap_resolve_methods.rs"]
 mod keymap_resolve_methods;
-pub(crate) use keymap_resolve_methods::*;
 #[path = "keymap_name/keymap_name_key.rs"]
 mod keymap_name_key;
 pub(crate) use keymap_name_key::*;

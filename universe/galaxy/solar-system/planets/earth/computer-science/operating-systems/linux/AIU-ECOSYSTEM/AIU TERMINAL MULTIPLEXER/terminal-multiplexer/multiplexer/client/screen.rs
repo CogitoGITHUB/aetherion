@@ -80,7 +80,6 @@ mod screen_type_structs;
 pub(crate) use screen_type_structs::*;
 #[path = "screen_type/screen_type_methods.rs"]
 mod screen_type_methods;
-pub(crate) use screen_type_methods::*;
 #[path = "screen_text/screen_text_clip.rs"]
 mod screen_text_clip;
 pub(crate) use screen_text_clip::*;

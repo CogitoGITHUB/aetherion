@@ -1,5 +1,3 @@
-use super::*;
-
 /// Command is what the multiplexer does. The dispatch does not know which key
 /// asked for it, so a command can be run from a key, from the explorer, or
 /// from the command line, and it does the same thing each time.
