@@ -53,7 +53,6 @@ mod config_file_type;
 pub(crate) use config_file_type::*;
 #[path = "config_file/config_file_methods.rs"]
 mod config_file_methods;
-pub(crate) use config_file_methods::*;
 #[cfg(test)]
 #[path = "config_test/config_test_behavior.rs"]
 mod tests;
