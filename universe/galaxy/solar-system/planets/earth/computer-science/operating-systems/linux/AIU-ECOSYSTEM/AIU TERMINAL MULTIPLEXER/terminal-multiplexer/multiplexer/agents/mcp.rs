@@ -12,7 +12,8 @@
 // The exit codes are frozen: 0 when every request was answered, 2 when a
 // request was refused, 3 when the server could not answer at all.
 
-#[path = "../holder/wire.rs"] mod wire;
+#[path = "../holder/wire/wire_socket.rs"] mod wire;
+#[path = "envelope/envelope_answer.rs"]
 mod envelope;
 mod tools;
 

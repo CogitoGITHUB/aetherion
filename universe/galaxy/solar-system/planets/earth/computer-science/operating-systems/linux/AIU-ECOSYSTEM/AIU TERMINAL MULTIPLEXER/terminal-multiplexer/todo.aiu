@@ -69,7 +69,6 @@ Planned.
 paragraph end
 
 paragraph start
-todo: open client.rs, clipboard.rs, git.rs, select.rs, workspace.rs, control.rs, editor.rs in client/ and the other loose files in holder/, agents/, devloop/, tty/ get subdirs where one file holds more than one job; names say what the thing does
 Planned.
 paragraph end
 

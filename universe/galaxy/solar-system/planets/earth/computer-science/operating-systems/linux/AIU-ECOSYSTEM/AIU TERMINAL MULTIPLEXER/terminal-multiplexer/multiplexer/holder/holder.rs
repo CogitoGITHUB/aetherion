@@ -11,20 +11,26 @@
 // shape: the client says attach, detach, read, state or send; the holder
 // answers with records and never dies because a client went.
 
-#[path = "../tty/facade.rs"] mod facade;
-#[path = "../tty/measure.rs"] mod measure;
-#[path = "../tty/tty.rs"] mod tty;
+#[path = "../tty/pty/pty_shell.rs"] mod facade;
+#[path = "../tty/measure/measure_screen.rs"] mod measure;
+#[path = "../tty/terminal/terminal_raw.rs"] mod tty;
+#[path = "editor/editor_ask.rs"]
 mod editor;
 mod git;
+#[path = "geometry/geometry_rects.rs"]
 mod geometry;
+#[path = "layout/layout_panes.rs"]
 mod layout;
 mod log;
+#[path = "sessions/sessions_names.rs"]
 mod sessions;
+#[path = "watch/watch_refusal.rs"]
 mod watch;
 mod workspace;
 
-#[path = "../agents/bundle.rs"]
+#[path = "../agents/bundle/bundle_carry.rs"]
 mod bundle;
+#[path = "shells/shells_spawn.rs"]
 mod shells;
 #[path = "request_client/request_client_detach.rs"]
 mod request_client_detach;

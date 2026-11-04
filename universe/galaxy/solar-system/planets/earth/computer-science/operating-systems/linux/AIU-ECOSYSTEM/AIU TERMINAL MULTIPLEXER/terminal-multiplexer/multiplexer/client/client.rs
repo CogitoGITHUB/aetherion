@@ -8,23 +8,28 @@
 // Its wait for the holder's socket ends on the filesystem event that creates
 // it, never on a clock.
 
-#[path = "../holder/wire.rs"] mod wire;
-#[path = "../holder/geometry.rs"] mod geometry;
+#[path = "../holder/wire/wire_socket.rs"] mod wire;
+#[path = "../holder/geometry/geometry_rects.rs"] mod geometry;
 #[allow(dead_code)]
-#[path = "../tty/tty.rs"] mod tty;
+#[path = "../tty/terminal/terminal_raw.rs"] mod tty;
 
 // The work mode's config: the devloop area sits below the client, so this is a
 // downward edge and the only one the client takes.
 #[path = "../devloop/config.rs"]
 mod config;
 
+#[path = "clipboard/clipboard_osc.rs"]
 mod clipboard;
 mod git;
+#[path = "workspace/workspace_lines.rs"]
 mod workspace;
+#[path = "editor/editor_lines.rs"]
 mod editor;
 mod keymap;
 mod screen;
+#[path = "select/select_region.rs"]
 mod select;
+#[path = "control/control_request.rs"]
 mod control;
 
 use serde_json::{json, Value};

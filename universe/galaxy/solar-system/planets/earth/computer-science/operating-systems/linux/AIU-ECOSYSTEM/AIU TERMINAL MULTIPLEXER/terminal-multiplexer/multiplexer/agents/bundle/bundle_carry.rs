@@ -19,7 +19,7 @@
 
 use serde_json::{json, Value};
 
-#[path = "redact.rs"]
+#[path = "../redact/redact_hide.rs"]
 mod redact;
 
 /// BOUNDARY is the version every bundle carries.

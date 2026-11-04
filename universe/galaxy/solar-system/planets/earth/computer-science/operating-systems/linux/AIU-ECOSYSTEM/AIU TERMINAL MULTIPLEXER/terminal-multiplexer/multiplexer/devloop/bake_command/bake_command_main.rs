@@ -11,8 +11,11 @@
 // Exit codes: 0 when the bake is good, 1 when it is not, 2 when the command
 // could not be asked what to bake.
 
+#[path = "../bake/bake_file.rs"]
 mod bake;
+#[path = "../config.rs"]
 mod config;
+#[path = "../last_good/last_good_record.rs"]
 mod last_good;
 
 use std::path::PathBuf;
