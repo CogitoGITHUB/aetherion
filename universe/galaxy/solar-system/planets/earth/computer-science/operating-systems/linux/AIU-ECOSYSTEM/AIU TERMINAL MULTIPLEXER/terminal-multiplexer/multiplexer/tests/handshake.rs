@@ -49,7 +49,7 @@ fn a_client_and_a_holder_that_disagree_refuse_each_other_by_name() {
     let sock = dir.join("holder.sock");
     let listener = UnixListener::bind(&sock).expect("the socket is made");
     let at = dir.display().to_string();
-    let mut client = Command::new(env!("CARGO_BIN_EXE_client"))
+    let client = Command::new(env!("CARGO_BIN_EXE_client"))
         .args(["--state-dir", &at, "--op", "screen"])
         .stdin(Stdio::null())
         .stdout(Stdio::piped())

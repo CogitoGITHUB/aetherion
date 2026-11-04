@@ -530,7 +530,7 @@ mod tests {
 
     #[test]
     fn visual_starts_at_the_root_map() {
-        let mut keymap = Keymap::empty();
+        let keymap = Keymap::empty();
         assert_eq!(keymap.explorer_map(), Context::Root);
         assert_eq!(keymap.group(), None);
     }
@@ -725,7 +725,7 @@ mod tests {
     fn the_explorer_shows_the_same_bindings_the_keys_use() {
         // The explorer and the keys read one table: the explorer shows the
         // root map, and the root map is what Visual mode reads.
-        let mut keymap = Keymap::empty();
+        let keymap = Keymap::empty();
         for binding in ROOT {
             if binding.is_map() {
                 continue;

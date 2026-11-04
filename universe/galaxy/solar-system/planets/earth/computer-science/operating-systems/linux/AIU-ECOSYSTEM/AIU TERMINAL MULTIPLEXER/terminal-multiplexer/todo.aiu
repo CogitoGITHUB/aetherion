@@ -56,7 +56,7 @@ Planned.
 paragraph end
 
 paragraph start
-todo: open holder/holder.rs is still 2001 lines: split the rest by job, the Session struct and its impl, serve and the read and close functions, the session handlers create rename kill shutdown, the pane handlers kill_pane show_pane rewind, ask_screen and control_result, the socket functions bind connect read_from write_to, Options; the answer function keeps only the dispatch; the other holder files get subdirs too
+todo: open holder/holder.rs keeps only the module declarations, the constants and the answer dispatch; the other holder files (geometry, git, layout, log, sessions, watch, workspace, editor, shells) get subdirs too
 Planned.
 paragraph end
 
