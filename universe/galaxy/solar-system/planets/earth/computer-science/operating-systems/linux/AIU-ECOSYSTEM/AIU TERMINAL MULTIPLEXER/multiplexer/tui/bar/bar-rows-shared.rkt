@@ -54,6 +54,14 @@
       null
       (append (list (edge-line "╭" "╮" title stamp width)) middle (list (rule-line "╰" "╯" width)))))
 
+(define (keys-body-rows layer pending width)
+  (define trig (let ([t (assoc layer trigger-of)]) (if t (cdr t) "-")))
+  (define waiting
+    (if (pair? pending) (format "  waiting after ~a" (string-join (map bar-kname pending) " ")) ""))
+  (if (or (pair? pending) (unbox menu-pinned) (not (member layer (list "visual" "write"))))
+      (map (lambda (r) (body-line r width)) (string-split (menu-text layer pending (max 20 (- width 4))) "\n" #:trim? #f))
+      (list (body-line (format "trigger ~a~a  ·  press ~a for keys" (bar-kname trig) waiting (bar-kname trig)) width))))
+
 (define (cell-chars name layer g)
   (cond
     [(string=? name "mode") (format "~a ~a" (mode-label layer) (unbox kind-filter))]
@@ -82,4 +90,4 @@
      (append (list "╭───╮") body filler (list "╰───╯"))]))
 
 
-(provide layer-keys-line bar-rows cell-chars strip-lines)
+(provide layer-keys-line bar-rows cell-chars strip-lines keys-body-rows)

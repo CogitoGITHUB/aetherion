@@ -7,12 +7,13 @@
 (struct bars-link (process in out lock))
 
 (define (racket-executable)
-  (define exec (find-system-path (quote exec-file)))
+  (define exec "racket")
   (or (find-executable-path exec) exec))
 
 (define (bars-link-open)
+  (putenv "LC_ALL" "C.utf8")
   (define-values (process in out err)
-    (subprocess #f #f (quote stdout) (racket-executable) (path->string server-path)))
+    (subprocess #f #f (quote stdout) (racket-executable) server-path))
   (bars-link process in out (make-semaphore 1)))
 
 (define (bars-link-ask! link layer short width pending pinned)
