@@ -61,12 +61,10 @@ Planned.
 paragraph end
 
 paragraph start
-todo: open client/screen.rs is still 999 lines: the Screen struct, the enums, the free functions clip put session refusal_text take_record and the tests move into their own files
 Planned.
 paragraph end
 
 paragraph start
-todo: open client/keymap.rs: the binding tables are split, the types (Mode Context Command Action Need State Binding), the Keymap struct with its methods, key_name and the tests still go into their own files, one keys file per category like the editor
 Planned.
 paragraph end
 

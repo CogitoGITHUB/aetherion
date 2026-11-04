@@ -20,7 +20,7 @@ pub fn parse(output: &str) -> Vec<Worktree> {
     let mut prunable = false;
     let mut bare = false;
     let mut seen = false;
-    let mut flush = |worktrees: &mut Vec<Worktree>,
+    let flush = |worktrees: &mut Vec<Worktree>,
                     path: &mut String,
                     commit: &mut String,
                     branch: &mut String,
