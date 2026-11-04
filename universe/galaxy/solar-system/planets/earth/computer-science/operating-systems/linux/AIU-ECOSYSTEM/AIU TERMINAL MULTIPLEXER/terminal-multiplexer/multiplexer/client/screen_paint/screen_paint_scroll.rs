@@ -49,14 +49,8 @@ impl Screen {
         let inner = rect.cols.saturating_sub(2) as usize;
         let height = rect.rows.saturating_sub(2) as usize;
         let mut lines: Vec<String> = Vec::new();
-        let name = format!("{} ", self.panes[index].name);
-        let mark = if focused { "*" } else { " " };
-        let mut top = format!("+{}{}", mark, name);
-        while top.chars().count() + 1 < rect.cols as usize {
-            top.push('-');
-        }
-        top.push('+');
-        lines.push(top);
+        let mark = if focused { "● " } else { "" };
+        lines.push(edge_line("╭", "╮", &format!("{}{}", mark, self.panes[index].name), "", rect.cols as usize));
         let visible = self.window(index, height);
         let visible = if focused && self.mode == Mode::Select {
             self.select.marked(&visible)
@@ -64,12 +58,12 @@ impl Screen {
             visible
         };
         for line in visible.iter() {
-            lines.push(format!("|{}|", clip(line, inner)));
+            lines.push(format!("│{}│", clip(line, inner)));
         }
         while lines.len() < height + 1 {
-            lines.push(format!("|{}|", " ".repeat(inner)));
+            lines.push(format!("│{}│", " ".repeat(inner)));
         }
-        lines.push(format!("+{}+", "-".repeat(inner)));
+        lines.push(rule_line("╰", "╯", rect.cols as usize));
         lines
     }
 }
