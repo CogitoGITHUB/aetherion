@@ -106,6 +106,12 @@
             (list "find" find-keys) (list "undo" undo-keys) (list "cursor" cursor-keys) (list "pin" pin-keys) (list "pane" split-keys) (list "project" project-keys) (list "workspace" workspace-keys))))
 
 (define (keys-of layer)
+  (define plain (keys-of-plain layer))
+  (if (or (null? plain) (assoc "space space" plain))
+      plain
+      (append plain (list (list "space space" "menu-or-visual")))))
+
+(define (keys-of-plain layer)
   (define found (assoc layer keymaps))
   (if found (cadr found) '()))
 

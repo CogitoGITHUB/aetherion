@@ -11,15 +11,25 @@
          "../../bridge/host-shared.rkt"
          "../../bridge/where-shared.rkt"
          "../session-shared.rkt"
-         "../multi-boxes-shared.rkt")
+         "../multi-boxes-shared.rkt"
+         (only-in "../../tui/bar/bar-state-shared.rkt" menu-pinned))
 
-(provide command-mode command-visual-mode command-write-mode command-select-mode command-level-up command-view-up command-view-down)
+(provide command-menu-or-visual command-mode command-visual-mode command-write-mode command-select-mode command-level-up command-view-up command-view-down)
 
 (define (command-mode session words)
   (define layer (the-layer session))
   (define next (if (string=? layer "write") "visual" "write"))
   (set-layer! session next)
   (cons #t (format "layer: ~a" next)))
+
+(define (command-menu-or-visual session words)
+  (cond
+    [(string=? (the-layer session) "visual")
+     (set-box! menu-pinned (not (unbox menu-pinned)))
+     (cons #t (if (unbox menu-pinned) "menu: open" "menu: closed"))]
+    [else
+     (set-layer! session "visual")
+     (cons #t "layer: visual")]))
 
 (define (command-visual-mode session words)
   (set-layer! session "visual")

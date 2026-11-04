@@ -12,10 +12,10 @@
       (set-box! git-info row)
       (set-box! tab-git-text (git-text row)))))
 
-(define (bar-stack layer short width)
+(define (bar-stack layer short width pending)
   (git-fresh)
   (define names (take bar-order (min (length bar-order) (max 0 (unbox bar-count)))))
-  (define bars (bar-rows layer short null (unbox git-info) width names))
+  (define bars (bar-rows layer short pending (unbox git-info) width names))
   (define tabs (tab-rows (path->string (path->complete-path short)) width void))
   (if (and (pair? tabs) (pair? bars) (unbox tab-joined))
       (append (drop-right tabs 1) (list (join-edge (car bars))) (cdr bars))
@@ -27,7 +27,7 @@
     (define parts (string-split line "\t" #:trim? #f))
     (define rows
       (with-handlers ([exn:fail? (lambda (why) (list (string-append "RACKET-ERROR " (car (string-split (exn-message why) "\n")))))])
-        (bar-stack (list-ref parts 0) (list-ref parts 1) (string->number (list-ref parts 2)))))
+        (begin (set-box! menu-pinned (and (> (length parts) 4) (string=? (list-ref parts 4) "1"))) (bar-stack (list-ref parts 0) (list-ref parts 1) (string->number (list-ref parts 2)) (if (> (length parts) 3) (string-split (list-ref parts 3) " ") null)))))
     (for ([row (in-list rows)])
       (displayln row))
     (displayln "")

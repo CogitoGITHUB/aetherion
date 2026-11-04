@@ -1,18 +1,47 @@
 #lang racket/base
-(provide route-keys)
-(define prefix-byte 29)
-(define quit-after-prefix-byte 113)
+(provide (struct-out key-state) initial-key-state key-state-pending-text key-state-pinned-flag route-keys)
+
+(struct key-state (layer pending pinned))
+
+(define space-byte 32)
+(define h-byte 104)
+(define i-byte 105)
+(define q-byte 113)
+(define delete-byte 127)
+
+(define (initial-key-state) (key-state "visual" (quote none) #f))
+(define (key-state-pending-text state) (if (eq? (key-state-pending state) (quote space)) "space" ""))
+(define (key-state-pinned-flag state) (if (key-state-pinned state) "1" "0"))
+
+(define (route-visual state byte)
+  (define pinned (key-state-pinned state))
+  (cond
+    [(eq? (key-state-pending state) (quote space))
+     (values (bytes) (key-state "visual" (quote none) (if (= byte space-byte) (not pinned) pinned)) #f)]
+    [(= byte space-byte) (values (bytes) (key-state "visual" (quote space) pinned) #f)]
+    [(= byte i-byte) (values (bytes) (key-state "write" (quote none) pinned) #f)]
+    [(= byte q-byte) (values (bytes) state #t)]
+    [else (values (bytes) state #f)]))
+
+(define (route-write state byte)
+  (define pinned (key-state-pinned state))
+  (cond
+    [(and (eq? (key-state-pending state) (quote h)) (= byte h-byte))
+     (values (bytes delete-byte) (key-state "visual" (quote none) pinned) #f)]
+    [(= byte h-byte) (values (bytes byte) (key-state "write" (quote h) pinned) #f)]
+    [else (values (bytes byte) (key-state "write" (quote none) pinned) #f)]))
+
 (define (route-keys state input)
   (define out (open-output-bytes))
   (define-values (final quit?)
     (for/fold ([state state] [quit? #f]) ([byte (in-bytes input)])
       (cond
         [quit? (values state quit?)]
-        [(eq? state (quote prefixed))
-         (cond
-           [(= byte quit-after-prefix-byte) (values (quote plain) #t)]
-           [(= byte prefix-byte) (write-byte byte out) (values (quote plain) #f)]
-           [else (values (quote plain) #f)])]
-        [(= byte prefix-byte) (values (quote prefixed) #f)]
-        [else (write-byte byte out) (values state #f)])))
+        [else
+         (define-values (forwarded next quit-now?)
+           (if (string=? (key-state-layer state) "visual")
+               (route-visual state byte)
+               (route-write state byte)))
+         (write-bytes forwarded out)
+         (values next quit-now?)])))
   (values (get-output-bytes out) final quit?))

@@ -15,11 +15,11 @@
     (subprocess #f #f (quote stdout) (racket-executable) (path->string server-path)))
   (bars-link process in out (make-semaphore 1)))
 
-(define (bars-link-ask! link layer short width)
+(define (bars-link-ask! link layer short width pending pinned)
   (call-with-semaphore
    (bars-link-lock link)
    (lambda ()
-     (write-string (format "~a\t~a\t~a\n" layer short width) (bars-link-out link))
+     (write-string (format "~a\t~a\t~a\t~a\t~a\n" layer short width pending pinned) (bars-link-out link))
      (flush-output (bars-link-out link))
      (let loop ([rows (list)])
        (define line (read-line (bars-link-in link)))

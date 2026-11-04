@@ -4,20 +4,24 @@
          "../pane/pane-keys.rkt" "../frame/frame-bars.rkt" "../frame/frame-paint.rkt"
          "../machine/terminal.rkt")
 
-(define layer-name "insert")
 (define session-name "shell")
 (define stty-program "/usr/bin/stty")
 
 (define (run-multiplexer)
   (define-values (first-columns first-height) (terminal-size))
   (define bars (bars-link-open))
+  (define key-state-box (box (initial-key-state)))
   (define screen-columns (box first-columns))
   (define screen-height (box first-height))
-  (define bar-rows (box (bars-link-ask! bars layer-name session-name first-columns)))
+  (define (ask-bars columns)
+    (define state (unbox key-state-box))
+    (bars-link-ask! bars (key-state-layer state) session-name columns
+                    (key-state-pending-text state) (key-state-pinned-flag state)))
+  (define bar-rows (box (ask-bars first-columns)))
   (define inner-columns (frame-inner-columns first-columns))
   (define inner-rows (frame-inner-rows first-height (length (unbox bar-rows))))
   (define grid (make-pane-grid inner-columns inner-rows))
-  (define link (pane-open (or (getenv "SHELL") "/bin/sh") (list) inner-columns inner-rows))
+  (define link (pane-open (path->string (or (find-executable-path "nu") (error "nu not found"))) (list) inner-columns inner-rows))
   (define lock (make-semaphore 1))
   (define dirty (box #t))
   (define finished (make-semaphore 0))
@@ -52,7 +56,7 @@
       (unless (and (= columns (unbox screen-columns)) (= height (unbox screen-height)))
         (set-box! screen-columns columns)
         (set-box! screen-height height)
-        (set-box! bar-rows (bars-link-ask! bars layer-name session-name columns))
+        (set-box! bar-rows (ask-bars columns))
         (set-box! dirty #t))
       (fit-pane-to-screen!)
       (when (unbox dirty)
@@ -63,7 +67,7 @@
   (define (bars-loop)
     (let loop ()
       (sleep 1)
-      (define rows (bars-link-ask! bars layer-name session-name (unbox screen-columns)))
+      (define rows (ask-bars (unbox screen-columns)))
       (unless (equal? rows (unbox bar-rows))
         (set-box! bar-rows rows)
         (set-box! dirty #t))
@@ -82,16 +86,20 @@
 
   (define (key-loop)
     (define buffer (make-bytes 4096))
-    (let loop ([state (quote plain)])
+    (let loop ()
       (define amount (read-bytes-avail! buffer (current-input-port)))
       (cond
         [(eof-object? amount) (semaphore-post finished)]
         [else
-         (define-values (forwarded next-state quit?) (route-keys state (subbytes buffer 0 amount)))
+         (define-values (forwarded next-state quit?)
+           (route-keys (unbox key-state-box) (subbytes buffer 0 amount)))
+         (set-box! key-state-box next-state)
          (when (> (bytes-length forwarded) 0)
            (write-bytes forwarded (pane-link-master-out link))
            (flush-output (pane-link-master-out link)))
-         (if quit? (semaphore-post finished) (loop next-state))])))
+         (set-box! bar-rows (ask-bars (unbox screen-columns)))
+         (set-box! dirty #t)
+         (if quit? (semaphore-post finished) (loop))])))
 
   (dynamic-wind
    (lambda ()

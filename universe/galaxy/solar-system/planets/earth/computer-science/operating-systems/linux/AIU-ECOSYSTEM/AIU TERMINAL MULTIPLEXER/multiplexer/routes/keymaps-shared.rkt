@@ -18,7 +18,7 @@
 
 (define trigger-of
   (list (cons "visual" "space")
-        (cons "write" "tab")
+        (cons "write" "h")
         (cons "select" "space")
           (cons "move" "space")
           (cons "bar" "space")
@@ -32,66 +32,10 @@
 (define workspace-keys (list (list "h" "workspace-prev") (list "t" "workspace-next") (list "left" "workspace-prev") (list "right" "workspace-next") (list "a" "workspace-move-left") (list "e" "workspace-move-right") (list "c" "workspace-close") (list "o" "workspace-open") (list "n" "workspace-new") (list "r" "workspace-remove") (list "p" "tab-place-next") (list "u" "tab-top") (list "b" "tab-bottom") (list "j" "tab-join") (list "x" "tab-hide") (list "v" "tab-level-mode") (list "escape" "visual-mode")))
 
 (define normal-keys
-  '(("w" "block-edit")
-    ("h" "block-up")
-    ("t" "block-down")
-    ("n" "move-left")
-    ("s" "move-right")
-    ("m" "block-move-mode")
-    ("a" "kind-any")
-    ("p" "kind-paragraph")
-    ("e" "kind-section")
-    ("c" "kind-code")
-    ("k" "kind-comment")
-    ("l" "kind-title")
-    ("x" "kind-todo")
-    ("o" "kind-todo-open")
-    ("d" "kind-todo-done")
-    ("i" "block-text")
-    ("g" "view-up")
-    ("r" "view-down")
-    
-    ("space v" "select-mode")
-    ("space c" "cursor-mode")
-    ("space y" "copy")
-    ("space p" "paste")
-    ("space d" "cut")
-    ("space s" "save")
-    ("space q" "quit") ("q" "quit")
-    ("space u" "undo-mode")
-    ("space ?" "explorer")
-    ("space g" "send")
-    ("space b" "bar-mode")
-    ("space t" "tab-mode")
-    ("space z" "focus-toggle")
-    ("space /" "find-mode")
-    ("space k" "check")
-    ("space n" "next-block")
-    ("space e" "block-end")
-    ("space o" "pin-mode") ("space w" "pane-mode") ("space j" "project-mode") ("space l" "workspace-mode")
-      ("up" "block-up") ("down" "block-down") ("left" "move-left") ("right" "move-right")
-    ("escape" "visual-mode")
-    ("backspace" "delete")))
+  (quote (("i" "write-mode") ("space space" "menu-or-visual") ("q" "quit"))))
 
 (define insert-keys
-  '(("tab tab" "mode")
-    ("tab s" "save")
-    ("tab p" "paste")
-    ("tab b" "blocks")
-    ("escape" "leave-write")
-    ("up" "move-up")
-    ("down" "move-down")
-    ("left" "move-left")
-    ("right" "move-right")
-    ("backspace" "delete")))
-
-
-
-
-
-
-
-
+  (quote (("h h" "visual-mode"))))
 
 (define keymaps
   (or (and (string=? (mode) "baked") (baked-tables))

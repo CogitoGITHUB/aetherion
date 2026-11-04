@@ -38,6 +38,7 @@
                            "select" command-select
                            "send" command-send
                            "mode" command-mode
+                           "menu-or-visual" command-menu-or-visual
                            "visual-mode" command-visual-mode
                            "write-mode" command-write-mode
                            "select-mode" command-select-mode

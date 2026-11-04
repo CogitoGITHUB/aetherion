@@ -25,4 +25,6 @@
 
 (define name-prompt (box #f))
 
-(provide name-prompt)
+(define menu-pinned (box #f))
+
+(provide name-prompt menu-pinned)

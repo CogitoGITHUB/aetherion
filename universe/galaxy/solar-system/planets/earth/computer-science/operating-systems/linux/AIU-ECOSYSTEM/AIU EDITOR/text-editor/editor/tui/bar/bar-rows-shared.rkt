@@ -45,7 +45,7 @@
     (string-join (filter values (list (and (has? "time") (clock-time)) (and (has? "date") (clock-date)))) "  "))
   (define middle
     (append (if (has? "keys")
-                (if (or (pair? pending) (not (member layer (list "visual" "write")))) (map (lambda (r) (body-line r width)) (let ([ls (string-split (menu-text layer pending (max 20 (- width 4))) "\n" #:trim? #f)]) ls)) (list (body-line (format "trigger ~a~a  ·  press ~a for keys" (bar-kname trig) waiting (bar-kname trig)) width)))
+                (if (or (pair? pending) (unbox menu-pinned) (not (member layer (list "visual" "write")))) (map (lambda (r) (body-line r width)) (let ([ls (string-split (menu-text layer pending (max 20 (- width 4))) "\n" #:trim? #f)]) ls)) (list (body-line (format "trigger ~a~a  ·  press ~a for keys" (bar-kname trig) waiting (bar-kname trig)) width)))
                 null)
             (if (and (has? "save") (unbox unsaved))
                 (list (edge-line "├" "┤" "save" "" width) (body-line "unsaved  SPC s saves" width))
