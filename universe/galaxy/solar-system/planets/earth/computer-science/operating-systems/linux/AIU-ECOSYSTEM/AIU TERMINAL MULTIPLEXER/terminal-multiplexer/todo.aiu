@@ -99,6 +99,33 @@ section end
 
 section start
 title start
+Step 3b: bars shared with the text editor, urgent, right after the file restructure
+title end
+
+paragraph start
+todo: open tab bar, mode line, workspaces, projects, keys and the keybindings menu use the exact same format as the text editor, read from the editor code first and copied, not redesigned
+Planned.
+paragraph end
+
+paragraph start
+todo: open the bars work together: when the text editor opens inside the multiplexer it uses the multiplexer bars and hides its own, and when it exits its own bars show again
+Planned.
+paragraph end
+
+paragraph start
+todo: open tab splitting, resizing and moving tabs work the same as in the text editor
+Planned.
+paragraph end
+
+paragraph start
+todo: open only when the multiplexer opens and runs with the text editor do we move forward to step 4
+Planned.
+paragraph end
+
+section end
+
+section start
+title start
 Step 4: make it work
 title end
 
