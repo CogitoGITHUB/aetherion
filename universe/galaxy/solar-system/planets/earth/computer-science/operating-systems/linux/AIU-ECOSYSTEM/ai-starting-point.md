@@ -1,3 +1,4 @@
+- Lessons: before debugging the editor, list the running processes (pgrep -fa entry/cli.rkt and hot-path serve) and kill old ones; a long-running editor keeps its old hot-path and environment, so rebuilds and env fixes never reach it.
 - Lessons: hot-path links the notation crate by path, so rebuild hot-path (cargo build --offline --bin hot-path in AIU EDITOR/text-editor/editor) after every notation change; a stale hot-path shows false problems in the page box while notation view is fine.
 - Lessons: remove comments with a full-line stripper that tracks quote parity so multi-line strings are untouched; count every comment shape first (full-line, trailing, block), then strip, then cargo check. Editor has trailing and block comments, so it needs its own pass.
 - Every time you learn something (a rule from Shape, the cause of a failure, a way that works), add it to this file at the top, in the same script as the work, so the next AI starts with it.
