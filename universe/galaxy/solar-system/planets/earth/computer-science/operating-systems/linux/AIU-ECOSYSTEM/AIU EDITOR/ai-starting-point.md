@@ -48,3 +48,7 @@ OPEN TODO
 1. Trailing comments after code and #| |# blocks not stripped yet.
 2. Put update, test and gate in ONE directory (check update-table.rkt find-up for gate first).
 3. TEST FILE PER SOURCE FILE; sort loose editor folders; notation file names; the rest of todo.aiu.
+
+## Two separate packages
+
+The editor (editor/) and the notation engine (notation/) are two separate packages with two separate binaries. They live in one folder but are never combined into one binary. Later notation gets its own literate mode, like org mode, and the two are sent and shipped separately, never as one package.

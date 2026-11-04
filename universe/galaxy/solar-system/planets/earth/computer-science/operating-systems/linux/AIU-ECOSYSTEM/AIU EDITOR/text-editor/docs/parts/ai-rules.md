@@ -8,3 +8,7 @@
 - Do not edit AIU NOTATION. No .org files, no compiled folders in the tree. Never loop over in-naturals without a bound.
 - No one-off scripts for tests or updates: extend aiutd update and aiutd test. No timers or sleeps in the test driver. Every aiutd command prints two empty lines, a banner, a boxed table, the banner, two empty lines.
 - A test must end in visual mode: a final escape after k rolls the keep back, and a test that ends inside the undo layer hangs for 15 s.
+
+## Two separate packages
+
+The editor (editor/) and the notation engine (notation/) are two separate packages with two separate binaries. They live in one folder but are never combined into one binary. Later notation gets its own literate mode, like org mode, and the two are sent and shipped separately, never as one package.

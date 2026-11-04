@@ -10,12 +10,12 @@
 (define (skipped-files)
   (define plan (build-path root "gate" "skipped.txt"))
   (if (file-exists? plan)
-      (append* (for/list ([l (in-list (file->lines plan))] #:when (string-contains? l "editor/"))
-                 (regexp-match* #px"editor/[^ ]+[.]rkt" l)))
+      (append* (for/list ([l (in-list (file->lines plan))] #:when (string-contains? l "/"))
+                 (regexp-match* #px"(editor|notation)/[^ ]+[.]rkt" l)))
       (list)))
 
 (define (rkt-files)
-  (for/list ([p (in-list (find-files (lambda (q) (regexp-match? #rx"[.]rkt$" (path->string q))) (build-path root "editor")))]
+  (for/list ([p (in-list (append (find-files (lambda (q) (regexp-match? #rx"[.]rkt$" (path->string q))) (build-path root "editor")) (find-files (lambda (q) (regexp-match? #rx"[.]rkt$" (path->string q))) (build-path root "notation"))))]
              #:unless (regexp-match? #rx"/compiled/" (path->string p)))
     (path->string (find-relative-path root p))))
 
