@@ -51,3 +51,5 @@ OPEN TODO
 ## Two separate packages
 
 The editor (editor/) and the notation engine (notation/) are two separate packages with two separate binaries. They live in one folder but are never combined into one binary. Later notation gets its own literate mode, like org mode, and the two are sent and shipped separately, never as one package.
+
+- Never compile inside the tree: no compiled/ folder and no target/ folder may exist anywhere under AIU-ECOSYSTEM. Every command that runs Racket exports PLTCOMPILEDROOTS="$HOME/aiu-compiled", every command that runs Cargo exports CARGO_TARGET_DIR="$HOME/aiu-cargo-target". Leave the directories clean: after any run that could have written build output, check that find . -type d ( -name compiled -o -name target ) finds nothing.
