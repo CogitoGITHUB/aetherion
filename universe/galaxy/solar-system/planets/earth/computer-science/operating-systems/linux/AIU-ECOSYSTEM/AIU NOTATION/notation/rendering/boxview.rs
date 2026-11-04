@@ -255,13 +255,13 @@ impl Boxes {
             ("╭", "╮", "╰", "╯", "─", "│", "├", "┤")
         };
         let w = w.max(10);
-        let lab = clip(label, w - 6);
-        let fill = w - lab.chars().count() - 4;
+        let lab = clip(label, w - 8);
+        let fill = w - lab.chars().count() - 6;
         let (dl, dr) = (1, fill - 1);
         let mut res: Vec<L> = Vec::new();
         let top = format!("{}{}{}{}",
-            self.sgr(&[2], &format!("{}{} ", tl, h.repeat(dl))), self.sgr(tcodes, &lab),
-            self.sgr(&[2], &format!(" {}", h.repeat(dr))), self.sgr(&[2], tr));
+            self.sgr(&[2], &format!("{}{}{} ", tl, h.repeat(dl), mr)), self.sgr(tcodes, &lab),
+            self.sgr(&[2], &format!(" {}{}", ml, h.repeat(dr))), self.sgr(&[2], tr));
         res.push(L { s: top, n: w, sep: false });
         for l in inner {
             if l.sep {
@@ -536,10 +536,10 @@ impl Boxes {
         let w = width.max(10);
         let mut framed = self.frame(label, tcodes, inner, width, false, center);
         let lab = clip(label, w.saturating_sub(badge.len() + 12));
-        let fill = w.saturating_sub(lab.chars().count() + badge.len() + 8);
+        let fill = w.saturating_sub(lab.chars().count() + badge.len() + 12);
         let top = format!("{}{}{}{}{}",
-            self.sgr(&[2], "╭─ "), self.sgr(tcodes, &lab),
-            self.sgr(&[2], &format!(" {} ", "─".repeat(fill))), self.sgr_todo(&[&[1u32][..], &red[..]].concat(), badge), self.sgr(&[2], " ─╮"));
+            self.sgr(&[2], "╭─┤ "), self.sgr(tcodes, &lab),
+            self.sgr(&[2], &format!(" ├{}┤ ", "─".repeat(fill))), self.sgr_todo(&[&[1u32][..], &red[..]].concat(), badge), self.sgr(&[2], " ├─╮"));
         framed[0] = L { s: top, n: w, sep: false };
         if desc.is_empty() {
             return framed;
@@ -547,8 +547,8 @@ impl Boxes {
         framed.pop();
         let mut out = framed;
         let lab2 = format!(" {} ", if done { "DONE" } else { "TODO · open" });
-        let fill2 = w.saturating_sub(3 + lab2.chars().count());
-        out.push(L { s: self.sgr_todo(&red, &format!("╰─{}{}╯", lab2, "─".repeat(fill2))), n: w, sep: false });
+        let fill2 = w.saturating_sub(5 + lab2.chars().count());
+        out.push(L { s: self.sgr_todo(&red, &format!("╰─┤{}├{}╯", lab2, "─".repeat(fill2))), n: w, sep: false });
         let tw = w.saturating_sub(4).max(4);
         let mut rows = wrap(desc, tw);
         if rows.is_empty() { rows.push(String::new()); }

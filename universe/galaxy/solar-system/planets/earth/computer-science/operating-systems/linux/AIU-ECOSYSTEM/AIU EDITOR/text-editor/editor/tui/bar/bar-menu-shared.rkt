@@ -15,7 +15,7 @@
   (define base
     (for/list ([i (in-range n)])
       (apply max (map (lambda (r) (string-length (list-ref r i))) (cons headers rows)))))
-  (define head (string-append "╭─ " title " "))
+  (define head (string-append "╭─┤ " title " ├"))
   (define raw-total (+ (apply + (map (lambda (w) (+ w 2)) base)) n 1))
   (define extra (max 0 (- (+ (string-length head) 1) raw-total)))
   (define ws (append (take base (sub1 n)) (list (+ (last base) extra))))
@@ -149,7 +149,7 @@
 
 (define (menu-box title lines width)
   (define inner (- width 4))
-  (define head (string-append "╭─ " title " "))
+  (define head (string-append "╭─┤ " title " ├"))
   (define top (string-append head (make-string (max 0 (- width (string-length head) 1)) #\─) "╮"))
   (append (list top)
           (for/list ([l (in-list lines)]) (string-append "│ " (cell-pad l inner) " │"))
@@ -192,7 +192,7 @@
                                   (string-append " " (cell-pad c w) " "))
                                 "│")
                    "│"))
-  (define head (string-append "╭─ " title " "))
+  (define head (string-append "╭─┤ " title " ├"))
   (define top (string-append head (make-string (max 0 (- total (string-length head) 1)) #\─) "╮"))
   (append (list top (row headers) (line "├" "┼" "┤"))
           (map row rows)

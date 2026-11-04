@@ -6,8 +6,8 @@
   (string-append s (make-string (max 0 (- n (string-length s))) #\space)))
 
 (define (edge-line l r left right width)
-  (define head (string-append l "─ " left " "))
-  (define tail0 (if (string=? right "") "" (string-append " " right " ")))
+  (define head (string-append l "─┤ " left " ├"))
+  (define tail0 (if (string=? right "") "" (string-append "┤ " right " ├─")))
   (define tail (if (< (+ (string-length head) (string-length tail0) 2) width) tail0 ""))
   (define h (if (> (+ (string-length head) 1) width) (substring head 0 (max 0 (- width 1))) head))
   (string-append h (make-string (max 0 (- width (string-length h) (string-length tail) 1)) #\─) tail r))

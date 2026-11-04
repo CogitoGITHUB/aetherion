@@ -2,18 +2,27 @@
 (require racket/list racket/string racket/path
          "bar-rows-shared.rkt" "bar-state-shared.rkt" "bar-git-shared.rkt" "../tabs/tabs-shared.rkt" "../float/box-shared.rkt")
 
-(define git-asked 0)
+(define git-running (box #f))
+(define last-layer (box #f))
 
-(define (git-fresh)
-  (when (>= (- (current-seconds) git-asked) 5)
-    (set! git-asked (current-seconds))
-    (let ([row (with-handlers ([(lambda (e) #t) (lambda (e) "git unavailable")])
-                 (git-facts (path->string (current-directory))))])
-      (set-box! git-info row)
-      (set-box! tab-git-text (git-text row)))))
+(define (git-refresh-in-background)
+  (unless (unbox git-running)
+    (set-box! git-running #t)
+    (thread
+     (lambda ()
+       (let ([row (with-handlers ([(lambda (e) #t) (lambda (e) "git unavailable")])
+                    (git-facts (path->string (current-directory))))])
+         (set-box! git-info row)
+         (set-box! tab-git-text (git-text row)))
+       (set-box! git-running #f)))))
+
+(define (git-on-layer layer)
+  (unless (equal? layer (unbox last-layer))
+    (set-box! last-layer layer)
+    (when (string=? layer "visual") (git-refresh-in-background))))
 
 (define (bar-stack layer short width pending)
-  (git-fresh)
+  (git-on-layer layer)
   (define names (take bar-order (min (length bar-order) (max 0 (unbox bar-count)))))
   (define bars (bar-rows layer short pending (unbox git-info) width names))
   (define tabs (tab-rows (path->string (path->complete-path short)) width void))

@@ -42,7 +42,7 @@
     (if (pair? pending) (format "  waiting after ~a" (string-join (map bar-kname pending) " ")) ""))
   (define title (if (has? "mode") (format "~a [~a] · ~a" (mode-label layer) (unbox kind-filter) short) "bar"))
   (define stamp
-    (string-join (filter values (list (and (has? "time") (clock-time)) (and (has? "date") (clock-date)))) "  "))
+    "")
   (define middle
     (append (if (has? "keys")
                 (if (or (pair? pending) (unbox menu-pinned) (not (member layer (list "visual" "write")))) (map (lambda (r) (body-line r width)) (let ([ls (string-split (menu-text layer pending (max 20 (- width 4))) "\n" #:trim? #f)]) ls)) (list (body-line (format "trigger ~a~a  ·  press ~a for keys" (bar-kname trig) waiting (bar-kname trig)) width)))
@@ -52,7 +52,7 @@
                 null)))
   (if (null? names)
       null
-      (append (list (edge-line "╭" "╮" title stamp width)) middle (list (rule-line "╰" "╯" width)))))
+      (append (list (edge-line "╭" "╮" title stamp width)) middle (list (clock-rule-line "╰" "╯" width (and (has? "time") #t) (and (has? "date") #t))))))
 
 (define (cell-chars name layer g)
   (cond

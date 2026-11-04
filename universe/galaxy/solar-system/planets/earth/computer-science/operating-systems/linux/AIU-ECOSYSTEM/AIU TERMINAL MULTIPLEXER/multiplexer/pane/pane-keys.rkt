@@ -4,7 +4,7 @@
 (struct key-state (layer pending pinned))
 
 (define space-byte 32)
-(define h-byte 104)
+(define a-byte 97)
 (define i-byte 105)
 (define q-byte 113)
 (define delete-byte 127)
@@ -26,9 +26,9 @@
 (define (route-write state byte)
   (define pinned (key-state-pinned state))
   (cond
-    [(and (eq? (key-state-pending state) (quote h)) (= byte h-byte))
+    [(and (eq? (key-state-pending state) (quote a)) (= byte a-byte))
      (values (bytes delete-byte) (key-state "visual" (quote none) pinned) #f)]
-    [(= byte h-byte) (values (bytes byte) (key-state "write" (quote h) pinned) #f)]
+    [(= byte a-byte) (values (bytes byte) (key-state "write" (quote a) pinned) #f)]
     [else (values (bytes byte) (key-state "write" (quote none) pinned) #f)]))
 
 (define (route-keys state input)

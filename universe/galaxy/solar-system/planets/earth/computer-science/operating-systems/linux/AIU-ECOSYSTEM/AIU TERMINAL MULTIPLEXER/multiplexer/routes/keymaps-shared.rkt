@@ -18,7 +18,7 @@
 
 (define trigger-of
   (list (cons "visual" "space")
-        (cons "write" "h")
+        (cons "write" "a")
         (cons "select" "space")
           (cons "move" "space")
           (cons "bar" "space")
@@ -32,10 +32,10 @@
 (define workspace-keys (list (list "h" "workspace-prev") (list "t" "workspace-next") (list "left" "workspace-prev") (list "right" "workspace-next") (list "a" "workspace-move-left") (list "e" "workspace-move-right") (list "c" "workspace-close") (list "o" "workspace-open") (list "n" "workspace-new") (list "r" "workspace-remove") (list "p" "tab-place-next") (list "u" "tab-top") (list "b" "tab-bottom") (list "j" "tab-join") (list "x" "tab-hide") (list "v" "tab-level-mode") (list "escape" "visual-mode")))
 
 (define normal-keys
-  (quote (("i" "write-mode") ("space space" "menu-or-visual") ("q" "quit"))))
+  (quote (("i" "write-mode") ("space space" "menu-or-visual") ("t" "scroll-up") ("h" "scroll-down") ("T" "page-up") ("H" "page-down") ("q" "quit"))))
 
 (define insert-keys
-  (quote (("h h" "visual-mode"))))
+  (quote (("a a" "visual-mode"))))
 
 (define keymaps
   (or (and (string=? (mode) "baked") (baked-tables))

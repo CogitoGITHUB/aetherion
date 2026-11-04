@@ -51,7 +51,7 @@
   (define frame-rows
     (for/list ([ip (in-list (last-n (for/list ([p (in-list parts)] [i (in-naturals 1)]) (cons i p)) 8))])
       (define t (plain-screen (cdr ip)))
-      (define m (regexp-match #px"╭─ ([a-z]+( [a-z]+)?) \\[" t))
+      (define m (regexp-match #px"[╭├]─┤? ([a-z]+( [a-z]+)?) \\[" t))
       (format "    frame ~a starts ~a len ~a mode ~a" (car ip) (visible (substring (cdr ip) 0 (min 6 (string-length (cdr ip))))) (string-length t) (if m (cadr m) "none"))))
   (define missing-lines
     (for/list ([t (in-list missing)])

@@ -26,7 +26,7 @@
   (define prefix (regexp-quote (blockview-prefix depth)))
   (define top-rx (regexp (string-append "^" prefix "╭─")))
   (define close-rx (regexp (string-append "^" prefix "╰")))
-  (define label-rx (regexp (string-append "^" prefix "╰─ ")))
+  (define label-rx (regexp (string-append "^" prefix "╰─┤? ")))
   (let loop ([i from] [out null])
     (cond
       [(>= i limit) (reverse out)]

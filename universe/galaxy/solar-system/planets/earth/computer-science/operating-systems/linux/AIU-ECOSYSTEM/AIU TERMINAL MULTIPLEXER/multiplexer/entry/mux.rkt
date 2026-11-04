@@ -1,7 +1,7 @@
 #lang racket/base
 (require racket/system
          "../pane/pane-pty.rkt" "../pane/pane-grid.rkt" "../pane/pane-text-decode.rkt"
-         "../pane/pane-keys.rkt" "../frame/frame-bars.rkt" "../frame/frame-paint.rkt"
+         "../pane/pane-keys.rkt" "../pane/pane-scroll-keys.rkt" "../frame/frame-bars.rkt" "../frame/frame-paint.rkt"
          "../machine/terminal.rkt")
 
 (define session-name "shell")
@@ -28,6 +28,7 @@
   (hash-set! bar-cache first-key first-rows)
   (define bar-rows (box first-rows))
   (define dirty (box #t))
+  (define scroll-offset (box 0))
   (define (refresh-bars!)
     (define key (bars-key))
     (define rows (ask-bars key))
@@ -64,7 +65,7 @@
       (call-with-semaphore
        lock
        (lambda ()
-         (paint-screen-string grid (unbox bar-rows) (unbox screen-columns) (unbox screen-height)))))
+         (paint-screen-string grid (unbox bar-rows) (unbox screen-columns) (unbox screen-height) (unbox scroll-offset)))))
     (write-string text (current-output-port))
     (flush-output (current-output-port)))
 
@@ -108,6 +109,31 @@
          (set-box! dirty #t)
          (loop kept)])))
 
+  (define (apply-scroll-command! command)
+    (call-with-semaphore
+     lock
+     (lambda ()
+       (cond
+         [(pane-grid-alternate grid)
+          (write-bytes (scroll-command-bytes command) (pane-link-master-out link))
+          (flush-output (pane-link-master-out link))]
+         [else
+          (define step (if (memq command (quote (page-up page-down))) (max 1 (quotient (pane-grid-height grid) 2)) 1))
+          (define limit (length (pane-grid-history grid)))
+          (set-box! scroll-offset
+                    (if (memq command (quote (line-up page-up)))
+                        (min limit (+ (unbox scroll-offset) step))
+                        (max 0 (- (unbox scroll-offset) step))))]))))
+
+  (define (apply-scroll-keys! input)
+    (define state (unbox key-state-box))
+    (cond
+      [(and (string=? (key-state-layer state) "visual") (eq? (key-state-pending state) (quote none)))
+       (define-values (remaining commands) (split-scroll-keys input))
+       (for ([command (in-list commands)]) (apply-scroll-command! command))
+       remaining]
+      [else input]))
+
   (define (key-loop)
     (define buffer (make-bytes 4096))
     (let loop ()
@@ -116,8 +142,9 @@
         [(eof-object? amount) (semaphore-post finished)]
         [else
          (define-values (forwarded next-state quit?)
-           (route-keys (unbox key-state-box) (subbytes buffer 0 amount)))
+           (route-keys (unbox key-state-box) (apply-scroll-keys! (subbytes buffer 0 amount))))
          (set-box! key-state-box next-state)
+                        (when (string=? (key-state-layer next-state) "write") (set-box! scroll-offset 0))
          (when (> (bytes-length forwarded) 0)
            (write-bytes forwarded (pane-link-master-out link))
            (flush-output (pane-link-master-out link)))
