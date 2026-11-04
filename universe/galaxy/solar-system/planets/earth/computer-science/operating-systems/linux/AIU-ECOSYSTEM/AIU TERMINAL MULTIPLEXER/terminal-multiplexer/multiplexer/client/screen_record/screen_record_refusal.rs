@@ -55,7 +55,25 @@ pub(crate) fn take_record(screen: &mut Screen, line: &str) -> Option<String> {
             .and_then(|outputs| outputs.get("text"))
             .and_then(|value| value.as_str())
             .unwrap_or("");
-        screen.push_text(who, text);
+        let raw = record
+            .get("outputs")
+            .and_then(|outputs| outputs.get("raw"))
+            .and_then(|value| value.as_str())
+            .unwrap_or("");
+        if raw.is_empty() {
+            screen.push_text(who, text);
+        } else {
+            let (_, area_rows) = screen.area();
+            let grid_lines = grid_lines_after(
+                who,
+                raw,
+                screen.cols.saturating_sub(2) as usize,
+                area_rows.saturating_sub(2) as usize,
+            );
+            if let Some(held) = screen.panes.iter_mut().find(|held| held.name == who) {
+                held.lines = grid_lines;
+            }
+        }
         return None;
     }
     if what == "the workspace was read" {

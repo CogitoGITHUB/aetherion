@@ -32,7 +32,7 @@ pub(crate) fn read_shell(session: &mut Session, pane_at: usize) -> Result<bool, 
         why: "the shell had something to say",
         how: "the master read the bytes and the escapes were left out",
         inputs: json!({ "bytes": got, "pane": pane_name }),
-        outputs: json!({ "text": text }),
+        outputs: json!({ "text": text, "raw": String::from_utf8_lossy(&buffer[..got]).to_string() }),
         result: json!({}),
     });
     session.write(&record);

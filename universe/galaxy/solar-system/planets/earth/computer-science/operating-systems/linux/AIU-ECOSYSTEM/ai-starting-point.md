@@ -1,3 +1,6 @@
+- Lessons: the pane is a screen grid in client/screen_grid/screen_grid_apply.rs fed by the raw field of the holder progress record; cursor moves, clears and wraps are applied, scrolled rows go to history; no crate can be fetched offline
+- Lessons: holder --shell works when given by hand; aiumux.nu passed /bin/sh anyway, so check the start call arguments in aiumux.nu and verify the pane program with --op state
+- Lessons: when Shape says compile, run aiumux --rebuild --start (builds into the state folder, never in the tree) and read the holder --shell argument from /proc/PID/cmdline
 - Lessons: /usr/local/bin/aiumux runs nu in a clean env, so it must pass SHELL itself (SHELL=${SHELL:-/bin/sh} after env); the pane program in --op state must be nu
 - Lessons: aiumux kill does not end the holder; end it with kill of the pid in sessions/main/holder.pid, remove holder.sock and holder.pid, then aiumux --start; check the pane program in --op state
 - Lessons: aiumux.nu starts the holder with the SHELL env, not /bin/sh; restart with aiumux kill main then aiumux --start after changing it
