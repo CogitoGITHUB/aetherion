@@ -63,9 +63,6 @@ editor/tui/text/clip.rkt
 editor/tui/undo/undo-keys.rkt
 editor/tui/undo/undo.rkt
 ../../AIU NOTATION/notation/data/aiu-text.rkt
-../../AIU NOTATION/notation/data/table-html.rkt
-../../AIU NOTATION/notation/data/table-latex.rkt
-../../AIU NOTATION/notation/diagnostics/collect.rkt
 ../../AIU NOTATION/notation/diagnostics/report.rkt
 ../../AIU NOTATION/notation/elements/dispatch.rkt
 ../../AIU NOTATION/notation/elements/literals.rkt
@@ -93,7 +90,6 @@ editor/tui/undo/undo.rkt
 ../../AIU NOTATION/notation/generation/plan.rkt
 ../../AIU NOTATION/notation/generation/write.rkt
 ../../AIU NOTATION/notation/literate/scan.rkt
-../../AIU NOTATION/notation/literate/skip-journal.rkt
 ../../AIU NOTATION/notation/literate/targets.rkt
 ../../AIU NOTATION/notation/machine/cancel.rkt
 ../../AIU NOTATION/notation/machine/directories.rkt
