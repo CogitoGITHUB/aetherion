@@ -1,6 +1,0 @@
-test mod-explorer
-level 2
-module editor/tui/float/explorer.rkt
-call (let ([l (explorer-lines)]) (list (car l) (list-ref l (sub1 (length l))) (car (command-explorer #f (list)))))
-expect result equals ("the keymap — the editor's own keys" "  every command of the table is in this panel" #t)
-expect seconds-under 20

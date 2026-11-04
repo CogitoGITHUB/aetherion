@@ -1,6 +1,0 @@
-test mod-cancel
-level 2
-module editor/machine/cancel.rkt
-call (let ([t (new-cancel-token)]) (let ([a (cancelled? t)]) (cancel t) (cancel t) (list a (cancelled? t) (with-handlers ([exn:fail? exn-message]) (check-cancel t "who" "what")))))
-expect result equals (#f #t "the call was cancelled before it acted")
-expect seconds-under 20

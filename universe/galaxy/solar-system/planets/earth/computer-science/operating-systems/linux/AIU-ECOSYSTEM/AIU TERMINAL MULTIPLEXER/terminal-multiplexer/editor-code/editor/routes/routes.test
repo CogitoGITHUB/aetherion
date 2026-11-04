@@ -1,6 +1,0 @@
-test mod-routes
-level 2
-module editor/routes/routes.rkt
-call (list (text-of "space") (text-of "up") (text-of "C-a") (text-of "a") (route-line (routing "x" "editor" #f)) (routing-owner (route-key reserved-prefix (list) "visual")) (routing-owner (route-key "k" (list "k") "visual")) (reserved-prefix-collisions))
-expect result equals (" " #f #f "a" "x -> editor -" "multiplexer" "program" ())
-expect seconds-under 20

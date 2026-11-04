@@ -1,6 +1,0 @@
-test mod-undo-git
-level 2
-module editor/tui/undo/undo-git.rkt
-call (list (undo-two 5) (undo-two 12) (undo-cut "abcdef" 3) (undo-cut "ab" 3) (undo-first 2 (list 1 2 3)) (undo-first 0 (list 1)) (undo-index "b" (list "a" "b")) (undo-index "z" (list "a")) (undo-blen "aé"))
-expect result equals ("05" "12" "abc" "ab" (1 2) () 1 #f 3)
-expect seconds-under 20

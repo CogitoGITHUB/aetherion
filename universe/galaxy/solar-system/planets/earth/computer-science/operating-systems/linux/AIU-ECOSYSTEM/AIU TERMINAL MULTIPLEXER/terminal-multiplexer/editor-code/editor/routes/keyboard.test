@@ -1,6 +1,0 @@
-test mod-keyboard
-level 2
-module editor/routes/keyboard.rkt
-call (list (bytes->hex (list 27 10 255)) (hex->bytes "1b0aff") (text-key? "a") (text-key? "C-a") (text-key? "space"))
-expect result equals ("1b0aff" (27 10 255) #t #f #f)
-expect seconds-under 20

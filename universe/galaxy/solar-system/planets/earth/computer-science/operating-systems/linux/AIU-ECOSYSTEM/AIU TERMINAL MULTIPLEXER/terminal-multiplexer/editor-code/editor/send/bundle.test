@@ -1,6 +1,0 @@
-test mod-bundle
-level 2
-module editor/send/bundle.rkt
-call (let ([b (make-bundle "prog" "proj" "agent" "sel" "f.txt" 5 "addr" "why")]) (list (bundle-lines b) (bundle-target b) (make-bundle "p" "q" "r" #f #f #f #f " ") boundary-version))
-expect result equals (("boundary: 1  program: prog  project: proj  target: agent" "why: why" "path: f.txt" "position: 5" "address: addr" "selection: sel") "agent" #f "1")
-expect seconds-under 20

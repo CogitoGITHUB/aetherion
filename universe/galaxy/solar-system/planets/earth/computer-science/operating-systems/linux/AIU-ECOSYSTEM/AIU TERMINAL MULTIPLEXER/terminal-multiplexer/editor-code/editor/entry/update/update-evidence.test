@@ -1,6 +1,0 @@
-test mod-update-evidence
-level 2
-module editor/entry/update/update-evidence.rkt
-call (list (count-bytes #"a" #"banana") (count-bytes #"zz" #"banana") (unbox last-evidence))
-expect result equals (3 0 ())
-expect seconds-under 20

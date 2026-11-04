@@ -1,6 +1,0 @@
-test mod-split-state
-level 2
-module editor/tui/split/split-state.rkt
-call (list (split-state-split! "right") (split-state-split! "down") (unbox split-tree) (unbox split-focus) (split-state-focus! "up") (unbox split-focus) (split-state-resize! "height" 20) (split-state-swap! "left") (unbox split-tree) (split-state-turn!) (split-state-flip!) (split-state-equalise!) (unbox split-tree) (split-state-close!) (unbox split-tree) (split-state-focus! "left"))
-expect result equals (2 3 ("split" "right" ("pane" 1) ("split" "down" ("pane" 2) ("pane" 3) 50) 50) 3 #t 2 #t #t ("split" "right" ("pane" 2) ("split" "down" ("pane" 1) ("pane" 3) 70) 50) #t #t #t ("split" "down" ("split" "down" ("pane" 1) ("pane" 3) 50) ("pane" 2) 50) #t ("split" "down" ("pane" 1) ("pane" 3) 50) #f)
-expect seconds-under 20

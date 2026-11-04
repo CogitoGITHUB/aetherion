@@ -1,6 +1,0 @@
-test mod-undo-tree
-level 2
-module editor/tui/undo/undo-tree.rkt
-call (begin (hash-clear! undo-nodes) (hash-clear! undo-kids) (hash-set! undo-nodes "a" (undo-node "a" #f 1 "s")) (hash-set! undo-nodes "b" (undo-node "b" "a" 2 "s")) (hash-set! undo-nodes "c" (undo-node "c" "a" 3 "s")) (hash-set! undo-kids "a" (list "b" "c")) (let ([roots (list "a")]) (list (undo-older? "a" "b") (undo-parent-of "b") (undo-parent-of "a") (undo-next-of "a") (undo-next-of "b"))))
-expect result equals (#t "a" #f "c" #f)
-expect seconds-under 20

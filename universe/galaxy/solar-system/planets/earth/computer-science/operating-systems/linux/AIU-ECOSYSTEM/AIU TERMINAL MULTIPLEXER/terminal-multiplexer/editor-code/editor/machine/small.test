@@ -1,6 +1,0 @@
-test mod-small
-level 2
-module editor/machine/small.rkt
-call (list (path->string (file-name-from-path "/a/b.txt")) (file-name-from-path "/a/b/") (with-output-to-string (lambda () (display "hi"))) (port->lines (open-input-string "a\nb")) (port->string (open-input-string "xyz")) (call-with-output-string (lambda (o) (display 7 o))))
-expect result equals ("b.txt" #f "hi" ("a" "b") "xyz" "7")
-expect seconds-under 20

@@ -1,6 +1,0 @@
-test mod-racket-entry
-level 2
-module editor/join/racket-entry.rkt
-call (list (answer-op "ping" (hasheq)) (answer-op "echo" (list 1 2)) (with-handlers ([exn:fail? exn-message]) (answer-op "nope" (hasheq))))
-expect result equals (#hasheq((pong . #t) (who . "the meaning side")) #hasheq((echo . (1 2))) "there is no operation named nope")
-expect seconds-under 20

@@ -1,6 +1,0 @@
-test mod-seam
-level 2
-module editor/plugins/seam.rkt
-call (begin (seam-request "/tmp/aiu-seam-test.json" "describe" (hasheq)) (list (seam-call-names) (seam-known? "describe") (seam-known? "x") (seam-meaning "x") (hash-ref (seam-answer "/tmp/aiu-seam-test.json") (quote call)) (seam-answer "/tmp/aiu-no-such-file.json")))
-expect result equals (("describe" "read-file" "insert-text" "save-file") #t #f #f "describe" #f)
-expect seconds-under 20

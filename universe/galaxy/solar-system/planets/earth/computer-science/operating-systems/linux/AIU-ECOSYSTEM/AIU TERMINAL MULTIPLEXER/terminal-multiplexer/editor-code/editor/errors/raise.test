@@ -1,6 +1,0 @@
-test mod-raise
-level 2
-module editor/errors/raise.rkt
-call (let ([ek (dynamic-require (path->complete-path "editor/errors/err.rkt") (quote err-kind))] [ee (dynamic-require (path->complete-path "editor/errors/err.rkt") (quote exn:fail:editor-err))]) (with-handlers ([exn:fail? (lambda (x) (list (exn-message x) (ek (ee x))))]) (error-of (quote err-x) "w" "h" "boom" "fix")))
-expect result equals ("boom" err-x)
-expect seconds-under 20

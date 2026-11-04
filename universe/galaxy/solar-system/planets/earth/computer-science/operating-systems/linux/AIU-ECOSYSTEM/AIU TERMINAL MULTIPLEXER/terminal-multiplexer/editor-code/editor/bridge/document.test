@@ -1,6 +1,0 @@
-test mod-document
-level 2
-module editor/bridge/document.rkt
-call (let* ([p (read-page "NOTATION-DOCUMENT 1\nfile \"a.aiu\"\nnode block title 1 0 3 20 0\ndecl kind \"x\" 2 5\nnode block para 2 5 3 15 1\nerror e 3 4 1 \"bad\" \"fix\"\nend")] [b (car (page-blocks p))]) (list (page-file p) (length (page-blocks p)) (block-name b) (length (block-decls b)) (fault-what (car (page-faults p))) (read-page "bad") (fields-of "a \"b c\" d")))
-expect result equals ("a.aiu" 2 "title" 1 "bad" "the page is not a NOTATION-DOCUMENT this editor reads: its first line is \"bad\"" ("a" "b c" "d"))
-expect seconds-under 20

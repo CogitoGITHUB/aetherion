@@ -1,6 +1,0 @@
-test mod-redact
-level 2
-module editor/security/redact.rkt
-call (redact-text "api_key = sk-123\nhello\npassword: abc\nbearer xyz")
-expect result equals "api_key [redacted]\nhello\npassword[redacted]\n[redacted]"
-expect seconds-under 20

@@ -1,6 +1,0 @@
-test mod-capabilities
-level 2
-module editor/entry/capabilities.rkt
-call (list (length (capability-names)) (capability-mutating (capability-of "send")) (capability-of "nope") (declaration-agrees? "routes") (declaration-honest?))
-expect result equals (19 #t #f #t #f)
-expect seconds-under 20

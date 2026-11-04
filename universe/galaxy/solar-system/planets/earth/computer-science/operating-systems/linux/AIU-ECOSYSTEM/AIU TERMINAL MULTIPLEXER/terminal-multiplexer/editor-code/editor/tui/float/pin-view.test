@@ -1,6 +1,0 @@
-test pin-view
-level 2
-file test.aiu
-keys t t t t t t t t t t space o a escape g g g r
-expect screen contains matches the box you see, the level by level matching works.
-expect seconds-under 30

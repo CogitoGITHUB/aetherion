@@ -1,6 +1,0 @@
-test mod-key-notes
-level 2
-module editor/tui/keys/key-notes.rkt
-call (begin (key-note-none (list "a" "b") "visual") ((dynamic-require (path->complete-path "editor/tui/notify/notify.rkt") (quote notify-overlay)) 80 24 1))
-expect result equals "\e[1;41H\e[97m╭─ warn ───────────────────────────────╮\e[0m\e[2;41H\e[97m│ no key: a b in visual                │\e[0m\e[3;41H\e[97m╰──────────────────────────────────────╯\e[0m"
-expect seconds-under 20

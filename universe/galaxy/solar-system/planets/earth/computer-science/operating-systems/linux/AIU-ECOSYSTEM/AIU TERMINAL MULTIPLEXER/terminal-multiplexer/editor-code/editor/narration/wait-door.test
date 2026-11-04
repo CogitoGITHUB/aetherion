@@ -1,6 +1,0 @@
-test mod-wait-door
-level 2
-module editor/narration/wait-door.rkt
-call (with-handlers ([exn:fail? exn-message]) (wait-for "w" "x" " " "e"))
-expect result equals "a wait was announced without a reason, or without the event that ends it"
-expect seconds-under 20

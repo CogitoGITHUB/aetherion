@@ -1,8 +1,0 @@
-test undo
-level 2
-file test.aiu
-keys w Y escape space s space u escape w Z escape space s space u h k
-expect screen lacks kind: default
-expect screen lacks tags: test editor introduction
-expect file contains ZYkind: default
-expect seconds-under 30

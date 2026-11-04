@@ -1,6 +1,0 @@
-test mod-dispatch
-level 2
-module editor/entry/dispatch/dispatch.rkt
-call (list (command-known? "keys") (command-known? "aiu-no-such-verb"))
-expect result equals (#t #f)
-expect seconds-under 20

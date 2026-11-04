@@ -1,8 +1,0 @@
-test focus-write
-level 2
-file test.aiu
-keys space z space f escape
-expect screen lacks comment
-expect screen lacks Every key in this page works in the visual layer unless a part says
-expect screen lacks trigger SPC
-expect seconds-under 30

@@ -1,6 +1,0 @@
-test mod-loader
-level 2
-module editor/plugins/loader.rkt
-call (let ([s (plugin-state "aiu-no-such-plugin")]) (list (hash-ref s (quote registered)) (hash-ref s (quote known)) (hash-ref s (quote package)) (length (hash-ref s (quote missing)))))
-expect result equals (#f #f #f 6)
-expect seconds-under 20

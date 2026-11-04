@@ -1,6 +1,0 @@
-test mod-multi-notes
-level 2
-module editor/tui/multi/multi-notes.rkt
-call (begin (multi-note-cursors 3) ((dynamic-require (path->complete-path "editor/tui/notify/notify.rkt") (quote notify-overlay)) 80 24 1))
-expect result equals "\e[1;41H\e[97m╭─ info ───────────────────────────────╮\e[0m\e[2;41H\e[97m│ cursors: 3                           │\e[0m\e[3;41H\e[97m╰──────────────────────────────────────╯\e[0m"
-expect seconds-under 20

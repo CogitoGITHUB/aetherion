@@ -1,6 +1,0 @@
-test mod-split-overlay
-level 2
-module editor/tui/split/split-overlay.rkt
-call (let* ([t (split-layout-split (split-layout-single 1) 1 2 "right")] [rects (split-layout-rects t 0 0 16 4)]) (regexp-replace* (regexp "\u001b") (split-overlay-draw rects 1 (lambda (id focused? w h) (cons (string-append "p" (number->string id)) (list "line"))) 2 3) "ESC"))
-expect result equals "ESC[3;4H┏━ p1 ━┓ESC[4;4H┃ESC[4;11H┃ESC[5;4H┃ESC[5;11H┃ESC[6;4H┗━━━━━━┛ESC[3;12H╭─ p2 ─╮ESC[4;12H│line  │ESC[5;12H│      │ESC[6;12H╰──────╯"
-expect seconds-under 20

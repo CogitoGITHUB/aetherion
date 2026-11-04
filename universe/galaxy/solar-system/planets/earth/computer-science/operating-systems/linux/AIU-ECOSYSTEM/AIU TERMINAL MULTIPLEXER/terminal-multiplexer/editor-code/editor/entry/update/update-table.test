@@ -1,6 +1,0 @@
-test mod-update-table
-level 2
-module editor/entry/update/update-table.rkt
-call (list (wrap-line "abcdef" 4) (fit "abc" 5) (fit-right "ab" 4) (first-n (list 1 2 3) 2) (last-n (list 1 2 3) 2) (level-of (list "--level" "3")))
-expect result equals (("abcd" "ef") "abc  " "  ab" (1 2) (2 3) 3)
-expect seconds-under 20

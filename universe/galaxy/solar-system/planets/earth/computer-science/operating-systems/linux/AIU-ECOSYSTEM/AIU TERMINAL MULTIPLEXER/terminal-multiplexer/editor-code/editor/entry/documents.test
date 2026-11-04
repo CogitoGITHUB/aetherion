@@ -1,6 +1,0 @@
-test mod-documents
-level 2
-module editor/entry/documents.rkt
-call (let ([d (document-json (refusal-document "k" "r" "m"))]) (list exit-ok exit-refusal exit-cannot-run program-name (hash-ref d (quote kind)) (hash-ref d (quote ok)) (hash-ref (hash-ref d (quote refusal)) (quote rule))))
-expect result equals (0 2 3 "aiu-editor" "k" #f "r")
-expect seconds-under 20

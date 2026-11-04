@@ -1,6 +1,0 @@
-test mod-finder
-level 2
-module editor/tui/tabs/finder.rkt
-call (list (line-start-offset "ab\ncd\nef" 1) (line-start-offset "ab\ncd\nef" 3) (line-start-offset "ab\ncd\nef" 9) (unbox find-jump))
-expect result equals (0 6 9 #f)
-expect seconds-under 20

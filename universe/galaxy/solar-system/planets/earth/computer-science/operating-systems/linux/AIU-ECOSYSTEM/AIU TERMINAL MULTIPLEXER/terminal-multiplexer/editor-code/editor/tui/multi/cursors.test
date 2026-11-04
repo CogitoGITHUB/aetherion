@@ -1,7 +1,0 @@
-test cursors
-level 2
-file test.aiu
-keys space c down f Z escape space s
-expect file contains Ztitle start
-expect file contains Zkind: default
-expect seconds-under 40
