@@ -18,6 +18,8 @@ pub fn session(
     if let Some(why) = config.problem() {
         screen.message = why.to_string();
     }
+    screen.workspace_quiet = true;
+    wire::ask(fd, &json!({ "op": "workspace", "what": "list", "client": client_name }))?;
     wire::ask(fd, &json!({ "op": "state", "client": client_name }))?;
     wire::ask(
         fd,

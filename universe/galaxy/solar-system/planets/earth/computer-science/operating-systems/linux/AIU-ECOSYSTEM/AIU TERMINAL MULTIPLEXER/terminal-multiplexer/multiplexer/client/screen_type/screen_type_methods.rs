@@ -34,6 +34,7 @@ impl Screen {
             project_name: String::new(),
             level: 2,
             shows_tab_bar: true,
+            workspace_quiet: false,
             editor_mcp,
             pending: None,
             fresh: false,

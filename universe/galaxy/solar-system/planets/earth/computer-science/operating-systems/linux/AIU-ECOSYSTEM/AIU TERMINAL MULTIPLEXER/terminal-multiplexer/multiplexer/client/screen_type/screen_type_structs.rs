@@ -56,6 +56,7 @@ pub struct Screen {
     pub(crate) project_name: String,
     pub(crate) level: u8,
     pub(crate) shows_tab_bar: bool,
+    pub(crate) workspace_quiet: bool,
     pub(crate) reserved: bool,
     pub(crate) editor_mcp: Vec<String>,
     pub(crate) pending: Option<String>,

@@ -59,7 +59,12 @@ pub(crate) fn take_record(screen: &mut Screen, line: &str) -> Option<String> {
         return None;
     }
     if what == "the workspace was read" {
-        screen.take_workspace(&record);
+        if screen.workspace_quiet {
+            screen.workspace_quiet = false;
+            screen.take_workspace_quiet(&record);
+        } else {
+            screen.take_workspace(&record);
+        }
     }
     if what == "the git state was read" {
         screen.take_git(&record);

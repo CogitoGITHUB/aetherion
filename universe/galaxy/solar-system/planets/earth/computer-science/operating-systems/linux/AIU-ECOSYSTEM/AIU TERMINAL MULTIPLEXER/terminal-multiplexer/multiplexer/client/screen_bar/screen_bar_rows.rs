@@ -43,6 +43,13 @@ impl Screen {
         (names, at, project_names, project_at)
     }
 
+    pub(crate) fn take_workspace_quiet(&mut self, record: &Value) {
+        if let Some(data) = record.get("outputs").and_then(|outputs| outputs.get("workspace")) {
+            let held = data.clone();
+            self.take_workspace_data(&held);
+        }
+    }
+
     pub(super) fn bar_box(&self) -> Vec<String> {
         let width = self.cols.max(20) as usize;
         let inner = width.saturating_sub(4).max(1);
