@@ -1,0 +1,6 @@
+test mod-bar-clock
+level 2
+module multiplexer/tui/bar/bar-clock-shared.rkt
+call (list (two 5) (two 12) (vector-length day-names) (vector-ref month-names 10))
+expect result equals ("05" "12" 7 "Nov")
+expect seconds-under 20

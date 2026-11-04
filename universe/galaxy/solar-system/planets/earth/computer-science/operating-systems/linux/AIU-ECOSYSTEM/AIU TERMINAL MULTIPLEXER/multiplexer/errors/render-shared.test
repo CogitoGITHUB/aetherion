@@ -1,0 +1,6 @@
+test mod-render
+level 2
+module multiplexer/errors/render-shared.rkt
+call (let ([mk (dynamic-require (path->complete-path "editor/errors/err.rkt") (quote err))]) (err-line (mk (quote err-x) "who" "where" "what" "todo")))
+expect result equals "ERR who at where: err-x: what; what to do: todo"
+expect seconds-under 20

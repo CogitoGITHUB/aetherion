@@ -1,0 +1,6 @@
+test mod-replay
+level 2
+module multiplexer/journal/replay-shared.rkt
+call (let ([r (dynamic-require (path->complete-path "editor/join/protocol.rkt") (quote response))]) (list (replay-report (r #t (hasheq (quote b) 2 (quote a) 1 (quote text) "x"))) (replay-report (r #f (hasheq (quote why) "no")))))
+expect result equals ("a=1 b=2" "FAIL why=no")
+expect seconds-under 20

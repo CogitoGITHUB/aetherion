@@ -1,0 +1,6 @@
+test mod-bar-menu
+level 2
+module multiplexer/tui/bar/bar-menu-shared.rkt
+call (list (kname "space") (kname "w") (kseq "space w") (cell-pad "ab" 4) (grid "t" (list "a" "b") (list (list "1" "2"))))
+expect result equals ("SPC" "w" "SPC w" "ab  " ("╭─ t ───╮" "│ a │ b │" "├───┼───┤" "│ 1 │ 2 │" "╰───┴───╯"))
+expect seconds-under 20

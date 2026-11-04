@@ -1,0 +1,41 @@
+title start
+kind: plan
+tags: todo planned
+MULTIPLEXER TODO
+title end
+
+section start
+title start
+Next
+title end
+
+paragraph start
+todo: history view, scroll back through the rows that left the top of the pane
+Planned.
+paragraph end
+
+paragraph start
+todo: bar placement from the editor bar plan, tabs on top and mode line at the bottom, instead of all rows stacked on top
+Planned.
+paragraph end
+
+paragraph start
+todo: prefix commands for tabs, workspaces, projects and splits through the copied editor tab code, with a second shell pane
+Planned.
+paragraph end
+
+paragraph start
+todo: decide per part what stays Racket and what goes to Rust, only server side where speed is needed, for example a pty holder that survives the client
+Planned.
+paragraph end
+
+paragraph start
+todo: combining marks and mouse and bracketed paste in the pane
+Planned.
+paragraph end
+
+paragraph start
+todo: the ecosystem gate finds the multiplexer project by itself, no second gate
+Planned.
+paragraph end
+section end

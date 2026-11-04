@@ -1,0 +1,6 @@
+test mod-selection
+level 2
+module multiplexer/buffer/selection-shared.rkt
+call (list (region-from 5 2) (region-text (lambda (op args) (list op (hash-ref args (quote from)) (hash-ref args (quote to)))) (region-from 5 2)) (region-text (lambda (op args) op) #f) (region-line (start-region 3)) (region-line #f) (grow-region (start-region 1) 4))
+expect result equals (#(struct:region 2 5) ("select" "2" "5") "" "selection: 3 to 3" "no selection" #(struct:region 1 4))
+expect seconds-under 20

@@ -1,0 +1,6 @@
+test mod-start
+level 2
+module multiplexer/devloop/start-shared.rkt
+call (list (mode) (exact-integer? (start-ms)) (string=? (config-source) "the source tree"))
+expect result equals ("work" #t #t)
+expect seconds-under 20

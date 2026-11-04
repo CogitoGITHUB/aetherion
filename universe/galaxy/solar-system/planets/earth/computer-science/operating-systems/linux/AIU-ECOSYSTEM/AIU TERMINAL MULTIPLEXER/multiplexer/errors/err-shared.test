@@ -1,0 +1,6 @@
+test mod-err
+level 2
+module multiplexer/errors/err-shared.rkt
+call (let ([e (err (quote k) "who" "where" "what" "todo")]) (list (err-kind e) (err-who e) (err-where e) (err-what e) (err-what-to-do e) (exn:fail:editor? (exn:fail:editor "m" (current-continuation-marks) e))))
+expect result equals (k "who" "where" "what" "todo" #t)
+expect seconds-under 20
