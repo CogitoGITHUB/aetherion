@@ -57,13 +57,14 @@ impl Screen {
 
     pub(super) fn area(&self) -> (u16, u16) {
         let rows = self.rows.max(6);
-        let bar = self.level >= 1 && self.shows_tab_bar;
-        let top = if bar { 2 } else { 1 };
-        let furniture = self.status_rows().len() + if bar { 1 } else { 0 };
-        (top, rows.saturating_sub(furniture as u16))
+        let furniture = self.status_rows().len();
+        (1, rows.saturating_sub(furniture as u16))
     }
 
     pub(super) fn status_rows(&self) -> Vec<String> {
+        if self.level >= 1 {
+            return self.bar_box();
+        }
         let mut rows: Vec<String> = Vec::new();
         if self.level >= 2 {
             rows.push(self.events_line());

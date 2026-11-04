@@ -6,12 +6,8 @@ impl Screen {
         let rows = self.rows.max(6) as usize;
         let (top, area_rows) = self.area();
         let status = self.status_rows();
-        let bar = self.level >= 1 && self.shows_tab_bar;
         let mut out = String::new();
         out.push_str("\x1b[?25l");
-        if bar {
-            put(&mut out, 1, 1, &clip(&self.tab_bar(), cols));
-        }
         let rects = self.rects(self.cols.max(20), area_rows, top);
         let members = self.tab_panes();
         for (at, rect) in rects.iter().enumerate() {

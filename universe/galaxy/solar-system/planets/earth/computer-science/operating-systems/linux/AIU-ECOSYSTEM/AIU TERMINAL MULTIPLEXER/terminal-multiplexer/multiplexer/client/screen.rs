@@ -33,6 +33,11 @@ mod screen_paint_frame;
 mod screen_paint_scroll;
 #[path = "screen_paint/screen_paint_rows.rs"]
 mod screen_paint_rows;
+#[path = "screen_bar/screen_bar_box.rs"]
+mod screen_bar_box;
+pub(crate) use screen_bar_box::*;
+#[path = "screen_bar/screen_bar_rows.rs"]
+mod screen_bar_rows;
 #[path = "screen_key/screen_key_input.rs"]
 mod screen_key_input;
 #[path = "screen_run/screen_run_command.rs"]
