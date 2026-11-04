@@ -1,0 +1,6 @@
+test mod-literals
+level 2
+module ../../AIU NOTATION/notation/elements/literals.rkt
+call (procedure? name-char?)
+expect result equals #t
+expect seconds-under 20

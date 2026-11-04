@@ -1,0 +1,6 @@
+test mod-gplan
+level 2
+module ../../AIU NOTATION/notation/generation/plan.rkt
+call (procedure? build-plan)
+expect result equals #t
+expect seconds-under 20

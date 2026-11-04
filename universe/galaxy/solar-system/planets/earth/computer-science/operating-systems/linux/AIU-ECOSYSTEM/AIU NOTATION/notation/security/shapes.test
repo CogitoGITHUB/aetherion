@@ -1,0 +1,6 @@
+test mod-shapes
+level 2
+module ../../AIU NOTATION/notation/security/shapes.rkt
+call (procedure? output-safe?)
+expect result equals #t
+expect seconds-under 20

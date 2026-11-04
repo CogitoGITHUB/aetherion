@@ -63,14 +63,9 @@ editor/tui/text/clip.rkt
 editor/tui/undo/undo-keys.rkt
 editor/tui/undo/undo.rkt
 ../../AIU NOTATION/notation/diagnostics/report.rkt
-../../AIU NOTATION/notation/elements/dispatch.rkt
-../../AIU NOTATION/notation/elements/literals.rkt
 ../../AIU NOTATION/notation/elements/register.rkt
 ../../AIU NOTATION/notation/entry/cli.rkt
 ../../AIU NOTATION/notation/entry/dispatch.rkt
-../../AIU NOTATION/notation/errors/err.rkt
-../../AIU NOTATION/notation/errors/raise.rkt
-../../AIU NOTATION/notation/errors/render.rkt
 ../../AIU NOTATION/notation/filetypes/dump-contracts.rkt
 ../../AIU NOTATION/notation/filetypes/filetypes.rkt
 ../../AIU NOTATION/notation/filetypes/make-live.rkt
@@ -86,8 +81,6 @@ editor/tui/undo/undo.rkt
 ../../AIU NOTATION/notation/filetypes/types/plan.rkt
 ../../AIU NOTATION/notation/filetypes/types/research.rkt
 ../../AIU NOTATION/notation/filetypes/types/todo.rkt
-../../AIU NOTATION/notation/generation/plan.rkt
-../../AIU NOTATION/notation/generation/write.rkt
 ../../AIU NOTATION/notation/literate/targets.rkt
 ../../AIU NOTATION/notation/machine/cancel.rkt
 ../../AIU NOTATION/notation/machine/directories.rkt
@@ -96,9 +89,7 @@ editor/tui/undo/undo.rkt
 ../../AIU NOTATION/notation/narration/narration.rkt
 ../../AIU NOTATION/notation/narration/print-console.rkt
 ../../AIU NOTATION/notation/narration/wait-door.rkt
-../../AIU NOTATION/notation/security/refuse.rkt
 ../../AIU NOTATION/notation/security/security.rkt
-../../AIU NOTATION/notation/security/shapes.rkt
 ../../AIU NOTATION/notation/surface/answers.rkt
 ../../AIU NOTATION/notation/surface/notices.rkt
 ../../AIU NOTATION/notation/surface/surface.rkt

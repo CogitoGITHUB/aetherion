@@ -1,0 +1,6 @@
+test mod-err
+level 2
+module ../../AIU NOTATION/notation/errors/err.rkt
+call (procedure? make-err)
+expect result equals #t
+expect seconds-under 20

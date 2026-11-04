@@ -1,0 +1,6 @@
+test mod-refuse
+level 2
+module ../../AIU NOTATION/notation/security/refuse.rkt
+call (procedure? refuse)
+expect result equals #t
+expect seconds-under 20
