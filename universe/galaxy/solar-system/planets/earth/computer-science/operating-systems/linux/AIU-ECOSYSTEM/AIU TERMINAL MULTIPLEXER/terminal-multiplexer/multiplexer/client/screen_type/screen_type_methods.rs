@@ -12,7 +12,7 @@ impl Screen {
             tab: 0,
             panes: Vec::new(),
             focused: 0,
-            mode: Mode::Visual,
+            mode: Mode::Insert,
             command: String::new(),
             cols: 0,
             rows: 0,
