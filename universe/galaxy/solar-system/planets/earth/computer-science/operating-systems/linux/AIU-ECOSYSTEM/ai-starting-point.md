@@ -1,3 +1,6 @@
+- Every time you learn something (a rule from Shape, the cause of a failure, a way that works), add it to this file at the top, in the same script as the work, so the next AI starts with it.
+- Lessons: run a split patcher from inside the folder of the file it splits, because a path attribute in a file that is not a mod.rs is relative to that file folder; the new group folders are created there. Never edit a patcher with sed, write it fresh and check the path names it writes (each ends in .rs exactly once). Test bodies go to <name>_test/<name>_test_behavior.rs with mod tests; in the source. Find a test block by its mod tests line, not by counting braces, because strings hold braces. After a split delete the unused glob imports cargo names and check again. When a push is refused, git fetch and git pull --rebase, then push. Never leave compiled or target folders in the tree.
+
 AI STARTING POINT: read this first, then work. The owner should never have to prompt you about how to work here.
 
 PROJECT
