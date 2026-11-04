@@ -1,0 +1,36 @@
+use super::*;
+
+/// WORKSPACE is the map of the workspace. Every sequence starts with the key
+/// that opens the map. The workspace is the one thing this program and the
+/// editor share, and the engine behind it owns the workspaces, the projects
+/// and the context.
+pub static WORKSPACE: &[Binding] = &[
+    Binding {
+        keys: "w w",
+        bytes: b"ww",
+        about: "the workspaces and their projects",
+        action: Action::Command(Command::WorkspaceList),
+        need: Need::Always,
+    },
+    Binding {
+        keys: "w p",
+        bytes: b"wp",
+        about: "the project context as it stands",
+        action: Action::Command(Command::WorkspaceContext),
+        need: Need::Always,
+    },
+    Binding {
+        keys: "w o",
+        bytes: b"wo",
+        about: "open the project context: the name of the project follows",
+        action: Action::Command(Command::WorkspaceOpen),
+        need: Need::Always,
+    },
+    Binding {
+        keys: "w e",
+        bytes: b"we",
+        about: "ask the editor what it owns, through the editor's own server",
+        action: Action::Command(Command::AskEditor),
+        need: Need::Always,
+    },
+];

@@ -66,7 +66,7 @@ Planned.
 paragraph end
 
 paragraph start
-todo: open client/keymap.rs (1216 lines): one file per binding table (root, workspace, select, git, tabs, panes, commands, sessions), the types in their own file, the Keymap methods in their own file, one keys file per category like the editor
+todo: open client/keymap.rs: the binding tables are split, the types (Mode Context Command Action Need State Binding), the Keymap struct with its methods, key_name and the tests still go into their own files, one keys file per category like the editor
 Planned.
 paragraph end
 
