@@ -62,7 +62,7 @@
                 (for/list ([r (in-list good)]) (string-append "| " (car r) " | " (cadr r) " | " (cadddr r) " |")))
         "\n"))
      (display-to-file (string-append aiu "\n" (howto-section) "\n" (cli-section) "\n") (build-path editor-root ".." "aiutd-tutorial.aiu") #:exists (quote truncate))
-     (display-to-file (string-append md "\n" (parts-text) "\n") (build-path editor-root ".." "ai-starting-point.md") #:exists (quote truncate))
+     (display-to-file (string-append md "\n" (parts-text) "\n") (build-path editor-root ".." ".." "ai-starting-point.md") #:exists (quote truncate))
      (define ok (andmap (lambda (r) (list-ref r 5)) rows))
      (for ([r (in-list rows)]) (log-step! 2 (string-append "doc:" (car r)) (list-ref r 4)))
      (define lines (for/list ([r (in-list rows)]) (step-line (string-append "doc:" (car r)) (list-ref r 4) (list-ref r 5))))

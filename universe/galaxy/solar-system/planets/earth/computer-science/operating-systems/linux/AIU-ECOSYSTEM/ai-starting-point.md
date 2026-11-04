@@ -11,7 +11,7 @@ REPLY FORMAT
 SHELL
 - His shell is nushell. Every command is ONE bash -c with single quotes outside and NO single quote inside. Write Racket quote forms as (quote x). Use quoted heredocs (cat <<"EOF").
 - Export LC_ALL=C.utf8 in every command. Ignore starship WARN lines.
-- Paths are relative to the text-editor folder. No timeouts. Every aiutd record or record-module call ends with < /dev/null.
+- Ecosystem root is AIU-ECOSYSTEM (his shell starts there). The editor project is AIU EDITOR/text-editor: cd into it with the path quoted. Paths in commands are relative to that folder.
 - Never create backup files.
 
 GIT
@@ -20,10 +20,9 @@ GIT
 - No Claude or Co-Authored-By lines in commit messages.
 
 CODE RULES
-- No comments in code. No .org files. No README files; the plan goes to plan.md only.
+- No comments in code. No .org files. No README files; open items go to todo.aiu (AIU EDITOR/todo.aiu) only, plan.md is deleted.
 - No abstract naming for any function, file or directory. A name says what the thing does and which group it belongs to (editor-tui-bar-state, blockview-command-pin-hide). Never helper, util, misc, common, stuff, data, tmp, base or numbered names.
 - Everything is categorised properly, like the editor: one directory per group (tui, commands, entry, machine, devloop, join, notation, gate, tests), each file in the group it belongs to, each notification and test next to its group.
-- Append one plan line to plan.md BEFORE the work.
 - Patch scripts: a small Racket patcher in /tmp where every anchor must occur exactly once or nothing is written. Then compile with aiutd update --level 1 and load touched modules WITHOUT running them. Never run racket FILE on editor/entry/mcp.rkt.
 - Close every hole in the same script; do not leave known gaps or follow-up steps.
 
@@ -36,7 +35,7 @@ TESTS
 
 BUILD
 - Cargo output lives outside the tree in ~/aiu-cargo-target (set in ~/.cargo/config.toml). hot-path-bin defaults to ~/aiu-cargo-target/debug/hot-path; AIU_HOT_PATH_BIN overrides it. No target or compiled folders in the tree.
-- The notation binary is in the AIU NOTATION project own target folder; AIU_NOTATION_BIN overrides it.
+- The notation engine lives in text-editor/notation, its own crate and binary at ~/aiu-cargo-target/debug/notation (AIU_NOTATION_BIN, set in ~/.config/nushell/env.nu). Notation tests sit beside their source; run them with AIU_ONLY=notation/ aiutd update --level 2. gate/skipped.txt lists files excused from a test.
 - Compile output of Racket goes to ~/aiu-compiled (PLTCOMPILEDROOTS).
 
 SCREEN LAYOUT
@@ -46,7 +45,7 @@ SCREEN LAYOUT
 
 OPEN TODO
 1. Trailing comments after code and #| |# blocks not stripped yet.
-2. Put update, test and gate in ONE directory (check update-table.rkt find-up for gate first).
+2. ONE gate at the ecosystem level covering all projects (projects list with roots and levels, aiutd takes the project from where it runs). Next after the notation tests, then the terminal multiplexer: test it, then make it work.
 3. TEST FILE PER SOURCE FILE; sort loose editor folders; notation file names; the rest of todo.aiu.
 
 ## Two separate packages
