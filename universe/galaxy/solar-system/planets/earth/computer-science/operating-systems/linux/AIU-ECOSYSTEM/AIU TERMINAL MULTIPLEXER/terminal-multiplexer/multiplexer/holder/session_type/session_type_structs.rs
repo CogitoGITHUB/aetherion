@@ -63,6 +63,7 @@ pub(crate) struct Pane {
     pub(crate) weight: u16,
     /// args are the arguments the program was started with: a restarted pane
     /// runs the same program the same way.
+    #[allow(dead_code)]
     pub(crate) args: Vec<String>,
     /// hidden says the pane is closed and not drawn, and its shell keeps
     /// running: a close hides, and a kill is another word (TODO item 45).

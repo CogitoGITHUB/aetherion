@@ -15,7 +15,7 @@
 // long, and it says what it did when it is done. There is no timer and no
 // watcher anywhere in here.
 
-use super::config::{baked_path, Config, ConfigFile};
+use super::config::{baked_path, Config};
 use super::last_good;
 use serde_json::Value;
 use std::path::{Path, PathBuf};

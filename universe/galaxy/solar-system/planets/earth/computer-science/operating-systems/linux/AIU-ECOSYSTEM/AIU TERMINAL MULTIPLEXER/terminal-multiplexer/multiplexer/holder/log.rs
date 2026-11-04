@@ -68,6 +68,7 @@ pub struct Log {
 
 impl Log {
     /// open opens the log with the rule this program ships, for a session.
+    #[allow(dead_code)]
     pub fn open(path: &Path) -> Result<Log, String> {
         Log::open_with(path, LIMIT_BYTES, KEEP_RECORDS)
     }

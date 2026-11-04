@@ -75,6 +75,7 @@ impl Context {
 /// asked for it, so a command can be run from a key, from the explorer, or
 /// from the command line, and it does the same thing each time.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
+#[allow(dead_code)]
 pub enum Command {
     Nothing,
     /// EnterInsert puts the keyboard into the focused pane.
@@ -232,6 +233,7 @@ impl Binding {
 
     /// action_as_command answers the command this binding runs, when it runs
     /// one.
+    #[cfg(test)]
     pub fn action_as_command(&self) -> Option<Command> {
         match self.action {
             Action::Command(command) => Some(command),
@@ -338,6 +340,7 @@ impl Keymap {
     }
 
     /// group answers the map a sequence opened, if any.
+    #[cfg(test)]
     pub fn group(&self) -> Option<Context> {
         self.group
     }

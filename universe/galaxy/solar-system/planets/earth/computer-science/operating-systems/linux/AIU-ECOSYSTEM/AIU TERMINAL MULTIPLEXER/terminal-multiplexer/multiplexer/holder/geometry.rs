@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 // One job: the geometry — where each pane sits on the terminal.
 //
 // The drawing and the sizes the programs get are ONE geometry: the screen

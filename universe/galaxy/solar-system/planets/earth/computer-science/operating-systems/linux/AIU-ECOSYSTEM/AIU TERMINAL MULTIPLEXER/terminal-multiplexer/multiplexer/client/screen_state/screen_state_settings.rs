@@ -33,6 +33,7 @@ impl Screen {
     }
 
     /// level answers how much furniture the screen draws now.
+    #[cfg(test)]
     pub fn level(&self) -> u8 {
         self.level
     }
@@ -43,6 +44,7 @@ impl Screen {
     }
 
     /// tab_bar_on answers whether the tab bar is drawn at level 1 and above.
+    #[cfg(test)]
     pub fn tab_bar_on(&self) -> bool {
         self.shows_tab_bar
     }
