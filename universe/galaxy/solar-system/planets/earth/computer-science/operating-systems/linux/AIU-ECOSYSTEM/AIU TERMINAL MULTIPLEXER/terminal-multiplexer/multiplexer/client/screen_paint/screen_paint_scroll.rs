@@ -58,7 +58,9 @@ impl Screen {
             visible
         };
         for line in visible.iter() {
-            lines.push(format!("│{}│", clip(line, inner)));
+            let clipped = clip(line, inner);
+            let shown = escape_free_width(&clipped);
+            lines.push(format!("│{}{}│", clipped, " ".repeat(inner.saturating_sub(shown))));
         }
         while lines.len() < height + 1 {
             lines.push(format!("│{}│", " ".repeat(inner)));
@@ -66,4 +68,21 @@ impl Screen {
         lines.push(rule_line("╰", "╯", rect.cols as usize));
         lines
     }
+}
+
+fn escape_free_width(text: &str) -> usize {
+    let mut count = 0;
+    let mut characters = text.chars();
+    while let Some(character) = characters.next() {
+        if character as u32 == 27 {
+            for next in characters.by_ref() {
+                if next.is_ascii_alphabetic() {
+                    break;
+                }
+            }
+        } else {
+            count += 1;
+        }
+    }
+    count
 }
