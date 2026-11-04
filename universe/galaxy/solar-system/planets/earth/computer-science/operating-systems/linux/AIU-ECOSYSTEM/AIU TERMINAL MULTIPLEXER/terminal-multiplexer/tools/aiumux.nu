@@ -53,7 +53,7 @@ def check-name [name: string] {
 def stale [package: string, target_dir: string] {
     let holder = ($target_dir | path join "debug" | path join "holder")
     if not ($holder | path exists) { return true }
-    let sources = (glob $"($package)/src/**/*.rs") | append ($package | path join "Cargo.toml")
+    let sources = (glob $"($package)/**/*.rs") | append ($package | path join "Cargo.toml")
     let there = ($sources | where {|f| $f | path exists })
     if ($there | is-empty) { return false }
     let built = (ls $holder | get modified | first)
