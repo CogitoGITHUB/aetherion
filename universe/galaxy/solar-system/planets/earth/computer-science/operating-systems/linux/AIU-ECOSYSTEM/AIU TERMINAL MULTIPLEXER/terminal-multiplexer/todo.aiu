@@ -46,17 +46,37 @@ Step 2: multiplexer layout, one directory per category
 title end
 
 paragraph start
-todo: open today the categories are agents, client, devloop, errors, holder, machine, narration, tty; keep them and give each subdirs for files that do the same job
+todo: open every split is one Racket patcher in /tmp where every anchor occurs once, method bodies unchanged, then cargo check --offline --bins --tests, commit and push only when green, otherwise revert
 Planned.
 paragraph end
 
 paragraph start
-todo: open split holder/holder.rs (2780 lines) into subdirs by job: session, pane, layout, log, wire, shells, watch, workspace; the file left in the category only wires them
+todo: open remove all comments from the multiplexer code, the meaning goes into names, same rule as the editor; the rkt files in errors, machine and narration too
 Planned.
 paragraph end
 
 paragraph start
-todo: open split client/screen.rs (2784 lines) and client/keymap.rs (1216 lines) the same way, one file per drawn thing and one file per key group
+todo: open holder/holder.rs is still 2001 lines: split the rest by job, the Session struct and its impl, serve and the read and close functions, the session handlers create rename kill shutdown, the pane handlers kill_pane show_pane rewind, ask_screen and control_result, the socket functions bind connect read_from write_to, Options; the answer function keeps only the dispatch; the other holder files get subdirs too
+Planned.
+paragraph end
+
+paragraph start
+todo: open client/screen.rs is still 999 lines: the Screen struct, the enums, the free functions clip put session refusal_text take_record and the tests move into their own files
+Planned.
+paragraph end
+
+paragraph start
+todo: open client/keymap.rs (1216 lines): one file per binding table (root, workspace, select, git, tabs, panes, commands, sessions), the types in their own file, the Keymap methods in their own file, one keys file per category like the editor
+Planned.
+paragraph end
+
+paragraph start
+todo: open client.rs, clipboard.rs, git.rs, select.rs, workspace.rs, control.rs, editor.rs in client/ and the other loose files in holder/, agents/, devloop/, tty/ get subdirs where one file holds more than one job; names say what the thing does
+Planned.
+paragraph end
+
+paragraph start
+todo: open the mod tests blocks inside the rs files move to test files beside their group
 Planned.
 paragraph end
 
@@ -114,6 +134,11 @@ paragraph end
 
 paragraph start
 todo: open tab splitting, resizing and moving tabs work the same as in the text editor
+Planned.
+paragraph end
+
+paragraph start
+todo: open copy from the editor: tui/bar (bar-state boxes for place, style, count and order, bar-keys, bar-menu), tui/tabs (tabs, tabs-commands, finder-keys: tab lists with workspace and project order and hidden lists, joined tab and bar), tui/split (split-keys, split-layout tree, split-state, split-commands); the multiplexer today has Binding tables in client/keymap.rs and a tab bar in client/screen.rs
 Planned.
 paragraph end
 
