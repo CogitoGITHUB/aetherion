@@ -66,26 +66,6 @@ impl Screen {
         }
     }
 
-    pub(super) fn tab_bar(&self) -> String {
-        if self.tabs.is_empty() {
-            return "[no tabs]".to_string();
-        }
-        let mut line = String::new();
-        for (at, tab) in self.tabs.iter().enumerate() {
-            if at > 0 {
-                line.push(' ');
-            }
-            if at == self.tab {
-                line.push('[');
-                line.push_str(tab);
-                line.push(']');
-            } else {
-                line.push_str(tab);
-            }
-        }
-        line
-    }
-
     pub(super) fn window(&self, index: usize, height: usize) -> Vec<String> {
         let pane = match self.panes.get(index) {
             Some(pane) => pane,
