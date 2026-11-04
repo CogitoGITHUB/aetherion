@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 // One job: the terminal itself — raw mode, window size, and what an escape is.
 //
 // Every answer here comes from the kernel and is returned as it came: no

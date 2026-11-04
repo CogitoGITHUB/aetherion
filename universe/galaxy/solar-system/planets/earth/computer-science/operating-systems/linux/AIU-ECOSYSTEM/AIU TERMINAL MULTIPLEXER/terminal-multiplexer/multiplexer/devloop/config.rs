@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 // One job: the config — the values the client honors, where the file is read
 // from, and whether it changed since the screen last looked.
 //

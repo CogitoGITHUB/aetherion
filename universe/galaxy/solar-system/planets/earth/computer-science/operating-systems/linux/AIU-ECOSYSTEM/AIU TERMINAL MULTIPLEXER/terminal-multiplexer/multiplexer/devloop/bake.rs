@@ -164,13 +164,6 @@ pub fn bake_file(state_dir: &Path, source: &Path) -> Bake {
     }
 }
 
-/// bake_in_force bakes the config the program would run with right now: the
-/// file the environment names, else the last good bake, else the built-in
-/// defaults.
-pub fn bake_in_force(state_dir: &Path) -> Bake {
-    let in_force = ConfigFile::start(state_dir);
-    bake(state_dir, in_force.config())
-}
 
 #[cfg(test)]
 mod tests {
