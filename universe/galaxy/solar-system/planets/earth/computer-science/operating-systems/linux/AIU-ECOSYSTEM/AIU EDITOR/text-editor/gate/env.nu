@@ -6,7 +6,7 @@ export const project_root = $gate_dir | path dirname
 export const package_dir = $project_root | path join "editor"
 
 export const package_src = $package_dir
-export const notation_dir = $project_root | path join "notation"
+export const notation_dir = $project_root | path dirname | path dirname | path join "AIU NOTATION" "notation"
 
 export const tools_dir = $project_root | path join "tools"
 

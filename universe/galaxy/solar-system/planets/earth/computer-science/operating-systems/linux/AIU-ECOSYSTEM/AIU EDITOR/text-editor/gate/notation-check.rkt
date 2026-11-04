@@ -18,7 +18,7 @@
       [else (loop up)])))
 
 (define types-dir
-  (simplify-path (build-path project-dir "notation" "types")))
+  (simplify-path (build-path project-dir ".." ".." "AIU NOTATION" "notation" "types")))
 
 (define scratch-journal
   (build-path (find-system-path 'temp-dir) "notation-check.journal"))

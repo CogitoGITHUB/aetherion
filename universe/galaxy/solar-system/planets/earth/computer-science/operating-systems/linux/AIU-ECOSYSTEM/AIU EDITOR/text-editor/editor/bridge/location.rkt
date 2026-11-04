@@ -1,6 +1,6 @@
 #lang racket/base
 
-(define notation-tail (list "text-editor" "notation" "target" "debug" "notation"))
+(define notation-tail (list "AIU NOTATION" "notation" "target" "debug" "notation"))
 
 (define (notation-bin-from dir)
   (define named (getenv "AIU_NOTATION_BIN"))

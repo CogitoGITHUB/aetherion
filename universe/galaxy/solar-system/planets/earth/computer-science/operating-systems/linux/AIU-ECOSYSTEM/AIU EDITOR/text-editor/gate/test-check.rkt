@@ -11,13 +11,13 @@
   (define plan (build-path root "gate" "skipped.txt"))
   (if (file-exists? plan)
       (append* (for/list ([l (in-list (file->lines plan))] #:when (string-contains? l "/"))
-                 (regexp-match* #px"(editor|notation)/[^ ]+[.]rkt" l)))
+                 (regexp-match* #px"(?:[.][.]/[.][.]/AIU NOTATION/notation|editor)/[^\n]+[.]rkt" l)))
       (list)))
 
 (define (rkt-files)
-  (for/list ([p (in-list (append (find-files (lambda (q) (regexp-match? #rx"[.]rkt$" (path->string q))) (build-path root "editor")) (find-files (lambda (q) (regexp-match? #rx"[.]rkt$" (path->string q))) (build-path root "notation"))))]
+  (for/list ([p (in-list (append (find-files (lambda (q) (regexp-match? #rx"[.]rkt$" (path->string q))) (build-path root "editor")) (find-files (lambda (q) (regexp-match? #rx"[.]rkt$" (path->string q))) (build-path root ".." ".." "AIU NOTATION" "notation"))))]
              #:unless (regexp-match? #rx"/compiled/" (path->string p)))
-    (path->string (find-relative-path root p))))
+    (path->string (find-relative-path (simplify-path root) (simplify-path p)))))
 
 ;; missing answers the Racket files that have no test beside them and no skip note.
 (define (missing)

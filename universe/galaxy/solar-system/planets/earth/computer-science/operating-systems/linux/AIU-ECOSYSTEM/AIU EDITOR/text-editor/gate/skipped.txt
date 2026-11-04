@@ -62,53 +62,53 @@ editor/tui/text/clip-notes.rkt
 editor/tui/text/clip.rkt
 editor/tui/undo/undo-keys.rkt
 editor/tui/undo/undo.rkt
-notation/data/aiu-text.rkt
-notation/data/table-html.rkt
-notation/data/table-latex.rkt
-notation/diagnostics/collect.rkt
-notation/diagnostics/report.rkt
-notation/elements/dispatch.rkt
-notation/elements/literals.rkt
-notation/elements/register.rkt
-notation/entry/cli.rkt
-notation/entry/dispatch.rkt
-notation/errors/err.rkt
-notation/errors/raise.rkt
-notation/errors/render.rkt
-notation/filetypes/dump-contracts.rkt
-notation/filetypes/filetypes.rkt
-notation/filetypes/make-live.rkt
-notation/filetypes/type.rkt
-notation/filetypes/types/_base.rkt
-notation/filetypes/types/book/blocks.rkt
-notation/filetypes/types/book/type.rkt
-notation/filetypes/types/decision.rkt
-notation/filetypes/types/default.rkt
-notation/filetypes/types/journal.rkt
-notation/filetypes/types/module.rkt
-notation/filetypes/types/note.rkt
-notation/filetypes/types/plan.rkt
-notation/filetypes/types/research.rkt
-notation/filetypes/types/todo.rkt
-notation/generation/plan.rkt
-notation/generation/write.rkt
-notation/literate/scan.rkt
-notation/literate/skip-journal.rkt
-notation/literate/targets.rkt
-notation/machine/cancel.rkt
-notation/machine/directories.rkt
-notation/machine/locks.rkt
-notation/model/addressing.rkt
-notation/model/nodes.rkt
-notation/model/numbering.rkt
-notation/model/properties.rkt
-notation/narration/events.rkt
-notation/narration/narration.rkt
-notation/narration/print-console.rkt
-notation/narration/wait-door.rkt
-notation/security/refuse.rkt
-notation/security/security.rkt
-notation/security/shapes.rkt
-notation/surface/answers.rkt
-notation/surface/notices.rkt
-notation/surface/surface.rkt
+../../AIU NOTATION/notation/data/aiu-text.rkt
+../../AIU NOTATION/notation/data/table-html.rkt
+../../AIU NOTATION/notation/data/table-latex.rkt
+../../AIU NOTATION/notation/diagnostics/collect.rkt
+../../AIU NOTATION/notation/diagnostics/report.rkt
+../../AIU NOTATION/notation/elements/dispatch.rkt
+../../AIU NOTATION/notation/elements/literals.rkt
+../../AIU NOTATION/notation/elements/register.rkt
+../../AIU NOTATION/notation/entry/cli.rkt
+../../AIU NOTATION/notation/entry/dispatch.rkt
+../../AIU NOTATION/notation/errors/err.rkt
+../../AIU NOTATION/notation/errors/raise.rkt
+../../AIU NOTATION/notation/errors/render.rkt
+../../AIU NOTATION/notation/filetypes/dump-contracts.rkt
+../../AIU NOTATION/notation/filetypes/filetypes.rkt
+../../AIU NOTATION/notation/filetypes/make-live.rkt
+../../AIU NOTATION/notation/filetypes/type.rkt
+../../AIU NOTATION/notation/filetypes/types/_base.rkt
+../../AIU NOTATION/notation/filetypes/types/book/blocks.rkt
+../../AIU NOTATION/notation/filetypes/types/book/type.rkt
+../../AIU NOTATION/notation/filetypes/types/decision.rkt
+../../AIU NOTATION/notation/filetypes/types/default.rkt
+../../AIU NOTATION/notation/filetypes/types/journal.rkt
+../../AIU NOTATION/notation/filetypes/types/module.rkt
+../../AIU NOTATION/notation/filetypes/types/note.rkt
+../../AIU NOTATION/notation/filetypes/types/plan.rkt
+../../AIU NOTATION/notation/filetypes/types/research.rkt
+../../AIU NOTATION/notation/filetypes/types/todo.rkt
+../../AIU NOTATION/notation/generation/plan.rkt
+../../AIU NOTATION/notation/generation/write.rkt
+../../AIU NOTATION/notation/literate/scan.rkt
+../../AIU NOTATION/notation/literate/skip-journal.rkt
+../../AIU NOTATION/notation/literate/targets.rkt
+../../AIU NOTATION/notation/machine/cancel.rkt
+../../AIU NOTATION/notation/machine/directories.rkt
+../../AIU NOTATION/notation/machine/locks.rkt
+../../AIU NOTATION/notation/model/addressing.rkt
+../../AIU NOTATION/notation/model/nodes.rkt
+../../AIU NOTATION/notation/model/numbering.rkt
+../../AIU NOTATION/notation/model/properties.rkt
+../../AIU NOTATION/notation/narration/events.rkt
+../../AIU NOTATION/notation/narration/narration.rkt
+../../AIU NOTATION/notation/narration/print-console.rkt
+../../AIU NOTATION/notation/narration/wait-door.rkt
+../../AIU NOTATION/notation/security/refuse.rkt
+../../AIU NOTATION/notation/security/security.rkt
+../../AIU NOTATION/notation/security/shapes.rkt
+../../AIU NOTATION/notation/surface/answers.rkt
+../../AIU NOTATION/notation/surface/notices.rkt
+../../AIU NOTATION/notation/surface/surface.rkt

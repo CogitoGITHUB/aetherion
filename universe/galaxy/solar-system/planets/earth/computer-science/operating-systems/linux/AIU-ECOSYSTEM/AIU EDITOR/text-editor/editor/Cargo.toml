@@ -22,4 +22,4 @@ git-inspection = { path = "../../../shared-layers/git-inspection" }
 # The AIU NOTATION engine, by path: the parser the editor hosts. It has no
 # dependencies of its own and is never fetched, so the build stays offline;
 # the editor calls it in-process, so opening a page needs no second program.
-notation = { path = "../notation" }
+notation = { path = "../../../AIU NOTATION/notation" }
