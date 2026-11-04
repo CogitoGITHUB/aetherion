@@ -1,0 +1,6 @@
+test mod-blockview-boxes
+level 2
+module editor/tui/blocks/blockview-boxes.rkt
+call (list (blockview-plain "\u001b[1mab\u001b[0m") (blockview-prefix 2) (blockview-end (vector "╭─ a" "x" "╰ b") 0 3 (regexp "^╰") (regexp "^╰─ ")) (map (lambda (b) (list (blockview-box-from b) (blockview-box-to b))) (blockview-boxes (vector "╭─ a" "│ x" "╰─ a" "╭─ b" "╰ b") 0 5 0)))
+expect result equals ("ab" "│ │ " 2 ((0 4)))
+expect seconds-under 20

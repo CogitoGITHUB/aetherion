@@ -1,0 +1,6 @@
+test mod-blocks-text
+level 2
+module editor/tui/blocks/blocks-text.rkt
+call (list (blockview-pad "ab" 5) (blockview-pad "abcdef" 3) (blockview-chunks "aa bb cc" 4) (blockview-chunks "short" 10))
+expect result equals ("ab   " "abcdef" ((0 . 3) (3 . 6) (6 . 8)) ((0 . 5)))
+expect seconds-under 20

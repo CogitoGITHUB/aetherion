@@ -1,0 +1,6 @@
+test mod-last-good
+level 2
+module editor/devloop/last-good.rkt
+call (list (good-answers? (list 1 2) 1) (good-answers? (list) 1) (good-answers? (list 2) 1))
+expect result equals (#t #f #f)
+expect seconds-under 20

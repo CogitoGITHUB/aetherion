@@ -1,0 +1,6 @@
+test mod-update-drive-docs
+level 2
+module editor/entry/update/update-drive-docs.rkt
+call (length (regexp-split "\n" (cli-section)))
+expect result equals 16
+expect seconds-under 20

@@ -1,0 +1,6 @@
+test mod-manifest
+level 2
+module editor/plugins/manifest.rkt
+call (list (manifest-missing #f) (manifest-missing (hasheq (quote name) "a")) (manifest-missing (hasheq (quote name) "a" (quote version) "1" (quote package) "p" (quote spec) "s" (quote command) (list "x") (quote provides) (list "y"))))
+expect result equals ((name version package spec command provides) (version package spec command provides) ())
+expect seconds-under 20

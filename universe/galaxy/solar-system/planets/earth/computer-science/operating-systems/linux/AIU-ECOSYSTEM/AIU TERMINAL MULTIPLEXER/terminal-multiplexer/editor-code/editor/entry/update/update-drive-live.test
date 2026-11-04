@@ -1,0 +1,6 @@
+test mod-update-drive-live
+level 2
+module editor/entry/update/update-drive-live.rkt
+call (list (live-wanted? "send key a") (live-wanted? "gate start"))
+expect result equals (#f #t)
+expect seconds-under 20

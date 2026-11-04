@@ -1,0 +1,6 @@
+test mod-update-drive-why
+level 2
+module editor/entry/update/update-drive-why.rkt
+call (list (map string-length (wrap-text (make-string 100 #\a))) (wrap-text "short") (err-where "nothing here") (seen-lines (list "x") (list (list #t "ok")) "") (seen-lines (list "x") (list (list #f "file contains z")) "a\nb") (diagnose "/tmp/aiu-no-code" "/tmp/aiu-no-out" "/tmp/aiu-no-out1"))
+expect result equals ((90 10) ("short") () ("    screen seen:" "    1 x") ("    screen seen:" "    1 x" "    file head:" "    f a" "    f b") ("    cause: exit code unknown" "    mid frame: MISSING, the editor produced nothing in 4 s" "    last frame at the end:"))
+expect seconds-under 20

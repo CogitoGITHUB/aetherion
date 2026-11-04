@@ -1,0 +1,6 @@
+test mod-tasks
+level 2
+module editor/commands/tasks.rkt
+call (list (task-say #f (list "a" "b")) task-names (dry-run?) (doc-line-of "task-say") (doc-line-of "no-such-task"))
+expect result equals ("a b" ("insert" "say") #f #f #f)
+expect seconds-under 20

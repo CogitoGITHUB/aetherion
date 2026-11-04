@@ -36,6 +36,9 @@ mod screen_paint_rows;
 #[path = "screen_bar/screen_bar_box.rs"]
 mod screen_bar_box;
 pub(crate) use screen_bar_box::*;
+#[path = "screen_bar/screen_bar_racket.rs"]
+mod screen_bar_racket;
+pub(crate) use screen_bar_racket::*;
 #[path = "screen_bar/screen_bar_rows.rs"]
 mod screen_bar_rows;
 #[path = "screen_key/screen_key_input.rs"]

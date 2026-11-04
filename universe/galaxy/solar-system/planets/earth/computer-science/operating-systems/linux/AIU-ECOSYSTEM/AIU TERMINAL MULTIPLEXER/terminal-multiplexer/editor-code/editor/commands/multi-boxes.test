@@ -1,0 +1,6 @@
+test mod-multi-boxes
+level 2
+module editor/commands/multi-boxes.rkt
+call (begin (set-box! main-anchor 5) (set-box! extra-cursors (list (cons 1 2) (cons 3 #f))) (multi-drop-selections!) (list (unbox main-anchor) (unbox extra-cursors) (unbox multi-raw-view)))
+expect result equals (#f ((1 . #f) (3 . #f)) #f)
+expect seconds-under 20

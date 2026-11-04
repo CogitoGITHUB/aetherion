@@ -1,3 +1,11 @@
+- Lessons: the multiplexer mode box comes from bar-lines-server.rkt run by client/screen_bar/screen_bar_racket.rs; after any change to a bar rkt file run raco make on bar-lines-server.rkt in the editor-code copy
+- Rule from Shape: the multiplexer bars come from the editor Racket code through tui/bar/bar-lines-server.rkt (one request line: layer TAB file TAB width, answer: bar rows then an empty line); both copies always identical
+- Rule from Shape: two copies of the editor code stand: AIU EDITOR/text-editor/editor and AIU TERMINAL MULTIPLEXER/terminal-multiplexer/editor-code/editor. Every change to tabs, mode line, bars or any other file in one copy is applied to the other copy in the SAME script, same relative path. End every such script with: diff -rq --exclude=compiled --exclude=target "AIU EDITOR/text-editor/editor" "AIU TERMINAL MULTIPLEXER/terminal-multiplexer/editor-code/editor" and judge by its exit code (must be 0)
+- Rule from Shape: COPY the working editor files into the multiplexer (editor-code/editor, same relative paths); never rewrite Racket in Rust, never reference the editor directory
+- Rule from Shape: Racket is the only copy of the bars. The multiplexer uses the editor Racket code in AIU EDITOR/text-editor/editor/tui/bar and keeps no Rust copy. Never port Racket to Rust.
+- Lessons: never run client --op screen or aiumux inside a diagnostic command with pipes; it takes the terminal raw and garbles the paste. Diagnose with --op state only
+- Lessons: the aiumux command is /usr/local/bin/aiumux, outside the tree; after moving tools/ update its path there
+- Lessons: client without --op prints one state report and exits, it is not interactive; the aiumux command wraps the real interactive start, check tools/aiumux.nu
 - Rule from Shape: commit only, NEVER git push unless he asks; a push can fail with a GitHub 500 and wastes rounds.
 - Lessons: before debugging the editor, list the running processes (pgrep -fa entry/cli.rkt and hot-path serve) and kill old ones; a long-running editor keeps its old hot-path and environment, so rebuilds and env fixes never reach it.
 - Lessons: hot-path links the notation crate by path, so rebuild hot-path (cargo build --offline --bin hot-path in AIU EDITOR/text-editor/editor) after every notation change; a stale hot-path shows false problems in the page box while notation view is fine.

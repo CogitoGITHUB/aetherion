@@ -1,0 +1,6 @@
+test block-picks
+level 2
+file test.aiu
+keys p t t e t c t k t
+expect screen lacks Every key in this page works in the visual layer unless a part says
+expect seconds-under 30

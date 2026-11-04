@@ -1,0 +1,8 @@
+test block-text
+level 2
+file test.aiu
+keys i Q Q escape space s
+expect screen lacks kind: default
+expect screen lacks tags: test editor introduction
+expect file contains QQkind: default
+expect seconds-under 30

@@ -1,0 +1,6 @@
+test mod-keymaps
+level 2
+module editor/routes/keymaps.rkt
+call (list (sequence-of "space space") (prefix-of? "visual" (list "space")) (binding-of "visual" "w") (binding-of "write" "tab s"))
+expect result equals (("space" "space") #t "block-edit" "save")
+expect seconds-under 20

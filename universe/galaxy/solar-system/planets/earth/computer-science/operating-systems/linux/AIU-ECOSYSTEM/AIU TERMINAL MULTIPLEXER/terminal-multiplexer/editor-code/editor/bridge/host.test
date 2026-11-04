@@ -1,0 +1,6 @@
+test mod-host
+level 2
+module editor/bridge/host.rkt
+call (page-refusal-text (page-refusal "t"))
+expect result equals "t"
+expect seconds-under 20

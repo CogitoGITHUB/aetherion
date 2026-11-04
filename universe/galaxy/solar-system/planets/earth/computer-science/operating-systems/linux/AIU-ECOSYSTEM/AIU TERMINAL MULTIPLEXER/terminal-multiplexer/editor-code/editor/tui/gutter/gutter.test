@@ -1,0 +1,6 @@
+test mod-gutter
+level 2
+module editor/tui/gutter/gutter.rkt
+call (begin (gutter-stale!) (gutter-hunks "x.txt"))
+expect result equals ()
+expect seconds-under 20

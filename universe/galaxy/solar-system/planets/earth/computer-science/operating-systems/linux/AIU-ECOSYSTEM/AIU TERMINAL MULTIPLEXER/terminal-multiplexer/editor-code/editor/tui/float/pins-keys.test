@@ -1,0 +1,6 @@
+test mod-pins-keys
+level 2
+module editor/tui/float/pins-keys.rkt
+call pin-keys
+expect result equals (("a" "pin-add") ("d" "pin-delete") ("h" "pin-prev") ("t" "pin-next") ("u" "pin-top") ("b" "pin-bottom") ("n" "pin-earlier") ("s" "pin-later") ("x" "pin-hide") ("left" "pin-prev") ("up" "pin-prev") ("right" "pin-next") ("down" "pin-next") ("f" "pin-keep") ("escape" "visual-mode"))
+expect seconds-under 20

@@ -1,0 +1,6 @@
+test mod-security
+level 2
+module editor/security/security.rkt
+call (list (state-changing? "list") (state-changing? "weird") (reversible? "move") (reversible? "delete") (checkpoint-needed? "send") (checkpoint-needed? "show"))
+expect result equals (#f #t #t #f #t #f)
+expect seconds-under 20

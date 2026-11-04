@@ -69,33 +69,26 @@ impl Screen {
             };
             sections.push(("tabs".to_string(), vec![tab_text]));
         }
-        let name = if self.watch {
-            format!("WATCH/{}", self.mode_name())
-        } else {
-            self.mode_name().to_string()
-        };
-        let mut mode_body: Vec<String> = Vec::new();
-        if self.mode == Mode::Command {
-            mode_body.push(format!(":{}", self.command));
-        } else {
-            if self.level >= 2 {
-                mode_body.push(self.events_line());
-                mode_body.push(self.specifics_line());
-            }
-            mode_body.push(self.hints_line());
-        }
-        let mode_title = format!("{} L{}", name.to_lowercase(), self.level);
-        sections.push((format!("{} · {}", mode_title, self.focused_tab()), mode_body));
         let mut lines: Vec<String> = Vec::new();
         for (at, (title, body)) in sections.iter().enumerate() {
             let (left, right) = if at == 0 { ("╭", "╮") } else { ("├", "┤") };
-            let right_text = if at + 1 == sections.len() { self.message.as_str() } else { "" };
-            lines.push(edge_line(left, right, title, right_text, width));
+            lines.push(edge_line(left, right, title, "", width));
             for text in body {
                 lines.push(body_line(text, width));
             }
         }
-        lines.push(rule_line("╰", "╯", width));
+        let layer = match self.mode {
+            Mode::Insert => "write",
+            _ => "visual",
+        };
+        let short = format!("{}", self.focused_tab());
+        let mut racket = bar_lines_from_racket(layer, &short, width);
+        if !lines.is_empty() {
+            if let Some(first) = racket.first_mut() {
+                *first = first.replacen("╭", "├", 1).replacen("╮", "┤", 1);
+            }
+        }
+        lines.extend(racket);
         lines
     }
 }

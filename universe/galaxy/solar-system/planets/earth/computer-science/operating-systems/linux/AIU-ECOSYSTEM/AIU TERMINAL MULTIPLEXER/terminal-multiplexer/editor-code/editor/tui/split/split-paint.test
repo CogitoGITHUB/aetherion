@@ -1,0 +1,6 @@
+test mod-split-paint
+level 2
+module editor/tui/split/split-paint.rkt
+call (let* ([t (split-layout-split (split-layout-single 1) 1 2 "right")] [rects (split-layout-rects t 0 0 20 5)] [boxes (hash 1 (split-pane-box split-paint-fit-plain "one" (list "a" "b") 10 5 #t) 2 (split-pane-box split-paint-fit-plain "a long title here" (list "c") 10 5 #f))]) (split-compose rects boxes 5))
+expect result equals "┏━ one ━━┓╭─ a lon ╮\n┃a       ┃│c       │\n┃b       ┃│        │\n┃        ┃│        │\n┗━━━━━━━━┛╰────────╯"
+expect seconds-under 20

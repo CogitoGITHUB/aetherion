@@ -1,0 +1,6 @@
+test mod-split-layout
+level 2
+module editor/tui/split/split-layout.rkt
+call (let* ([t (split-layout-split (split-layout-single 1) 1 2 "right")] [u (split-layout-split t 2 3 "down")] [w (split-layout-resize u 1 "width" 20)] [h (split-layout-resize u 3 "height" -20)]) (list u (split-layout-rects w 0 0 100 40) (split-layout-rects h 0 0 100 40) (split-layout-resize w 1 "width" 80) (split-layout-swap u 1 3) (split-layout-flip w 1) (split-layout-turn u 3) (split-layout-equalise w) (split-layout-neighbour u 3 "up" 80 24) (split-layout-neighbour u 1 "right" 80 24) (split-layout-neighbour u 3 "left" 80 24) (split-layout-close u 2) (split-layout-ids u)))
+expect result equals (("split" "right" ("pane" 1) ("split" "down" ("pane" 2) ("pane" 3) 50) 50) ((1 0 0 70 40) (2 70 0 30 20) (3 70 20 30 20)) ((1 0 0 50 40) (2 50 0 50 28) (3 50 28 50 12)) ("split" "right" ("pane" 1) ("split" "down" ("pane" 2) ("pane" 3) 50) 90) ("split" "right" ("pane" 3) ("split" "down" ("pane" 2) ("pane" 1) 50) 50) ("split" "right" ("split" "down" ("pane" 2) ("pane" 3) 50) ("pane" 1) 30) ("split" "right" ("pane" 1) ("split" "right" ("pane" 2) ("pane" 3) 50) 50) ("split" "right" ("pane" 1) ("split" "down" ("pane" 2) ("pane" 3) 50) 50) 2 2 1 ("split" "right" ("pane" 1) ("pane" 3) 50) (1 2 3))
+expect seconds-under 20
