@@ -1,3 +1,4 @@
+- Lessons: aiumux kill does not end the holder; end it with kill of the pid in sessions/main/holder.pid, remove holder.sock and holder.pid, then aiumux --start; check the pane program in --op state
 - Lessons: aiumux.nu starts the holder with the SHELL env, not /bin/sh; restart with aiumux kill main then aiumux --start after changing it
 - Lessons: the shell pane starts in Insert mode (keys go to the shell, prefix key for multiplexer commands); the bar server refreshes git itself every 5 seconds because the client has no repaint callback
 - Rule from Shape: no bar drawing in Rust; bar_box only asks bar-lines-server.rkt (tabs, workspace, git, mode all from the editor Racket). Obey literally, delete Rust copies
