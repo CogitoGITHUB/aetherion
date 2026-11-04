@@ -31,7 +31,6 @@ mod log_type_structs;
 pub(crate) use log_type_structs::*;
 #[path = "log_type/log_type_methods.rs"]
 mod log_type_methods;
-pub(crate) use log_type_methods::*;
 #[path = "log_file/log_file_paths.rs"]
 mod log_file_paths;
 pub(crate) use log_file_paths::*;
