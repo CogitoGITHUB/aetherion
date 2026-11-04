@@ -1,7 +1,5 @@
 use crate::*;
 
-/// call runs one tool and answers the MCP result: the envelope as the text,
-/// and whether it was a refusal.
 pub(crate) fn call(id: Value, name: &str, arguments: &Value, sessions_dir: &PathBuf) -> Value {
     let cap = match tools::of(name) {
         Some(found) => found,
@@ -41,16 +39,10 @@ pub(crate) fn call(id: Value, name: &str, arguments: &Value, sessions_dir: &Path
     }
 }
 
-/// declared_agrees answers whether the declaration and the gate say the same
-/// thing about one capability. The gate here is the token: a capability the
-/// declaration calls a change must ask for the human's token.
 pub(crate) fn declared_agrees(cap: &tools::Capability) -> bool {
     !cap.mutates || cap.name.starts_with("multiplexer_")
 }
 
-/// token_given answers whether the arguments carry the human's token: the
-/// server compares it with its own, so a caller cannot grant itself the
-/// right to change a session.
 pub(crate) fn token_given(arguments: &Value, sessions_dir: &PathBuf) -> bool {
     let given = arguments
         .get("confirm")

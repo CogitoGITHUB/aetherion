@@ -1,25 +1,13 @@
 use super::*;
 
-/// Answer is what the engine said: whether it could answer, the data it
-/// gave, and the reason when it could not.
 pub struct Answer {
     pub ok: bool,
     pub data: Value,
     pub reason: String,
 }
 
-/// requests counts the requests this seam made, so every one of them has
-/// its own name. The engine answers a change with the same name once, and
-/// never twice.
 pub(crate) static REQUESTS: AtomicU64 = AtomicU64::new(0);
 
-/// read asks the engine what the workspace holds, and answers with the
-/// facts.
-///
-/// The "what" says which view is asked for: the workspaces and their
-/// projects, or the context as it stands. The workspace is named when the
-/// owner names one; the engine takes the only one there is when nobody
-/// does.
 pub fn read(state_dir: &Path, workspace: &str, what: &str) -> Answer {
     let engine = match Engine::open(state_dir) {
         Ok(engine) => engine,
@@ -47,8 +35,6 @@ pub fn read(state_dir: &Path, workspace: &str, what: &str) -> Answer {
             .and_then(|context| text(context, "project"))
             .unwrap_or_default();
         let projects_held = list(data_of(&projects), "projects");
-        // The context names a project by its own name; the owner reads
-        // names, not identifiers.
         let context_name = projects_held
             .iter()
             .find(|one| text(one, "id").as_deref() == Some(context_project.as_str()))

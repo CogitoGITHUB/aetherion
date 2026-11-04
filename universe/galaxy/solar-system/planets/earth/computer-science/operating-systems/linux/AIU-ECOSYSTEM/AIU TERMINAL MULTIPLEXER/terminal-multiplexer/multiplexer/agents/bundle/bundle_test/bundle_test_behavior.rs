@@ -89,8 +89,6 @@
         let made = bundle().carrying("export api_key=sk-abcdef", "sk-abcdef");
         let text = made.text();
         assert!(!text.contains("sk-abcdef"), "the secret left: {}", text);
-        // The seam keeps the name and drops the value: the separator goes
-        // with the value, exactly as it does for every other line.
         assert!(text.contains("command: export api_key[redacted]"), "{}", text);
         assert!(text.contains("output: [redacted]"), "{}", text);
     }

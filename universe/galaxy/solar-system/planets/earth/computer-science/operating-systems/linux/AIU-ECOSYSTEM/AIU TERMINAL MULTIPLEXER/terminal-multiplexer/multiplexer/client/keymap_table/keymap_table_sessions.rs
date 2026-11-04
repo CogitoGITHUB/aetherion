@@ -1,6 +1,5 @@
 use super::*;
 
-/// SESSIONS is the map of the session commands.
 pub static SESSIONS: &[Binding] = &[
     Binding {
         keys: "s d",

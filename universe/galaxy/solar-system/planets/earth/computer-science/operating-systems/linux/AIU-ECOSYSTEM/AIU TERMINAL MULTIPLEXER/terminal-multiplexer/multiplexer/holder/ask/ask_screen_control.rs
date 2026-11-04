@@ -1,8 +1,5 @@
 use crate::*;
 
-/// ask_screen hands the agent's request to the screen and waits for the
-/// screen's answer: the request is remembered by its id, and the answer
-/// goes back to the client that asked.
 pub(crate) fn ask_screen(
     session: &mut Session,
     at: usize,
@@ -45,9 +42,6 @@ pub(crate) fn ask_screen(
     let mut line = asked.to_string();
     line.push('\n');
     if let Err(why) = write_to(screen, line.as_bytes()) {
-        // The screen did not take the request: it comes off the list and the
-        // agent is told, rather than left waiting for an answer that will
-        // never come.
         session.pending.pop();
         let record = session.record(Fields {
             kind: "fail",
@@ -65,9 +59,6 @@ pub(crate) fn ask_screen(
     Ok(true)
 }
 
-/// control_result is the screen's answer to the agent's request: the id of
-/// the request and what the screen did. The answer goes to the client that
-/// asked, and the request is off the list.
 pub(crate) fn control_result(session: &mut Session, _at: usize, request: &Value) -> Result<bool, String> {
     let id = request
         .get("id")

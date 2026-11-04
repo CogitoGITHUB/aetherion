@@ -27,10 +27,6 @@ pub(crate) fn request_view_read(session: &mut Session, at: usize, request: &Valu
         result: json!({}),
     });
     session.write(&done);
-    // The last answer of this request: the reader knows the records
-    // are all there without waiting for the connection to close.
     answer_client(session, at, &done);
-    // The client stays: the answer says it is the last one of this
-    // request, and the client closes the connection when it is done.
     Ok(true)
 }

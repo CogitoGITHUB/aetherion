@@ -1,8 +1,6 @@
     use super::pane_text_at;
     use serde_json::json;
 
-    /// a_log is a journal of three panes' words: two panes say one line each,
-    /// in the order the session recorded them.
     fn a_log() -> Vec<serde_json::Value> {
         vec![
             json!({ "seq": 1, "who": "work", "outputs": { "text": "the first line" } }),

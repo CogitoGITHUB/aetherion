@@ -1,16 +1,6 @@
-// One job: the editor's own answer, drawn as lines.
-//
-// The answer is the editor's own words: the multiplexer does not rewrite
-// them and does not explain them. A refusal is shown as a refusal, with the
-// reason the editor gave.
 
 use serde_json::Value;
 
-/// lines answers the panel of the editor's own answer: what the editor said,
-/// one line per row of it.
-///
-/// An answer that carries no words is said so: an empty panel is not an
-/// answer, and the owner must not read one as one.
 pub fn lines(data: &Value) -> Vec<String> {
     let why = data
         .get("why")

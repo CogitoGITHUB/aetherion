@@ -1,14 +1,11 @@
 use super::*;
 
-/// Capability is one thing an agent may do, as the declaration says it.
 pub struct Capability {
     pub name: String,
     pub mutates: bool,
     pub description: String,
 }
 
-/// capabilities answers every declared capability, in the order of the
-/// declaration.
 pub fn capabilities() -> Vec<Capability> {
     let declared: Value = match serde_json::from_str(DECLARATION) {
         Ok(value) => value,
@@ -36,14 +33,10 @@ pub fn capabilities() -> Vec<Capability> {
         .collect()
 }
 
-/// of answers the capability of that name, or nothing.
 pub fn of(name: &str) -> Option<Capability> {
     capabilities().into_iter().find(|cap| cap.name == name)
 }
 
-/// schema answers the input shape of one capability, the way the editor
-/// declares it: the arguments in order, and the human's token when the tool
-/// changes something.
 pub fn schema(cap: &Capability) -> Value {
     let mut properties = serde_json::Map::new();
     properties.insert(

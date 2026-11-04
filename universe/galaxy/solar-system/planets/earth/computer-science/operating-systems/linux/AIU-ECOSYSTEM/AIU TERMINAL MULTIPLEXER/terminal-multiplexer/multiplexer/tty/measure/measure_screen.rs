@@ -1,13 +1,6 @@
-// One job: what works under proot is measured, never assumed.
-//
-// The holder asks this file what the kernel actually did, and writes the answer
-// into the session log as a record. A capability this phone does not have is
-// then a fact in the log, not a promise in a document.
 
 use crate::tty;
 
-/// Measured is what one terminal actually answered when it was opened, made
-/// raw and sized: the facts the holder logs, and nothing it hopes for.
 pub struct Measured {
     pub pty_open: bool,
     pub raw_mode: bool,
@@ -17,8 +10,6 @@ pub struct Measured {
     pub slave: String,
 }
 
-/// of_terminal takes the terminal that was opened and reads the kernel back:
-/// the slave name it answered, whether raw mode took, and the size it holds.
 pub fn of_terminal(fd: libc::c_int, wanted: (u16, u16), slave: &str) -> Measured {
     let held = tty::window_size(fd);
     let (cols, rows) = held.unwrap_or((0, 0));
@@ -32,8 +23,6 @@ pub fn of_terminal(fd: libc::c_int, wanted: (u16, u16), slave: &str) -> Measured
     }
 }
 
-/// record answers the measured facts as the fields of one log record, so the
-/// log says what the phone did before it says anything else.
 pub fn record(measured: &Measured) -> Vec<(&'static str, serde_json::Value)> {
     let mut fields: Vec<(&'static str, serde_json::Value)> = Vec::new();
     fields.push(("pty", serde_json::Value::Bool(measured.pty_open)));

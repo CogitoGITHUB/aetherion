@@ -1,7 +1,5 @@
 use crate::*;
 
-/// attach answers a client that wants to watch the session. The contracts are
-/// exchanged before anything else, and a mismatch refuses by name.
 pub(crate) fn attach(session: &mut Session, at: usize, request: &Value) -> Result<bool, String> {
     let client_event = request
         .get("event-contract")
@@ -37,8 +35,6 @@ pub(crate) fn attach(session: &mut Session, at: usize, request: &Value) -> Resul
     }
 
     session.clients[at].attached = true;
-    // The screen says what it is: the agent's words run on the owner's own
-    // screen, and nowhere else.
     let role = request
         .get("role")
         .and_then(|value| value.as_str())
@@ -47,13 +43,10 @@ pub(crate) fn attach(session: &mut Session, at: usize, request: &Value) -> Resul
     session.clients[at].role = role;
     let record = session.state("the client attached and the contracts agree");
     session.write(&record);
-    // The answer is not the last one: the client stays and watches what the
-    // session says next.
     answer_client_more(session, at, &record);
     Ok(true)
 }
 
-/// client_name answers the name a client gave, or a plain one.
 pub(crate) fn client_name(request: &Value) -> String {
     request
         .get("client")

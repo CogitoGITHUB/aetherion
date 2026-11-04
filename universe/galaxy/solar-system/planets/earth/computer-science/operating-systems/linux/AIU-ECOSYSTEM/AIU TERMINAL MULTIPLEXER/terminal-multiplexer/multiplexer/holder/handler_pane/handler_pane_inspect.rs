@@ -1,8 +1,5 @@
 use crate::*;
 
-/// kill_pane ends a shell for good: the pane is removed and its terminal is
-/// closed. This is the separate word from close/hide (TODO item 45), and
-/// nothing uses it by accident.
 pub(crate) fn kill_pane(session: &mut Session, at: usize, request: &Value) -> Result<bool, String> {
     let name = request
         .get("name")
@@ -35,8 +32,6 @@ pub(crate) fn kill_pane(session: &mut Session, at: usize, request: &Value) -> Re
     Ok(true)
 }
 
-/// show_pane brings a hidden pane back: its shell keeps running, and it
-/// becomes drawn again.
 pub(crate) fn show_pane(session: &mut Session, at: usize, name: &str) -> Result<bool, String> {
     let mut shown = false;
     for pane in session.panes.iter_mut() {
@@ -71,10 +66,6 @@ pub(crate) fn show_pane(session: &mut Session, at: usize, name: &str) -> Result<
     Ok(true)
 }
 
-/// rewind answers how one pane looked at one record: the lines that pane had
-/// said by then, read from the journal. The answer is a record like every
-/// other op's answer, and it touches no pane: a look back cannot change what
-/// the session is doing.
 pub(crate) fn rewind(session: &mut Session, at: usize, request: &Value) -> Result<bool, String> {
     let pane = request
         .get("pane")

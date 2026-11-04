@@ -1,6 +1,5 @@
 use crate::*;
 
-/// Options are the client's arguments.
 pub(crate) struct Options {
     pub(crate) state_dir: PathBuf,
     pub(crate) op: String,
@@ -57,10 +56,6 @@ impl Options {
                     at += 2;
                 }
                 "--editor-mcp-arg" => {
-                    // The command that starts the editor's own server: the
-                    // program first, and then what it runs. It is given one
-                    // word at a time, so a path with a space in it is still
-                    // one path.
                     editor_mcp.push(value);
                     at += 2;
                 }
@@ -101,7 +96,6 @@ impl Options {
         })
     }
 
-    /// request is the one JSON object the client puts on the wire.
     pub(crate) fn request(&self) -> Value {
         match self.op.as_str() {
             "attach" => json!({

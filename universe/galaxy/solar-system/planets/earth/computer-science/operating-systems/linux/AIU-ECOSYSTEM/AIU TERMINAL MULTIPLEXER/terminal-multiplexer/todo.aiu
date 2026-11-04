@@ -51,7 +51,7 @@ Planned.
 paragraph end
 
 paragraph start
-todo: open remove all comments from the multiplexer code, the meaning goes into names, same rule as the editor; the rkt files in errors, machine and narration too
+todo: open remove all comments from text-editor, notation and AIU-OS/AIU-PM including trailing comments and block comments; the multiplexer is done, the meaning goes into names
 Planned.
 paragraph end
 

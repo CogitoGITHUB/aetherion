@@ -1,7 +1,5 @@
     use super::*;
 
-    /// a_screen is a screen on a window big enough to draw one pane, so the
-    /// drawing can be read for what it holds.
     fn a_screen() -> Screen {
         let mut screen = Screen::empty("opencode".to_string(), "editor".to_string(), Vec::new());
         screen.cols = 60;
@@ -64,9 +62,6 @@
         assert!(drawing.contains("[main]") == false, "the tab bar is gone: {:?}", drawing);
     }
 
-    /// a_screen_with_words is a screen whose focused pane said forty
-    /// numbered lines, so a page is a page and there is something to
-    /// scroll to.
     fn a_screen_with_words() -> Screen {
         let mut screen = a_screen();
         screen.panes[0].lines = (1..=40).map(|at| format!("line {}", at)).collect();
@@ -114,8 +109,6 @@
         assert!(screen.select.mark().is_none(), "the mark is gone");
     }
 
-    /// a_picked_screen is a screen holding one line of the given length, with
-    /// the whole line picked: the mark at its start and the point at its end.
     fn a_picked_screen(width: usize) -> Screen {
         let mut screen = a_screen();
         let text: String = "x".repeat(width);
@@ -307,8 +300,6 @@
         screen.set_watch(true);
         let drawing = screen.draw();
         assert!(drawing.contains("WATCH/"), "the mode row says it watches: {:?}", drawing);
-        // Every action that would change the session is taken away, and the
-        // message says the rule; leaving is still done.
         let left = screen.watch_filter(Action::Quit);
         assert!(matches!(left, Some(Action::Quit)), "leaving is not a change");
         let taken = screen.watch_filter(Action::Send(b"rm -rf /".to_vec()));

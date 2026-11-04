@@ -1,6 +1,5 @@
     use super::*;
 
-    /// state is a session with two tabs and two panes.
     fn state() -> State {
         State {
             tabs: 2,
@@ -157,15 +156,12 @@
                 }
                 let resolution = keymap.resolve(Mode::Visual, last);
                 match binding.action_as_command() {
-                    // A command binding runs the command it says.
                     Some(command) => assert_eq!(
                         resolution,
                         Resolution::Command(command),
                         "the binding {} does not run its command",
                         binding.keys
                     ),
-                    // The selection is a mode and not a group: the key
-                    // enters it, and the mode line says which mode stands.
                     None if binding.action == Action::Map(Context::Select) => {
                         assert_eq!(
                             resolution,
@@ -174,8 +170,6 @@
                             binding.keys
                         )
                     }
-                    // A group binding opens the group and waits for the next
-                    // key of that group.
                     None => assert_eq!(
                         resolution,
                         Resolution::Pending,
@@ -203,8 +197,6 @@
 
     #[test]
     fn the_explorer_shows_the_same_bindings_the_keys_use() {
-        // The explorer and the keys read one table: the explorer shows the
-        // root map, and the root map is what Visual mode reads.
         let keymap = Keymap::empty();
         for binding in ROOT {
             if binding.is_map() {

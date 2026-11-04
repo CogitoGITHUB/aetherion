@@ -11,19 +11,14 @@ pub(crate) fn main() {
     }
 }
 
-/// run holds one session from the first moment to the last.
 pub(crate) fn run(args: &[String]) -> Result<(), String> {
     let options = Options::read(args)?;
-    // The holder says which build it is: a client that meets it at attach
-    // compares the contracts, and the refusal must be able to name both sides.
     eprintln!(
         "holder: build {} — contracts {} and {}",
         env!("CARGO_PKG_VERSION"),
         HOLDER_CONTRACT,
         EVENT_CONTRACT
     );
-    // The state directory is the owner's alone (TODO item 51): 0700, and the
-    // files the session writes in it are 0600.
     log::private_dir(&options.state_dir)?;
 
     let log_path = options.state_dir.join("events.log");
@@ -31,9 +26,6 @@ pub(crate) fn run(args: &[String]) -> Result<(), String> {
     let pid_path = options.state_dir.join("holder.pid");
 
     if socket_path.exists() {
-        // A connection is not proof: this phone answers connect() on a socket
-        // a dead holder left behind, and then says nothing. The proof is an
-        // answer, so the question is asked before the session is called held.
         let stale = match connect(&socket_path) {
             Ok(fd) => {
                 let answers = answers_holder(fd);
@@ -60,8 +52,6 @@ pub(crate) fn run(args: &[String]) -> Result<(), String> {
     let log = log::Log::open_with(&log_path, options.log_limit, log::KEEP_RECORDS)?;
     let listen_fd = bind(&socket_path)?;
 
-    // The panes of the session: the layout file names them, or the smallest
-    // layout there is holds one pane with one shell.
     let wanted = match &options.layout {
         Some(path) => layout::read(path)?,
         None => layout::one("main", &options.shell, options.cols, options.rows),

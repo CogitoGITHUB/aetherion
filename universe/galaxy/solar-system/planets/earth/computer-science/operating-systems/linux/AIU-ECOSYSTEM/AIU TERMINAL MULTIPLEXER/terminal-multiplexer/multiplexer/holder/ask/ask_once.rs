@@ -1,9 +1,5 @@
 use crate::*;
 
-/// ask_once connects to another session's socket, sends one request, and
-/// answers the one line that comes back. It is a single exchange: no clock and
-/// no retry, so a session that does not answer is a session that was not
-/// touched.
 pub(crate) fn ask_once(socket: &Path, request: &Value) -> Result<Value, String> {
     let fd = connect(socket)?;
     let mut line = request.to_string();

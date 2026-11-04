@@ -1,9 +1,6 @@
 use crate::*;
 
 pub(crate) fn request_view_workspace(session: &mut Session, at: usize, request: &Value) -> Result<bool, String> {
-    // The client asks what the shared workspace holds, or asks
-    // for a change: the engine is asked, and the engine owns the
-    // workspaces, the projects and the context.
     let what = request
         .get("what")
         .and_then(|value| value.as_str())

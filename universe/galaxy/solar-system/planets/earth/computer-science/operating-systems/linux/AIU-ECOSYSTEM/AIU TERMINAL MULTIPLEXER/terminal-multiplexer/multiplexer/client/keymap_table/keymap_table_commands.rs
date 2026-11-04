@@ -1,6 +1,5 @@
 use super::*;
 
-/// COMMANDS is the map of the command commands.
 pub static COMMANDS: &[Binding] = &[
     Binding {
         keys: "c l",

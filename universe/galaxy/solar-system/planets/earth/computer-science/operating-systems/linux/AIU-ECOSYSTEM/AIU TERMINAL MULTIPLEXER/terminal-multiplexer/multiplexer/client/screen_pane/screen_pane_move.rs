@@ -1,9 +1,6 @@
 use super::*;
 
 impl Screen {
-    /// change_weight asks the holder for more of the space, or less of it,
-    /// for the focused pane: the pane's share is its weight, and the layout
-    /// file keeps it.
     pub(super) fn change_weight(&mut self, by: i32) -> Action {
         let pane = self.focused_pane();
         if pane.is_empty() {
@@ -29,7 +26,6 @@ impl Screen {
         }))
     }
 
-    /// focus_pane gives the focus to the pane with that name.
     pub(super) fn focus_pane(&mut self, name: &str) -> bool {        match self.panes.iter().position(|pane| pane.name == name) {
             Some(at) => {
                 self.focused = at;
@@ -43,13 +39,10 @@ impl Screen {
         }
     }
 
-    /// close_panel closes the panel over the panes.
     pub(super) fn close_panel(&mut self) {
         self.panel = None;
     }
 
-    /// move_focus moves the focus to the next or the previous pane of the
-    /// current tab.
     pub(super) fn move_focus(&mut self, step: i32) {
         let members = self.tab_panes();
         if members.is_empty() {
@@ -64,7 +57,6 @@ impl Screen {
         self.focused = members[next];
     }
 
-    /// move_tab moves to the next or the previous tab.
     pub(super) fn move_tab(&mut self, step: i32) {
         if self.tabs.is_empty() {
             return;

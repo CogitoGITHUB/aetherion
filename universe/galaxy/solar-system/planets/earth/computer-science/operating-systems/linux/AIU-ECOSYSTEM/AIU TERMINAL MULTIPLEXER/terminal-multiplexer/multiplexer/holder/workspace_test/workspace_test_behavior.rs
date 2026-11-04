@@ -1,6 +1,5 @@
     use super::*;
 
-    /// a_directory answers a directory of its own for the tests.
     fn a_directory(name: &str) -> std::path::PathBuf {
         let directory = std::env::temp_dir().join(name);
         let _ = std::fs::remove_dir_all(&directory);

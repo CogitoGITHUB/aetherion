@@ -1,9 +1,6 @@
 use super::*;
 
 impl Screen {
-    /// show_explorer fills the panel with the keys of the map the explorer is
-    /// showing. The panel is made of the keymap's own table, so it cannot
-    /// fall behind it.
     pub(super) fn show_explorer(&mut self) {
         let map = self.keymap.explorer_map();
         let state = self.state();
@@ -34,7 +31,6 @@ impl Screen {
         });
     }
 
-    /// show_records fills the panel with the records of this session.
     pub(super) fn show_records(&mut self) {
         let mut lines: Vec<String> = Vec::new();
         for event in self.events.iter().rev().take(20).rev() {
@@ -49,16 +45,11 @@ impl Screen {
         });
     }
 
-    /// show_sessions fills the panel with the sessions this multiplexer knows.
-    /// show_sessions asks the holder what stands: the sessions are the
-    /// holder's, and the list is read, never guessed.
     pub(super) fn show_sessions(&mut self) -> Action {
         self.message = "the sessions are being listed".to_string();
         Action::Request(json!({ "op": "sessions" }))
     }
 
-    /// take_sessions fills the panel with what the holder says stands: every
-    /// session and whether a holder holds it.
     pub(super) fn take_sessions(&mut self, record: &Value) {
         let mut lines: Vec<String> = Vec::new();
         let sessions = record
@@ -87,8 +78,6 @@ impl Screen {
         self.message = format!("the sessions stand: {}", sessions.len());
     }
 
-    /// session_word asks the holder to run one of the session commands:
-    /// create, rename or kill.
     pub(super) fn session_word(&mut self, what: &str, name: &str) -> Action {
         if name.is_empty() || name.contains('/') {
             self.message = format!("{} is not a session name", name);
@@ -98,8 +87,6 @@ impl Screen {
         Action::Request(json!({ "op": "session", "what": what, "name": name }))
     }
 
-    /// switch_to moves this client to another session's socket: the sessions
-    /// directory is the holder's answer, and the name is one of its entries.
     pub(super) fn switch_to(&mut self, name: &str) -> Action {
         if name.is_empty() || name.contains('/') {
             self.message = format!("{} is not a session name", name);

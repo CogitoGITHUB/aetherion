@@ -1,8 +1,5 @@
 use super::*;
 
-/// refusal_text answers the holder's refusal of the contracts, in one line that
-/// says both builds and what to do, and None for any other record: a client
-/// that meets a holder it does not agree with must not go on drawing.
 pub fn refusal_text(record: &Value) -> Option<String> {
     let what = record.get("what").and_then(|value| value.as_str())?;
     if what != "the client and the holder do not agree on the contract" {
@@ -32,11 +29,6 @@ pub fn refusal_text(record: &Value) -> Option<String> {
     ))
 }
 
-/// take_record reads one record from the holder into the screen.
-///
-/// Every record is shown: the program's output goes into the pane it came
-/// from, and the event itself goes into the events strip, so nothing that
-/// happened is silent (rule 01: nothing important is silent).
 pub(crate) fn take_record(screen: &mut Screen, line: &str) -> Option<String> {
     let record: Value = match serde_json::from_str(line) {
         Ok(found) => found,

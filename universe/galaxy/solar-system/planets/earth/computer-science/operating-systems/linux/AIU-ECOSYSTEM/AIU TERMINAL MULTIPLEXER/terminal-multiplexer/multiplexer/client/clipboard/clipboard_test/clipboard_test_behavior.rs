@@ -1,7 +1,5 @@
     use super::*;
 
-    /// the_rfc_vectors are the examples of RFC 4648: an encoder that agrees
-    /// with them is an encoder that agrees with every emulator.
     #[test]
     fn base64_agrees_with_the_standard_examples() {
         assert_eq!(base64(b""), "");
@@ -15,8 +13,6 @@
 
     #[test]
     fn base64_takes_the_bytes_of_a_multibyte_line() {
-        // The phone writes UTF-8, and the payload is bytes, not characters:
-        // three bytes make four characters with no padding.
         assert_eq!(base64("é".as_bytes()), "w6k=");
         assert_eq!(base64("δ".as_bytes()), "zrQ=");
     }
@@ -41,8 +37,6 @@
 
     #[test]
     fn a_text_that_just_fits_is_taken() {
-        // 6132 bytes of text make 8176 base64 characters, 8184 with the
-        // prefix and the bell: the last size the string takes.
         let text = "x".repeat(6132);
         let said = String::from_utf8(out(&text).unwrap()).unwrap();
         assert_eq!(said.len(), OSC_LIMIT - 8);

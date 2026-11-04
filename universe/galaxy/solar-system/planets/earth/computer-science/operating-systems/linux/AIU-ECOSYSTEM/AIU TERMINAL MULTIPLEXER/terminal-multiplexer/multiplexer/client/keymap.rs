@@ -1,16 +1,3 @@
-// One job: the keymap — the keys that mean what, as data.
-//
-// The commands and the keymap explorer read this one table. What the keys do
-// and what the explorer shows are the same facts, so they cannot drift apart
-// (rule 03: one file, one job; rule 07: the program never learns which key
-// asked).
-//
-// There is no modifier in here: no Control, no Alt, no Meta, and no prefix
-// chord. The keys are the ordinary keys of the keyboard, and the sequences
-// are ordinary keys one after another. A Control key that the owner presses
-// belongs to the program in the pane, not to the multiplexer — the one
-// exception is the reserved prefix, and that one is the client's, not this
-// table's (D-027).
 
 #[path = "keymap_table/keymap_table_root.rs"]
 mod keymap_table_root;

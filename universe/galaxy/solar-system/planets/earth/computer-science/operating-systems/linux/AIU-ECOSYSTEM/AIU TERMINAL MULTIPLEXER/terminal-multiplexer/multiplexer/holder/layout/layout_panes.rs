@@ -1,13 +1,7 @@
-// One job: the layout file — the panes a session holds, by name.
-//
-// The file is data and it is read once, at the start, as an argument. The
-// holder reads no config file and no environment variable for it (rule 03).
 
 use serde_json::{json, Value};
 use std::path::Path;
 
-/// Pane is one pane of a layout: a name, the program it runs, how much of
-/// the layout it wants, and the size it asks for.
 pub struct Pane {
     pub name: String,
     pub tab: String,
@@ -17,15 +11,11 @@ pub struct Pane {
     pub rows: u16,
 }
 
-/// Layout is what a layout file says: the direction the panes are laid out
-/// in, and the panes themselves.
 pub struct Layout {
     pub direction: String,
     pub panes: Vec<Pane>,
 }
 
-/// read answers the layout of the layout file. A file that is not there, or
-/// that holds no pane, is an error the caller names.
 pub fn read(path: &Path) -> Result<Layout, String> {
     let body = std::fs::read_to_string(path)
         .map_err(|why| format!("the layout {} cannot be read: {}", path.display(), why))?;
@@ -89,7 +79,6 @@ pub fn read(path: &Path) -> Result<Layout, String> {
     })
 }
 
-/// one answers the smallest layout there is: a single pane, running a shell.
 pub fn one(name: &str, program: &str, cols: u16, rows: u16) -> Layout {
     Layout {
         direction: "row".to_string(),
@@ -104,10 +93,6 @@ pub fn one(name: &str, program: &str, cols: u16, rows: u16) -> Layout {
     }
 }
 
-/// write answers the layout as it stands, written back to the layout file:
-/// the file IS the session's shape, and a change of the shape is written
-/// where the shape was read from. The file is written whole, so a reader
-/// never sees half a shape.
 pub fn write(path: &Path, direction: &str, panes: &[Pane]) -> Result<(), String> {
     let mut list: Vec<Value> = Vec::new();
     for pane in panes {

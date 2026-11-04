@@ -1,13 +1,5 @@
 #![allow(dead_code)]
-// One job: the geometry — where each pane sits on the terminal.
-//
-// The drawing and the sizes the programs get are ONE geometry: the screen
-// draws the panes where this says, and the holder gives every program the
-// size of the place it is drawn in. Two geometries would drift, and a
-// program would redraw for a size it does not have.
 
-/// Rect is one pane's place on the terminal: where it starts and how big it
-/// is. The rows and the columns are 1-based, the way the terminal counts.
 pub struct Rect {
     pub top: u16,
     pub left: u16,
@@ -15,15 +7,9 @@ pub struct Rect {
     pub cols: u16,
 }
 
-/// MIN_COLS is the smallest width a pane is drawn at: a pane narrower than
-/// this cannot show a word.
 const MIN_COLS: u16 = 6;
-/// MIN_ROWS is the smallest height a pane is drawn at.
 const MIN_ROWS: u16 = 3;
 
-/// rects answers where each pane sits, in the order the panes are given.
-/// The direction says whether they stand side by side or one above the
-/// other, and the weight says how much of the space each one wants.
 pub fn rects(
     direction: &str,
     weights: &[u16],

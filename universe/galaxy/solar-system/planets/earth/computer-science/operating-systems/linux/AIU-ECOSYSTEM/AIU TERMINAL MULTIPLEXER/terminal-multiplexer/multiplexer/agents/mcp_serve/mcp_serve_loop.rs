@@ -1,7 +1,5 @@
 use crate::*;
 
-/// sessions_dir answers the directory that holds the sessions. It is an
-/// argument: no environment variable decides where the sessions are.
 pub(crate) fn sessions_dir(args: &[String]) -> Result<PathBuf, String> {
     let at = 0;
     while at < args.len() {
@@ -23,8 +21,6 @@ pub(crate) fn sessions_dir(args: &[String]) -> Result<PathBuf, String> {
     Err("the server needs --sessions-dir".to_string())
 }
 
-/// serve answers every request on the standard input, and says what happened
-/// with its exit code.
 pub(crate) fn serve(sessions_dir: &PathBuf) -> i32 {
     let stdin = std::io::stdin();
     let mut reader = stdin.lock();
@@ -90,8 +86,6 @@ pub(crate) fn serve(sessions_dir: &PathBuf) -> i32 {
     }
 }
 
-/// handle answers one request, or nothing when the request is a
-/// notification: a notification has no id and expects no answer.
 pub(crate) fn handle(request: &Value, sessions_dir: &PathBuf) -> Option<Value> {
     let id = request.get("id").cloned();
     let method = request

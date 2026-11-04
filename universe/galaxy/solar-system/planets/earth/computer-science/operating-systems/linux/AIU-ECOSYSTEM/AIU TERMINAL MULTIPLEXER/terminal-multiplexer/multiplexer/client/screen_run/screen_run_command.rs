@@ -1,8 +1,6 @@
 use super::*;
 
 impl Screen {
-    /// run does what the command says, and answers what the client must do
-    /// with the holder. The command does not know which key asked for it.
     pub(super) fn run(&mut self, command: Command) -> Action {
         self.message = String::new();
         match command {
@@ -100,8 +98,6 @@ impl Screen {
             Command::GitBranches => self.show_git("branches"),
             Command::GitWorktrees => self.show_git("worktrees"),
             Command::LevelHide => {
-                // One level less: at level 1 the mode row and the tab bar
-                // go too, and the panes take the whole screen.
                 self.level = self.level.saturating_sub(1);
                 self.message = format!("the level: {}", self.level);
                 Action::Nothing
@@ -112,8 +108,6 @@ impl Screen {
                 Action::Nothing
             }
             Command::PageUp => {
-                // The wheel is refused: there is no mouse here, so the
-                // scroll is a key, and this is that key.
                 if self.scroll_view(true) {
                     self.message = format!(
                         "the view is one page up: {} lines from the tail",
@@ -138,17 +132,12 @@ impl Screen {
             Command::WorkspaceList => self.show_workspace("list"),
             Command::WorkspaceContext => self.show_workspace("context"),
             Command::AskEditor => {
-                // The editor is asked through its own server, and the ask
-                // takes as long as the editor takes to start. The owner is
-                // told that before the wait, never after it.
                 self.message =
                     "the editor is being asked: its own server starts first, and that takes a while"
                         .to_string();
                 Action::AskEditor
             }
             Command::WorkspaceOpen => {
-                // The owner names the project, and the name follows in the
-                // command line.
                 self.mode = Mode::Command;
                 self.command = "workspace open ".to_string();
                 Action::Nothing
@@ -177,7 +166,6 @@ impl Screen {
         }
     }
 
-    /// run_command runs the words the owner typed on the command line.
     pub(super) fn run_command(&mut self, said: &str) -> Action {
         let words: Vec<&str> = said.split_whitespace().collect();
         self.message = String::new();
@@ -249,16 +237,12 @@ impl Screen {
             ["scroll", "up"] => self.run(Command::PageUp),
             ["scroll", "down"] => self.run(Command::PageDown),
             ["copy", pane, first, last] => {
-                // The lines of a pane, counted from one: the view shows the
-                // count, so the owner and the agent name the same line.
                 self.copy_lines(pane, first, last);
                 Action::Nothing
             }
             ["paste", "agent"] => self.paste_to_agent(),
             ["paste", pane] => self.paste_into(pane),
             ["clipboard", "out"] => {
-                // The pick, and nothing else: the command line never takes a
-                // region the point did not mark.
                 let lines = self.select_lines();
                 self.copy_out(&lines)
             }

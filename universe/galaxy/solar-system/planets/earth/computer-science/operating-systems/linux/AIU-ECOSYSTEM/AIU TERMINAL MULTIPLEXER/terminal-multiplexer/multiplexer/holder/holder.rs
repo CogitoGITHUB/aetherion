@@ -1,15 +1,3 @@
-// One job: the session — the holder that outlives every client, keeps the
-// shell alive, and serves the socket.
-//
-// No config and no timers (rule 03): the state directory is an argument and
-// no environment variable is read for it, no clock is started, and nothing is
-// polled in a loop. Every wait ends on an event — the shell wrote, the shell
-// exited, a client asked, the socket closed — through one poll that waits for
-// exactly those events and nothing else.
-//
-// The wire is one JSON object per line (rule 07), in the ecosystem's event
-// shape: the client says attach, detach, read, state or send; the holder
-// answers with records and never dies because a client went.
 
 #[path = "../tty/pty/pty_shell.rs"] mod facade;
 #[path = "../tty/measure/measure_screen.rs"] mod measure;
@@ -121,12 +109,8 @@ use std::time::Instant;
 const EVENT_CONTRACT: &str = "event-log-format/1";
 const HOLDER_CONTRACT: &str = "multiplexer-holder/1";
 
-/// AGENT_PANES are the panes a bundle goes to: the multiplexer's own agent
-/// and the editor's agent. Both run the same agent program, so one bundle
-/// serves both, and a pane with another name is not an agent.
 const AGENT_PANES: [&str; 2] = ["agent", "editor-agent"];
 
-/// answer handles one request line and answers it on the same wire.
 fn answer(session: &mut Session, at: usize, line: &str) -> Result<bool, String> {
     let request: Value = match serde_json::from_str(line) {
         Ok(value) => value,
@@ -151,10 +135,6 @@ fn answer(session: &mut Session, at: usize, line: &str) -> Result<bool, String> 
         .unwrap_or("")
         .to_string();
 
-    // A watcher sees the session and never changes it (TODO item 60). The
-    // rule is one predicate over the op, and the refusal names both the op
-    // and the rule: a watcher that asks for a change is refused here, before
-    // the dispatch, so no op can reach a change by a second path.
     if session.clients[at].role == "watch" {
         if let Some(why) = watch::refusal(&request) {
             let record = session.record(Fields {

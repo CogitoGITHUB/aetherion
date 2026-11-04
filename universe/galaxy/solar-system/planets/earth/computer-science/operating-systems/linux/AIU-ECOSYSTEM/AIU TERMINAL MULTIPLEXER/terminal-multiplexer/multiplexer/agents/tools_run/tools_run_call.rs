@@ -1,6 +1,5 @@
 use super::*;
 
-/// run does the work of one capability and answers the data it produced.
 pub fn run(cap: &Capability, arguments: &Value, sessions_dir: &Path) -> Result<Value, String> {
     match cap.name.as_str() {
         "multiplexer_sessions" => sessions(sessions_dir),
@@ -30,10 +29,6 @@ pub fn run(cap: &Capability, arguments: &Value, sessions_dir: &Path) -> Result<V
             Ok(json!({ "session": session_name(arguments), "records": held }))
         }
         "multiplexer_control" => {
-            // The agent drives the multiplexer as the owner does: the words
-            // of the command line run on the owner's own screen. The holder
-            // asks the screen and answers the agent with what the screen
-            // said.
             let session = named_session(arguments, sessions_dir)?;
             let words: Vec<String> = arguments
                 .get("words")
@@ -60,8 +55,6 @@ pub fn run(cap: &Capability, arguments: &Value, sessions_dir: &Path) -> Result<V
             Ok(answered(session_name(arguments), held))
         }
         "multiplexer_view" => {
-            // The agent's read of the owner's screen: the tabs, the panes,
-            // the scroll and the ring. A read is free.
             let session = named_session(arguments, sessions_dir)?;
             let request = json!({
                 "op": "view",
@@ -75,8 +68,6 @@ pub fn run(cap: &Capability, arguments: &Value, sessions_dir: &Path) -> Result<V
     }
 }
 
-/// answered answers what the holder said: the session, the records, and the
-/// data of the last one — the view, when the request was the agent's read.
 pub(crate) fn answered(session: String, held: Vec<Value>) -> Value {
     let mut said = json!({ "session": session, "records": held });
     if let Some(last) = held.last() {
@@ -90,9 +81,6 @@ pub(crate) fn answered(session: String, held: Vec<Value>) -> Value {
     said
 }
 
-/// next_id answers the id of one request: the process and a counter, so two
-/// requests never share an id and the holder knows which answer belongs to
-/// which request.
 pub(crate) fn next_id() -> String {
     static COUNTER: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
     let count = COUNTER.fetch_add(1, std::sync::atomic::Ordering::SeqCst);

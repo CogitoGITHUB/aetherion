@@ -1,9 +1,6 @@
 use crate::*;
 
 impl Session {
-    /// screen_client answers the descriptor of the screen: the client that
-    /// attached as the screen. The agent's words run there, because the
-    /// screen is the owner's own view of the session.
     pub(crate) fn screen_client(&self) -> Option<c_int> {
         self.clients
             .iter()
@@ -11,10 +8,6 @@ impl Session {
             .map(|client| client.fd)
     }
 
-    /// token answers the human's token: the environment first, then the file
-    /// in the session's own directory, then the file in the sessions
-    /// directory above it. The empty text means there is no token, and a
-    /// change is refused.
     pub(crate) fn token(&self) -> String {
         if let Ok(from_env) = std::env::var("AIU_MULTIPLEXER_TOKEN") {
             if !from_env.is_empty() {
@@ -36,9 +29,6 @@ impl Session {
         String::new()
     }
 
-    /// token_matches answers whether the given token is the session's own.
-    /// The holder compares it itself: the caller's word is not taken for
-    /// what it does (rule 07).
     pub(crate) fn token_matches(&self, given: &str) -> bool {
         if given.is_empty() {
             return false;
@@ -47,7 +37,6 @@ impl Session {
         !own.is_empty() && given == own
     }
 
-    /// tab_names answers the tabs of the session, in the order they stand.
     pub(crate) fn tab_names(&self) -> Vec<String> {
         if self.tabs.is_empty() {
             return vec![String::new()];
@@ -55,10 +44,6 @@ impl Session {
         self.tabs.clone()
     }
 
-    /// sizes answers the size every pane gets, by the pane's name: the panes
-    /// of a tab share the space between them, and every tab has the whole
-    /// space for itself. It is the same geometry the screen draws with, so a
-    /// program is given the size of the place it is drawn in.
     pub(crate) fn sizes(&self) -> Vec<(String, u16, u16)> {
         let mut held: Vec<(String, u16, u16)> = Vec::new();
         for tab in self.tab_names() {
@@ -79,8 +64,6 @@ impl Session {
         held
     }
 
-    /// tell_sizes gives every pane the size of its own place and tells its
-    /// program to redraw.
     pub(crate) fn tell_sizes(&mut self) -> Vec<String> {
         let sizes = self.sizes();
         let mut told: Vec<String> = Vec::new();
@@ -101,8 +84,6 @@ impl Session {
         told
     }
 
-    /// shape answers the layout as it stands, so it can be written back to
-    /// the file the shape was read from.
     pub(crate) fn shape(&self) -> Vec<layout::Pane> {
         self.panes
             .iter()
@@ -117,8 +98,6 @@ impl Session {
             .collect()
     }
 
-    /// record builds one event record: the identity and the timing of the
-    /// session, plus the story of what happened. The key set is fixed.
     pub(crate) fn record(&mut self, fields: Fields) -> Value {
         self.seq += 1;
         let mut map = serde_json::Map::new();
@@ -140,12 +119,6 @@ impl Session {
         Value::Object(map)
     }
 
-    /// write puts one record in the log and on every attached client's wire.
-    /// A log that cannot be written ends the session: the log IS the record.
-    ///
-    /// The journal's bound is kept here: a log that passed the rule is trimmed,
-    /// and the trim is a record of its own, so what the journal let go is never
-    /// silent (TODO item 51).
     pub(crate) fn write(&mut self, record: &Value) {
         if let Err(why) = self.log.append(record) {
             eprintln!("holder: {}", why);
@@ -190,9 +163,6 @@ impl Session {
         self.broadcast(&note);
     }
 
-    /// broadcast sends one record to every attached client. A client that
-    /// cannot take it is marked dead and dropped at the end of the round: it
-    /// is a screen, not the session.
     pub(crate) fn broadcast(&mut self, record: &Value) {
         let mut line = record.to_string();
         line.push('\n');
@@ -207,8 +177,6 @@ impl Session {
         }
     }
 
-    /// state answers what the session holds: its panes, the log, the socket,
-    /// the clients, and the contracts a client must agree with.
     pub(crate) fn state(&mut self, why: &str) -> Value {
         let attached = self.clients.iter().filter(|c| c.attached).count();
         let workspace_dir = self.workspace_dir.clone();
@@ -234,8 +202,6 @@ impl Session {
                 "alive": pane.shell.alive_now(),
                 "program": pane.shell.program.clone(),
                 "weight": pane.weight,
-                // The pane's recent words: the log holds them, and the
-                // client that attaches sees the pane as it is.
                 "text": pane_log_tail(self, &pane.name, 50)
             }));
         }

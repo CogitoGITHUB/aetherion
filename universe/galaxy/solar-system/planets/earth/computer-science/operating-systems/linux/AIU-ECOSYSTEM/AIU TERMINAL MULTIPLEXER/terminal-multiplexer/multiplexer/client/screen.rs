@@ -1,15 +1,3 @@
-// One job: the screen — the panes drawn on one terminal, the mode line, the
-// tab bar, the keymap explorer, and the redraw when something arrives.
-//
-// The screen holds nothing: the panes, their shells and their output belong
-// to the holder. What lives here is what the owner sees and what the owner
-// presses.
-//
-// The keys are read through the keymap (=keymap.rs=): the same table says
-// what the keys do and what the explorer shows, so the two cannot drift
-// apart. The modes are Visual (the multiplexer's own keys), Insert (the
-// pane's own keys), Command (the command line) and Explorer (the keymap
-// explorer).
 
 use serde_json::{json, Value};
 use std::io::Write;
@@ -23,26 +11,14 @@ use super::config::{ConfigFile, Reload};
 use super::control;
 use super::geometry;
 
-/// ESCAPE leaves Insert, and cancels a sequence or the explorer.
 const ESCAPE: u8 = 0x1b;
-/// ENTER ends a command line.
 const ENTER: u8 = 0x0d;
-/// BACKSPACE takes the last character off the command line.
 const BACKSPACE: u8 = 0x7f;
-/// RESERVED_PREFIX is the escape hatch: the multiplexer keeps it in every
-/// mode, so the owner can reach the multiplexer's own keys while a program
-/// in the focused pane has the keyboard. Every other key in Insert belongs
-/// to that program (rule 06).
 const RESERVED_PREFIX: u8 = 0x02;
-/// KEPT is how many lines of a pane's output the screen remembers.
 const KEPT: usize = 400;
 
-/// RING_KEPT is how many copies the multiplexer's own ring holds. The
-/// ring is a small buffer: the newest copy is the first one.
 const RING_KEPT: usize = 20;
 
-/// VIEW_LINES is how many lines of a pane the agent's view carries: the
-/// newest ones, each with the number the agent names it by.
 const VIEW_LINES: usize = 40;
 
 #[path = "screen_state/screen_state_settings.rs"]

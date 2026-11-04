@@ -1,7 +1,5 @@
 use super::*;
 
-/// diff answers the lines of the diff: which comparison, then the files
-/// and the hunks and the lines that changed.
 pub(crate) fn diff(data: &Value) -> Vec<String> {
     let mut lines: Vec<String> = Vec::new();
     if let Some(comparison) = text(data, "comparison") {
@@ -32,7 +30,6 @@ pub(crate) fn diff(data: &Value) -> Vec<String> {
     lines
 }
 
-/// history answers the lines of the history: the commits, newest first.
 pub(crate) fn history(data: &Value) -> Vec<String> {
     let mut lines: Vec<String> = Vec::new();
     for commit in list(data, "commits") {
@@ -52,8 +49,6 @@ pub(crate) fn history(data: &Value) -> Vec<String> {
     lines
 }
 
-/// branches answers the lines of the branches: the name, the upstream
-/// and the distance, and a star on the one the head is on.
 pub(crate) fn branches(data: &Value) -> Vec<String> {
     let mut lines: Vec<String> = Vec::new();
     for branch in list(data, "branches") {

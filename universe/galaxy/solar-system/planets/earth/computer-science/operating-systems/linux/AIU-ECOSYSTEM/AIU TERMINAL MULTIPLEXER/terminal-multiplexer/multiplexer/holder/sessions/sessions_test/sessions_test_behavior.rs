@@ -1,7 +1,6 @@
     use super::*;
     use std::path::PathBuf;
 
-    /// a_scratch is a directory of this test's own, emptied first.
     fn a_scratch(name: &str) -> PathBuf {
         let dir = std::env::temp_dir().join(format!("mux-sessions-{}-{}", std::process::id(), name));
         let _ = std::fs::remove_dir_all(&dir);
@@ -49,9 +48,6 @@
         let session = dir.join("stale");
         std::fs::create_dir_all(&session).unwrap();
         let socket = session.join("holder.sock");
-        // The listener nobody answers on: this is the socket a holder the
-        // phone killed leaves behind. The connection is made and the question
-        // that follows gets nothing, so the session is not held.
         let fd = super::super::bind(&socket).expect("the scratch socket is bound");
         let list = listing(&dir);
         let sessions = list["sessions"].as_array().cloned().unwrap_or_default();

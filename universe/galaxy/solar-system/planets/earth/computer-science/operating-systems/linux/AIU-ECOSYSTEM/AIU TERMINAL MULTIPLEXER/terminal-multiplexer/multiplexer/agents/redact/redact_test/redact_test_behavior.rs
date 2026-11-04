@@ -21,8 +21,6 @@
     #[test]
     fn every_line_of_a_pane_is_seen() {
         let redacted = redact_text("first line\npassword: hunter2\nlast line");
-        // The seam keeps the name and drops the value, exactly as the
-        // editor's seam does: the colon is the separator and it goes too.
         assert_eq!(
             redacted,
             "first line\npassword[redacted]\nlast line"

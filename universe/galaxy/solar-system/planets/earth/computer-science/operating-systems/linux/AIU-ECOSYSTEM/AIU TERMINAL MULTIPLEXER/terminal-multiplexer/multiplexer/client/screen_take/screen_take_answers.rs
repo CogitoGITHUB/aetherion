@@ -1,9 +1,6 @@
 use super::*;
 
 impl Screen {
-    /// show_git asks the holder what Git says, and the answer fills the
-    /// panel. The holder asks the shared layer, and the layer only reads:
-    /// nothing here can change a repository.
     pub(super) fn show_git(&mut self, want: &str) -> Action {
         self.git_want = want.to_string();
         self.message = format!("the git is being read: {}", want);
@@ -13,9 +10,6 @@ impl Screen {
         }))
     }
 
-    /// show_workspace asks the holder what the shared workspace holds, and
-    /// the answer fills the panel. The holder asks the engine, and the
-    /// engine owns the workspaces, the projects and the context.
     pub(super) fn show_workspace(&mut self, view: &str) -> Action {
         self.workspace_view = view.to_string();
         self.message = format!("the workspace is being read: {}", view);
@@ -25,8 +19,6 @@ impl Screen {
         }))
     }
 
-    /// take_workspace reads the engine's answer and fills the panel with
-    /// it.
     pub(super) fn take_workspace(&mut self, record: &Value) {
         let data = match record
             .get("outputs")
@@ -43,9 +35,6 @@ impl Screen {
         });
     }
 
-    /// take_workspace_data keeps the names the mode line shows: the
-    /// workspace this session works on, and the project the context
-    /// stands on.
     pub(super) fn take_workspace_data(&mut self, data: &Value) {
         self.workspace = Some(data.clone());
         let id = data
@@ -76,9 +65,6 @@ impl Screen {
             .to_string();
     }
 
-    /// take_editor reads the editor's own answer and fills the panel with
-    /// it. The words are the editor's own: the multiplexer shows them and
-    /// does not explain them.
     pub(super) fn take_editor(&mut self, record: &Value) {
         let data = match record
             .get("outputs")
@@ -94,7 +80,6 @@ impl Screen {
         });
     }
 
-    /// take_git reads the layer's answer and fills the panel with it.
     pub(super) fn take_git(&mut self, record: &Value) {
         let data = match record
             .get("outputs")

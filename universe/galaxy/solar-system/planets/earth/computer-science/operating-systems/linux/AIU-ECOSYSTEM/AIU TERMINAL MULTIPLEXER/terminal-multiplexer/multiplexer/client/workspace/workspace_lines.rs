@@ -1,17 +1,6 @@
-// One job: the workspace panel — the shared workspace as the multiplexer
-// shows it.
-//
-// The panel is built from the data the holder answers with: the engine's
-// own facts, read as the multiplexer reads them. Nothing here touches the
-// engine and nothing here decides anything: the holder asked the engine,
-// and this file only turns the answer into lines.
 
 use serde_json::Value;
 
-/// lines answers the lines of the panel for one answer of the holder.
-///
-/// The "view" says which view was asked for: the workspaces and their
-/// projects, or the context as it stands.
 pub fn lines(view: &str, data: &Value) -> Vec<String> {
     match view {
         "context" => context(data),
@@ -19,8 +8,6 @@ pub fn lines(view: &str, data: &Value) -> Vec<String> {
     }
 }
 
-/// workspaces answers the lines of the workspaces: the one this session
-/// works on, its projects, and the context as it stands.
 fn workspaces(data: &Value) -> Vec<String> {
     let mut lines: Vec<String> = Vec::new();
     let held = list(data, "workspaces");
@@ -51,8 +38,6 @@ fn workspaces(data: &Value) -> Vec<String> {
     lines
 }
 
-/// context answers the lines of the context as it stands: the project it
-/// names and the resources it holds.
 fn context(data: &Value) -> Vec<String> {
     let mut lines: Vec<String> = Vec::new();
     lines.push(format!("  the workspace: {}", the_workspace(data)));
@@ -68,7 +53,6 @@ fn context(data: &Value) -> Vec<String> {
     lines
 }
 
-/// the_workspace answers the name of the workspace this session works on.
 fn the_workspace(data: &Value) -> String {
     let id = text(data, "workspace").unwrap_or_default();
     if id.is_empty() {
@@ -82,7 +66,6 @@ fn the_workspace(data: &Value) -> String {
     id
 }
 
-/// the_project answers the name of the project the context stands on.
 fn the_project(data: &Value) -> String {
     let project = text(data, "project").unwrap_or_default();
     if project.is_empty() {
@@ -91,8 +74,6 @@ fn the_project(data: &Value) -> String {
     project
 }
 
-/// the_context answers the context of one workspace in a line: the project
-/// it names and the resources it holds.
 fn the_context(context: &Value) -> String {
     let project = text(context, "project").unwrap_or_default();
     let resources = strings(context, "resources");
@@ -102,7 +83,6 @@ fn the_context(context: &Value) -> String {
     format!("the project {}, {} resources", project, resources.len())
 }
 
-/// text answers one string field of a value.
 fn text(value: &Value, key: &str) -> Option<String> {
     value
         .get(key)
@@ -110,7 +90,6 @@ fn text(value: &Value, key: &str) -> Option<String> {
         .map(|found| found.to_string())
 }
 
-/// strings answers the list of strings under a key of a value.
 fn strings(value: &Value, key: &str) -> Vec<String> {
     value
         .get(key)
@@ -125,7 +104,6 @@ fn strings(value: &Value, key: &str) -> Vec<String> {
         .unwrap_or_default()
 }
 
-/// list answers the list under a key of a value.
 fn list(value: &Value, key: &str) -> Vec<Value> {
     value
         .get(key)

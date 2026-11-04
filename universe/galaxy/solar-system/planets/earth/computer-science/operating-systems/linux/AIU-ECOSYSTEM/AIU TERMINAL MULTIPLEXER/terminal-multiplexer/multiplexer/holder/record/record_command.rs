@@ -1,8 +1,5 @@
 use crate::*;
 
-/// command_record answers the command one pane was given and what that pane
-/// printed after it: the two parts of one record, read from the log. A pane
-/// with no command yet answers nothing, and the bundle carries neither part.
 pub(crate) fn command_record(session: &Session, pane: &str) -> (String, String) {
     if pane.is_empty() {
         return (String::new(), String::new());

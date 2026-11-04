@@ -1,6 +1,5 @@
 use super::*;
 
-/// PANES is the map of the pane commands.
 pub static PANES: &[Binding] = &[
     Binding {
         keys: "p a",

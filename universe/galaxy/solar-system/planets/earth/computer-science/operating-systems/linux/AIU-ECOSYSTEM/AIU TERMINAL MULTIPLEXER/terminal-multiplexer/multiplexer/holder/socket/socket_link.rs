@@ -1,6 +1,5 @@
 use crate::*;
 
-/// bind opens the session's socket and listens on it.
 pub(crate) fn bind(path: &Path) -> Result<c_int, String> {
     let fd = unsafe { libc::socket(libc::AF_UNIX, libc::SOCK_STREAM, 0) };
     if fd < 0 {
@@ -39,12 +38,6 @@ pub(crate) fn bind(path: &Path) -> Result<c_int, String> {
     Ok(fd)
 }
 
-/// answers_holder asks the socket whether a holder is behind it: one state
-/// request, and an answer is the proof. A socket a dead holder left behind
-/// AT the connection on this phone (proot answers connect and then says
-/// nothing), so the question is asked instead of assumed. The read has its own
-/// bound: a socket that accepts and never answers is not a holder, and it must
-/// not hold the next one up for ever.
 pub(crate) fn answers_holder(fd: c_int) -> bool {
     let bound = libc::timeval {
         tv_sec: 2,
@@ -69,7 +62,6 @@ pub(crate) fn answers_holder(fd: c_int) -> bool {
     matches!(read_from(fd, &mut buffer), Ok(got) if got > 0)
 }
 
-/// connect opens a connection to a socket that is already there.
 pub(crate) fn connect(path: &Path) -> Result<c_int, String> {
     let fd = unsafe { libc::socket(libc::AF_UNIX, libc::SOCK_STREAM, 0) };
     if fd < 0 {
@@ -101,7 +93,6 @@ pub(crate) fn connect(path: &Path) -> Result<c_int, String> {
     Ok(fd)
 }
 
-/// read_from waits for bytes and answers how many came.
 pub(crate) fn read_from(fd: c_int, buffer: &mut [u8]) -> Result<usize, String> {
     let got = unsafe { libc::read(fd, buffer.as_mut_ptr() as *mut libc::c_void, buffer.len()) };
     if got >= 0 {
@@ -111,7 +102,6 @@ pub(crate) fn read_from(fd: c_int, buffer: &mut [u8]) -> Result<usize, String> {
     }
 }
 
-/// write_to puts bytes on a descriptor and answers when they are all in.
 pub(crate) fn write_to(fd: c_int, bytes: &[u8]) -> Result<(), String> {
     let mut at = 0;
     while at < bytes.len() {

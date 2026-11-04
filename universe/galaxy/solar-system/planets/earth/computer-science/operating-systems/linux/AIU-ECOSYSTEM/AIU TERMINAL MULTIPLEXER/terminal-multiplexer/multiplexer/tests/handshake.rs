@@ -1,18 +1,9 @@
-// One job: the proof of the versioned handshake (TODO item 48) — a client and
-// a holder that do not agree on the contracts refuse each other by name, with
-// both versions said and with what to do next.
-//
-// The holder here is the test's own: it answers the two requests a screen makes
-// (the state, then the attach) with the refusal an older holder would give.
-// Nothing about the client is faked: the real binary runs, and what it says is
-// what the owner would see.
 
 use std::io::{BufRead, BufReader, Write};
 use std::os::unix::net::UnixListener;
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
 
-/// a_scratch is a directory of this test's own, emptied first.
 fn a_scratch(name: &str) -> PathBuf {
     let dir = std::env::temp_dir().join(format!("mux-handshake-{}-{}", std::process::id(), name));
     let _ = std::fs::remove_dir_all(&dir);
@@ -20,8 +11,6 @@ fn a_scratch(name: &str) -> PathBuf {
     dir
 }
 
-/// an_old_holder answers what a holder that disagrees says: the client's two
-/// contracts, its own two, and the safe path.
 fn an_old_holder() -> String {
     let record = serde_json::json!({
         "kind": "fail",
@@ -57,9 +46,6 @@ fn a_client_and_a_holder_that_disagree_refuse_each_other_by_name() {
         .spawn()
         .expect("the client starts");
 
-    // The screen opens a connection, closes it, and opens another to draw: the
-    // second one asks twice — the state, then the attach — and its attach is
-    // answered with the old holder's refusal.
     let mut asked = 0;
     while asked < 2 {
         let (stream, _) = listener.accept().expect("the client connects");

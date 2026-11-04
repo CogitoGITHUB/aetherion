@@ -24,10 +24,6 @@ pub(crate) fn request_pane_resize(session: &mut Session, at: usize, request: &Va
         answer_client(session, at, &record);
         return Ok(false);
     }
-    // One window for the whole session, and every pane gets the size
-    // of its OWN place in it: a shell or an editor is told the size
-    // of the frame it is drawn in, so what the owner sees in one
-    // pane is what that pane draws.
     let area = request
         .get("area-rows")
         .and_then(|value| value.as_u64())

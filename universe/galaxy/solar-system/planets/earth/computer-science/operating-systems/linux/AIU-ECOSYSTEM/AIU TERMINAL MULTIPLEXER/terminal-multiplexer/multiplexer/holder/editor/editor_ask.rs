@@ -1,16 +1,3 @@
-// One job: the editor's own answer — the editor's own server asked, and its
-// own words given back.
-//
-// The multiplexer asks the editor through the editor's OWN surface: the MCP
-// server the editor ships, over the editor's own wire (one JSON-RPC object
-// per line, one answer per line). The ask is read-only: the capability asked
-// for changes nothing, and the editor's own engine re-checks that before it
-// runs anything (rule 07).
-//
-// The command that starts the editor's server is given at runtime, never
-// written here: this file names no program of the editor, so the two
-// languages never meet in this file (D-028). Without that command there is
-// nothing to ask, and the ask is refused BY NAME.
 
 use std::io::{BufRead, BufReader, Read, Write};
 use std::process::{Command, Stdio};
@@ -18,22 +5,11 @@ use std::time::Instant;
 
 use serde_json::{json, Value};
 
-/// Answer is what the editor said: whether it could answer, and its own
-/// words.
 pub struct Answer {
     pub ok: bool,
     pub data: Value,
 }
 
-/// ask asks the editor what it owns, through the editor's own server.
-///
-/// The command is the program and what it runs: the first word is the
-/// program, the rest are its arguments. The capability is the editor's own
-/// name for the read it does; the editor refuses a capability it does not
-/// have, and the refusal comes back as the editor's own words.
-///
-/// The ask takes as long as the editor's server takes to start, and that is
-/// said in the answer: the caller never waits without knowing why.
 pub fn ask(command: &[String], capability: &str) -> Answer {
     if command.is_empty() {
         return Answer {
@@ -62,8 +38,6 @@ pub fn ask(command: &[String], capability: &str) -> Answer {
             }
         }
     };
-    // The two requests: the handshake, and the read itself. One line each,
-    // the way the editor's server speaks.
     {
         let mut stdin = match child.stdin.take() {
             Some(stdin) => stdin,
@@ -100,7 +74,6 @@ pub fn ask(command: &[String], capability: &str) -> Answer {
             };
         }
     }
-    // The answers: one line each, in the order the requests were sent.
     let mut lines: Vec<String> = Vec::new();
     if let Some(stdout) = child.stdout.take() {
         let mut reader = BufReader::new(stdout);
@@ -126,8 +99,6 @@ pub fn ask(command: &[String], capability: &str) -> Answer {
             }
         }
     }
-    // The editor's server is ended here: the holder never waits on a child
-    // that will not leave, and the child is not left behind either.
     let _ = child.kill();
     let _ = child.wait();
     let elapsed = started.elapsed().as_millis();
@@ -163,8 +134,6 @@ pub fn ask(command: &[String], capability: &str) -> Answer {
             }
         }
     };
-    // The editor's own words: the envelope the tool answered with, and the
-    // text inside it.
     let words = parsed
         .get("result")
         .and_then(|result| result.get("content"))
@@ -183,9 +152,6 @@ pub fn ask(command: &[String], capability: &str) -> Answer {
         .and_then(|text| text.as_str())
         .unwrap_or(words)
         .to_string();
-    // A refusal is a refusal that says something: an empty refusal is no
-    // refusal at all, and the editor's own envelope carries it empty when
-    // the tool ran.
     let refused = match envelope.get("refusal") {
         None | Some(Value::Null) => false,
         Some(Value::Array(list)) => !list.is_empty(),

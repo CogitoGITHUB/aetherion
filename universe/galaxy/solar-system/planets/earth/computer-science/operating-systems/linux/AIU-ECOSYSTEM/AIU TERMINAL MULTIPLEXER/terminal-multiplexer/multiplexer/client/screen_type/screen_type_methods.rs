@@ -1,8 +1,6 @@
 use super::*;
 
 impl Screen {
-    /// empty is a screen with nothing on it yet: the holder's state fills it
-    /// in as soon as the state arrives.
     pub fn empty(
         agent_program: String,
         editor_program: String,

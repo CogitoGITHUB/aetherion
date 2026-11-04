@@ -1,10 +1,3 @@
-// One job: the Git seam of the holder — the shared layer asked, and the
-// model's own data given back.
-//
-// The holder holds the session, and the session lives in a directory: that
-// is the directory Git is asked about. The layer is read-only, so asking it
-// changes nothing, and the answer is the same model the editor reads, so
-// the two programs cannot disagree about what Git says.
 
 use std::path::Path;
 
@@ -13,18 +6,11 @@ use git_inspection::model;
 use git_inspection::Git;
 use serde_json::{json, Value};
 
-/// Answer is what the layer said: whether it could answer, and the data.
 pub struct Answer {
     pub ok: bool,
     pub data: Value,
 }
 
-/// read asks the layer what Git says in a directory, and answers with the
-/// model's own data.
-///
-/// The "what" says which view is asked for: the overview of the repository
-/// and its worktrees, the changed files, the diff of one comparison, the
-/// history, or the branches.
 pub fn read(directory: &Path, what: &str) -> Answer {
     let git = match Git::open(directory) {
         Ok(git) => git,
@@ -93,8 +79,6 @@ pub fn read(directory: &Path, what: &str) -> Answer {
             })).collect::<Vec<Value>>(),
         }),
         _ => {
-            // The overview: where the repository stands, what changed, and
-            // every worktree of it.
             let status = git.status();
             let repository = git.repository();
             json!({
@@ -109,8 +93,6 @@ pub fn read(directory: &Path, what: &str) -> Answer {
     Answer { ok: true, data }
 }
 
-/// the_model_is_shared says the marks the layer gives are the marks the
-/// multiplexer shows: there is one meaning, and it is the layer's.
 #[allow(dead_code)]
 fn the_model_is_shared() -> &'static str {
     model::WorkingTree::Modified.mark()

@@ -1,9 +1,6 @@
 use crate::*;
 
 pub(crate) fn request_pane_close(session: &mut Session, at: usize, request: &Value) -> Result<bool, String> {
-    // A close HIDES: the pane stops being drawn and its shell keeps
-    // running. Ending it for good is the separate word "kill"
-    // (TODO item 45), so a wrong key cannot lose a shell.
     let kind = request
         .get("kind")
         .and_then(|value| value.as_str())

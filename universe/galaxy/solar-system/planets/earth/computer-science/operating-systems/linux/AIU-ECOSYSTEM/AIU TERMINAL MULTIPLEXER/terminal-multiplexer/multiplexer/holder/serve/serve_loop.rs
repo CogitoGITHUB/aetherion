@@ -1,6 +1,5 @@
 use crate::*;
 
-/// serve waits for events and answers them, until every pane has ended.
 pub(crate) fn serve(session: &mut Session) -> Result<(), String> {
     loop {
         let mut fds: Vec<libc::pollfd> = Vec::with_capacity(2 + session.panes.len() + session.clients.len());
@@ -41,8 +40,6 @@ pub(crate) fn serve(session: &mut Session) -> Result<(), String> {
                 ended.push(pane_at);
             }
         }
-        // A pane whose program ended goes on its own: the session and the
-        // other panes go on. The session ends when the last pane is gone.
         for pane_at in ended.into_iter().rev() {
             close_pane(session, pane_at);
         }

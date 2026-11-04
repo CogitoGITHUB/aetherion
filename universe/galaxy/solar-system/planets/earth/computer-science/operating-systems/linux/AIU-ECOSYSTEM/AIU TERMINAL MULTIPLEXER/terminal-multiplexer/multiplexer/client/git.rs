@@ -1,12 +1,3 @@
-// One job: the Git panel — the shared model as the multiplexer shows it.
-//
-// The panel is built from the data the holder answers with: the shared
-// layer's own model, read as the multiplexer reads it. The marks are the
-// layer's marks, so the two programs say the same thing about the same
-// repository.
-//
-// Nothing here runs Git and nothing here decides anything: the holder
-// asked the layer, and this file only turns the answer into lines.
 
 use serde_json::Value;
 

@@ -44,9 +44,6 @@ pub(crate) fn request_send_text(session: &mut Session, at: usize, request: &Valu
         }
     };
     if sent {
-        // The command the pane was given: the typed text since the
-        // last newline. The log holds it, so a later send can carry
-        // the command and what the pane printed after it.
         session.panes[target].typed.push_str(data);
         let typed = session.panes[target].typed.clone();
         let command = match typed.rfind('\n') {
@@ -81,6 +78,5 @@ pub(crate) fn request_send_text(session: &mut Session, at: usize, request: &Valu
         session.write(&record);
         answer_client(session, at, &record);
     }
-    // The client stays: a screen sends a key and then sends the next.
     Ok(true)
 }

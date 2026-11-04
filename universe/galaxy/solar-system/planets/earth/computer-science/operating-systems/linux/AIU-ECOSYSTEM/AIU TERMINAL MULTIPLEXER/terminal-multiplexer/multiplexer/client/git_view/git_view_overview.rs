@@ -1,10 +1,5 @@
 use super::*;
 
-/// lines answers the lines of the panel for one answer of the holder.
-///
-/// The "what" says which view was asked for: the overview of the
-/// repository and its worktrees, the changed files, the diff of one
-/// comparison, the history, or the branches.
 pub fn lines(want: &str, data: &Value) -> Vec<String> {
     match want {
         "changed" => changed(data),
@@ -16,8 +11,6 @@ pub fn lines(want: &str, data: &Value) -> Vec<String> {
     }
 }
 
-/// overview answers the lines of the whole repository: where it stands,
-/// what changed, and every worktree of it.
 pub(crate) fn overview(data: &Value) -> Vec<String> {
     let mut lines: Vec<String> = Vec::new();
     let status = data.get("status").cloned().unwrap_or(Value::Null);
@@ -64,8 +57,6 @@ pub(crate) fn overview(data: &Value) -> Vec<String> {
     lines
 }
 
-/// changed answers the lines of the changed files: the counts, then one
-/// line per file with the marks the layer gives.
 pub(crate) fn changed(data: &Value) -> Vec<String> {
     let status = data.get("status").cloned().unwrap_or(Value::Null);
     let mut lines: Vec<String> = Vec::new();

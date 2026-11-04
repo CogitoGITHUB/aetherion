@@ -1,4 +1,3 @@
-/// key_name answers the name of one byte, the way the explorer shows it.
 pub fn key_name(byte: u8) -> String {
     match byte {
         0x1b => "Escape".to_string(),

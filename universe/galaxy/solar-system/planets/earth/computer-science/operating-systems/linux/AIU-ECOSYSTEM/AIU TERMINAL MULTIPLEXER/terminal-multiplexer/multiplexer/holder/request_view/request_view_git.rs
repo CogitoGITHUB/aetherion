@@ -1,9 +1,6 @@
 use crate::*;
 
 pub(crate) fn request_view_git(session: &mut Session, at: usize, request: &Value) -> Result<bool, String> {
-    // The client asks what Git says here, and the shared layer
-    // answers. The layer only reads: it cannot change a
-    // repository, an index, a branch or a worktree.
     let what = request
         .get("what")
         .and_then(|value| value.as_str())

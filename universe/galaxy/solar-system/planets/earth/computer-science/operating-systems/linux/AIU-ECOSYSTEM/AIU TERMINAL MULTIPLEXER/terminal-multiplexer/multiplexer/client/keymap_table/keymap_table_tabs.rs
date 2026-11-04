@@ -1,7 +1,5 @@
 use super::*;
 
-/// TABS is the map of the tab commands. Every sequence starts with the key
-/// that opens the map.
 pub static TABS: &[Binding] = &[
     Binding {
         keys: "t a",

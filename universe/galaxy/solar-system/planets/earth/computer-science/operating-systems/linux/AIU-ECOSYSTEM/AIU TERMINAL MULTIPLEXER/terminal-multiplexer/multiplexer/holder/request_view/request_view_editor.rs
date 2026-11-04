@@ -1,10 +1,6 @@
 use crate::*;
 
 pub(crate) fn request_view_editor(session: &mut Session, at: usize, request: &Value) -> Result<bool, String> {
-    // The client asks the editor what it owns: the editor's own
-    // server is asked, over the editor's own wire, and the editor's
-    // own words come back. The ask is read-only, and the editor's
-    // own engine checks that before it runs anything.
     let command: Vec<String> = request
         .get("command")
         .and_then(|value| value.as_array())

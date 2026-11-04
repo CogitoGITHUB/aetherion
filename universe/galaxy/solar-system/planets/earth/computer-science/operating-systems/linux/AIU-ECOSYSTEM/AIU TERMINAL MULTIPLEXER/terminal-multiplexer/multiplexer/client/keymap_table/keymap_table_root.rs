@@ -1,6 +1,5 @@
 use super::*;
 
-/// ROOT is the map of Visual mode: what the ordinary keys do.
 pub static ROOT: &[Binding] = &[
     Binding {
         keys: "i",

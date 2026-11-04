@@ -1,29 +1,15 @@
-// One job: the one way shells and panes touch a terminal — open a pty, size
-// it, read and write bytes.
-//
-// A pty is a pair: the master stays with the holder, the slave becomes the
-// shell's terminal. The recipe here is the one measured on this phone
-// (research/tiny-binary-probe.org): openpt, grantpt, unlockpt, ptsname, open
-// the slave, make it raw, size it, fork, setsid, TIOCSCTTY, dup2, exec.
-//
-// Nothing here panics and nothing sleeps: a read blocks until bytes or the end
-// of the terminal, and wait_exit blocks until the shell is gone.
 
 use crate::measure;
 use crate::tty;
 use libc::c_int;
 use std::ffi::CString;
 
-/// Pty is one open terminal: the master the holder reads and writes, the pid
-/// of the shell on the slave, and what the kernel answered when it was made.
 pub struct Pty {
     pub master: c_int,
     pub pid: libc::pid_t,
     pub measured: measure::Measured,
 }
 
-/// open_shell starts one program on a new terminal, sized as asked, and
-/// answers the master side together with what was measured while opening it.
 pub fn open_shell(program: &str, args: &[String], cols: u16, rows: u16) -> Result<Pty, String> {
     let master = unsafe { libc::posix_openpt(libc::O_RDWR | libc::O_NOCTTY) };
     if master < 0 {
@@ -87,8 +73,6 @@ pub fn open_shell(program: &str, args: &[String], cols: u16, rows: u16) -> Resul
     }
 }
 
-/// read_bytes waits for the terminal to have bytes and answers how many came,
-/// with 0 meaning the other side of the terminal is gone (the shell exited).
 pub fn read_bytes(fd: c_int, buffer: &mut [u8]) -> Result<usize, String> {
     let got = unsafe { libc::read(fd, buffer.as_mut_ptr() as *mut libc::c_void, buffer.len()) };
     if got >= 0 {
@@ -98,8 +82,6 @@ pub fn read_bytes(fd: c_int, buffer: &mut [u8]) -> Result<usize, String> {
     }
 }
 
-/// write_bytes puts bytes into the terminal and answers only when they are
-/// all in, so the caller knows the shell's terminal took every one.
 pub fn write_bytes(fd: c_int, bytes: &[u8]) -> Result<(), String> {
     let mut at = 0;
     while at < bytes.len() {
@@ -118,8 +100,6 @@ pub fn write_bytes(fd: c_int, bytes: &[u8]) -> Result<(), String> {
     Ok(())
 }
 
-/// wait_exit waits for the shell to end — an event, never a poll — and
-/// answers the status a person would read: the exit code, or the signal.
 pub fn wait_exit(pid: libc::pid_t) -> String {
     let mut status: c_int = 0;
     let got = unsafe { libc::waitpid(pid, &mut status, 0) };
@@ -135,8 +115,6 @@ pub fn wait_exit(pid: libc::pid_t) -> String {
     }
 }
 
-/// close closes one descriptor and says nothing: a close that fails leaves
-/// nothing to do about it.
 pub fn close(fd: c_int) {
     if fd >= 0 {
         unsafe {
@@ -145,9 +123,6 @@ pub fn close(fd: c_int) {
     }
 }
 
-/// fork_shell forks and, in the child, becomes the session leader on the slave
-/// with the program's three standard streams on it. The child never returns:
-/// it execs, or exits 127 and the holder records that.
 fn fork_shell(slave_path: String, program: &str, args: &[String]) -> Result<libc::pid_t, String> {
     let path = match CString::new(program) {
         Ok(value) => value,

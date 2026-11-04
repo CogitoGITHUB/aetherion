@@ -41,9 +41,6 @@ pub(crate) fn request_pane_open(session: &mut Session, at: usize, request: &Valu
                 .collect()
         })
         .unwrap_or_default();
-    // The context: the tail of the pane's own log, asked of the log
-    // itself. The screen never copies the text by hand and never
-    // scrapes the drawing: the log is the truth.
     if let Some(context) = request.get("context") {
         let pane_of = context
             .get("pane")
@@ -60,11 +57,6 @@ pub(crate) fn request_pane_open(session: &mut Session, at: usize, request: &Valu
             .and_then(|value| value.as_str())
             .unwrap_or("")
             .to_string();
-        // The selection is the text the owner picked on the
-        // screen, when the screen picked one. Without a pick the
-        // context is the tail of the pane's own log: the log
-        // belongs to the holder, and the screen never copies the
-        // text by hand.
         let selection = match context.get("selection").and_then(|value| value.as_str()) {
             Some(picked) => picked.to_string(),
             None => pane_log_tail(session, &pane_of, 50),
@@ -84,9 +76,6 @@ pub(crate) fn request_pane_open(session: &mut Session, at: usize, request: &Valu
                 let text = bundle.text();
                 args.push("--prompt".to_string());
                 args.push(text);
-                // The send is a record: the log says what was sent,
-                // to whom and why, before the pane that carries it
-                // opens.
                 let record = session.record(Fields {
                     kind: "info",
                     who: "client",

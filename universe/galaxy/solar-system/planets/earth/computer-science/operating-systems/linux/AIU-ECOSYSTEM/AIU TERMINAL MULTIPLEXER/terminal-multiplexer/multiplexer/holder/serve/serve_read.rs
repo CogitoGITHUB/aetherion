@@ -1,11 +1,7 @@
 use crate::*;
 
-/// read_shell takes what one pane's shell wrote and records it, under that
-/// pane's name. It answers whether the session continues.
 pub(crate) fn read_shell(session: &mut Session, pane_at: usize) -> Result<bool, String> {
     let mut buffer = [0u8; 4096];
-    // A terminal that breaks is one pane's program gone: the session and
-    // the other panes go on.
     let got = match session.panes[pane_at].shell.read(&mut buffer) {
         Ok(got) => got,
         Err(why) => {
@@ -43,8 +39,6 @@ pub(crate) fn read_shell(session: &mut Session, pane_at: usize) -> Result<bool, 
     Ok(true)
 }
 
-/// close_pane lets one pane go: its terminal is closed, the log says so,
-/// and the panes that are left go on.
 pub(crate) fn close_pane(session: &mut Session, pane_at: usize) {
     let pane = session.panes.remove(pane_at);
     close(pane.shell.master);
@@ -61,12 +55,6 @@ pub(crate) fn close_pane(session: &mut Session, pane_at: usize) {
     session.write(&record);
 }
 
-/// read_client takes what a client sent and answers it. It answers whether
-/// the client stays connected.
-///
-/// A client whose socket breaks is one client gone, not the session gone: the
-/// read error is answered as "that client is finished", and the panes go on
-/// without it.
 pub(crate) fn read_client(session: &mut Session, at: usize) -> Result<bool, String> {
     let mut buffer = [0u8; 4096];
     let got = match read_from(session.clients[at].fd, &mut buffer) {

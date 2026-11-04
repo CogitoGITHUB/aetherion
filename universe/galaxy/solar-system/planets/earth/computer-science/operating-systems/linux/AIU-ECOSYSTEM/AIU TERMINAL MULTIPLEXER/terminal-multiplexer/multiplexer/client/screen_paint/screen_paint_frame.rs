@@ -1,13 +1,9 @@
 use super::*;
 
 impl Screen {
-    /// draw answers the whole screen as the escape sequences that draw it.
     pub fn draw(&self) -> String {
         let cols = self.cols.max(20) as usize;
         let rows = self.rows.max(6) as usize;
-        // The screen's own furniture takes rows from the programs: the
-        // level says how much of it there is, and level 0 leaves the
-        // whole screen to the panes.
         let (top, area_rows) = self.area();
         let status = self.status_rows();
         let bar = self.level >= 1 && self.shows_tab_bar;
@@ -26,8 +22,6 @@ impl Screen {
                 put(&mut out, rect.top + row as u16, rect.left, text);
             }
         }
-        // The rows of the screen's own furniture sit at the bottom, and
-        // the mode row is the last of them.
         let first = rows.saturating_sub(status.len()) as u16 + 1;
         for (at, line) in status.iter().enumerate() {
             put(&mut out, first + at as u16, 1, &clip(line, cols));
@@ -39,7 +33,6 @@ impl Screen {
         out
     }
 
-    /// draw_panel draws the box that lies over the panes.
     pub(super) fn draw_panel(&self, out: &mut String, panel: &Panel, rows: usize) {
         let width = panel
             .lines
@@ -70,8 +63,6 @@ impl Screen {
         let _ = rows;
     }
 
-    /// events_line answers the strip that says what just happened: the last
-    /// event, and how many are waiting behind it.
     pub(super) fn events_line(&self) -> String {
         match self.events.last() {
             Some(last) => format!("{} ({} events)", last, self.events.len()),
@@ -79,8 +70,6 @@ impl Screen {
         }
     }
 
-    /// tab_bar answers the line that names the tabs and marks the one the
-    /// owner stands in.
     pub(super) fn tab_bar(&self) -> String {
         if self.tabs.is_empty() {
             return "[no tabs]".to_string();
@@ -101,12 +90,6 @@ impl Screen {
         line
     }
 
-    /// window answers the lines of one pane that the screen shows: the tail
-    /// of the pane's words, or the page the owner scrolled to.
-    ///
-    /// The drawing and the pick read this one window, so a line that is on
-    /// the screen is a line that can be picked, and a line that is not on
-    /// the screen cannot be picked: it cannot be seen.
     pub(super) fn window(&self, index: usize, height: usize) -> Vec<String> {
         let pane = match self.panes.get(index) {
             Some(pane) => pane,

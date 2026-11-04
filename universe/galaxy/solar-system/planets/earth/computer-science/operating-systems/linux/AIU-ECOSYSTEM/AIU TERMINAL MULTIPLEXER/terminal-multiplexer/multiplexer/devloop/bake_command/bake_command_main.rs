@@ -1,15 +1,3 @@
-// One job: the bake from the command line — run it once, and say what it did.
-//
-// The command reads the config it is asked to bake (the one named with
-// --config, else the one the program would run with now), writes it as the
-// baked defaults in the state directory, and prints the path, the verdict, the
-// reason when it is not good, and where the last good one stands.
-//
-// The rebuild is manual: a person runs this when they decide, and it says what
-// it did. There is no timer and no watcher in here.
-//
-// Exit codes: 0 when the bake is good, 1 when it is not, 2 when the command
-// could not be asked what to bake.
 
 #[path = "../bake/bake_file.rs"]
 mod bake;
@@ -31,7 +19,6 @@ fn main() {
     }
 }
 
-/// run bakes one config and prints what the bake did.
 fn run(args: &[String]) -> Result<i32, String> {
     let options = Options::read(args)?;
     println!("mux-bake: the state directory: {}", options.state_dir.display());
@@ -54,15 +41,12 @@ fn run(args: &[String]) -> Result<i32, String> {
     Ok(if baked.good { 0 } else { 1 })
 }
 
-/// Options are the command's arguments: the state directory it bakes into, and
-/// the config file it bakes when one is named.
 struct Options {
     state_dir: PathBuf,
     config: Option<PathBuf>,
 }
 
 impl Options {
-    /// read answers the options the arguments name, or the reason it cannot.
     fn read(args: &[String]) -> Result<Options, String> {
         let mut state_dir: Option<PathBuf> = None;
         let mut config: Option<PathBuf> = None;

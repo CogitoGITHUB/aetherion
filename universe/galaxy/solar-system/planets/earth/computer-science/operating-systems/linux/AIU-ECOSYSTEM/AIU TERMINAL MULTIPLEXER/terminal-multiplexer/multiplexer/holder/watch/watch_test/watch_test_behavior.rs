@@ -32,7 +32,5 @@
 
     #[test]
     fn a_request_with_no_op_is_not_refused_here() {
-        // The dispatch itself answers an unknown op; this predicate only
-        // refuses what a watcher may not do.
         assert!(refusal(&json!({ "client": "a watcher" })).is_none());
     }

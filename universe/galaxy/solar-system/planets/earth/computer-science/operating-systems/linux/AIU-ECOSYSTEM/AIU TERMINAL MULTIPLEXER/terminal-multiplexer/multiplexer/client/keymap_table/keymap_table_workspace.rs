@@ -1,9 +1,5 @@
 use super::*;
 
-/// WORKSPACE is the map of the workspace. Every sequence starts with the key
-/// that opens the map. The workspace is the one thing this program and the
-/// editor share, and the engine behind it owns the workspaces, the projects
-/// and the context.
 pub static WORKSPACE: &[Binding] = &[
     Binding {
         keys: "w w",

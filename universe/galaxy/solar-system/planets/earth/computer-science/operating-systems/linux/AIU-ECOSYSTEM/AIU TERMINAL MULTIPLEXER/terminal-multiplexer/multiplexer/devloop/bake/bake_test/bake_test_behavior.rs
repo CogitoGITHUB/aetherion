@@ -1,7 +1,6 @@
     use super::*;
     use std::fs;
 
-    /// scratch answers a state directory of this test's own.
     fn scratch(name: &str) -> PathBuf {
         let dir = std::env::temp_dir().join(format!("mux-bake-{}-{}", std::process::id(), name));
         let _ = fs::remove_dir_all(&dir);

@@ -1,7 +1,6 @@
 use super::*;
 
 impl Screen {
-    /// focus_height answers how many lines the focused pane shows.
     pub(super) fn focus_height(&self) -> usize {
         let cols = self.cols.max(20);
         let (top, area_rows) = self.area();
@@ -17,14 +16,6 @@ impl Screen {
         }
     }
 
-    /// scroll_view moves the view of the focused pane by one page: a page is
-    /// the height of that pane, and the view stops at the oldest page there
-    /// is.
-    ///
-    /// The wheel is refused (rule 13): there is no mouse in this program,
-    /// so the scroll is a key too, and the page keys are that key. The
-    /// answer says whether the view moved: a scroll that could not happen
-    /// is said, and not hidden.
     pub(super) fn scroll_view(&mut self, up: bool) -> bool {
         let height = self.focus_height();
         if height == 0 {
@@ -47,8 +38,6 @@ impl Screen {
         next != current
     }
 
-    /// scroll_distance answers how far the focused pane's view is from the
-    /// tail of its words.
     pub(super) fn scroll_distance(&self) -> usize {
         self.panes
             .get(self.focused)
@@ -56,8 +45,6 @@ impl Screen {
             .unwrap_or(0)
     }
 
-    /// pane_lines answers the lines of one pane: its frame, its name, and
-    /// what its program said.
     pub(super) fn pane_lines(&self, index: usize, rect: &geometry::Rect, focused: bool) -> Vec<String> {
         let inner = rect.cols.saturating_sub(2) as usize;
         let height = rect.rows.saturating_sub(2) as usize;
@@ -71,8 +58,6 @@ impl Screen {
         top.push('+');
         lines.push(top);
         let visible = self.window(index, height);
-        // In the selection the region is shown in reverse video: the text
-        // under the keys is the text that is selected.
         let visible = if focused && self.mode == Mode::Select {
             self.select.marked(&visible)
         } else {

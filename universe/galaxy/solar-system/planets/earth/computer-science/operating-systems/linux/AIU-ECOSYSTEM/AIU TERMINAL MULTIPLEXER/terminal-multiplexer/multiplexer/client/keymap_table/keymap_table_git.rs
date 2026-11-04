@@ -1,8 +1,5 @@
 use super::*;
 
-/// GIT is the map of the git commands. Every sequence starts with the key
-/// that opens the map. Every one of them reads: the layer behind them
-/// cannot change a repository.
 pub static GIT: &[Binding] = &[
     Binding {
         keys: "g o",

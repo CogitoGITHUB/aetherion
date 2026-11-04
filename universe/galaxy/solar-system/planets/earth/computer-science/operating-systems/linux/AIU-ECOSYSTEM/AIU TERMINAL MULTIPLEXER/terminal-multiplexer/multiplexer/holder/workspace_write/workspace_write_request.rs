@@ -1,11 +1,5 @@
 use super::*;
 
-/// write asks the engine to change the workspace, and answers with the
-/// facts as they stand after the change.
-///
-/// The "what" says which change is asked for: a workspace is created, a
-/// project is registered, or the context is opened on a project. The name
-/// is what the change is about.
 pub fn write(state_dir: &Path, workspace: &str, what: &str, name: &str) -> Answer {
     let engine = match Engine::open(state_dir) {
         Ok(engine) => engine,
@@ -15,8 +9,6 @@ pub fn write(state_dir: &Path, workspace: &str, what: &str, name: &str) -> Answe
         "create" => ("workspace.create", json!({ "name": name })),
         "project" => ("project.register", json!({ "name": name })),
         "open" => {
-            // The owner names a project; the engine knows a project by its
-            // own name, so the name is resolved here.
             let target = match the_project_of(&engine, workspace, name) {
                 Some(target) => target,
                 None => {
@@ -46,8 +38,6 @@ pub fn write(state_dir: &Path, workspace: &str, what: &str, name: &str) -> Answe
     answer
 }
 
-/// the_project_of answers the id of the project the owner named, in the
-/// workspace this session works on.
 pub(crate) fn the_project_of(engine: &Engine, workspace: &str, name: &str) -> Option<String> {
     let listed = engine.apply(&request("workspace.list", json!({}), workspace));
     let workspaces = list(data_of(&listed), "workspaces");
@@ -72,13 +62,10 @@ pub(crate) fn the_project_of(engine: &Engine, workspace: &str, name: &str) -> Op
     None
 }
 
-/// data_of answers the data of the engine's answer.
 pub(crate) fn data_of(answer: &Value) -> &Value {
     answer.get("data").unwrap_or(&Value::Null)
 }
 
-/// request builds the engine's own request: the protocol, the name of
-/// this request, the operation and its arguments.
 pub(crate) fn request(op: &str, args: Value, workspace: &str) -> Value {
     let number = REQUESTS.fetch_add(1, Ordering::Relaxed);
     let mut request = json!({

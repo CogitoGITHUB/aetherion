@@ -1,8 +1,6 @@
 use crate::*;
 
 pub(crate) fn request_pane_weight(session: &mut Session, at: usize, request: &Value) -> Result<bool, String> {
-    // A pane wants more of the space, or less of it: the weight is
-    // the pane's share, and the layout file keeps it.
     let name = request
         .get("pane")
         .and_then(|value| value.as_str())
@@ -49,8 +47,6 @@ pub(crate) fn request_pane_weight(session: &mut Session, at: usize, request: &Va
     let before = session.panes[at].weight;
     session.panes[at].weight = weight;
     let told = session.tell_sizes();
-    // The shape is written back where it was read: the layout file
-    // IS the session's shape.
     let written = match session.layout_path.clone() {
         Some(path) => layout::write(&path, &session.direction, &session.shape()),
         None => Ok(()),

@@ -1,14 +1,11 @@
 use super::*;
 
 impl Log {
-    /// open opens the log with the rule this program ships, for a session.
     #[allow(dead_code)]
     pub fn open(path: &Path) -> Result<Log, String> {
         Log::open_with(path, LIMIT_BYTES, KEEP_RECORDS)
     }
 
-    /// open_with opens the log with a rule of the caller's choosing: the
-    /// session uses the shipped one, and a probe or a small disk may say less.
     pub fn open_with(path: &Path, limit: u64, keep: usize) -> Result<Log, String> {
         let file = OpenOptions::new()
             .create(true)
@@ -16,8 +13,6 @@ impl Log {
             .mode(0o600)
             .open(path)
             .map_err(|why| format!("the log {} cannot be opened: {}", path.display(), why))?;
-        // A file made before the rule was written is 0644: it is made private
-        // here, and a refusal is named rather than passed over.
         private_file(path)?;
         let bytes = file
             .metadata()
@@ -33,8 +28,6 @@ impl Log {
         })
     }
 
-    /// append writes one record as one line and flushes it, so the record is
-    /// on disk before the holder does anything else.
     pub fn append(&mut self, record: &serde_json::Value) -> Result<(), String> {
         let mut line = record.to_string();
         line.push('\n');
@@ -48,34 +41,18 @@ impl Log {
         Ok(())
     }
 
-    /// over_limit answers whether the rule says the log must be trimmed now.
     pub fn over_limit(&self) -> bool {
         self.bytes > self.limit && !self.tripped
     }
 
-    /// size answers how many bytes the log holds now.
     pub fn size(&self) -> u64 {
         self.bytes
     }
 
-    /// rule answers the bound in force, so the holder can say it in its own
-    /// records without a second copy of the numbers.
     pub fn rule(&self) -> (u64, usize) {
         (self.limit, self.keep)
     }
 
-    /// trim rewrites the log to its newest records, and answers what it did.
-    ///
-    /// The rewrite never edits the file in place: the kept part is written to
-    /// a sibling, synced, and renamed over the log. A reader that opens the log
-    /// while this runs reads the old one whole or the new one whole, and a
-    /// holder killed in the middle leaves the old log untouched.
-    ///
-    /// The count and the size are both kept, and neither is allowed to make the
-    /// other useless: at most `keep` records are kept, and only as many of them
-    /// as fit in half the bound. A trim that could not get under the bound —
-    /// one record bigger than half of it — is refused by name, and the log does
-    /// not try again on every record after it.
     pub fn trim(&mut self) -> Result<Trimmed, String> {
         let body = std::fs::read_to_string(&self.path).map_err(|why| {
             format!(
@@ -106,8 +83,6 @@ impl Log {
             .map(|line| seq_of(line))
             .unwrap_or(0);
         if used > self.limit {
-            // One record is bigger than the bound: the rule cannot be kept by
-            // trimming, and saying so once is better than a trim per record.
             self.tripped = true;
             return Err(format!(
                 "one record is {} bytes, and the bound is {}: the journal cannot be \
@@ -152,8 +127,6 @@ impl Log {
                 why
             )
         })?;
-        // The handle holds the old file, which the rename left behind: it is
-        // opened again, and the rule's own count starts from the new size.
         self.file = OpenOptions::new()
             .append(true)
             .open(&self.path)
@@ -178,8 +151,6 @@ impl Log {
         })
     }
 
-    /// records answers every record the log file holds, oldest first, read
-    /// back from the file: what the log says is what the file holds.
     pub fn records(path: &Path) -> Result<Vec<serde_json::Value>, String> {
         let body = std::fs::read_to_string(path)
             .map_err(|why| format!("the log {} cannot be read: {}", path.display(), why))?;

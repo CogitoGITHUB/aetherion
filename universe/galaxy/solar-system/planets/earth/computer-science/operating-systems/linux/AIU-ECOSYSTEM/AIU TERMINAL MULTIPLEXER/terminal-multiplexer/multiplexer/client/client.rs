@@ -1,20 +1,9 @@
-// One job: the client — a thin screen that attaches to a holder, asks it
-// things, and lets go again.
-//
-// The client holds nothing: the shell and the log belong to the holder, so a
-// client that ends takes nothing with it (rule 01). It reads no environment
-// variable for the session: the state directory is an argument.
-//
-// Its wait for the holder's socket ends on the filesystem event that creates
-// it, never on a clock.
 
 #[path = "../holder/wire/wire_socket.rs"] mod wire;
 #[path = "../holder/geometry/geometry_rects.rs"] mod geometry;
 #[allow(dead_code)]
 #[path = "../tty/terminal/terminal_raw.rs"] mod tty;
 
-// The work mode's config: the devloop area sits below the client, so this is a
-// downward edge and the only one the client takes.
 #[path = "../devloop/config.rs"]
 mod config;
 
@@ -39,9 +28,6 @@ const EVENT_CONTRACT: &str = "event-log-format/1";
 const HOLDER_CONTRACT: &str = "multiplexer-holder/1";
 const CLIENT_NAME: &str = "multiplexer-client/1";
 
-/// BUILD is the build this client is: the crate's own version, printed when it
-/// starts, so a rebuilt client that meets an older holder can say what it is
-/// (TODO item 48).
 const BUILD: &str = env!("CARGO_PKG_VERSION");
 
 #[path = "client_run/client_run_screen.rs"]

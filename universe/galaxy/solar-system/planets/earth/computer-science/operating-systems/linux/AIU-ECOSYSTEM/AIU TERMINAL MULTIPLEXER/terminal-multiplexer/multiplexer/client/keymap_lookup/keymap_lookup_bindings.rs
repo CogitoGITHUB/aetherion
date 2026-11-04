@@ -1,7 +1,5 @@
 use super::*;
 
-/// bindings answers the bindings of one map. It is the only place that says
-/// which map holds which bindings.
 pub fn bindings(context: Context) -> &'static [Binding] {
     match context {
         Context::Root => ROOT,

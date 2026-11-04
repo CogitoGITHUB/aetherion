@@ -1,12 +1,5 @@
 use crate::*;
 
-/// control is the agent's door into the screen: the words the agent sent,
-/// and the screen's answer. A change needs the human's token, and the holder
-/// checks it itself (rule 07): the caller's word is not taken for what it
-/// does.
-///
-/// The holder holds no screen of its own. The words run on the owner's own
-/// screen, so the agent and the owner drive the same code.
 pub(crate) fn control(session: &mut Session, at: usize, request: &Value) -> Result<bool, String> {
     let id = request
         .get("id")
@@ -47,8 +40,6 @@ pub(crate) fn control(session: &mut Session, at: usize, request: &Value) -> Resu
     ask_screen(session, at, &id, &words, "control")
 }
 
-/// view is the agent's read of the screen: what the owner sees. A read is
-/// free, so it needs no token.
 pub(crate) fn view(session: &mut Session, at: usize, request: &Value) -> Result<bool, String> {
     let id = request
         .get("id")
@@ -58,8 +49,6 @@ pub(crate) fn view(session: &mut Session, at: usize, request: &Value) -> Result<
     ask_screen(session, at, &id, &[], "view")
 }
 
-/// list_sessions answers what stands in the sessions directory: every session,
-/// and whether a holder holds it. It is a read: nothing is made or ended.
 pub(crate) fn list_sessions(session: &mut Session, at: usize) -> Result<bool, String> {
     let list = sessions::listing(&session.sessions_dir);
     let record = session.record(Fields {
@@ -77,8 +66,6 @@ pub(crate) fn list_sessions(session: &mut Session, at: usize) -> Result<bool, St
     Ok(true)
 }
 
-/// a_fail answers one refusal to the client that asked, and says the rule that
-/// refused: every one of the four session commands answers by name.
 pub(crate) fn a_fail(session: &mut Session, at: usize, what: &str, why: String, inputs: Value) {
     let record = session.record(Fields {
         kind: "fail",
@@ -94,8 +81,6 @@ pub(crate) fn a_fail(session: &mut Session, at: usize, what: &str, why: String, 
     answer_client(session, at, &record);
 }
 
-/// session_command runs one of the owner's four session commands: create,
-/// rename, kill. The fourth, the listing, is list_sessions above.
 pub(crate) fn session_command(session: &mut Session, at: usize, request: &Value) -> Result<bool, String> {
     let what = request
         .get("what")

@@ -1,10 +1,6 @@
 use crate::*;
 
 pub(crate) fn request_send_agent(session: &mut Session, at: usize, request: &Value) -> Result<bool, String> {
-    // The picked text goes to the agent that is open, in the
-    // bundle: the same shape every program sends. The bundle is
-    // built here, where the redaction seam is, and the text
-    // leaves the multiplexer through the agent's own terminal.
     let selection = request
         .get("selection")
         .and_then(|value| value.as_str())
@@ -25,9 +21,6 @@ pub(crate) fn request_send_agent(session: &mut Session, at: usize, request: &Val
         .and_then(|value| value.as_str())
         .unwrap_or("")
         .to_string();
-    // The command record: the command the pane was given and what
-    // that pane printed after it, read from the log — the truth, and
-    // never a copy the screen made by hand.
     let (command, output) = command_record(session, &from);
     let made = bundle::Bundle::make(
         "aiu-multiplexer",
@@ -43,10 +36,6 @@ pub(crate) fn request_send_agent(session: &mut Session, at: usize, request: &Val
         Some(bundle) => {
             let bundle = bundle.carrying(&command, &output);
             let text = format!("{}\n", bundle.text());
-            // The seam has already been through the bundle; this
-            // asks the seam again, and a text that would still
-            // change is refused by name instead of written to an
-            // agent's terminal.
             if !bundle::carries_no_secret(&text) {
                 let record = session.record(Fields {
                     kind: "fail",
@@ -80,9 +69,6 @@ pub(crate) fn request_send_agent(session: &mut Session, at: usize, request: &Val
             return Ok(false);
         }
     };
-    // The destinations: the multiplexer's own agent and the editor's
-    // agent. Both panes run the same agent program, so one bundle
-    // serves both and neither is told which one it is.
     let destinations: Vec<usize> = AGENT_PANES
         .iter()
         .filter_map(|name| session.panes.iter().position(|pane| &pane.name == name))

@@ -1,7 +1,5 @@
 use super::*;
 
-/// sessions answers every session under the sessions directory, with what
-/// each one holds right now.
 pub(crate) fn sessions(sessions_dir: &Path) -> Result<Value, String> {
     let entries = std::fs::read_dir(sessions_dir)
         .map_err(|why| format!("the sessions directory {} cannot be read: {}", sessions_dir.display(), why))?;
@@ -47,7 +45,6 @@ pub(crate) fn sessions(sessions_dir: &Path) -> Result<Value, String> {
     Ok(json!({ "sessions": held }))
 }
 
-/// named_session answers the session's directory from the arguments.
 pub(crate) fn named_session(arguments: &Value, sessions_dir: &Path) -> Result<PathBuf, String> {
     let name = arguments
         .get("session")
@@ -63,7 +60,6 @@ pub(crate) fn named_session(arguments: &Value, sessions_dir: &Path) -> Result<Pa
     Ok(sessions_dir.join(&name))
 }
 
-/// session_name answers the session's name as the arguments gave it.
 pub(crate) fn session_name(arguments: &Value) -> String {
     arguments
         .get("session")
@@ -72,12 +68,8 @@ pub(crate) fn session_name(arguments: &Value) -> String {
         .to_string()
 }
 
-/// ask_holder asks one session's holder and answers every record it sent.
 pub(crate) fn ask_holder(session_dir: &Path, request: Value) -> Result<Vec<Value>, String> {
     let socket = session_dir.join("holder.sock");
-    // The wait ends on the filesystem event that creates the socket, so an
-    // agent that asks a moment after the session started is not refused for
-    // a race it did not cause.
     wire::wait_for_socket(&socket)?;
     let fd = wire::connect(&socket)?;
     let asked = wire::ask(fd, &request);
@@ -109,9 +101,6 @@ pub(crate) fn ask_holder(session_dir: &Path, request: Value) -> Result<Vec<Value
             }
             match serde_json::from_str::<Value>(&line) {
                 Ok(value) => {
-                    // The holder marks the last answer of a request, so the
-                    // agent knows the answer is complete without waiting for
-                    // the connection to close.
                     if value
                         .get("result")
                         .and_then(|result| result.get("final"))

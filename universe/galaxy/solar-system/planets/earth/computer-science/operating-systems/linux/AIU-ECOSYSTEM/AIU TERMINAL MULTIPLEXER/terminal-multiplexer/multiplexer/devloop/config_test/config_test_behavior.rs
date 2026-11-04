@@ -1,8 +1,6 @@
     use super::*;
     use std::fs;
 
-    /// scratch answers a state directory of this test's own, so two tests
-    /// never write over each other's file.
     fn scratch(name: &str) -> PathBuf {
         let dir = std::env::temp_dir().join(format!("mux-config-{}-{}", std::process::id(), name));
         let _ = fs::remove_dir_all(&dir);
@@ -116,7 +114,6 @@
             _ => panic!("the broken file was taken for a change"),
         }
         assert_eq!(config.config(), &before);
-        // The same file is reported once, not on every turn of the loop.
         assert!(matches!(config.reload_if_changed(), Reload::Unchanged));
         let _ = fs::remove_dir_all(&dir);
     }

@@ -1,6 +1,5 @@
     use super::*;
 
-    /// two_weighed answers the places of two panes that want one and three.
     fn two_weighed() -> Vec<Rect> {
         rects("row", &[1, 3], 80, 24, 1)
     }

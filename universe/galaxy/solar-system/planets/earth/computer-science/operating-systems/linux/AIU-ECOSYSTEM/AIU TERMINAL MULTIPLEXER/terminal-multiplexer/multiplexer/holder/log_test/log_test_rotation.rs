@@ -1,6 +1,5 @@
     use super::*;
 
-    /// a_scratch is a directory of this test's own, emptied first.
     fn a_scratch(name: &str) -> PathBuf {
         let dir = std::env::temp_dir().join(format!("mux-log-{}-{}", std::process::id(), name));
         let _ = std::fs::remove_dir_all(&dir);
@@ -8,7 +7,6 @@
         dir
     }
 
-    /// a_record is one record with the seq the caller names.
     fn a_record(seq: u64, text: &str) -> serde_json::Value {
         serde_json::json!({ "seq": seq, "kind": "progress", "outputs": { "text": text } })
     }
@@ -46,8 +44,6 @@
     fn the_rule_trims_to_the_newest_records_and_says_what_it_let_go() {
         let dir = a_scratch("trim");
         let path = dir.join("events.log");
-        // A limit of 260 with 10 records of 49 bytes: half the bound is 130,
-        // so two records are kept even though the count would take three.
         let mut log = Log::open_with(&path, 260, 3).unwrap();
         for seq in 1..=10 {
             log.append(&a_record(seq, "x")).unwrap();

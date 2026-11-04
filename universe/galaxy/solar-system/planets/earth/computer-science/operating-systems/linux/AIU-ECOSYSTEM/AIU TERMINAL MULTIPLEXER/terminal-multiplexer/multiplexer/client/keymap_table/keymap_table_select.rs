@@ -1,14 +1,5 @@
 use super::*;
 
-/// SELECT is the map of the selection. The keys move a point over the
-/// visible text of the focused pane, one key sets the mark, and the
-/// region is the text between the mark and the point.
-///
-/// The escape leaves the selection and does nothing else: no text is
-/// copied, no bundle is sent and no pane opens. The escape is not a
-/// binding here: the byte stream is what tells a lone escape from the
-/// escape that begins an arrow key, and the program reads the escape
-/// where the byte stream hands it over.
 pub static SELECT: &[Binding] = &[
     Binding {
         keys: "Left",

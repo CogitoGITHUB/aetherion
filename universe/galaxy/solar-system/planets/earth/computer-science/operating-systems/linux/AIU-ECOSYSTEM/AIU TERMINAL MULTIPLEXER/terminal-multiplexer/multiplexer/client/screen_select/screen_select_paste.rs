@@ -1,9 +1,6 @@
 use super::*;
 
 impl Screen {
-    /// paste_clipboard reads the Android clipboard and pastes it into the
-    /// focused pane. A phone without the add-on is told by name, before
-    /// anything is written: the script behind it waits for ever there.
     pub(super) fn paste_clipboard(&mut self) -> Action {
         match clipboard::paste() {
             Ok(text) => self.paste_text(text),
@@ -14,10 +11,6 @@ impl Screen {
         }
     }
 
-    /// paste_text puts the clipboard's text into the focused pane, the way
-    /// the owner's own paste does. The text is checked before it goes: an
-    /// empty clipboard is said, and a paste over the limit is refused with
-    /// the numbers instead of being cut.
     pub(super) fn paste_text(&mut self, text: String) -> Action {
         if text.is_empty() {
             self.message = "the Android clipboard is empty: nothing is pasted".to_string();
@@ -44,8 +37,6 @@ impl Screen {
         }))
     }
 
-    /// paste_into puts the newest copy into a pane, the way the owner's own
-    /// paste does: the text goes to the pane's own program.
     pub(super) fn paste_into(&mut self, name: &str) -> Action {
         let text = match self.ring.first() {
             Some(found) => found.clone(),
@@ -66,8 +57,6 @@ impl Screen {
         }))
     }
 
-    /// paste_to_agent sends the newest copy to the agents, the way the
-    /// owner's own send does: the bundle carries the text and the why.
     pub(super) fn paste_to_agent(&mut self) -> Action {
         let text = match self.ring.first() {
             Some(found) => found.clone(),

@@ -1,12 +1,5 @@
 use super::*;
 
-/// worktrees answers the lines of the worktree browser: every worktree
-/// of the repository, one line each, with the branch it stands on, the
-/// changes it holds, and where it lives.
-///
-/// The worktree the head is on is marked, so the owner knows which one
-/// the commands of this multiplexer touch. A worktree that is locked or
-/// prunable says so: the layer read both facts from Git.
 pub(crate) fn worktrees(data: &Value) -> Vec<String> {
     let repository = data.get("repository").cloned().unwrap_or(Value::Null);
     let held = list(&repository, "worktrees");
@@ -50,8 +43,6 @@ pub(crate) fn worktrees(data: &Value) -> Vec<String> {
     lines
 }
 
-/// what_the_file_is answers the words for one file: what the index holds
-/// of it, and what the working tree holds of it.
 pub(crate) fn what_the_file_is(index: &str, working: &str) -> String {
     if working == "untracked" {
         return "untracked".to_string();

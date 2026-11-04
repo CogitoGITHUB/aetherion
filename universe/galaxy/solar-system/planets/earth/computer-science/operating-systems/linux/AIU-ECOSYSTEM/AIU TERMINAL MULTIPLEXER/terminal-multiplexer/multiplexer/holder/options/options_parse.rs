@@ -1,24 +1,14 @@
 use crate::*;
 
-/// Options are the holder's arguments: the state directory is one of them, so
-/// no environment variable is read for it.
 pub(crate) struct Options {
     pub(crate) state_dir: PathBuf,
-    /// sessions_dir is the directory this session stands in, with its siblings:
-    /// the state directory's parent unless the owner names one.
     pub(crate) sessions_dir: PathBuf,
     pub(crate) shell: String,
     pub(crate) layout: Option<PathBuf>,
     pub(crate) cols: u16,
     pub(crate) rows: u16,
-    /// workspace_dir is where the shared workspace engine keeps its files:
-    /// it is an argument, and no environment variable names it.
     pub(crate) workspace_dir: PathBuf,
-    /// workspace is the workspace this session works on, when the owner
-    /// names one. Empty means the only one there is.
     pub(crate) workspace: String,
-    /// log_limit is the bound the session's log keeps to, in bytes: the
-    /// shipped rule unless the owner says less (TODO item 51).
     pub(crate) log_limit: u64,
 }
 
