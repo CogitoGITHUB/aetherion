@@ -1,9 +1,9 @@
 #lang racket/base
 
 (require racket/runtime-path
-         "protocol.rkt"
-         "transport.rkt"
-         "../machine/directories.rkt")
+         "protocol-shared.rkt"
+         "transport-shared.rkt"
+         "../machine/directories-shared.rkt")
 
 (define entry-name "racket-entry.rkt")
 

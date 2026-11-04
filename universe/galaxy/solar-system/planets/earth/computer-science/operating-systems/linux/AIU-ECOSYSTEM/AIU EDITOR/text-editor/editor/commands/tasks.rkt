@@ -4,8 +4,8 @@
          racket/list
          racket/runtime-path
          racket/string
-         "../narration/print-console.rkt"
-         "../commands/commands.rkt")
+         "../narration/print-console-shared.rkt"
+         "../commands/commands-shared.rkt")
 
 (define-runtime-path tasks-source "tasks.rkt")
 

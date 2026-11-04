@@ -3,7 +3,7 @@
 (require racket/file
          racket/list
          racket/string
-         "../machine/directories.rkt"
+         "../machine/directories-shared.rkt"
          "../machine/run.rkt")
 
 (define (pm-cli)

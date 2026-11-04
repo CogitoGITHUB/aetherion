@@ -1,6 +1,6 @@
 #lang racket/base
 
-(require racket/list racket/path racket/string "../../narration/print-console.rkt" "../../join/hot-path.rkt" "../../join/protocol.rkt")
+(require racket/list racket/path racket/string "../../narration/print-console-shared.rkt" "../../join/hot-path-shared.rkt" "../../join/protocol-shared.rkt")
 
 (provide git-verb git-diff-verb git-history-verb)
 

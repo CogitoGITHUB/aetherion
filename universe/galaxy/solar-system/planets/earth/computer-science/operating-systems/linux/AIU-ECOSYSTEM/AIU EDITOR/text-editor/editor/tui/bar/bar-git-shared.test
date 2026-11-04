@@ -1,0 +1,6 @@
+test mod-bar-git
+level 2
+module editor/tui/bar/bar-git-shared.rkt
+call (list (git-text #f) (git-text "none") (git-text (list "main" 2 1 0 "abc  msg" 1 1 3 4)) (git-text (list "dev" 0 0 0 "" 0 0 0 0)) (git-letters #f) (git-letters "x") (git-letters (list "main" 2 0 0 "" 0 0 0 0)) (git-letters (list "main" 0 0 0 "" 0 0 0 0)))
+expect result equals ("reading git" "none" "main  2 changed  1 staged  1 unstaged  +3 -4  1 ahead  abc  msg" "dev  clean" "git" "none" "main~2" "main")
+expect seconds-under 20

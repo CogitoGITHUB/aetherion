@@ -10,7 +10,7 @@
 
 (require racket/system
          "../editor/join/load.rkt"
-         "../editor/machine/directories.rkt")
+         "../editor/machine/directories-shared.rkt")
 
 ;; now-ms is the clock this probe reads: milliseconds, inexact.
 (define (now-ms)

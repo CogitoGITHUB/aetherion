@@ -4,32 +4,32 @@
          racket/path racket/port
          racket/path racket/port
          racket/string
-         "../../narration/print-console.rkt"
-         "../../commands/commands.rkt"
-         "../../join/hot-path.rkt"
-         "../../join/live-wire.rkt"
-         "../../join/protocol.rkt"
+         "../../narration/print-console-shared.rkt"
+         "../../commands/commands-shared.rkt"
+         "../../join/hot-path-shared.rkt"
+         "../../join/live-wire-shared.rkt"
+         "../../join/protocol-shared.rkt"
          "../../drawing/screen.rkt"
          "../../machine/terminal.rkt"
          "../../routes/keyboard.rkt"
-         "../../routes/keymaps.rkt"
+         "../../routes/keymaps-shared.rkt"
          "../../routes/routes.rkt"
-         "../../bridge/document.rkt"
-         "../../bridge/host.rkt"
-         "../../bridge/where.rkt"
+         "../../bridge/document-shared.rkt"
+         "../../bridge/host-shared.rkt"
+         "../../bridge/where-shared.rkt"
          "../../tui/blocks/blockview.rkt" "../../tui/blocks/blocks-edit.rkt" "../../tui/blocks/blocks-view.rkt"
          "../../tui/blocks/blocks-move.rkt"
-         "../../tui/bar/bar-menu.rkt"
+         "../../tui/bar/bar-menu-shared.rkt"
          "../../tui/bar/bar.rkt"
-         "../../tui/tabs/tabs.rkt"
+         "../../tui/tabs/tabs-shared.rkt"
          "../../tui/tabs/finder.rkt"
          "../../tui/notify/notify.rkt"
-         (only-in "../../tui/float/box.rkt" paint-ready)
+         (only-in "../../tui/float/box-shared.rkt" paint-ready)
          "../../tui/gutter/gutter.rkt"
          "../../tui/gutter/gutterview.rkt"
-         (only-in "../../machine/directories.rkt" journal-path-for))
+         (only-in "../../machine/directories-shared.rkt" journal-path-for))
 
-(require (only-in "../../tui/bar/bar-state.rkt" title-rows split-panes-on) "../../tui/split/split-state.rkt" "../../tui/split/split-layout.rkt" "../../tui/split/split-overlay.rkt" "../../tui/split/split-view.rkt" (only-in "../../tui/float/pins.rkt" pins-now first-start cur-start))
+(require (only-in "../../tui/bar/bar-state-shared.rkt" title-rows split-panes-on) "../../tui/split/split-state.rkt" "../../tui/split/split-layout.rkt" "../../tui/split/split-overlay.rkt" "../../tui/split/split-view.rkt" (only-in "../../tui/float/pins.rkt" pins-now first-start cur-start))
 
 (provide repaint page-view pending-keys viewport-top live-multi-overlay)
 

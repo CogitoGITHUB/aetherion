@@ -5,7 +5,7 @@
          racket/list
          racket/port
          racket/string
-         "../machine/directories.rkt"
+         "../machine/directories-shared.rkt"
          "../security/security.rkt"
          "capabilities.rkt"
          "dispatch/dispatch.rkt"

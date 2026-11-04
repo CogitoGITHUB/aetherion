@@ -2,9 +2,9 @@
 
 (require racket/list
          racket/string
-         "../../commands/commands.rkt"
-         "../../bridge/document.rkt"
-         "../../bridge/host.rkt"
+         "../../commands/commands-shared.rkt"
+         "../../bridge/document-shared.rkt"
+         "../../bridge/host-shared.rkt"
          "blockview.rkt")
 
 (define (blockview-clamp! session start)

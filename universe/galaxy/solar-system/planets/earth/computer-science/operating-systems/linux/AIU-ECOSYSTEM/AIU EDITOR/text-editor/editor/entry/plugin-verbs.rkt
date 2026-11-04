@@ -7,7 +7,7 @@
          "../plugins/manifest.rkt"
          "../plugins/pm.rkt"
          "../plugins/seam.rkt"
-         "../narration/print-console.rkt")
+         "../narration/print-console-shared.rkt")
 
 (define (plugin-verb args)
   (define names (plugin-names))

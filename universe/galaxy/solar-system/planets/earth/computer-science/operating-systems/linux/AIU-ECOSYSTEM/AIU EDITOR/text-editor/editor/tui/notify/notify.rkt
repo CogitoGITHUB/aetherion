@@ -1,5 +1,5 @@
 #lang racket/base
-(require racket/string "../float/box.rkt")
+(require racket/string "../float/box-shared.rkt")
 
 (define notify-repaint (box void))
 

@@ -1,0 +1,6 @@
+test mod-events
+level 2
+module editor/narration/events-shared.rkt
+call (list (event-kind (make-event (quote ev-note) "w" "why" "t" #f #f #f #f)) (with-handlers ([exn:fail? exn-message]) (make-event (quote ev-note) "w" " " "t" #f #f #f #f)) (string-length (utc-now)))
+expect result equals (ev-note "an event was made with no reason" 20)
+expect seconds-under 20

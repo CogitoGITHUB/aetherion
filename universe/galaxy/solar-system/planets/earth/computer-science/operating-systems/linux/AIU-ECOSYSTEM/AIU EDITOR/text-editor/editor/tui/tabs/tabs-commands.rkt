@@ -1,6 +1,6 @@
 #lang racket/base
 
-(require racket/list racket/string racket/path "../../commands/commands.rkt" "tabs.rkt" "tabs-folders.rkt" (only-in "../bar/bar-state.rkt" name-prompt))
+(require racket/list racket/string racket/path "../../commands/commands-shared.rkt" "tabs-shared.rkt" "tabs-folders-shared.rkt" (only-in "../bar/bar-state-shared.rkt" name-prompt))
 
 (provide)
 

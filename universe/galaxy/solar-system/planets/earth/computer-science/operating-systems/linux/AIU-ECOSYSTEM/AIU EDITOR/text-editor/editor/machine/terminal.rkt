@@ -4,7 +4,7 @@
          racket/port
          racket/string
          racket/system
-         "directories.rkt")
+         "directories-shared.rkt")
 
 (define stty "/usr/bin/stty")
 

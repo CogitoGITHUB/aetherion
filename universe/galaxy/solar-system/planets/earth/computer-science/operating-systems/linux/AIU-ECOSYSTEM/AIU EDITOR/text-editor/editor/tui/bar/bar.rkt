@@ -3,15 +3,15 @@
 (require racket/list
          racket/string
          racket/path
-         "../../commands/commands.rkt"
-         "../../commands/lazy-stub.rkt"
-         "../../routes/keymaps.rkt"
-         "../float/box.rkt"
-         "../tabs/tabs.rkt"
-         "bar-clock.rkt"
-         "bar-git.rkt"
-         "bar-state.rkt"
-         "bar-rows.rkt"
+         "../../commands/commands-shared.rkt"
+         "../../commands/lazy-stub-shared.rkt"
+         "../../routes/keymaps-shared.rkt"
+         "../float/box-shared.rkt"
+         "../tabs/tabs-shared.rkt"
+         "bar-clock-shared.rkt"
+         "bar-git-shared.rkt"
+         "bar-state-shared.rkt"
+         "bar-rows-shared.rkt"
          "bar-commands.rkt")
 
 (struct bar-plan (left right top bottom text overlay line?) #:transparent)

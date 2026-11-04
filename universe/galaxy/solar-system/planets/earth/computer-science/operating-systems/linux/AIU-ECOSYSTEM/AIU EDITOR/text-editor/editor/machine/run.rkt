@@ -3,7 +3,7 @@
 (require racket/file
          racket/string
          racket/system
-         "directories.rkt")
+         "directories-shared.rkt")
 
 (define shell "/bin/sh")
 

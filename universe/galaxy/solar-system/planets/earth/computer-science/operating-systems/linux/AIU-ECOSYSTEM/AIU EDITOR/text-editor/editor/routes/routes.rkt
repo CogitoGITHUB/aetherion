@@ -2,7 +2,7 @@
 
 (require racket/list
          racket/string
-         "keymaps.rkt")
+         "keymaps-shared.rkt")
 
 (struct routing (key owner meaning) #:transparent)
 

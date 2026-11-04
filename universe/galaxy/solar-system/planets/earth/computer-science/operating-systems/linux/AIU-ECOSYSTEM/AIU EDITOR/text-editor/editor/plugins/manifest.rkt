@@ -5,7 +5,7 @@
          racket/list
          racket/path
          racket/string
-         "../machine/directories.rkt")
+         "../machine/directories-shared.rkt")
 
 (define plugin-dir
   (build-path (state-dir) "plugins"))

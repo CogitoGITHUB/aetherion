@@ -4,20 +4,20 @@
          racket/path
          racket/port
          racket/string
-         "../../narration/print-console.rkt"
+         "../../narration/print-console-shared.rkt"
          "../../narration/narration.rkt"
-         "../../machine/directories.rkt"
-         "../../commands/commands.rkt"
+         "../../machine/directories-shared.rkt"
+         "../../commands/commands-shared.rkt"
          "../../commands/tasks.rkt"
          "../../devloop/bake.rkt"
          "../../devloop/last-good.rkt"
          "../../routes/keyboard.rkt"
-         "../../routes/keymaps.rkt"
+         "../../routes/keymaps-shared.rkt"
          "../../routes/routes.rkt"
-         "../../join/hot-path.rkt"
-         "../../join/protocol.rkt"
-         "../../bridge/document.rkt"
-         "../../bridge/host.rkt")
+         "../../join/hot-path-shared.rkt"
+         "../../join/protocol-shared.rkt"
+         "../../bridge/document-shared.rkt"
+         "../../bridge/host-shared.rkt")
 
 (provide routes-walk keys-verb)
 

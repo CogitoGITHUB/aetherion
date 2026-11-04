@@ -1,9 +1,9 @@
 #lang racket/base
 
 (require racket/string
-         "../join/hot-path.rkt"
-         "../join/protocol.rkt"
-         "keymaps.rkt")
+         "../join/hot-path-shared.rkt"
+         "../join/protocol-shared.rkt"
+         "keymaps-shared.rkt")
 
 (define (key-names bytes)
   (define runs (key-runs bytes))

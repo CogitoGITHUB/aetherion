@@ -3,9 +3,9 @@
 (require racket/list
          racket/string
          racket/path
-         "../../commands/commands.rkt"
+         "../../commands/commands-shared.rkt"
          "../../machine/terminal.rkt"
-         "tabs.rkt")
+         "tabs-shared.rkt")
 
 (define find-jump (box #f))
 

@@ -7,7 +7,7 @@
          racket/port
          racket/string
          racket/system
-         "../machine/directories.rkt")
+         "../machine/directories-shared.rkt")
 
 (define checkpoints-dir
   (build-path (state-dir) "checkpoints"))

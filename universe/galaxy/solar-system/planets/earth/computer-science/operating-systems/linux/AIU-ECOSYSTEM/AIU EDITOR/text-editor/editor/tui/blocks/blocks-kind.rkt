@@ -1,5 +1,5 @@
 #lang racket/base
-(require "../../commands/commands.rkt")
+(require "../../commands/commands-shared.rkt")
 
 (define (blockview-kind-setter want)
   (lambda (session words)

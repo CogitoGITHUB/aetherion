@@ -2,7 +2,7 @@
 
 (require racket/file
          racket/string
-         "directories.rkt")
+         "directories-shared.rkt")
 
 (define stop-file
   (build-path (state-dir) "stop"))

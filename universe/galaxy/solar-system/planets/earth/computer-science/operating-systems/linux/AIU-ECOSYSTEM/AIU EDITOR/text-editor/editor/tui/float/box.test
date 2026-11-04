@@ -1,6 +1,0 @@
-test mod-box
-level 2
-module editor/tui/float/box.rkt
-call (list (rule-line "╰" "╯" 10) (body-line "hi" 10))
-expect result equals ("╰────────╯" "│ hi     │")
-expect seconds-under 20

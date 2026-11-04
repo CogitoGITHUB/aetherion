@@ -4,7 +4,7 @@
          racket/list
          racket/port
          racket/string
-         (file "../AIU EDITOR/text-editor/editor/machine/directories.rkt")
+         (file "../AIU EDITOR/text-editor/editor/machine/directories-shared.rkt")
          (file "../AIU EDITOR/text-editor/editor/security/redact.rkt")
          (file "../AIU EDITOR/text-editor/editor/send/bundle.rkt"))
 

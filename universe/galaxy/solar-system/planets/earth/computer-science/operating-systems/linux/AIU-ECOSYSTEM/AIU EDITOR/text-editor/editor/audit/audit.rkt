@@ -7,8 +7,8 @@
          racket/port
          racket/string
          "../checkpoint/checkpoint.rkt"
-         "../machine/directories.rkt"
-         "../narration/events.rkt"
+         "../machine/directories-shared.rkt"
+         "../narration/events-shared.rkt"
          "../send/opencode-adapter.rkt")
 
 (define audit-dir

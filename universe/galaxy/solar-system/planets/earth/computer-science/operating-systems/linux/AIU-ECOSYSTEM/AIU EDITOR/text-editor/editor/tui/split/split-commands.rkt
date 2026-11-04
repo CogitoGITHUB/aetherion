@@ -1,6 +1,6 @@
 #lang racket/base
 
-(require "../../commands/commands.rkt" "../tabs/tabs.rkt" "split-state.rkt")
+(require "../../commands/commands-shared.rkt" "../tabs/tabs-shared.rkt" "split-state.rkt")
 
 (provide)
 

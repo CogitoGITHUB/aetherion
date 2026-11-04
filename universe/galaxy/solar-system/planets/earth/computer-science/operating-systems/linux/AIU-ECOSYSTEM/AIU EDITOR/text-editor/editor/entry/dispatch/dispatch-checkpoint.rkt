@@ -1,7 +1,7 @@
 #lang racket/base
 
 (require racket/string
-         "../../narration/print-console.rkt"
+         "../../narration/print-console-shared.rkt"
          "../../checkpoint/checkpoint.rkt"
          "../../checkpoint/rollback.rkt"
          "../../machine/stop-switch.rkt")

@@ -4,7 +4,7 @@
          racket/list
          racket/port
          racket/string
-         "../machine/directories.rkt"
+         "../machine/directories-shared.rkt"
          "../machine/stop-switch.rkt"
          "../security/redact.rkt"
          "bundle.rkt"

@@ -4,8 +4,8 @@
          racket/list
          racket/path
          racket/string
-         (file "../AIU EDITOR/text-editor/editor/bridge/document.rkt")
-         (file "../AIU EDITOR/text-editor/editor/bridge/host.rkt"))
+         (file "../AIU EDITOR/text-editor/editor/bridge/document-shared.rkt")
+         (file "../AIU EDITOR/text-editor/editor/bridge/host-shared.rkt"))
 
 (define project-dir
   (let loop ([at (simplify-path (current-directory))])

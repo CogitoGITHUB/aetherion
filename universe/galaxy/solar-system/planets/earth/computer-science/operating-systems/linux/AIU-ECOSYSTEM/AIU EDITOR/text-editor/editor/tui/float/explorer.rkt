@@ -2,8 +2,8 @@
 
 (require racket/list
          racket/string
-         "../../commands/commands.rkt"
-         "../../routes/keymaps.rkt"
+         "../../commands/commands-shared.rkt"
+         "../../routes/keymaps-shared.rkt"
          "../blocks/blockview.rkt"
          "../bar/bar.rkt"
          "../tabs/finder.rkt")

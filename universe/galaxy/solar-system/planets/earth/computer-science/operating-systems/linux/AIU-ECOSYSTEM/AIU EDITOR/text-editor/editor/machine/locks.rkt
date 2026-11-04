@@ -3,7 +3,7 @@
 (require racket/file
          racket/path
          "cancel.rkt"
-         "../errors/raise.rkt")
+         "../errors/raise-shared.rkt")
 
 (struct lock (path signal token) #:transparent)
 

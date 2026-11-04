@@ -1,6 +1,6 @@
 #lang racket/base
 
-(require "../errors/raise.rkt")
+(require "../errors/raise-shared.rkt")
 
 (struct cancel-token (closed? signal) #:mutable #:transparent)
 

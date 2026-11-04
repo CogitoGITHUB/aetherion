@@ -1,8 +1,8 @@
 #lang racket/base
 
-(require "protocol.rkt"
-         "../errors/err.rkt"
-         "../errors/raise.rkt"
+(require "protocol-shared.rkt"
+         "../errors/err-shared.rkt"
+         "../errors/raise-shared.rkt"
          "../narration/narration.rkt")
 
 (define wire-in (current-input-port))

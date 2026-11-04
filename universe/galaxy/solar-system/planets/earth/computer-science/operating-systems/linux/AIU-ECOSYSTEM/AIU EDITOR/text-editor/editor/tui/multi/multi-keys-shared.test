@@ -1,0 +1,6 @@
+test mod-multi-keys
+level 2
+module editor/tui/multi/multi-keys-shared.rkt
+call (list select-keys cursor-keys)
+expect result equals ((("space space" "mode") ("space v" "sel-cancel") ("n" "sel-left") ("s" "sel-right") ("left" "sel-left") ("right" "sel-right") ("up" "sel-up") ("down" "sel-down") ("w" "sel-word") ("b" "sel-word-back") ("h" "sel-block-back") ("t" "sel-block-forward") ("a" "kind-any") ("p" "kind-paragraph") ("e" "kind-section") ("c" "kind-code") ("k" "kind-comment") ("l" "kind-title") ("x" "kind-todo") ("o" "kind-todo-open") ("d" "kind-todo-done") ("y" "copy") ("space y" "copy") ("space d" "cut") ("space p" "paste") ("j" "sel-next-match") ("v" "sel-all-matches") ("r" "sel-drop") ("escape" "sel-cancel")) (("t" "cur-next-block") ("h" "cur-prev-block") ("down" "cur-below") ("up" "cur-above") ("left" "move-left") ("right" "move-right") ("j" "cur-next-match") ("v" "cur-all-matches") ("r" "cur-drop") ("z" "cur-clear") ("f" "write-mode") ("s" "select-mode") ("a" "kind-any") ("p" "kind-paragraph") ("e" "kind-section") ("c" "kind-code") ("k" "kind-comment") ("l" "kind-title") ("x" "kind-todo") ("o" "kind-todo-open") ("d" "kind-todo-done") ("escape" "cur-leave")))
+expect seconds-under 20

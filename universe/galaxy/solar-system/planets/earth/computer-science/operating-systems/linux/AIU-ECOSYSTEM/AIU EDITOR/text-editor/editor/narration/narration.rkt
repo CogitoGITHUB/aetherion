@@ -1,8 +1,8 @@
 #lang racket/base
 ;; One job: a run's voice — open, step, note, warn, skip, decide.
 
-(require "events.rkt"
-         "print-console.rkt")
+(require "events-shared.rkt"
+         "print-console-shared.rkt")
 
 (define (open-run who why) (say 'ev-open who why))
 

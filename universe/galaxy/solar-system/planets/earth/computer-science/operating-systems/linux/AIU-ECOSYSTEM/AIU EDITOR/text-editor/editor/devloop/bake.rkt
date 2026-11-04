@@ -4,9 +4,9 @@
          racket/list
          racket/string
          racket/system
-         "../machine/directories.rkt"
+         "../machine/directories-shared.rkt"
          "last-good.rkt"
-         "start.rkt")
+         "start-shared.rkt")
 
 (define (bake tables check)
   (define path baked-file)

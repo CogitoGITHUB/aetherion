@@ -1,9 +1,9 @@
 #lang racket/base
 
 (require "../text/text-motion.rkt"
-         "../../commands/commands.rkt"
-         "../../bridge/document.rkt"
-         "../../bridge/host.rkt"
+         "../../commands/commands-shared.rkt"
+         "../../bridge/document-shared.rkt"
+         "../../bridge/host-shared.rkt"
          (only-in "../blocks/blockview.rkt" blockview-kind-match? blockview-inside blockview-drawn)
          (only-in "../bar/bar.rkt" multi-table)
          "multi-notes.rkt"

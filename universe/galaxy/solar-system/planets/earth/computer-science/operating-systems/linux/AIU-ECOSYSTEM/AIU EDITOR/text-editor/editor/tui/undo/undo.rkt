@@ -2,10 +2,10 @@
 
 (require "undo-git.rkt" "undo-tree.rkt"
          (only-in racket/string string-trim string-split)
-         (only-in "../../commands/commands.rkt"
+         (only-in "../../commands/commands-shared.rkt"
                   commands ask session-text set-layer! the-point session-file unsaved move-to)
          (only-in "../bar/bar.rkt" undo-table undo-rows-hook)
-         (only-in "../float/box.rkt" edge-line rule-line body-line)
+         (only-in "../float/box-shared.rkt" edge-line rule-line body-line)
          (only-in "../float/shadow.rkt" shadow-commit-now! shadow-key))
 
 

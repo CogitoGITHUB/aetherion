@@ -1,0 +1,6 @@
+test mod-blocks-keys
+level 2
+module editor/tui/blocks/blocks-keys-shared.rkt
+call move-keys
+expect result equals (("h" "block-move-up") ("t" "block-move-down") ("up" "block-move-up") ("down" "block-move-down") ("escape" "visual-mode"))
+expect seconds-under 20

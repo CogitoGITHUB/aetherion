@@ -2,9 +2,9 @@
 (require racket/string
          "../blocks/blockview.rkt"
          "gutter.rkt"
-         "../../commands/commands.rkt"
-         "../../bridge/host.rkt"
-         "../../bridge/document.rkt")
+         "../../commands/commands-shared.rkt"
+         "../../bridge/host-shared.rkt"
+         "../../bridge/document-shared.rkt")
 
 (define (mark-of hunks lo hi)
   (define hit

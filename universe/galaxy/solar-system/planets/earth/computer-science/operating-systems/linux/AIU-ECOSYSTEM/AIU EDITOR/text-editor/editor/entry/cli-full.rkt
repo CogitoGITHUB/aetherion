@@ -2,8 +2,8 @@
 
 (require "dispatch/dispatch.rkt"
          "documents.rkt"
-         "../devloop/start.rkt"
-         "../narration/print-console.rkt")
+         "../devloop/start-shared.rkt"
+         "../narration/print-console-shared.rkt")
 
 (define (main)
   (define args (vector->list (current-command-line-arguments)))

@@ -1,0 +1,6 @@
+test mod-bar-keys
+level 2
+module editor/tui/bar/bar-keys-shared.rkt
+call (list bar-keys bar-level-keys)
+expect result equals ((("p" "bar-place-next") ("b" "bar-bottom") ("u" "bar-top") ("l" "bar-left") ("r" "bar-right") ("s" "bar-sides") ("d" "bar-style") ("x" "bar-hide") ("left" "bar-left") ("right" "bar-right") ("up" "bar-top") ("down" "bar-bottom") ("v" "bar-level-mode") ("escape" "visual-mode")) (("h" "bar-less") ("t" "bar-more") ("left" "bar-less") ("right" "bar-more") ("escape" "bar-mode")))
+expect seconds-under 20

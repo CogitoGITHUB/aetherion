@@ -1,8 +1,8 @@
 #lang racket/base
 
 (require racket/path racket/port
-         "../machine/directories.rkt"
-         "../commands/commands.rkt"
+         "../machine/directories-shared.rkt"
+         "../commands/commands-shared.rkt"
          "../tui/float/explorer.rkt"
          "live/live.rkt")
 

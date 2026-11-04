@@ -2,7 +2,7 @@
 
 (require racket/file
          racket/string
-         "../machine/directories.rkt")
+         "../machine/directories-shared.rkt")
 
 (define last-good-file
   (build-path (state-dir) "last-good"))

@@ -1,6 +1,6 @@
 #lang racket/base
 
-(require racket/list racket/string "../../commands/commands.rkt" "../../machine/terminal.rkt" "../../bridge/document.rkt" "../../bridge/host.rkt" "../float/pins.rkt" "blocks-kind.rkt" "blockview.rkt" "blocks-edit.rkt")
+(require racket/list racket/string "../../commands/commands-shared.rkt" "../../machine/terminal.rkt" "../../bridge/document-shared.rkt" "../../bridge/host-shared.rkt" "../float/pins.rkt" "blocks-kind.rkt" "blockview.rkt" "blocks-edit.rkt")
 
 (provide blockview-pad blockview-chunks blockview-text-overlay)
 

@@ -2,10 +2,10 @@
 
 (require racket/list
          racket/string
-         "../../commands/commands.rkt"
+         "../../commands/commands-shared.rkt"
          "../../machine/terminal.rkt"
-         "../../bridge/document.rkt"
-         "../../bridge/host.rkt"
+         "../../bridge/document-shared.rkt"
+         "../../bridge/host-shared.rkt"
          "../float/pins.rkt" "blocks-kind.rkt" "blockview-boxes.rkt")
 
 (define edit-start (box #f))

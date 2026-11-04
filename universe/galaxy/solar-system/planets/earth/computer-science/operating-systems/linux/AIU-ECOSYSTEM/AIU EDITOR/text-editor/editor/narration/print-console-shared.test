@@ -1,0 +1,6 @@
+test mod-print-console
+level 2
+module editor/narration/print-console-shared.rkt
+call (let ([e ((dynamic-require (path->complete-path "editor/narration/events.rkt") (quote make-event)) (quote ev-note) "w" "why" "t" #f #f #f #f)]) (list (event->string e (quote sexp)) (event->string e (quote json))))
+expect result equals ("(ev-note w why t #f #f #f #f)" "{\"kind\":\"ev-note\",\"who\":\"w\",\"why\":\"why\",\"started\":\"t\",\"ended\":\"\",\"duration_ms\":0,\"data\":null,\"redacted\":null}")
+expect seconds-under 20

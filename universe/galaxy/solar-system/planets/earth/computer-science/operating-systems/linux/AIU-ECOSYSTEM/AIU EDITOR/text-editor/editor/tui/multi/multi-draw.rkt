@@ -1,6 +1,6 @@
 #lang racket/base
 
-(require "../text/text-motion.rkt" "../../commands/commands.rkt" "../../bridge/document.rkt" "../../bridge/host.rkt" (only-in "../blocks/blockview.rkt" blockview-inside))
+(require "../text/text-motion.rkt" "../../commands/commands-shared.rkt" "../../bridge/document-shared.rkt" "../../bridge/host-shared.rkt" (only-in "../blocks/blockview.rkt" blockview-inside))
 
 (provide multi-lit multi-text-overlay)
 

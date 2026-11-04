@@ -5,7 +5,7 @@
          racket/path
          racket/string
          "../checkpoint/checkpoint.rkt"
-         "../commands/commands.rkt"
+         "../commands/commands-shared.rkt"
          "../security/security.rkt"
          "adapter.rkt"
          "bundle.rkt"

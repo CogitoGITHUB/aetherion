@@ -1,0 +1,6 @@
+test mod-commands-layer
+level 2
+module editor/commands/sets/commands-layer-shared.rkt
+call (let* ([mk (dynamic-require (path->complete-path "editor/commands/session.rkt") (quote make-session))] [tl (dynamic-require (path->complete-path "editor/commands/session.rkt") (quote the-layer))] [s (mk (string->path "/tmp/x.txt") (string->path "/tmp/x.j"))]) (list (command-mode s (list)) (tl s) (command-mode s (list)) (tl s) (command-visual-mode s (list)) (command-write-mode s (list)) (tl s)))
+expect result equals ((#t . "layer: write") "write" (#t . "layer: visual") "visual" (#t . "layer: visual") (#t . "layer: write") "write")
+expect seconds-under 20

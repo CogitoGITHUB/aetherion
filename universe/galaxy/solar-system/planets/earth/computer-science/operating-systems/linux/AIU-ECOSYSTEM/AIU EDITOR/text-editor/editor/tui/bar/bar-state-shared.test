@@ -1,0 +1,6 @@
+test mod-bar-state
+level 2
+module editor/tui/bar/bar-state-shared.rkt
+call (list (unbox bar-place) (unbox bar-style) (unbox bar-count) (unbox focus-on) bar-order bar-places (bar-kname "space") (bar-kname "w"))
+expect result equals ("bottom" "docked" 5 #f ("mode" "keys" "time" "save" "date") ("bottom" "top" "left" "right" "sides") "SPC" "w")
+expect seconds-under 20

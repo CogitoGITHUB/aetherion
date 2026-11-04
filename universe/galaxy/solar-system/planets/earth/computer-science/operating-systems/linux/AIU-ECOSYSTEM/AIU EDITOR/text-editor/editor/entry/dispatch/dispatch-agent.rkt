@@ -4,10 +4,10 @@
          racket/path
          racket/port
          racket/string
-         "../../narration/print-console.rkt"
+         "../../narration/print-console-shared.rkt"
          "../../narration/narration.rkt"
-         "../../machine/directories.rkt"
-         "../../commands/commands.rkt"
+         "../../machine/directories-shared.rkt"
+         "../../commands/commands-shared.rkt"
          "../../checkpoint/checkpoint.rkt"
          "../../send/adapter.rkt"
          "../../send/bundle.rkt"
@@ -15,8 +15,8 @@
          "../../send/opencode-adapter.rkt"
          "../../audit/audit.rkt"
          "../../audit/accept.rkt"
-         "../../join/hot-path.rkt"
-         "../../join/protocol.rkt")
+         "../../join/hot-path-shared.rkt"
+         "../../join/protocol-shared.rkt")
 
 (define (send-verb args)
   (define file (if (null? args) "" (car args)))

@@ -1,6 +1,6 @@
 #lang racket/base
 
-(require racket/list racket/string "../../commands/commands.rkt" "../../machine/terminal.rkt" "../../bridge/document.rkt" "../../bridge/host.rkt" "../float/pins.rkt" "blocks-kind.rkt" "blockview.rkt" "blocks-text.rkt")
+(require racket/list racket/string "../../commands/commands-shared.rkt" "../../machine/terminal.rkt" "../../bridge/document-shared.rkt" "../../bridge/host-shared.rkt" "../float/pins.rkt" "blocks-kind.rkt" "blockview.rkt" "blocks-text.rkt")
 
 (provide block-overlay)
 
@@ -56,7 +56,7 @@
      (list (string-join (vector->list v) "\n") (cadr r) top)]
     [else r]))
 
-(require (only-in "../bar/bar-state.rkt" title-rows))
+(require (only-in "../bar/bar-state-shared.rkt" title-rows))
 
 (define (blockview-view-overlay-float session raw width height got)
   (define r (blockview-view-overlay-base session raw width height got))

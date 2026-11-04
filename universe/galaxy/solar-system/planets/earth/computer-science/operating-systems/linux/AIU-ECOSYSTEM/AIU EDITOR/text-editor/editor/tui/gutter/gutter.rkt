@@ -1,6 +1,6 @@
 #lang racket/base
 
-(require (only-in "../float/box.rkt" paint-ready))
+(require (only-in "../float/box-shared.rkt" paint-ready))
 
 (define kept (box null))
 

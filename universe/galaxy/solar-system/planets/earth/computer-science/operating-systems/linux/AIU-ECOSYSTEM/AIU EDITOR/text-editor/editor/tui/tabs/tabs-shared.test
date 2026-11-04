@@ -1,0 +1,6 @@
+test mod-tab-order
+level 2
+module editor/tui/tabs/tabs-shared.rkt
+call (list (tabs-order-moved (quote (a b c)) (quote b) -1) (tabs-order-moved (quote (a b c)) (quote a) -1) (tabs-order-moved (quote (a b c)) (quote c) 1))
+expect result equals ((b a c) (a b c) (a b c))
+expect seconds-under 20

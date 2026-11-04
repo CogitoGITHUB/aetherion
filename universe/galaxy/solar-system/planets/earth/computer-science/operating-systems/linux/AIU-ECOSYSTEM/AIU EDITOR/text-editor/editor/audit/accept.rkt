@@ -5,8 +5,8 @@
          racket/path
          racket/string
          "../checkpoint/checkpoint.rkt"
-         "../machine/directories.rkt"
-         "../narration/events.rkt"
+         "../machine/directories-shared.rkt"
+         "../narration/events-shared.rkt"
          "../security/security.rkt"
          "audit.rkt")
 

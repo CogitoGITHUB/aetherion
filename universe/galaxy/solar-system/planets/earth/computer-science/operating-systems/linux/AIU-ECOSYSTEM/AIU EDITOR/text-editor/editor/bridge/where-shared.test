@@ -1,0 +1,6 @@
+test mod-where
+level 2
+module editor/bridge/where-shared.rkt
+call (let* ([rp (dynamic-require (path->complete-path "editor/bridge/document.rkt") (quote read-page))] [p (rp "NOTATION-DOCUMENT 1\nfile \"a.aiu\"\nnode block title 1 0 3 20 0\ndecl kind \"x\" 2 5\nnode block para 2 5 3 15 1\nerror e 3 4 1 \"bad\" \"fix\"\nend")]) (list (blocks-text p) (faults-text p) (block-at p 7) (block-at p 99) (block-start-after p 0) (block-start-before p 7)))
+expect result equals ("the page: a.aiu  blocks: 2  faults: 1\ntitle  lines 1-3  [kind: x]\n  para  lines 2-3" "faults: 1 of 2 blocks\nline 3: bad — fix (the block opens at line 1)" #(struct:block "para" 2 5 3 15 1 ()) #f #(struct:block "para" 2 5 3 15 1 ()) #(struct:block "para" 2 5 3 15 1 ()))
+expect seconds-under 20

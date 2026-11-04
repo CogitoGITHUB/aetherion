@@ -1,9 +1,9 @@
 #lang racket/base
 
 (require racket/string
-         "events.rkt"
+         "events-shared.rkt"
          "narration.rkt"
-         "../errors/raise.rkt")
+         "../errors/raise-shared.rkt")
 
 (define (wait-for who what why on-event)
   (if (or (blank? why) (blank? on-event))
