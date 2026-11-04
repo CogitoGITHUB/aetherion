@@ -22,11 +22,11 @@
 # filesystem watch, and this script never sleeps and never polls. A start that
 # fails names the file to read, and does it before the screen takes the terminal.
 
-# script_dir is this file's directory: tools/, one level under the project.
+# script_dir is this file's directory: tools/, inside the crate.
 const script_dir = path self | path dirname
 
-# package_dir is where cargo runs: the crate lives beside tools/.
-const package_dir = $script_dir | path dirname | path join "multiplexer"
+# package_dir is where cargo runs: the crate holds tools/.
+const package_dir = $script_dir | path dirname
 
 # check-name answers whether a name can be a session's, in the holder's own
 # words (holder/sessions.rs, check_name): one path segment, no slash, no

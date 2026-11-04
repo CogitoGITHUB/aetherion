@@ -20,7 +20,7 @@
 const probe_dir = path self | path dirname
 
 # mux_root is the multiplexer project: two levels up from the probe.
-const mux_root = $probe_dir | path dirname | path dirname
+const mux_root = $probe_dir | path dirname | path dirname | path dirname
 
 # ecosystem is where the other programs live: one level up from the mux.
 const ecosystem = $mux_root | path dirname

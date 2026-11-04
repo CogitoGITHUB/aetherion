@@ -6,11 +6,13 @@
 #
 # Run it, read the commands, run them yourself if you agree.
 
+const script_dir = path self | path dirname
+
 def main [
     --cwd: string
     --config: string
 ] {
-    let cwd = (if ($cwd == null) { pwd | path expand } else { $cwd })
+    let cwd = (if ($cwd == null) { $script_dir | path dirname } else { $cwd })
     let config = (if ($config == null) {
         $nu.home-dir | path join ".config" "television"
     } else {
