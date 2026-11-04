@@ -197,7 +197,7 @@ def main [
     if (holds $dir) {
         print $"aiumux: a holder already holds ($name)"
     } else {
-        start $holder $dir $sessions "/bin/sh"
+        start $holder $dir $sessions ($env.SHELL? | default "/bin/sh")
     }
 
     if $start {

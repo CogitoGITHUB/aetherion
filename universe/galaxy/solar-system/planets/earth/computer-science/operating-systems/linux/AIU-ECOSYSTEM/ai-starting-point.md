@@ -1,3 +1,4 @@
+- Lessons: aiumux.nu starts the holder with the SHELL env, not /bin/sh; restart with aiumux kill main then aiumux --start after changing it
 - Lessons: the shell pane starts in Insert mode (keys go to the shell, prefix key for multiplexer commands); the bar server refreshes git itself every 5 seconds because the client has no repaint callback
 - Rule from Shape: no bar drawing in Rust; bar_box only asks bar-lines-server.rkt (tabs, workspace, git, mode all from the editor Racket). Obey literally, delete Rust copies
 - Lessons: pane rows must be padded to the box width by visible width (escape_free_width in screen_paint_scroll.rs); his paste cuts lines at 80 columns, so a missing right edge in a paste can be the paste, check widths in code
