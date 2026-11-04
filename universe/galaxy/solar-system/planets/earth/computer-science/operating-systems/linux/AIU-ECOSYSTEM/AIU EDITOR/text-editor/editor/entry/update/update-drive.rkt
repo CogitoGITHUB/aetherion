@@ -6,7 +6,7 @@
   (define files
     (if (and dir (directory-exists? dir))
         (sort (filter (lambda (p) (regexp-match? #rx"[.]test$" (path->string p)))
-                      (append (find-files (lambda (q) (regexp-match? #rx"[.]test$" (path->string q))) dir) (find-files (lambda (q) (regexp-match? #rx"[.]test$" (path->string q))) (build-path editor-root "editor"))))
+                      (append (find-files (lambda (q) (regexp-match? #rx"[.]test$" (path->string q))) dir) (find-files (lambda (q) (regexp-match? #rx"[.]test$" (path->string q))) (build-path editor-root "editor")) (find-files (lambda (q) (regexp-match? #rx"[.]test$" (path->string q))) (build-path editor-root "notation"))))
               string<? #:key path->string)
         (list)))
   (define only (getenv "AIU_ONLY"))

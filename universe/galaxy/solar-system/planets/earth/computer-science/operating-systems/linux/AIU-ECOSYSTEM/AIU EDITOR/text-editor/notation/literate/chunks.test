@@ -1,0 +1,6 @@
+test mod-chunks
+level 2
+module notation/literate/chunks.rkt
+call (procedure? read-chunks)
+expect result equals #t
+expect seconds-under 20

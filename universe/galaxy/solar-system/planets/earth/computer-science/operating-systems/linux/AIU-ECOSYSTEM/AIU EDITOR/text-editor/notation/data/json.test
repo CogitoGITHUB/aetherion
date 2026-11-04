@@ -1,0 +1,6 @@
+test mod-json
+level 2
+module notation/data/json.rkt
+call (json-null? json-null)
+expect result equals #t
+expect seconds-under 20

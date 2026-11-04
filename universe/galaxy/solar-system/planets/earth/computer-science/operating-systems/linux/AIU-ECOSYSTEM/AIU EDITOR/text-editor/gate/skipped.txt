@@ -63,10 +63,8 @@ editor/tui/text/clip.rkt
 editor/tui/undo/undo-keys.rkt
 editor/tui/undo/undo.rkt
 notation/data/aiu-text.rkt
-notation/data/json.rkt
 notation/data/table-html.rkt
 notation/data/table-latex.rkt
-notation/data/table.rkt
 notation/diagnostics/collect.rkt
 notation/diagnostics/report.rkt
 notation/elements/dispatch.rkt
@@ -94,7 +92,6 @@ notation/filetypes/types/research.rkt
 notation/filetypes/types/todo.rkt
 notation/generation/plan.rkt
 notation/generation/write.rkt
-notation/literate/chunks.rkt
 notation/literate/scan.rkt
 notation/literate/skip-journal.rkt
 notation/literate/targets.rkt
@@ -104,7 +101,6 @@ notation/machine/locks.rkt
 notation/model/addressing.rkt
 notation/model/nodes.rkt
 notation/model/numbering.rkt
-notation/model/outline.rkt
 notation/model/properties.rkt
 notation/narration/events.rkt
 notation/narration/narration.rkt
