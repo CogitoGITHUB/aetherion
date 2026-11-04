@@ -4,9 +4,9 @@
          racket/list
          racket/port
          racket/string
-         "../editor/machine/directories.rkt"
-         "../editor/security/redact.rkt"
-         "../editor/send/bundle.rkt")
+         (file "../AIU EDITOR/text-editor/editor/machine/directories.rkt")
+         (file "../AIU EDITOR/text-editor/editor/security/redact.rkt")
+         (file "../AIU EDITOR/text-editor/editor/send/bundle.rkt"))
 
 (define the-secret "api_key = sk-0123456789abcdef")
 

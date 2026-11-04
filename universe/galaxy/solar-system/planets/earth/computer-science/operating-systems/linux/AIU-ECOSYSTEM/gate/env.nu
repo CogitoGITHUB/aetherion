@@ -1,7 +1,7 @@
 
 export const gate_dir = path self | path dirname
 
-export const project_root = $gate_dir | path dirname
+export const project_root = $gate_dir | path dirname | path join "AIU EDITOR" "text-editor"
 
 export const package_dir = $project_root | path join "editor"
 

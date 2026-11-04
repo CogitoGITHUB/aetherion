@@ -4,15 +4,15 @@
          racket/list
          racket/path
          racket/string
-         "../editor/bridge/document.rkt"
-         "../editor/bridge/host.rkt")
+         (file "../AIU EDITOR/text-editor/editor/bridge/document.rkt")
+         (file "../AIU EDITOR/text-editor/editor/bridge/host.rkt"))
 
 (define project-dir
   (let loop ([at (simplify-path (current-directory))])
     (define up (simplify-path (build-path at "..")))
     (cond
       [(and (directory-exists? (build-path at "editor"))
-            (directory-exists? (build-path at "gate")))
+            (directory-exists? (build-path at "docs")))
        at]
       [(string=? (path->string at) (path->string up)) at]
       [else (loop up)])))

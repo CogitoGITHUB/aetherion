@@ -19,7 +19,7 @@
     (define up (simplify-path (build-path at "..")))
     (cond
       [(and (directory-exists? (build-path at "editor"))
-            (directory-exists? (build-path at "gate")))
+            (directory-exists? (build-path at "docs")))
        at]
       [(string=? (path->string at) (path->string up)) at]
       [else (loop up)])))
