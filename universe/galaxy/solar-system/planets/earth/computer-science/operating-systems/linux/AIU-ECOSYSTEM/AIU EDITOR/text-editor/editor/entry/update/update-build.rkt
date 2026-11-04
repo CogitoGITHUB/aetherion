@@ -5,7 +5,7 @@
 (provide do-update)
 
 (define (compile-files-of n)
-  (for/list ([l (in-list (file->lines (build-path editor-root "gate" "compile.txt")))] #:when (regexp-match? #px"^[0-9]+ " l) #:when (<= (string->number (car (string-split l))) n))
+  (for/list ([l (in-list (file->lines (build-path gate-root "compile.txt")))] #:when (regexp-match? #px"^[0-9]+ " l) #:when (<= (string->number (car (string-split l))) n))
     (cadr (string-split l))))
 
 (define (compile-jobs)

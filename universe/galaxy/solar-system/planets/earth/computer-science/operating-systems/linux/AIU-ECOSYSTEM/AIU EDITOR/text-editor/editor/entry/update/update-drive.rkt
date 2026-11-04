@@ -2,7 +2,7 @@
 (require racket/system racket/string racket/list racket/file racket/path "update-table.rkt" "update-screen.rkt" "update-evidence.rkt" "update-drive-live.rkt" "update-drive-pty.rkt" "update-drive-why.rkt" "update-drive-run.rkt" "update-drive-record.rkt" "update-drive-docs.rkt" "update-module.rkt")
 
 (define (run-all-tests level)
-  (define dir (and editor-root (build-path editor-root "gate" "tests")))
+  (define dir (and editor-root (build-path gate-root "tests")))
   (define files
     (if (and dir (directory-exists? dir))
         (sort (filter (lambda (p) (regexp-match? #rx"[.]test$" (path->string p)))

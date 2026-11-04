@@ -12,7 +12,7 @@
           [else (loop (simplify-path (build-path d (quote up))) (add1 n))])))
 
 (define editor-root
-  (find-up here-dir (lambda (d) (directory-exists? (build-path d "gate")))))
+  (find-up here-dir (lambda (d) (directory-exists? (build-path d "docs")))))
 
 (require "../../bridge/location.rkt")
 
@@ -160,4 +160,5 @@
   (row-line name (cond [(not ok?) "FAIL"] [slow? "SLOW"] [else "ok"]) (format "~a s" s) (if prev (format "~a s" prev) "")))
 
 
-(provide here-dir find-up editor-root notation-bin capture width-cache term-width banner-text wrap-line emit first-n last-n level-of secs log-path previous-secs log-step! pad fit fit-right name-width row-line border table-lines step-line)
+(provide gate-root here-dir find-up editor-root notation-bin capture width-cache term-width banner-text wrap-line emit first-n last-n level-of secs log-path previous-secs log-step! pad fit fit-right name-width row-line border table-lines step-line)
+(define gate-root (build-path (find-up here-dir (lambda (d) (directory-exists? (build-path d "gate")))) "gate"))

@@ -11,7 +11,7 @@
     (list (cadr p) (/ (round (/ (string->number (caddr p)) 100.0)) 10.0))))
 
 (define (level-stages-text n)
-  (define f (build-path editor-root "gate" "levels.txt"))
+  (define f (build-path gate-root "levels.txt"))
   (string-join (for/list ([l (in-list (file->lines f))] #:when (regexp-match? #px"^[0-9]+ " l) #:when (<= (string->number (car (string-split l))) n)) (cadr (string-split l))) ","))
 
 (define level-1-stages (level-stages-text 1))
@@ -54,11 +54,11 @@
   (cond
     [(not stages)
      (live "gate all stages start")
-     (let-values ([(c t) (capture editor-root nu (append (list "gate/check.nu") (stage-args level)))])
+     (let-values ([(c t) (capture editor-root nu (append (list (path->string (build-path gate-root "check.nu"))) (stage-args level)))])
        (live (format "gate all stages done code ~a" c))
        (values c t))]
     [else
-     (define started (for/list ([s (in-list stages)]) (let ([ch (make-channel)]) (thread (lambda () (let-values ([(c t) (capture editor-root nu (list "gate/check.nu" "--only" s))]) (channel-put ch (cons c t))))) ch)))
+     (define started (for/list ([s (in-list stages)]) (let ([ch (make-channel)]) (thread (lambda () (let-values ([(c t) (capture editor-root nu (list (path->string (build-path gate-root "check.nu")) "--only" s))]) (channel-put ch (cons c t))))) ch)))
      (define results
        (for/list ([s (in-list stages)])
          (live (string-append "gate " s " start"))

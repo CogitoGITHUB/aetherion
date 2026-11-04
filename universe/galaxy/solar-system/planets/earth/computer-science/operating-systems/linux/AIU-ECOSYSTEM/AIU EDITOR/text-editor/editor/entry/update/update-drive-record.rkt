@@ -39,7 +39,7 @@
 (define (do-record words)
   (define name (car words))
   (define keys (string-join (cdr words) " "))
-  (define tdir (build-path editor-root "gate" "tests"))
+  (define tdir (build-path gate-root "tests"))
   (define (found-test n) (let ([f (find-files (lambda (q) (regexp-match? (regexp (string-append "/" n "[.]test$")) (path->string q))) (build-path editor-root "editor"))]) (if (pair? f) (car f) (build-path tdir (string-append n ".test")))))
   (define tpath (found-test name))
   (define old-test (and (file-exists? tpath) (file->string tpath)))

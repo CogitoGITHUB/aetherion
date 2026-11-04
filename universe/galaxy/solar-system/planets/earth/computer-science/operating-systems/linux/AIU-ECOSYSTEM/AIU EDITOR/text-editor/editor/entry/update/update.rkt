@@ -5,7 +5,7 @@
 (provide run)
 
 (define (do-test level only repeat)
-  (define dir (and editor-root (build-path editor-root "gate" "tests")))
+  (define dir (and editor-root (build-path gate-root "tests")))
   (define files
     (if (and dir (directory-exists? dir))
         (sort (filter (lambda (p) (regexp-match? #rx"[.]test$" (path->string p)))
