@@ -29,7 +29,7 @@
          "../../tui/gutter/gutterview.rkt"
          (only-in "../../machine/directories-shared.rkt" journal-path-for))
 
-(require (only-in "../../tui/bar/bar-state-shared.rkt" title-rows split-panes-on) "../../tui/split/split-state.rkt" "../../tui/split/split-layout.rkt" "../../tui/split/split-overlay.rkt" "../../tui/split/split-view.rkt" (only-in "../../tui/float/pins.rkt" pins-now first-start cur-start))
+(require (only-in "../../tui/bar/bar-state-shared.rkt" title-rows split-panes-on) "../../tui/split/split-state.rkt" "../../tui/split/split-layout.rkt" "../../tui/split/split-overlay.rkt" "../../tui/split/split-view.rkt" (only-in "../../tui/float/pins.rkt" pins-now first-start cur-start)) (require (only-in "../../tui/float/box-shared.rkt" edge-line rule-line body-line draw-at) (only-in "../../tui/float/float-state-shared.rkt" float-visible float-active float-share float-rect float-names float-tabs-text float-current-file))
 
 (provide repaint page-view pending-keys viewport-top live-multi-overlay)
 
@@ -107,6 +107,17 @@
                   (if focused? (list) (split-view-lines file inner-width inner-height))))
           (bar-plan-top plan) (bar-plan-left plan))
         ""))
+  (define float-overlay-text
+    (if (unbox float-visible)
+        (let-values ([(fx fy fw fh) (float-rect (unbox float-share) region-width region-rows)])
+          (let* ([file (path->string (path->complete-path (float-current-file)))]
+                 [lines (split-view-lines file (max 1 (- fw 4)) (max 0 (- fh 2)))])
+            (draw-at (append (list (edge-line "╭" "╮" (list-ref float-names (unbox float-active)) (float-tabs-text (unbox float-active)) fw))
+                             (for/list ([i (in-range (max 0 (- fh 2)))])
+                               (body-line (if (< i (length lines)) (list-ref lines i) "") fw))
+                             (list (rule-line "╰" "╯" fw)))
+                     (+ (bar-plan-top plan) fy 1) (+ (bar-plan-left plan) fx 1))))
+        ""))
   (define text-shown
     (if menu (car (menu-screen menu top height)) text))
   (define where
@@ -123,7 +134,7 @@
                   (format "~a [~a]~a" (mode-label (the-layer session)) (unbox kind-filter) (if (unbox unsaved) "  unsaved: SPC s" "")) row column where) (bar-plan-text plan))
           writing?
           (or (and menu #t) (and overlay #t) (and (not writing?) (not (multi-raw? session)) (string-suffix? name ".aiu")))
-          #:offset (+ (bar-plan-top plan) pane-offset-extra) #:left (+ (bar-plan-left plan) pane-left-extra) #:full full-width #:overlay (string-append (bar-plan-overlay plan) pane-overlay (live-multi-overlay session raw top (if panes? render-height height) (+ (bar-plan-top plan) pane-offset-extra) (+ (bar-plan-left plan) pane-left-extra) width (and (not menu) (not overlay) (or writing? (not (string-suffix? name ".aiu")) (multi-raw? session)) #t)) (notify-overlay width height (+ 1 (bar-plan-top plan))))))
+          #:offset (+ (bar-plan-top plan) pane-offset-extra) #:left (+ (bar-plan-left plan) pane-left-extra) #:full full-width #:overlay (string-append (bar-plan-overlay plan) pane-overlay float-overlay-text (live-multi-overlay session raw top (if panes? render-height height) (+ (bar-plan-top plan) pane-offset-extra) (+ (bar-plan-left plan) pane-left-extra) width (and (not menu) (not overlay) (or writing? (not (string-suffix? name ".aiu")) (multi-raw? session)) #t)) (notify-overlay width height (+ 1 (bar-plan-top plan))))))
   (flush-output))
 
 (define (viewport-top viewport row visible)

@@ -1,7 +1,7 @@
 #lang racket/base
 
 (require racket/list
-         racket/string)
+         racket/string "screen-diff.rkt" (only-in "../machine/terminal.rkt" terminal-size))
 
 (define (ansi code)
   (string-append "\u001b[" code))
@@ -52,7 +52,7 @@
                         (ansi "0m"))]
         [else (string-append (ansi "7m") (fit mode-line width) (ansi "27m"))]))
 
-(define (paint text point width height top mode-line cursor? preformatted?
+(define (paint-frame text point width height top mode-line cursor? preformatted?
                #:offset [offset 0] #:left [left 0] #:full [full width] #:overlay [overlay ""])
   (define rows (string-split text "\n" #:trim? #f))
   (define visible (max 1 (- height 1)))
@@ -76,6 +76,16 @@
                      (string-append (ansi "?25h")
                                     (cursor-to (+ offset (- cursor-row top-line -1)) (+ left column 1)))
                      (ansi "?25l")) sync-end))
+
+(define last-frame (box #f))
+
+(define paint
+  (make-keyword-procedure
+   (lambda (kws kw-args . rest)
+     (define frame (let-values ([(columns rows) (terminal-size)]) (screen-diff! (regexp-replace* #rx"\n" (keyword-apply paint-frame kws kw-args rest) "\r\n") columns rows)))
+     (cond
+       [(string=? frame "") ""]
+       [else frame]))))
 
 (provide paint
          clear-screen

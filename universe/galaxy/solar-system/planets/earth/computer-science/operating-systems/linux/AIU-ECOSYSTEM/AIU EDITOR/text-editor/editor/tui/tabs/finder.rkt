@@ -4,7 +4,7 @@
          racket/string
          racket/path
          "../../commands/commands-shared.rkt"
-         "../../machine/terminal.rkt"
+         "../../machine/terminal.rkt" (only-in "../../drawing/screen-diff.rkt" screen-forget!)
          "tabs-shared.rkt")
 
 (define find-jump (box #f))
@@ -70,6 +70,7 @@
           (if (string? s) (string-trim s) "")))))
   (with-handlers ([(lambda (e) #t) void]) (delete-file preview-path))
   (raw-mode)
+  (screen-forget!)
   (display "\u001b[?1049h\u001b[?25l")
   (flush-output)
   text)

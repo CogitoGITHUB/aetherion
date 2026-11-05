@@ -2,8 +2,8 @@
 (require racket/system racket/list
          "../pane/pane-pty.rkt" "../pane/pane-grid.rkt" "../pane/pane-text-decode.rkt" "../pane/pane-unit.rkt"
          "../pane/pane-keys.rkt" "../pane/pane-scroll-keys.rkt" "../pane/pane-buffer-keys.rkt" "../pane/pane-split-keys.rkt"
-         "../tui/layout/layout-tree-shared.rkt" "../tui/layout/layout-buffers-shared.rkt"
-         "../frame/frame-bars.rkt" "../frame/frame-paint.rkt"
+         "../tui/layout/layout-tree-shared.rkt" "../tui/layout/layout-buffers-shared.rkt" "../tui/float/float-state-shared.rkt"
+         "../frame/frame-bars.rkt" "../frame/frame-paint.rkt" "../frame/frame-diff.rkt" "../frame/frame-compose.rkt"
          "../machine/terminal.rkt")
 
 (define session-name "shell")
@@ -28,6 +28,45 @@
   (define state-lock (make-semaphore 1))
   (define finished (make-semaphore 0))
   (define dirty (box #t))
+  (define float-shown (box #f))
+  (define float-index (box 0))
+  (define float-preset (box 100))
+  (define ecosystem-root
+    (let ([raw (environment-variables-ref (current-environment-variables) #"AIU_ROOT")])
+      (if raw (bytes->path raw) (current-directory))))
+  (define (float-active-id) (float-pane-id-of (unbox float-index)))
+  (define (float-rect-now)
+    (float-rect (unbox float-preset) (unbox screen-columns) (max 5 (- (unbox screen-height) (length (unbox bar-rows))))))
+  (define (show-float! index)
+    (set-box! float-index index)
+    (set-box! float-shown #t))
+  (define (tile-count) (length (filter (lambda (id) (>= id 0)) (hash-keys panes))))
+  (define (open-float-pane! id columns rows)
+    (define file (float-file-path (list-ref float-names (unbox float-index)) ecosystem-root))
+    (define unit (pane-unit-open-program id columns rows "/usr/local/bin/aiutd" (list (path->bytes file))))
+    (hash-set! panes id unit)
+    (start-output-thread! unit))
+  (define (fit-float!)
+    (when (unbox float-shown)
+      (define-values (x y width height) (float-rect-now))
+      (define id (float-active-id))
+      (define columns (- width 2))
+      (define rows (- height 2))
+      (define unit (hash-ref panes id #f))
+      (cond
+        [(not unit) (open-float-pane! id columns rows)]
+        [else
+         (define grid (pane-unit-grid unit))
+         (unless (and (= columns (pane-grid-columns grid)) (= rows (pane-grid-height grid)))
+           (call-with-semaphore lock (lambda () (pane-grid-resize! grid columns rows)))
+           (pane-set-size! (pane-unit-link unit) columns rows))])))
+  (define (float-entries)
+    (define unit (and (unbox float-shown) (hash-ref panes (float-active-id) #f)))
+    (if unit
+        (let-values ([(x y width height) (float-rect-now)])
+          (list (list x y width height (pane-unit-grid unit) (unbox (pane-unit-scroll unit)) #t
+                      (list-ref float-names (unbox float-index)) (float-tabs-text (unbox float-index)))))
+        (list)))
 
   (define (current-layout)
     (define state (unbox buffers-state))
@@ -35,7 +74,7 @@
   (define (update-layout! change)
     (set-box! buffers-state (layout-buffers-update-current (unbox buffers-state) change)))
   (define (focused-unit)
-    (hash-ref panes (layout-focused-id (current-layout)) #f))
+    (hash-ref panes (if (unbox float-shown) (float-active-id) (layout-focused-id (current-layout))) #f))
 
   (define (bars-key)
     (define state (unbox key-state-box))
@@ -91,7 +130,7 @@
   (define (prune-panes!)
     (define live (live-ids))
     (for ([id (in-list (hash-keys panes))])
-      (unless (memv id live)
+      (unless (or (memv id live) (< id 0))
         (pane-unit-close! (hash-ref panes id))
         (hash-remove! panes id))))
 
@@ -111,7 +150,8 @@
             (define grid (pane-unit-grid unit))
             (unless (and (= columns (pane-grid-columns grid)) (= rows (pane-grid-height grid)))
               (call-with-semaphore lock (lambda () (pane-grid-resize! grid columns rows)))
-              (pane-set-size! (pane-unit-link unit) columns rows))])))))
+              (pane-set-size! (pane-unit-link unit) columns rows))]))
+       (fit-float!))))
 
   (define (reap-dead-panes!)
     (call-with-semaphore
@@ -122,7 +162,12 @@
        (for ([id (in-list ids)])
          (define here (layout-tab-ids (current-layout)))
          (cond
-           [(<= (hash-count panes) 1) (semaphore-post finished)]
+           [(< id 0)
+            (pane-unit-close! (hash-ref panes id))
+            (hash-remove! panes id)
+            (set-box! float-shown #f)
+            (set-box! dirty #t)]
+           [(<= (tile-count) 1) (semaphore-post finished)]
            [(memv id here)
             (if (pair? (cdr here))
                 (update-layout! (lambda (layout) (layout-close (layout-focus-id layout id))))
@@ -143,8 +188,8 @@
              (define unit (hash-ref panes (layout-rect-id rect)))
              (list (layout-rect-x rect) (layout-rect-y rect) (layout-rect-width rect) (layout-rect-height rect)
                    (pane-unit-grid unit) (unbox (pane-unit-scroll unit)) (equal? (layout-rect-id rect) focus-id))))
-         (call-with-semaphore lock (lambda () (paint-panes-string entries (unbox bar-rows)))))))
-    (write-string text (current-output-port))
+         (call-with-semaphore lock (lambda () (compose-frame (unbox screen-columns) (unbox screen-height) (append (if (unbox float-shown) (map (lambda (entry) (list-set entry 6 #f)) entries) entries) (float-entries)) (unbox bar-rows)))))))
+    (write-string (screen-diff-cells! text (unbox screen-columns) (unbox screen-height)) (current-output-port))
     (flush-output (current-output-port)))
 
   (define (paint-loop)
@@ -228,6 +273,13 @@
       [(focus-down) (update-layout! (lambda (layout) (layout-focus layout (quote down))))]
       [(split-right) (split-pane! (quote right))]
       [(split-down) (split-pane! (quote down))]
+      [(float-toggle) (set-box! float-shown (not (unbox float-shown)))]
+      [(float-todo) (show-float! 0)]
+      [(float-journal) (show-float! 1)]
+      [(float-notes) (show-float! 2)]
+      [(float-size) (set-box! float-preset (float-next-share (unbox float-preset)))]
+      [(float-grow) (set-box! float-preset (float-grow-share (unbox float-preset)))]
+      [(float-shrink) (set-box! float-preset (float-shrink-share (unbox float-preset)))]
       [else (when (pair? (cdr (layout-tab-ids (current-layout)))) (update-layout! layout-close))]))
 
   (define (apply-buffer-keys! input)

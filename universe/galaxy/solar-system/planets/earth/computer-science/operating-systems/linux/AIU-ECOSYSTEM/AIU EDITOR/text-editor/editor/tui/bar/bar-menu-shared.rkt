@@ -121,6 +121,7 @@
         (list "undo-tip" "undo" "branch end") (list "undo-mark" "undo" "mark") (list "undo-unmark" "undo" "unmark")
         (list "undo-diff" "undo" "diff") (list "undo-live" "undo" "live file") (list "undo-keep" "undo" "keep")
         (list "undo-cancel" "undo" "roll back")
+        (list "float-todo" "float" "to-do") (list "float-journal" "float" "journal") (list "float-notes" "float" "notes") (list "float-back" "float" "back") (list "float-capture" "float" "capture line") (list "float-size" "float" "size") (list "float-grow" "float" "grow") (list "float-shrink" "float" "shrink") (list "float-mode" "float" "float layer")
         (list "pane-focus-left" "focus" "left") (list "pane-focus-right" "focus" "right") (list "pane-focus-up" "focus" "up") (list "pane-focus-down" "focus" "down")
         (list "pane-split-right" "split" "right") (list "pane-split-down" "split" "down") (list "pane-close" "split" "close pane")
         (list "pane-swap-left" "swap" "move left") (list "pane-swap-right" "swap" "move right") (list "pane-swap-up" "swap" "move up") (list "pane-swap-down" "swap" "move down")

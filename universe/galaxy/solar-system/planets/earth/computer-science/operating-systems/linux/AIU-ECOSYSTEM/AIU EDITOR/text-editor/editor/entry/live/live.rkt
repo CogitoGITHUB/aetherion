@@ -21,7 +21,7 @@
          "../../tui/blocks/blocks-move.rkt"
          "../../tui/bar/bar-menu-shared.rkt"
          "../../tui/bar/bar.rkt"
-         "../../tui/tabs/tabs-shared.rkt" "../../tui/tabs/tabs-commands.rkt" "../../tui/split/split-commands.rkt" "../../tui/split/split-state.rkt"
+         "../../tui/tabs/tabs-shared.rkt" "../../tui/tabs/tabs-commands.rkt" "../../tui/split/split-commands.rkt" "../../tui/float/float-commands.rkt" "../../tui/split/split-state.rkt"
          "../../tui/tabs/finder.rkt"
          "../../tui/notify/notify.rkt"
          (only-in "../../tui/float/box-shared.rkt" paint-ready)

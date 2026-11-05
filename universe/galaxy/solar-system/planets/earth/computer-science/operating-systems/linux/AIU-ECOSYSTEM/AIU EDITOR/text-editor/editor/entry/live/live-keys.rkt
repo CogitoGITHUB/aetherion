@@ -142,7 +142,7 @@
      (define nm (string-trim buf))
      (cond
        [(string=? nm "") (set-box! name-prompt (list label buf cb "type a name first")) #t]
-       [(regexp-match? #rx"[/]|^[.]" nm) (set-box! name-prompt (list label buf cb "no slash and no leading dot")) #t]
+       [(and (not (equal? label "capture")) (regexp-match? #rx"[/]|^[.]" nm)) (set-box! name-prompt (list label buf cb "no slash and no leading dot")) #t]
        [else
         (define r (cb nm))
         (cond

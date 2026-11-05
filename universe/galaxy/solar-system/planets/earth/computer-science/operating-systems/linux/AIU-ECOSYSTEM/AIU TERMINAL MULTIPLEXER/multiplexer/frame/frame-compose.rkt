@@ -1,0 +1,96 @@
+#lang racket/base
+(require "../pane/pane-grid.rkt" "../tui/float/box-shared.rkt")
+(provide compose-frame)
+
+(define blank-cell (vector-ref (vector-ref (pane-grid-rows (make-pane-grid 1 1)) 0) 0))
+(define plain-style (cdr blank-cell))
+
+(define bar-kept (box #f))
+
+(define (bar-cell-rows bar-rows columns)
+  (define key (cons bar-rows columns))
+  (define kept (unbox bar-kept))
+  (cond
+    [(and kept (equal? (car kept) key)) (cdr kept)]
+    [else
+     (define grid (make-pane-grid columns (max 1 (length bar-rows))))
+     (pane-grid-feed! grid
+                      (apply string-append
+                             (for/list ([row (in-list bar-rows)] [i (in-naturals 1)])
+                               (string-append "\u001b[" (number->string i) ";1H" row))))
+     (define rows (pane-grid-rows grid))
+     (set-box! bar-kept (cons key rows))
+     rows]))
+
+(define (scrolled-rows grid scroll-offset)
+  (define rows (pane-grid-rows grid))
+  (define height (pane-grid-height grid))
+  (cond
+    [(or (zero? scroll-offset) (pane-grid-alternate grid)) rows]
+    [else
+     (define newest-first (pane-grid-history grid))
+     (define count (min scroll-offset (length newest-first) height))
+     (define older (reverse (for/list ([row (in-list newest-first)] [i (in-range count)]) row)))
+     (list->vector (for/list ([row (in-list (append older (vector->list rows)))] [i (in-range height)]) row))]))
+
+(define (border-chars focused?)
+  (if focused?
+      (list #\┏ #\┓ #\┗ #\┛ #\━ #\┃)
+      (list #\╭ #\╮ #\╰ #\╯ #\─ #\│)))
+
+(define (pane-fits? grid width height)
+  (and (= (pane-grid-columns grid) (- width 2)) (= (pane-grid-height grid) (- height 2))))
+
+(define (compose-frame columns rows entries bar-rows)
+  (define cells (for/vector ([r (in-range rows)]) (make-vector columns blank-cell)))
+  (define (put! r c cell)
+    (when (and (>= r 0) (< r rows) (>= c 0) (< c columns))
+      (vector-set! (vector-ref cells r) c cell)))
+  (define (put-char! r c ch) (put! r c (cons ch plain-style)))
+  (define (put-text! r c text)
+    (for ([ch (in-string text)] [i (in-naturals)]) (put-char! r (+ c i) ch)))
+  (define bar-count (length bar-rows))
+  (when (> bar-count 0)
+    (define source (bar-cell-rows bar-rows columns))
+    (for ([r (in-range (min bar-count rows))])
+      (define row (vector-ref source r))
+      (for ([c (in-range (min columns (vector-length row)))])
+        (put! r c (vector-ref row c)))))
+  (define cursor (list 0 0 #f))
+  (for ([entry (in-list entries)])
+    (define x (list-ref entry 0))
+    (define y (list-ref entry 1))
+    (define width (list-ref entry 2))
+    (define height (list-ref entry 3))
+    (define grid (list-ref entry 4))
+    (define scroll (list-ref entry 5))
+    (define focused? (list-ref entry 6))
+    (define chars (border-chars focused?))
+    (define inner-width (- width 2))
+    (define inner-height (- height 2))
+    (define top (+ bar-count y))
+    (define fits? (pane-fits? grid width height))
+    (define view-rows (and fits? (scrolled-rows grid scroll)))
+    (put-char! top x (list-ref chars 0))
+    (for ([c (in-range inner-width)]) (put-char! top (+ x 1 c) (list-ref chars 4)))
+    (put-char! top (+ x width -1) (list-ref chars 1))
+    (for ([r (in-range inner-height)])
+      (define row (+ top 1 r))
+      (put-char! row x (list-ref chars 5))
+      (for ([c (in-range inner-width)]) (put! row (+ x 1 c) blank-cell))
+      (when view-rows
+        (define source (vector-ref view-rows r))
+        (for ([c (in-range (min inner-width (vector-length source)))])
+          (put! row (+ x 1 c) (vector-ref source c))))
+      (put-char! row (+ x width -1) (list-ref chars 5)))
+    (define bottom (+ top height -1))
+    (put-char! bottom x (list-ref chars 2))
+    (for ([c (in-range inner-width)]) (put-char! bottom (+ x 1 c) (list-ref chars 4)))
+    (put-char! bottom (+ x width -1) (list-ref chars 3))
+    (when (> (length entry) 7)
+      (put-text! top x (edge-line "┏" "┓" (list-ref entry 7) (list-ref entry 8) width)))
+    (when (and focused? fits? (zero? scroll) (pane-grid-shown grid))
+      (set! cursor (list (+ top 1 (pane-grid-cursor-row grid))
+                         (+ x 1 (pane-grid-cursor-column grid))
+                         #t))))
+  (cons cells cursor))

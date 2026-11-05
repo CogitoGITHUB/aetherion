@@ -19,6 +19,13 @@
         (list "f" "pane-flip")
         (list "u" "pane-turn")
         (list "e" "pane-equalise")
+        (list "1" "float-todo")
+        (list "2" "float-journal")
+        (list "3" "float-notes")
+        (list "0" "float-back")
+          (list "z" "float-size")
+          (list "m" "float-grow")
+          (list "b" "float-shrink")
         (list "escape" "visual-mode")))
 
 (provide split-keys)

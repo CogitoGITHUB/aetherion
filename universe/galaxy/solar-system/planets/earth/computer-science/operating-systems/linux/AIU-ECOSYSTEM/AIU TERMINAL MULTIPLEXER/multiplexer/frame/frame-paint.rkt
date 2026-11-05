@@ -1,5 +1,5 @@
 #lang racket/base
-(require "../pane/pane-grid.rkt")
+(require "../pane/pane-grid.rkt" "../tui/float/box-shared.rkt")
 (provide frame-inner-columns frame-inner-rows paint-panes-string)
 
 (define (frame-inner-columns columns) (- columns 2))
@@ -41,7 +41,7 @@
   (and (= (pane-grid-columns grid) (- width 2)) (= (pane-grid-height grid) (- height 2))))
 
 (define (paint-pane! out entry bar-count)
-  (define-values (x y width height grid scroll focused?) (apply values entry))
+  (define-values (x y width height grid scroll focused?) (apply values (for/list ([value (in-list entry)] [i (in-range 7)]) value)))
   (define chars (border-chars focused?))
   (define inner-width (- width 2))
   (define inner-height (- height 2))
@@ -69,8 +69,11 @@
   (write-string (format "\u001b[~a;1H\u001b[0m\u001b[J" (add1 bar-count)) out)
   (for ([entry (in-list entries)])
     (paint-pane! out entry bar-count))
+  (for ([entry (in-list entries)] #:when (> (length entry) 7))
+    (define-values (x y width height grid scroll focused?) (apply values (for/list ([value (in-list entry)] [i (in-range 7)]) value)))
+    (write-string (format "\u001b[~a;~aH\u001b[0m~a" (+ bar-count y 1) (+ x 1) (edge-line "┏" "┓" (list-ref entry 7) (list-ref entry 8) width)) out))
   (for ([entry (in-list entries)])
-    (define-values (x y width height grid scroll focused?) (apply values entry))
+    (define-values (x y width height grid scroll focused?) (apply values (for/list ([value (in-list entry)] [i (in-range 7)]) value)))
     (when (and focused? (pane-grid-shown grid) (zero? scroll) (pane-fits? grid width height))
       (write-string (format "\u001b[~a;~aH\u001b[?25h" (+ bar-count y 2 (pane-grid-cursor-row grid)) (+ x 2 (pane-grid-cursor-column grid))) out)))
   (write-string "\u001b[?2026l" out)

@@ -1,6 +1,6 @@
 #lang racket/base
 (require "pane-pty.rkt" "pane-grid.rkt")
-(provide (struct-out pane-unit) pane-unit-open pane-unit-close!)
+(provide (struct-out pane-unit) pane-unit-open pane-unit-open-program pane-unit-close!)
 
 (struct pane-unit (id grid link scroll))
 
@@ -19,3 +19,13 @@
 
 (define (pane-unit-close! unit)
   (pane-close! (pane-unit-link unit)))
+
+(define (pane-unit-open-program id columns rows program arguments)
+  (define grid (make-pane-grid columns rows))
+  (define link (pane-open program arguments columns rows))
+  (set-pane-grid-reply!
+   grid
+   (lambda (answer)
+     (write-bytes answer (pane-link-master-out link))
+     (flush-output (pane-link-master-out link))))
+  (pane-unit id grid link (box 0)))

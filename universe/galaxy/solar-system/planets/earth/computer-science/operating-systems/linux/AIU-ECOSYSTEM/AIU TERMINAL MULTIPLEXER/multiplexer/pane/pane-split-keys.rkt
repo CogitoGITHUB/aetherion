@@ -17,5 +17,12 @@
            [(114) (quote split-right)]
            [(115) (quote split-down)]
            [(99) (quote close)]
+           [(102) (quote float-toggle)]
+           [(49) (quote float-todo)]
+           [(50) (quote float-journal)]
+           [(51) (quote float-notes)]
+           [(122) (quote float-size)]
+           [(103) (quote float-grow)]
+           [(107) (quote float-shrink)]
            [else #f]))
        (if command (loop (+ i 1) (cons command found)) (stop))])))
