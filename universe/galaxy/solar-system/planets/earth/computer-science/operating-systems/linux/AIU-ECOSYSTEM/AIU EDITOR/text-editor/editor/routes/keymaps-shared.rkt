@@ -50,6 +50,10 @@
     ("i" "block-text")
     ("g" "view-up")
     ("r" "view-down")
+    ("T" "view-page-up")
+    ("H" "view-page-down")
+    ("pageup" "view-page-up")
+    ("pagedown" "view-page-down")
     
     ("space v" "select-mode")
     ("space c" "cursor-mode")

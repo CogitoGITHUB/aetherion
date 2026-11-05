@@ -81,6 +81,22 @@
   (set-box! free-block #t)
   (cons #t "view down"))
 
+(define (blockview-command-view-page-up session words)
+  (cond
+    [(blockview-aiu? session)
+     (set-box! top-line (max 1 (- (unbox top-line) 12)))
+     (set-box! free-block #t)]
+    [else (set-view-top! session (- (the-view-top session) 12))])
+  (cons #t "view page up"))
+
+(define (blockview-command-view-page-down session words)
+  (cond
+    [(blockview-aiu? session)
+     (set-box! top-line (+ (unbox top-line) 12))
+     (set-box! free-block #t)]
+    [else (set-view-top! session (+ (the-view-top session) 12))])
+  (cons #t "view page down"))
+
 (define (blockview-center from to visible)
   (define next (if (>= (- to from) visible) from (max 1 (- (quotient (+ from to) 2) (quotient visible 2)))))
   (set-box! top-line next)
@@ -109,6 +125,8 @@
 
 (hash-set! commands "view-up" blockview-command-view-up)
 (hash-set! commands "view-down" blockview-command-view-down)
+(hash-set! commands "view-page-up" blockview-command-view-page-up)
+(hash-set! commands "view-page-down" blockview-command-view-page-down)
 (hash-set! commands "pin-mode" blockview-command-pin-mode)
 (hash-set! commands "pin-add" blockview-command-pin-add)
 (hash-set! commands "pin-delete" blockview-command-pin-delete)

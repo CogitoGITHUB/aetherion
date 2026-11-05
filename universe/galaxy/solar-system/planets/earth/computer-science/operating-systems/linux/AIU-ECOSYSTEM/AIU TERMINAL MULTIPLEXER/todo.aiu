@@ -10,11 +10,6 @@ Next
 title end
 
 paragraph start
-todo: history view, scroll back through the rows that left the top of the pane
-Planned.
-paragraph end
-
-paragraph start
 todo: bar placement from the editor bar plan, tabs on top and mode line at the bottom, instead of all rows stacked on top
 Planned.
 paragraph end
@@ -38,4 +33,51 @@ paragraph start
 todo: the ecosystem gate finds the multiplexer project by itself, no second gate
 Planned.
 paragraph end
+section end
+
+section start
+title start
+Floating and tiling
+title end
+
+paragraph start
+todo: layout engine wired: the editor splits and the multiplexer panes both call tui/layout/layout-tree-shared.rkt, a pure tree of strips with axis, windows, sizes and an insertion direction, rectangles with scrolling to the focused window
+Planned.
+paragraph end
+
+paragraph start
+todo: multiplexer multi-pane base: a pane list with focus, one pty per pane, an input route and a scroll offset per pane
+Planned.
+paragraph end
+
+paragraph start
+todo: floating layer in the editor and the multiplexer, identical shared files: one float above the tiles with size and anchor, hide keeps its state, size and tabs persist, on a narrow screen it grows to near full width
+Planned.
+paragraph end
+
+paragraph start
+todo: float tabs and named floats: todo, journal and notes each with its own key, the to-do file opens at once, journal opens a dated file created when missing, a capture key appends one line without focusing the float, in the multiplexer a float is a hidden pane running the editor on the to-do file
+Planned.
+paragraph end
+
+paragraph start
+todo: float resizer: step keys and presets small, medium, large and full on one key, saved size, entries in the keys menu, title and tabs on the border in the box style
+Planned.
+paragraph end
+
+paragraph start
+todo: tiling in the editor replacing tui/split: strips in both directions, focus, move, consume and expel, size presets one third, half, two thirds and full, maximize and center, tabbed strip for many files
+Planned.
+paragraph end
+
+paragraph start
+todo: tiling in the multiplexer panes: the same engine, window layer keys d n h t for focus, shift moves the window, a resize layer, the insertion direction shown in the mode bar, layout saved per workspace and project
+Planned.
+paragraph end
+
+paragraph start
+todo: wire buffers: every project holds a buffer list from tui/layout/layout-buffers-shared.rkt, keys for new, next, previous, rename and close buffer, a split or a window added in any direction makes a tab in the same buffer
+Planned.
+paragraph end
+
 section end

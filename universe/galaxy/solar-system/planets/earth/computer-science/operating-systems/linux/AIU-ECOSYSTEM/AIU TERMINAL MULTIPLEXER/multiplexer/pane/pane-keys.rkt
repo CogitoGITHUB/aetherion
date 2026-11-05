@@ -17,7 +17,7 @@
   (define pinned (key-state-pinned state))
   (cond
     [(eq? (key-state-pending state) (quote space))
-     (values (bytes) (key-state "visual" (quote none) (if (= byte space-byte) (not pinned) pinned)) #f)]
+     (values (bytes) (if (= byte 98) (key-state "buffer" (quote none) pinned) (key-state "visual" (quote none) (if (= byte space-byte) (not pinned) pinned))) #f)]
     [(= byte space-byte) (values (bytes) (key-state "visual" (quote space) pinned) #f)]
     [(= byte i-byte) (values (bytes) (key-state "write" (quote none) pinned) #f)]
     [(= byte q-byte) (values (bytes) state #t)]
@@ -31,6 +31,11 @@
     [(= byte a-byte) (values (bytes byte) (key-state "write" (quote a) pinned) #f)]
     [else (values (bytes byte) (key-state "write" (quote none) pinned) #f)]))
 
+(define (route-buffer state byte)
+  (if (= byte 27)
+      (values (bytes) (key-state "visual" (quote none) (key-state-pinned state)) #f)
+      (values (bytes) state #f)))
+
 (define (route-keys state input)
   (define out (open-output-bytes))
   (define-values (final quit?)
@@ -41,7 +46,7 @@
          (define-values (forwarded next quit-now?)
            (if (string=? (key-state-layer state) "visual")
                (route-visual state byte)
-               (route-write state byte)))
+               (if (string=? (key-state-layer state) "buffer") (route-buffer state byte) (route-write state byte))))
          (write-bytes forwarded out)
          (values next quit-now?)])))
   (values (get-output-bytes out) final quit?))

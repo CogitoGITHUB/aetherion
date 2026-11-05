@@ -1,7 +1,7 @@
 #lang racket/base
 (require racket/system
          "../pane/pane-pty.rkt" "../pane/pane-grid.rkt" "../pane/pane-text-decode.rkt"
-         "../pane/pane-keys.rkt" "../pane/pane-scroll-keys.rkt" "../frame/frame-bars.rkt" "../frame/frame-paint.rkt"
+         "../pane/pane-keys.rkt" "../pane/pane-scroll-keys.rkt" "../pane/pane-buffer-keys.rkt" "../tui/layout/layout-buffers-shared.rkt" "../frame/frame-bars.rkt" "../frame/frame-paint.rkt"
          "../machine/terminal.rkt")
 
 (define session-name "shell")
@@ -15,14 +15,17 @@
   (define key-state-box (box (initial-key-state)))
   (define screen-columns (box first-columns))
   (define screen-height (box first-height))
+  (define buffers-state (box (layout-buffers-new "main" 1)))
   (define bar-cache (make-hash))
+  (define shell-cwd (box ""))
   (define (bars-key)
     (define state (unbox key-state-box))
     (list (key-state-layer state) (key-state-pending-text state)
-          (key-state-pinned-flag state) (unbox screen-columns)))
+          (key-state-pinned-flag state) (unbox screen-columns)
+          (layout-buffers-names (unbox buffers-state)) (layout-buffers-current-index (unbox buffers-state)) (unbox shell-cwd)))
   (define (ask-bars key)
     (bars-link-ask! bars (list-ref key 0) session-name (list-ref key 3)
-                    (list-ref key 1) (list-ref key 2)))
+                    (list-ref key 1) (list-ref key 2) (list-ref key 4) (list-ref key 5) (list-ref key 6)))
   (define first-key (bars-key))
   (define first-rows (ask-bars first-key))
   (hash-set! bar-cache first-key first-rows)
@@ -30,6 +33,7 @@
   (define dirty (box #t))
   (define scroll-offset (box 0))
   (define (refresh-bars!)
+    (set-box! shell-cwd (shell-cwd-of (subprocess-pid (pane-link-process link))))
     (define key (bars-key))
     (define rows (ask-bars key))
     (hash-set! bar-cache key rows)
@@ -125,6 +129,27 @@
                         (min limit (+ (unbox scroll-offset) step))
                         (max 0 (- (unbox scroll-offset) step))))]))))
 
+  (define buffer-tab-counter (box 1))
+
+  (define (apply-buffer-command! command)
+    (define state (unbox buffers-state))
+    (set-box! buffers-state
+              (case command
+                [(previous) (layout-buffers-previous state)]
+                [(next) (layout-buffers-next state)]
+                [(close) (layout-buffers-close state)]
+                [else
+                 (set-box! buffer-tab-counter (add1 (unbox buffer-tab-counter)))
+                 (layout-buffers-add state (format "buffer ~a" (unbox buffer-tab-counter)) (unbox buffer-tab-counter))])))
+
+  (define (apply-buffer-keys! input)
+    (cond
+      [(string=? (key-state-layer (unbox key-state-box)) "buffer")
+       (define-values (remaining commands) (split-buffer-keys input))
+       (for ([command (in-list commands)]) (apply-buffer-command! command))
+       remaining]
+      [else input]))
+
   (define (apply-scroll-keys! input)
     (define state (unbox key-state-box))
     (cond
@@ -142,7 +167,7 @@
         [(eof-object? amount) (semaphore-post finished)]
         [else
          (define-values (forwarded next-state quit?)
-           (route-keys (unbox key-state-box) (apply-scroll-keys! (subbytes buffer 0 amount))))
+           (route-keys (unbox key-state-box) (apply-buffer-keys! (apply-scroll-keys! (subbytes buffer 0 amount)))))
          (set-box! key-state-box next-state)
                         (when (string=? (key-state-layer next-state) "write") (set-box! scroll-offset 0))
          (when (> (bytes-length forwarded) 0)

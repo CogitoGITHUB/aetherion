@@ -21,8 +21,16 @@
           (if (string? s) s "")))
       ""))
 
+(define (git-out-later dir args)
+  (define result (box ""))
+  (define worker (thread (lambda () (set-box! result (git-out dir args)))))
+  (lambda () (thread-wait worker) (unbox result)))
+
 (define (git-facts dir)
-  (define st (string-split (git-out dir (list "status" "--porcelain" "-b" "-uno")) "\n"))
+  (define status-later (git-out-later dir (list "status" "--porcelain" "-b" "-uno" "--" ".")))
+  (define stat-later (git-out-later dir (list "diff" "--shortstat" "HEAD" "--" ".")))
+  (define log-later (git-out-later dir (list "log" "-1" "--format=%h  %s")))
+  (define st (string-split (status-later) "\n"))
   (define head (if (null? st) "" (car st)))
   (cond
     [(not (string-prefix? head "## ")) "no repository"]
@@ -30,13 +38,13 @@
      (define m (regexp-match #px"^## (?:No commits yet on |Initial commit on )?([^. ]+)" head))
      (define ahead (regexp-match #px"ahead ([0-9]+)" head))
      (define behind (regexp-match #px"behind ([0-9]+)" head))
-     (define stat (git-out dir (list "diff" "--shortstat" "HEAD")))
+     (define stat (stat-later))
      (define (stat-n rx) (let ([m (regexp-match rx stat)]) (if m (string->number (cadr m)) 0)))
      (list (if m (cadr m) "?")
            (sub1 (length st))
            (if ahead (string->number (cadr ahead)) 0)
            (if behind (string->number (cadr behind)) 0)
-           (string-trim (git-out dir (list "log" "-1" "--format=%h  %s")))
+           (string-trim (log-later))
            (length (filter (lambda (l) (and (> (string-length l) 1) (not (memv (string-ref l 0) (list #\space #\?))))) (cdr st)))
            (length (filter (lambda (l) (and (> (string-length l) 1) (not (memv (string-ref l 1) (list #\space #\?))))) (cdr st)))
            (stat-n #px"([0-9]+) insertion")

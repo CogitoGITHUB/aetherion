@@ -82,7 +82,7 @@
         (list "next-block" "blocks" "next")
         (list "block-end" "blocks" "block end") (list "blocks" "blocks" "list")
         (list "focus-toggle" "view" "focus") (list "explorer" "view" "explorer")
-        (list "block-up" "move" "block up") (list "view-up" "move" "view up") (list "view-down" "move" "view down") (list "pin-mode" "view" "pin-mode") (list "pin-add" "view" "pin-add") (list "pin-delete" "view" "pin-delete") (list "pin-next" "view" "pin-next") (list "pin-prev" "view" "pin-prev") (list "pin-top" "view" "pin-top") (list "pin-bottom" "view" "pin-bottom") (list "pin-hide" "view" "pin-hide") (list "pin-keep" "view" "pin-keep") (list "pin-earlier" "view" "pin-earlier") (list "pin-later" "view" "pin-later") (list "block-down" "move" "block down")
+        (list "block-up" "move" "block up") (list "view-up" "move" "view up") (list "view-down" "move" "view down") (list "view-page-up" "move" "page up") (list "view-page-down" "move" "page down") (list "pin-mode" "view" "pin-mode") (list "pin-add" "view" "pin-add") (list "pin-delete" "view" "pin-delete") (list "pin-next" "view" "pin-next") (list "pin-prev" "view" "pin-prev") (list "pin-top" "view" "pin-top") (list "pin-bottom" "view" "pin-bottom") (list "pin-hide" "view" "pin-hide") (list "pin-keep" "view" "pin-keep") (list "pin-earlier" "view" "pin-earlier") (list "pin-later" "view" "pin-later") (list "block-down" "move" "block down")
         (list "move-left" "move" "left") (list "move-right" "move" "right")
         (list "move-up" "move" "up") (list "move-down" "move" "down")
         (list "block-move-up" "move" "move block up") (list "block-move-down" "move" "move block down")

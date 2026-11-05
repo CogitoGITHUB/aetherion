@@ -8,6 +8,10 @@
 
 (define tab-files (box (list)))
 
+(define tab-buffers (box (list "main")))
+
+(define tab-buffer-current (box 0))
+
 (define tab-current (box #f))
 
 (define tab-switch (box #f))
@@ -91,10 +95,12 @@
     (if ready (let ([l (tabs-arranged (caddr have) project-order project-hidden project)]) (tabs-mark-row l (index-of l project) inner)) "reading folders"))
   (define workspace-text
     (if ready (let ([l (tabs-arranged (cadr have) workspace-order workspace-hidden (tabs-last root))]) (tabs-mark-row l (index-of l (tabs-last root)) inner)) "reading folders"))
+  (define buffer-text (tabs-mark-row (unbox tab-buffers) (unbox tab-buffer-current) inner))
   (define sections
     (append (list (cons "git" (unbox tab-git-text)))
             (if (>= level 3) (list (cons "workspace" workspace-text)) null)
             (if (>= level 2) (list (cons "project" project-text)) null)
+            (if (>= level 2) (list (cons "buffer" buffer-text)) null)
             (list (cons "tabs" tabs-text))))
   (append (list (edge-line "╭" "╮" (car (car sections)) "" width)
                 (body-line (cdr (car sections)) width))
@@ -112,6 +118,6 @@
 
 (define tab-git-text (box "reading git"))
 
-(provide tab-git-text)
+(provide tab-git-text tab-buffers tab-buffer-current)
 (provide project-order project-hidden workspace-order workspace-hidden tabs-arranged)
 (provide tab-lists)
