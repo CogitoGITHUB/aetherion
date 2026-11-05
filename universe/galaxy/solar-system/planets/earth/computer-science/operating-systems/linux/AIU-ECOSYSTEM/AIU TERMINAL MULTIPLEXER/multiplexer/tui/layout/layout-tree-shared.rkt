@@ -2,7 +2,7 @@
 (require racket/list)
 (provide (struct-out layout-tab) (struct-out layout-strip) (struct-out layout-state) (struct-out layout-rect)
          layout-new layout-split layout-close layout-focus layout-move layout-cycle-size layout-set-direction
-         layout-tab-ids layout-focused-id layout-rects layout-size-presets)
+         layout-tab-ids layout-focused-id layout-focus-id layout-rects layout-size-presets)
 
 (struct layout-tab (id) #:transparent)
 (struct layout-strip (axis items sizes) #:transparent)
@@ -172,6 +172,19 @@
     (if (layout-tab? node)
         (list (layout-tab-id node))
         (append-map loop (layout-strip-items node)))))
+
+(define (layout-path-of root id)
+  (let loop ([node root] [path null])
+    (if (layout-tab? node)
+        (and (equal? (layout-tab-id node) id) path)
+        (for/or ([item (in-list (layout-strip-items node))] [index (in-naturals)])
+          (loop item (append path (list index)))))))
+
+(define (layout-focus-id state id)
+  (define path (layout-path-of (layout-state-root state) id))
+  (if path
+      (layout-state (layout-state-root state) path (layout-state-direction state))
+      state))
 
 (define (layout-focused-id state)
   (layout-tab-id (node-at (layout-state-root state) (layout-state-focus state))))

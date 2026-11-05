@@ -46,11 +46,6 @@ Planned.
 paragraph end
 
 paragraph start
-todo: multiplexer multi-pane base: a pane list with focus, one pty per pane, an input route and a scroll offset per pane
-Planned.
-paragraph end
-
-paragraph start
 todo: floating layer in the editor and the multiplexer, identical shared files: one float above the tiles with size and anchor, hide keeps its state, size and tabs persist, on a narrow screen it grows to near full width
 Planned.
 paragraph end
@@ -72,11 +67,6 @@ paragraph end
 
 paragraph start
 todo: tiling in the multiplexer panes: the same engine, window layer keys d n h t for focus, shift moves the window, a resize layer, the insertion direction shown in the mode bar, layout saved per workspace and project
-Planned.
-paragraph end
-
-paragraph start
-todo: wire buffers: every project holds a buffer list from tui/layout/layout-buffers-shared.rkt, keys for new, next, previous, rename and close buffer, a split or a window added in any direction makes a tab in the same buffer
 Planned.
 paragraph end
 

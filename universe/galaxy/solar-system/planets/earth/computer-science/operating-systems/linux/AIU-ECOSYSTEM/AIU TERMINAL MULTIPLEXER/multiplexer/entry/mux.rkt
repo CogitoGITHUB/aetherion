@@ -1,7 +1,9 @@
 #lang racket/base
-(require racket/system
-         "../pane/pane-pty.rkt" "../pane/pane-grid.rkt" "../pane/pane-text-decode.rkt"
-         "../pane/pane-keys.rkt" "../pane/pane-scroll-keys.rkt" "../pane/pane-buffer-keys.rkt" "../tui/layout/layout-buffers-shared.rkt" "../frame/frame-bars.rkt" "../frame/frame-paint.rkt"
+(require racket/system racket/list
+         "../pane/pane-pty.rkt" "../pane/pane-grid.rkt" "../pane/pane-text-decode.rkt" "../pane/pane-unit.rkt"
+         "../pane/pane-keys.rkt" "../pane/pane-scroll-keys.rkt" "../pane/pane-buffer-keys.rkt" "../pane/pane-split-keys.rkt"
+         "../tui/layout/layout-tree-shared.rkt" "../tui/layout/layout-buffers-shared.rkt"
+         "../frame/frame-bars.rkt" "../frame/frame-paint.rkt"
          "../machine/terminal.rkt")
 
 (define session-name "shell")
@@ -16,8 +18,25 @@
   (define screen-columns (box first-columns))
   (define screen-height (box first-height))
   (define buffers-state (box (layout-buffers-new "main" 1)))
+  (define pane-counter (box 1))
+  (define buffer-counter (box 1))
+  (define panes (make-hash))
+  (define dead-panes (box (list)))
   (define bar-cache (make-hash))
   (define shell-cwd (box ""))
+  (define lock (make-semaphore 1))
+  (define state-lock (make-semaphore 1))
+  (define finished (make-semaphore 0))
+  (define dirty (box #t))
+
+  (define (current-layout)
+    (define state (unbox buffers-state))
+    (layout-buffer-layout (list-ref (layout-buffer-list-buffers state) (layout-buffer-list-current state))))
+  (define (update-layout! change)
+    (set-box! buffers-state (layout-buffers-update-current (unbox buffers-state) change)))
+  (define (focused-unit)
+    (hash-ref panes (layout-focused-id (current-layout)) #f))
+
   (define (bars-key)
     (define state (unbox key-state-box))
     (list (key-state-layer state) (key-state-pending-text state)
@@ -30,10 +49,11 @@
   (define first-rows (ask-bars first-key))
   (hash-set! bar-cache first-key first-rows)
   (define bar-rows (box first-rows))
-  (define dirty (box #t))
-  (define scroll-offset (box 0))
+
   (define (refresh-bars!)
-    (set-box! shell-cwd (shell-cwd-of (subprocess-pid (pane-link-process link))))
+    (define unit (focused-unit))
+    (when unit
+      (set-box! shell-cwd (shell-cwd-of (subprocess-pid (pane-link-process (pane-unit-link unit))))))
     (define key (bars-key))
     (define rows (ask-bars key))
     (hash-set! bar-cache key rows)
@@ -43,33 +63,87 @@
   (define (show-cached-bars!)
     (define rows (hash-ref bar-cache (bars-key) #f))
     (when rows (set-box! bar-rows rows)))
-  (define inner-columns (frame-inner-columns first-columns))
-  (define inner-rows (frame-inner-rows first-height (length (unbox bar-rows))))
-  (define grid (make-pane-grid inner-columns inner-rows))
-  (define link (pane-open (path->string (or (find-executable-path "nu") (error "nu not found"))) (list) inner-columns inner-rows))
-  (define lock (make-semaphore 1))
-  (define finished (make-semaphore 0))
-  (set-pane-grid-reply!
-   grid
-   (lambda (answer)
-     (write-bytes answer (pane-link-master-out link))
-     (flush-output (pane-link-master-out link))))
 
-  (define (fit-pane-to-screen!)
-    (define wanted-columns (frame-inner-columns (unbox screen-columns)))
-    (define wanted-rows (frame-inner-rows (unbox screen-height) (length (unbox bar-rows))))
-    (when (and (> wanted-columns 0) (> wanted-rows 0)
-               (or (not (= wanted-columns (pane-grid-columns grid)))
-                   (not (= wanted-rows (pane-grid-height grid)))))
-      (call-with-semaphore lock (lambda () (pane-grid-resize! grid wanted-columns wanted-rows)))
-      (pane-set-size! link wanted-columns wanted-rows)))
+  (define (region-rects)
+    (layout-rects (current-layout) (unbox screen-columns) (max 1 (- (unbox screen-height) (length (unbox bar-rows))))))
+  (define (rect-fits? rect)
+    (and (>= (layout-rect-width rect) 3) (>= (layout-rect-height rect) 3)))
+  (define (live-ids)
+    (append-map (lambda (buffer) (layout-tab-ids (layout-buffer-layout buffer)))
+                (layout-buffer-list-buffers (unbox buffers-state))))
+
+  (define (start-output-thread! unit)
+    (thread
+     (lambda ()
+       (let loop ([leftover (bytes)])
+         (define chunk (pane-read-chunk (pane-unit-link unit)))
+         (cond
+           [(eof-object? chunk) (set-box! dead-panes (cons (pane-unit-id unit) (unbox dead-panes)))]
+           [else
+            (define-values (text kept) (decode-complete-prefix (bytes-append leftover chunk)))
+            (call-with-semaphore lock (lambda () (pane-grid-feed! (pane-unit-grid unit) text)))
+            (set-box! dirty #t)
+            (loop kept)])))))
+  (define (open-pane! id columns rows)
+    (define unit (pane-unit-open id columns rows (unbox shell-cwd)))
+    (hash-set! panes id unit)
+    (start-output-thread! unit))
+  (define (prune-panes!)
+    (define live (live-ids))
+    (for ([id (in-list (hash-keys panes))])
+      (unless (memv id live)
+        (pane-unit-close! (hash-ref panes id))
+        (hash-remove! panes id))))
+
+  (define (fit-panes!)
+    (call-with-semaphore
+     state-lock
+     (lambda ()
+       (prune-panes!)
+       (for ([rect (in-list (region-rects))] #:when (rect-fits? rect))
+         (define id (layout-rect-id rect))
+         (define columns (- (layout-rect-width rect) 2))
+         (define rows (- (layout-rect-height rect) 2))
+         (define unit (hash-ref panes id #f))
+         (cond
+           [(not unit) (open-pane! id columns rows)]
+           [else
+            (define grid (pane-unit-grid unit))
+            (unless (and (= columns (pane-grid-columns grid)) (= rows (pane-grid-height grid)))
+              (call-with-semaphore lock (lambda () (pane-grid-resize! grid columns rows)))
+              (pane-set-size! (pane-unit-link unit) columns rows))])))))
+
+  (define (reap-dead-panes!)
+    (call-with-semaphore
+     state-lock
+     (lambda ()
+       (define ids (filter (lambda (id) (hash-ref panes id #f)) (unbox dead-panes)))
+       (set-box! dead-panes ids)
+       (for ([id (in-list ids)])
+         (define here (layout-tab-ids (current-layout)))
+         (cond
+           [(<= (hash-count panes) 1) (semaphore-post finished)]
+           [(memv id here)
+            (if (pair? (cdr here))
+                (update-layout! (lambda (layout) (layout-close (layout-focus-id layout id))))
+                (set-box! buffers-state (layout-buffers-close (unbox buffers-state))))
+            (set-box! dirty #t)]
+           [else (void)]))
+       (prune-panes!))))
 
   (define (paint-now!)
     (define text
       (call-with-semaphore
-       lock
+       state-lock
        (lambda ()
-         (paint-screen-string grid (unbox bar-rows) (unbox screen-columns) (unbox screen-height) (unbox scroll-offset)))))
+         (define focus-id (layout-focused-id (current-layout)))
+         (define entries
+           (for/list ([rect (in-list (region-rects))]
+                      #:when (and (rect-fits? rect) (hash-ref panes (layout-rect-id rect) #f)))
+             (define unit (hash-ref panes (layout-rect-id rect)))
+             (list (layout-rect-x rect) (layout-rect-y rect) (layout-rect-width rect) (layout-rect-height rect)
+                   (pane-unit-grid unit) (unbox (pane-unit-scroll unit)) (equal? (layout-rect-id rect) focus-id))))
+         (call-with-semaphore lock (lambda () (paint-panes-string entries (unbox bar-rows)))))))
     (write-string text (current-output-port))
     (flush-output (current-output-port)))
 
@@ -78,6 +152,7 @@
       (sleep 0.02)
       (define now (current-inexact-milliseconds))
       (define checking (> (- now last-check) size-check-milliseconds))
+      (when (pair? (unbox dead-panes)) (reap-dead-panes!))
       (when checking
         (define-values (columns height) (terminal-size))
         (unless (and (= columns (unbox screen-columns)) (= height (unbox screen-height)))
@@ -85,7 +160,7 @@
           (set-box! screen-height height)
           (show-cached-bars!)
           (set-box! dirty #t))
-        (fit-pane-to-screen!))
+        (fit-panes!))
       (when (unbox dirty)
         (set-box! dirty #f)
         (paint-now!))
@@ -102,54 +177,75 @@
          (loop key now)]
         [else (loop last-key last-time)])))
 
-  (define (shell-output-loop)
-    (let loop ([leftover (bytes)])
-      (define chunk (pane-read-chunk link))
-      (cond
-        [(eof-object? chunk) (semaphore-post finished)]
-        [else
-         (define-values (text kept) (decode-complete-prefix (bytes-append leftover chunk)))
-         (call-with-semaphore lock (lambda () (pane-grid-feed! grid text)))
-         (set-box! dirty #t)
-         (loop kept)])))
-
   (define (apply-scroll-command! command)
     (call-with-semaphore
-     lock
+     state-lock
      (lambda ()
-       (cond
-         [(pane-grid-alternate grid)
-          (write-bytes (scroll-command-bytes command) (pane-link-master-out link))
-          (flush-output (pane-link-master-out link))]
-         [else
-          (define step (if (memq command (quote (page-up page-down))) (max 1 (quotient (pane-grid-height grid) 2)) 1))
-          (define limit (length (pane-grid-history grid)))
-          (set-box! scroll-offset
-                    (if (memq command (quote (line-up page-up)))
-                        (min limit (+ (unbox scroll-offset) step))
-                        (max 0 (- (unbox scroll-offset) step))))]))))
-
-  (define buffer-tab-counter (box 1))
+       (define unit (focused-unit))
+       (when unit
+         (define grid (pane-unit-grid unit))
+         (define link (pane-unit-link unit))
+         (call-with-semaphore
+          lock
+          (lambda ()
+            (cond
+              [(pane-grid-alternate grid)
+               (write-bytes (scroll-command-bytes command) (pane-link-master-out link))
+               (flush-output (pane-link-master-out link))]
+              [else
+               (define step (if (memq command (quote (page-up page-down))) (max 1 (quotient (pane-grid-height grid) 2)) 1))
+               (define limit (length (pane-grid-history grid)))
+               (define scroll (pane-unit-scroll unit))
+               (set-box! scroll
+                         (if (memq command (quote (line-up page-up)))
+                             (min limit (+ (unbox scroll) step))
+                             (max 0 (- (unbox scroll) step))))])))))))
 
   (define (apply-buffer-command! command)
-    (define state (unbox buffers-state))
-    (set-box! buffers-state
-              (case command
-                [(previous) (layout-buffers-previous state)]
-                [(next) (layout-buffers-next state)]
-                [(close) (layout-buffers-close state)]
-                [else
-                 (set-box! buffer-tab-counter (add1 (unbox buffer-tab-counter)))
-                 (layout-buffers-add state (format "buffer ~a" (unbox buffer-tab-counter)) (unbox buffer-tab-counter))])))
+    (call-with-semaphore
+     state-lock
+     (lambda ()
+       (define state (unbox buffers-state))
+       (set-box! buffers-state
+                 (case command
+                   [(previous) (layout-buffers-previous state)]
+                   [(next) (layout-buffers-next state)]
+                   [(close) (layout-buffers-close state)]
+                   [else
+                    (set-box! pane-counter (add1 (unbox pane-counter)))
+                    (set-box! buffer-counter (add1 (unbox buffer-counter)))
+                    (layout-buffers-add state (format "buffer ~a" (unbox buffer-counter)) (unbox pane-counter))])))))
+
+  (define (split-pane! direction)
+    (set-box! pane-counter (add1 (unbox pane-counter)))
+    (define id (unbox pane-counter))
+    (update-layout! (lambda (layout) (layout-split layout id direction))))
+  (define (apply-pane-command! command)
+    (case command
+      [(focus-left) (update-layout! (lambda (layout) (layout-focus layout (quote left))))]
+      [(focus-right) (update-layout! (lambda (layout) (layout-focus layout (quote right))))]
+      [(focus-up) (update-layout! (lambda (layout) (layout-focus layout (quote up))))]
+      [(focus-down) (update-layout! (lambda (layout) (layout-focus layout (quote down))))]
+      [(split-right) (split-pane! (quote right))]
+      [(split-down) (split-pane! (quote down))]
+      [else (when (pair? (cdr (layout-tab-ids (current-layout)))) (update-layout! layout-close))]))
 
   (define (apply-buffer-keys! input)
     (cond
       [(string=? (key-state-layer (unbox key-state-box)) "buffer")
        (define-values (remaining commands) (split-buffer-keys input))
        (for ([command (in-list commands)]) (apply-buffer-command! command))
+       (when (pair? commands) (fit-panes!))
        remaining]
       [else input]))
-
+  (define (apply-pane-keys! input)
+    (cond
+      [(string=? (key-state-layer (unbox key-state-box)) "pane")
+       (define-values (remaining commands) (split-pane-keys input))
+       (call-with-semaphore state-lock (lambda () (for ([command (in-list commands)]) (apply-pane-command! command))))
+       (when (pair? commands) (fit-panes!))
+       remaining]
+      [else input]))
   (define (apply-scroll-keys! input)
     (define state (unbox key-state-box))
     (cond
@@ -167,16 +263,20 @@
         [(eof-object? amount) (semaphore-post finished)]
         [else
          (define-values (forwarded next-state quit?)
-           (route-keys (unbox key-state-box) (apply-buffer-keys! (apply-scroll-keys! (subbytes buffer 0 amount)))))
+           (route-keys (unbox key-state-box)
+                       (apply-pane-keys! (apply-buffer-keys! (apply-scroll-keys! (subbytes buffer 0 amount))))))
          (set-box! key-state-box next-state)
-                        (when (string=? (key-state-layer next-state) "write") (set-box! scroll-offset 0))
-         (when (> (bytes-length forwarded) 0)
-           (write-bytes forwarded (pane-link-master-out link))
-           (flush-output (pane-link-master-out link)))
+         (define unit (focused-unit))
+         (when (and unit (string=? (key-state-layer next-state) "write"))
+           (set-box! (pane-unit-scroll unit) 0))
+         (when (and unit (> (bytes-length forwarded) 0))
+           (write-bytes forwarded (pane-link-master-out (pane-unit-link unit)))
+           (flush-output (pane-link-master-out (pane-unit-link unit))))
          (show-cached-bars!)
          (set-box! dirty #t)
          (if quit? (semaphore-post finished) (loop))])))
 
+  (fit-panes!)
   (dynamic-wind
    (lambda ()
      (raw-mode)
@@ -186,14 +286,13 @@
    (lambda ()
      (thread paint-loop)
      (thread bars-loop)
-     (thread shell-output-loop)
      (thread key-loop)
      (semaphore-wait finished))
    (lambda ()
      (write-string "\u001b[?25h\u001b[?1049l" (current-output-port))
      (flush-output (current-output-port))
      (restore-settings)
-     (pane-close! link)
+     (for ([unit (in-list (hash-values panes))]) (pane-unit-close! unit))
      (bars-link-close! bars))))
 
 (module+ main (run-multiplexer))

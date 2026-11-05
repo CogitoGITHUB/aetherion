@@ -76,7 +76,7 @@
    "\n"))
 
 (define menu-groups
-  (list (list "save" "file" "save") (list "quit" "file" "quit") (list "send" "file" "send")
+  (list (list "scroll-up" "move" "scroll up") (list "scroll-down" "move" "scroll down") (list "page-up" "move" "page up") (list "page-down" "move" "page down") (list "buffer-layer" "view" "buffers") (list "buffer-previous" "view" "buffer before") (list "buffer-next" "view" "buffer after") (list "buffer-new" "view" "new buffer") (list "buffer-close" "view" "close buffer") (list "pane-layer" "view" "panes") (list "save" "file" "save") (list "quit" "file" "quit") (list "send" "file" "send")
         (list "check" "file" "check")
         (list "undo-mode" "view" "undo tree") (list "level-up" "page" "more rows")
         (list "next-block" "blocks" "next")

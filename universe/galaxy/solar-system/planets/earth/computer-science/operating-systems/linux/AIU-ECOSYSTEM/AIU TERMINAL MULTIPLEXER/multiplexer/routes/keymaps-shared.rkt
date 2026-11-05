@@ -35,7 +35,7 @@
   (quote (("h" "buffer-previous") ("t" "buffer-next") ("n" "buffer-new") ("c" "buffer-close") ("escape" "visual-mode"))))
 
 (define normal-keys
-  (quote (("i" "write-mode") ("space space" "menu-or-visual") ("space b" "buffer-layer") ("t" "scroll-up") ("h" "scroll-down") ("T" "page-up") ("H" "page-down") ("q" "quit"))))
+  (quote (("i" "write-mode") ("space space" "menu-or-visual") ("space b" "buffer-layer") ("space w" "pane-layer") ("t" "scroll-up") ("h" "scroll-down") ("T" "page-up") ("H" "page-down") ("q" "quit"))))
 
 (define insert-keys
   (quote (("a a" "visual-mode"))))
