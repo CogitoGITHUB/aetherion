@@ -24,5 +24,7 @@
            [(122) (quote float-size)]
            [(103) (quote float-grow)]
            [(107) (quote float-shrink)]
+             [(109) (quote float-grow)]
+             [(98) (quote float-shrink)]
            [else #f]))
        (if command (loop (+ i 1) (cons command found)) (stop))])))

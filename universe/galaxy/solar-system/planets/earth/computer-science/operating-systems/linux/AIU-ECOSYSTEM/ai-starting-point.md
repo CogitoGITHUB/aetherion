@@ -1,3 +1,4 @@
+- Lessons: mux float is entered with space x (pane layer with pending float, pane-keys.rkt) and shown by the key-loop hook in entry/mux.rkt; leaving the pane layer (escape, x, 0) hides it; pane layer keys 1 2 3 z g m k b; mux float is still a pane running aiutd, not a drawn box.
 - Lessons: mux frame pipeline is now cells end to end: frame/frame-compose.rkt copies pane grid cells, borders, titles and bar cells straight into a cell matrix (no ANSI string, no re-parse); frame-diff.rkt screen-diff-cells! diffs it against the front matrix. frame-paint.rkt is dead code, delete it once Shape confirms.
 - Rule from Shape: the whole multiplexer must render at TUI level (cell grid, diff, no text strings pasted to the terminal), not only the float; same as the editor.
 - Lessons: leaving the float layer (escape or space space) hides the box: float-keys in routes/keymaps-shared.rkt bind both to float-back.

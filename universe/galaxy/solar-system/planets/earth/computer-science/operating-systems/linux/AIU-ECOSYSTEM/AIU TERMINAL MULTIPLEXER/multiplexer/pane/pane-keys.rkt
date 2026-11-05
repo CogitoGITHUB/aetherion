@@ -17,7 +17,7 @@
   (define pinned (key-state-pinned state))
   (cond
     [(eq? (key-state-pending state) (quote space))
-     (values (bytes) (cond [(= byte 98) (key-state "buffer" (quote none) pinned)] [(= byte 119) (key-state "pane" (quote none) pinned)] [else (key-state "visual" (quote none) (if (= byte space-byte) (not pinned) pinned))]) #f)]
+     (values (bytes) (cond [(= byte 98) (key-state "buffer" (quote none) pinned)] [(= byte 119) (key-state "pane" (quote none) pinned)] [(= byte 120) (key-state "pane" (quote float) pinned)] [else (key-state "visual" (quote none) (if (= byte space-byte) (not pinned) pinned))]) #f)]
     [(= byte space-byte) (values (bytes) (key-state "visual" (quote space) pinned) #f)]
     [(= byte i-byte) (values (bytes) (key-state "write" (quote none) pinned) #f)]
     [(= byte q-byte) (values (bytes) state #t)]
@@ -32,7 +32,7 @@
     [else (values (bytes byte) (key-state "write" (quote none) pinned) #f)]))
 
 (define (route-buffer state byte)
-  (if (= byte 27)
+  (if (or (= byte 27) (and (string=? (key-state-layer state) "pane") (or (= byte 120) (= byte 48))))
       (values (bytes) (key-state "visual" (quote none) (key-state-pinned state)) #f)
       (values (bytes) state #f)))
 

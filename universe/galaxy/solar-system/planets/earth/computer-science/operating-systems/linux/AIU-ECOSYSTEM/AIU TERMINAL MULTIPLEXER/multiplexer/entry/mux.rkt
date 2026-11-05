@@ -317,7 +317,11 @@
          (define-values (forwarded next-state quit?)
            (route-keys (unbox key-state-box)
                        (apply-pane-keys! (apply-buffer-keys! (apply-scroll-keys! (subbytes buffer 0 amount))))))
-         (set-box! key-state-box next-state)
+         (let ([was (key-state-layer (unbox key-state-box))] [now (key-state-layer next-state)])
+             (cond
+               [(and (string=? was "pane") (not (string=? now "pane"))) (set-box! float-shown #f)]
+               [(and (not (string=? was "pane")) (string=? now "pane") (eq? (key-state-pending next-state) (quote float))) (set-box! float-shown #t)]))
+           (set-box! key-state-box next-state)
          (define unit (focused-unit))
          (when (and unit (string=? (key-state-layer next-state) "write"))
            (set-box! (pane-unit-scroll unit) 0))
