@@ -1,5 +1,5 @@
 title start
-kind: plan
+kind: default
 tags: notation contracts
 Plan: aiu notation contracts
 title end
@@ -119,10 +119,6 @@ paragraph start
 Needs: links and backlinks between files and blocks, fast search, direct queries on any file or block, files stay plain text as the source of truth, the index rebuilds from the files at any time.
 paragraph end
 
-paragraph start
-Next questions: which engine or design (own Rust index, embedded graph or document store); what is stored (files, blocks, links, tags, todos, contracts, answers); how it updates (file watcher, on save, on check); who reads it (editor, multiplexer, notation, LSP); how it is queried (a command, a small query language, or both).
-paragraph end
-
 section end
 
 section start
@@ -201,10 +197,6 @@ paragraph start
 Admin files stay in the .notation/ directory: the database index.db, the contracts and anything else the notation system owns.
 paragraph end
 
-paragraph start
-Still open: the parts a name is built from, the scope where a name must be unique, what happens on rename, and how a shown box is kept up to date.
-paragraph end
-
 section end
 
 section start
@@ -238,49 +230,6 @@ paragraph end
 
 paragraph start
 Source of truth stays the files. The database finds which files show a box, and the files hold all the text.
-paragraph end
-
-section end
-
-section start
-title start
-Section 7: next questions
-title end
-
-paragraph start
-Where does the shown text live: stored inside the file between link start and link end, so the file is complete without the database, or only resolved when viewed? Suggestion: stored, and synced on save.
-paragraph end
-
-paragraph start
-Two shown copies of the same box changed and unsaved at the same time: which wins? Suggestion: the one saved last wins, and the other open copy is told it changed.
-paragraph end
-
-paragraph start
-A shown box that itself contains a link, and cycles such as A showing B showing A: allow nesting, refuse cycles with an error? Suggestion: yes.
-paragraph end
-
-paragraph start
-The shown copy has the same name as its original. Should uniqueness apply to originals only, with copies recognised by sitting inside a link block? Suggestion: yes.
-paragraph end
-
-paragraph start
-Rename or save touches many files, some open and unsaved in the editor: refuse until they are saved, or update the open buffers too? Suggestion: update open buffers.
-paragraph end
-
-paragraph start
-A save that writes many files: print the list of files changed, and keep it undoable? Suggestion: print the list, and one undo step reverts all.
-paragraph end
-
-paragraph start
-Deleting an original box that others show: report an error and keep the copies as normal blocks? Suggestion: yes.
-paragraph end
-
-paragraph start
-Name declaration keyword: name: under the start line, for every block kind including a whole file on its title block? Suggestion: yes.
-paragraph end
-
-paragraph start
-Where is the ecosystem wide names registry: in the database at the ecosystem root, with each directory database reporting up to it? Suggestion: yes.
 paragraph end
 
 section end
@@ -330,37 +279,6 @@ section end
 
 section start
 title start
-Section 9: next questions
-title end
-
-paragraph start
-Name keyword: each block gets one line under its start line, like todo: and kind: today. The word before the colon is the keyword. Proposed keyword: name:. Example: name: paragraph-install-guide. Yes or another word?
-paragraph end
-
-paragraph start
-Git check on delete runs git ls-files and git status for the path. Git is slow on this disk, so it runs in a background thread and the answer is cached. Is a short wait on delete acceptable?
-paragraph end
-
-paragraph start
-Not tracked by git: the delete is refused and says so, and an explicit approval key deletes anyway. Which key or word approves?
-paragraph end
-
-paragraph start
-Idle timer: is 5 seconds fixed, or a setting? Does the timer count only keystrokes, or also cursor moves?
-paragraph end
-
-paragraph start
-Does autosave also write the synced copies in other files each time, or only on an explicit save? Suggestion: every autosave syncs, since files must always agree.
-paragraph end
-
-paragraph start
-Order of work for the database: engine core, then indexers one kind at a time, then names, then links and sync, then the red delete popup, then autosave. Agreed?
-paragraph end
-
-section end
-
-section start
-title start
 Section 10: answers to section 9
 title end
 
@@ -385,7 +303,7 @@ Autosave: every autosave also syncs the shown copies in other files.
 paragraph end
 
 paragraph start
-Order of work: decided after the plan is finished. The proposed order stands as a proposal: engine core, indexers one kind at a time, names, links and sync, red delete popup, autosave.
+Order of work: agreed on 2026-11-06: engine core, indexers one kind at a time, names, links and sync, red delete popup, autosave.
 paragraph end
 
 section end
@@ -404,7 +322,7 @@ Making a new block type, changing one or deleting one is adding, editing or dele
 paragraph end
 
 paragraph start
-The folder notation/blocktypes/ holds the default types and seeds every new .notation/. The parser takes its block names at run time from the folder it finds, so the build time name list in build.rs is only a stepping stone and goes away.
+The folder notation/blocktypes/ holds the default types and seeds every new .notation/. The parser and the register take their block names at run time from the folder they find; the build time list is gone.
 paragraph end
 
 paragraph start

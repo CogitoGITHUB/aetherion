@@ -414,13 +414,7 @@ impl<'a> View<'a> {
 
     /// How a block breaks a rule, or None when it keeps it.
     fn rule_failure(&self, b: &Block, c: &Contract) -> Option<String> {
-        let ls = self.body(b);
-        let words = ls.join(" ").split_whitespace().count();
-        let n: usize = c.arg.parse().unwrap_or(0);
         match c.name.as_str() {
-            "max-words" => (words > n).then(|| format!("has {} words, the most allowed is {}", words, n)),
-            "min-words" => (words < n).then(|| format!("has {} words, the least allowed is {}", words, n)),
-            "max-lines" => (ls.len() > n).then(|| format!("has {} lines, the most allowed is {}", ls.len(), n)),
             "needs-declaration" => decl(b, &c.arg).is_none().then(|| format!("has no {}: declaration", c.arg)),
             _ => None,
         }

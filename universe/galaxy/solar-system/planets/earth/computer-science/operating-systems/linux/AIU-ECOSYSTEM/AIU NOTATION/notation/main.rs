@@ -40,6 +40,9 @@ fn main() {
     }
     let command = args[1].clone();
     let path = args[2].clone();
+    if let Some(folder) = notation::block_registry::load_near(std::path::Path::new(&path)) {
+        eprintln!("notation: block types from {}", folder);
+    }
 
     let text = match std::fs::read_to_string(&path) {
         Ok(t) => t,

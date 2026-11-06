@@ -1,5 +1,5 @@
 title start
-kind: plan
+kind: todo
 tags: todo planned
 NOTATION TODO
 title end
@@ -40,7 +40,7 @@ Planned.
 paragraph end
 
 paragraph start
-todo: notation database: one database for files, blocks, links, tags, todos and contracts, like Vulpea v2 but not SQLite; first choose the engine, see plan section 3.
+todo: notation database: engine written from zero in Rust inside notation, no outside engine, no SQLite; order of work agreed: engine core, indexers one kind at a time, names, links and sync, red delete popup, autosave; see plan sections 3, 4 and 10.
 Planned.
 paragraph end
 
@@ -75,7 +75,12 @@ Planned.
 paragraph end
 
 paragraph start
-todo: block types from .notation: the parser and the register read block types at run time from the nearest .notation/blocktypes/ folder up the tree, inherited downward like contracts; remove the build.rs name list; see plan section 11.
+todo: database indexers: one source file per kind in notation/database, files first, then blocks, links, tags and todos; each rebuilds only its own kind of one source file through Store.replace_source.
+Planned.
+paragraph end
+
+paragraph start
+todo: register link as a block type in .notation/blocktypes and Racket elements/register.rkt, then make the links indexer read parsed link blocks instead of text lines
 Planned.
 paragraph end
 

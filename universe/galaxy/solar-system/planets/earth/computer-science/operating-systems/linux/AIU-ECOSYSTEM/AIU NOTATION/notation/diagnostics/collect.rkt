@@ -63,6 +63,7 @@
 ;; counted, and every finding's column is 0, which the report prints as
 ;; "unknown".
 (define (collect-findings page o)
+  (when (outline-file o) (load-blocktypes-near! (outline-file o)))
   (define who (or (outline-file o) "the document"))
   (define lines (page-lines page))
   (define targets (link-targets who (outline-nodes o)))
@@ -416,12 +417,7 @@
 (define (rule-failure lines n name arg)
   (define ls (block-content-lines lines n))
   (define text (string-join ls " "))
-  (define words (length (string-split text)))
   (case name
-    [(max-words) (and (> words arg) (format "has ~a words, the most allowed is ~a" words arg))]
-    [(min-words) (and (< words arg) (format "has ~a words, the least allowed is ~a" words arg))]
-    [(max-lines) (and (> (length ls) arg)
-                      (format "has ~a lines, the most allowed is ~a" (length ls) arg))]
     [(must-match) (and (not (regexp-match? (pregexp arg) text))
                        (format "does not match ~a" arg))]
     [(must-not-match) (and (regexp-match? (pregexp arg) text)

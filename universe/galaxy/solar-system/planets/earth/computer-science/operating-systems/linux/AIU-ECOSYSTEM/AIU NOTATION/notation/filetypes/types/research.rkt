@@ -18,7 +18,6 @@
 (define the-contracts
   (list (list 'question "References" "paragraph" "Does every source cited in the text appear here?" "q29fee1")
         (list 'question "Introduction" "paragraph" "Does it say why the question matters?" "q075df6")
-        (list 'rule "Abstract" "paragraph" 'max-words 200)
         (list 'rule "*" "code" 'needs-declaration "language")
         (list 'question "Abstract" "paragraph" "Does it state the question, the method, the result and a limit?" "qfdb2b2")
         (list 'question "Methods" "paragraph" "Could a reader repeat this from the text alone?" "q6b4b50")

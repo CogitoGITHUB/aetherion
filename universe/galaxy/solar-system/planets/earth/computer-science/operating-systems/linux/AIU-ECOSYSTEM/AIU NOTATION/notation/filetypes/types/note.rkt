@@ -14,5 +14,4 @@
 (define the-contracts
   (list (list 'question "*" "title" "Does the title name the idea?" "q87b175")
         (list 'question "*" "paragraph" "Is this one idea a reader could restate?" "q1deb06")
-        (list 'rule "*" "paragraph" 'max-words 120)
         (list 'rule "*" "code" 'needs-declaration "language")))

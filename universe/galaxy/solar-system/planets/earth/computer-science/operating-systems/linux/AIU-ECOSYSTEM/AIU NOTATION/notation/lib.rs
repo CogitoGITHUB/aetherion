@@ -17,6 +17,9 @@ pub mod positions;
 #[path = "text/comments.rs"]
 pub mod comments;
 
+#[path = "parser/block-registry.rs"]
+pub mod block_registry;
+
 #[path = "parser/parser.rs"]
 pub mod parser;
 
@@ -42,3 +45,27 @@ pub mod rich;
 // numbering comes after parser: it walks the tree the parser built.
 #[path = "model/numbering.rs"]
 pub mod numbering;
+
+#[path = "database/record.rs"]
+pub mod database_record;
+
+#[path = "database/store.rs"]
+pub mod database_store;
+
+#[path = "database/file-format.rs"]
+pub mod database_file_format;
+
+#[path = "database/index-files.rs"]
+pub mod database_index_files;
+
+#[path = "database/index-blocks.rs"]
+pub mod database_index_blocks;
+
+#[path = "database/index-todos.rs"]
+pub mod database_index_todos;
+
+#[path = "database/index-tags.rs"]
+pub mod database_index_tags;
+
+#[path = "database/index-links.rs"]
+pub mod database_index_links;

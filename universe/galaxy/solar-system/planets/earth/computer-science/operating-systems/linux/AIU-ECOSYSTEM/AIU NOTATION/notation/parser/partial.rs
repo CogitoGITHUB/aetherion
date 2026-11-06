@@ -22,7 +22,7 @@
 //! `<name> start` line — cuts there, and puts the error node at the cut.
 
 use crate::buffer::Buffer;
-use crate::parser::{parse, Block, ErrorKind, ErrorNode, Node, Span, Tree, BLOCK_NAMES};
+use crate::parser::{parse, Block, ErrorKind, ErrorNode, Node, Span, Tree};
 
 /// Parse a whole file and recover where the parser could not: every element
 /// that parsed cleanly stays, the broken one becomes an error node, and the
@@ -194,7 +194,7 @@ fn break_line_of(block: &Block, buffer: &Buffer) -> Option<usize> {
 /// "start", and a Tier 1 name.
 fn opens_a_registered_block(line: &str) -> bool {
     let parts: Vec<&str> = line.trim_end().split_whitespace().collect();
-    parts.len() == 2 && parts[1] == "start" && BLOCK_NAMES.contains(&parts[0])
+    parts.len() == 2 && parts[1] == "start" && crate::block_registry::is_registered(parts[0])
 }
 
 /// The error node at the cut. It carries an empty span, like the errors that

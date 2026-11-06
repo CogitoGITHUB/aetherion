@@ -37,7 +37,7 @@
 use crate::buffer::Buffer;
 use crate::positions::{line_col_to_offset, offset_to_line_col, LineCol};
 
-include!(concat!(env!("OUT_DIR"), "/block-types.rs"));
+use crate::block_registry::{is_opaque_name, is_registered};
 
 /// The registered declaration keywords (rule B). They are hints, never meaning.
 pub const DECLARATION_KEYWORDS: [&str; 17] = [
@@ -114,7 +114,7 @@ impl Block {
     /// The code block's body is opaque: nothing inside it is read as notation,
     /// and only an exact matching `code end` line closes it (rule D).
     pub fn is_opaque(&self) -> bool {
-        OPAQUE_NAMES.contains(&self.name.as_str())
+        is_opaque_name(&self.name)
     }
 }
 
@@ -255,7 +255,7 @@ fn shape_of(text: &str) -> LineShape {
 // is_block_name says whether a name is one of the registered block
 // names, so a block line with an unknown name can be refused.
 fn is_block_name(name: &str) -> bool {
-    BLOCK_NAMES.contains(&name)
+    is_registered(name)
 }
 
 /// True when the line opens a block of that name and of no other: it is the
@@ -533,7 +533,7 @@ fn unknown_name(span: Span, line: usize, name: &str) -> ErrorNode {
         line,
         opener_line: None,
         what: format!("\"{}\" is not a Tier 1 block name", name),
-        what_to_do: "use one of title, paragraph, code, heading, table, header, row, comment".to_string(),
+        what_to_do: format!("use one of {}", crate::block_registry::registered_names().join(", ")),
     }
 }
 

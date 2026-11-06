@@ -1,8 +1,100 @@
 title start
-kind: plan
+kind: todo
 tags: todo aiutd planned
 AIUTD TODO
 title end
+
+section start
+title start
+Reading mode: RSVP and Bionic Reading
+title end
+
+paragraph start
+todo: bionic reading rendering, EXTREMELY IMPORTANT: render text with Bionic Reading emphasis in the editor and the notation viewer.
+Planned.
+paragraph end
+
+paragraph start
+todo: research RSVP (Rapid Serial Visual Presentation).
+Planned.
+paragraph end
+
+paragraph start
+todo: research Spritz-style ORP alignment.
+Planned.
+paragraph end
+
+paragraph start
+todo: research Bionic Reading.
+Planned.
+paragraph end
+
+paragraph start
+todo: research tachistoscopic reading.
+Planned.
+paragraph end
+
+paragraph start
+todo: design a single-word-at-a-time reading interface.
+Planned.
+paragraph end
+
+paragraph start
+todo: implement adjustable reading speed (WPM).
+Planned.
+paragraph end
+
+paragraph start
+todo: implement highlighted consonants and word emphasis.
+Planned.
+paragraph end
+
+paragraph start
+todo: implement punctuation-aware pauses.
+Planned.
+paragraph end
+
+paragraph start
+todo: implement adjustable word display duration.
+Planned.
+paragraph end
+
+paragraph start
+todo: add sentence and paragraph navigation.
+Planned.
+paragraph end
+
+paragraph start
+todo: add pause, resume, forward and backward controls.
+Planned.
+paragraph end
+
+paragraph start
+todo: add reading progress statistics.
+Planned.
+paragraph end
+
+paragraph start
+todo: test reading comprehension at different speeds.
+Planned.
+paragraph end
+
+paragraph start
+todo: explore Emacs integration.
+Planned.
+paragraph end
+
+paragraph start
+todo: explore AIU Notation compatibility.
+Planned.
+paragraph end
+
+paragraph start
+todo: combine RSVP and Bionic Reading into one reading mode.
+Planned.
+paragraph end
+
+section end
 
 comment start
 Every planned feature, first taken from the old docs (now deleted). Later this page is written by code from the feature registry, and a feature leaves it when its tests pass.
@@ -421,4 +513,9 @@ title end
 paragraph start
 todo: notification history. A command shows the last notifications of the active session in a box (level, text and time), kept in a small ring in the notify mechanism. Not urgent at all, do it last.
 paragraph end
+paragraph start
+todo: literate code view: all files are written in .aiu with literate programming like org mode; a key in the text editor hides the notation and shows only the code, like a normal code file
+Planned.
+paragraph end
+
 section end
