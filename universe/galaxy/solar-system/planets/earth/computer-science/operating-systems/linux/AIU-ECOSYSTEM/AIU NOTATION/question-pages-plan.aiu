@@ -1,0 +1,414 @@
+title start
+kind: plan
+tags: notation contracts
+Plan: aiu notation contracts
+title end
+
+section start
+title start
+Section 1: decided so far
+title end
+
+paragraph start
+Command: aiu notation contracts, and every contract action is a subcommand of it.
+paragraph end
+
+paragraph start
+A contract is a block written contract start and contract end. It is attached to the block kind it is for, the same way a todo is attached: a contract for a paragraph sits on the paragraph, a contract for a title sits on the title.
+paragraph end
+
+paragraph start
+Storage: a .notation/ folder, created automatically in the directory where the command runs, with one subfolder per block type and one file per contract. The section condition is written inside the contract itself.
+paragraph end
+
+paragraph start
+Inheritance: a .notation/ applies to its directory and every subdirectory, until a subdirectory has its own .notation/.
+paragraph end
+
+paragraph start
+When a block of a type that has contracts is made in the text editor, the editor asks the notation system, and the notation system writes the contracts inside the file under that block. The contract text cannot be edited in the file.
+paragraph end
+
+paragraph start
+The notation system gets a contracts directory holding the code, with a types subfolder holding the default contracts. Every block category gets at least one default contract, so the feature can be seen working.
+paragraph end
+
+paragraph start
+No max-words, min-words, max-lines or other counting rules. A contract is free text, as long as it needs to be, because some contracts need a lot of explaining.
+paragraph end
+
+paragraph start
+Every contract is a todo until it is populated. The todo mark moves to the upper right of the box for every todo, and titles stay on the left like everything else.
+paragraph end
+
+paragraph start
+Errors and warnings must show inside the text editor, and an LSP style server is wanted so other editors can use them too.
+paragraph end
+
+paragraph start
+Contracts are created in the text editor. No creation TUI. A TUI comes later, only to select and deselect which contracts are used, after the whole ecosystem works.
+paragraph end
+
+paragraph start
+The hard coded the-contracts lists in filetypes/types are deleted once their questions exist as contract files.
+paragraph end
+
+section end
+
+section start
+title start
+Section 2: next questions
+title end
+
+paragraph start
+Existing answers point at ids like qadd5fe. Should each current question become a contract file that keeps its id, so no answer is orphaned?
+paragraph end
+
+paragraph start
+How is a contract file named inside its type folder: by its id, by a short title, or by a number?
+paragraph end
+
+paragraph start
+Where does the file type condition go, for example plan only: inside the contract next to the section condition?
+paragraph end
+
+paragraph start
+When does the notation system attach contracts: when the block is created, on every save, or on check? If the contract file changes later, do the attached copies update?
+paragraph end
+
+paragraph start
+How is read only enforced: the editor refuses edits inside the contract block, or the checker reports a changed contract?
+paragraph end
+
+paragraph start
+Does the right side todo mark apply to every existing todo line too, and what does populated mean: the contract has text, or the block has an answer?
+paragraph end
+
+paragraph start
+LSP: a real server over stdio now, or editor integration first and the server later?
+paragraph end
+
+paragraph start
+A subdirectory with its own .notation/ but no folder for some block type: fall back to the parent for that type, or no contracts for it?
+paragraph end
+
+paragraph start
+Do the required section lists stay in the file types for now, or move into .notation/ too?
+paragraph end
+
+section end
+
+section start
+title start
+Section 3: the database comes first
+title end
+
+paragraph start
+Status: the contracts work is paused. The database is built first, because contracts, links, files and everything else will read from it.
+paragraph end
+
+paragraph start
+Goal: one database for absolutely everything, like Vulpea v2 in Emacs but better. It indexes files, blocks, links, tags, todos, contracts and answers, and every file and link can be queried directly from it.
+paragraph end
+
+paragraph start
+SQLite is not used. A much better database system is wanted, and it is not chosen yet.
+paragraph end
+
+paragraph start
+Needs: links and backlinks between files and blocks, fast search, direct queries on any file or block, files stay plain text as the source of truth, the index rebuilds from the files at any time.
+paragraph end
+
+paragraph start
+Next questions: which engine or design (own Rust index, embedded graph or document store); what is stored (files, blocks, links, tags, todos, contracts, answers); how it updates (file watcher, on save, on check); who reads it (editor, multiplexer, notation, LSP); how it is queried (a command, a small query language, or both).
+paragraph end
+
+section end
+
+section start
+title start
+Section 4: database decisions
+title end
+
+paragraph start
+Engine: our own, written in Rust, no outside database and no SQLite.
+paragraph end
+
+paragraph start
+Data model: not decided yet. It must be built on the box system that already exists, not a plain graph of simple nodes. The tree view and the mind map view are wanted, so the model has to serve both.
+paragraph end
+
+paragraph start
+Source of truth: the files. This is a hard rule. The database can always be rebuilt from the files and holds nothing that exists nowhere else.
+paragraph end
+
+paragraph start
+Indexed first: files, blocks, links, tags and todos. More kinds come later. Each kind gets its own source file in the code, so the code for each kind stays separate.
+paragraph end
+
+paragraph start
+Updates: when the editor saves and when aiu notation runs. A file watcher comes later, not now.
+paragraph end
+
+paragraph start
+Scope: a database file in every directory, not one for the whole ecosystem.
+paragraph end
+
+paragraph start
+Query: commands and a TUI. The notation CLI and the editor read the same database and must work together at all times.
+paragraph end
+
+paragraph start
+Still open: the data model, the file format of the database, how a directory database relates to its subdirectories, and what the first query commands are.
+paragraph end
+
+paragraph start
+Engine decision: written from zero in Rust inside notation, with no outside engine, so every feature stays under our control. Cozo, Datascript and the others were looked at and rejected.
+paragraph end
+
+section end
+
+section start
+title start
+Section 5: names, links and reuse
+title end
+
+paragraph start
+Everything is linkable and reusable. A whole file, a chapter, a section, a paragraph or any other block can be taken from one file and shown inside another.
+paragraph end
+
+paragraph start
+Identity: every box kind gets its own declaration holding a unique, readable name. The name is built from several parts so that no two are the same. It is written in the file, so it survives edits above it. The name is the id and the link target at once.
+paragraph end
+
+paragraph start
+No random ids and no Emacs style identifiers. A link uses the real name of what it points to.
+paragraph end
+
+paragraph start
+Links are blocks: link start and link end, the same way as every other block. A link names its target box and may ask for it to be shown in place.
+paragraph end
+
+paragraph start
+Every existing block kind must be edited to accept the name declaration.
+paragraph end
+
+paragraph start
+Typing support: an LSP style server suggests existing names while typing a link, in the editor and in other editors.
+paragraph end
+
+paragraph start
+Admin files stay in the .notation/ directory: the database index.db, the contracts and anything else the notation system owns.
+paragraph end
+
+paragraph start
+Still open: the parts a name is built from, the scope where a name must be unique, what happens on rename, and how a shown box is kept up to date.
+paragraph end
+
+section end
+
+section start
+title start
+Section 6: decisions on names and shown boxes
+title end
+
+paragraph start
+This section answers the open paragraph of section 5.
+paragraph end
+
+paragraph start
+Name parts: the kind plus the first words of the title or text, with a short counter added only when two names collide. Example: paragraph-install-guide, section-goal. Chosen for being modular, so the builder is one small replaceable function.
+paragraph end
+
+paragraph start
+Scope: a name is unique across the whole ecosystem. A contract checks it. A link needs no path, only the name.
+paragraph end
+
+paragraph start
+Rename: renaming a name rewrites every link and every shown copy in every file, through the database. The check reports any link left pointing at a missing name.
+paragraph end
+
+paragraph start
+Shown boxes are never read only. A box shown inside another file can be edited right there. On save the notation system updates the original file and every other file that shows the same box. If paragraph 1 is shown in ten files, all ten and the original receive the saved text.
+paragraph end
+
+paragraph start
+Who writes names: the editor writes the name when a block is made. The notation system fills in old blocks that have none.
+paragraph end
+
+paragraph start
+Source of truth stays the files. The database finds which files show a box, and the files hold all the text.
+paragraph end
+
+section end
+
+section start
+title start
+Section 7: next questions
+title end
+
+paragraph start
+Where does the shown text live: stored inside the file between link start and link end, so the file is complete without the database, or only resolved when viewed? Suggestion: stored, and synced on save.
+paragraph end
+
+paragraph start
+Two shown copies of the same box changed and unsaved at the same time: which wins? Suggestion: the one saved last wins, and the other open copy is told it changed.
+paragraph end
+
+paragraph start
+A shown box that itself contains a link, and cycles such as A showing B showing A: allow nesting, refuse cycles with an error? Suggestion: yes.
+paragraph end
+
+paragraph start
+The shown copy has the same name as its original. Should uniqueness apply to originals only, with copies recognised by sitting inside a link block? Suggestion: yes.
+paragraph end
+
+paragraph start
+Rename or save touches many files, some open and unsaved in the editor: refuse until they are saved, or update the open buffers too? Suggestion: update open buffers.
+paragraph end
+
+paragraph start
+A save that writes many files: print the list of files changed, and keep it undoable? Suggestion: print the list, and one undo step reverts all.
+paragraph end
+
+paragraph start
+Deleting an original box that others show: report an error and keep the copies as normal blocks? Suggestion: yes.
+paragraph end
+
+paragraph start
+Name declaration keyword: name: under the start line, for every block kind including a whole file on its title block? Suggestion: yes.
+paragraph end
+
+paragraph start
+Where is the ecosystem wide names registry: in the database at the ecosystem root, with each directory database reporting up to it? Suggestion: yes.
+paragraph end
+
+section end
+
+section start
+title start
+Section 8: decisions on saving, cycles and deletion
+title end
+
+paragraph start
+Shown text is stored inside the file between link start and link end, so a file is complete without the database. It is synced on save.
+paragraph end
+
+paragraph start
+Autosave: in write mode, if nothing is typed for 5 seconds, a notification appears, write mode ends and the file is saved. Everything is always saved.
+paragraph end
+
+paragraph start
+Cycles: a shown box may contain a link and nest, but a cycle (A shows B shows A) is refused with an error.
+paragraph end
+
+paragraph start
+Uniqueness applies to originals only. A copy is recognised by sitting inside a link block.
+paragraph end
+
+paragraph start
+A save that touches many files also updates every open buffer that holds a changed box.
+paragraph end
+
+paragraph start
+After a multi file save the list of changed files is printed, and one undo reverts all of them.
+paragraph end
+
+paragraph start
+Deleting: nothing is deleted unless it is tracked by git, so the deletion can be undone, unless the owner approves explicitly. This holds for a file, a section, a paragraph or any block.
+paragraph end
+
+paragraph start
+Deleting something that is shown in other files opens a large popup with red borders and red text, listing the files and asking yes or no. The shown copies stay as normal blocks if the answer is yes.
+paragraph end
+
+paragraph start
+The names registry lives in the database at the ecosystem root, and each directory database reports up to it.
+paragraph end
+
+section end
+
+section start
+title start
+Section 9: next questions
+title end
+
+paragraph start
+Name keyword: each block gets one line under its start line, like todo: and kind: today. The word before the colon is the keyword. Proposed keyword: name:. Example: name: paragraph-install-guide. Yes or another word?
+paragraph end
+
+paragraph start
+Git check on delete runs git ls-files and git status for the path. Git is slow on this disk, so it runs in a background thread and the answer is cached. Is a short wait on delete acceptable?
+paragraph end
+
+paragraph start
+Not tracked by git: the delete is refused and says so, and an explicit approval key deletes anyway. Which key or word approves?
+paragraph end
+
+paragraph start
+Idle timer: is 5 seconds fixed, or a setting? Does the timer count only keystrokes, or also cursor moves?
+paragraph end
+
+paragraph start
+Does autosave also write the synced copies in other files each time, or only on an explicit save? Suggestion: every autosave syncs, since files must always agree.
+paragraph end
+
+paragraph start
+Order of work for the database: engine core, then indexers one kind at a time, then names, then links and sync, then the red delete popup, then autosave. Agreed?
+paragraph end
+
+section end
+
+section start
+title start
+Section 10: answers to section 9
+title end
+
+paragraph start
+Name keyword: name: on its own line under the start line of every block kind, including a whole file on its title block. Example: name: paragraph-install-guide. A link block holds name: and target:. Confirmed.
+paragraph end
+
+paragraph start
+Delete and its git check: they belong to our own file manager, which is built later. The file manager does the tracked check and shows the red popup when a box is shown elsewhere.
+paragraph end
+
+paragraph start
+Untracked files: the approval word is decided together with the file manager design. The delete is refused until then.
+paragraph end
+
+paragraph start
+Idle timer: a setting, default 5 seconds, counting keystrokes only. The timer starts when typing stops.
+paragraph end
+
+paragraph start
+Autosave: every autosave also syncs the shown copies in other files.
+paragraph end
+
+paragraph start
+Order of work: decided after the plan is finished. The proposed order stands as a proposal: engine core, indexers one kind at a time, names, links and sync, red delete popup, autosave.
+paragraph end
+
+section end
+
+section start
+title start
+Section 11: block types in .notation
+title end
+
+paragraph start
+Block types are detected from a .notation/blocktypes/ folder, the same way contracts are: one file per block type, found at the nearest directory base and inherited by every subdirectory.
+paragraph end
+
+paragraph start
+Making a new block type, changing one or deleting one is adding, editing or deleting one file in that folder. No code is edited.
+paragraph end
+
+paragraph start
+The folder notation/blocktypes/ holds the default types and seeds every new .notation/. The parser takes its block names at run time from the folder it finds, so the build time name list in build.rs is only a stepping stone and goes away.
+paragraph end
+
+paragraph start
+Still open: a subdirectory with its own .notation/ but no file for some type, whether it falls back to the parent, the same open question as for contracts; and how each type says how it is drawn.
+paragraph end
+
+section end

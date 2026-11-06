@@ -1,0 +1,82 @@
+title start
+kind: plan
+tags: todo planned
+NOTATION TODO
+title end
+
+section start
+title start
+Next
+title end
+
+paragraph start
+todo: notation question pages: the questions each paragraph, section and to-do type must answer live in an editable page at the base of a directory, not hard coded; every file in that directory and its subdirectories takes those questions, and the notation system reports an error where a file lacks an answer after the page changes. Idea only, not designed yet.
+Planned.
+paragraph end
+
+paragraph start
+todo: question page loader: contracts-of reads rules and questions from a questions.aiu page found at the nearest directory base up the tree, replacing the hard coded the-contracts lists in filetypes/types.
+Planned.
+paragraph end
+
+paragraph start
+todo: missing question error: check reports a finding where a paragraph, section or to-do type has no question in the page, and where an answer points at a question id that no longer exists.
+Planned.
+paragraph end
+
+paragraph start
+todo: stale types readme: filetypes/types/README.md still names notation system/ and gate/check.nu; point it at the real paths and at the question pages.
+Planned.
+paragraph end
+
+paragraph start
+todo: delete hard coded contracts: seed .questions.aiu from the current rules and questions with their ids, then remove every the-contracts list from filetypes/types.
+Planned.
+paragraph end
+
+paragraph start
+todo: notation create command and TUI: list file types and block kinds, add, edit or remove a rule or question, write the nearest dot page; plan in question-pages-plan.aiu.
+Planned.
+paragraph end
+
+paragraph start
+todo: notation database: one database for files, blocks, links, tags, todos and contracts, like Vulpea v2 but not SQLite; first choose the engine, see plan section 3.
+Planned.
+paragraph end
+
+paragraph start
+todo: box names: every block kind gets a name declaration, unique and readable, written in the file; it is the id and the link target; see plan section 5.
+Planned.
+paragraph end
+
+paragraph start
+todo: link blocks: link start and link end name a target box and can show it inside another file; the editor suggests names while typing.
+Planned.
+paragraph end
+
+paragraph start
+todo: idle autosave: after 5 seconds without typing in write mode, show a notification, leave write mode and save.
+Planned.
+paragraph end
+
+paragraph start
+todo: safe delete: refuse deleting anything not tracked by git unless approved; if shown in other files, ask yes or no in a red popup first.
+Planned.
+paragraph end
+
+paragraph start
+todo: own file manager for safe delete: the git tracked check, the untracked approval word and the red popup for boxes shown elsewhere live in our own file manager; see plan section 10.
+Planned.
+paragraph end
+
+paragraph start
+todo: block type drawing: view.rs, boxview.rs, rich.rs, json.rkt, aiu-text.rkt and make-live.rkt still match block names in code; move how each type is drawn into its blocktypes file so a new type needs no code edit.
+Planned.
+paragraph end
+
+paragraph start
+todo: block types from .notation: the parser and the register read block types at run time from the nearest .notation/blocktypes/ folder up the tree, inherited downward like contracts; remove the build.rs name list; see plan section 11.
+Planned.
+paragraph end
+
+section end

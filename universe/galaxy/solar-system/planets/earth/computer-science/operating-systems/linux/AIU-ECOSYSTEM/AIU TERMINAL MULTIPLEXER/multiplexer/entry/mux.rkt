@@ -1,5 +1,5 @@
 #lang racket/base
-(require racket/system racket/list
+(require racket/system racket/list racket/file racket/string
          "../pane/pane-pty.rkt" "../pane/pane-grid.rkt" "../pane/pane-text-decode.rkt" "../pane/pane-unit.rkt"
          "../pane/pane-keys.rkt" "../pane/pane-scroll-keys.rkt" "../pane/pane-buffer-keys.rkt" "../pane/pane-split-keys.rkt"
          "../tui/layout/layout-tree-shared.rkt" "../tui/layout/layout-buffers-shared.rkt" "../tui/float/float-state-shared.rkt"
@@ -42,8 +42,8 @@
     (set-box! float-shown #t))
   (define (tile-count) (length (filter (lambda (id) (>= id 0)) (hash-keys panes))))
   (define (open-float-pane! id columns rows)
-    (define file (float-file-path (list-ref float-names (unbox float-index)) ecosystem-root))
-    (define unit (pane-unit-open-program id columns rows "/usr/local/bin/aiutd" (list (path->bytes file))))
+    (void)
+    (define unit (pane-unit-open id columns rows (unbox shell-cwd)))
     (hash-set! panes id unit)
     (start-output-thread! unit))
   (define (fit-float!)
@@ -313,15 +313,16 @@
       (define amount (read-bytes-avail! buffer (current-input-port)))
       (cond
         [(eof-object? amount) (semaphore-post finished)]
+        
         [else
          (define-values (forwarded next-state quit?)
            (route-keys (unbox key-state-box)
                        (apply-pane-keys! (apply-buffer-keys! (apply-scroll-keys! (subbytes buffer 0 amount))))))
          (let ([was (key-state-layer (unbox key-state-box))] [now (key-state-layer next-state)])
              (cond
-               [(and (string=? was "pane") (not (string=? now "pane"))) (set-box! float-shown #f)]
-               [(and (not (string=? was "pane")) (string=? now "pane") (eq? (key-state-pending next-state) (quote float))) (set-box! float-shown #t)]))
-           (set-box! key-state-box next-state)
+               [#f (void)]
+               [(and (string=? now "pane") (eq? (key-state-pending next-state) (quote float))) (set-box! float-shown (not (unbox float-shown)))]))
+           (set-box! key-state-box (if (and (string=? (key-state-layer next-state) "pane") (eq? (key-state-pending next-state) (quote float))) (key-state (if (unbox float-shown) "write" "visual") (quote none) (key-state-pinned next-state)) next-state))
          (define unit (focused-unit))
          (when (and unit (string=? (key-state-layer next-state) "write"))
            (set-box! (pane-unit-scroll unit) 0))

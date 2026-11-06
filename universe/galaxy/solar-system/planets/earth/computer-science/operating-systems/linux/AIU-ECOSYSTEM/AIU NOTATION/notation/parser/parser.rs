@@ -37,13 +37,7 @@
 use crate::buffer::Buffer;
 use crate::positions::{line_col_to_offset, offset_to_line_col, LineCol};
 
-/// The Tier 1 block names (rule A). Anything else on a block line is an error.
-pub const BLOCK_NAMES: [&str; 10] = [
-    "answer",
-"section",
-    "title", "paragraph", "code", "heading", "table", "header", "row",
-    "comment",
-];
+include!(concat!(env!("OUT_DIR"), "/block-types.rs"));
 
 /// The registered declaration keywords (rule B). They are hints, never meaning.
 pub const DECLARATION_KEYWORDS: [&str; 17] = [
@@ -120,7 +114,7 @@ impl Block {
     /// The code block's body is opaque: nothing inside it is read as notation,
     /// and only an exact matching `code end` line closes it (rule D).
     pub fn is_opaque(&self) -> bool {
-        self.name == "code"
+        OPAQUE_NAMES.contains(&self.name.as_str())
     }
 }
 
