@@ -103,7 +103,7 @@ pub fn draw_screen(frame: &mut Frame, state: &InputState) {
 
     let (title, color) = match state.mode {
         Mode::Visual => (
-            "input",
+            "input  f full screen edit",
             Color::White,
         ),
         Mode::Insert => ("input insert  esc visual  enter run  up down history  ctrl+r search", Color::White),
@@ -115,6 +115,12 @@ pub fn draw_screen(frame: &mut Frame, state: &InputState) {
     let mut row = state.text.replace("\n", "⏎");
     if state.mode == Mode::Insert || state.mode == Mode::Search {
         row.push_str("█");
+    }
+    let keep_chars = width.saturating_sub(4);
+    let row_count = row.chars().count();
+    if row_count > keep_chars && keep_chars > 1 {
+        let tail: String = row.chars().skip(row_count - keep_chars + 1).collect();
+        row = format!("\u{2026}{}", tail);
     }
     let input_box = BoxFrame {
         title: input_title(state, title),
@@ -130,6 +136,7 @@ pub fn draw_screen(frame: &mut Frame, state: &InputState) {
     frame.render_widget(Paragraph::new(text).style(Style::default().fg(color)), input_rect);
     draw_search(frame, state, area, pairs_height + bar.len() as u16, search_height);
     crate::bar_view::draw_menu(frame, state, area);
+    crate::bar_view::draw_full_input(frame, state, full_area);
 }
 
 fn output_failed(rows: &[String]) -> bool {

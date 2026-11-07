@@ -277,3 +277,9 @@ The project is made available under the MIT license. See the `LICENSE` file for 
 - Full screen programs: a command whose first word is tv, aiutm, vim, nvim, vi, nano, less, man, htop, btop, top, emacs, ssh or fzf gets the whole terminal, then the screen comes back. The screen starts inside aiutm by default (AIU_IN_MULTIPLEXER=1 skips this); the multiplexer pane runs AIU_PANE_PROGRAM when it is set.
 
 - Inside aiutm: SPC SPC leaves insert in both (aiutm sends escape to the screen), i enters insert in both, all other visual keys (t h d n e s c p a y Y / q) go to the screen, the bar title shows aiu shell.
+
+- aiutm starts the aiu shell screen in every pane by default when the screen binary exists; AIU_PANE_PROGRAM overrides it.
+
+- Paste inside aiutm: paste arrives in the screen as one bracketed paste (one command, no line by line run). Paste in insert mode.
+
+- Input box: long text shows its tail with the cursor; f in visual mode opens the full screen input view (opens by itself for a big paste), f again closes it.

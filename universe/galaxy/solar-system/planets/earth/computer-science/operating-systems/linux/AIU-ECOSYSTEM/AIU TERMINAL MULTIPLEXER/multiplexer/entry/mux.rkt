@@ -307,12 +307,23 @@
        remaining]
       [else input]))
 
+  (define paste-active (box #f))
   (define (key-loop)
     (define buffer (make-bytes 4096))
     (let loop ()
       (define amount (read-bytes-avail! buffer (current-input-port)))
       (cond
         [(eof-object? amount) (semaphore-post finished)]
+        [(and (getenv "AIU_PANE_PROGRAM")
+              (> amount 0)
+              (focused-unit)
+              (or (unbox paste-active)
+                  (regexp-match? #rx#"\e\\[200~" (subbytes buffer 0 amount))))
+         (let ([chunk (subbytes buffer 0 amount)])
+           (set-box! paste-active (not (regexp-match? #rx#"\e\\[201~" chunk)))
+           (write-bytes chunk (pane-link-master-out (pane-unit-link (focused-unit))))
+           (flush-output (pane-link-master-out (pane-unit-link (focused-unit)))))
+         (loop)]
         [(and (getenv "AIU_PANE_PROGRAM")
               (> amount 0)
               (focused-unit)
@@ -349,6 +360,9 @@
    (lambda ()
      (raw-mode)
      (system* stty-program "raw" "-echo")
+     (write-string "\e[?2004h")
+     (flush-output)
+     (plumber-add-flush! (current-plumber) (lambda (h) (write-string "\e[?2004l") (flush-output)))
      (write-string "\u001b[?1049h\u001b[2J" (current-output-port))
      (flush-output (current-output-port)))
    (lambda ()

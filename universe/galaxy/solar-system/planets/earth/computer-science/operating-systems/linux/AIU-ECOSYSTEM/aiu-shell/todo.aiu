@@ -116,3 +116,9 @@ todo: multiplexer and shell keys: while a pane runs the screen, aiutm forwards e
 todo: clipboard: termux-clipboard-set hangs on the phone (timeout 124), so the screen copy only works through the OSC 52 passthrough of aiutm; check Termux:API app and permission; the screen copy fallback should be removed or given a timeout
 
 todo: history secrets.rs: the ghr_ sample (GitHub refresh token) is still one long literal and may be flagged by GitHub push protection; split it with concat! like the others; commit 732b3bca still holds the old sample tokens in git history
+
+todo: aiutm default pane program: aiutm picks HOME/aiu-target/aiu-shell/debug/aiu-shell-screen when it exists (debug path hard coded in pane-unit.rkt); set AIU_PANE_PROGRAM=nu to get plain nushell; needs a real install path and a config setting
+
+todo: paste in aiutm: aiutm turns bracketed paste on for the real terminal and forwards a whole paste to the screen pane; a paste is detected by ESC[200~ at the start of a read, an end marker split across two reads is not handled; paste while the screen is in visual mode is not checked
+
+todo: full input view: f in visual mode toggles a full screen editor for the input box inside the screen pane; it does not cover the aiutm bars yet (needs the screen to tell aiutm to toggle focus, for example through a private OSC sequence caught in pane-grid.rkt); the cursor is always at the end, no cursor movement or editing in the middle

@@ -326,6 +326,9 @@ impl InputState {
         self.mode = Mode::Insert;
         self.text.push_str(cleaned.trim_end_matches("\n"));
         self.cursor = None;
+        if self.text.chars().count() > 400 || self.text.lines().count() > 6 {
+            crate::bar_view::open_full_input();
+        }
     }
 
     fn keep_line(&mut self) {
@@ -396,6 +399,7 @@ impl InputState {
                         "Y" => self.copy_last(true),
                         "/" => self.open_search(),
                         " " => crate::bar_view::toggle_menu(),
+                        "f" => crate::bar_view::toggle_full_input(),
                         "q" => self.quit = true,
                         _ => {}
                     }

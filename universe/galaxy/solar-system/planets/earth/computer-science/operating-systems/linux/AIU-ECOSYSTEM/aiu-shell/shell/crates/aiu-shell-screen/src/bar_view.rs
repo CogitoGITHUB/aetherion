@@ -261,3 +261,56 @@ pub fn draw_menu(frame: &mut Frame, state: &InputState, area: Rect) {
     frame.render_widget(Clear, rect);
     frame.render_widget(Paragraph::new(text).style(Style::default().fg(Color::White)), rect);
 }
+
+static FULL_INPUT: AtomicBool = AtomicBool::new(false);
+
+pub fn toggle_full_input() {
+    FULL_INPUT.fetch_xor(true, Ordering::Relaxed);
+}
+
+pub fn open_full_input() {
+    FULL_INPUT.store(true, Ordering::Relaxed);
+}
+
+pub fn draw_full_input(frame: &mut Frame, state: &InputState, area: Rect) {
+    if !FULL_INPUT.load(Ordering::Relaxed) || state.mode == Mode::Search {
+        return;
+    }
+    let width = area.width as usize;
+    if width < 8 || area.height < 4 {
+        return;
+    }
+    let inner = width - 3;
+    let mut rows: Vec<String> = Vec::new();
+    for part in state.text.split(char::from(10u8)) {
+        let chars: Vec<char> = part.chars().collect();
+        if chars.is_empty() {
+            rows.push(String::new());
+        }
+        for piece in chars.chunks(inner) {
+            rows.push(piece.iter().collect());
+        }
+    }
+    if state.mode == Mode::Insert {
+        let full = rows.last().map(|row| row.chars().count() >= inner).unwrap_or(true);
+        if full {
+            rows.push(String::from("█"));
+        } else if let Some(last) = rows.last_mut() {
+            last.push_str("█");
+        }
+    }
+    let keep = area.height as usize - 2;
+    if rows.len() > keep {
+        let extra = rows.len() - keep;
+        rows.drain(0..extra);
+    }
+    let frame_box = crate::box_frame::BoxFrame {
+        title: String::from("full input  esc visual  f closes"),
+        rows,
+    };
+    frame.render_widget(Clear, area);
+    frame.render_widget(
+        Paragraph::new(frame_box.lines(width).join("\n")).style(Style::default().fg(Color::White)),
+        area,
+    );
+}
