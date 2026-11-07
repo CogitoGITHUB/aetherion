@@ -1,0 +1,180 @@
+title start
+kind: default
+tags: shell tui
+Plan: the aiu-shell TUI
+title end
+
+section start
+title start
+Section 1: decided
+title end
+
+paragraph start
+The shell gets its own TUI. aiu-shell owns the screen and draws every box itself. It works alone and does not need the multiplexer; the multiplexer can host and combine it.
+paragraph end
+
+paragraph start
+Every command makes a pair of boxes: a command box holding what was typed and an output box holding what it printed. Both have a title edge and side bars on every row.
+paragraph end
+
+paragraph start
+The shell starts in visual mode, not insert mode, because most of the time he goes back through history and boxes. A key enters insert mode to type, and escape returns to visual mode.
+paragraph end
+
+paragraph start
+Navigation between boxes uses the Dvorak keys: d and n move left and right, h and t move down and up.
+paragraph end
+
+paragraph start
+A key selects the current box. Selected boxes can be copied: the command box alone, the output box alone, or the pair. Copy goes to the clipboard, so a command given by the assistant and its output can be separated and pasted back without selecting text by hand.
+paragraph end
+
+paragraph start
+It is built piece by piece. Each piece is run and checked on screen before the next piece starts.
+paragraph end
+
+section end
+
+section start
+title start
+Section 2: what exists now
+title end
+
+paragraph start
+The shell crate aiu-shell-tui already holds ratatui and crossterm based TUI commands: tui run owns the terminal and returns one record. It is a possible base for the boxes.
+paragraph end
+
+paragraph start
+The REPL loop is in aiu-shell-cli repl.rs: evaluate_repl and loop_iteration run the line editor reedline once per command. The reedline box patch is a stopgap and is dropped when the own TUI exists.
+paragraph end
+
+section end
+
+section start
+title start
+Section 3: pieces in order
+title end
+
+paragraph start
+Piece 1: the screen. Boxes drawn with fixed text, title edges, side bars, resize, no shell inside yet.
+paragraph end
+
+paragraph start
+Piece 2: the input box with modes. Visual mode is the start, insert mode types, escape goes back, history is browsed in visual mode.
+paragraph end
+
+paragraph start
+Piece 3: running a command. Input goes to the shell engine, the output is captured and drawn in a new output box under its command box.
+paragraph end
+
+paragraph start
+Piece 4: box navigation and selection with d n h t and a select key.
+paragraph end
+
+paragraph start
+Piece 5: copy keys for the command box, the output box and the pair.
+paragraph end
+
+paragraph start
+Piece 6: scrolling inside long output boxes and a key to fold or open a box.
+paragraph end
+
+paragraph start
+Piece 7: programs that need a real terminal, such as editors and pagers, run in a pty and take the screen until they end.
+paragraph end
+
+section end
+
+section start
+title start
+Section 4: still open
+title end
+
+paragraph start
+Which language the TUI layer is written in, and whether it is built on the existing aiu-shell-tui crate or draws its own cells.
+paragraph end
+
+paragraph start
+How copy reaches the clipboard on his phone setup, inside Termux and proot.
+paragraph end
+
+paragraph start
+How the multiplexer hosts the shell TUI and how the two divide the screen when run together.
+paragraph end
+
+paragraph start
+How stderr is shown and how exit code and time appear on the output box edge.
+paragraph end
+
+paragraph start
+How the boxes are saved, so history browsing after a restart brings back whole pairs of boxes.
+paragraph end
+
+section end
+
+
+section start
+title start
+Section 4: piece 1 built
+title end
+
+paragraph start
+Piece 1 lives in the new crate aiu-shell/shell/crates/aiu-shell-screen (ratatui and crossterm, own draw code, no engine). The old crate aiu-shell-tui is a pipeline command set with a 3038 line session and is not the base; it stays untouched. The binary aiu-shell-screen with the argument dump prints the screen headless; without an argument it opens the screen and Esc quits. Fixed text only, nothing runs inside.
+paragraph end
+
+section end
+
+section start
+title start
+Section 5: piece 2 built
+title end
+
+paragraph start
+Piece 2 lives in aiu-shell-screen: input_state.rs holds the modes and history as a pure state machine with tests, screen_draw.rs draws the pairs above and the input box below. Visual mode is the start: t older history, h newer history, i insert, q quit. Insert mode: typing, backspace, enter keeps the line as a new pair with the output not run yet, escape back to visual. Nothing runs yet; piece 3 runs the command.
+paragraph end
+
+section end
+
+section start
+title start
+Section 6: piece 3 built
+title end
+
+paragraph start
+Piece 3 lives in aiu-shell-screen: command_runner.rs starts aiu-shell with no config file and -c for the line, captures stdout and stderr, strips escape codes, cuts at 200 rows and appends the exit code. InputState new_running makes Enter in insert mode run the line and fill the output box. The binary argument run with a line prints the result headless. A fresh process per line is the first step; one kept engine comes next.
+paragraph end
+
+section end
+
+section start
+title start
+Section 7: piece 4 built
+title end
+
+paragraph start
+Piece 4 lives in aiu-shell-screen: input_state.rs has Mode Boxes with focus (box index, pair times two plus side) and marked boxes; b enters from visual mode, t and h move by pair, d and n switch between command box and output box, s marks or unmarks, escape returns and keeps the marks; screen_draw.rs draws the focused box yellow and bold and marked boxes magenta.
+paragraph end
+
+section end
+
+section start
+title start
+Section 8: history view built
+title end
+
+paragraph start
+The history view lives in aiu-shell-screen: history_view.rs reads the aiu-shell-history database with rusqlite (newest first, unique commands, exit mark, age, folder), filters while typing (substring matches first, then fuzzy), and screen_draw.rs draws it above the input box with the best match at the bottom. Slash in visual mode and ctrl+r in insert or boxes mode open it, up and down move, enter puts the command into the input box, escape closes and restores the typed text.
+paragraph end
+
+section end
+
+section start
+title start
+Section 9: copy mode built
+title end
+
+paragraph start
+Piece 5 lives in aiu-shell-screen: in boxes mode c copies the focused box, p copies the pair and a copies the marked boxes. clipboard_copy.rs writes the OSC 52 escape with its own base64 and also pipes the text to termux-clipboard-set when it exists. The title shows how many characters were copied.
+paragraph end
+
+section end

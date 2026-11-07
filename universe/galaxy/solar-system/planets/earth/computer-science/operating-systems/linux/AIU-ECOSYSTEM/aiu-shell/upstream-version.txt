@@ -1,0 +1,21 @@
+nushell https://github.com/nushell/nushell
+commit 192e5533546f89eddbb65cc73359aca1598a3076
+version = "0.116.2"
+cloned 2026-11-06 depth 1
+
+starship https://github.com/starship/starship
+commit 47b4acdc4e6d7aa357177805b7038fc3f75601c2
+version = "1.27.0"
+cloned 2026-11-06 depth 1
+
+reedline https://github.com/nushell/reedline
+commit b72fd34f54abb15ff50886604a82c22f95642a78
+version = "0.52.1"
+cloned 2026-11-07 depth 1
+
+reedline main https://github.com/nushell/reedline
+commit c9fcec8a91b034b21fc89fd77aa54a07569ee3c3
+version = "0.52.1"
+cloned 2026-11-07 depth 1
+aiu-shell/atuin: no history copy of https://github.com/atuinsh/atuin tag v18.17.1 commit 6245cc003a01380da6f62284e38cfcc5695e881d (MIT, LICENSE kept)
+aiu-shell/jump (renamed aiu-shell-jump, was zoxide): no history copy of https://github.com/ajeetdsouza/zoxide tag v0.10.0 commit f84f9a3e1d16fabf3e34b199ec7d552993b41f29 (MIT, LICENSE kept)

@@ -1,0 +1,58 @@
+[package]
+authors.workspace = true
+description = "Nushell's extra commands that are not part of the 1.0 api standard."
+edition.workspace = true
+license.workspace = true
+name = "aiu-shell-cmd-extra"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-cmd-extra"
+rust-version.workspace = true
+version.workspace = true
+autotests = false
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+bench = false
+harness = false
+
+[lints]
+workspace = true
+
+[[test]]
+name = "tests"
+path = "tests/main.rs"
+harness = false
+
+[dependencies]
+aiu-shell-cmd-base.workspace = true
+aiu-shell-engine.workspace = true
+aiu-shell-heavy-utils = { workspace = true, features = ["endian"] }
+aiu-shell-json.workspace = true
+aiu-shell-parser.workspace = true
+aiu-shell-pretty-hex.workspace = true
+aiu-shell-protocol.workspace = true
+aiu-shell-utils.workspace = true
+
+# Potential dependencies for extras
+heck = { workspace = true }
+num-traits = { workspace = true }
+nu-ansi-term = { workspace = true }
+fancy-regex = { workspace = true }
+serde = { workspace = true }
+serde_urlencoded = { workspace = true }
+v_htmlescape = { workspace = true }
+itertools = { workspace = true }
+mime = { workspace = true }
+
+[dev-dependencies]
+# "os" feature required for testing examples
+aiu-shell-cmd-lang = { workspace = true, features = ["os"] }
+aiu-shell-command = { workspace = true, features = ["os"] }
+aiu-shell-test-support = { path = "../aiu-shell-test-support" }
+
+[build-dependencies]
+aiu-shell-protocol.workspace = true
+
+serde = { workspace = true }
+serde_json = { workspace = true }
+quote = { workspace = true }

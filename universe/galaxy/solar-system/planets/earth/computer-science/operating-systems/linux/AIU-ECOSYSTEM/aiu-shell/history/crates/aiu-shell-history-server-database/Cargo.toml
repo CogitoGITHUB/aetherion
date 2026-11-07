@@ -1,0 +1,22 @@
+[package]
+name = "aiu-shell-history-server-database"
+edition = "2024"
+description = "server database library for aiu-shell-history"
+
+version = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+homepage = { workspace = true }
+repository = { workspace = true }
+
+[dependencies]
+aiu-shell-history-common = { path = "../aiu-shell-history-common", version = "18.17.1" }
+derive_more = { workspace = true }
+
+async-trait = { workspace = true }
+eyre = { workspace = true }
+serde = { workspace = true }
+sqlx = { workspace = true }
+time = { workspace = true }
+tracing = { workspace = true }
+url = "2.5.2"

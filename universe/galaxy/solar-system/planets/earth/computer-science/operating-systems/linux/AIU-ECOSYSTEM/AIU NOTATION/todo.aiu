@@ -40,14 +40,10 @@ Planned.
 paragraph end
 
 paragraph start
-todo: notation database: engine written from zero in Rust inside notation, no outside engine, no SQLite; order of work agreed: engine core, indexers one kind at a time, names, links and sync, red delete popup, autosave; see plan sections 3, 4 and 10.
+todo: notation database: engine core and the files, blocks, links, names, tags, todos indexers are done and the folder command notation index saves .notation/index.db; the open parts are filed as their own to-dos
 Planned.
 paragraph end
 
-paragraph start
-todo: box names: every block kind gets a name declaration, unique and readable, written in the file; it is the id and the link target; see plan section 5.
-Planned.
-paragraph end
 
 paragraph start
 todo: link blocks: link start and link end name a target box and can show it inside another file; the editor suggests names while typing.
@@ -74,13 +70,24 @@ todo: block type drawing: view.rs, boxview.rs, rich.rs, json.rkt, aiu-text.rkt a
 Planned.
 paragraph end
 
+
 paragraph start
-todo: database indexers: one source file per kind in notation/database, files first, then blocks, links, tags and todos; each rebuilds only its own kind of one source file through Store.replace_source.
+todo: register link as a block type in .notation/blocktypes and Racket elements/register.rkt, then make the links indexer read parsed link blocks instead of text lines
 Planned.
 paragraph end
 
 paragraph start
-todo: register link as a block type in .notation/blocktypes and Racket elements/register.rkt, then make the links indexer read parsed link blocks instead of text lines
+todo: the folder index loads block types from the folder nearest to the first file only; load them per file or per folder
+Planned.
+paragraph end
+
+paragraph start
+todo: names: fill name: on old blocks that have none, and make a duplicate name a check error instead of a stderr line
+Planned.
+paragraph end
+
+paragraph start
+todo: ecosystem server: the notation database is reachable through the shared ecosystem server so the editor, shell and multiplexer read the same index; plan in ecosystem-server-plan.aiu
 Planned.
 paragraph end
 

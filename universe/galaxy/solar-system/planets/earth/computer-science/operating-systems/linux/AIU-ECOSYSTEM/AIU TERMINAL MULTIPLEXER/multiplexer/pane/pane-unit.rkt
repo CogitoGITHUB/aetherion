@@ -6,7 +6,7 @@
 
 (define (pane-unit-open id columns rows directory)
   (define grid (make-pane-grid columns rows))
-  (define shell (path->string (or (find-executable-path "nu") (error "nu not found"))))
+  (define shell (or (getenv "AIU_PANE_PROGRAM") (path->string (or (find-executable-path "nu") (error "nu not found")))))
   (define link
     (parameterize ([current-directory (if (and (string? directory) (> (string-length directory) 0) (directory-exists? directory)) directory (current-directory))])
       (pane-open shell (list) columns rows)))

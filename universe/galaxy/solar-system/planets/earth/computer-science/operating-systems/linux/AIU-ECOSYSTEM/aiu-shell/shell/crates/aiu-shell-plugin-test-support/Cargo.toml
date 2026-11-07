@@ -1,0 +1,36 @@
+[package]
+name = "aiu-shell-plugin-test-support"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Testing support for Nushell plugins"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-plugin-test-support"
+
+[lib]
+bench = false
+
+[lints]
+workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+default = ["local-socket"]
+local-socket = ["aiu-shell-plugin/local-socket", "aiu-shell-plugin-engine/local-socket"]
+
+[dependencies]
+aiu-shell-engine = { workspace = true, features = ["plugin"] }
+aiu-shell-protocol = { workspace = true, features = ["plugin"] }
+aiu-shell-parser = { workspace = true, features = ["plugin"] }
+aiu-shell-plugin.workspace = true
+aiu-shell-plugin-core.workspace = true
+aiu-shell-plugin-engine.workspace = true
+aiu-shell-plugin-protocol.workspace = true
+aiu-shell-cmd-lang = { workspace = true, features = ["plugin"] }
+nu-ansi-term.workspace = true
+similar = "3.1"
+
+[dev-dependencies]
+typetag = "0.2"
+serde = "1.0"

@@ -1,0 +1,75 @@
+title start
+kind: default
+tags: ecosystem server
+Plan: the ecosystem and its servers
+title end
+
+section start
+title start
+Section 1: decided
+title end
+
+paragraph start
+The ecosystem is not one package. Every package stands on its own ground and works alone: terminal multiplexer, text editor, shell, notation system, and the packages that come after.
+paragraph end
+
+paragraph start
+Every package can have its own server and its own database, built in, so it never needs another package to run.
+paragraph end
+
+paragraph start
+Every package can also use one shared server and one shared database. When the shared server is there, the packages find it and talk to each other through it, so they combine better.
+paragraph end
+
+paragraph start
+Everything must be able to work with everything else: any package can read what another package stores and call what another package offers.
+paragraph end
+
+paragraph start
+The shell gets its own TUI. It draws the input box and the output box itself. It does not depend on the multiplexer. The multiplexer can host and combine the shell TUI, and stays optional for it.
+paragraph end
+
+section end
+
+section start
+title start
+Section 2: first packages
+title end
+
+paragraph start
+Order of work: terminal multiplexer, text editor, shell, notation system. Each gets its own server part first, then the connection to the shared server.
+paragraph end
+
+paragraph start
+The notation database in AIU NOTATION/notation/database is the first database to be shared: files, blocks, links, names, tags and todos are already indexed there.
+paragraph end
+
+section end
+
+section start
+title start
+Section 3: still open
+title end
+
+paragraph start
+The protocol between a package and a server, and how packages find the shared server.
+paragraph end
+
+paragraph start
+How a package switches between its own server and the shared one, and what happens when the shared one goes away.
+paragraph end
+
+paragraph start
+Who owns the name registry, and how names stay unique across all packages.
+paragraph end
+
+paragraph start
+Which language the shell TUI is written in, and how it talks to the shell.
+paragraph end
+
+paragraph start
+How the multiplexer and the shell TUI divide the screen when they run together.
+paragraph end
+
+section end
+

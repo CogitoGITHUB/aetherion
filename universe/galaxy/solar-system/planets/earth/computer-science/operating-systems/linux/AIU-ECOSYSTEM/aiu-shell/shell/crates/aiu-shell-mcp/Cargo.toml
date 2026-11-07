@@ -1,0 +1,45 @@
+[package]
+name = "aiu-shell-mcp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+description = "Modules to run a model context protocol (MCP) server that provides Nushell as a tool."
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-mcp"
+homepage = "https://www.nushell.sh"
+license.workspace = true
+
+[target.'cfg(unix)'.dependencies]
+nix = { workspace = true, features = ["process"] }
+
+[dependencies]
+aiu-shell-engine = { workspace = true, features = ["os"] }
+aiu-shell-json = { workspace = true, features = ["aiu-shell-protocol", "preserve_order"] }
+aiu-shell-parser.workspace = true
+aiu-shell-protocol = { workspace = true, features = ["os"] }
+aiu-shell-nuon.workspace = true
+
+bytes = { workspace = true }
+chrono = { workspace = true }
+futures = "0.3.31"
+hyper-util = { version = "0.1", features = ["tokio", "server-auto", "service"] }
+indoc = "2.0.7"
+miette = { workspace = true }
+rmcp = { version = "3.4.0", features = ["server", "transport-io", "schemars", "transport-streamable-http-server"] }
+schemars = "1.2.1"
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+tokio = { workspace = true, features = ["full"] }
+tokio-util = "0.7"
+tracing = { version = "0.1.44", features = ["log"] }
+tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
+
+[features]
+default = []
+mcp = []
+
+[lints]
+workspace = true
+
+[dev-dependencies]
+aiu-shell-cmd-lang = { workspace = true, features = ["os"] }

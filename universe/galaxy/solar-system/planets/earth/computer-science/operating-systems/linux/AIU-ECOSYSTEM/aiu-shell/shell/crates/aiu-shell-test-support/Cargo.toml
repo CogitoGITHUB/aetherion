@@ -1,0 +1,86 @@
+[package]
+authors.workspace = true
+description = "Support for writing Nushell tests"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-test-support"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+name = "aiu-shell-test-support"
+version.workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+[lib]
+doctest = false
+bench = false
+
+[lints]
+workspace = true
+
+[features]
+os = [
+  "aiu-shell-cli",
+  "aiu-shell-cmd-lang/os",
+  "aiu-shell-command/os",
+  "aiu-shell-engine/os",
+  "aiu-shell-protocol/os",
+  "aiu-shell-utils/os",
+  "dep:aiu-shell-tui",
+]
+network = ["aiu-shell-command/network"]
+rustls-tls = ["aiu-shell-command/rustls-tls"]
+plugin = [
+  "dep:aiu-shell-cmd-plugin",
+  "dep:aiu-shell-plugin-core",
+  "dep:aiu-shell-plugin-engine",
+  "aiu-shell-protocol/plugin",
+  "os",
+]
+
+[dependencies]
+aiu-shell-cli = { workspace = true, optional = true }
+aiu-shell-cmd-base.workspace = true
+aiu-shell-cmd-extra.workspace = true
+aiu-shell-cmd-lang.workspace = true
+aiu-shell-cmd-plugin = { workspace = true, optional = true }
+aiu-shell-command.workspace = true
+aiu-shell-tui = { workspace = true, optional = true }
+aiu-shell-engine.workspace = true
+aiu-shell-experimental.workspace = true
+aiu-shell-glob.workspace = true
+aiu-shell-parser.workspace = true
+aiu-shell-path.workspace = true
+aiu-shell-plugin-core = { workspace = true, optional = true }
+aiu-shell-plugin-engine = { workspace = true, optional = true }
+aiu-shell-protocol.workspace = true
+aiu-shell-std.workspace = true
+aiu-shell-test-support-macros.workspace = true
+aiu-shell-utils.workspace = true
+
+derive_more = { workspace = true, features = ["debug"] }
+indoc = { workspace = true }
+itertools = { workspace = true }
+kitest = { workspace = true }
+lexopt = { workspace = true }
+linkme = { workspace = true }
+miette = { workspace = true }
+nu-ansi-term = { workspace = true }
+num-format = { workspace = true }
+parking_lot = { workspace = true }
+pastey = { workspace = true }
+serde_json = { workspace = true }
+tempfile = { workspace = true }
+thiserror = { workspace = true }
+which = { workspace = true }
+
+[target.'cfg(unix)'.dependencies]
+gatekeeper = { workspace = true }
+
+[dev-dependencies]
+# doc tests use the "os" feature of `aiu-shell-command`
+aiu-shell-cmd-lang = { workspace = true, features = ["default"] }
+aiu-shell-command = { workspace = true, features = ["default"] }
+
+bytes = { workspace = true }
+rstest = { workspace = true }

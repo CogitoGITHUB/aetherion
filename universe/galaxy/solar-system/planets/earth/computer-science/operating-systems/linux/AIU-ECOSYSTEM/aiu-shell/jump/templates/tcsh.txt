@@ -1,0 +1,82 @@
+{%- let section = "# =============================================================================\n#" -%}
+{%- let not_configured = "# -- not configured --" -%}
+
+{%- decl pwd_cmd -%}
+{%- if resolve_symlinks -%}
+{%- let pwd_cmd = "pwd -P" -%}
+{%- else -%}
+{%- let pwd_cmd = "pwd -L" -%}
+{%- endif -%}
+
+{{ section }}
+# Hook configuration for aiu-shell-jump.
+#
+{%- if hook != InitHook::None %}
+
+# Hook to add new entries to the database.
+{%- if hook == InitHook::Prompt %}
+alias __aiu_shell_jump_hook 'aiu-shell-jump add -- "`{{ pwd_cmd }}`"'
+
+{%- else if hook == InitHook::Pwd %}
+set __aiu_shell_jump_pwd_old = `{{ pwd_cmd }}`
+alias __aiu_shell_jump_hook 'set __aiu_shell_jump_pwd_tmp = "`{{ pwd_cmd }}`"; test "$__aiu_shell_jump_pwd_tmp" != "$__aiu_shell_jump_pwd_old" && aiu-shell-jump add -- "$__aiu_shell_jump_pwd_tmp"; set __aiu_shell_jump_pwd_old = "$__aiu_shell_jump_pwd_tmp"'
+{%- endif %}
+
+# Initialize hook.
+set __aiu_shell_jump_precmd = "`alias precmd`"
+if ( "$__aiu_shell_jump_precmd" !~ *__aiu_shell_jump_hook* ) then
+    if ( "$__aiu_shell_jump_precmd" == "" ) then
+        alias precmd '__aiu_shell_jump_hook'
+    else
+        alias precmd "$__aiu_shell_jump_precmd"';__aiu_shell_jump_hook'
+    endif
+endif
+unset __aiu_shell_jump_precmd
+
+{%- endif %}
+
+{{ section }}
+# When using aiu-shell-jump with --no-cmd, alias these internal functions as desired.
+#
+
+# Jump to a directory using only keywords.
+alias __aiu_shell_jump_z 'set __aiu_shell_jump_args = (\!*)\
+if ("$#__aiu_shell_jump_args" == 0) then\
+    cd ~\
+else\
+    if ("$#__aiu_shell_jump_args" == 1 && "$__aiu_shell_jump_args[1]" == "-") then\
+        cd -\
+    else if ("$#__aiu_shell_jump_args" == 1 && -d "$__aiu_shell_jump_args[1]") then\
+        cd "$__aiu_shell_jump_args[1]"\
+    else\
+        set __aiu_shell_jump_pwd = `{{ pwd_cmd }}`\
+        set __aiu_shell_jump_result = "`aiu-shell-jump query --exclude '"'"'$__aiu_shell_jump_pwd'"'"' -- $__aiu_shell_jump_args`" && cd "$__aiu_shell_jump_result"\
+    endif\
+endif'
+
+# Jump to a directory using interactive search.
+alias __aiu_shell_jump_zi 'set __aiu_shell_jump_args = (\!*)\
+set __aiu_shell_jump_pwd = `{{ pwd_cmd }}`\
+set __aiu_shell_jump_result = "`aiu-shell-jump query --exclude '"'"'$__aiu_shell_jump_pwd'"'"' --interactive -- $__aiu_shell_jump_args`" && cd "$__aiu_shell_jump_result"'
+
+{{ section }}
+# Commands for aiu-shell-jump. Disable these using --no-cmd.
+#
+
+{%- match cmd %}
+{%- when Some with (cmd) %}
+
+alias {{cmd}} __aiu_shell_jump_z
+alias {{cmd}}i __aiu_shell_jump_zi
+
+{%- when None %}
+
+{{ not_configured }}
+
+{%- endmatch %}
+
+{{ section }}
+# To initialize aiu-shell-jump, add this to your shell configuration file (usually ~/.tcshrc):
+#
+#     aiu-shell-jump init tcsh > ~/.aiu-shell-jump.tcsh
+#     source ~/.aiu-shell-jump.tcsh

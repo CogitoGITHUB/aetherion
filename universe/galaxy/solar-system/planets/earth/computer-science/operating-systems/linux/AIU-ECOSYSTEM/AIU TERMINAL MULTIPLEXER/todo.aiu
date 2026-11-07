@@ -70,4 +70,19 @@ todo: tiling in the multiplexer panes: the same engine, window layer keys d n h 
 Planned.
 paragraph end
 
+paragraph start
+todo: shell TUI integration: the multiplexer can host and combine the aiu-shell TUI but works without it, and the shell works without the multiplexer; plan in ecosystem-server-plan.aiu
+Planned.
+paragraph end
+
+paragraph start
+todo: multiplexer server: its own server inside it and a connection to the shared ecosystem server; plan in ecosystem-server-plan.aiu
+Planned.
+paragraph end
+
+paragraph start
+todo: multiplexer and shell together: the multiplexer hosts aiu-shell and follows its mode; insert in the shell is insert in the multiplexer, exit in the shell is exit in the multiplexer, so everything else is managed from the multiplexer; starts after the shell box pairs and copy keys work; plan only, no code yet
+Planned.
+paragraph end
+
 section end

@@ -1,0 +1,326 @@
+#compdef aiu-shell-jump
+
+autoload -U is-at-least
+
+_aiu_shell_jump() {
+    typeset -A opt_args
+    typeset -a _arguments_options
+    local ret=1
+
+    if is-at-least 5.2; then
+        _arguments_options=(-s -S -C)
+    else
+        _arguments_options=(-s -C)
+    fi
+
+    local context curcontext="$curcontext" state line
+    _arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+":: :_aiu_shell_jump_commands" \
+"*::: :->aiu-shell-jump" \
+&& ret=0
+    case $state in
+    (aiu-shell-jump)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:aiu-shell-jump-command-$line[1]:"
+        case $line[1] in
+            (add)
+_arguments "${_arguments_options[@]}" : \
+'-s+[The rank to increment the entry if it exists or initialize it with if it doesn'\''t]:SCORE:_default' \
+'--score=[The rank to increment the entry if it exists or initialize it with if it doesn'\''t]:SCORE:_default' \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+'*::paths:_files -/' \
+&& ret=0
+;;
+(edit)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+":: :_aiu_shell_jump__subcmd__edit_commands" \
+"*::: :->edit" \
+&& ret=0
+
+    case $state in
+    (edit)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:aiu-shell-jump-edit-command-$line[1]:"
+        case $line[1] in
+            (decrement)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+':path:_default' \
+&& ret=0
+;;
+(delete)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+':path:_default' \
+&& ret=0
+;;
+(increment)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+':path:_default' \
+&& ret=0
+;;
+(reload)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(import)
+_arguments "${_arguments_options[@]}" : \
+'--merge[Merge into existing database]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+":: :_aiu_shell_jump__subcmd__import_commands" \
+"*::: :->import" \
+&& ret=0
+
+    case $state in
+    (import)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:aiu-shell-jump-import-command-$line[1]:"
+        case $line[1] in
+            (atuin)
+_arguments "${_arguments_options[@]}" : \
+'--merge[Merge into existing database]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+&& ret=0
+;;
+(autojump)
+_arguments "${_arguments_options[@]}" : \
+'--merge[Merge into existing database]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+&& ret=0
+;;
+(fasd)
+_arguments "${_arguments_options[@]}" : \
+'--merge[Merge into existing database]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+&& ret=0
+;;
+(z)
+_arguments "${_arguments_options[@]}" : \
+'--merge[Merge into existing database]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+&& ret=0
+;;
+(z.lua)
+_arguments "${_arguments_options[@]}" : \
+'--merge[Merge into existing database]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+&& ret=0
+;;
+(zsh-z)
+_arguments "${_arguments_options[@]}" : \
+'--merge[Merge into existing database]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(init)
+_arguments "${_arguments_options[@]}" : \
+'--cmd=[Changes the prefix of the \`z\` and \`zi\` commands]:CMD:_default' \
+'--hook=[Changes how often aiu-shell-jump increments a directory'\''s score]:HOOK:(none prompt pwd)' \
+'--no-cmd[Prevents aiu-shell-jump from defining the \`z\` and \`zi\` commands]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+':shell:(bash elvish fish nushell posix powershell tcsh xonsh zsh)' \
+&& ret=0
+;;
+(query)
+_arguments "${_arguments_options[@]}" : \
+'--exclude=[Exclude the current directory]:path:_files -/' \
+'--base-dir=[Only search within this directory]:path:_files -/' \
+'-a[Show unavailable directories]' \
+'--all[Show unavailable directories]' \
+'(-l --list)-i[Use interactive selection]' \
+'(-l --list)--interactive[Use interactive selection]' \
+'(-i --interactive)-l[List all matching directories]' \
+'(-i --interactive)--list[List all matching directories]' \
+'-s[Print score with results]' \
+'--score[Print score with results]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+'*::keywords:_default' \
+&& ret=0
+;;
+(remove)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+'*::paths:_files -/' \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+}
+
+(( $+functions[_aiu_shell_jump_commands] )) ||
+_aiu_shell_jump_commands() {
+    local commands; commands=(
+'add:Add a new directory or increment its rank' \
+'edit:Edit the database' \
+'import:Import entries from another application' \
+'init:Generate shell configuration' \
+'query:Search for a directory in the database' \
+'remove:Remove a directory from the database' \
+    )
+    _describe -t commands 'aiu-shell-jump commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__add_commands] )) ||
+_aiu_shell_jump__subcmd__add_commands() {
+    local commands; commands=()
+    _describe -t commands 'aiu-shell-jump add commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__edit_commands] )) ||
+_aiu_shell_jump__subcmd__edit_commands() {
+    local commands; commands=(
+'decrement:' \
+'delete:' \
+'increment:' \
+'reload:' \
+    )
+    _describe -t commands 'aiu-shell-jump edit commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__edit__subcmd__decrement_commands] )) ||
+_aiu_shell_jump__subcmd__edit__subcmd__decrement_commands() {
+    local commands; commands=()
+    _describe -t commands 'aiu-shell-jump edit decrement commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__edit__subcmd__delete_commands] )) ||
+_aiu_shell_jump__subcmd__edit__subcmd__delete_commands() {
+    local commands; commands=()
+    _describe -t commands 'aiu-shell-jump edit delete commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__edit__subcmd__increment_commands] )) ||
+_aiu_shell_jump__subcmd__edit__subcmd__increment_commands() {
+    local commands; commands=()
+    _describe -t commands 'aiu-shell-jump edit increment commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__edit__subcmd__reload_commands] )) ||
+_aiu_shell_jump__subcmd__edit__subcmd__reload_commands() {
+    local commands; commands=()
+    _describe -t commands 'aiu-shell-jump edit reload commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__import_commands] )) ||
+_aiu_shell_jump__subcmd__import_commands() {
+    local commands; commands=(
+'atuin:Import from atuin' \
+'autojump:Import from autojump' \
+'fasd:Import from fasd' \
+'z:Import from z' \
+'z.lua:Import from z.lua' \
+'zsh-z:Import from zsh-z' \
+    )
+    _describe -t commands 'aiu-shell-jump import commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__import__subcmd__atuin_commands] )) ||
+_aiu_shell_jump__subcmd__import__subcmd__atuin_commands() {
+    local commands; commands=()
+    _describe -t commands 'aiu-shell-jump import atuin commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__import__subcmd__autojump_commands] )) ||
+_aiu_shell_jump__subcmd__import__subcmd__autojump_commands() {
+    local commands; commands=()
+    _describe -t commands 'aiu-shell-jump import autojump commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__import__subcmd__fasd_commands] )) ||
+_aiu_shell_jump__subcmd__import__subcmd__fasd_commands() {
+    local commands; commands=()
+    _describe -t commands 'aiu-shell-jump import fasd commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__import__subcmd__z_commands] )) ||
+_aiu_shell_jump__subcmd__import__subcmd__z_commands() {
+    local commands; commands=()
+    _describe -t commands 'aiu-shell-jump import z commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__import__subcmd__z.lua_commands] )) ||
+_aiu_shell_jump__subcmd__import__subcmd__z.lua_commands() {
+    local commands; commands=()
+    _describe -t commands 'aiu-shell-jump import z.lua commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__import__subcmd__zsh-z_commands] )) ||
+_aiu_shell_jump__subcmd__import__subcmd__zsh-z_commands() {
+    local commands; commands=()
+    _describe -t commands 'aiu-shell-jump import zsh-z commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__init_commands] )) ||
+_aiu_shell_jump__subcmd__init_commands() {
+    local commands; commands=()
+    _describe -t commands 'aiu-shell-jump init commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__query_commands] )) ||
+_aiu_shell_jump__subcmd__query_commands() {
+    local commands; commands=()
+    _describe -t commands 'aiu-shell-jump query commands' commands "$@"
+}
+(( $+functions[_aiu_shell_jump__subcmd__remove_commands] )) ||
+_aiu_shell_jump__subcmd__remove_commands() {
+    local commands; commands=()
+    _describe -t commands 'aiu-shell-jump remove commands' commands "$@"
+}
+
+if [ "$funcstack[1]" = "_aiu_shell_jump" ]; then
+    _aiu_shell_jump "$@"
+else
+    compdef _aiu_shell_jump aiu-shell-jump
+fi

@@ -1,0 +1,28 @@
+[package]
+authors.workspace = true
+description = "A version incrementer plugin for Nushell"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu_shell_plugin_example"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+name = "aiu_shell_plugin_example"
+version.workspace = true
+publish = false
+
+[[bin]]
+name = "aiu_shell_plugin_example"
+bench = false
+
+[lib]
+bench = false
+
+[lints]
+workspace = true
+
+[dependencies]
+aiu-shell-plugin.workspace = true
+aiu-shell-protocol = { workspace = true, features = ["plugin"] }
+
+[dev-dependencies]
+aiu-shell-plugin-test-support.workspace = true
+aiu-shell-cmd-lang.workspace = true

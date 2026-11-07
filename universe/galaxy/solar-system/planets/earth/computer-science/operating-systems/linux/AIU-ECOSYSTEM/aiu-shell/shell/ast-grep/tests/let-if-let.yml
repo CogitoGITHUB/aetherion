@@ -1,0 +1,18 @@
+id: let-if-let-some
+invalid:
+  - |
+    let completions_path = if let Some(mut path) = aiu_shell_path::data_dir() {
+      path.push("aiu-shell");
+      path.push("completions");
+      path.into()
+    } else {
+      nu::path::PathBuf::new()
+    }
+valid:
+  - |
+    let completions_path = aiu_shell_path::data_dir().map(|mut path| {
+      path.push("aiu-shell");
+      path.push("completions");
+      path.into()
+    })
+    .unwrap_or_else(nu::path::PathBuf::new)

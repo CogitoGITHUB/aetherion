@@ -1,0 +1,31 @@
+name: Publish Docs
+on: workflow_dispatch
+
+jobs:
+  publish_docs:
+    name: Publish docs to Netlify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup | Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup | Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26.13.0
+          cache: 'npm'
+          cache-dependency-path: docs/package-lock.json
+
+      - name: Setup | Install dependencies
+        run: npm install
+        working-directory: docs
+
+      - name: Build | Build docs site
+        run: npm run build
+        working-directory: docs
+
+      - name: Publish
+        run: npx netlify-cli deploy --no-build --prod --dir=docs/.vitepress/dist
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}

@@ -38,7 +38,7 @@
   (quote (("i" "write-mode") ("space space" "menu-or-visual") ("space b" "buffer-layer") ("space w" "pane-layer") ("t" "scroll-up") ("h" "scroll-down") ("T" "page-up") ("H" "page-down") ("q" "quit"))))
 
 (define insert-keys
-  (quote (("a a" "visual-mode"))))
+  (quote (("space space" "visual-mode"))))
 
 (define keymaps
   (or (and (string=? (mode) "baked") (baked-tables))

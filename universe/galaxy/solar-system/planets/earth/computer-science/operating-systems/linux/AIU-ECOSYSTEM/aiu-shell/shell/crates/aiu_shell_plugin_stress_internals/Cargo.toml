@@ -1,0 +1,21 @@
+[package]
+authors.workspace = true
+description = "A test plugin for Nushell to stress aspects of the internals"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu_shell_plugin_stress_internals"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+name = "aiu_shell_plugin_stress_internals"
+version.workspace = true
+publish = false
+
+[[bin]]
+name = "aiu_shell_plugin_stress_internals"
+bench = false
+
+[dependencies]
+# Intentionally not using the aiu-shell-protocol / aiu-shell-plugin crates, to check behavior against our
+# assumptions about the serialized format
+serde = { workspace = true }
+serde_json = { workspace = true }
+interprocess = { workspace = true }

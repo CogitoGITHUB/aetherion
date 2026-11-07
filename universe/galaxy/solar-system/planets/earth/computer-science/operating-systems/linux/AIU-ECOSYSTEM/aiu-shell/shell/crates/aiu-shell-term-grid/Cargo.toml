@@ -1,0 +1,20 @@
+[package]
+authors.workspace = true
+description = "Nushell grid printing"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-term-grid"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+name = "aiu-shell-term-grid"
+version.workspace = true
+
+[lib]
+bench = false
+
+[lints]
+workspace = true
+
+[dependencies]
+aiu-shell-utils.workspace = true
+
+unicode-width = { workspace = true }

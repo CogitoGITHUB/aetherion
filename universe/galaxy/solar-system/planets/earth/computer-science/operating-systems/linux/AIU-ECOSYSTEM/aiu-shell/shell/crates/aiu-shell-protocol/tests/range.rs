@@ -1,0 +1,78 @@
+use aiu_shell_protocol::Range;
+use aiu_shell_test_support::prelude::*;
+use rstest::rstest;
+use std::ops::Bound;
+
+#[rstest]
+#[case("..2")]
+#[case("0..0")]
+#[case("1..2")]
+#[case("1..<2")]
+#[case("1..")]
+#[case("-2..2")]
+#[case("2..-2")]
+#[case("1..3..9")]
+#[case("9..7..1")]
+#[case("1.0..2.0")]
+#[case("1..2.0")]
+#[case("1.0..2")]
+#[case("1.0..<2.0")]
+#[case("-2.0..2.0")]
+#[case("2.0..-2.0")]
+#[case("-2.0..<2")]
+#[case("0.1..0.2..0.5")]
+#[case("-0.5..-0.4..0.0")]
+fn engine_eq_from_str(#[case] input: &str) -> Result {
+    let mut tester = test();
+    let via_engine: Range = tester.run(input)?;
+    let via_from_str: Range = input.parse().expect("range parses");
+    assert_eq!(via_engine, via_from_str, "{input}");
+    Ok(())
+}
+
+#[rstest]
+#[case(Range::new_int(None, None, Bound::Included(2)))]
+#[case(Range::new_int(0, None, Bound::Included(0)))]
+#[case(Range::new_int(1, None, Bound::Included(2)))]
+#[case(Range::new_int(1, None, Bound::Excluded(2)))]
+#[case(Range::new_int(1, None, Bound::Unbounded))]
+#[case(Range::new_int(-2, None, Bound::Included(2)))]
+#[case(Range::new_int(2, None, Bound::Included(-2)))]
+#[case(Range::new_int(1, 3, Bound::Included(9)))]
+#[case(Range::new_int(9, 7, Bound::Included(1)))]
+#[case(Range::new_float(1.0, None, Bound::Included(2.0)))]
+#[case(Range::new_float(1.0, None, Bound::Included(2.0)))]
+#[case(Range::new_float(1.0, None, Bound::Included(2.0)))]
+#[case(Range::new_float(1.0, None, Bound::Excluded(2.0)))]
+#[case(Range::new_float(-2.0, None, Bound::Included(2.0)))]
+#[case(Range::new_float(2.0, None, Bound::Included(-2.0)))]
+#[case(Range::new_float(-2.0, None, Bound::Excluded(2.0)))]
+#[case(Range::new_float(0.1, 0.2, Bound::Included(0.5)))]
+#[case(Range::new_float(-0.5, -0.4, Bound::Included(0.0)))]
+fn serde_round_trip(#[case] range: Range) {
+    let serialized = serde_json::to_string(&range).unwrap();
+    let deserialized = serde_json::from_str(&serialized).unwrap();
+    assert_eq!(range, deserialized, "{range:?}");
+}
+
+#[rstest]
+#[case("-9223372036854775808..9223372036854775807..0")]
+#[case("-1..9223372036854775807..0")]
+#[case("-9223372036854775808..0..0")]
+#[case("-9223372036854775808..0..")]
+fn error_on_overflow(#[case] input: &str) -> Result {
+    let mut tester = test();
+    tester
+        .run(input)
+        .expect_error_code_eq("nu::shell::range_to_countable")
+}
+
+#[rstest]
+#[case("'!range -9223372036854775808..0..0' | from yaml")]
+#[case("'!range -9223372036854775808..0..' | from yaml")]
+fn error_on_overflow_parse(#[case] input: &str) -> Result {
+    let mut tester = test();
+    tester
+        .run(input)
+        .expect_error_code_eq("shell::yaml::parse::range")
+}

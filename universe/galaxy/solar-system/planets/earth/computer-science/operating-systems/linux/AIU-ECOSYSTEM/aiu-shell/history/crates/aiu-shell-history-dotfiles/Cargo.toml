@@ -1,0 +1,27 @@
+[package]
+name = "aiu-shell-history-dotfiles"
+description = "The dotfiles crate for aiu-shell-history"
+edition = "2024"
+version = { workspace = true }
+
+authors.workspace = true
+rust-version.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+readme.workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+aiu-shell-history-common = { path = "../aiu-shell-history-common", version = "18.17.1" }
+aiu-shell-history-client = { path = "../aiu-shell-history-client", version = "18.17.1" }
+derive_more = { workspace = true }
+
+eyre = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+rmp = { version = "0.8.14" }
+rand = { workspace = true }
+serde = { workspace = true }
+crypto_secretbox = "0.1.1"

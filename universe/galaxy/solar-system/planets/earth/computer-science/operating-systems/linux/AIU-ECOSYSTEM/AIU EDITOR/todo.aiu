@@ -518,4 +518,14 @@ todo: literate code view: all files are written in .aiu with literate programmin
 Planned.
 paragraph end
 
+paragraph start
+todo: the editor writes the name: declaration when a block is made
+Planned.
+paragraph end
+
+paragraph start
+todo: editor server: the editor has its own server and can connect to the shared ecosystem server and database; plan in ecosystem-server-plan.aiu
+Planned.
+paragraph end
+
 section end

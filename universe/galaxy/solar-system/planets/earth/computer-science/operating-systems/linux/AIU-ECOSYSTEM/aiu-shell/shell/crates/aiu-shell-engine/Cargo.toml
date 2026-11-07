@@ -1,0 +1,42 @@
+[package]
+authors.workspace = true
+description = "Nushell's evaluation engine"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-engine"
+edition.workspace = true
+license.workspace = true
+name = "aiu-shell-engine"
+rust-version.workspace = true
+autotests = false
+version.workspace = true
+
+[lib]
+bench = false
+harness = false
+
+[lints]
+workspace = true
+
+[dependencies]
+aiu-shell-protocol.workspace = true
+aiu-shell-experimental.workspace = true
+aiu-shell-path.workspace = true
+aiu-shell-glob.workspace = true
+aiu-shell-utils.workspace = true
+fancy-regex = { workspace = true }
+log = { workspace = true }
+
+[features]
+default = ["os"]
+os = [
+  "aiu-shell-protocol/os",
+  "aiu-shell-test-support/os",
+  "aiu-shell-utils/os",
+]
+plugin = [
+  "aiu-shell-protocol/plugin",
+  "os",
+]
+
+[dev-dependencies]
+aiu-shell-test-support = { path = "../aiu-shell-test-support" }
+rstest.workspace = true

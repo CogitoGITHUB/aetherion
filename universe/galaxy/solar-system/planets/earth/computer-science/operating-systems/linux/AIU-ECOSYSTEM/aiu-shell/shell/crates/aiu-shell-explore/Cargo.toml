@@ -1,0 +1,49 @@
+[package]
+authors.workspace = true
+description = "Nushell table pager"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-explore"
+edition.workspace = true
+license.workspace = true
+name = "aiu-shell-explore"
+rust-version.workspace = true
+version.workspace = true
+
+[lib]
+bench = false
+
+[lints]
+workspace = true
+
+[dependencies]
+aiu-shell-protocol = { workspace = true, features = ["os"] }
+aiu-shell-path.workspace = true
+aiu-shell-parser.workspace = true
+aiu-shell-color-config.workspace = true
+aiu-shell-engine = { workspace = true, features = ["os"] }
+aiu-shell-table.workspace = true
+aiu-shell-json.workspace = true
+aiu-shell-utils.workspace = true
+aiu-shell-config.workspace = true
+nu-ansi-term.workspace = true
+aiu-shell-pretty-hex.workspace = true
+
+ansi-str = { workspace = true }
+anyhow = { workspace = true }
+crossterm = { workspace = true }
+fancy-regex = { workspace = true }
+log = { workspace = true }
+lscolors = { workspace = true, default-features = false, features = [
+    "nu-ansi-term",
+] }
+ratatui = { workspace = true }
+serde_json = { workspace = true, features = ["preserve_order"] }
+strip-ansi-escapes = { workspace = true }
+edtui = { version = "0.11.2", default-features = false, features = [
+    "system-editor",
+] }
+tui-tree-widget = "0.24"
+unicode-segmentation = { workspace = true }
+unicode-width = { workspace = true }
+
+[target.'cfg(any(windows, target_os = "macos", target_os = "linux"))'.dependencies]
+edtui = { version = "0.11.2", default-features = false, features = ["system-editor", "arboard"] }

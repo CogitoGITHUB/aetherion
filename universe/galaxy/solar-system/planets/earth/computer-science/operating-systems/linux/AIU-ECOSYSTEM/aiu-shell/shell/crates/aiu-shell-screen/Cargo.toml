@@ -1,0 +1,17 @@
+[package]
+authors.workspace = true
+description = "aiu-shell own screen: box pairs drawn with title edges and side bars"
+edition.workspace = true
+license.workspace = true
+name = "aiu-shell-screen"
+rust-version.workspace = true
+version.workspace = true
+
+[[bin]]
+name = "aiu-shell-screen"
+path = "src/main.rs"
+
+[dependencies]
+crossterm = { workspace = true, features = ["bracketed-paste"] }
+ratatui = { workspace = true }
+rusqlite = { workspace = true, features = ["bundled"] }

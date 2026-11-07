@@ -313,8 +313,18 @@
       (define amount (read-bytes-avail! buffer (current-input-port)))
       (cond
         [(eof-object? amount) (semaphore-post finished)]
+        [(and (getenv "AIU_PANE_PROGRAM")
+              (> amount 0)
+              (focused-unit)
+              (string=? (key-state-layer (unbox key-state-box)) "visual")
+              (eq? (key-state-pending (unbox key-state-box)) (quote none))
+              (not (memv (bytes-ref buffer 0) (list 32 105 27))))
+         (write-bytes (subbytes buffer 0 amount) (pane-link-master-out (pane-unit-link (focused-unit))))
+         (flush-output (pane-link-master-out (pane-unit-link (focused-unit))))
+         (loop)]
         
         [else
+         (define layer-before (key-state-layer (unbox key-state-box)))
          (define-values (forwarded next-state quit?)
            (route-keys (unbox key-state-box)
                        (apply-pane-keys! (apply-buffer-keys! (apply-scroll-keys! (subbytes buffer 0 amount))))))
@@ -326,8 +336,9 @@
          (define unit (focused-unit))
          (when (and unit (string=? (key-state-layer next-state) "write"))
            (set-box! (pane-unit-scroll unit) 0))
-         (when (and unit (> (bytes-length forwarded) 0))
-           (write-bytes forwarded (pane-link-master-out (pane-unit-link unit)))
+         (define sent (cond [(and (string=? layer-before "visual") (string=? (key-state-layer next-state) "write") (getenv "AIU_PANE_PROGRAM")) (bytes-append #"i" forwarded)] [(and (string=? layer-before "write") (string=? (key-state-layer next-state) "visual") (getenv "AIU_PANE_PROGRAM")) (bytes-append #"\e" forwarded)] [else forwarded]))
+         (when (and unit (> (bytes-length sent) 0))
+           (write-bytes sent (pane-link-master-out (pane-unit-link unit)))
            (flush-output (pane-link-master-out (pane-unit-link unit))))
          (show-cached-bars!)
          (set-box! dirty #t)

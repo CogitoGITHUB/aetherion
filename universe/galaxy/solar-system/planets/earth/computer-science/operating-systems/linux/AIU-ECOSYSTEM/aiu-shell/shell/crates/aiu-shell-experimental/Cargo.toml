@@ -1,0 +1,13 @@
+[package]
+authors.workspace = true
+description = "Nushell experimental options"
+edition.workspace = true
+license.workspace = true
+name = "aiu-shell-experimental"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-experimental"
+rust-version.workspace = true
+version.workspace = true
+
+[dependencies]
+itertools.workspace = true
+thiserror.workspace = true

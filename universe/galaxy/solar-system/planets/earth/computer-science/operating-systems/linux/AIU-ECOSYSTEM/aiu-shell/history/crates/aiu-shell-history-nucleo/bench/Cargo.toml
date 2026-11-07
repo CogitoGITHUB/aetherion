@@ -1,0 +1,10 @@
+[package]
+name = "aiu-shell-history-nucleo-bench"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+aiu-shell-history-nucleo = { version = "*", path = "../" }
+brunch = "0.5.0"
+fuzzy-matcher = "0.3.7"
+walkdir = "2"

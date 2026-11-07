@@ -1,0 +1,119 @@
+.TH "AIU_SHELL_JUMP" "1" "2021-04-12" "" "aiu-shell-jump"
+.SH NAME
+\fBaiu-shell-jump-init\fR - generate shell configuration for aiu-shell-jump
+.SH SYNOPSIS
+.B aiu-shell-jump init SHELL [OPTIONS]
+.SH DESCRIPTION
+To initialize aiu-shell-jump on your shell:
+.TP
+.B bash
+Add this to the \fBend\fR of your config file (usually \fB~/.bashrc\fR):
+.sp
+.nf
+    \fBeval "$(aiu-shell-jump init bash)"\fR
+.fi
+.TP
+.B elvish
+Add this to the \fBend\fR of your config file (usually \fB~/.elvish/rc.elv\fR):
+.sp
+.nf
+    \fBeval $(aiu-shell-jump init elvish | slurp)\fR
+.fi
+.sp
+Note: aiu-shell-jump only supports elvish v0.18.0 and above.
+.TP
+.B fish
+Add this to the \fBend\fR of your config file (usually
+\fB~/.config/fish/config.fish\fR):
+.sp
+.nf
+    \fBaiu-shell-jump init fish | source\fR
+.fi
+.TP
+.B nushell
+Add this to the \fBend\fR of your env file (find it by running
+\fB$nu.env-path\fR in Nushell):
+.sp
+.nf
+    \fBaiu-shell-jump init nushell | save -f ~/.aiu-shell-jump.nu\fR
+.fi
+.sp
+Now, add this to the \fBend\fR of your config file (find it by running
+\fB$nu.config-path\fR in Nushell):
+.sp
+.nf
+    \fBsource ~/.aiu-shell-jump.nu\fR
+.fi
+.sp
+Note: aiu-shell-jump only supports Nushell v0.89.0+.
+.TP
+.B powershell
+Add this to the \fBend\fR of your config file (find it by running \fBecho
+$profile\fR in PowerShell):
+.sp
+.nf
+    \fBInvoke-Expression (& { (aiu-shell-jump init powershell | Out-String) })\fR
+.fi
+.TP
+.B tcsh
+Add this to the \fBend\fR of your config file (usually \fB~/.tcshrc\fR):
+.sp
+.nf
+    \fBaiu-shell-jump init tcsh > ~/.aiu-shell-jump.tcsh\fR
+    \fBsource ~/.aiu-shell-jump.tcsh\fR
+.fi
+.TP
+.B xonsh
+Add this to the \fBend\fR of your config file (usually \fB~/.xonshrc\fR):
+.sp
+.nf
+    \fBexecx($(aiu-shell-jump init xonsh), 'exec', __xonsh__.ctx, filename='aiu-shell-jump')\fR
+.fi
+.TP
+.B zsh
+Add this to the \fBend\fR of your config file (usually \fB~/.zshrc\fR):
+.sp
+.nf
+    \fBeval "$(aiu-shell-jump init zsh)"\fR
+.fi
+.TP
+.B any POSIX shell
+.sp
+Add this to the \fBend\fR of your config file:
+.sp
+.nf
+    \fBeval "$(aiu-shell-jump init posix --hook prompt)"\fR
+.fi
+.SH OPTIONS
+.TP
+.B --cmd
+Changes the prefix of the \fBz\fR and \fBzi\fR commands.
+.br
+\fB--cmd j\fR would change the commands to (\fBj\fR, \fBji\fR).
+.br
+\fB--cmd cd\fR would replace the \fBcd\fR command (doesn't work on Nushell /
+POSIX shells).
+.TP
+.B -h, --help
+Print help information.
+.TP
+.B --hook HOOK
+Changes how often aiu-shell-jump increments a directory's score:
+.TS
+tab(|);
+l l.
+    \fBnone\fR|Never
+    \fBprompt\fR|At every shell prompt
+    \fBpwd\fR|Whenever the directory is changed
+.TE
+.TP
+.B --no-cmd
+Prevents aiu-shell-jump from defining the \fBz\fR and \fBzi\fR commands. These functions
+will still be available in your shell as \fB__aiu_shell_jump_z\fR and \fB__aiu_shell_jump_zi\fR,
+should you choose to redefine them.
+.SH REPORTING BUGS
+For any issues, feature requests, or questions, please visit:
+.sp
+\fBhttps://github.com/ajeetdsouza/zoxide/issues\fR
+.SH AUTHOR
+Ajeet D'Souza \fB<98ajeet@gmail.com>\fR

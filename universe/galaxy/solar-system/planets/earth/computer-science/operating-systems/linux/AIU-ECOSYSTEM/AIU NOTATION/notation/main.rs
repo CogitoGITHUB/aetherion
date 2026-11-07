@@ -26,7 +26,7 @@ const RICH_DEFAULT_WIDTH: usize = 40;
 // right one is.
 /// Say how to call the binary: the five commands and the one file path they take.
 fn usage() {
-    eprintln!("usage: notation <parse|render|render-rich|roundtrip|todos> <file>");
+    eprintln!("usage: notation <parse|render|render-rich|roundtrip|todos> <file>  or  notation index <folder>");
 }
 // main reads the command and the file, and hands the work to the one
 // command that knows it.
@@ -37,6 +37,18 @@ fn main() {
     if args.len() < 3 {
         usage();
         std::process::exit(2);
+    }
+    if args[1] == "index" {
+        match notation::database_index_folder::index_folder(std::path::Path::new(&args[2])) {
+            Ok(summary) => {
+                println!("{}", summary);
+                return;
+            }
+            Err(e) => {
+                eprintln!("notation: {}", e);
+                std::process::exit(1);
+            }
+        }
     }
     let command = args[1].clone();
     let path = args[2].clone();

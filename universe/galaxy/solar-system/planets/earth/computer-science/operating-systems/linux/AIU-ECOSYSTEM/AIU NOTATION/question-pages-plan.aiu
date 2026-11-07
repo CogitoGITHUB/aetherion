@@ -330,3 +330,22 @@ Still open: a subdirectory with its own .notation/ but no file for some type, wh
 paragraph end
 
 section end
+
+section start
+title start
+Section 12: progress 2026-11-06
+title end
+
+paragraph start
+Done: the database engine core (record.rs, store.rs, file-format.rs), the indexers for files, blocks, links, names, tags, todos, and the folder command notation index <folder> that walks a directory, indexes every .aiu and saves .notation/index.db.
+paragraph end
+
+paragraph start
+Done: block types load at run time from the nearest .notation/blocktypes folder, the counting rules are removed, and a duplicate name is printed by the folder command.
+paragraph end
+
+paragraph start
+Open, in order: name filler for old blocks that have none, duplicate name as a check error, link as a registered block type, block types loaded per file in the folder command, then links and sync, the red delete popup in our own file manager, and idle autosave after 5 seconds.
+paragraph end
+
+section end

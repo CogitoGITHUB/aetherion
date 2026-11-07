@@ -1,0 +1,37 @@
+[package]
+authors.workspace = true
+description = "Functionality for building Nushell plugins"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-plugin"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+name = "aiu-shell-plugin"
+version.workspace = true
+
+[lib]
+bench = false
+
+[lints]
+workspace = true
+
+[features]
+default = ["local-socket"]
+local-socket = ["aiu-shell-plugin-core/local-socket"]
+
+[dependencies]
+aiu-shell-engine = { workspace = true, features = ["plugin"] }
+aiu-shell-protocol = { workspace = true, features = ["plugin"] }
+aiu-shell-plugin-protocol.workspace = true
+aiu-shell-plugin-core.workspace = true
+aiu-shell-utils.workspace = true
+
+log = { workspace = true }
+thiserror = { workspace = true}
+
+[dev-dependencies]
+serde = { workspace = true }
+typetag = "0.2"
+
+[target.'cfg(target_family = "unix")'.dependencies]
+# For setting the process group ID (EnterForeground / LeaveForeground)
+nix = { workspace = true, default-features = false, features = ["process"] }

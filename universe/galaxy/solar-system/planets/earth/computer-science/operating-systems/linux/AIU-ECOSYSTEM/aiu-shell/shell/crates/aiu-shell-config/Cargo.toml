@@ -1,0 +1,38 @@
+[package]
+authors.workspace = true
+description = "Nushell configuration infrastructure - path resolution and config file management"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-config"
+edition.workspace = true
+license.workspace = true
+name = "aiu-shell-config"
+rust-version.workspace = true
+version.workspace = true
+
+[lib]
+bench = false
+harness = false
+
+[features]
+plugin = []
+
+[dependencies]
+aiu-shell-path = { workspace = true }
+
+derive_more = { workspace = true, features = ["display"] }
+derive_setters = { workspace = true }
+dirs = { workspace = true }
+thiserror = { workspace = true }
+
+[target.'cfg(windows)'.dependencies]
+# Resolve ProgramData via SHGetKnownFolderPath on the workspace windows-sys only.
+# Do not pass GUIDs into dirs-sys::known_folder — dirs-sys may link a different
+# windows-sys 0.x and GUID types are not compatible across those crate versions.
+windows-sys = { workspace = true, features = [
+  "Win32_UI_Shell",
+  "Win32_Globalization",
+  "Win32_System_Com",
+] }
+
+[dev-dependencies]
+aiu-shell-test-support = { path = "../aiu-shell-test-support", default-features = false }
+tempfile = { workspace = true }

@@ -1,0 +1,118 @@
+title start
+kind: todo
+tags: todo planned
+AIU SHELL TODO
+title end
+
+section start
+title start
+Next
+title end
+
+paragraph start
+todo: shell own TUI: aiu-shell draws its own input box and output box with side bars on every row; each command runs in a pty, its output is captured and drawn inside the output box with scrolling and resize; works without the multiplexer; plan in ecosystem-server-plan.aiu
+Planned.
+paragraph end
+
+paragraph start
+todo: drop the reedline box patch: aiu-shell/reedline painter patch and the prompt hooks in default_env.nu go once the own TUI exists
+Planned.
+paragraph end
+
+paragraph start
+todo: shell server: aiu-shell has its own server and can connect to the shared ecosystem server; plan in ecosystem-server-plan.aiu
+Planned.
+paragraph end
+
+paragraph start
+todo: shell TUI modes and history: the TUI starts in visual mode, insert mode is a key, history is browsed in visual mode; piece 2 in aiu-shell/tui-plan.aiu
+Planned.
+paragraph end
+
+paragraph start
+todo: shell TUI box select and copy: select a box with a key, move between boxes with d n h t, copy the command box, the output box or the pair; pieces 4 and 5 in aiu-shell/tui-plan.aiu
+Planned.
+paragraph end
+
+paragraph start
+todo: shell TUI pieces: build one piece at a time and check it on screen before the next; order in aiu-shell/tui-plan.aiu
+Planned.
+paragraph end
+
+paragraph start
+todo: shell and multiplexer together: when the box pairs work (command box, output box, copy keys), aiu-shell and the AIU TERMINAL MULTIPLEXER work together; entering or leaving insert mode in the shell does the same in the multiplexer, so exit in the shell also exits in the multiplexer and he can manage everything else there; plan only, no code yet
+Planned.
+paragraph end
+
+paragraph start
+todo: jump and history leftovers: cd takes several words (cd foo bar), no interactive pick without fzf, the up arrow shows the current line once more because the not_command_line filter is not used by the new history backend, history import and the mcp history tool still use the old reedline sqlite schema, the Plaintext arms in repl.rs and history_.rs can go, aiu-shell-jump has no completions generation since build = false
+Planned.
+paragraph end
+
+paragraph start
+todo: remove the old tools from the Shape config: the lines in config.nu that source zoxide.nu and the atuin init file and the z, zi and ctrl+u fzf bindings in modules/forms/scripts/zoxide.nu are replaced by the built in cd and history; do it after the new binary is used daily; the jump database is the same db.zo through _ZO_DATA_DIR, the history database is aiu-shell-history/history.db in the XDG data home
+Planned.
+paragraph end
+
+paragraph start
+todo: shell TUI piece 3 leftovers: every line runs in a fresh aiu-shell -c process, so cd and variables are not kept between lines (the screen must keep one engine and its cwd); no pty, so interactive programs and colors do not work; output is read after the command ends, not live; output is cut at 200 rows; the screen has no scrolling yet (piece 6)
+Planned.
+paragraph end
+
+paragraph start
+todo: shell TUI piece 4 leftovers: boxes mode is entered with b from visual mode and left with escape, because t and h in visual mode still browse history; Shape may want one mode with history on other keys; marks are indexes of boxes and are not kept when boxes are removed; piece 5 copy keys use the focus and the marks
+Planned.
+paragraph end
+
+paragraph start
+todo: shell TUI rounded corners: aiu-shell-screen boxes use rounded corners; the reedline stopgap box and the frame prompt in default_env.nu, the multiplexer and the editor frames still need rounded corners so everything looks the same
+Planned.
+paragraph end
+
+paragraph start
+todo: television: after copy works, clone Television with no history copy (upstream commit into aiu-shell/upstream-version.txt), rename it like jump and history (planned name aiu-shell-pick), and use it as the fuzzy picker inside aiu-shell for files, directories, history and the interactive cd that has no fzf now; the history view in aiu-shell-screen is the first picker
+Planned.
+paragraph end
+
+paragraph start
+todo: shell TUI history view leftovers: commands run in the screen are not saved into the history database yet; typed letters filter so the arrows move; no filter modes (directory, session, host) and no preview like atuin; the view shows exit mark, age and folder only; the history view must also feed the multiplexer later
+Planned.
+paragraph end
+
+paragraph start
+todo: shell TUI copy leftovers: copy works in boxes mode only (c box, p pair, a marked boxes); no copy of a part of a box or of a typed line in visual mode; OSC 52 may be ignored by Termux so termux-clipboard-set is also called when it exists; no paste key yet
+Planned.
+paragraph end
+
+paragraph start
+todo: shell server and notation: aiu-shell gets its own server and database that is connected to the AIU NOTATION system, so history, jump directories, command pairs and their output are stored there and can be read as notation blocks; the shell then reads from the server instead of reading everything again at every start; it can also connect to the shared ecosystem server (ecosystem-server-plan.aiu)
+Planned.
+paragraph end
+
+paragraph start
+todo: use aiu-shell daily: after copy is checked, read the config in .config/nushell and make aiu-shell run on it: config.nu, env.nu, the aliases and scripts, the starship lines and the old zoxide and atuin lines that the built in jump and history replace; first the plan, then one patch, no change to the nushell files before Shape agrees
+Planned.
+paragraph end
+
+paragraph start
+todo: shell TUI box view leftovers: in boxes mode the focused box is centered and the others are dark gray, boxes over 4 rows are folded in every mode and e expands the focused one; the input box stays at the bottom, Shape may want it in the middle; the fold length of 4 rows is fixed and could be a setting
+Planned.
+paragraph end
+
+paragraph start
+todo: shell TUI job leftovers: live output and stop are done; stop kills only the aiu-shell process and not its children (needs a process group), there is still no pty so no colors and no interactive programs, carriage return progress bars are flattened to lines, one process per line so cd and variables are not kept
+Planned.
+paragraph end
+
+section end
+
+todo: shell TUI bar leftovers: the tab bar shows only the directory and one shell tab, no git row, no project or workspace rows, no tab keys; the bar is fixed at the bottom with no bar place keys or level adjuster; the key menu is a fixed list, not read from a keymap; the clock calls the date command once a minute
+
+todo: shell TUI full screen leftovers: tv, aiutm, vim, less, htop, ssh and similar get the whole terminal while they run (list in command_runner.rs is_fullscreen_line), their output is not captured into the box; the real fix is a pty per command
+
+
+todo: multiplexer and shell keys: while a pane runs the screen, aiutm forwards every visual key except space, i and escape sequences, so the screen own space menu is not reachable inside aiutm (aiutm uses SPC SPC, SPC b, SPC w); the keys menu of aiutm does not list the screen keys
+
+todo: clipboard: termux-clipboard-set hangs on the phone (timeout 124), so the screen copy only works through the OSC 52 passthrough of aiutm; check Termux:API app and permission; the screen copy fallback should be removed or given a timeout
+
+todo: history secrets.rs: the ghr_ sample (GitHub refresh token) is still one long literal and may be flagged by GitHub push protection; split it with concat! like the others; commit 732b3bca still holds the old sample tokens in git history

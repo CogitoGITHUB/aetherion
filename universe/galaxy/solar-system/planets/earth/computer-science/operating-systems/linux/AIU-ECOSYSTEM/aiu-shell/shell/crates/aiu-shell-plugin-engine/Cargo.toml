@@ -1,0 +1,39 @@
+[package]
+authors.workspace = true
+description = "Functionality for running Nushell plugins from a Nushell engine"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-plugin-engine"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+name = "aiu-shell-plugin-engine"
+version.workspace = true
+
+[lib]
+bench = false
+
+[features]
+default = ["local-socket"]
+local-socket = ["aiu-shell-plugin-core/local-socket"]
+
+[lints]
+workspace = true
+
+[dependencies]
+aiu-shell-engine = { workspace = true, features = ["plugin"] }
+aiu-shell-protocol.workspace = true
+aiu-shell-system.workspace = true
+aiu-shell-plugin-protocol.workspace = true
+aiu-shell-plugin-core.workspace = true
+aiu-shell-utils.workspace = true
+
+serde = { workspace = true }
+log = { workspace = true }
+
+[dev-dependencies]
+typetag = "0.2"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows = { workspace = true, features = [
+  # For setting process creation flags
+  "Win32_System_Threading",
+] }

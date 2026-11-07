@@ -40,7 +40,7 @@
   (define trig (let ([t (assoc layer trigger-of)]) (if t (cdr t) "-")))
   (define waiting
     (if (pair? pending) (format "  waiting after ~a" (string-join (map bar-kname pending) " ")) ""))
-  (define title (if (has? "mode") (format "~a [~a] · ~a" (mode-label layer) (unbox kind-filter) short) "bar"))
+  (define title (if (has? "mode") (format "~a [~a] · ~a" (mode-label layer) (unbox kind-filter) (if (getenv "AIU_PANE_PROGRAM") "aiu shell" short)) "bar"))
   (define stamp
     "")
   (define middle

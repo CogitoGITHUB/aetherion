@@ -1,0 +1,29 @@
+[package]
+authors.workspace = true
+description = "A Nushell plugin to query JSON, XML, and various web data"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu_shell_plugin_query"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+name = "aiu_shell_plugin_query"
+version.workspace = true
+
+[lib]
+doctest = false
+bench = false
+
+[[bin]]
+name = "aiu_shell_plugin_query"
+bench = false
+
+[dependencies]
+aiu-shell-plugin.workspace = true
+aiu-shell-protocol.workspace = true
+
+gjson = "0.8.1"
+scraper = { default-features = false, version = "0.29.0" }
+sxd-document = "0.3"
+sxd-xpath = "0.4"
+webpage = { version = "2.1.0", features = ["serde"] }
+serde_json.workspace = true
+serde.workspace = true

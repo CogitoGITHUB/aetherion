@@ -1,0 +1,51 @@
+[package]
+authors.workspace = true
+build = "build.rs"
+description = "Nushell's core language commands"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-cmd-lang"
+edition.workspace = true
+license.workspace = true
+name = "aiu-shell-cmd-lang"
+rust-version.workspace = true
+version.workspace = true
+
+[lib]
+bench = false
+
+[lints]
+workspace = true
+
+[dependencies]
+aiu-shell-engine.workspace = true
+aiu-shell-experimental.workspace = true
+aiu-shell-parser.workspace = true
+aiu-shell-protocol.workspace = true
+aiu-shell-utils.workspace = true
+aiu-shell-cmd-base.workspace = true
+
+itertools = { workspace = true }
+semver = { workspace = true }
+shadow-rs = { version = "2.0", default-features = false }
+
+[build-dependencies]
+shadow-rs = { version = "2.0", default-features = false, features = ["build"] }
+
+[dev-dependencies]
+aiu-shell-test-support = { path = "../aiu-shell-test-support" }
+
+quickcheck = { workspace = true }
+quickcheck_macros = { workspace = true }
+miette = { workspace = true }
+
+[features]
+default = ["os"]
+os = [
+  "aiu-shell-engine/os",
+  "aiu-shell-protocol/os",
+  "aiu-shell-test-support/os",
+  "aiu-shell-utils/os",
+]
+plugin = [
+  "aiu-shell-protocol/plugin",
+  "os",
+]

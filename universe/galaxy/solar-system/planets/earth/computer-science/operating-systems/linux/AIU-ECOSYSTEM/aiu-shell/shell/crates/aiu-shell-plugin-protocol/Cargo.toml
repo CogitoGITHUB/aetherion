@@ -1,0 +1,28 @@
+[package]
+authors.workspace = true
+description = "Protocol type definitions for Nushell plugins"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-plugin-protocol"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+name = "aiu-shell-plugin-protocol"
+version.workspace = true
+
+[lib]
+bench = false
+
+[lints]
+workspace = true
+
+[dependencies]
+aiu-shell-protocol = { workspace = true, features = ["plugin"] }
+aiu-shell-utils.workspace = true
+
+rmp-serde = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+semver = "1.0"
+typetag = "0.2"
+
+[features]
+default = ["local-socket"]
+local-socket = []

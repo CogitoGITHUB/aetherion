@@ -1,0 +1,21 @@
+[package]
+authors.workspace = true
+description = "Macros for aiu-shell-test-support"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-test-support-macros"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+name = "aiu-shell-test-support-macros"
+version.workspace = true
+
+[lib]
+proc-macro = true
+
+[dependencies]
+aiu-shell-experimental.workspace = true
+
+heck = { workspace = true }
+proc-macro-error3 = { workspace = true }
+proc-macro2 = { workspace = true }
+quote = { workspace = true }
+syn = { workspace = true, features = ["full"] }

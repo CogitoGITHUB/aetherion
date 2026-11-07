@@ -1,6 +1,6 @@
 #lang racket/base
 (require racket/list racket/string "pane-width.rkt")
-(provide (struct-out pane-grid) make-pane-grid pane-grid-feed! pane-grid-resize!)
+(provide (struct-out pane-grid) make-pane-grid pane-grid-feed! pane-grid-resize! pane-grid-osc52-hook)
 
 (struct pane-grid (columns height rows cursor-row cursor-column style shown top bottom
                    pending-wrap parse-state parse-buffer history alternate saved-main
@@ -262,7 +262,7 @@
   (set-pane-grid-parse-state! g (quote ground))
   (case ch
     [(#\[) (set-pane-grid-parse-state! g (quote csi)) (set-pane-grid-parse-buffer! g "")]
-    [(#\] #\P #\_ #\^ #\X) (set-pane-grid-parse-state! g (quote osc))]
+    [(#\] #\P #\_ #\^ #\X) (set-pane-grid-parse-state! g (quote osc)) (set-pane-grid-parse-buffer! g "")]
     [(#\( #\) #\* #\+) (set-pane-grid-parse-state! g (quote charset))]
     [(#\7) (save-cursor! g)]
     [(#\8) (restore-cursor! g)]
@@ -272,10 +272,24 @@
     [(#\c) (reset-grid! g)]
     [else (void)]))
 
+(define pane-grid-osc52-hook
+  (box (lambda (body)
+         (write-string (string-append "\u001b]" body "\u0007"))
+         (flush-output))))
+
+(define (osc-finish! g)
+  (define body (pane-grid-parse-buffer g))
+  (set-pane-grid-parse-state! g (quote ground))
+  (set-pane-grid-parse-buffer! g "")
+  (when (and (> (string-length body) 3) (< (string-length body) 30000) (string=? (substring body 0 3) "52;"))
+    ((unbox pane-grid-osc52-hook) body)))
+
 (define (osc-char! g ch)
   (cond
-    [(char=? ch #\u07) (set-pane-grid-parse-state! g (quote ground))]
-    [(char=? ch #\u1B) (set-pane-grid-parse-state! g (quote osc-escape))]))
+    [(char=? ch #\u07) (osc-finish! g)]
+    [(char=? ch #\u1B) (set-pane-grid-parse-state! g (quote osc-escape))]
+    [(< (string-length (pane-grid-parse-buffer g)) 30000)
+     (set-pane-grid-parse-buffer! g (string-append (pane-grid-parse-buffer g) (string ch)))]))
 
 (define (ground-char! g ch)
   (define row (pane-grid-cursor-row g))
@@ -295,7 +309,7 @@
     [(escape) (escape-char! g ch)]
     [(csi) (csi-char! g ch)]
     [(osc) (osc-char! g ch)]
-    [(osc-escape) (set-pane-grid-parse-state! g (if (char=? ch #\\) (quote ground) (quote osc)))]
+    [(osc-escape) (if (char=? ch #\\) (osc-finish! g) (set-pane-grid-parse-state! g (quote osc)))]
     [(charset) (set-pane-grid-parse-state! g (quote ground))]))
 
 (define (pane-grid-feed! g text)

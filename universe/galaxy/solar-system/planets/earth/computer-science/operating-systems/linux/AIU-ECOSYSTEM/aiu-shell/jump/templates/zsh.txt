@@ -1,0 +1,186 @@
+{%- let section = "# =============================================================================\n#" -%}
+{%- let not_configured = "# -- not configured --" -%}
+
+# shellcheck shell=bash
+
+{{ section }}
+# Utility functions for aiu-shell-jump.
+#
+
+# pwd based on the value of _ZO_RESOLVE_SYMLINKS.
+function __aiu_shell_jump_pwd() {
+{%- decl pwd -%}
+{%- if resolve_symlinks -%}
+{%- let pwd = "\\builtin pwd -P" -%}
+{%- else -%}
+{%- let pwd = "\\builtin pwd -L" -%}
+{%- endif -%}
+{%- if cfg!(windows) %}
+    \command cygpath -w "{{ pwd }}"
+{%- else %}
+    {{ pwd }}
+{%- endif %}
+}
+
+# cd + custom logic based on the value of _ZO_ECHO.
+function __aiu_shell_jump_cd() {
+    # shellcheck disable=SC2164
+    \builtin cd -- "$@" {%- if echo %} && __aiu_shell_jump_pwd {%- endif %}
+}
+
+{{ section }}
+# Hook configuration for aiu-shell-jump.
+#
+
+# Hook to add new entries to the database.
+function __aiu_shell_jump_hook() {
+    # shellcheck disable=SC2312
+    \command aiu-shell-jump add -- "$(__aiu_shell_jump_pwd)"
+}
+
+# Initialize hook.
+\builtin typeset -ga precmd_functions
+\builtin typeset -ga chpwd_functions
+# shellcheck disable=SC2034,SC2296
+precmd_functions=("${(@)precmd_functions:#__aiu_shell_jump_hook}")
+# shellcheck disable=SC2034,SC2296
+chpwd_functions=("${(@)chpwd_functions:#__aiu_shell_jump_hook}")
+
+{%- if hook == InitHook::Prompt %}
+precmd_functions+=(__aiu_shell_jump_hook)
+{%- else if hook == InitHook::Pwd %}
+chpwd_functions+=(__aiu_shell_jump_hook)
+{%- endif %}
+
+# Report common issues.
+function __aiu_shell_jump_doctor() {
+{%- if hook == InitHook::None %}
+    return 0
+
+{%- else %}
+    [[ ${_ZO_DOCTOR:-1} -ne 0 ]] || return 0
+    [[ $- == *i* ]] || return 0
+
+{%- if hook == InitHook::Prompt %}
+    [[ ${precmd_functions[(Ie)__aiu_shell_jump_hook]:-} -eq 0 ]] || return 0
+{%- else if hook == InitHook::Pwd %}
+    [[ ${chpwd_functions[(Ie)__aiu_shell_jump_hook]:-} -eq 0 ]] || return 0
+{%- endif %}
+
+    _ZO_DOCTOR=0
+    \builtin printf '%s\n' \
+        'aiu-shell-jump: detected a possible configuration issue.' \
+        'Please ensure that aiu-shell-jump is initialized right at the end of your shell configuration file (usually ~/.zshrc).' \
+        '' \
+        'If the issue persists, consider filing an issue at:' \
+        'https://github.com/ajeetdsouza/zoxide/issues' \
+        '' \
+        'Disable this message by setting _ZO_DOCTOR=0.' \
+        '' >&2
+{%- endif %}
+}
+
+{{ section }}
+# When using aiu-shell-jump with --no-cmd, alias these internal functions as desired.
+#
+
+# Jump to a directory using only keywords.
+function __aiu_shell_jump_z() {
+    __aiu_shell_jump_doctor
+    if [[ "$#" -eq 0 ]]; then
+        __aiu_shell_jump_cd ~
+    elif [[ "$#" -eq 1 ]] && [[ "$1" = '-' ]]; then
+        __aiu_shell_jump_cd "${OLDPWD}"
+    elif [[ "$#" -eq 1 ]] && { [[ "$1" =~ ^[-+][0-9]+$ ]] || (\builtin cd -q -- "$1") &>/dev/null; }; then
+        __aiu_shell_jump_cd "$1"
+    elif [[ "$#" -eq 2 ]] && [[ "$1" = "--" ]]; then
+        __aiu_shell_jump_cd "$2"
+    else
+        \builtin local result
+        # shellcheck disable=SC2312
+        result="$(\command aiu-shell-jump query --exclude "$(__aiu_shell_jump_pwd)" -- "$@")" && __aiu_shell_jump_cd "${result}"
+    fi
+}
+
+# Jump to a directory using interactive search.
+function __aiu_shell_jump_zi() {
+    __aiu_shell_jump_doctor
+    \builtin local result
+    result="$(\command aiu-shell-jump query --interactive -- "$@")" && __aiu_shell_jump_cd "${result}"
+}
+
+{{ section }}
+# Commands for aiu-shell-jump. Disable these using --no-cmd.
+#
+
+{%- match cmd %}
+{%- when Some with (cmd) %}
+
+function {{ cmd }}() {
+    __aiu_shell_jump_z "$@"
+}
+
+function {{ cmd }}i() {
+    __aiu_shell_jump_zi "$@"
+}
+
+{%- when None %}
+
+{{ not_configured }}
+
+{%- endmatch %}
+
+# Completions.
+if [[ -o zle ]]; then
+    __aiu_shell_jump_result=''
+
+    function __aiu_shell_jump_z_complete() {
+        # Only show completions when the cursor is at the end of the line.
+        # shellcheck disable=SC2154
+        [[ "{{ "${#words[@]}" }}" -eq "${CURRENT}" ]] || return 0
+
+        if [[ "{{ "${#words[@]}" }}" -eq 2 ]]; then
+            # Show completions for local directories.
+            _cd -/
+
+        elif [[ "${words[-1]}" == '' ]]; then
+            # Show completions for Space-Tab.
+            # shellcheck disable=SC2086
+            __aiu_shell_jump_result="$(\command aiu-shell-jump query --exclude "$(__aiu_shell_jump_pwd || \builtin true)" --interactive -- ${words[2,-1]} 2>/dev/null)" || __aiu_shell_jump_result=''
+
+            # Set a result to ensure completion doesn't re-run
+            compadd -Q -S "" -- ""
+
+            # Bind '\e[0n' to helper function.
+            \builtin bindkey '\e[0n' '__aiu_shell_jump_z_complete_helper'
+            # Sends query device status code, which results in a '\e[0n' being sent to console input.
+            \builtin printf '\e[5n'
+
+            # Report that the completion was successful, so that we don't fall back
+            # to another completion function.
+            return 0
+        fi
+    }
+
+    function __aiu_shell_jump_z_complete_helper() {
+        if [[ -n "${__aiu_shell_jump_result}" ]]; then
+            # shellcheck disable=SC2034,SC2296
+            BUFFER="{{ cmd.unwrap_or("cd") }} ${(q-)__aiu_shell_jump_result}"
+            __aiu_shell_jump_result=''
+            \builtin zle reset-prompt
+            \builtin zle accept-line
+        else
+            \builtin zle reset-prompt
+        fi
+    }
+    \builtin zle -N __aiu_shell_jump_z_complete_helper
+{%- if let Some(cmd) = cmd %}
+
+    [[ "${+functions[compdef]}" -ne 0 ]] && \compdef __aiu_shell_jump_z_complete {{ cmd }}
+{%- endif %}
+fi
+
+{{ section }}
+# To initialize aiu-shell-jump, add this to your shell configuration file (usually ~/.zshrc):
+#
+# eval "$(aiu-shell-jump init zsh)"

@@ -1,0 +1,4013 @@
+notation-index	1
+R	block	AIU EDITOR/aiutd-tutorial.aiu:1	AIU EDITOR/aiutd-tutorial.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:101	AIU EDITOR/aiutd-tutorial.aiu
+F	block	section
+F	line	101
+F	end-line	114
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:102	AIU EDITOR/aiutd-tutorial.aiu
+F	block	title
+F	line	102
+F	end-line	104
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:106	AIU EDITOR/aiutd-tutorial.aiu
+F	block	paragraph
+F	line	106
+F	end-line	108
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:110	AIU EDITOR/aiutd-tutorial.aiu
+F	block	paragraph
+F	line	110
+F	end-line	112
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:116	AIU EDITOR/aiutd-tutorial.aiu
+F	block	section
+F	line	116
+F	end-line	125
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:117	AIU EDITOR/aiutd-tutorial.aiu
+F	block	title
+F	line	117
+F	end-line	119
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:12	AIU EDITOR/aiutd-tutorial.aiu
+F	block	paragraph
+F	line	12
+F	end-line	14
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:121	AIU EDITOR/aiutd-tutorial.aiu
+F	block	paragraph
+F	line	121
+F	end-line	123
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:16	AIU EDITOR/aiutd-tutorial.aiu
+F	block	paragraph
+F	line	16
+F	end-line	18
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:22	AIU EDITOR/aiutd-tutorial.aiu
+F	block	comment
+F	line	22
+F	end-line	24
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:26	AIU EDITOR/aiutd-tutorial.aiu
+F	block	section
+F	line	26
+F	end-line	39
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:27	AIU EDITOR/aiutd-tutorial.aiu
+F	block	title
+F	line	27
+F	end-line	29
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:31	AIU EDITOR/aiutd-tutorial.aiu
+F	block	paragraph
+F	line	31
+F	end-line	33
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:35	AIU EDITOR/aiutd-tutorial.aiu
+F	block	paragraph
+F	line	35
+F	end-line	37
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:41	AIU EDITOR/aiutd-tutorial.aiu
+F	block	section
+F	line	41
+F	end-line	54
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:42	AIU EDITOR/aiutd-tutorial.aiu
+F	block	title
+F	line	42
+F	end-line	44
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:46	AIU EDITOR/aiutd-tutorial.aiu
+F	block	paragraph
+F	line	46
+F	end-line	48
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:50	AIU EDITOR/aiutd-tutorial.aiu
+F	block	paragraph
+F	line	50
+F	end-line	52
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:56	AIU EDITOR/aiutd-tutorial.aiu
+F	block	section
+F	line	56
+F	end-line	69
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:57	AIU EDITOR/aiutd-tutorial.aiu
+F	block	title
+F	line	57
+F	end-line	59
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:61	AIU EDITOR/aiutd-tutorial.aiu
+F	block	paragraph
+F	line	61
+F	end-line	63
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:65	AIU EDITOR/aiutd-tutorial.aiu
+F	block	paragraph
+F	line	65
+F	end-line	67
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:7	AIU EDITOR/aiutd-tutorial.aiu
+F	block	section
+F	line	7
+F	end-line	20
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:71	AIU EDITOR/aiutd-tutorial.aiu
+F	block	section
+F	line	71
+F	end-line	84
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:72	AIU EDITOR/aiutd-tutorial.aiu
+F	block	title
+F	line	72
+F	end-line	74
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:76	AIU EDITOR/aiutd-tutorial.aiu
+F	block	paragraph
+F	line	76
+F	end-line	78
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:8	AIU EDITOR/aiutd-tutorial.aiu
+F	block	title
+F	line	8
+F	end-line	10
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:80	AIU EDITOR/aiutd-tutorial.aiu
+F	block	paragraph
+F	line	80
+F	end-line	82
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:86	AIU EDITOR/aiutd-tutorial.aiu
+F	block	section
+F	line	86
+F	end-line	99
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:87	AIU EDITOR/aiutd-tutorial.aiu
+F	block	title
+F	line	87
+F	end-line	89
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:91	AIU EDITOR/aiutd-tutorial.aiu
+F	block	paragraph
+F	line	91
+F	end-line	93
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/aiutd-tutorial.aiu:95	AIU EDITOR/aiutd-tutorial.aiu
+F	block	paragraph
+F	line	95
+F	end-line	97
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:1	AIU EDITOR/text-editor/test.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:100	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	100
+F	end-line	103
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:105	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	105
+F	end-line	108
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:11	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	11
+F	end-line	13
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:111	AIU EDITOR/text-editor/test.aiu
+F	block	section
+F	line	111
+F	end-line	133
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:112	AIU EDITOR/text-editor/test.aiu
+F	block	title
+F	line	112
+F	end-line	114
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:116	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	116
+F	end-line	118
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:120	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	120
+F	end-line	122
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:124	AIU EDITOR/text-editor/test.aiu
+F	block	code
+F	line	124
+F	end-line	132
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:135	AIU EDITOR/text-editor/test.aiu
+F	block	section
+F	line	135
+F	end-line	155
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:136	AIU EDITOR/text-editor/test.aiu
+F	block	title
+F	line	136
+F	end-line	138
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:140	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	140
+F	end-line	142
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:144	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	144
+F	end-line	146
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:148	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	148
+F	end-line	150
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:15	AIU EDITOR/text-editor/test.aiu
+F	block	section
+F	line	15
+F	end-line	47
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:152	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	152
+F	end-line	154
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:157	AIU EDITOR/text-editor/test.aiu
+F	block	section
+F	line	157
+F	end-line	185
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:158	AIU EDITOR/text-editor/test.aiu
+F	block	title
+F	line	158
+F	end-line	160
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:16	AIU EDITOR/text-editor/test.aiu
+F	block	title
+F	line	16
+F	end-line	18
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:162	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	162
+F	end-line	164
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:166	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	166
+F	end-line	168
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:170	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	170
+F	end-line	172
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:174	AIU EDITOR/text-editor/test.aiu
+F	block	code
+F	line	174
+F	end-line	184
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:187	AIU EDITOR/text-editor/test.aiu
+F	block	section
+F	line	187
+F	end-line	201
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:188	AIU EDITOR/text-editor/test.aiu
+F	block	title
+F	line	188
+F	end-line	190
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:192	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	192
+F	end-line	194
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:196	AIU EDITOR/text-editor/test.aiu
+F	block	code
+F	line	196
+F	end-line	200
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:20	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	20
+F	end-line	22
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:203	AIU EDITOR/text-editor/test.aiu
+F	block	comment
+F	line	203
+F	end-line	205
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:24	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	24
+F	end-line	26
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:28	AIU EDITOR/text-editor/test.aiu
+F	block	section
+F	line	28
+F	end-line	46
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:29	AIU EDITOR/text-editor/test.aiu
+F	block	title
+F	line	29
+F	end-line	31
+F	depth	2
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:33	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	33
+F	end-line	35
+F	depth	2
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:37	AIU EDITOR/text-editor/test.aiu
+F	block	section
+F	line	37
+F	end-line	45
+F	depth	2
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:38	AIU EDITOR/text-editor/test.aiu
+F	block	title
+F	line	38
+F	end-line	40
+F	depth	3
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:42	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	42
+F	end-line	44
+F	depth	3
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:49	AIU EDITOR/text-editor/test.aiu
+F	block	section
+F	line	49
+F	end-line	78
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:50	AIU EDITOR/text-editor/test.aiu
+F	block	title
+F	line	50
+F	end-line	52
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:54	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	54
+F	end-line	56
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:58	AIU EDITOR/text-editor/test.aiu
+F	block	code
+F	line	58
+F	end-line	69
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:7	AIU EDITOR/text-editor/test.aiu
+F	block	comment
+F	line	7
+F	end-line	9
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:71	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	71
+F	end-line	73
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:75	AIU EDITOR/text-editor/test.aiu
+F	block	comment
+F	line	75
+F	end-line	77
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:80	AIU EDITOR/text-editor/test.aiu
+F	block	section
+F	line	80
+F	end-line	109
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:81	AIU EDITOR/text-editor/test.aiu
+F	block	title
+F	line	81
+F	end-line	83
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:85	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	85
+F	end-line	88
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:90	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	90
+F	end-line	93
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/text-editor/test.aiu:95	AIU EDITOR/text-editor/test.aiu
+F	block	paragraph
+F	line	95
+F	end-line	98
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:1	AIU EDITOR/todo.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:103	AIU EDITOR/todo.aiu
+F	block	section
+F	line	103
+F	end-line	107
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:104	AIU EDITOR/todo.aiu
+F	block	title
+F	line	104
+F	end-line	106
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:109	AIU EDITOR/todo.aiu
+F	block	section
+F	line	109
+F	end-line	162
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:110	AIU EDITOR/todo.aiu
+F	block	title
+F	line	110
+F	end-line	112
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:114	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	114
+F	end-line	116
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:118	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	118
+F	end-line	121
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:12	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	12
+F	end-line	15
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:123	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	123
+F	end-line	126
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:128	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	128
+F	end-line	131
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:133	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	133
+F	end-line	136
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:138	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	138
+F	end-line	141
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:143	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	143
+F	end-line	146
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:148	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	148
+F	end-line	151
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:153	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	153
+F	end-line	156
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:158	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	158
+F	end-line	161
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:164	AIU EDITOR/todo.aiu
+F	block	section
+F	line	164
+F	end-line	188
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:165	AIU EDITOR/todo.aiu
+F	block	title
+F	line	165
+F	end-line	167
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:169	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	169
+F	end-line	172
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:17	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	17
+F	end-line	20
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:174	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	174
+F	end-line	177
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:179	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	179
+F	end-line	182
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:184	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	184
+F	end-line	187
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:190	AIU EDITOR/todo.aiu
+F	block	section
+F	line	190
+F	end-line	229
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:191	AIU EDITOR/todo.aiu
+F	block	title
+F	line	191
+F	end-line	193
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:195	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	195
+F	end-line	198
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:200	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	200
+F	end-line	203
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:205	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	205
+F	end-line	208
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:210	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	210
+F	end-line	213
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:215	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	215
+F	end-line	218
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:22	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	22
+F	end-line	25
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:220	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	220
+F	end-line	223
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:225	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	225
+F	end-line	228
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:231	AIU EDITOR/todo.aiu
+F	block	section
+F	line	231
+F	end-line	265
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:232	AIU EDITOR/todo.aiu
+F	block	title
+F	line	232
+F	end-line	234
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:236	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	236
+F	end-line	239
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:241	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	241
+F	end-line	244
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:246	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	246
+F	end-line	249
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:251	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	251
+F	end-line	254
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:256	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	256
+F	end-line	259
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:261	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	261
+F	end-line	264
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:267	AIU EDITOR/todo.aiu
+F	block	section
+F	line	267
+F	end-line	316
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:268	AIU EDITOR/todo.aiu
+F	block	title
+F	line	268
+F	end-line	270
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:27	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	27
+F	end-line	30
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:272	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	272
+F	end-line	275
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:277	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	277
+F	end-line	280
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:282	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	282
+F	end-line	285
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:287	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	287
+F	end-line	290
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:292	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	292
+F	end-line	295
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:297	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	297
+F	end-line	300
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:302	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	302
+F	end-line	305
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:307	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	307
+F	end-line	310
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:312	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	312
+F	end-line	315
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:318	AIU EDITOR/todo.aiu
+F	block	section
+F	line	318
+F	end-line	367
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:319	AIU EDITOR/todo.aiu
+F	block	title
+F	line	319
+F	end-line	321
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:32	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	32
+F	end-line	35
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:323	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	323
+F	end-line	326
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:328	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	328
+F	end-line	331
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:333	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	333
+F	end-line	336
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:338	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	338
+F	end-line	341
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:343	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	343
+F	end-line	346
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:348	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	348
+F	end-line	351
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:353	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	353
+F	end-line	356
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:358	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	358
+F	end-line	361
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:363	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	363
+F	end-line	366
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:369	AIU EDITOR/todo.aiu
+F	block	section
+F	line	369
+F	end-line	383
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:37	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	37
+F	end-line	40
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:370	AIU EDITOR/todo.aiu
+F	block	title
+F	line	370
+F	end-line	372
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:374	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	374
+F	end-line	377
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:379	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	379
+F	end-line	382
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:385	AIU EDITOR/todo.aiu
+F	block	section
+F	line	385
+F	end-line	390
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:386	AIU EDITOR/todo.aiu
+F	block	title
+F	line	386
+F	end-line	388
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:392	AIU EDITOR/todo.aiu
+F	block	section
+F	line	392
+F	end-line	397
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:393	AIU EDITOR/todo.aiu
+F	block	title
+F	line	393
+F	end-line	395
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:399	AIU EDITOR/todo.aiu
+F	block	section
+F	line	399
+F	end-line	408
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:400	AIU EDITOR/todo.aiu
+F	block	title
+F	line	400
+F	end-line	402
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:404	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	404
+F	end-line	407
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:410	AIU EDITOR/todo.aiu
+F	block	section
+F	line	410
+F	end-line	419
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:411	AIU EDITOR/todo.aiu
+F	block	title
+F	line	411
+F	end-line	413
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:415	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	415
+F	end-line	418
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:42	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	42
+F	end-line	45
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:421	AIU EDITOR/todo.aiu
+F	block	section
+F	line	421
+F	end-line	431
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:422	AIU EDITOR/todo.aiu
+F	block	title
+F	line	422
+F	end-line	424
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:426	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	426
+F	end-line	430
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:433	AIU EDITOR/todo.aiu
+F	block	section
+F	line	433
+F	end-line	443
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:434	AIU EDITOR/todo.aiu
+F	block	title
+F	line	434
+F	end-line	436
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:438	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	438
+F	end-line	442
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:445	AIU EDITOR/todo.aiu
+F	block	section
+F	line	445
+F	end-line	456
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:446	AIU EDITOR/todo.aiu
+F	block	title
+F	line	446
+F	end-line	448
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:450	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	450
+F	end-line	455
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:458	AIU EDITOR/todo.aiu
+F	block	section
+F	line	458
+F	end-line	467
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:459	AIU EDITOR/todo.aiu
+F	block	title
+F	line	459
+F	end-line	461
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:463	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	463
+F	end-line	466
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:469	AIU EDITOR/todo.aiu
+F	block	section
+F	line	469
+F	end-line	480
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:47	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	47
+F	end-line	50
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:470	AIU EDITOR/todo.aiu
+F	block	title
+F	line	470
+F	end-line	472
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:474	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	474
+F	end-line	479
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:482	AIU EDITOR/todo.aiu
+F	block	section
+F	line	482
+F	end-line	489
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:483	AIU EDITOR/todo.aiu
+F	block	title
+F	line	483
+F	end-line	485
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:486	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	486
+F	end-line	488
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:491	AIU EDITOR/todo.aiu
+F	block	section
+F	line	491
+F	end-line	498
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:492	AIU EDITOR/todo.aiu
+F	block	title
+F	line	492
+F	end-line	494
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:495	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	495
+F	end-line	497
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:500	AIU EDITOR/todo.aiu
+F	block	section
+F	line	500
+F	end-line	507
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:501	AIU EDITOR/todo.aiu
+F	block	title
+F	line	501
+F	end-line	503
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:504	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	504
+F	end-line	506
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:509	AIU EDITOR/todo.aiu
+F	block	section
+F	line	509
+F	end-line	526
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:510	AIU EDITOR/todo.aiu
+F	block	title
+F	line	510
+F	end-line	512
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:513	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	513
+F	end-line	515
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:516	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	516
+F	end-line	519
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:52	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	52
+F	end-line	55
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:521	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	521
+F	end-line	524
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:57	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	57
+F	end-line	60
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:62	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	62
+F	end-line	65
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:67	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	67
+F	end-line	70
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:7	AIU EDITOR/todo.aiu
+F	block	section
+F	line	7
+F	end-line	97
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:72	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	72
+F	end-line	75
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:77	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	77
+F	end-line	80
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:8	AIU EDITOR/todo.aiu
+F	block	title
+F	line	8
+F	end-line	10
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:82	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	82
+F	end-line	85
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:87	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	87
+F	end-line	90
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:92	AIU EDITOR/todo.aiu
+F	block	paragraph
+F	line	92
+F	end-line	95
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU EDITOR/todo.aiu:99	AIU EDITOR/todo.aiu
+F	block	comment
+F	line	99
+F	end-line	101
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/book.aiu:1	AIU NOTATION/notation/types/book.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/book.aiu:11	AIU NOTATION/notation/types/book.aiu
+F	block	section
+F	line	11
+F	end-line	28
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/book.aiu:12	AIU NOTATION/notation/types/book.aiu
+F	block	title
+F	line	12
+F	end-line	14
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/book.aiu:16	AIU NOTATION/notation/types/book.aiu
+F	block	paragraph
+F	line	16
+F	end-line	23
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/book.aiu:18	AIU NOTATION/notation/types/book.aiu
+F	block	answer
+F	line	18
+F	end-line	22
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/book.aiu:25	AIU NOTATION/notation/types/book.aiu
+F	block	comment
+F	line	25
+F	end-line	27
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/book.aiu:30	AIU NOTATION/notation/types/book.aiu
+F	block	section
+F	line	30
+F	end-line	52
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/book.aiu:31	AIU NOTATION/notation/types/book.aiu
+F	block	title
+F	line	31
+F	end-line	33
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/book.aiu:35	AIU NOTATION/notation/types/book.aiu
+F	block	comment
+F	line	35
+F	end-line	46
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/book.aiu:38	AIU NOTATION/notation/types/book.aiu
+F	block	paragraph
+F	line	38
+F	end-line	40
+F	depth	2
+F	parent	comment
+F	declared-name	
+R	block	AIU NOTATION/notation/types/book.aiu:42	AIU NOTATION/notation/types/book.aiu
+F	block	paragraph
+F	line	42
+F	end-line	45
+F	depth	2
+F	parent	comment
+F	declared-name	
+R	block	AIU NOTATION/notation/types/book.aiu:48	AIU NOTATION/notation/types/book.aiu
+F	block	code
+F	line	48
+F	end-line	51
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/book.aiu:7	AIU NOTATION/notation/types/book.aiu
+F	block	paragraph
+F	line	7
+F	end-line	9
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:1	AIU NOTATION/notation/types/comment.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:11	AIU NOTATION/notation/types/comment.aiu
+F	block	section
+F	line	11
+F	end-line	22
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:12	AIU NOTATION/notation/types/comment.aiu
+F	block	title
+F	line	12
+F	end-line	14
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:16	AIU NOTATION/notation/types/comment.aiu
+F	block	paragraph
+F	line	16
+F	end-line	21
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:18	AIU NOTATION/notation/types/comment.aiu
+F	block	comment
+F	line	18
+F	end-line	20
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:24	AIU NOTATION/notation/types/comment.aiu
+F	block	section
+F	line	24
+F	end-line	40
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:25	AIU NOTATION/notation/types/comment.aiu
+F	block	title
+F	line	25
+F	end-line	27
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:29	AIU NOTATION/notation/types/comment.aiu
+F	block	comment
+F	line	29
+F	end-line	39
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:32	AIU NOTATION/notation/types/comment.aiu
+F	block	paragraph
+F	line	32
+F	end-line	34
+F	depth	2
+F	parent	comment
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:36	AIU NOTATION/notation/types/comment.aiu
+F	block	paragraph
+F	line	36
+F	end-line	38
+F	depth	2
+F	parent	comment
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:42	AIU NOTATION/notation/types/comment.aiu
+F	block	section
+F	line	42
+F	end-line	59
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:43	AIU NOTATION/notation/types/comment.aiu
+F	block	title
+F	line	43
+F	end-line	45
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:47	AIU NOTATION/notation/types/comment.aiu
+F	block	paragraph
+F	line	47
+F	end-line	53
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:50	AIU NOTATION/notation/types/comment.aiu
+F	block	comment
+F	line	50
+F	end-line	52
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:55	AIU NOTATION/notation/types/comment.aiu
+F	block	paragraph
+F	line	55
+F	end-line	58
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/comment.aiu:7	AIU NOTATION/notation/types/comment.aiu
+F	block	paragraph
+F	line	7
+F	end-line	9
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:1	AIU NOTATION/notation/types/decision.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:11	AIU NOTATION/notation/types/decision.aiu
+F	block	section
+F	line	11
+F	end-line	28
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:12	AIU NOTATION/notation/types/decision.aiu
+F	block	title
+F	line	12
+F	end-line	14
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:16	AIU NOTATION/notation/types/decision.aiu
+F	block	paragraph
+F	line	16
+F	end-line	23
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:18	AIU NOTATION/notation/types/decision.aiu
+F	block	answer
+F	line	18
+F	end-line	22
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:25	AIU NOTATION/notation/types/decision.aiu
+F	block	comment
+F	line	25
+F	end-line	27
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:30	AIU NOTATION/notation/types/decision.aiu
+F	block	section
+F	line	30
+F	end-line	48
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:31	AIU NOTATION/notation/types/decision.aiu
+F	block	title
+F	line	31
+F	end-line	33
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:35	AIU NOTATION/notation/types/decision.aiu
+F	block	paragraph
+F	line	35
+F	end-line	42
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:37	AIU NOTATION/notation/types/decision.aiu
+F	block	answer
+F	line	37
+F	end-line	41
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:44	AIU NOTATION/notation/types/decision.aiu
+F	block	paragraph
+F	line	44
+F	end-line	47
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:50	AIU NOTATION/notation/types/decision.aiu
+F	block	section
+F	line	50
+F	end-line	63
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:51	AIU NOTATION/notation/types/decision.aiu
+F	block	title
+F	line	51
+F	end-line	53
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:55	AIU NOTATION/notation/types/decision.aiu
+F	block	paragraph
+F	line	55
+F	end-line	62
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:57	AIU NOTATION/notation/types/decision.aiu
+F	block	answer
+F	line	57
+F	end-line	61
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:65	AIU NOTATION/notation/types/decision.aiu
+F	block	section
+F	line	65
+F	end-line	83
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:66	AIU NOTATION/notation/types/decision.aiu
+F	block	title
+F	line	66
+F	end-line	68
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:7	AIU NOTATION/notation/types/decision.aiu
+F	block	paragraph
+F	line	7
+F	end-line	9
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:70	AIU NOTATION/notation/types/decision.aiu
+F	block	paragraph
+F	line	70
+F	end-line	77
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:72	AIU NOTATION/notation/types/decision.aiu
+F	block	answer
+F	line	72
+F	end-line	76
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/decision.aiu:79	AIU NOTATION/notation/types/decision.aiu
+F	block	paragraph
+F	line	79
+F	end-line	82
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/default.aiu:1	AIU NOTATION/notation/types/default.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/default.aiu:11	AIU NOTATION/notation/types/default.aiu
+F	block	section
+F	line	11
+F	end-line	38
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/default.aiu:12	AIU NOTATION/notation/types/default.aiu
+F	block	title
+F	line	12
+F	end-line	14
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/default.aiu:16	AIU NOTATION/notation/types/default.aiu
+F	block	paragraph
+F	line	16
+F	end-line	23
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/default.aiu:18	AIU NOTATION/notation/types/default.aiu
+F	block	answer
+F	line	18
+F	end-line	22
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/default.aiu:25	AIU NOTATION/notation/types/default.aiu
+F	block	paragraph
+F	line	25
+F	end-line	28
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/default.aiu:30	AIU NOTATION/notation/types/default.aiu
+F	block	code
+F	line	30
+F	end-line	33
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/default.aiu:35	AIU NOTATION/notation/types/default.aiu
+F	block	comment
+F	line	35
+F	end-line	37
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/default.aiu:40	AIU NOTATION/notation/types/default.aiu
+F	block	section
+F	line	40
+F	end-line	54
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/default.aiu:41	AIU NOTATION/notation/types/default.aiu
+F	block	title
+F	line	41
+F	end-line	43
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/default.aiu:45	AIU NOTATION/notation/types/default.aiu
+F	block	section
+F	line	45
+F	end-line	53
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/default.aiu:46	AIU NOTATION/notation/types/default.aiu
+F	block	title
+F	line	46
+F	end-line	48
+F	depth	2
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/default.aiu:50	AIU NOTATION/notation/types/default.aiu
+F	block	paragraph
+F	line	50
+F	end-line	52
+F	depth	2
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/default.aiu:7	AIU NOTATION/notation/types/default.aiu
+F	block	paragraph
+F	line	7
+F	end-line	9
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/journal.aiu:1	AIU NOTATION/notation/types/journal.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/journal.aiu:12	AIU NOTATION/notation/types/journal.aiu
+F	block	paragraph
+F	line	12
+F	end-line	19
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/journal.aiu:14	AIU NOTATION/notation/types/journal.aiu
+F	block	answer
+F	line	14
+F	end-line	18
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/journal.aiu:22	AIU NOTATION/notation/types/journal.aiu
+F	block	section
+F	line	22
+F	end-line	36
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/journal.aiu:23	AIU NOTATION/notation/types/journal.aiu
+F	block	title
+F	line	23
+F	end-line	25
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/journal.aiu:27	AIU NOTATION/notation/types/journal.aiu
+F	block	paragraph
+F	line	27
+F	end-line	35
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/journal.aiu:30	AIU NOTATION/notation/types/journal.aiu
+F	block	answer
+F	line	30
+F	end-line	34
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/journal.aiu:7	AIU NOTATION/notation/types/journal.aiu
+F	block	section
+F	line	7
+F	end-line	20
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/journal.aiu:8	AIU NOTATION/notation/types/journal.aiu
+F	block	title
+F	line	8
+F	end-line	10
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/module.aiu:1	AIU NOTATION/notation/types/module.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/module.aiu:11	AIU NOTATION/notation/types/module.aiu
+F	block	section
+F	line	11
+F	end-line	29
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/module.aiu:12	AIU NOTATION/notation/types/module.aiu
+F	block	title
+F	line	12
+F	end-line	14
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/module.aiu:16	AIU NOTATION/notation/types/module.aiu
+F	block	paragraph
+F	line	16
+F	end-line	23
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/module.aiu:18	AIU NOTATION/notation/types/module.aiu
+F	block	answer
+F	line	18
+F	end-line	22
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/module.aiu:25	AIU NOTATION/notation/types/module.aiu
+F	block	paragraph
+F	line	25
+F	end-line	28
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/module.aiu:31	AIU NOTATION/notation/types/module.aiu
+F	block	section
+F	line	31
+F	end-line	49
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/module.aiu:32	AIU NOTATION/notation/types/module.aiu
+F	block	title
+F	line	32
+F	end-line	34
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/module.aiu:36	AIU NOTATION/notation/types/module.aiu
+F	block	paragraph
+F	line	36
+F	end-line	38
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/module.aiu:40	AIU NOTATION/notation/types/module.aiu
+F	block	code
+F	line	40
+F	end-line	44
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/module.aiu:46	AIU NOTATION/notation/types/module.aiu
+F	block	comment
+F	line	46
+F	end-line	48
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/module.aiu:7	AIU NOTATION/notation/types/module.aiu
+F	block	paragraph
+F	line	7
+F	end-line	9
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/note.aiu:1	AIU NOTATION/notation/types/note.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/note.aiu:16	AIU NOTATION/notation/types/note.aiu
+F	block	paragraph
+F	line	16
+F	end-line	19
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/note.aiu:21	AIU NOTATION/notation/types/note.aiu
+F	block	comment
+F	line	21
+F	end-line	23
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/note.aiu:25	AIU NOTATION/notation/types/note.aiu
+F	block	code
+F	line	25
+F	end-line	28
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/note.aiu:7	AIU NOTATION/notation/types/note.aiu
+F	block	paragraph
+F	line	7
+F	end-line	14
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/note.aiu:9	AIU NOTATION/notation/types/note.aiu
+F	block	answer
+F	line	9
+F	end-line	13
+F	depth	1
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:1	AIU NOTATION/notation/types/plan.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:11	AIU NOTATION/notation/types/plan.aiu
+F	block	section
+F	line	11
+F	end-line	24
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:12	AIU NOTATION/notation/types/plan.aiu
+F	block	title
+F	line	12
+F	end-line	14
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:16	AIU NOTATION/notation/types/plan.aiu
+F	block	paragraph
+F	line	16
+F	end-line	23
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:18	AIU NOTATION/notation/types/plan.aiu
+F	block	answer
+F	line	18
+F	end-line	22
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:26	AIU NOTATION/notation/types/plan.aiu
+F	block	section
+F	line	26
+F	end-line	53
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:27	AIU NOTATION/notation/types/plan.aiu
+F	block	title
+F	line	27
+F	end-line	29
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:31	AIU NOTATION/notation/types/plan.aiu
+F	block	paragraph
+F	line	31
+F	end-line	39
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:34	AIU NOTATION/notation/types/plan.aiu
+F	block	answer
+F	line	34
+F	end-line	38
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:41	AIU NOTATION/notation/types/plan.aiu
+F	block	paragraph
+F	line	41
+F	end-line	44
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:46	AIU NOTATION/notation/types/plan.aiu
+F	block	paragraph
+F	line	46
+F	end-line	48
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:50	AIU NOTATION/notation/types/plan.aiu
+F	block	comment
+F	line	50
+F	end-line	52
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:55	AIU NOTATION/notation/types/plan.aiu
+F	block	section
+F	line	55
+F	end-line	68
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:56	AIU NOTATION/notation/types/plan.aiu
+F	block	title
+F	line	56
+F	end-line	58
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:60	AIU NOTATION/notation/types/plan.aiu
+F	block	paragraph
+F	line	60
+F	end-line	67
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:62	AIU NOTATION/notation/types/plan.aiu
+F	block	answer
+F	line	62
+F	end-line	66
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:7	AIU NOTATION/notation/types/plan.aiu
+F	block	paragraph
+F	line	7
+F	end-line	9
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:70	AIU NOTATION/notation/types/plan.aiu
+F	block	section
+F	line	70
+F	end-line	84
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:71	AIU NOTATION/notation/types/plan.aiu
+F	block	title
+F	line	71
+F	end-line	73
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:75	AIU NOTATION/notation/types/plan.aiu
+F	block	paragraph
+F	line	75
+F	end-line	83
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/plan.aiu:78	AIU NOTATION/notation/types/plan.aiu
+F	block	answer
+F	line	78
+F	end-line	82
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:1	AIU NOTATION/notation/types/research.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:100	AIU NOTATION/notation/types/research.aiu
+F	block	section
+F	line	100
+F	end-line	113
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:101	AIU NOTATION/notation/types/research.aiu
+F	block	title
+F	line	101
+F	end-line	103
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:105	AIU NOTATION/notation/types/research.aiu
+F	block	paragraph
+F	line	105
+F	end-line	112
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:107	AIU NOTATION/notation/types/research.aiu
+F	block	answer
+F	line	107
+F	end-line	111
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:11	AIU NOTATION/notation/types/research.aiu
+F	block	section
+F	line	11
+F	end-line	24
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:12	AIU NOTATION/notation/types/research.aiu
+F	block	title
+F	line	12
+F	end-line	14
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:16	AIU NOTATION/notation/types/research.aiu
+F	block	paragraph
+F	line	16
+F	end-line	23
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:18	AIU NOTATION/notation/types/research.aiu
+F	block	answer
+F	line	18
+F	end-line	22
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:26	AIU NOTATION/notation/types/research.aiu
+F	block	section
+F	line	26
+F	end-line	39
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:27	AIU NOTATION/notation/types/research.aiu
+F	block	title
+F	line	27
+F	end-line	29
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:31	AIU NOTATION/notation/types/research.aiu
+F	block	paragraph
+F	line	31
+F	end-line	38
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:33	AIU NOTATION/notation/types/research.aiu
+F	block	answer
+F	line	33
+F	end-line	37
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:41	AIU NOTATION/notation/types/research.aiu
+F	block	section
+F	line	41
+F	end-line	63
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:42	AIU NOTATION/notation/types/research.aiu
+F	block	title
+F	line	42
+F	end-line	44
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:46	AIU NOTATION/notation/types/research.aiu
+F	block	paragraph
+F	line	46
+F	end-line	53
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:48	AIU NOTATION/notation/types/research.aiu
+F	block	answer
+F	line	48
+F	end-line	52
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:55	AIU NOTATION/notation/types/research.aiu
+F	block	code
+F	line	55
+F	end-line	58
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:60	AIU NOTATION/notation/types/research.aiu
+F	block	comment
+F	line	60
+F	end-line	62
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:65	AIU NOTATION/notation/types/research.aiu
+F	block	section
+F	line	65
+F	end-line	78
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:66	AIU NOTATION/notation/types/research.aiu
+F	block	title
+F	line	66
+F	end-line	68
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:7	AIU NOTATION/notation/types/research.aiu
+F	block	paragraph
+F	line	7
+F	end-line	9
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:70	AIU NOTATION/notation/types/research.aiu
+F	block	paragraph
+F	line	70
+F	end-line	77
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:72	AIU NOTATION/notation/types/research.aiu
+F	block	answer
+F	line	72
+F	end-line	76
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:80	AIU NOTATION/notation/types/research.aiu
+F	block	section
+F	line	80
+F	end-line	98
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:81	AIU NOTATION/notation/types/research.aiu
+F	block	title
+F	line	81
+F	end-line	83
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:85	AIU NOTATION/notation/types/research.aiu
+F	block	paragraph
+F	line	85
+F	end-line	92
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:87	AIU NOTATION/notation/types/research.aiu
+F	block	answer
+F	line	87
+F	end-line	91
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/research.aiu:94	AIU NOTATION/notation/types/research.aiu
+F	block	paragraph
+F	line	94
+F	end-line	97
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:1	AIU NOTATION/notation/types/todo.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:11	AIU NOTATION/notation/types/todo.aiu
+F	block	section
+F	line	11
+F	end-line	33
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:12	AIU NOTATION/notation/types/todo.aiu
+F	block	title
+F	line	12
+F	end-line	14
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:16	AIU NOTATION/notation/types/todo.aiu
+F	block	paragraph
+F	line	16
+F	end-line	24
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:19	AIU NOTATION/notation/types/todo.aiu
+F	block	answer
+F	line	19
+F	end-line	23
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:26	AIU NOTATION/notation/types/todo.aiu
+F	block	paragraph
+F	line	26
+F	end-line	32
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:29	AIU NOTATION/notation/types/todo.aiu
+F	block	comment
+F	line	29
+F	end-line	31
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:35	AIU NOTATION/notation/types/todo.aiu
+F	block	section
+F	line	35
+F	end-line	53
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:36	AIU NOTATION/notation/types/todo.aiu
+F	block	title
+F	line	36
+F	end-line	38
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:40	AIU NOTATION/notation/types/todo.aiu
+F	block	comment
+F	line	40
+F	end-line	52
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:43	AIU NOTATION/notation/types/todo.aiu
+F	block	paragraph
+F	line	43
+F	end-line	46
+F	depth	2
+F	parent	comment
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:48	AIU NOTATION/notation/types/todo.aiu
+F	block	paragraph
+F	line	48
+F	end-line	51
+F	depth	2
+F	parent	comment
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:55	AIU NOTATION/notation/types/todo.aiu
+F	block	section
+F	line	55
+F	end-line	67
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:56	AIU NOTATION/notation/types/todo.aiu
+F	block	title
+F	line	56
+F	end-line	58
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:60	AIU NOTATION/notation/types/todo.aiu
+F	block	paragraph
+F	line	60
+F	end-line	62
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:64	AIU NOTATION/notation/types/todo.aiu
+F	block	comment
+F	line	64
+F	end-line	66
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/notation/types/todo.aiu:7	AIU NOTATION/notation/types/todo.aiu
+F	block	paragraph
+F	line	7
+F	end-line	9
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:1	AIU NOTATION/question-pages-plan.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:101	AIU NOTATION/question-pages-plan.aiu
+F	block	section
+F	line	101
+F	end-line	122
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:102	AIU NOTATION/question-pages-plan.aiu
+F	block	title
+F	line	102
+F	end-line	104
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:106	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	106
+F	end-line	108
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:110	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	110
+F	end-line	112
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:114	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	114
+F	end-line	116
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:118	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	118
+F	end-line	120
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:12	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	12
+F	end-line	14
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:124	AIU NOTATION/question-pages-plan.aiu
+F	block	section
+F	line	124
+F	end-line	165
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:125	AIU NOTATION/question-pages-plan.aiu
+F	block	title
+F	line	125
+F	end-line	127
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:129	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	129
+F	end-line	131
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:133	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	133
+F	end-line	135
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:137	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	137
+F	end-line	139
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:141	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	141
+F	end-line	143
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:145	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	145
+F	end-line	147
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:149	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	149
+F	end-line	151
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:153	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	153
+F	end-line	155
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:157	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	157
+F	end-line	159
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:16	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	16
+F	end-line	18
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:161	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	161
+F	end-line	163
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:167	AIU NOTATION/question-pages-plan.aiu
+F	block	section
+F	line	167
+F	end-line	200
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:168	AIU NOTATION/question-pages-plan.aiu
+F	block	title
+F	line	168
+F	end-line	170
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:172	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	172
+F	end-line	174
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:176	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	176
+F	end-line	178
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:180	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	180
+F	end-line	182
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:184	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	184
+F	end-line	186
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:188	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	188
+F	end-line	190
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:192	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	192
+F	end-line	194
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:196	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	196
+F	end-line	198
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:20	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	20
+F	end-line	22
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:202	AIU NOTATION/question-pages-plan.aiu
+F	block	section
+F	line	202
+F	end-line	235
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:203	AIU NOTATION/question-pages-plan.aiu
+F	block	title
+F	line	203
+F	end-line	205
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:207	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	207
+F	end-line	209
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:211	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	211
+F	end-line	213
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:215	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	215
+F	end-line	217
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:219	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	219
+F	end-line	221
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:223	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	223
+F	end-line	225
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:227	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	227
+F	end-line	229
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:231	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	231
+F	end-line	233
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:237	AIU NOTATION/question-pages-plan.aiu
+F	block	section
+F	line	237
+F	end-line	278
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:238	AIU NOTATION/question-pages-plan.aiu
+F	block	title
+F	line	238
+F	end-line	240
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:24	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	24
+F	end-line	26
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:242	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	242
+F	end-line	244
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:246	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	246
+F	end-line	248
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:250	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	250
+F	end-line	252
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:254	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	254
+F	end-line	256
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:258	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	258
+F	end-line	260
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:262	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	262
+F	end-line	264
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:266	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	266
+F	end-line	268
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:270	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	270
+F	end-line	272
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:274	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	274
+F	end-line	276
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:28	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	28
+F	end-line	30
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:280	AIU NOTATION/question-pages-plan.aiu
+F	block	section
+F	line	280
+F	end-line	309
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:281	AIU NOTATION/question-pages-plan.aiu
+F	block	title
+F	line	281
+F	end-line	283
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:285	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	285
+F	end-line	287
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:289	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	289
+F	end-line	291
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:293	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	293
+F	end-line	295
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:297	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	297
+F	end-line	299
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:301	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	301
+F	end-line	303
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:305	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	305
+F	end-line	307
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:311	AIU NOTATION/question-pages-plan.aiu
+F	block	section
+F	line	311
+F	end-line	332
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:312	AIU NOTATION/question-pages-plan.aiu
+F	block	title
+F	line	312
+F	end-line	314
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:316	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	316
+F	end-line	318
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:32	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	32
+F	end-line	34
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:320	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	320
+F	end-line	322
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:324	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	324
+F	end-line	326
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:328	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	328
+F	end-line	330
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:36	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	36
+F	end-line	38
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:40	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	40
+F	end-line	42
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:44	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	44
+F	end-line	46
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:48	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	48
+F	end-line	50
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:52	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	52
+F	end-line	54
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:58	AIU NOTATION/question-pages-plan.aiu
+F	block	section
+F	line	58
+F	end-line	99
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:59	AIU NOTATION/question-pages-plan.aiu
+F	block	title
+F	line	59
+F	end-line	61
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:63	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	63
+F	end-line	65
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:67	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	67
+F	end-line	69
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:7	AIU NOTATION/question-pages-plan.aiu
+F	block	section
+F	line	7
+F	end-line	56
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:71	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	71
+F	end-line	73
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:75	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	75
+F	end-line	77
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:79	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	79
+F	end-line	81
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:8	AIU NOTATION/question-pages-plan.aiu
+F	block	title
+F	line	8
+F	end-line	10
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:83	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	83
+F	end-line	85
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:87	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	87
+F	end-line	89
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:91	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	91
+F	end-line	93
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/question-pages-plan.aiu:95	AIU NOTATION/question-pages-plan.aiu
+F	block	paragraph
+F	line	95
+F	end-line	97
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:1	AIU NOTATION/todo.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:12	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	12
+F	end-line	15
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:17	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	17
+F	end-line	20
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:22	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	22
+F	end-line	25
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:27	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	27
+F	end-line	30
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:32	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	32
+F	end-line	35
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:37	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	37
+F	end-line	40
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:42	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	42
+F	end-line	45
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:47	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	47
+F	end-line	50
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:52	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	52
+F	end-line	55
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:57	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	57
+F	end-line	60
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:62	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	62
+F	end-line	65
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:67	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	67
+F	end-line	70
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:7	AIU NOTATION/todo.aiu
+F	block	section
+F	line	7
+F	end-line	97
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:72	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	72
+F	end-line	75
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:77	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	77
+F	end-line	80
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:8	AIU NOTATION/todo.aiu
+F	block	title
+F	line	8
+F	end-line	10
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:82	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	82
+F	end-line	85
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:87	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	87
+F	end-line	90
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU NOTATION/todo.aiu:92	AIU NOTATION/todo.aiu
+F	block	paragraph
+F	line	92
+F	end-line	95
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:1	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:12	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	paragraph
+F	line	12
+F	end-line	15
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:17	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	paragraph
+F	line	17
+F	end-line	20
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:22	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	paragraph
+F	line	22
+F	end-line	25
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:27	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	paragraph
+F	line	27
+F	end-line	30
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:32	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	paragraph
+F	line	32
+F	end-line	35
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:38	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	section
+F	line	38
+F	end-line	73
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:39	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	title
+F	line	39
+F	end-line	41
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:43	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	paragraph
+F	line	43
+F	end-line	46
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:48	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	paragraph
+F	line	48
+F	end-line	51
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:53	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	paragraph
+F	line	53
+F	end-line	56
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:58	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	paragraph
+F	line	58
+F	end-line	61
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:63	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	paragraph
+F	line	63
+F	end-line	66
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:68	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	paragraph
+F	line	68
+F	end-line	71
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:7	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	section
+F	line	7
+F	end-line	36
+F	depth	0
+F	parent	
+F	declared-name	
+R	block	AIU TERMINAL MULTIPLEXER/todo.aiu:8	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	block	title
+F	line	8
+F	end-line	10
+F	depth	1
+F	parent	section
+F	declared-name	
+R	block	journal/2026-11-05.aiu:1	journal/2026-11-05.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	
+R	file	AIU EDITOR/aiutd-tutorial.aiu	AIU EDITOR/aiutd-tutorial.aiu
+F	kind	default
+F	lines	126
+F	bytes	2657
+F	blocks	33
+F	errors	0
+R	file	AIU EDITOR/text-editor/test.aiu	AIU EDITOR/text-editor/test.aiu
+F	kind	default
+F	lines	205
+F	bytes	5433
+F	blocks	48
+F	errors	0
+R	file	AIU EDITOR/todo.aiu	AIU EDITOR/todo.aiu
+F	kind	todo
+F	lines	526
+F	bytes	13817
+F	blocks	123
+F	errors	0
+R	file	AIU NOTATION/notation/types/book.aiu	AIU NOTATION/notation/types/book.aiu
+F	kind	book
+F	lines	52
+F	bytes	1188
+F	blocks	13
+F	errors	0
+R	file	AIU NOTATION/notation/types/comment.aiu	AIU NOTATION/notation/types/comment.aiu
+F	kind	default
+F	lines	59
+F	bytes	1564
+F	blocks	16
+F	errors	0
+R	file	AIU NOTATION/notation/types/decision.aiu	AIU NOTATION/notation/types/decision.aiu
+F	kind	decision
+F	lines	83
+F	bytes	2025
+F	blocks	21
+F	errors	0
+R	file	AIU NOTATION/notation/types/default.aiu	AIU NOTATION/notation/types/default.aiu
+F	kind	default
+F	lines	54
+F	bytes	1080
+F	blocks	14
+F	errors	0
+R	file	AIU NOTATION/notation/types/journal.aiu	AIU NOTATION/notation/types/journal.aiu
+F	kind	journal
+F	lines	36
+F	bytes	1043
+F	blocks	9
+F	errors	0
+R	file	AIU NOTATION/notation/types/module.aiu	AIU NOTATION/notation/types/module.aiu
+F	kind	module
+F	lines	49
+F	bytes	1141
+F	blocks	12
+F	errors	0
+R	file	AIU NOTATION/notation/types/note.aiu	AIU NOTATION/notation/types/note.aiu
+F	kind	note
+F	lines	28
+F	bytes	740
+F	blocks	6
+F	errors	0
+R	file	AIU NOTATION/notation/types/plan.aiu	AIU NOTATION/notation/types/plan.aiu
+F	kind	plan
+F	lines	84
+F	bytes	1813
+F	blocks	21
+F	errors	0
+R	file	AIU NOTATION/notation/types/research.aiu	AIU NOTATION/notation/types/research.aiu
+F	kind	research
+F	lines	113
+F	bytes	2843
+F	blocks	29
+F	errors	0
+R	file	AIU NOTATION/notation/types/todo.aiu	AIU NOTATION/notation/types/todo.aiu
+F	kind	todo
+F	lines	67
+F	bytes	1773
+F	blocks	17
+F	errors	0
+R	file	AIU NOTATION/question-pages-plan.aiu	AIU NOTATION/question-pages-plan.aiu
+F	kind	default
+F	lines	332
+F	bytes	12424
+F	blocks	85
+F	errors	0
+R	file	AIU NOTATION/todo.aiu	AIU NOTATION/todo.aiu
+F	kind	todo
+F	lines	97
+F	bytes	3870
+F	blocks	20
+F	errors	0
+R	file	AIU TERMINAL MULTIPLEXER/todo.aiu	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	kind	todo
+F	lines	73
+F	bytes	2534
+F	blocks	16
+F	errors	0
+R	file	journal/2026-11-05.aiu	journal/2026-11-05.aiu
+F	kind	journal
+F	lines	5
+F	bytes	69
+F	blocks	1
+F	errors	0
+R	tag	AIU EDITOR/aiutd-tutorial.aiu:aiutd	AIU EDITOR/aiutd-tutorial.aiu
+F	tag	aiutd
+F	line	3
+R	tag	AIU EDITOR/aiutd-tutorial.aiu:docs	AIU EDITOR/aiutd-tutorial.aiu
+F	tag	docs
+F	line	3
+R	tag	AIU EDITOR/aiutd-tutorial.aiu:generated	AIU EDITOR/aiutd-tutorial.aiu
+F	tag	generated
+F	line	3
+R	tag	AIU EDITOR/text-editor/test.aiu:editor	AIU EDITOR/text-editor/test.aiu
+F	tag	editor
+F	line	3
+R	tag	AIU EDITOR/text-editor/test.aiu:introduction	AIU EDITOR/text-editor/test.aiu
+F	tag	introduction
+F	line	3
+R	tag	AIU EDITOR/text-editor/test.aiu:test	AIU EDITOR/text-editor/test.aiu
+F	tag	test
+F	line	3
+R	tag	AIU EDITOR/todo.aiu:aiutd	AIU EDITOR/todo.aiu
+F	tag	aiutd
+F	line	3
+R	tag	AIU EDITOR/todo.aiu:planned	AIU EDITOR/todo.aiu
+F	tag	planned
+F	line	3
+R	tag	AIU EDITOR/todo.aiu:todo	AIU EDITOR/todo.aiu
+F	tag	todo
+F	line	3
+R	tag	AIU NOTATION/notation/types/book.aiu:book	AIU NOTATION/notation/types/book.aiu
+F	tag	book
+F	line	3
+R	tag	AIU NOTATION/notation/types/book.aiu:chapter	AIU NOTATION/notation/types/book.aiu
+F	tag	chapter
+F	line	3
+R	tag	AIU NOTATION/notation/types/comment.aiu:comment	AIU NOTATION/notation/types/comment.aiu
+F	tag	comment
+F	line	3
+R	tag	AIU NOTATION/notation/types/comment.aiu:todo	AIU NOTATION/notation/types/comment.aiu
+F	tag	todo
+F	line	3
+R	tag	AIU NOTATION/notation/types/decision.aiu:decision	AIU NOTATION/notation/types/decision.aiu
+F	tag	decision
+F	line	3
+R	tag	AIU NOTATION/notation/types/decision.aiu:notes	AIU NOTATION/notation/types/decision.aiu
+F	tag	notes
+F	line	3
+R	tag	AIU NOTATION/notation/types/default.aiu:default	AIU NOTATION/notation/types/default.aiu
+F	tag	default
+F	line	3
+R	tag	AIU NOTATION/notation/types/default.aiu:example	AIU NOTATION/notation/types/default.aiu
+F	tag	example
+F	line	3
+R	tag	AIU NOTATION/notation/types/journal.aiu:journal	AIU NOTATION/notation/types/journal.aiu
+F	tag	journal
+F	line	3
+R	tag	AIU NOTATION/notation/types/journal.aiu:workshop	AIU NOTATION/notation/types/journal.aiu
+F	tag	workshop
+F	line	3
+R	tag	AIU NOTATION/notation/types/module.aiu:example	AIU NOTATION/notation/types/module.aiu
+F	tag	example
+F	line	3
+R	tag	AIU NOTATION/notation/types/module.aiu:module	AIU NOTATION/notation/types/module.aiu
+F	tag	module
+F	line	3
+R	tag	AIU NOTATION/notation/types/note.aiu:idea	AIU NOTATION/notation/types/note.aiu
+F	tag	idea
+F	line	3
+R	tag	AIU NOTATION/notation/types/note.aiu:note	AIU NOTATION/notation/types/note.aiu
+F	tag	note
+F	line	3
+R	tag	AIU NOTATION/notation/types/plan.aiu:plan	AIU NOTATION/notation/types/plan.aiu
+F	tag	plan
+F	line	3
+R	tag	AIU NOTATION/notation/types/plan.aiu:release	AIU NOTATION/notation/types/plan.aiu
+F	tag	release
+F	line	3
+R	tag	AIU NOTATION/notation/types/research.aiu:notes	AIU NOTATION/notation/types/research.aiu
+F	tag	notes
+F	line	3
+R	tag	AIU NOTATION/notation/types/research.aiu:research	AIU NOTATION/notation/types/research.aiu
+F	tag	research
+F	line	3
+R	tag	AIU NOTATION/notation/types/todo.aiu:todo	AIU NOTATION/notation/types/todo.aiu
+F	tag	todo
+F	line	3
+R	tag	AIU NOTATION/notation/types/todo.aiu:viewer	AIU NOTATION/notation/types/todo.aiu
+F	tag	viewer
+F	line	3
+R	tag	AIU NOTATION/question-pages-plan.aiu:contracts	AIU NOTATION/question-pages-plan.aiu
+F	tag	contracts
+F	line	3
+R	tag	AIU NOTATION/question-pages-plan.aiu:notation	AIU NOTATION/question-pages-plan.aiu
+F	tag	notation
+F	line	3
+R	tag	AIU NOTATION/todo.aiu:planned	AIU NOTATION/todo.aiu
+F	tag	planned
+F	line	3
+R	tag	AIU NOTATION/todo.aiu:todo	AIU NOTATION/todo.aiu
+F	tag	todo
+F	line	3
+R	tag	AIU TERMINAL MULTIPLEXER/todo.aiu:planned	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	tag	planned
+F	line	3
+R	tag	AIU TERMINAL MULTIPLEXER/todo.aiu:todo	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	tag	todo
+F	line	3
+R	tag	journal/2026-11-05.aiu:journal	journal/2026-11-05.aiu
+F	tag	journal
+F	line	3
+R	todo	AIU EDITOR/text-editor/test.aiu:101	AIU EDITOR/text-editor/test.aiu
+F	line	101
+F	text	done press d and see that this done todo is visited
+R	todo	AIU EDITOR/text-editor/test.aiu:106	AIU EDITOR/text-editor/test.aiu
+F	line	106
+F	text	open the cursor cannot land on the todo tray after a block move
+R	todo	AIU EDITOR/text-editor/test.aiu:86	AIU EDITOR/text-editor/test.aiu
+F	line	86
+F	text	open press o, then t, and see that only open todos are visited
+R	todo	AIU EDITOR/text-editor/test.aiu:91	AIU EDITOR/text-editor/test.aiu
+F	line	91
+F	text	open press w on this block, change this line, then press escape to save
+R	todo	AIU EDITOR/text-editor/test.aiu:96	AIU EDITOR/text-editor/test.aiu
+F	line	96
+F	text	press x and see that a todo with no word counts as open
+R	todo	AIU EDITOR/todo.aiu:119	AIU EDITOR/todo.aiu
+F	line	119
+F	text	open strip trailing comments after code and #| |# blocks in the source
+R	todo	AIU EDITOR/todo.aiu:124	AIU EDITOR/todo.aiu
+F	line	124
+F	text	open too many gates: keep one-way, language-split, secret-check, security-gate and delete the others the owner names
+R	todo	AIU EDITOR/todo.aiu:129	AIU EDITOR/todo.aiu
+F	line	129
+F	text	open put update, test and gate in ONE directory, check find-up for gate in update-table.rkt first
+R	todo	AIU EDITOR/todo.aiu:13	AIU EDITOR/todo.aiu
+F	line	13
+F	text	bionic reading rendering, EXTREMELY IMPORTANT: render text with Bionic Reading emphasis in the editor and the notation viewer.
+R	todo	AIU EDITOR/todo.aiu:134	AIU EDITOR/todo.aiu
+F	line	134
+F	text	open check that bar-less and bar-more levels still behave with the new bar menu table
+R	todo	AIU EDITOR/todo.aiu:139	AIU EDITOR/todo.aiu
+F	line	139
+F	text	open pane-split test is missing: record one with keys that change the screen, the title block is pinned now
+R	todo	AIU EDITOR/todo.aiu:144	AIU EDITOR/todo.aiu
+F	line	144
+F	text	open tests for the project (SPC j) and workspace (SPC l) layers
+R	todo	AIU EDITOR/todo.aiu:149	AIU EDITOR/todo.aiu
+F	line	149
+F	text	open block cursor: h t w i, typing, escape, picks a p e c k l x o d
+R	todo	AIU EDITOR/todo.aiu:154	AIU EDITOR/todo.aiu
+F	line	154
+F	text	open check that OSC 52 copy reaches the phone clipboard through the multiplexer
+R	todo	AIU EDITOR/todo.aiu:159	AIU EDITOR/todo.aiu
+F	line	159
+F	text	open type with 5 cursors and say if it lags
+R	todo	AIU EDITOR/todo.aiu:170	AIU EDITOR/todo.aiu
+F	line	170
+F	text	open cut the 1.3 s between first paint and ready
+R	todo	AIU EDITOR/todo.aiu:175	AIU EDITOR/todo.aiu
+F	line	175
+F	text	open lower the priority of the background scan
+R	todo	AIU EDITOR/todo.aiu:18	AIU EDITOR/todo.aiu
+F	line	18
+F	text	research RSVP (Rapid Serial Visual Presentation).
+R	todo	AIU EDITOR/todo.aiu:180	AIU EDITOR/todo.aiu
+F	line	180
+F	text	open batched hot path op multi-edit for many cursors, only if typing lags
+R	todo	AIU EDITOR/todo.aiu:185	AIU EDITOR/todo.aiu
+F	line	185
+F	text	open hot path binary lives in /tmp: rebuild or set AIU_HOT_PATH_BIN
+R	todo	AIU EDITOR/todo.aiu:196	AIU EDITOR/todo.aiu
+F	line	196
+F	text	open cursor cannot land on the todo tray of a box after a block move
+R	todo	AIU EDITOR/todo.aiu:201	AIU EDITOR/todo.aiu
+F	line	201
+F	text	open comment that wraps blocks may light its parent block
+R	todo	AIU EDITOR/todo.aiu:206	AIU EDITOR/todo.aiu
+F	line	206
+F	text	open cursors while a block is edited, block cursor at the block start
+R	todo	AIU EDITOR/todo.aiu:211	AIU EDITOR/todo.aiu
+F	line	211
+F	text	open select a block as one unit for cut and paste, paste a block between pages
+R	todo	AIU EDITOR/todo.aiu:216	AIU EDITOR/todo.aiu
+F	line	216
+F	text	open copy ring: cycle with space P, visible list, keep between sessions
+R	todo	AIU EDITOR/todo.aiu:221	AIU EDITOR/todo.aiu
+F	line	221
+F	text	open copy of a selection made inside the undo layer
+R	todo	AIU EDITOR/todo.aiu:226	AIU EDITOR/todo.aiu
+F	line	226
+F	text	open raw line wider than the screen while a block is edited
+R	todo	AIU EDITOR/todo.aiu:23	AIU EDITOR/todo.aiu
+F	line	23
+F	text	research Spritz-style ORP alignment.
+R	todo	AIU EDITOR/todo.aiu:237	AIU EDITOR/todo.aiu
+F	line	237
+F	text	open answer the three questions of 13.9, then build step 1 marks.rkt with place-of and find-place
+R	todo	AIU EDITOR/todo.aiu:242	AIU EDITOR/todo.aiu
+F	line	242
+F	text	open mark-set, mark-jump, mark-delete, keys by loop, menu rows
+R	todo	AIU EDITOR/todo.aiu:247	AIU EDITOR/todo.aiu
+F	line	247
+F	text	open jumplist with jump-back and jump-forward
+R	todo	AIU EDITOR/todo.aiu:252	AIU EDITOR/todo.aiu
+F	line	252
+F	text	open global marks, named bookmarks, fzf list
+R	todo	AIU EDITOR/todo.aiu:257	AIU EDITOR/todo.aiu
+F	line	257
+F	text	open mark letters in the strip, bar count, dashboard section
+R	todo	AIU EDITOR/todo.aiu:262	AIU EDITOR/todo.aiu
+F	line	262
+F	text	open automatic marks: last change, last edit block, last visual block
+R	todo	AIU EDITOR/todo.aiu:273	AIU EDITOR/todo.aiu
+F	line	273
+F	text	open decide: keep or drop the history file of section 14
+R	todo	AIU EDITOR/todo.aiu:278	AIU EDITOR/todo.aiu
+F	line	278
+F	text	open decide: keep or remove SPC u level-up
+R	todo	AIU EDITOR/todo.aiu:28	AIU EDITOR/todo.aiu
+F	line	28
+F	text	research Bionic Reading.
+R	todo	AIU EDITOR/todo.aiu:283	AIU EDITOR/todo.aiu
+F	line	283
+F	text	open undo and redo keys u and r
+R	todo	AIU EDITOR/todo.aiu:288	AIU EDITOR/todo.aiu
+F	line	288
+F	text	open tree view as an AIU page
+R	todo	AIU EDITOR/todo.aiu:293	AIU EDITOR/todo.aiu
+F	line	293
+F	text	open git hunk and block revert from the git strip, restore from a commit
+R	todo	AIU EDITOR/todo.aiu:298	AIU EDITOR/todo.aiu
+F	line	298
+F	text	open tab switch and quit while writing also make the undo commit
+R	todo	AIU EDITOR/todo.aiu:303	AIU EDITOR/todo.aiu
+F	line	303
+F	text	open pruning of refs/aiu-undo-old, git worktree for an old state
+R	todo	AIU EDITOR/todo.aiu:308	AIU EDITOR/todo.aiu
+F	line	308
+F	text	open untracked files in the git row
+R	todo	AIU EDITOR/todo.aiu:313	AIU EDITOR/todo.aiu
+F	line	313
+F	text	open remove dead code of section 17 if still there
+R	todo	AIU EDITOR/todo.aiu:324	AIU EDITOR/todo.aiu
+F	line	324
+F	text	open tab completion for .aiu from the notation engine
+R	todo	AIU EDITOR/todo.aiu:329	AIU EDITOR/todo.aiu
+F	line	329
+F	text	open LSP server with the same completion core
+R	todo	AIU EDITOR/todo.aiu:33	AIU EDITOR/todo.aiu
+F	line	33
+F	text	research tachistoscopic reading.
+R	todo	AIU EDITOR/todo.aiu:334	AIU EDITOR/todo.aiu
+F	line	334
+F	text	open search and replace with n and N
+R	todo	AIU EDITOR/todo.aiu:339	AIU EDITOR/todo.aiu
+F	line	339
+F	text	open folding, split view, macros, outline list
+R	todo	AIU EDITOR/todo.aiu:344	AIU EDITOR/todo.aiu
+F	line	344
+F	text	open git stage and blame
+R	todo	AIU EDITOR/todo.aiu:349	AIU EDITOR/todo.aiu
+F	line	349
+F	text	open reload when the file changes on disk
+R	todo	AIU EDITOR/todo.aiu:354	AIU EDITOR/todo.aiu
+F	line	354
+F	text	open spell check
+R	todo	AIU EDITOR/todo.aiu:359	AIU EDITOR/todo.aiu
+F	line	359
+F	text	open project and workspace rows of the tab bar switch pages
+R	todo	AIU EDITOR/todo.aiu:364	AIU EDITOR/todo.aiu
+F	line	364
+F	text	open scan limits (800 pages, 8 repositories, 4 folders deep) configurable
+R	todo	AIU EDITOR/todo.aiu:375	AIU EDITOR/todo.aiu
+F	line	375
+F	text	open add undo.rkt, multi.rkt, clip.rkt to compile-deps of cli.rkt
+R	todo	AIU EDITOR/todo.aiu:38	AIU EDITOR/todo.aiu
+F	line	38
+F	text	design a single-word-at-a-time reading interface.
+R	todo	AIU EDITOR/todo.aiu:380	AIU EDITOR/todo.aiu
+F	line	380
+F	text	open key tables of undo, cursor and select layers in the docs
+R	todo	AIU EDITOR/todo.aiu:405	AIU EDITOR/todo.aiu
+F	line	405
+F	text	open notation requires a title for every box type
+R	todo	AIU EDITOR/todo.aiu:416	AIU EDITOR/todo.aiu
+F	line	416
+F	text	tab management needs more features. There is no workspace management, no project management and no keys for them. These need real work: open, switch, close and list workspaces and projects, each with keys. Owner request 2026-11-02.
+R	todo	AIU EDITOR/todo.aiu:417	AIU EDITOR/todo.aiu
+F	line	417
+F	text	the mode line shows the available keys but only the keys alone. It needs a full table of every key with what it does, per layer. Owner request 2026-11-02.
+R	todo	AIU EDITOR/todo.aiu:427	AIU EDITOR/todo.aiu
+F	line	427
+F	text	a .aiu-memory file kept in the directory the owner works in (workspace or project). It remembers the open tabs, workspaces and projects, so nothing is lost when aiutd exits and everything comes back when it is opened in that directory again. Owner request 2026-11-02, top priority.
+R	todo	AIU EDITOR/todo.aiu:428	AIU EDITOR/todo.aiu
+F	line	428
+F	text	feature 1 of .aiu-memory: the work placement is never lost on exit. Open tabs, their order, the current tab, the cursor and view place of each, and the open workspaces and projects are saved and restored.
+R	todo	AIU EDITOR/todo.aiu:429	AIU EDITOR/todo.aiu
+F	line	429
+F	text	feature 2 of .aiu-memory: workspace settings. A directory or workspace can say which projects it holds and which files and tabs open by themselves when aiutd starts there. The format and the rules need thinking first: where the file lives, what it holds, and how it relates to the plain text .aiu format. It must not use .org files and must not edit AIU NOTATION.
+R	todo	AIU EDITOR/todo.aiu:43	AIU EDITOR/todo.aiu
+F	line	43
+F	text	implement adjustable reading speed (WPM).
+R	todo	AIU EDITOR/todo.aiu:439	AIU EDITOR/todo.aiu
+F	line	439
+F	text	clone https://github.com/Canop/broot and https://github.com/alexpasmantier/television into AIU ECOSYSTEM/ FILE MANAGER/.
+R	todo	AIU EDITOR/todo.aiu:440	AIU EDITOR/todo.aiu
+F	line	440
+F	text	combine them into one file manager, then add oil.nvim style editing: the directory is edited as a text buffer and saving applies the renames, moves, deletes and creates.
+R	todo	AIU EDITOR/todo.aiu:441	AIU EDITOR/todo.aiu
+F	line	441
+F	text	make aiutd use this file manager.
+R	todo	AIU EDITOR/todo.aiu:451	AIU EDITOR/todo.aiu
+F	line	451
+F	text	first check that the keybindings are set properly.
+R	todo	AIU EDITOR/todo.aiu:452	AIU EDITOR/todo.aiu
+F	line	452
+F	text	then sort the files into subfolders by subject. Many files share a subject and sit loose in one folder, so each subject gets its own subdirectory.
+R	todo	AIU EDITOR/todo.aiu:453	AIU EDITOR/todo.aiu
+F	line	453
+F	text	after that, move the key sets into their categories: the keys for tabs go in the tabs folder, and so on, so no key has to be hunted for.
+R	todo	AIU EDITOR/todo.aiu:454	AIU EDITOR/todo.aiu
+F	line	454
+F	text	move the test files the same way. Every file gets its own test file from that point, so the mechanic can test each file properly.
+R	todo	AIU EDITOR/todo.aiu:464	AIU EDITOR/todo.aiu
+F	line	464
+F	text	every file of the editor that belongs to AIU NOTATION (its modules, checks, tests and docs) gets notation in its file name, because these files sit in many folders. Then one search for notation finds all of them when AIU NOTATION is updated. Do not edit AIU NOTATION itself.
+R	todo	AIU EDITOR/todo.aiu:465	AIU EDITOR/todo.aiu
+F	line	465
+F	text	do this together with the subject subfolders, and keep the one-way rule: the editor requires the notation files, never the other way round.
+R	todo	AIU EDITOR/todo.aiu:475	AIU EDITOR/todo.aiu
+F	line	475
+F	text	test system per-frame state line. The test system should show the editor state on each frame, so a failed test says what the state was at every step.
+R	todo	AIU EDITOR/todo.aiu:476	AIU EDITOR/todo.aiu
+F	line	476
+F	text	Rust tests in the gate. The Rust side of the editor gets its own tests, run by the gate stages like the Racket ones.
+R	todo	AIU EDITOR/todo.aiu:477	AIU EDITOR/todo.aiu
+F	line	477
+F	text	errortrace run. Run the editor under errortrace once and fix what it finds. The details are in plan.md.
+R	todo	AIU EDITOR/todo.aiu:478	AIU EDITOR/todo.aiu
+F	line	478
+F	text	gutter files. gutter.rkt and gutterview.rkt are loose in editor/tui. Give the gutter its own folder, and give each file its own test file.
+R	todo	AIU EDITOR/todo.aiu:48	AIU EDITOR/todo.aiu
+F	line	48
+F	text	implement highlighted consonants and word emphasis.
+R	todo	AIU EDITOR/todo.aiu:487	AIU EDITOR/todo.aiu
+F	line	487
+F	text	the one-way lint prints NOTHING-TO-CHECK, so it enforces nothing. Find why it sees no Racket files (the project path holds the letter AE), put tui into its area table at its true place (entry and routes already require tui, and the key tables now live in tui folders), and make it fail for real on an upward require.
+R	todo	AIU EDITOR/todo.aiu:496	AIU EDITOR/todo.aiu
+F	line	496
+F	text	test file per source file. A key test drives the live editor, so most modules cannot have one. Module tests are recorded with aiutd record-module NAME MODULE-PATH EXPRESSION (one file, one test, gate/tests/mod-NAME.test). A first batch is recorded; the rest of the Racket files follow, the live and tui files with key tests from aiutd record. The Rust files get their tests with the Rust tests in the gate item.
+R	todo	AIU EDITOR/todo.aiu:505	AIU EDITOR/todo.aiu
+F	line	505
+F	text	copy and paste mechanism. The mechanism in editor/tui/text/clip.rkt (the ring of copies, paste per cursor, the OSC 52 clipboard, the notes in clip-notes.rkt) needs improvements. The owner decides what changes; related items are copy-cut-paste and the OSC 52 clipboard check. Give it its own test file.
+R	todo	AIU EDITOR/todo.aiu:514	AIU EDITOR/todo.aiu
+F	line	514
+F	text	notification history. A command shows the last notifications of the active session in a box (level, text and time), kept in a small ring in the notify mechanism. Not urgent at all, do it last.
+R	todo	AIU EDITOR/todo.aiu:517	AIU EDITOR/todo.aiu
+F	line	517
+F	text	literate code view: all files are written in .aiu with literate programming like org mode; a key in the text editor hides the notation and shows only the code, like a normal code file
+R	todo	AIU EDITOR/todo.aiu:522	AIU EDITOR/todo.aiu
+F	line	522
+F	text	the editor writes the name: declaration when a block is made
+R	todo	AIU EDITOR/todo.aiu:53	AIU EDITOR/todo.aiu
+F	line	53
+F	text	implement punctuation-aware pauses.
+R	todo	AIU EDITOR/todo.aiu:58	AIU EDITOR/todo.aiu
+F	line	58
+F	text	implement adjustable word display duration.
+R	todo	AIU EDITOR/todo.aiu:63	AIU EDITOR/todo.aiu
+F	line	63
+F	text	add sentence and paragraph navigation.
+R	todo	AIU EDITOR/todo.aiu:68	AIU EDITOR/todo.aiu
+F	line	68
+F	text	add pause, resume, forward and backward controls.
+R	todo	AIU EDITOR/todo.aiu:73	AIU EDITOR/todo.aiu
+F	line	73
+F	text	add reading progress statistics.
+R	todo	AIU EDITOR/todo.aiu:78	AIU EDITOR/todo.aiu
+F	line	78
+F	text	test reading comprehension at different speeds.
+R	todo	AIU EDITOR/todo.aiu:83	AIU EDITOR/todo.aiu
+F	line	83
+F	text	explore Emacs integration.
+R	todo	AIU EDITOR/todo.aiu:88	AIU EDITOR/todo.aiu
+F	line	88
+F	text	explore AIU Notation compatibility.
+R	todo	AIU EDITOR/todo.aiu:93	AIU EDITOR/todo.aiu
+F	line	93
+F	text	combine RSVP and Bionic Reading into one reading mode.
+R	todo	AIU NOTATION/notation/types/book.aiu:43	AIU NOTATION/notation/types/book.aiu
+F	line	43
+F	text	add a short example page
+R	todo	AIU NOTATION/notation/types/comment.aiu:48	AIU NOTATION/notation/types/comment.aiu
+F	line	48
+F	text	write the install guide and test it on a clean machine before Friday
+R	todo	AIU NOTATION/notation/types/comment.aiu:56	AIU NOTATION/notation/types/comment.aiu
+F	line	56
+F	text	done viewer fixed, names now sit on the left
+R	todo	AIU NOTATION/notation/types/decision.aiu:45	AIU NOTATION/notation/types/decision.aiu
+F	line	45
+F	text	ask whether pictures need a fourth option
+R	todo	AIU NOTATION/notation/types/decision.aiu:80	AIU NOTATION/notation/types/decision.aiu
+F	line	80
+F	text	done folder created and the first fifty notes moved
+R	todo	AIU NOTATION/notation/types/default.aiu:26	AIU NOTATION/notation/types/default.aiu
+F	line	26
+F	text	done add a section inside a section
+R	todo	AIU NOTATION/notation/types/journal.aiu:28	AIU NOTATION/notation/types/journal.aiu
+F	line	28
+F	text	write the other starter pages
+R	todo	AIU NOTATION/notation/types/module.aiu:26	AIU NOTATION/notation/types/module.aiu
+F	line	26
+F	text	decide whether it should refuse a text input
+R	todo	AIU NOTATION/notation/types/note.aiu:17	AIU NOTATION/notation/types/note.aiu
+F	line	17
+F	text	link this idea to the page that uses it
+R	todo	AIU NOTATION/notation/types/plan.aiu:32	AIU NOTATION/notation/types/plan.aiu
+F	line	32
+F	text	done guide written
+R	todo	AIU NOTATION/notation/types/plan.aiu:42	AIU NOTATION/notation/types/plan.aiu
+F	line	42
+F	text	waiting for a clean machine
+R	todo	AIU NOTATION/notation/types/plan.aiu:76	AIU NOTATION/notation/types/plan.aiu
+F	line	76
+F	text	ask Anna by Monday
+R	todo	AIU NOTATION/notation/types/research.aiu:95	AIU NOTATION/notation/types/research.aiu
+F	line	95
+F	text	find three people to repeat the test
+R	todo	AIU NOTATION/notation/types/todo.aiu:17	AIU NOTATION/notation/types/todo.aiu
+F	line	17
+F	text	write the install guide and test it on a clean machine before Friday
+R	todo	AIU NOTATION/notation/types/todo.aiu:27	AIU NOTATION/notation/types/todo.aiu
+F	line	27
+F	text	waiting for Anna to name the second operating system
+R	todo	AIU NOTATION/notation/types/todo.aiu:44	AIU NOTATION/notation/types/todo.aiu
+F	line	44
+F	text	done viewer fixed, block names now sit on the left
+R	todo	AIU NOTATION/notation/types/todo.aiu:49	AIU NOTATION/notation/types/todo.aiu
+F	line	49
+F	text	done contracts now show on every page
+R	todo	AIU NOTATION/todo.aiu:13	AIU NOTATION/todo.aiu
+F	line	13
+F	text	notation question pages: the questions each paragraph, section and to-do type must answer live in an editable page at the base of a directory, not hard coded; every file in that directory and its subdirectories takes those questions, and the notation system reports an error where a file lacks an answer after the page changes. Idea only, not designed yet.
+R	todo	AIU NOTATION/todo.aiu:18	AIU NOTATION/todo.aiu
+F	line	18
+F	text	question page loader: contracts-of reads rules and questions from a questions.aiu page found at the nearest directory base up the tree, replacing the hard coded the-contracts lists in filetypes/types.
+R	todo	AIU NOTATION/todo.aiu:23	AIU NOTATION/todo.aiu
+F	line	23
+F	text	missing question error: check reports a finding where a paragraph, section or to-do type has no question in the page, and where an answer points at a question id that no longer exists.
+R	todo	AIU NOTATION/todo.aiu:28	AIU NOTATION/todo.aiu
+F	line	28
+F	text	stale types readme: filetypes/types/README.md still names notation system/ and gate/check.nu; point it at the real paths and at the question pages.
+R	todo	AIU NOTATION/todo.aiu:33	AIU NOTATION/todo.aiu
+F	line	33
+F	text	delete hard coded contracts: seed .questions.aiu from the current rules and questions with their ids, then remove every the-contracts list from filetypes/types.
+R	todo	AIU NOTATION/todo.aiu:38	AIU NOTATION/todo.aiu
+F	line	38
+F	text	notation create command and TUI: list file types and block kinds, add, edit or remove a rule or question, write the nearest dot page; plan in question-pages-plan.aiu.
+R	todo	AIU NOTATION/todo.aiu:43	AIU NOTATION/todo.aiu
+F	line	43
+F	text	notation database: engine written from zero in Rust inside notation, no outside engine, no SQLite; order of work agreed: engine core, indexers one kind at a time, names, links and sync, red delete popup, autosave; see plan sections 3, 4 and 10.
+R	todo	AIU NOTATION/todo.aiu:48	AIU NOTATION/todo.aiu
+F	line	48
+F	text	box names: every block kind gets a name declaration, unique and readable, written in the file; it is the id and the link target; see plan section 5.
+R	todo	AIU NOTATION/todo.aiu:53	AIU NOTATION/todo.aiu
+F	line	53
+F	text	link blocks: link start and link end name a target box and can show it inside another file; the editor suggests names while typing.
+R	todo	AIU NOTATION/todo.aiu:58	AIU NOTATION/todo.aiu
+F	line	58
+F	text	idle autosave: after 5 seconds without typing in write mode, show a notification, leave write mode and save.
+R	todo	AIU NOTATION/todo.aiu:63	AIU NOTATION/todo.aiu
+F	line	63
+F	text	safe delete: refuse deleting anything not tracked by git unless approved; if shown in other files, ask yes or no in a red popup first.
+R	todo	AIU NOTATION/todo.aiu:68	AIU NOTATION/todo.aiu
+F	line	68
+F	text	own file manager for safe delete: the git tracked check, the untracked approval word and the red popup for boxes shown elsewhere live in our own file manager; see plan section 10.
+R	todo	AIU NOTATION/todo.aiu:73	AIU NOTATION/todo.aiu
+F	line	73
+F	text	block type drawing: view.rs, boxview.rs, rich.rs, json.rkt, aiu-text.rkt and make-live.rkt still match block names in code; move how each type is drawn into its blocktypes file so a new type needs no code edit.
+R	todo	AIU NOTATION/todo.aiu:78	AIU NOTATION/todo.aiu
+F	line	78
+F	text	database indexers: one source file per kind in notation/database, files first, then blocks, links, tags and todos; each rebuilds only its own kind of one source file through Store.replace_source.
+R	todo	AIU NOTATION/todo.aiu:83	AIU NOTATION/todo.aiu
+F	line	83
+F	text	register link as a block type in .notation/blocktypes and Racket elements/register.rkt, then make the links indexer read parsed link blocks instead of text lines
+R	todo	AIU NOTATION/todo.aiu:88	AIU NOTATION/todo.aiu
+F	line	88
+F	text	the folder index loads block types from the folder nearest to the first file only; load them per file or per folder
+R	todo	AIU NOTATION/todo.aiu:93	AIU NOTATION/todo.aiu
+F	line	93
+F	text	names: fill name: on old blocks that have none, and make a duplicate name a check error instead of a stderr line
+R	todo	AIU TERMINAL MULTIPLEXER/todo.aiu:13	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	line	13
+F	text	bar placement from the editor bar plan, tabs on top and mode line at the bottom, instead of all rows stacked on top
+R	todo	AIU TERMINAL MULTIPLEXER/todo.aiu:18	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	line	18
+F	text	prefix commands for tabs, workspaces, projects and splits through the copied editor tab code, with a second shell pane
+R	todo	AIU TERMINAL MULTIPLEXER/todo.aiu:23	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	line	23
+F	text	decide per part what stays Racket and what goes to Rust, only server side where speed is needed, for example a pty holder that survives the client
+R	todo	AIU TERMINAL MULTIPLEXER/todo.aiu:28	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	line	28
+F	text	combining marks and mouse and bracketed paste in the pane
+R	todo	AIU TERMINAL MULTIPLEXER/todo.aiu:33	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	line	33
+F	text	the ecosystem gate finds the multiplexer project by itself, no second gate
+R	todo	AIU TERMINAL MULTIPLEXER/todo.aiu:44	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	line	44
+F	text	layout engine wired: the editor splits and the multiplexer panes both call tui/layout/layout-tree-shared.rkt, a pure tree of strips with axis, windows, sizes and an insertion direction, rectangles with scrolling to the focused window
+R	todo	AIU TERMINAL MULTIPLEXER/todo.aiu:49	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	line	49
+F	text	floating layer in the editor and the multiplexer, identical shared files: one float above the tiles with size and anchor, hide keeps its state, size and tabs persist, on a narrow screen it grows to near full width
+R	todo	AIU TERMINAL MULTIPLEXER/todo.aiu:54	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	line	54
+F	text	float tabs and named floats: todo, journal and notes each with its own key, the to-do file opens at once, journal opens a dated file created when missing, a capture key appends one line without focusing the float, in the multiplexer a float is a hidden pane running the editor on the to-do file
+R	todo	AIU TERMINAL MULTIPLEXER/todo.aiu:59	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	line	59
+F	text	float resizer: step keys and presets small, medium, large and full on one key, saved size, entries in the keys menu, title and tabs on the border in the box style
+R	todo	AIU TERMINAL MULTIPLEXER/todo.aiu:64	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	line	64
+F	text	tiling in the editor replacing tui/split: strips in both directions, focus, move, consume and expel, size presets one third, half, two thirds and full, maximize and center, tabbed strip for many files
+R	todo	AIU TERMINAL MULTIPLEXER/todo.aiu:69	AIU TERMINAL MULTIPLEXER/todo.aiu
+F	line	69
+F	text	tiling in the multiplexer panes: the same engine, window layer keys d n h t for focus, shift moves the window, a resize layer, the insertion direction shown in the mode bar, layout saved per workspace and project

@@ -1,0 +1,42 @@
+[package]
+authors.workspace = true
+description = "Nushell's integrated LSP server"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-lsp"
+name = "aiu-shell-lsp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+aiu-shell-cli.workspace = true
+aiu-shell-glob.workspace = true
+aiu-shell-parser.workspace = true
+aiu-shell-protocol.workspace = true
+aiu-shell-utils.workspace = true
+aiu-shell-experimental.workspace = true 
+
+crossbeam-channel = { workspace = true }
+fancy-regex = { workspace = true }
+lsp-server = { workspace = true }
+lsp-textdocument = { workspace = true }
+lsp-types = { workspace = true }
+memchr = { workspace = true }
+miette = { workspace = true }
+nucleo-matcher = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+url = { workspace = true }
+
+[dev-dependencies]
+aiu-shell-cmd-lang = { workspace = true, features = ["os"] }
+aiu-shell-command = { workspace = true, features = ["os"] }
+aiu-shell-engine.workspace = true
+aiu-shell-std.workspace = true
+aiu-shell-test-support = { path = "../aiu-shell-test-support" }
+
+assert-json-diff = "2.0"
+rstest = { workspace = true, default-features = false }
+
+[lints]
+workspace = true

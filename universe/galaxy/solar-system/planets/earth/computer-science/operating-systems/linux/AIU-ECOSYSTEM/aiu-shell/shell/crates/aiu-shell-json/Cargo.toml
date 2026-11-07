@@ -1,0 +1,42 @@
+[package]
+authors = [
+    "The Nushell Project Developers",
+    "Christian Zangl <laktak@cdak.net>",
+]
+description = "Fork of serde-hjson"
+repository = "https://github.com/nushell/aiu-shell/tree/main/crates/aiu-shell-json"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+name = "aiu-shell-json"
+version.workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+bench = false
+
+[features]
+preserve_order = ["linked-hash-map", "linked-hash-map/serde_impl", "serde_json/preserve_order"]
+default = ["preserve_order"]
+
+[dependencies]
+aiu-shell-utils.workspace = true
+aiu-shell-protocol = { workspace = true, optional = true }
+
+linked-hash-map = { version = "0.5", optional = true }
+num-traits = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+aiu-shell-test-support = { path = "../aiu-shell-test-support" }
+aiu-shell-path.workspace = true
+
+serde_json = "1.0"
+fancy-regex = "0.20.0"
+pretty_assertions = { workspace = true }
+rstest = { workspace = true, default-features = false }
+
+[lints]
+workspace = true
