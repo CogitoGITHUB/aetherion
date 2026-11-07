@@ -239,16 +239,14 @@ pm --format json why pm.lock manifest.json some-package
 
 ## Testing and verification
 
-The full gate is the entry point, and it runs the whole test suite and every lint:
+The ecosystem gate at the ecosystem root is the only check. The package manager keeps no tests of its own; the stage pm-compile compiles every source file:
 
 ```bash
-nu gate/check.nu
+nu gate/check.nu --only pm-compile
 nu gate/check.nu --list
 ```
 
-At the pause it was green on `28384b5f`: 111 test files, 1586 checks, 0 failed, with the
-one-way dependency lint and the wait-door lint at zero violations. The suite lives in
-`package-manager/tests/`, and the test doubles live apart from the production code.
+The old suite was green on `28384b5f` before it was deleted on 2026-11-07; git history keeps it.
 
 ## Limitations
 
@@ -349,7 +347,7 @@ the human accepts.
 ## Development
 
 ```bash
-nu gate/check.nu
+nu gate/check.nu --only pm-compile
 nu gate/check.nu --list
 racket tools/repl.rkt
 ```

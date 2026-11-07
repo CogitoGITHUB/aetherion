@@ -122,3 +122,16 @@ todo: aiutm default pane program: aiutm picks HOME/aiu-target/aiu-shell/debug/ai
 todo: paste in aiutm: aiutm turns bracketed paste on for the real terminal and forwards a whole paste to the screen pane; a paste is detected by ESC[200~ at the start of a read, an end marker split across two reads is not handled; paste while the screen is in visual mode is not checked
 
 todo: full input view: f in visual mode toggles a full screen editor for the input box inside the screen pane; it does not cover the aiutm bars yet (needs the screen to tell aiutm to toggle focus, for example through a private OSC sequence caught in pane-grid.rkt); the cursor is always at the end, no cursor movement or editing in the middle
+
+section start
+title start
+Server bar
+title end
+
+paragraph start
+todo: shell server bar: a bar in the aiu-shell screen shows information about the ecosystem server (shared or own, state, dev mode, last good); after the ecosystem server exists
+Planned.
+paragraph end
+
+section end
+

@@ -4,13 +4,13 @@
 ;; promises so an invalid value cannot exist (M-10).
 
 (require racket/contract/base
-          "../errors/error-type.rkt"
-          "./version.rkt"
-          "../errors/git-id.rkt"
-          "../errors/package-name.rkt")
+         "../errors/error-type.rkt"
+         "./version.rkt"
+         "../git/git-commit.rkt")
 
 (provide
  (struct-out source)
+ (struct-out local-source)
  (struct-out dep)
  (struct-out build-step)
  (struct-out install-spec)
@@ -56,6 +56,15 @@
             (values url commit)))
 ;; url    : string?  git URL (scheme checks happen in spec-read)
 ;; commit : string?  full commit id, 40 or 64 lowercase hex
+
+(struct local-source (path)
+  #:transparent
+  #:guard (lambda (path _name)
+            (unless (and (string? path) (> (string-length path) 0))
+              (raise-pm-error (quote spec) (quote local-source) "path must be a nonempty string"
+                              #:fields (list (cons "value" (format "~s" path)))))
+            path))
+;; path : string?  a folder on this machine that is the source, no upstream
 
 (struct dep (name version)
   #:transparent
@@ -166,7 +175,7 @@
             (unless (string? summary)
               (raise-pm-error 'spec 'spec "summary must be a string"
                               #:fields `(("value" . ,summary))))
-            (unless (source? source)
+            (unless (or (source? source) (local-source? source))
               (raise-pm-error 'spec 'spec "not a source"
                               #:fields `(("value" . ,source))))
             (unless (and (list? deps) (andmap dep? deps))

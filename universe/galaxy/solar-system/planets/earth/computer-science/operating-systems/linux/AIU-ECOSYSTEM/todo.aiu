@@ -1,0 +1,83 @@
+title start
+kind: todo
+tags: todo planned ecosystem
+ECOSYSTEM TODO
+title end
+
+section start
+title start
+Next
+title end
+
+paragraph start
+todo: one package-name? only: spec/spec.rkt defines its own package-name? and errors/package-name.rkt defines the same one; keep the errors one, make spec.rkt re-export it, then delete the copy
+Planned.
+paragraph end
+
+paragraph start
+todo: package manager local first, stage 2: a pin for a local source, the tree fingerprint from store/content-address.rkt tree-hash; spec, plan-derive and the lockfile use that pin where they use source-commit now
+Planned.
+paragraph end
+
+paragraph start
+todo: package manager local first, stage 3: apply installs a local package by copying its folder into staging instead of fetch and export from the vault; skip the vault preflight for local sources; manifest entry for a local package
+Planned.
+paragraph end
+
+paragraph start
+todo: package manager local first, stage 4: the lockfile accepts a local source without the git URL check; the ecosystem manifest declares every package as (local PATH)
+Planned.
+paragraph end
+
+paragraph start
+todo: ecosystem manifest: one list of every package in the ecosystem (editor, multiplexer, shell family, notation, browser, package manager) with its local folder
+Planned.
+paragraph end
+
+paragraph start
+todo: ecosystem binary skeleton: entry, commands status and update, own folder AIU ECOSYSTEM, builds with raco exe like aiutm
+Planned.
+paragraph end
+
+paragraph start
+todo: ecosystem update: fingerprint package folders, rebuild only changed ones through the package manager, new generation per change
+Planned.
+paragraph end
+
+paragraph start
+todo: server skeleton in Rust: serve and stop, own server per package and the shared one, discovery of the shared one
+Planned.
+paragraph end
+
+paragraph start
+todo: dev supervisor in the server: start the new generation, health check, on failure kill it and return to the last good generation
+Planned.
+paragraph end
+
+paragraph start
+todo: package manager under dev mode: the package manager is a package of the manifest and updates itself through the same supervisor
+Planned.
+paragraph end
+
+paragraph start
+todo: connect the notation database to the server as the first shared database
+Planned.
+paragraph end
+
+paragraph start
+todo: move the editor devloop onto the server, then the multiplexer, then the shell; delete the separate devloop copies when done
+Planned.
+paragraph end
+
+paragraph start
+todo: settle the open questions in ecosystem-binary-plan.aiu section 4 and write the answers into the plan
+Planned.
+paragraph end
+
+paragraph start
+todo: package manager TODO.org cosmetics: the tests: lines of its items point at deleted tests; delete those lines when each item is worked
+Planned.
+paragraph end
+
+section end
+

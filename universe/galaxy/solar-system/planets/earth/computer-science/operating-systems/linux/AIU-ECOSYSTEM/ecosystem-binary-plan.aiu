@@ -1,0 +1,98 @@
+title start
+kind: default
+tags: ecosystem server binary dev-mode
+Plan: the ecosystem binary, the one server and dev mode
+title end
+
+section start
+title start
+Section 1: decided by Shape 2026-11-07
+title end
+
+paragraph start
+One binary called ecosystem covers everything in the ecosystem. Any command such as ecosystem update runs when code changes.
+paragraph end
+
+paragraph start
+One shared server for the whole ecosystem, written in Rust. Every package can also have its own small server and still works alone.
+paragraph end
+
+paragraph start
+Dev mode lives in the server. The server runs the new version. If the new version fails, the server kills it and runs the last good one.
+paragraph end
+
+paragraph start
+The package manager AIU-PM is the base. It must use local files when a package has no upstream.
+paragraph end
+
+paragraph start
+The package manager itself must be covered by dev mode too.
+paragraph end
+
+paragraph start
+Later: a bar in the shell shows information about the server. It is in aiu-shell/todo.aiu.
+paragraph end
+
+section end
+
+section start
+title start
+Section 2: the pieces
+title end
+
+paragraph start
+The ecosystem binary: Racket front. Commands status, update, serve, dev, stop. It calls the package manager and talks to the server.
+paragraph end
+
+paragraph start
+The package manager: owns packages, builds, generations and rollback. A generation is a good version, and the last good one is the previous generation, so rollback is a pointer move.
+paragraph end
+
+paragraph start
+The ecosystem manifest: one list of every package in the ecosystem with its local folder. Local folders are the source when there is no upstream.
+paragraph end
+
+paragraph start
+The server: holds the notation database, the name registry and the list of running programs with their modes. Dev supervisor inside it: build the new version, start it, health check, keep it or kill it and return to the last good generation.
+paragraph end
+
+paragraph start
+ecosystem update: fingerprint every package folder, rebuild only the changed ones through the package manager, make a new generation, tell the server.
+paragraph end
+
+section end
+
+section start
+title start
+Section 3: order of work
+title end
+
+paragraph start
+The order is the order of the to-do in todo.aiu at the ecosystem root. Finished items are deleted from the to-do in the same script, so the next AI continues from the first item left.
+paragraph end
+
+section end
+
+section start
+title start
+Section 4: still open
+title end
+
+paragraph start
+The protocol between a package and a server, and how packages find the shared server.
+paragraph end
+
+paragraph start
+How a package switches between its own server and the shared one, and what happens when the shared one goes away.
+paragraph end
+
+paragraph start
+Who owns the name registry, and how names stay unique across all packages.
+paragraph end
+
+paragraph start
+What a health check is for each kind of program: editor, multiplexer, shell, server.
+paragraph end
+
+section end
+

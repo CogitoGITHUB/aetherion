@@ -11,9 +11,8 @@
 # line, continue without stopping.
 # Deliberately not built: =LATER.org=. Decided policy:
 # =plan/DECISIONS.org=. Done history: =plan/PROGRESS.org= and =git log=.
-# Tests live in =package-manager/tests/<area>/=, mirroring src, unless an
-# item says otherwise. The gate runs with
-# =~/opt/nushell/0.116.1/nu --no-config-file gate/check.nu=.
+# The package manager keeps no tests: the ecosystem gate checks it, stage pm-compile.
+# The gate runs from the ecosystem root with =nu gate/check.nu=.
 
 * PAUSED 2026-10-21 -- the TERMINAL MULTIPLEXER is built first.
 The owner switched the priority on 2026-10-21. pm's implementation stops

@@ -26,6 +26,24 @@
 
 ;; syntax -> source
 (define (read-source form)
+  (if (local-source-form? form)
+      (read-local-source form)
+      (read-git-source form)))
+
+(define (local-source-form? form)
+  (define inner (syntax->list (car (field-args form 1 (quote source)))))
+  (and inner
+       (= (length inner) 2)
+       (eq? (syntax->datum (car inner)) (quote local))))
+
+(define (read-local-source form)
+  (define inner (syntax->list (car (field-args form 1 (quote source)))))
+  (define path (syntax->datum (cadr inner)))
+  (unless (and (string? path) (> (string-length path) 0))
+    (fail (cadr inner) "local source must be a nonempty path string"))
+  (local-source path))
+
+(define (read-git-source form)
   (define (v) (car (field-args form 1 'source)))
   (define inner (syntax->list (v)))
   (unless (and inner (= (length inner) 3)

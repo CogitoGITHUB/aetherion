@@ -101,11 +101,9 @@ the committed version.
 
 | need | command |
 |------|---------|
-| check parens / parse | `~/opt/racket-full/bin/racket gate/read-check.rkt <files...>` |
+| compile every PM file | `nu gate/check.nu --only pm-compile` at the ecosystem root |
 | interactive Racket | `~/opt/racket-full/bin/racket tools/repl.rkt` |
-| test specific files | `~/opt/racket-full/bin/racket gate/test-runner.rkt <files...>` |
 | the gate | `~/opt/nushell/0.116.1/nu --no-config-file gate/check.nu` |
-| between items | `... gate/check.nu --changed` |
 | list the stages | `... gate/check.nu --list` |
 
 **Never** write a python heredoc to patch a `.rkt`, and never re-derive a
@@ -144,8 +142,7 @@ scripts get a row in `docs/RACKET-TOOLING.org`.
 2. Make the edit.
 3. `racket gate/read-check.rkt <the file>` — green after the edit, with
    a `file:line` if not.
-4. Test with `gate/test-runner.rkt` for fast-tier files, `raco test`
-   for the rest.
+4. Run `nu gate/check.nu` at the ecosystem root; the package manager keeps no tests.
 
 ## Startup cost, measured
 

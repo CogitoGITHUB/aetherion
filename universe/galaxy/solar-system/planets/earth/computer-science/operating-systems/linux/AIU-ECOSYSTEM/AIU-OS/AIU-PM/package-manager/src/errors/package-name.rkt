@@ -2,7 +2,6 @@
 ;; package-name.rkt -- package name validation (D-8). Pure, no I/O.
 
 (require racket/contract/base
-         racket/regexp
          "../errors/error-type.rkt")
 
 (provide

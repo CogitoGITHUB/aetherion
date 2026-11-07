@@ -14,6 +14,7 @@ const STAGES = [
     {name: "kit-check", script: "kit-check.rkt", kind: "racket-plain"}
     {name: "send-check", script: "send-check.rkt", kind: "racket-plain"}
     {name: "git-check", script: "git-check.rkt", kind: "racket-plain"}
+    {name: "pm-compile", script: "pm-compile-check.rkt", kind: "racket-plain"}
     {name: "test-check", script: "test-check.rkt", kind: "racket-plain"}
 ]
 
