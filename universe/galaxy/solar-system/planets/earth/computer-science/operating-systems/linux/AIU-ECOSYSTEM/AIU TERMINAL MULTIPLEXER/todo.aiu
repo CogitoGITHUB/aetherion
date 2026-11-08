@@ -10,6 +10,11 @@ Next
 title end
 
 paragraph start
+todo: first paint never waits (Shape rule 2026-11-08): the multiplexer now draws before the first bar answer (two blank rows, the bars loop refreshes at once); check the start time and the bars helper start (join/live-wire-shared.rkt), then do the same for the editor entry and the shell
+Planned.
+paragraph end
+
+paragraph start
 todo: bar placement from the editor bar plan, tabs on top and mode line at the bottom, instead of all rows stacked on top
 Planned.
 paragraph end

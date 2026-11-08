@@ -15,17 +15,11 @@ Planned.
 paragraph end
 
 paragraph start
-todo: package manager local first, stage 2: a pin for a local source, the tree fingerprint from store/content-address.rkt tree-hash; spec, plan-derive and the lockfile use that pin where they use source-commit now
-Planned.
-paragraph end
-
 paragraph start
-todo: package manager local first, stage 3: apply installs a local package by copying its folder into staging instead of fetch and export from the vault; skip the vault preflight for local sources; manifest entry for a local package
-Planned.
-paragraph end
-
 paragraph start
-todo: package manager local first, stage 4: the lockfile accepts a local source without the git URL check; the ecosystem manifest declares every package as (local PATH)
+paragraph start
+paragraph start
+todo: package manager local first, stage 5: try it for real: one spec with (local PATH) on a small ecosystem folder through pm apply into a scratch prefix; then the ecosystem manifest declares every package as (local PATH)
 Planned.
 paragraph end
 
@@ -76,6 +70,11 @@ paragraph end
 
 paragraph start
 todo: package manager TODO.org cosmetics: the tests: lines of its items point at deleted tests; delete those lines when each item is worked
+Planned.
+paragraph end
+
+paragraph start
+todo: git facts from the server: one watcher per repo in the shared server answers the bars of the multiplexer, the editor and the shell, so no program runs git itself; brings back the +N -M line counts that were dropped from bar-git-shared.rkt on 2026-11-08
 Planned.
 paragraph end
 

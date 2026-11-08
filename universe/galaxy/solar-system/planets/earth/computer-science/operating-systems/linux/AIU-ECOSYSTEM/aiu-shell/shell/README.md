@@ -283,3 +283,4 @@ The project is made available under the MIT license. See the `LICENSE` file for 
 - Paste inside aiutm: paste arrives in the screen as one bracketed paste (one command, no line by line run). Paste in insert mode.
 
 - Input box: long text shows its tail with the cursor; f in visual mode opens the full screen input view (opens by itself for a big paste), f again closes it.
+- Enter in insert mode closes the full screen input view before the line runs, so the normal screen shows the result.

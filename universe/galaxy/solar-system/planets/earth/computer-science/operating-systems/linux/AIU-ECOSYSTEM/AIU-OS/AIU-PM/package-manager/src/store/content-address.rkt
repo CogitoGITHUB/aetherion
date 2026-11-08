@@ -75,7 +75,7 @@
  (contract-out
   ;; path-string -> string, sha1 hex over the tree's content. Equal
   ;; inputs hash equal in any order, on any machine, forever.
-  [tree-hash (-> path-string? string?)]
+  [tree-hash (->* (path-string?) ((listof string?)) string?)]
   ;; the executor's inputs -> string, sha1 hex over the canonical text
   ;; whose lines are listed in this file's header. #:tree-hash is the
   ;; digest tree-hash already returned: hashing once is the point.
@@ -130,12 +130,13 @@
 ;; A symlink is hashed AS a link (its target, no mode bits, never
 ;; followed), so a link pointing back up the tree cannot make the walk
 ;; loop and a link's own name cannot hide the tree it points into.
-(define (tree-entries root)
+(define (tree-entries root [skipped (list)])
   (define (walk dir rel)
     (append*
      (for/list ([name (in-list (sort (map path->string (directory-list dir))
                                     string<?))]
-                #:unless (member name '("." "..")))
+                #:unless (member name '("." ".."))
+                                    #:unless (and (member name skipped) (directory-exists? (build-path dir name))))
        (define full (build-path dir name))
        (define here
          (if (string=? rel "") name (string-append rel "/" name)))
@@ -159,7 +160,7 @@
 ;; path-string -> string, sha1 hex over every entry's path, mode and
 ;; bytes. Sorted by path, so two machines that list one directory in
 ;; different orders still agree.
-(define (tree-hash root)
+(define (tree-hash root [skipped (list)])
   (define r (build-path (if (path? root) root (string->path root))))
   (unless (directory-exists? r)
     (raise-pm-error 'config 'tree-hash "no tree to hash"
@@ -168,7 +169,7 @@
   (define digest
     (string-sha1hex
      (string-join
-      (for/list ([e (in-list (sort (tree-entries r) string<? #:key car))])
+      (for/list ([e (in-list (sort (tree-entries r skipped) string<? #:key car))])
         (cdr e))
       "\n")))
   (step 'store "hash"

@@ -268,6 +268,10 @@ pub fn toggle_full_input() {
     FULL_INPUT.fetch_xor(true, Ordering::Relaxed);
 }
 
+pub fn close_full_input() {
+    FULL_INPUT.store(false, Ordering::Relaxed);
+}
+
 pub fn open_full_input() {
     FULL_INPUT.store(true, Ordering::Relaxed);
 }

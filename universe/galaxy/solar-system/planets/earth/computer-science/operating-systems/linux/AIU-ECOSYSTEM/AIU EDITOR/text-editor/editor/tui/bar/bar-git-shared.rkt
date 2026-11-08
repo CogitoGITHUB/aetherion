@@ -12,7 +12,7 @@
 (define (git-out dir args)
   (define git (find-executable-path "git"))
   (if git
-      (let-values ([(sp out in err) (apply subprocess #f #f #f git "-C" dir args)])
+      (let-values ([(sp out in err) (let ([nice (find-executable-path "nice")]) (if nice (apply subprocess #f #f #f nice "-n" "19" git "-C" dir args) (apply subprocess #f #f #f git "-C" dir args)))])
         (close-output-port in)
         (let ([s (read-string 100000 out)])
           (close-input-port out)
@@ -30,7 +30,7 @@
      (define m (regexp-match #px"^## (?:No commits yet on |Initial commit on )?([^. ]+)" head))
      (define ahead (regexp-match #px"ahead ([0-9]+)" head))
      (define behind (regexp-match #px"behind ([0-9]+)" head))
-     (define stat (git-out dir (list "diff" "--shortstat" "HEAD")))
+     (define stat "")
      (define (stat-n rx) (let ([m (regexp-match rx stat)]) (if m (string->number (cadr m)) 0)))
      (list (if m (cadr m) "?")
            (sub1 (length st))
@@ -67,7 +67,7 @@
                          (if (zero? (list-ref g 1)) "" (format "~~~a" (list-ref g 1))))]))
 
 (define (git-refresh-maybe dir again)
-  (when (and (unbox paint-ready) (not (unbox git-busy)) (>= (- (current-seconds) (unbox git-stamp)) 20))
+  (when (and (unbox paint-ready) (not (unbox git-busy)) (>= (- (current-seconds) (unbox git-stamp)) 60))
     (set-box! git-busy #t)
     (define first? (zero? (unbox git-stamp)))
     (set-box! git-stamp (current-seconds))

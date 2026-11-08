@@ -6,70 +6,24 @@
   (define n (count-of old text))
   (cond [(= n 1) (string-replace text old new)]
         [(and (= n 0) (string-contains? text done-marker)) text]
-        [else (fail (string-append "anchor failed: " label))]))
-(define src "AIU-OS/AIU-PM/package-manager/src")
-(define spec-path (string-append src "/spec/spec.rkt"))
-(define source-path (string-append src "/spec/spec-source.rkt"))
-(define todo-path "todo.aiu")
+        [else (fail (string-append "anchor failed (" (number->string n) " found): " label))]))
+(define mux-path "AIU TERMINAL MULTIPLEXER/multiplexer/entry/mux.rkt")
+(define mux-todo-path "AIU TERMINAL MULTIPLEXER/todo.aiu")
 (define starting-path "ai-starting-point.md")
-(for ([p (list spec-path source-path todo-path starting-path)])
+(for ([p (list mux-path mux-todo-path starting-path)])
   (unless (file-exists? p) (fail (string-append "missing " p))))
-(define struct-new #<<X
-(struct local-source (path)
-  #:transparent
-  #:guard (lambda (path _name)
-            (unless (and (string? path) (> (string-length path) 0))
-              (raise-pm-error (quote spec) (quote local-source) "path must be a nonempty string"
-                              #:fields (list (cons "value" (format "~s" path)))))
-            path))
-;; path : string?  a folder on this machine that is the source, no upstream
-
-(struct dep (name version)
-X
-  )
-(define reader-new #<<X
-(define (read-source form)
-  (if (local-source-form? form)
-      (read-local-source form)
-      (read-git-source form)))
-
-(define (local-source-form? form)
-  (define inner (syntax->list (car (field-args form 1 (quote source)))))
-  (and inner
-       (= (length inner) 2)
-       (eq? (syntax->datum (car inner)) (quote local))))
-
-(define (read-local-source form)
-  (define inner (syntax->list (car (field-args form 1 (quote source)))))
-  (define path (syntax->datum (cadr inner)))
-  (unless (and (string? path) (> (string-length path) 0))
-    (fail (cadr inner) "local source must be a nonempty path string"))
-  (local-source path))
-
-(define (read-git-source form)
-X
-  )
-(define spec-in (file->string spec-path))
-(define spec-1 (replace-once spec-in " (struct-out source)\n (struct-out dep)" " (struct-out source)\n (struct-out local-source)\n (struct-out dep)" "(struct-out local-source)" "spec provide"))
-(define spec-2 (replace-once spec-1 "(struct dep (name version)" struct-new "(struct local-source (path)" "spec struct dep"))
-(define spec-3 (replace-once spec-2 "(unless (source? source)" "(unless (or (source? source) (local-source? source))" "(local-source? source)" "spec guard source?"))
-(define source-in (file->string source-path))
-(define source-1 (replace-once source-in "(define (read-source form)" reader-new "(define (read-git-source form)" "read-source header"))
-(define todo-in (file->string todo-path))
-(define item-old "todo: package manager local first: new source form (local PATH) next to (git URL COMMIT); a local package installs from its live folder like dev mode, no clone, no commit pin; a tree fingerprint replaces the commit; read apply.rkt, plan-derive.rkt, plan-actions.rkt, lockfile.rkt and dev-link.rkt first\nPlanned.\nparagraph end\n\n")
-(define (paragraph text) (string-append "paragraph start\ntodo: " text "\nPlanned.\nparagraph end\n\n"))
-(define item-new
-  (string-append
-   "todo: package manager local first, stage 2: a pin for a local source, the tree fingerprint from store/content-address.rkt tree-hash; spec, plan-derive and the lockfile use that pin where they use source-commit now\nPlanned.\nparagraph end\n\n"
-   (paragraph "package manager local first, stage 3: apply installs a local package by copying its folder into staging instead of fetch and export from the vault; skip the vault preflight for local sources; manifest entry for a local package")
-   (paragraph "package manager local first, stage 4: the lockfile accepts a local source without the git URL check; the ecosystem manifest declares every package as (local PATH)")))
-(define todo-1 (replace-once todo-in item-old item-new "local first, stage 2" "todo item local first"))
+(define mux-in (file->string mux-path))
+(define mux-1 (replace-once mux-in "(define first-rows (ask-bars first-key))" "(define first-rows (list \"\" \"\"))" "(define first-rows (list \"\" \"\"))" "mux first-rows"))
+(define mux-2 (replace-once mux-1 "(let loop ([last-key (bars-key)] [last-time (current-inexact-milliseconds)])" "(let loop ([last-key (bars-key)] [last-time 0.0])" "[last-time 0.0])" "mux bars-loop first refresh"))
+(define todo-in (file->string mux-todo-path))
+(define todo-old "todo: first paint never waits (Shape rule 2026-11-08): the multiplexer, the editor and the shell draw at once and load everything else after; today entry/mux.rkt waits for the first bar answer (ask-bars first-key) before it draws; measure the start, draw an empty bar first, fill it when the bars link answers")
+(define todo-new "todo: first paint never waits (Shape rule 2026-11-08): the multiplexer now draws before the first bar answer (two blank rows, the bars loop refreshes at once); check the start time and the bars helper start (join/live-wire-shared.rkt), then do the same for the editor entry and the shell")
+(define todo-out (replace-once todo-in todo-old todo-new "now draws before the first bar answer" "multiplexer todo first paint"))
 (define starting-text (file->string starting-path))
 (define starting-line
-  "- PM local first stage 1 2026-11-07: spec.rkt has a local-source struct (path) accepted as a spec source, spec-source.rkt reads (local PATH); todo split into stages 2 to 4; apply and the lockfile still need the pin; NEXT STEP: read the apply performer, content-address tree-hash and plan-hash, then patch stage 2\n")
-(display-to-file spec-3 spec-path #:exists (quote truncate))
-(display-to-file source-1 source-path #:exists (quote truncate))
-(display-to-file todo-1 todo-path #:exists (quote truncate))
-(unless (string-contains? starting-text "PM local first stage 1 2026-11-07")
+  "- Multiplexer first paint 2026-11-08: Shape: aiutm took 5 s to start; mux.rkt waited for the first bars answer before drawing; now first-rows is two blank rows and bars-loop refreshes at once; shell starts in 0.3 s so it is not the cause; NEXT STEP: Shape rebuilds aiutm in a second session and times the start, then the bars helper start is read\n")
+(display-to-file mux-2 mux-path #:exists (quote truncate))
+(display-to-file todo-out mux-todo-path #:exists (quote truncate))
+(unless (string-contains? starting-text "Multiplexer first paint 2026-11-08")
   (display-to-file (string-append starting-line starting-text) starting-path #:exists (quote truncate)))
 (printf "ok\n")

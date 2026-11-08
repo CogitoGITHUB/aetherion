@@ -8,7 +8,8 @@
 ;; All writes are atomic staging+rename appends. Readers re-validate every
 ;; field (name regex, git-url); a corrupt manifest is kind 'config.
 
-(require racket/contract/base
+(require "./source-url-check.rkt"
+         racket/contract/base
          racket/file
          "../errors/error-type.rkt"
          "../git/git-env.rkt"
@@ -111,7 +112,7 @@
                               #:fields (list (cons "name"
                                                    (manifest-entry-name e)))
                               #:cause bad))])
-            (check-git-url (manifest-entry-url e)))
+            (check-source-url (manifest-entry-url e)))
           e))))
 
 ;; input-port -> (listof any/c), every datum in the file

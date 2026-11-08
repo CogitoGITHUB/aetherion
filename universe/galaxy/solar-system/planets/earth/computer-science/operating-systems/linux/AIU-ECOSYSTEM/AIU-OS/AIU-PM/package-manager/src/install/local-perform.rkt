@@ -6,7 +6,9 @@
 ;; a previously pinned commit using the #:commit context. Run steps and
 ;; staging live wherever the plan says; only install paths are confined.
 
-(require racket/contract/base
+(require "../store/local-source-pin.rkt"
+         racket/file racket/string
+         racket/contract/base
          racket/file
          racket/path
          racket/string
@@ -241,6 +243,25 @@
 ;; The vault root rides alongside #:commit as plan data context (A-3):
 ;; the action carries what to export, the caller says from where.
 (define (perform-export! a vault)
+  (if (and (string? vault) (string-prefix? vault "local:"))
+      (copy-local-folder! (substring vault 6) (export-action-dest a))
+      (perform-vault-export! a vault)))
+
+(define (copy-local-folder! source-folder dest)
+  (define skipped local-source-skipped-folders)
+  (define (walk from to)
+    (make-directory* to)
+    (for ([name (in-list (directory-list from))])
+      (define source-path (build-path from name))
+      (define target-path (build-path to name))
+      (cond [(member (path->string name) skipped) (void)]
+            [(link-exists? source-path)
+             (make-file-or-directory-link (resolve-path source-path) target-path)]
+            [(directory-exists? source-path) (walk source-path target-path)]
+            [(file-exists? source-path) (copy-file source-path target-path #:exists-ok? #t)])))
+  (walk (string->path source-folder) (string->path dest)))
+
+(define (perform-vault-export! a vault)
   (define vault-git
     (or vault
         (raise-pm-error 'config 'local-perform! "export needs a vault"

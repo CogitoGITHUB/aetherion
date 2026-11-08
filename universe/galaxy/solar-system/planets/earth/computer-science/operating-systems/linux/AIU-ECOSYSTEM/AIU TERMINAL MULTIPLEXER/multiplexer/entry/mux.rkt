@@ -85,7 +85,7 @@
     (bars-link-ask! bars (list-ref key 0) session-name (list-ref key 3)
                     (list-ref key 1) (list-ref key 2) (list-ref key 4) (list-ref key 5) (list-ref key 6)))
   (define first-key (bars-key))
-  (define first-rows (ask-bars first-key))
+  (define first-rows (list "" ""))
   (hash-set! bar-cache first-key first-rows)
   (define bar-rows (box first-rows))
 
@@ -212,7 +212,7 @@
       (loop (if checking now last-check))))
 
   (define (bars-loop)
-    (let loop ([last-key (bars-key)] [last-time (current-inexact-milliseconds)])
+    (let loop ([last-key (bars-key)] [last-time 0.0])
       (sleep 0.05)
       (define key (bars-key))
       (define now (current-inexact-milliseconds))

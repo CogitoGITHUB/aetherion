@@ -438,7 +438,10 @@ impl InputState {
                     self.mode = Mode::Visual;
                 }
                 KeyCode::Esc => self.mode = Mode::Visual,
-                KeyCode::Enter => self.keep_line(),
+                KeyCode::Enter => {
+                    crate::bar_view::close_full_input();
+                    self.keep_line()
+                }
                 KeyCode::Up => self.show_older(),
                 KeyCode::Down => self.show_newer(),
                 KeyCode::Backspace => {

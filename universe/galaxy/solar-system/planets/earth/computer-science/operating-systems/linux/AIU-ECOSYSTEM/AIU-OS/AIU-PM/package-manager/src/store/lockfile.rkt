@@ -11,7 +11,8 @@
 ;; entries carried only (NAME VERSION COMMIT URL) and no reader for them
 ;; remains; a version-1 file fails closed as unsupported.
 
-(require racket/contract/base
+(require "./source-url-check.rkt"
+         racket/contract/base
          racket/file
          racket/port
          openssl/sha1
@@ -252,7 +253,7 @@
               (define cell (assoc "reason" (exn:fail:pm-fields e)))
               (define reason (if cell (cdr cell) "?"))
               (lock-fail stx (format "rejected git URL ~s (~a" u reason)))])
-        (check-git-url u)
+        (check-source-url u)
         u)))
 
 ;; syntax -> package-name symbol or a located error

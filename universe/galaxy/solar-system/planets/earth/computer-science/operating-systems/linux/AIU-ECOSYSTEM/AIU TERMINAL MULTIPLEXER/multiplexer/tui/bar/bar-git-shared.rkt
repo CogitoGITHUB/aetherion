@@ -12,7 +12,7 @@
 (define (git-out dir args)
   (define git (find-executable-path "git"))
   (if git
-      (let-values ([(sp out in err) (apply subprocess #f #f #f git "-C" dir args)])
+      (let-values ([(sp out in err) (let ([nice (find-executable-path "nice")]) (if nice (apply subprocess #f #f #f nice "-n" "19" git "-C" dir args) (apply subprocess #f #f #f git "-C" dir args)))])
         (close-output-port in)
         (let ([s (read-string 100000 out)])
           (close-input-port out)
@@ -28,7 +28,7 @@
 
 (define (git-facts dir)
   (define status-later (git-out-later dir (list "status" "--porcelain" "-b" "-uno" "--" ".")))
-  (define stat-later (git-out-later dir (list "diff" "--shortstat" "HEAD" "--" ".")))
+  (define stat-later (lambda () ""))
   (define log-later (git-out-later dir (list "log" "-1" "--format=%h  %s")))
   (define st (string-split (status-later) "\n"))
   (define head (if (null? st) "" (car st)))
@@ -75,7 +75,7 @@
                          (if (zero? (list-ref g 1)) "" (format "~~~a" (list-ref g 1))))]))
 
 (define (git-refresh-maybe dir again)
-  (when (and (unbox paint-ready) (not (unbox git-busy)) (>= (- (current-seconds) (unbox git-stamp)) 20))
+  (when (and (unbox paint-ready) (not (unbox git-busy)) (>= (- (current-seconds) (unbox git-stamp)) 60))
     (set-box! git-busy #t)
     (define first? (zero? (unbox git-stamp)))
     (set-box! git-stamp (current-seconds))

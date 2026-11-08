@@ -37,6 +37,7 @@
          "./local-perform.rkt"
          "../store/manifest.rkt"
          "../store/query.rkt"
+         "../store/local-source-pin.rkt"
          "../git/vault.rkt"
          "../errors/error-type.rkt"
          "../store/lockfile.rkt"
@@ -294,7 +295,7 @@
                          #:how "read each spec in the specs dir"
                          (lambda ()
                            (for/list ([f (in-list (spec-files specs-dir))])
-                             (define s (read-spec-file f))
+                             (define s (car (pin-local-sources (list (read-spec-file f)))))
                              (step 'scan
                                    (string-append
                                     (symbol->string (spec-name s)) " "
@@ -313,7 +314,7 @@
                            "the pin must already resolve in the vault or the export below cannot work"
                            #:how (format "verify ~a at ~a" name (source-commit src))
                            (lambda ()
-                             (verify-source! vault-root name
+                             (verify-source-unless-local! vault-root name
                                              (source-url src)
                                              (source-commit src))))))
              specs)))
@@ -506,6 +507,15 @@
                            state manifest prefix vault cancel)))))
 
 ;; path-or-string -> string
+(define (export-origin found vault*)
+  (if (string-prefix? (source-url found) "local:")
+      (source-url found)
+      vault*))
+
+(define (verify-source-unless-local! vault-root name url pin)
+  (unless (string-prefix? url "local:")
+    (verify-source! vault-root name url pin)))
+
 (define (as-dir d)
   (if (path? d) (path->string d) (format "~a" d)))
 
@@ -575,7 +585,7 @@
       (wait-for 'apply (action-kind a)
                 (action-why a)
                 #:how (format "~a into ~a" id versioned)
-                (lambda () (perform-action! a versioned commit* vault*)))
+                (lambda () (perform-action! a versioned commit* (export-origin src vault*))))
       (define ms (inexact->exact
                   (round (- (current-inexact-monotonic-milliseconds) t0))))
       (hash-set! outcomes id (list 'applied ms))))
