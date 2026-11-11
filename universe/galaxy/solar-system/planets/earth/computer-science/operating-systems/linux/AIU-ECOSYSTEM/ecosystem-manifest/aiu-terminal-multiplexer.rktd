@@ -1,0 +1,10 @@
+(spec
+  (format-version 2)
+  (name aiu-terminal-multiplexer)
+  (version "0.1.0")
+  (summary "the AIU terminal multiplexer")
+  (source (local "/root/home/shape/Ætherion/universe/galaxy/solar-system/planets/earth/computer-science/operating-systems/linux/AIU-ECOSYSTEM/AIU TERMINAL MULTIPLEXER"))
+  (build (steps (run #:argv ("raco" "exe" "-o" "aiutm-built" "multiplexer/entry/mux.rkt"))))
+  (install (prefix (copy-tree "multiplexer" "multiplexer") (bin "aiutm-built" "bin/aiutm")))
+  (license mit)
+  (homepage "https://example.invalid/"))

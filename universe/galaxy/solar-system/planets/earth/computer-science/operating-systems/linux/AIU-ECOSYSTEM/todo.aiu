@@ -10,14 +10,15 @@ Next
 title end
 
 paragraph start
-todo: one package-name? only: spec/spec.rkt defines its own package-name? and errors/package-name.rkt defines the same one; keep the errors one, make spec.rkt re-export it, then delete the copy
+todo: PM spawn wrapper death 2026-11-08: when the wrapper dies before it opens the status fifo (setsid could not run env, cwd gone), spawn-and-wait waits for ever and says nothing; the opener thread must also watch the child process handle and raise child died before status line; find-helper in process/spawn.rkt now skips non-executable files on PATH, add a test with a non-executable env first on PATH
 Planned.
 paragraph end
 
 paragraph start
-paragraph start
-paragraph start
-paragraph start
+todo: one package-name? only: spec/spec.rkt defines its own package-name? and errors/package-name.rkt defines the same one; keep the errors one, make spec.rkt re-export it, then delete the copy
+Planned.
+paragraph end
+
 paragraph start
 todo: package manager local first, stage 5: try it for real: one spec with (local PATH) on a small ecosystem folder through pm apply into a scratch prefix; then the ecosystem manifest declares every package as (local PATH)
 Planned.
@@ -29,7 +30,62 @@ Planned.
 paragraph end
 
 paragraph start
-todo: ecosystem binary skeleton: entry, commands status and update, own folder AIU ECOSYSTEM, builds with raco exe like aiutm
+todo: ecosystem manifest build steps 2026-11-08: ecosystem-manifest/ has editor, multiplexer, notation and pm as copy-only specs and they install in a scratch prefix; still to do: aiu-shell spec (25 MB, Cargo workspace), browser when it has code, then one build step per package (multiplexer raco exe of mux.rkt first), each tested in a scratch XDG; read first whether mux.rkt requires files outside its folder and what env a run step gets under env -i
+Planned.
+paragraph end
+
+paragraph start
+todo: cargo load on the system 2026-11-08: Shape: cargo builds and runs freeze or overload his machine while we work; the dev supervisor in the server must run every cargo and raco build in a limited way (nice, fewer jobs, one build at a time, timeout, output to a file) and never in the session he types in; decide the limits after measuring one build
+Planned.
+paragraph end
+
+paragraph start
+todo: shared-layers docs 2026-11-08: shared-layers was removed (git-inspection now lives in AIU EDITOR/text-editor/editor/git-inspection, workspace deleted unused); fix the text that still names it: README.md, INDEX.org, AIU-OS/AIU-PM/README.md, AIU-WORKFLOW-ENGINE-FOR-AI/README.md, AIU BROWSER/README.md, the comment at the top of the editor Cargo.toml
+Planned.
+paragraph end
+
+paragraph start
+todo: aiutd installed launcher 2026-11-08: the editor spec installs bin/aiutd (sh launcher) and bin/hot-path in a scratch prefix; still to prove: the installed aiutd starts the editor after raco make of its cli, finds aiu-notation from the same prefix, and aiutd update, test, docs work without the ecosystem gate folder (an installed prefix has none). Then add aiu-shell to the manifest.
+Planned.
+paragraph end
+
+paragraph start
+todo: aiu-shell spec 2026-11-08: ecosystem-manifest/aiu-shell.rktd copies the aiu-shell family folder (shell, reedline, jump, history, starship) and builds aiu-shell and aiu-shell-screen in release with nice, -j 2, --target-dir target-shell; still to prove: scratch install works, release profile size and time are acceptable (debug aiu-shell is 807 MB), the screen finds the installed aiu-shell through AIU_SHELL_BINARY or its own folder.
+Planned.
+paragraph end
+
+paragraph start
+todo: ecosystem installed root 2026-11-09: ecosystem-manifest/ecosystem.rktd builds bin/ecosystem with raco exe; an installed ecosystem binary finds ecosystem-manifest only from the current folder or AIU_ECOSYSTEM_ROOT, so it needs a stored root (decide with Shape: config file or baked path). Also read why pm apply rerun of aiu-shell took 20 min (local-perform.rkt deletes a target folder at line 238, not yet read in full).
+Planned.
+paragraph end
+
+paragraph start
+todo: one ecosystem binary 2026-11-09 (Shape): once the ecosystem binary exists, the packages stop shipping their own binaries: ecosystem edit, ecosystem mux and ecosystem pm run the editor, multiplexer and package manager from inside it (raco exe, one build). Rust parts (aiu-shell, notation engine, hot-path, server) stay Rust and the ecosystem binary installs and launches them. The package manager must be able to build and update the ecosystem binary itself (dev mode covers it). Steps: read how each entry starts (mux.rkt, editor cli.rkt, pm cli.rkt), add the commands, keep aiutd and aiutm as thin names for them, drop the per-package raco exe specs. Paused: why the pm apply rerun of aiu-shell took 20 min (guess: copy-file gives new file times so cargo rebuilds workspace crates; unproven).
+Planned.
+paragraph end
+
+paragraph start
+todo: real install through pm 2026-11-09 (Shape): everything must install through pm into its prefix, not loose binaries in home. Still to do: ecosystem spec source is now the whole ecosystem root (any change rebuilds it), put the pm prefix bin folder on PATH, install ecosystem for real (replacing aiutm and aiutd names with thin launchers or ecosystem mux and ecosystem edit), the other package specs stop building their own binaries when the ecosystem binary covers them.
+Planned.
+paragraph end
+
+paragraph start
+todo: install script 2026-11-09 (Shape): install.sh at the ecosystem root builds Racket from source tarball, installs Rust from the official tarball, cargo fetch, rewrites spec source paths (AIU ECOSYSTEM/install/rewrite-specs.rkt), pm installs itself then the full manifest, sets the login shell; INSTALL.md holds the paste commands (REPO-URL is a placeholder). Only dry-run tested. Still to do: aiu-pm ecosystem install command, a launcher so the installed pm is runnable, check the Racket and Rust download URLs and chsh under proot, real test on a scratch HOME.
+Planned.
+paragraph end
+
+paragraph start
+todo: ecosystem binary polish 2026-11-09: merged binary runs pm, editor and status from a moved copy (17 MB). Still wrong: a stray #t line printed at every command (source unread), pm prints its START and END log lines when run inside the binary, mux not tried by hand, the installed binary is not yet used for real (no PATH, aiutm and aiutd are still the old files).
+Planned.
+paragraph end
+
+paragraph start
+todo: real ecosystem install 2026-11-09: ecosystem installed through pm into the real prefix (HOME/.local/share/aiu-pm/prefix/ecosystem/current/bin/ecosystem), bash PATH line in ~/.profile; nushell PATH line must be added by hand after reading ~/.config/nushell. Still to do: mux tried by hand, aiutm and aiutd stay old files until ecosystem mux and ecosystem edit replace them, other specs still build their own binaries.
+Planned.
+paragraph end
+
+paragraph start
+todo: server and dev mode FIRST 2026-11-09 (Shape): Shape cannot continue until the server and dev mode work, so he can stay live on the ecosystem while working. Real ecosystem install is DONE (ecosystem 0.1.0-9f07c15fcc03 in the real pm prefix, bash PATH line in ~/.profile; nushell PATH line still to add by hand after reading ~/.config/nushell). Order now: smallest working dev supervisor (build new version in a work folder with nice and -j 2, start it, health check, on failure keep or restore the last good generation), then Rust server skeleton, then ecosystem update with fingerprints. Read ecosystem-server-plan.aiu and ecosystem-binary-plan.aiu before designing.
 Planned.
 paragraph end
 
@@ -39,7 +95,22 @@ Planned.
 paragraph end
 
 paragraph start
-todo: server skeleton in Rust: serve and stop, own server per package and the shared one, discovery of the shared one
+todo: dev supervisor minimal 2026-11-09: ecosystem dev [NAME...] in AIU ECOSYSTEM/ecosystem/entry/ecosystem.rkt (default package ecosystem): remembers the current links, runs pm apply under nice, health check (bin folder, ecosystem binary starts), on failure points current back to the old store version. Racket only, not in the server yet. Open: PM may delete old store versions (unread); health check for other packages is only the bin folder; no watching of source changes; must move into the Rust server later.
+Planned.
+paragraph end
+
+paragraph start
+todo: dev supervisor failure test 2026-11-09: success path proven (ecosystem dev rebuilt and installed ecosystem 0.1.0-8efe93bf5051 in 674 s, old store version 0.1.0-9f07c15fcc03 kept by pm, current link flipped). Rollback on failure PROVEN 2026-11-09 with a forced failing spec (health check failed, link returned to 0.1.0-8efe93bf5051). Open: a stack frame from embedded editor commands/tasks printed by the installed ecosystem status after the test (cause unread). Also: dev takes 11 min per ecosystem build, no source watching, health check for non-ecosystem packages is only the bin folder.
+Planned.
+paragraph end
+
+paragraph start
+todo: installed binary reads its own source 2026-11-09: AIU EDITOR/text-editor/editor/commands/tasks.rkt opens its own .rkt file at load time, so the installed ecosystem binary needs the pm work folder to still hold the source; the forced failure test replaced work/ecosystem and the installed binary status then crashed (open-input-file on work/ecosystem/AIU EDITOR/.../tasks.rkt). Guarded 2026-11-09 with file-exists? (doc lines are empty when the source is missing); proper fix still open: embed the source lines at compile time; then check the other embedded modules for the same. Work folder restored 2026-11-09 by ecosystem dev (ecosystem 0.1.0-51deceed839e installed and healthy).
+Planned.
+paragraph end
+
+paragraph start
+todo: server skeleton in Rust 2026-11-09: AIU ECOSYSTEM/server (crate ecosystem-server, std only, unix socket AIU_SERVER_SOCKET or HOME/.local/state/aiu-ecosystem/server.sock, one line request and answer: ping status stop register unregister list; same binary is the client). Open: wire ecosystem serve and stop to it (needs an ecosystem rebuild, about 10 min), a pm spec so it installs (cargo build --offline, nice, -j 2, --target-dir target), detach serve into the background, own server per package, discovery of the shared one, move the dev supervisor and the notation database into it.
 Planned.
 paragraph end
 
@@ -80,3 +151,57 @@ paragraph end
 
 section end
 
+
+
+
+
+
+paragraph start
+todo: aiu-shell install 2026-11-09: aiu-shell installed through ecosystem dev aiu-shell; HOME/.config/aiu-shell/env.nu is the default env plus one PATH line (aiu-shell and ecosystem bin folders), no normal nushell involved. Next: aiu-shell as the login shell (chsh unverified under proot), mux by hand, aiutm and aiutd replaced by ecosystem mux and ecosystem edit, ecosystem update with fingerprints. Dev forwarding to the server is proven both ways.
+Planned.
+paragraph end
+
+paragraph start
+todo: banner deleted 2026-11-09: the Nushell welcome banner is deleted from the aiu-shell source (repl.rs startup block and the banner command in std/prelude/mod.nu); it disappears with the next aiu-shell rebuild. Still to clean: the banner test in aiu-shell-std/tests/test_prelude.nu, the show_banner config option and the second banner call in repl.rs (never runs now). Next: mux autostart in the shell with a no-loop guard.
+Planned.
+paragraph end
+
+paragraph start
+todo: dev mode server 2026-11-11: aiu-shell starts the ecosystem server by itself at launch; a dev mode flag file in the aiu-pm folder is read by the server, the multiplexer and the screen.
+Planned.
+paragraph end
+
+paragraph start
+todo: dev mode live 2026-11-11: while dev mode is on, changes load in real time with incremental builds. Leaving dev mode with its key builds everything that changed through the PM fingerprints.
+Planned.
+paragraph end
+
+paragraph start
+todo: dev mode keys 2026-11-11: two new keys in aiu-shell-screen, d turns dev mode on or off and D builds everything changed through the PM; both also work in the multiplexer.
+Planned.
+paragraph end
+
+paragraph start
+todo: multiplexer boxes 2026-11-11: a server status box at the top, and a red DEV MODE ACTIVE box detached from the tabs, shown only while dev mode is on.
+Planned.
+paragraph end
+
+paragraph start
+todo: pm only 2026-11-11: every build goes through the PM and the server, no separate builds; the multiplexer pane program now comes from the aiu-pm prefix, not the debug path.
+Planned.
+paragraph end
+
+paragraph start
+todo: how to use 2026-11-11: HOW-TO-USE.md in the PM folder explains every command and key; a rule at the top of the ecosystem AI introduction says to use only that.
+Planned.
+paragraph end
+
+paragraph start
+todo: final build 2026-11-11: one full build of everything that changed at the end of this plan, using all CPU power, with the phone idle.
+Planned.
+paragraph end
+
+paragraph start
+todo: dev errors 2026-11-11: failed builds write the compile text to dev-errors/NAME.log; the dev box shows the count; ecosystem deverrors prints them.
+Planned.
+paragraph end

@@ -7,12 +7,12 @@
          "live/live.rkt")
 
 (define here
-  (let-values ([(base name dir?)
-                (split-path (variable-reference->module-source (#%variable-reference)))])
-    base))
+  (let ([src (variable-reference->module-source (#%variable-reference))])
+    (and (path? src)
+         (let-values ([(base name dir?) (split-path src)]) base))))
 
 (define (stub-send session words)
-  (dynamic-require (simplify-path (build-path here (quote up) "send" "send.rkt")) #f)
+  (when here (dynamic-require (simplify-path (build-path here (quote up) "send" "send.rkt")) #f))
   (define real (hash-ref commands "send" #f))
   (if (and real (not (eq? real stub-send)))
       (real session words)

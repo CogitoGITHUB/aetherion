@@ -1,0 +1,70 @@
+title start
+kind: default
+tags: ecosystem manifest package-manager plan
+Plan: the ecosystem manifest, written 2026-11-08 so another AI can continue
+title end
+
+section start
+title start
+Section 1: facts read in the package manager (do not guess, these were read)
+title end
+
+paragraph start
+pm apply takes one folder of specs: pm apply SPECDIR [--lock FILE] [--confirm]. One file per package, name.rktd. State is XDG_DATA_HOME/aiu-pm, prefix is state/prefix, manifest state/manifest.rktd, work folder state/work/NAME, store state/store/NAME/default/VERSION-HASH, installed link prefix/NAME/current.
+paragraph end
+
+paragraph start
+A spec is (spec (format-version 2) (name N) (version V-string) (summary S-string) (source ...) (build (steps ...)) (install (prefix ...)) (license L) (homepage H-string)). All of those are required; deps, build-deps, extends, variants, slot, flags are optional. Unknown or duplicate keys are errors.
+paragraph end
+
+paragraph start
+Source (local PATH): the folder is copied into work/NAME and pinned by a tree fingerprint. Folders named compiled, target, .git and node_modules are skipped in the fingerprint and in the copy. Relative paths resolve from the folder pm runs in, so the manifest should use absolute paths or be run from the ecosystem root.
+paragraph end
+
+paragraph start
+Build steps are a closed list: cmake-build cmake-configure cmake-install configure copy make make-info cargo run. make needs #:targets, run needs #:argv, cmake-configure needs #:srcdir #:builddir. A run step executes exact argv with the step cwd, fails the build on a non-zero exit.
+paragraph end
+
+paragraph start
+Install forms: (bin SRC DST) and lib include share man libexec take one or two paths; the FIRST is the file inside the work folder, the LAST is the destination inside the prefix (no absolute path, no ..). Also copy-tree SRC DST, symlink, mode PATH 755-or-644, and one check form. The scratch hello package proved this: (bin bin/hello bin/hello).
+paragraph end
+
+paragraph start
+Proven on 2026-11-08: hello installed from a local folder into a scratch prefix and ran. Fixes made on the way: documents.rkt apply-document rows, spawn.rkt find-helper skips non-executable files on PATH. The first raco make of cli.rkt took 7 minutes, later runs are fast.
+paragraph end
+section end
+
+section start
+title start
+Section 2: the packages and their entry files
+title end
+
+paragraph start
+editor: AIU EDITOR/text-editor/editor, Racket entry entry/cli.rkt, also a Cargo.toml (Rust hot path). multiplexer: AIU TERMINAL MULTIPLEXER/multiplexer/entry/mux.rkt, built with raco exe into aiutm. notation: AIU NOTATION/notation, entry/cli.rkt and a Cargo.toml. package manager: AIU-OS/AIU-PM/package-manager/src/entry/cli.rkt. shell family: aiu-shell/shell, a Cargo workspace, built with CARGO_TARGET_DIR=$HOME/aiu-target/aiu-shell. browser: AIU BROWSER has only documents so far, leave it out of the manifest until it has code.
+paragraph end
+section end
+
+section start
+title start
+Section 3: steps in order
+title end
+
+paragraph start
+Step 1: read the unknowns: where a run step cwd is (work folder?), where build output lands, the exact build command of each package (raco exe flags, cargo manifest path). Step 2: write the manifest folder ecosystem-manifest/ at the ecosystem root with one spec per package, first with source (local PATH) and a copy-only install, to prove the folder applies. Step 3: add the build steps one package at a time, each tested with pm apply in a scratch XDG, never on the real prefix. Step 4: ecosystem binary skeleton. Step 5 onwards: the order in todo.aiu.
+paragraph end
+
+paragraph start
+Open: todo.aiu has stray empty paragraph start lines around the old stage 5 items (lines 22 to 26), clean them in a script after reading them. A raco exe inside a PM run step may need a second session and a long timeout.
+paragraph end
+section end
+
+
+section start
+title start
+Section 4: progress 2026-11-08
+title end
+
+paragraph start
+The four specs in ecosystem-manifest/ apply with pm apply --confirm in a scratch XDG and the files land in prefix/NAME/current. PM fix made: perform-install-file! in install/local-perform.rkt copies a folder when the source is a directory, so copy-tree works on folders. Next: aiu-shell spec, then build steps one package at a time.
+paragraph end
+section end

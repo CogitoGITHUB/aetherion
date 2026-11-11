@@ -12,7 +12,7 @@
           [else (loop (simplify-path (build-path d (quote up))) (add1 n))])))
 
 (define editor-root
-  (find-up here-dir (lambda (d) (directory-exists? (build-path d "docs")))))
+  (or (find-up here-dir (lambda (d) (directory-exists? (build-path d "docs")))) here-dir))
 
 (require "../../bridge/location.rkt")
 
@@ -161,4 +161,4 @@
 
 
 (provide gate-root here-dir find-up editor-root notation-bin capture width-cache term-width banner-text wrap-line emit first-n last-n level-of secs log-path previous-secs log-step! pad fit fit-right name-width row-line border table-lines step-line)
-(define gate-root (build-path (find-up here-dir (lambda (d) (directory-exists? (build-path d "gate")))) "gate"))
+(define gate-root (build-path (or (find-up here-dir (lambda (d) (directory-exists? (build-path d "gate")))) here-dir) "gate"))

@@ -1,0 +1,25 @@
+# general
+# Comment this out to use your terminal's default background color
+# background = '#18191a'
+border_fg = '#6a6a7e'
+text_fg = '#cdcdcd'
+dimmed_text_fg = '#646477'
+# input
+input_text_fg = '#d2788c'
+result_count_fg = '#d2788c'
+# results
+result_name_fg = '#9a9ac7'
+result_line_number_fg = '#d2a374'
+result_value_fg = '#646477'
+selection_fg = '#8faf77'
+selection_bg = '#282830'
+match_fg = '#d2788c'
+# preview
+preview_title_fg = '#d2a374'
+# modes
+channel_mode_fg = '#18191a'
+channel_mode_bg = '#8faf77'
+remote_control_mode_fg = '#18191a'
+remote_control_mode_bg = '#d2a374'
+action_picker_mode_fg = '#18191a'
+action_picker_mode_bg = '#9a9ac7'

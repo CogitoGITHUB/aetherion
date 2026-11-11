@@ -1,0 +1,6 @@
+test mod-hashtext
+level 2
+module ../../AIU NOTATION/notation/literate/skip-journal.rkt
+call (procedure? text-hash)
+expect result equals #t
+expect seconds-under 20

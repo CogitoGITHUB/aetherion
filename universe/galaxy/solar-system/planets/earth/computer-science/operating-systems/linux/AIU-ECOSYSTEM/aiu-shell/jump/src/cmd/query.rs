@@ -29,26 +29,19 @@ impl Query {
         }
     }
 
-    fn query_interactive(&self, stream: &mut Stream, now: Epoch) -> Result<()> {
-        let mut fzf = Self::get_fzf()?;
-        let selection = loop {
-            match stream.next() {
-                Some(dir) if Some(dir.path.as_ref()) == self.exclude.as_deref() => continue,
-                Some(dir) => {
-                    if let Some(selection) = fzf.write(dir, now)? {
-                        break selection;
-                    }
-                }
-                None => break fzf.wait()?,
-            }
-        };
-
-        if self.score {
-            print!("{selection}");
-        } else {
-            let path = selection.get(7..).context("could not read selection from fzf")?;
-            print!("{path}");
+    fn query_interactive(&self, _stream: &mut Stream, _now: Epoch) -> Result<()> {
+        let out = std::process::Command::new("tv")
+            .arg("zoxide")
+            .stdin(std::process::Stdio::inherit())
+            .stderr(std::process::Stdio::inherit())
+            .stdout(std::process::Stdio::piped())
+            .output()
+            .context("could not launch tv, is it installed?")?;
+        let path = String::from_utf8_lossy(&out.stdout).trim().to_string();
+        if !out.status.success() || path.is_empty() {
+            anyhow::bail!(crate::error::SilentExit { code: 130 });
         }
+        print!("{path}");
         Ok(())
     }
 

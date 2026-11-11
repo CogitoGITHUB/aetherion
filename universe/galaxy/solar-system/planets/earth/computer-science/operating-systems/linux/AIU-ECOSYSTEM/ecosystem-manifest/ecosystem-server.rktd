@@ -1,0 +1,10 @@
+(spec
+  (format-version 2)
+  (name ecosystem-server)
+  (version "0.1.0")
+  (summary "the shared ecosystem server")
+  (source (local "/root/home/shape/Ætherion/universe/galaxy/solar-system/planets/earth/computer-science/operating-systems/linux/AIU-ECOSYSTEM/AIU ECOSYSTEM"))
+  (build (steps (run #:argv ("nice" "-n" "19" "cargo" "build" "--offline" "--release" "-j" "2" "--target-dir" "target" "--manifest-path" "server/Cargo.toml"))))
+  (install (prefix (bin "target/release/ecosystem-server" "bin/ecosystem-server")))
+  (license mit)
+  (homepage "https://example.invalid/"))

@@ -10,6 +10,22 @@ use ratatui::widgets::Paragraph;
 
 const INPUT_HEIGHT: u16 = 3;
 
+fn wrap_box_rows(rows: &[String], limit: usize) -> Vec<String> {
+    let size = limit.max(1);
+    let mut wrapped: Vec<String> = Vec::new();
+    for row in rows {
+        let letters: Vec<char> = row.chars().collect();
+        if letters.is_empty() {
+            wrapped.push(String::new());
+            continue;
+        }
+        for piece in letters.chunks(size) {
+            wrapped.push(piece.iter().collect());
+        }
+    }
+    wrapped
+}
+
 pub fn draw_screen(frame: &mut Frame, state: &InputState) {
     let full_area = frame.area();
     let bar = crate::bar_view::bar_lines(state, full_area.width as usize, full_area.height, INPUT_HEIGHT + search_box_height(state, full_area.height));
@@ -62,7 +78,11 @@ pub fn draw_screen(frame: &mut Frame, state: &InputState) {
                 rows.push(format!("… {} more rows, e expands", current.rows.len() - 4));
                 BoxFrame { title: current.title.clone(), rows }
             } else {
-                BoxFrame { title: current.title.clone(), rows: current.rows.clone() }
+                if state.expanded.contains(&flat) {
+                    BoxFrame { title: current.title.clone(), rows: wrap_box_rows(&current.rows, width.saturating_sub(4)) }
+                } else {
+                    BoxFrame { title: current.title.clone(), rows: current.rows.clone() }
+                }
             };
             let mut shown_box = shown_box;
             if running_box {
@@ -103,7 +123,7 @@ pub fn draw_screen(frame: &mut Frame, state: &InputState) {
 
     let (title, color) = match state.mode {
         Mode::Visual => (
-            "input  f full screen edit",
+            "input  f full screen edit  z jump  Z add dir",
             Color::White,
         ),
         Mode::Insert => ("input insert  esc visual  enter run  up down history  ctrl+r search", Color::White),

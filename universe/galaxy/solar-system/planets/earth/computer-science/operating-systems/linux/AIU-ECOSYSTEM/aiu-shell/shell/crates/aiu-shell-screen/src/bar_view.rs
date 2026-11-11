@@ -151,6 +151,9 @@ pub fn bar_lines(state: &InputState, width: usize, height: u16, reserved: u16) -
         bar[0] = format!("├{}┤", middle);
     }
     tabs.extend(bar);
+    let mut top = crate::status_bar::status_lines(width, available.saturating_sub(tabs.len()));
+    top.extend(tabs);
+    let tabs = top;
     tabs
 }
 
@@ -165,7 +168,7 @@ pub fn draw_bar(frame: &mut Frame, lines: &[String], full: Rect, inner_height: u
         height: lines.len() as u16,
     };
     frame.render_widget(
-        Paragraph::new(lines.join("\n")).style(Style::default().fg(Color::White)),
+        Paragraph::new(lines.iter().map(|l| match l.split_once("\u{1}") { Some((a, b)) => ratatui::text::Line::from(vec![ratatui::text::Span::styled(a.to_string(), Style::default().fg(Color::White)), ratatui::text::Span::styled(b.to_string(), Style::default().fg(Color::Red).add_modifier(ratatui::style::Modifier::BOLD))]), None => ratatui::text::Line::from(l.clone()) }).collect::<Vec<ratatui::text::Line>>()).style(Style::default().fg(Color::White)),
         rect,
     );
 }
@@ -228,6 +231,7 @@ fn menu_lines(width: usize) -> Vec<String> {
         ("move", vec!["t h > between boxes", "d n > command or output"]),
         ("view", vec!["e > expand folded box"]),
         ("mark", vec!["s > mark box"]),
+        ("edit", vec!["x > clear input box"]), ("jump", vec!["z > zoxide picker", "Z > add this dir to zoxide"]), ("dev", vec!["m > dev mode on or off, off builds changed", "M > build everything changed"]),
         (
             "copy",
             vec!["c > box", "p > pair", "a > marked", "y > last output", "Y > last pair"],

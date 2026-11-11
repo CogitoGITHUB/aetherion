@@ -261,7 +261,7 @@ static FULLSCREEN_LINE: std::sync::Mutex<Option<String>> = std::sync::Mutex::new
 
 pub fn is_fullscreen_line(line: &str) -> bool {
     let first = line.split_whitespace().next().unwrap_or("");
-    ["tv", "aiutm", "vim", "nvim", "vi", "nano", "less", "man", "htop", "btop", "top", "emacs", "ssh", "fzf", "aiu-shell"].contains(&first)
+    ["tv", "aiutm", "vim", "nvim", "vi", "nano", "less", "man", "htop", "btop", "top", "emacs", "ssh", "fzf", "aiu-shell", "aiutd"].contains(&first)
 }
 
 pub fn request_fullscreen(line: &str) {
@@ -270,7 +270,7 @@ pub fn request_fullscreen(line: &str) {
     }
 }
 
-pub fn take_fullscreen() -> Option<String> {
+static JUMP_REQUEST: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false); pub fn request_jump() { JUMP_REQUEST.store(true, std::sync::atomic::Ordering::Relaxed); } pub fn take_jump() -> bool { JUMP_REQUEST.swap(false, std::sync::atomic::Ordering::Relaxed) } pub fn pick_directory() -> Option<String> { let out = Command::new("tv").arg("zoxide").stdin(std::process::Stdio::inherit()).stderr(std::process::Stdio::inherit()).stdout(std::process::Stdio::piped()).output().ok()?; let path = String::from_utf8_lossy(&out.stdout).trim().to_string(); if !out.status.success() || path.is_empty() { return None; } std::env::set_current_dir(&path).ok()?; Some(path) } fn jump_bin() -> String { format!("{}/.local/share/aiu-pm/prefix/aiu-jump/current/bin/aiu-shell-jump", std::env::var("HOME").unwrap_or_default()) } pub fn add_current_dir() -> String { let cwd = match std::env::current_dir() { Ok(c) => c, Err(e) => return format!("add failed: {e}") }; match Command::new(jump_bin()).arg("add").arg(&cwd).status() { Ok(s) if s.success() => format!("added {}", cwd.display()), _ => String::from("zoxide add failed") } } pub fn try_cd(line: &str) -> Option<String> { let mut parts = line.split_whitespace(); if parts.next()? != "cd" { return None; } let rest: Vec<&str> = parts.collect(); let target = rest.join(" "); let home = std::env::var("HOME").unwrap_or_default(); let expanded = if target.is_empty() || target == "~" { home.clone() } else if let Some(r) = target.strip_prefix("~/") { format!("{home}/{r}") } else { target.clone() }; if std::path::Path::new(&expanded).is_dir() { return Some(match std::env::set_current_dir(&expanded) { Ok(_) => format!("cd {expanded}"), Err(e) => format!("cd failed: {e}") }); } let out = Command::new(jump_bin()).arg("query").args(&rest).output().ok()?; let path = String::from_utf8_lossy(&out.stdout).trim().to_string(); if out.status.success() && !path.is_empty() && std::env::set_current_dir(&path).is_ok() { Some(format!("z {path}")) } else { Some(format!("cd: no match for {target}")) } } pub fn take_fullscreen() -> Option<String> {
     FULLSCREEN_LINE.lock().ok().and_then(|mut slot| slot.take())
 }
 
@@ -295,4 +295,21 @@ pub fn enter_multiplexer() -> bool {
         .env("AIU_PANE_PROGRAM", &me)
         .status()
         .is_ok()
+}
+pub fn dev_flag_path() -> String { format!("{}/.local/state/aiu-ecosystem/dev-mode", std::env::var("HOME").unwrap_or_default()) }
+pub fn dev_mode_active() -> bool { std::path::Path::new(&dev_flag_path()).exists() }
+fn run_detached(args: &str) -> bool {
+    let home = std::env::var("HOME").unwrap_or_default();
+    let _ = std::fs::create_dir_all(format!("{home}/.local/state/aiu-ecosystem"));
+    let line = format!("setsid {home}/.local/share/aiu-pm/prefix/ecosystem/current/bin/ecosystem {args} >> {home}/.local/state/aiu-ecosystem/devmode.log 2>&1 < /dev/null &");
+    Command::new("sh").arg("-c").arg(line).status().map(|s| s.success()).unwrap_or(false)
+}
+pub fn dev_mode_toggle() -> String {
+    let was = dev_mode_active();
+    if run_detached("devmode toggle") {
+        if was { String::from("dev mode off: building everything changed, see devmode.log") } else { String::from("dev mode on") }
+    } else { String::from("dev mode: could not start ecosystem") }
+}
+pub fn dev_build_all() -> String {
+    if run_detached("update") { String::from("building everything changed through the pm, see devmode.log") } else { String::from("build: could not start ecosystem") }
 }

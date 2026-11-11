@@ -1,0 +1,10 @@
+(spec
+  (format-version 2)
+  (name aiu-television)
+  (version "0.15.9")
+  (summary "television, the fuzzy picker")
+  (source (local "/root/home/shape/Ætherion/universe/galaxy/solar-system/planets/earth/computer-science/operating-systems/linux/AIU-ECOSYSTEM/aiu-shell"))
+  (build (steps (run #:argv ("nice" "-n" "19" "cargo" "build" "--release" "-j" "2" "--config" "profile.release.lto=false" "--target-dir" "target-television" "--manifest-path" "television/Cargo.toml" "--bin" "tv"))))
+  (install (prefix (bin "target-television/release/tv" "bin/tv")))
+  (license mit)
+  (homepage "https://example.invalid/"))

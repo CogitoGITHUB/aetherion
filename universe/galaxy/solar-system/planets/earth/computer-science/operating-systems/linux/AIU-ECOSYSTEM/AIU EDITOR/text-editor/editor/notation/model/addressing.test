@@ -1,0 +1,6 @@
+test mod-addressing
+level 2
+module ../../AIU NOTATION/notation/model/addressing.rkt
+call (procedure? address-of)
+expect result equals #t
+expect seconds-under 20

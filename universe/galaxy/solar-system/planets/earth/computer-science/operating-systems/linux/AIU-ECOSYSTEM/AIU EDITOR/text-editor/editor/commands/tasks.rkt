@@ -11,7 +11,7 @@
 
 (define dry-run? (make-parameter #f))
 
-(define source-lines (file->lines tasks-source))
+(define source-lines (if (file-exists? tasks-source) (file->lines tasks-source) (list)))
 
 (define (task-say session args)
   (string-join args " "))

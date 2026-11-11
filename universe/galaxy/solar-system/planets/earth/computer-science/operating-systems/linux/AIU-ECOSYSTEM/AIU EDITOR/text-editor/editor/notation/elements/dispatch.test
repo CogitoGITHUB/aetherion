@@ -1,0 +1,6 @@
+test mod-edispatch
+level 2
+module ../../AIU NOTATION/notation/elements/dispatch.rkt
+call (procedure? dispatch)
+expect result equals #t
+expect seconds-under 20

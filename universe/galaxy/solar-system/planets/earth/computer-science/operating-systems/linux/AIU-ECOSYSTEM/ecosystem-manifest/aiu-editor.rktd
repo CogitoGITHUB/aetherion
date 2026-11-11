@@ -1,0 +1,10 @@
+(spec
+  (format-version 2)
+  (name aiu-editor)
+  (version "0.1.0")
+  (summary "the AIU text editor")
+  (source (local "/root/home/shape/Ætherion/universe/galaxy/solar-system/planets/earth/computer-science/operating-systems/linux/AIU-ECOSYSTEM/AIU EDITOR"))
+  (build (steps (run #:argv ("nice" "-n" "19" "cargo" "build" "--offline" "-j" "2" "--target-dir" "target-hot-path" "--manifest-path" "text-editor/editor/Cargo.toml" "--bin" "hot-path"))))
+  (install (prefix (copy-tree "text-editor" "text-editor") (bin "target-hot-path/debug/hot-path" "bin/hot-path") (bin "ecosystem-install/aiutd-launcher.sh" "bin/aiutd")))
+  (license mit)
+  (homepage "https://example.invalid/"))

@@ -68,7 +68,7 @@
     (for/list ([b (in-list (keys-of "visual"))] #:when (and (regexp-match? #rx"^kind-" (cadr b)) (not (regexp-match? #rx" " (car b)))))
       (string-append (car b) " > " (menu-label-of (cadr b)))))
   (define pick-boxes
-    (if (string=? layer "visual") (menu-box "pick · h t move between" (menu-cells pick-cells (- width 8)) (- width 4)) null))
+    (append (if (string=? layer "visual") (menu-box "pick · h t move between" (menu-cells pick-cells (- width 8)) (- width 4)) null) (if (and (string=? layer "visual") (getenv "AIU_PANE_PROGRAM")) (menu-box "screen · keys in the pane" (menu-cells (list "t h > between boxes" "d n > command or output" "e > expand box" "s > mark box" "c > box" "p > pair" "a > marked" "x > clear input box" "y > last output" "Y > last pair" "f > full input" "/ > search" "i > insert") (- width 8)) (- width 4)) null)))
   (define after     (if (null? pending) "keys" (format "keys after ~a" (string-join (map kname pending) " "))))
   (string-join
    (append (menu-table "modes · switch to" (car mode-rows) (cdr mode-rows) width)

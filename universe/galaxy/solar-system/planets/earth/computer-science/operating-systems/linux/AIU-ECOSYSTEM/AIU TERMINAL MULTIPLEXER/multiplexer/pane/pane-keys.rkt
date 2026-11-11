@@ -7,6 +7,8 @@
 (define a-byte 97)
 (define i-byte 105)
 (define q-byte 113)
+(define z-byte 122)
+(define zoxide-pick-bytes (bytes-append (bytes 21) #"let d = (tv zoxide | str trim); if ($d | is-not-empty) { cd $d }\r"))
 (define delete-byte 127)
 
 (define (initial-key-state) (key-state "visual" (quote none) #f))
@@ -20,6 +22,7 @@
      (values (bytes) (cond [(= byte 98) (key-state "buffer" (quote none) pinned)] [(= byte 119) (key-state "pane" (quote none) pinned)] [(= byte 120) (key-state "pane" (quote float) pinned)] [else (key-state "visual" (quote none) (if (= byte space-byte) (not pinned) pinned))]) #f)]
     [(= byte space-byte) (values (bytes) (key-state "visual" (quote space) pinned) #f)]
     [(= byte i-byte) (values (bytes) (key-state "write" (quote none) pinned) #f)]
+    [(= byte z-byte) (values zoxide-pick-bytes state #f)]
     [(= byte q-byte) (values (bytes) state #t)]
     [else (values (bytes) state #f)]))
 
@@ -28,6 +31,9 @@
   (cond
     [(and (eq? (key-state-pending state) (quote a)) (= byte a-byte))
      (values (bytes delete-byte) (key-state "visual" (quote none) pinned) #f)]
+    [(and (eq? (key-state-pending state) (quote blank)) (= byte space-byte))
+     (values (bytes byte) (key-state "visual" (quote none) pinned) #f)]
+    [(= byte space-byte) (values (bytes byte) (key-state "write" (quote blank) pinned) #f)]
     [(= byte a-byte) (values (bytes byte) (key-state "write" (quote a) pinned) #f)]
     [else (values (bytes byte) (key-state "write" (quote none) pinned) #f)]))
 

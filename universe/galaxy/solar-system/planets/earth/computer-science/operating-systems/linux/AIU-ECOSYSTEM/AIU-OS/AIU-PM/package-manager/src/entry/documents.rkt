@@ -349,7 +349,7 @@
 ;; dry derivation is the single source of the plan for both paths.
 (define (apply-document specs lock)
   (for/list ([row (in-list (pm-apply-dry specs #:lock lock))])
-    (list (car row) (cadr row) (caddr row))))
+    (list (car row) (quote planned) (string-split (cadr row) "\n"))))
 
 ;; string? (listof rows) -> list, the text preview. It says plainly that
 ;; nothing changed; an empty plan printed with no such line would be

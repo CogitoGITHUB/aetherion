@@ -10,6 +10,11 @@ Next
 title end
 
 paragraph start
+todo: one cell TUI for the shell, the multiplexer and the editor (Shape 2026-11-08): the shell screen draws a cell grid itself on every resize event and tick, same grid model as the multiplexer and the editor, plan the shared grid piece before the next TUI piece
+Planned.
+paragraph end
+
+paragraph start
 todo: shell own TUI: aiu-shell draws its own input box and output box with side bars on every row; each command runs in a pty, its output is captured and drawn inside the output box with scrolling and resize; works without the multiplexer; plan in ecosystem-server-plan.aiu
 Planned.
 paragraph end
@@ -130,6 +135,11 @@ title end
 
 paragraph start
 todo: shell server bar: a bar in the aiu-shell screen shows information about the ecosystem server (shared or own, state, dev mode, last good); after the ecosystem server exists
+Planned.
+paragraph end
+
+paragraph start
+todo: running command box pulse 2026-11-08: Shape: while a command runs in the screen, its box pulsates orange (soft pulse between two orange shades, driven by a timer so the screen never waits for a key) and shows CPU and RAM usage of the running process in the box (read /proc/PID/stat and statm about once per second); first read screen_draw.rs and how the screen knows a command is running and its pid
 Planned.
 paragraph end
 

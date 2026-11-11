@@ -1,0 +1,186 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+@font-face {
+  font-family: "Doto";
+  src: url("/fonts/Doto.ttf");
+}
+
+@font-face {
+  font-family: "Ubuntu Mono";
+  src: url("/fonts/UbuntuMono-Regular.ttf");
+}
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #aeaed1;
+  --ifm-color-primary-dark: #9696c3;
+  --ifm-color-primary-darker: #8989bc;
+  --ifm-color-primary-darkest: #6565a7;
+  --ifm-color-primary-light: #c6c6df;
+  --ifm-color-primary-lighter: #d3d3e6;
+  --ifm-color-primary-lightest: #f7f7fb;
+  --ifm-background-color: #241f31;
+
+  --ifm-font-family-base: "Ubuntu Mono", monospace;
+  --ifm-font-color-base: #aeaed1;
+  --ifm-font-color-secondary: #545c8c;
+  --ifm-font-size-base: 1.1rem;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.05);
+  --ifm-heading-font-family: "Doto", sans-serif;
+  --ifm-heading-color: var(--ifm-color-primary-darkest);
+  --ifm-menu-color-active: var(--ifm-color-primary-lightest);
+  --ifm-menu-color-background-active: var(--ifm-color-primary-darkest);
+  --ifm-toc-link-color: var(--ifm-color-primary-dark);
+
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {}
+
+.navbar {
+  background-color: var(--ifm-background-color);
+  border-bottom: 3px solid var(--ifm-color-primary-darkest);
+  font-family: "Doto", sans-serif;
+  font-size: 1.5rem;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+  font-variation-settings:
+    "ROND" 0;
+}
+
+@media screen and (max-width: 576px) {
+  .navbar {
+    font-size: 1.2rem;
+  }  
+}
+
+.hero {
+  background-color: var(--ifm-background-color);
+  margin-bottom: 4rem;
+}
+
+.footer {
+  background-color: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  border-top: 3px solid var(--ifm-color-primary-darkest);
+}
+
+nav.menu {
+  border-right: 1px solid var(--ifm-color-primary-darkest);
+  padding-right: 1rem;
+  font-family: "Doto", sans-serif;
+  font-weight: 400;
+}
+
+.table-of-contents__left-border {
+  border-left: 1px solid var(--ifm-color-primary-darkest);
+  font-family: "Ubuntu Mono", monospace;
+}
+
+.theme-doc-markdown a {
+  color: var(--ifm-color-primary-darker)
+}
+
+/* Doc category cards container */
+.row.row--no-gutters {
+  gap: 1rem;
+  margin: 0 !important;
+}
+
+.row.row--no-gutters > .col {
+  padding: 0 !important;
+  flex: 1 1 300px !important;
+  max-width: 100% !important;
+}
+
+/* Doc category cards */
+.card {
+  background-color: rgba(174, 174, 209, 0.08);
+  border: 1px solid var(--ifm-color-primary-darkest);
+  border-radius: 8px;
+  transition: all 0.25s ease;
+  height: 100%;
+  padding: 0.4rem 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card .cardContainer_fWXF,
+.card [class*="cardContainer"] {
+  padding: 0 !important;
+}
+
+.card:hover {
+  background-color: rgba(174, 174, 209, 0.15);
+  border-color: var(--ifm-color-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Card title */
+.card h2 {
+  color: var(--ifm-color-primary-light);
+  font-family: "Doto", sans-serif;
+  font-size: 1.1rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Hide ALL SVGs inside doc cards - multiple approaches */
+.card svg,
+.card article svg,
+.cardContainer_node_modules svg,
+[class*="cardContainer"] svg,
+[class*="card_"] svg,
+main article svg,
+.theme-doc-markdown svg,
+.generatedIndexPage svg,
+[class*="generatedIndexPage"] svg,
+article[class*="cardContainer"] svg,
+a[class*="card"] svg,
+.card h2 svg,
+.card [class*="cardTitle"] svg {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Hide card description */
+.card p {
+  display: none;
+}
+
+/* Card container (the link wrapper) */
+.card__body,
+.card article,
+.card [class*="cardContainer"] {
+  padding: 0 !important;
+}
+
+/* Pagination nav cards */
+.pagination-nav__link {
+  background-color: rgba(174, 174, 209, 0.08);
+  border: 1px solid var(--ifm-color-primary-darkest);
+  border-radius: 8px;
+  transition: all 0.25s ease;
+}
+
+.pagination-nav__link:hover {
+  background-color: rgba(174, 174, 209, 0.15);
+  border-color: var(--ifm-color-primary);
+}
+
+.pagination-nav__sublabel {
+  color: var(--ifm-color-primary-dark);
+}
+
+.pagination-nav__label {
+  color: var(--ifm-color-primary-light);
+}

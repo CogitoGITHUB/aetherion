@@ -1,0 +1,83 @@
+title start
+kind: decision
+tags: decision notes
+Decision page: keep every note as a plain text file
+title end
+
+paragraph start
+Use a decision page when you choose between options and want the reason to survive. This one is a worked example, so replace its text with your own.
+paragraph end
+
+section start
+title start
+Context
+title end
+
+paragraph start
+Notes were spread over three apps, each with its own format. Searching meant opening every app, and an export could lose structure.
+answer start
+for: q552a83
+asked: What forces this decision now?
+Searching and exporting were already failing, and the pile grows every week.
+answer end
+paragraph end
+
+comment start
+Keep the context short and factual. A stranger should understand it a year from now.
+comment end
+section end
+
+section start
+title start
+Options
+title end
+
+paragraph start
+Stay with the three apps. Move everything to one plain text format. Use a database.
+answer start
+for: qe8a03e
+asked: Which option was rejected, and why?
+The database was rejected, because no plain editor opens it and grep cannot read it.
+answer end
+paragraph end
+
+paragraph start
+todo: ask whether pictures need a fourth option
+Pictures and tables fit none of these options yet.
+paragraph end
+section end
+
+section start
+title start
+Decision
+title end
+
+paragraph start
+Write every note as a plain text file in one folder, and read it with any editor.
+answer start
+for: qf9407a
+asked: Is it one choice, stated so someone can act on it?
+Yes. One folder and one format, with no exceptions.
+answer end
+paragraph end
+section end
+
+section start
+title start
+Consequences
+title end
+
+paragraph start
+Search and diffs become simple and nothing is locked in. Pictures and tables need their own answer later.
+answer start
+for: q0cb6eb
+asked: What gets harder because of this decision?
+Pictures and tables, and any tool that expects a database.
+answer end
+paragraph end
+
+paragraph start
+todo: done folder created and the first fifty notes moved
+The move started the same week.
+paragraph end
+section end

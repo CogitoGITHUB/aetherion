@@ -1,0 +1,49 @@
+title start
+kind: module
+tags: module example
+Module page: a tiny function explained before its code
+title end
+
+paragraph start
+Use a module page to document one piece of code so it can be understood without running it. Say what it is for first, then show it.
+paragraph end
+
+section start
+title start
+Purpose
+title end
+
+paragraph start
+Add one to a number. It does not read input, print anything or check that the input is a number.
+answer start
+for: q5e4923
+asked: What problem does this module solve, and what does it leave out?
+It gives the other code one named step for adding one, and nothing more.
+answer end
+paragraph end
+
+paragraph start
+todo: decide whether it should refuse a text input
+The page leaves that out on purpose.
+paragraph end
+section end
+
+section start
+title start
+Code
+title end
+
+paragraph start
+The code goes in a code block, with its language written under the start line.
+paragraph end
+
+code start
+language: racket
+(define (add-one n)
+  (+ n 1))
+code end
+
+comment start
+A code body is opaque, so a question about code cannot be answered inside it. A person answers it here, beside the code.
+comment end
+section end

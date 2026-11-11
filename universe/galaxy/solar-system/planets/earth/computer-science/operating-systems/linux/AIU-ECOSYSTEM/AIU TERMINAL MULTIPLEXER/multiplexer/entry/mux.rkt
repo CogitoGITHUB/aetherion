@@ -1,5 +1,5 @@
 #lang racket/base
-(require racket/system racket/list racket/file racket/string
+(require (only-in racket/port open-output-nowhere) racket/system racket/list racket/file racket/string
          "../pane/pane-pty.rkt" "../pane/pane-grid.rkt" "../pane/pane-text-decode.rkt" "../pane/pane-unit.rkt"
          "../pane/pane-keys.rkt" "../pane/pane-scroll-keys.rkt" "../pane/pane-buffer-keys.rkt" "../pane/pane-split-keys.rkt"
          "../tui/layout/layout-tree-shared.rkt" "../tui/layout/layout-buffers-shared.rkt" "../tui/float/float-state-shared.rkt"
@@ -11,9 +11,43 @@
 (define bar-refresh-milliseconds 1000)
 (define size-check-milliseconds 400)
 
+(define status-home (or (getenv "HOME") ""))
+(define server-state (box "checking"))
+(define (status-thread-start!)
+  (thread
+   (lambda ()
+     (let loop ()
+       (define bin (build-path status-home ".local/share/aiu-pm/prefix/ecosystem-server/current/bin/ecosystem-server"))
+       (set-box! server-state
+                 (cond [(not (file-exists? bin)) "not installed"]
+                       [(with-handlers ([void (lambda (why) #f)])
+                          (parameterize ([current-output-port (open-output-nowhere)] [current-error-port (open-output-nowhere)])
+                            (= 0 (system*/exit-code bin "ping")))) "running"]
+                       [else "stopped"]))
+       (sleep 2)
+       (loop)))))
+(define (dev-on?) (file-exists? (build-path status-home ".local/state/aiu-ecosystem/dev-mode")))
+(define (error-count)
+  (define d (build-path status-home ".local/state/aiu-ecosystem/dev-errors"))
+  (if (directory-exists? d) (length (directory-list d)) 0))
+(define (strip-blank rows)
+  (define (blank? r) (string=? "" (string-trim (regexp-replace* #rx"\e\\[[0-9;]*[A-Za-z]" r ""))))
+  (let loop ([l rows]) (if (and (pair? l) (blank? (car l))) (loop (cdr l)) l)))
+(define (box3 text)
+  (define n (+ 2 (string-length text)))
+  (list (string-append "╭" (make-string n #\─) "╮") (string-append "│ " text " │") (string-append "╰" (make-string n #\─) "╯")))
+(define (decorate-bars rows)
+  (define a (box3 (string-append "AIU server: " (unbox server-state))))
+  (define n (error-count))
+  (define b (cond [(dev-on?) (box3 (if (> n 0) (format "DEV MODE ACTIVE  errors ~a" n) "DEV MODE ACTIVE"))] [(> n 0) (box3 (format "BUILD ERRORS ~a" n))] [else #f]))
+  (append (for/list ([i (in-range 3)])
+            (if b (string-append (list-ref a i) "  \e[1;31m" (list-ref b i) "\e[0m") (list-ref a i)))
+          (strip-blank rows)))
+
 (define (run-multiplexer)
   (define-values (first-columns first-height) (terminal-size))
   (define bars (bars-link-open))
+  (void (status-thread-start!))
   (define key-state-box (box (initial-key-state)))
   (define screen-columns (box first-columns))
   (define screen-height (box first-height))
@@ -87,7 +121,7 @@
   (define first-key (bars-key))
   (define first-rows (list "" ""))
   (hash-set! bar-cache first-key first-rows)
-  (define bar-rows (box first-rows))
+  (define bar-rows (box (decorate-bars first-rows)))
 
   (define (refresh-bars!)
     (define unit (focused-unit))
@@ -96,12 +130,12 @@
     (define key (bars-key))
     (define rows (ask-bars key))
     (hash-set! bar-cache key rows)
-    (when (and (equal? key (bars-key)) (not (equal? rows (unbox bar-rows))))
-      (set-box! bar-rows rows)
+    (when (and (equal? key (bars-key)) (not (equal? (decorate-bars rows) (unbox bar-rows))))
+      (set-box! bar-rows (decorate-bars rows))
       (set-box! dirty #t)))
   (define (show-cached-bars!)
     (define rows (hash-ref bar-cache (bars-key) #f))
-    (when rows (set-box! bar-rows rows)))
+    (when rows (set-box! bar-rows (decorate-bars rows))))
 
   (define (region-rects)
     (layout-rects (current-layout) (unbox screen-columns) (max 1 (- (unbox screen-height) (length (unbox bar-rows))))))
@@ -347,7 +381,8 @@
          (define unit (focused-unit))
          (when (and unit (string=? (key-state-layer next-state) "write"))
            (set-box! (pane-unit-scroll unit) 0))
-         (define sent (cond [(and (string=? layer-before "visual") (string=? (key-state-layer next-state) "write") (getenv "AIU_PANE_PROGRAM")) (bytes-append #"i" forwarded)] [(and (string=? layer-before "write") (string=? (key-state-layer next-state) "visual") (getenv "AIU_PANE_PROGRAM")) (bytes-append #"\e" forwarded)] [else forwarded]))
+         (when (and (getenv "AIU_PANE_PROGRAM") (string=? layer-before "write") (regexp-match? #rx#"[\r\n]" (subbytes buffer 0 amount))) (set-box! key-state-box (key-state "visual" (quote none) (key-state-pinned (unbox key-state-box)))))
+         (define sent (cond [(and (string=? layer-before "visual") (string=? (key-state-layer next-state) "write") (getenv "AIU_PANE_PROGRAM")) (bytes-append #"i" forwarded)] [(and (string=? layer-before "write") (string=? (key-state-layer next-state) "visual") (getenv "AIU_PANE_PROGRAM")) forwarded] [else forwarded]))
          (when (and unit (> (bytes-length sent) 0))
            (write-bytes sent (pane-link-master-out (pane-unit-link unit)))
            (flush-output (pane-link-master-out (pane-unit-link unit))))
@@ -376,5 +411,7 @@
      (restore-settings)
      (for ([unit (in-list (hash-values panes))]) (pane-unit-close! unit))
      (bars-link-close! bars))))
+
+(provide run-multiplexer)
 
 (module+ main (run-multiplexer))

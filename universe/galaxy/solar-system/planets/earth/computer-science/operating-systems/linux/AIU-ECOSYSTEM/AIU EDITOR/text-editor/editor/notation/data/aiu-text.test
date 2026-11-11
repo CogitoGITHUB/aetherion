@@ -1,0 +1,6 @@
+test mod-aiutext
+level 2
+module ../../AIU NOTATION/notation/data/aiu-text.rkt
+call (procedure? blocks->aiu-text)
+expect result equals #t
+expect seconds-under 20

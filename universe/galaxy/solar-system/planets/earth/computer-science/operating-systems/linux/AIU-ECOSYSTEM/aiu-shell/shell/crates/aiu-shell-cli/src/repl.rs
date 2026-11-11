@@ -103,6 +103,33 @@ fn build_interactive_prompt(
     NushellPrompt::shared(engine_state.prompt_state.clone())
 }
 
+#[cfg(unix)]
+fn find_ecosystem() -> Option<std::path::PathBuf> {
+    let mut dirs: Vec<std::path::PathBuf> = Vec::new();
+    if let Ok(me) = std::env::current_exe() {
+        if let Some(d) = me.parent() {
+            dirs.push(d.to_path_buf());
+        }
+    }
+    if let Some(a) = std::env::args_os().next() {
+        let s = a.to_string_lossy().trim_start_matches("-").to_string();
+        if s.contains("/") {
+            if let Some(d) = std::path::Path::new(&s).parent() {
+                dirs.push(d.to_path_buf());
+            }
+        }
+    }
+    if let Some(p) = std::env::var_os("PATH") {
+        dirs.extend(std::env::split_paths(&p));
+    }
+    if let Some(h) = std::env::var_os("HOME") {
+        dirs.push(std::path::PathBuf::from(h).join(".local/share/aiu-pm/prefix/ecosystem/current/bin"));
+    }
+    dirs.into_iter()
+        .flat_map(|d| vec![d.join("ecosystem"), d.join("../../../ecosystem/current/bin/ecosystem")])
+        .find(|c| c.is_file())
+}
+
 /// The main REPL loop, including spinning up the prompt itself.
 pub fn evaluate_repl(
     engine_state: &mut EngineState,
@@ -110,6 +137,24 @@ pub fn evaluate_repl(
     prerun_command: Option<Spanned<String>>,
     load_std_lib: Option<Spanned<String>>,
 ) -> Result<()> {
+    #[cfg(unix)]
+    {
+        use std::io::IsTerminal;
+        use std::os::unix::process::CommandExt;
+        if std::env::var_os("AIU_IN_MULTIPLEXER").is_none()
+            && std::env::var_os("AIU_NO_AUTOSTART").is_none()
+            && std::io::stdin().is_terminal()
+        {
+            match find_ecosystem() {
+                Some(screen) => {
+                    let _ = std::process::Command::new(&screen).arg("serve").stdin(std::process::Stdio::null()).stdout(std::process::Stdio::null()).stderr(std::process::Stdio::null()).status();
+                    let err = std::process::Command::new(&screen).arg("mux").env("AIU_IN_MULTIPLEXER", "1").exec();
+                    eprintln!("aiu-shell: multiplexer start failed: {}: {}", screen.display(), err);
+                }
+                None => eprintln!("aiu-shell: ecosystem not found"),
+            }
+        }
+    }
     // throughout this code, we hold this stack uniquely.
     // During the main REPL loop, we hand ownership of this value to an Arc,
     // so that it may be read by various reedline plugins. During this, we
@@ -196,21 +241,7 @@ pub fn evaluate_repl(
     // The banner is defined by the standard library. Its welcome message goes out now, before
     // the startup hooks; its startup time line follows the hooks and the prompt evaluation,
     // right before the first prompt, once the value is final.
-    let banner = if load_std_lib.is_none() {
-        engine_state.get_config().show_banner
-    } else {
-        BannerKind::None
-    };
-    if matches!(banner, BannerKind::Full) {
-        eval_source(
-            engine_state,
-            &mut unique_stack,
-            "banner --no-startup-time".as_bytes(),
-            "show_banner",
-            PipelineData::empty(),
-            false,
-        );
-    }
+    let banner = BannerKind::None;
     let mut first_prompt = Some(FirstPrompt { banner });
 
     kitty_protocol_healthcheck(engine_state);

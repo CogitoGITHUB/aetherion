@@ -1,0 +1,10 @@
+(spec
+  (format-version 2)
+  (name ecosystem)
+  (version "0.1.0")
+  (summary "the AIU ecosystem command with editor, multiplexer and package manager inside")
+  (source (local "/root/home/shape/Ætherion/universe/galaxy/solar-system/planets/earth/computer-science/operating-systems/linux/AIU-ECOSYSTEM"))
+  (build (steps (run #:argv ("raco" "exe" "-o" "ecosystem-built" "AIU ECOSYSTEM/ecosystem/entry/ecosystem.rkt"))))
+  (install (prefix (bin "ecosystem-built" "bin/ecosystem")))
+  (license mit)
+  (homepage "https://example.invalid/"))

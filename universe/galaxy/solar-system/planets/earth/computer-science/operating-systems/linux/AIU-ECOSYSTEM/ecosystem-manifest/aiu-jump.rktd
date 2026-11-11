@@ -1,0 +1,10 @@
+(spec
+  (format-version 2)
+  (name aiu-jump)
+  (version "0.10.0")
+  (summary "the built-in zoxide clone as a command")
+  (source (local "/root/home/shape/Ætherion/universe/galaxy/solar-system/planets/earth/computer-science/operating-systems/linux/AIU-ECOSYSTEM/aiu-shell"))
+  (build (steps (run #:argv ("nice" "-n" "19" "cargo" "build" "--release" "-j" "2" "--config" "profile.release.lto=false" "--target-dir" "target-jump" "--manifest-path" "jump/Cargo.toml" "--bin" "aiu-shell-jump"))))
+  (install (prefix (bin "target-jump/release/aiu-shell-jump" "bin/aiu-shell-jump")))
+  (license mit)
+  (homepage "https://example.invalid/"))

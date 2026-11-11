@@ -1,0 +1,6 @@
+test mod-nodes
+level 2
+module ../../AIU NOTATION/notation/model/nodes.rkt
+call (procedure? node-line)
+expect result equals #t
+expect seconds-under 20

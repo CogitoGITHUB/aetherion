@@ -23,8 +23,14 @@
   (window-size-ioctl descriptor set-window-size-request size)
   (free size))
 
+(define send-signal (get-ffi-obj "kill" c-library (_fun _int _int -> _int)))
+(define window-change-signal 28)
+
 (define (pane-set-size! link columns rows)
-  (set-descriptor-size! (pane-link-master-fd link) columns rows))
+  (set-descriptor-size! (pane-link-master-fd link) columns rows)
+  (define pid (subprocess-pid (pane-link-process link)))
+  (send-signal (- pid) window-change-signal)
+  (send-signal pid window-change-signal))
 
 (define (pane-open program arguments columns rows)
   (define descriptors (malloc 8 (quote raw)))

@@ -260,7 +260,7 @@ impl InputState {
     }
 
     fn start_job(&mut self, line: &str) -> Vec<String> {
-        match start_line(line) {
+        if let Some(message) = crate::command_runner::try_cd(line) { return vec![message]; } match start_line(line) {
             Ok(job) => {
                 self.job = Some(job);
                 Vec::new()
@@ -395,12 +395,17 @@ impl InputState {
                             crate::bar_view::close_menu();
                             self.mode = Mode::Insert;
                         }
+                        "x" => {
+                            self.text.clear();
+                            self.cursor = None;
+                            self.notice = String::from("input cleared");
+                        }
                         "y" => self.copy_last(false),
                         "Y" => self.copy_last(true),
                         "/" => self.open_search(),
                         " " => crate::bar_view::toggle_menu(),
                         "f" => crate::bar_view::toggle_full_input(),
-                        "q" => self.quit = true,
+                        "m" => { self.notice = crate::command_runner::dev_mode_toggle(); } "M" => { self.notice = crate::command_runner::dev_build_all(); } "z" => crate::command_runner::request_jump(), "Z" => { self.notice = crate::command_runner::add_current_dir(); } "q" => self.quit = true,
                         _ => {}
                     }
                 }
@@ -440,7 +445,8 @@ impl InputState {
                 KeyCode::Esc => self.mode = Mode::Visual,
                 KeyCode::Enter => {
                     crate::bar_view::close_full_input();
-                    self.keep_line()
+                    self.keep_line();
+                    self.mode = Mode::Visual;
                 }
                 KeyCode::Up => self.show_older(),
                 KeyCode::Down => self.show_newer(),

@@ -12,7 +12,7 @@
 
 (define (level-stages-text n)
   (define f (build-path gate-root "levels.txt"))
-  (string-join (for/list ([l (in-list (file->lines f))] #:when (regexp-match? #px"^[0-9]+ " l) #:when (<= (string->number (car (string-split l))) n)) (cadr (string-split l))) ","))
+  (string-join (for/list ([l (in-list (if (file-exists? f) (file->lines f) (list)))] #:when (regexp-match? #px"^[0-9]+ " l) #:when (<= (string->number (car (string-split l))) n)) (cadr (string-split l))) ","))
 
 (define level-1-stages (level-stages-text 1))
 

@@ -15,6 +15,21 @@ Planned.
 paragraph end
 
 paragraph start
+todo: one cell TUI for the shell, the multiplexer and the editor (Shape 2026-11-08): every program owns one cell grid with real resize events and redraws by itself, no text blocks that wait for a key; the multiplexer pane resize now sends SIGWINCH to the pane, check it on screen first
+Planned.
+paragraph end
+
+paragraph start
+todo: SPC SPC does not leave insert in aiutm (Shape tested twice 2026-11-08, after the a a, backspace plus Esc and raw space versions); routing facts: pane/pane-keys.rkt route-write only knows a a, mux.rkt key-loop forwards bytes to the pane when the layer is write, the screen own exit is input_state.rs Insert mode space after space; next: log the bytes the pane receives, then fix; Enter leaving insert is done
+Planned.
+paragraph end
+
+paragraph start
+todo: the screen tells the multiplexer its mode (insert or visual) so the two never drift apart; today the multiplexer only guesses it from i, SPC SPC, Esc and Enter
+Planned.
+paragraph end
+
+paragraph start
 todo: bar placement from the editor bar plan, tabs on top and mode line at the bottom, instead of all rows stacked on top
 Planned.
 paragraph end

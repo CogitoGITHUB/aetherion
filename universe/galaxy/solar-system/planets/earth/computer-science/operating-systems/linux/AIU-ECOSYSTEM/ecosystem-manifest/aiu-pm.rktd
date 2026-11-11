@@ -1,0 +1,10 @@
+(spec
+  (format-version 2)
+  (name aiu-pm)
+  (version "0.1.0")
+  (summary "the AIU package manager")
+  (source (local "/root/home/shape/Ætherion/universe/galaxy/solar-system/planets/earth/computer-science/operating-systems/linux/AIU-ECOSYSTEM/AIU-OS/AIU-PM"))
+  (build (steps))
+  (install (prefix (copy-tree "package-manager" "package-manager")))
+  (license mit)
+  (homepage "https://example.invalid/"))

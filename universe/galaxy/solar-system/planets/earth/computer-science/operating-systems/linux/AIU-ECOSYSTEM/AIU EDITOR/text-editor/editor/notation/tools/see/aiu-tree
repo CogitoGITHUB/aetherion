@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# aiu-tree: broot tree with .aiu pages previewed through preview-fit.sh. Usage: aiu-tree [DIR]
+here=$(cd "${0%/*}" && pwd)
+d="${XDG_CONFIG_HOME:-$HOME/.config}/broot"
+[ -f "$d/conf.hjson" ] || broot --write-default-conf "$d" >/dev/null 2>&1
+exec broot --cmd :toggle_preview --conf "$d/conf.hjson;$here/broot-aiu.toml" "${1:-.}"

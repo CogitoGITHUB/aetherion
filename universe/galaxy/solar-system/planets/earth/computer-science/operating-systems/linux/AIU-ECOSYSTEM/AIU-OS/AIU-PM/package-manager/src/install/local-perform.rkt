@@ -152,7 +152,9 @@
         (delete-file dest))
       (when (file-exists? dest)
         (delete-file dest))
-      (copy-file src dest)
+      (if (directory-exists? src)
+          (copy-local-folder! src (path->string dest))
+          (copy-file src dest))
       (file-or-directory-permissions dest (install-file-action-mode a))
       (void))))
 

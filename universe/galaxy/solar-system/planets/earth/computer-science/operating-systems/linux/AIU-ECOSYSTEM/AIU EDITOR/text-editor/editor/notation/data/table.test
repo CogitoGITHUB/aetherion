@@ -1,0 +1,6 @@
+test mod-table
+level 2
+module notation/data/table.rkt
+call (procedure? read-table)
+expect result equals #t
+expect seconds-under 20

@@ -67,7 +67,7 @@
 
 ;; -> path, helper binary or kind 'config when missing
 (define (find-helper name)
-  (or (find-executable-path name)
+  (or (for/or ([dir (in-list (regexp-split #rx":" (or (getenv "PATH") "")))]) (define candidate (and (not (string=? dir "")) (build-path dir name))) (and candidate (file-exists? candidate) (memq (quote execute) (file-or-directory-permissions candidate)) candidate))
       (raise-pm-error 'config 'spawn-and-wait "helper executable missing"
                       #:fields `(("helper" . ,name)))))
 

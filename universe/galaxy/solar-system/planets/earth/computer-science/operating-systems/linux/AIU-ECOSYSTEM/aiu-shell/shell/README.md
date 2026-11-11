@@ -284,3 +284,9 @@ The project is made available under the MIT license. See the `LICENSE` file for 
 
 - Input box: long text shows its tail with the cursor; f in visual mode opens the full screen input view (opens by itself for a big paste), f again closes it.
 - Enter in insert mode closes the full screen input view before the line runs, so the normal screen shows the result.
+
+- e on a focused box shows every row wrapped to the box width, also boxes of 4 rows or less; aiutd runs full screen like vim, so the editor gets the real terminal.
+
+- x in visual mode clears the whole input box (double space leaves insert, x clears, i types again).
+
+- Enter in insert mode runs the line and leaves insert (screen and aiutm); aiutm keys menu lists the screen keys including x clear input box.

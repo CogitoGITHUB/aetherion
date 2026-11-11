@@ -1,0 +1,6 @@
+test mod-kinds
+level 2
+module ../../AIU NOTATION/notation/diagnostics/collect.rkt
+call (list? finding-kinds)
+expect result equals #t
+expect seconds-under 20

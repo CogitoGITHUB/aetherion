@@ -1,0 +1,10 @@
+(spec
+  (format-version 2)
+  (name aiu-shell)
+  (version "0.116.2")
+  (summary "the AIU shell and its screen")
+  (source (local "/root/home/shape/Ætherion/universe/galaxy/solar-system/planets/earth/computer-science/operating-systems/linux/AIU-ECOSYSTEM/aiu-shell"))
+  (build (steps (run #:argv ("cargo" "build" "--offline" "--release" "--target-dir" "target-shell" "--manifest-path" "shell/Cargo.toml" "-p" "aiu-shell" "-p" "aiu-shell-screen"))))
+  (install (prefix (bin "target-shell/release/aiu-shell" "bin/aiu-shell") (bin "target-shell/release/aiu-shell-screen" "bin/aiu-shell-screen")))
+  (license mit)
+  (homepage "https://example.invalid/"))

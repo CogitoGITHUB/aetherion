@@ -1,14 +1,14 @@
 #lang racket/base
 (require "pane-pty.rkt" "pane-grid.rkt")
-(let* ([home (or (getenv "HOME") "")]
-       [screen (string-append home "/aiu-target/aiu-shell/debug/aiu-shell-screen")]
-       [shell (string-append home "/aiu-target/aiu-shell/debug/aiu-shell")])
+(void (let* ([home (or (getenv "HOME") "")]
+       [screen (string-append home "/.local/share/aiu-pm/prefix/aiu-shell/current/bin/aiu-shell-screen")]
+       [shell (string-append home "/.local/share/aiu-pm/prefix/aiu-shell/current/bin/aiu-shell")])
   (when (and (not (getenv "AIU_PANE_PROGRAM")) (file-exists? screen))
     (putenv "AIU_PANE_PROGRAM" screen))
   (when (and (not (getenv "AIU_SHELL_BINARY")) (file-exists? shell))
     (putenv "AIU_SHELL_BINARY" shell))
   (when (getenv "AIU_PANE_PROGRAM")
-    (putenv "AIU_IN_MULTIPLEXER" "1")))
+    (putenv "AIU_IN_MULTIPLEXER" "1"))))
 (provide (struct-out pane-unit) pane-unit-open pane-unit-open-program pane-unit-close!)
 
 (struct pane-unit (id grid link scroll))

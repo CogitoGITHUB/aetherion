@@ -1,0 +1,9 @@
+[package]
+name = "ecosystem-server"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[[bin]]
+name = "ecosystem-server"
+path = "main.rs"

@@ -1,0 +1,463 @@
+use anyhow::Result;
+use clap::Parser;
+use std::env;
+use std::io::{BufWriter, IsTerminal, Write, stderr, stdout};
+use std::path::PathBuf;
+use std::process::exit;
+use television::channels::prototypes::remove_enter_keybinding;
+use television::cli::ChannelCli;
+use television::config::layers::ConfigLayers;
+use television::config::shell_integration::ShellIntegrationConfig;
+use television::{
+    app::App,
+    cable::{Cable, load_cable},
+    channels::prototypes::ChannelPrototype,
+    cli::{
+        args::{Cli, Command},
+        guess_channel_from_prompt, list_channels, post_process,
+    },
+    config::{Config, ConfigEnv},
+    errors::os_error_exit,
+    gh::update_local_channels,
+    television::Mode,
+    utils::clipboard::CLIPBOARD,
+    utils::paths::expand_tilde,
+    utils::{
+        shell::{
+            Shell, completion_script, render_autocomplete_script_template,
+            render_clap_autocomplete,
+        },
+        stdin::is_readable_stdin,
+    },
+};
+use tracing::{debug, info};
+
+#[tokio::main(flavor = "multi_thread")]
+async fn main() -> Result<()> {
+    television::errors::init()?;
+    television::logging::init()?;
+
+    debug!("\n\n====  NEW SESSION  =====\n");
+
+    let readable_stdin = is_readable_stdin();
+
+    let raw_cli = Cli::parse();
+
+    // Load configuration first so the cable directory it points to (which may differ
+    // from the default) is honored when resolving channel-vs-path ambiguity in post_process.
+    debug!("Loading configuration...");
+    let config_file = raw_cli.config_file.as_deref().map(expand_tilde);
+    let base_config =
+        Config::new(&ConfigEnv::init()?, config_file.as_deref())?;
+
+    let cable_dir = raw_cli
+        .cable_dir
+        .as_deref()
+        .map(expand_tilde)
+        .unwrap_or_else(|| base_config.application.cable_dir.clone());
+
+    debug!("Loading cable channels...");
+    let cable = load_cable(&cable_dir);
+
+    let cli = post_process(raw_cli, readable_stdin, &cable);
+    debug!("PostProcessedCli: {:?}", cli);
+
+    // handle subcommands
+    debug!("Handling subcommands...");
+    if let Some(subcommand) = &cli.global.command {
+        handle_subcommand(subcommand, &cable, &base_config.shell_integration)?;
+    }
+
+    // optionally change the working directory
+    if let Some(ref working_dir) = cli.global.workdir {
+        set_current_dir(working_dir)
+            .unwrap_or_else(|e| os_error_exit(&e.to_string()));
+    }
+
+    // determine the base channel prototype
+    debug!("Determining base channel prototype...");
+    let channel_prototype =
+        determine_channel(&cli.channel, &base_config, readable_stdin, &cable);
+
+    let layered_config =
+        ConfigLayers::new(base_config, channel_prototype, cli.clone());
+
+    CLIPBOARD.with(<_>::default);
+
+    debug!("Creating application...");
+    let mut app = App::new(layered_config, cable);
+
+    // If the user requested to show the remote control on startup, switch the
+    // television into Remote Control mode before the application event loop
+    // begins. This mirrors the behaviour of toggling the remote control via
+    // the corresponding keybinding after launch, ensuring the panel is
+    // visible from the start.
+    // TODO: This is a hack, preview is not initialised yet, find a better way to do it.
+    if cli.channel.show_remote && app.television.remote_control.is_some() {
+        app.television.mode = Mode::RemoteControl;
+    }
+
+    stdout().flush()?;
+    debug!("Running application...");
+
+    // Run in headless mode when auto-selection is enabled and no TTY is available.
+    // This allows piping output without requiring a terminal for the TUI.
+    let has_auto_select = app.television.merged_config.select_1
+        || app.television.merged_config.take_1
+        || app.television.merged_config.take_1_fast;
+    let no_tty_available = !stdout().is_terminal() && !stderr().is_terminal();
+    let headless = has_auto_select && no_tty_available;
+
+    let output = app.run(stdout().is_terminal(), headless).await?;
+    info!("App output: {:?}", output);
+
+    let stdout_handle = stdout().lock();
+    let mut bufwriter = BufWriter::new(stdout_handle);
+    if let Some(key) = output.expect_key {
+        writeln!(bufwriter, "{}", key)?;
+    }
+    if let Some(entries) = output.selected_entries {
+        for entry in &entries {
+            writeln!(bufwriter, "{}", entry.output()?)?;
+        }
+    }
+    bufwriter.flush()?;
+    exit(0);
+}
+
+pub fn set_current_dir(path: &PathBuf) -> Result<()> {
+    env::set_current_dir(path)?;
+    Ok(())
+}
+
+pub fn handle_subcommand(
+    command: &Command,
+    cable: &Cable,
+    shell_integration_config: &ShellIntegrationConfig,
+) -> Result<()> {
+    match command {
+        Command::ListChannels => {
+            list_channels(cable);
+            exit(0);
+        }
+        Command::InitShell { shell } => {
+            let target_shell = Shell::from(shell);
+            // the completion scripts for the various shells are templated
+            // so that it's possible to override the keybindings triggering
+            // shell autocomplete and command history in tv
+            let script = render_autocomplete_script_template(
+                target_shell,
+                completion_script(target_shell)?,
+                shell_integration_config,
+            )?;
+            let _ = writeln!(stdout().lock(), "{script}");
+            exit(0);
+        }
+        Command::Completions { shell } => {
+            let target_shell = Shell::from(shell);
+            if let Some(script) = render_clap_autocomplete(target_shell) {
+                let _ = writeln!(stdout().lock(), "{script}");
+            } else {
+                eprintln!(
+                    "Shell completions are not supported for {target_shell}"
+                );
+                exit(1);
+            }
+            exit(0);
+        }
+        Command::UpdateChannels { force } => {
+            update_local_channels(force)?;
+            exit(0);
+        }
+    }
+}
+
+/// Creates an ad-hoc channel prototype from CLI arguments
+fn create_adhoc_channel(cli: &ChannelCli) -> ChannelPrototype {
+    let p = ChannelPrototype::new(
+        "Custom Channel",
+        cli.source_command.as_ref().unwrap().raw(),
+    );
+
+    debug!("Creating ad-hoc channel prototype: {:?}", p);
+
+    p
+}
+
+/// Determines which channel prototype to use based on CLI arguments and configuration.
+///
+/// This function handles multiple modes of operation:
+/// 1. **Stdin mode**: When stdin is readable, creates a stdin channel
+/// 2. **Autocomplete mode**: When autocomplete prompt is provided, guesses channel from prompt
+/// 3. **Ad-hoc mode**: When no channel is specified but source command is provided
+/// 4. **Channel mode**: Uses a named channel from CLI args or config default
+///
+/// After determining the base channel, it applies all relevant CLI overrides.
+pub fn determine_channel(
+    cli: &ChannelCli,
+    config: &Config,
+    readable_stdin: bool,
+    cable: &Cable,
+) -> ChannelPrototype {
+    // Determine the base channel prototype
+    if readable_stdin {
+        ChannelPrototype::stdin()
+    } else if let Some(prompt) = &cli.autocomplete_prompt {
+        debug!("Using autocomplete prompt: {:?}", prompt);
+        let mut prototype = guess_channel_from_prompt(
+            prompt,
+            &config.shell_integration.commands,
+            &config.shell_integration.fallback_channel,
+            cable,
+        );
+        debug!("Using guessed channel: {:?}", prototype);
+        // Unbind any <Enter> keybinding since that would interfere with autocompletion behavior.
+        remove_enter_keybinding(&mut prototype);
+        prototype
+    } else if cli.channel.is_none() && cli.source_command.is_some() {
+        create_adhoc_channel(cli)
+    } else {
+        let channel_name = cli
+            .channel
+            .as_ref()
+            .unwrap_or(&config.application.default_channel);
+        debug!("Using channel: {:?}", channel_name);
+        cable.get_channel(channel_name)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use rustc_hash::FxHashMap;
+    use television::{
+        channels::prototypes::{
+            ChannelPrototype, CommandSpec, PreviewSpec, Template,
+        },
+        cli::PostProcessedCli,
+        event::Key,
+    };
+
+    use super::*;
+
+    fn assert_is_correct_channel(
+        cli: &PostProcessedCli,
+        config: &Config,
+        readable_stdin: bool,
+        expected_channel: &ChannelPrototype,
+        cable_channels: Option<Cable>,
+    ) {
+        let channels: Cable =
+            cable_channels.unwrap_or(Cable::from_prototypes(vec![
+                ChannelPrototype::new("files", "fd -t f"),
+                ChannelPrototype::new("dirs", "ls"),
+                ChannelPrototype::new("git", "git status"),
+            ]));
+        let channel =
+            determine_channel(&cli.channel, config, readable_stdin, &channels);
+
+        assert_eq!(
+            channel.metadata.name, expected_channel.metadata.name,
+            "Expected {:?} but got {:?}",
+            expected_channel.metadata.name, channel.metadata.name
+        );
+    }
+
+    #[test]
+    /// Test that the channel is stdin when stdin is readable
+    fn test_determine_channel_readable_stdin() {
+        let args = PostProcessedCli::default();
+        let config = Config::default();
+        assert_is_correct_channel(
+            &args,
+            &config,
+            true,
+            &ChannelPrototype::new("stdin", "cat"),
+            None,
+        );
+    }
+
+    #[test]
+    fn test_determine_channel_autocomplete_prompt() {
+        let autocomplete_prompt = Some("cd".to_string());
+        let expected_channel = ChannelPrototype::new("dirs", "ls {}");
+        let args = PostProcessedCli {
+            channel: ChannelCli {
+                autocomplete_prompt,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let config = Config {
+            shell_integration:
+                television::config::shell_integration::ShellIntegrationConfig {
+                    fallback_channel: "files".to_string(),
+                    commands: {
+                        let mut m = FxHashMap::default();
+                        m.insert("cd".to_string(), "dirs".to_string());
+                        m
+                    },
+                    keybindings: FxHashMap::default(),
+                },
+            ..Default::default()
+        };
+
+        assert_is_correct_channel(
+            &args,
+            &config,
+            false,
+            &expected_channel,
+            None,
+        );
+    }
+
+    #[test]
+    fn test_determine_channel_autocomplete_unbinds_enter() {
+        // A channel that defines an <Enter> keybinding.
+        let toml_data = r#"
+        [metadata]
+        name = "git-branches"
+
+        [source]
+        command = "git branch --all"
+
+        [keybindings]
+        esc = "quit"
+        enter = "actions:checkout"
+        "#;
+        let branches: ChannelPrototype = toml::from_str(toml_data).unwrap();
+        assert!(
+            branches
+                .keybindings
+                .as_ref()
+                .unwrap()
+                .bindings
+                .contains_key(&Key::Enter)
+        );
+
+        let cable = Cable::from_prototypes(vec![branches]);
+        let config = Config {
+            shell_integration:
+                television::config::shell_integration::ShellIntegrationConfig {
+                    fallback_channel: "git-branches".to_string(),
+                    commands: {
+                        let mut m = FxHashMap::default();
+                        m.insert(
+                            "git checkout".to_string(),
+                            "git-branches".to_string(),
+                        );
+                        m
+                    },
+                    keybindings: FxHashMap::default(),
+                },
+            ..Default::default()
+        };
+        let cli = ChannelCli {
+            autocomplete_prompt: Some("git checkout ".to_string()),
+            ..Default::default()
+        };
+
+        let channel = determine_channel(&cli, &config, false, &cable);
+
+        // In autocomplete mode the <Enter> binding is stripped so it doesn't
+        // interfere with the autocompletion behavior.
+        assert_eq!(channel.metadata.name, "git-branches");
+        assert!(
+            !channel
+                .keybindings
+                .as_ref()
+                .unwrap()
+                .bindings
+                .contains_key(&Key::Enter)
+        );
+    }
+
+    #[test]
+    fn test_determine_channel_standard_case() {
+        let channel = Some(String::from("dirs"));
+        let args = PostProcessedCli {
+            channel: ChannelCli {
+                channel,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let config = Config::default();
+        assert_is_correct_channel(
+            &args,
+            &config,
+            false,
+            &ChannelPrototype::new("dirs", "ls {}"),
+            None,
+        );
+    }
+
+    #[test]
+    fn test_determine_channel_config_fallback() {
+        let args = PostProcessedCli {
+            channel: ChannelCli {
+                channel: None,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let mut config = Config::default();
+        config.application.default_channel = String::from("dirs");
+        assert_is_correct_channel(
+            &args,
+            &config,
+            false,
+            &ChannelPrototype::new("dirs", "ls"),
+            None,
+        );
+    }
+
+    #[test]
+    fn test_determine_channel_with_cli_preview() {
+        let preview_command = Template::parse("echo hello").unwrap();
+        let preview_spec =
+            PreviewSpec::new(CommandSpec::from(preview_command.clone()), None);
+
+        let args = PostProcessedCli {
+            channel: ChannelCli {
+                channel: Some(String::from("dirs")),
+                preview_command: Some(preview_command),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let config = Config::default();
+
+        let expected_prototype = ChannelPrototype::new("dirs", "ls")
+            .with_preview(Some(preview_spec));
+
+        assert_is_correct_channel(
+            &args,
+            &config,
+            false,
+            &expected_prototype,
+            None,
+        );
+    }
+
+    #[test]
+    fn test_determine_channel_adhoc_with_source_command() {
+        let cli = PostProcessedCli {
+            channel: ChannelCli {
+                channel: None,
+                source_command: Some(Template::parse("fd -t f -H").unwrap()),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let config = Config::default();
+
+        let channel =
+            determine_channel(&cli.channel, &config, false, &Cable::default());
+
+        assert_eq!(channel.metadata.name, "Custom Channel");
+        assert_eq!(
+            channel.source.command.get_nth(0).template().raw(),
+            "fd -t f -H"
+        );
+    }
+}

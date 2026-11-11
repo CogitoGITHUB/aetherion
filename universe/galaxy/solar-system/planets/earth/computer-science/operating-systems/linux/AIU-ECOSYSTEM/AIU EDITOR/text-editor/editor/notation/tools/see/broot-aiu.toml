@@ -1,0 +1,47 @@
+modal = true
+initial_mode = "command"
+show_selection_mark = true
+
+[[preview_transformers]]
+input_extensions = ["aiu"]
+output_extension = "txt"
+mode = "text"
+command = ["bash", "-c", "env AIU_PANE_PCT=56 bash \"$1\" \"$2\" --contracts | sed -r \"s/\\x1b\\[[0-9;]*m//g\" > \"$3\"; touch -d @0 \"$3\"", "_", "/root/home/shape/Ætherion/universe/galaxy/solar-system/planets/earth/computer-science/operating-systems/linux/AIU-ECOSYSTEM/AIU NOTATION/notation system/tools/see/preview-fit.sh", "{input-path}", "{output-path}"]
+
+[[verbs]]
+key = "d"
+internal = ":parent"
+
+[[verbs]]
+key = "h"
+internal = ":line_down"
+
+[[verbs]]
+key = "t"
+internal = ":line_up"
+
+[[verbs]]
+key = "n"
+internal = ":open_stay"
+
+[[verbs]]
+key = "left"
+internal = ":back"
+
+[[verbs]]
+key = "right"
+internal = ":open_stay"
+
+[[verbs]]
+key = "up"
+internal = ":line_up"
+
+[[verbs]]
+key = "down"
+internal = ":line_down"
+
+[[verbs]]
+key = "enter"
+apply_to = "file"
+external = ["aiutd", "{file}"]
+leave_broot = false

@@ -1,0 +1,54 @@
+title start
+kind: default
+tags: default example
+Default page: every block in one place
+title end
+
+paragraph start
+The default type allows every block and has no required sections. Use it when no other type fits, and pick a stricter type when one does.
+paragraph end
+
+section start
+title start
+Blocks
+title end
+
+paragraph start
+A section groups blocks under one title. This one shows a paragraph, a comment, a code block and a todo mark.
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+Yes. It lists what a section can hold.
+answer end
+paragraph end
+
+paragraph start
+todo: done add a section inside a section
+Sections nest, so a part can have parts of its own.
+paragraph end
+
+code start
+language: racket
+(display hello)
+code end
+
+comment start
+The default type asks that every code block names its language.
+comment end
+section end
+
+section start
+title start
+Nested
+title end
+
+section start
+title start
+A section inside a section
+title end
+
+paragraph start
+A section can hold sections, and the viewer numbers them for you.
+paragraph end
+section end
+section end

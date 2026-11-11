@@ -1,0 +1,21 @@
+[metadata]
+name = "aiu-list-types"
+description = "File types that load"
+
+[source]
+command = "bash aiu-list.sh types"
+display = "{}"
+output = "{}"
+
+[preview]
+cached = false
+command = "bash aiu-list-preview-fit.sh type \"{}\""
+
+[keybindings]
+enter = "actions:pick"
+
+[actions.pick]
+description = "write the chosen type to /tmp/aiu-list"
+command = "printf %s {} > /tmp/aiu-list"
+shell = "bash"
+mode = "execute"

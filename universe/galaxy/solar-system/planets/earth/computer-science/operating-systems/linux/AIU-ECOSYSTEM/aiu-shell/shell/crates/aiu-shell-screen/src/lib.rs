@@ -6,3 +6,4 @@ pub mod input_state;
 pub mod pair_screen;
 pub mod screen_draw;
 pub mod bar_view;
+pub mod status_bar;
