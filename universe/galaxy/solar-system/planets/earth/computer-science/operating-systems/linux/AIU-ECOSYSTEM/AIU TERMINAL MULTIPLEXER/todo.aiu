@@ -10,6 +10,10 @@ Next
 title end
 
 paragraph start
+todo: URGENT running command block: copy c still works but the copy notification says ❗ RUNNING COMMAND ❗ (Shape lost output copying a running block 3 times); do not touch mux z
+Planned.
+paragraph end
+paragraph start
 todo: first paint never waits (Shape rule 2026-11-08): the multiplexer now draws before the first bar answer (two blank rows, the bars loop refreshes at once); check the start time and the bars helper start (join/live-wire-shared.rkt), then do the same for the editor entry and the shell
 Planned.
 paragraph end

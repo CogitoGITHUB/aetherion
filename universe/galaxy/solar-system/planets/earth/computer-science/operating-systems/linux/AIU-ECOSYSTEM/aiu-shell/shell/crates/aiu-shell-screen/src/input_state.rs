@@ -28,10 +28,13 @@ pub struct InputState {
     pub search_saved: String,
     pub pending_copy: Option<String>,
     pub notice: String,
+    pub notice_age: u32,
     pub job: Option<RunningJob>,
     pub tick: usize,
     pub block_until_job_done: bool,
     pub expanded: Vec<usize>,
+    pub infos: Vec<Option<crate::pair_screen::PairInfo>>,
+    pub info_open: Vec<usize>,
 }
 
 impl Default for InputState {
@@ -47,6 +50,8 @@ impl InputState {
             .map(|line| String::from(*line))
             .collect();
         Self {
+            infos: Vec::new(),
+            info_open: Vec::new(),
             mode: Mode::Visual,
             text: String::new(),
             history,
@@ -63,6 +68,7 @@ impl InputState {
             search_saved: String::new(),
             pending_copy: None,
             notice: String::new(),
+            notice_age: 0,
             job: None,
             tick: 0,
             block_until_job_done: false,
@@ -90,7 +96,7 @@ impl InputState {
 
     fn copy_boxes(&mut self, key: &str) {
         let text = match key {
-            "c" => self.rows_of_box(self.focus).map(|rows| rows.join("\n")),
+            "c" => self.rows_of_box_c(self.focus).map(|rows| rows.join("\n")),
             "p" => {
                 let first = self.focus - self.focus % 2;
                 let mut rows = self.rows_of_box(first).unwrap_or_default();
@@ -114,7 +120,7 @@ impl InputState {
         };
         match text {
             Some(text) => {
-                self.notice = format!("copied {} chars", text.chars().count());
+                self.notice = self.copy_notice(text.lines().count(), self.copy_running(key));
                 self.pending_copy = Some(text);
             }
             None => self.notice = String::from("nothing to copy"),
@@ -132,8 +138,55 @@ impl InputState {
         }
         rows.extend(self.rows_of_box(last * 2 + 1).unwrap_or_default());
         let text = rows.join("\n");
-        self.notice = format!("copied {} chars", text.chars().count());
+        self.notice = self.copy_notice(text.lines().count(), self.job.is_some());
         self.pending_copy = Some(text);
+    }
+
+    fn toggle_info(&mut self) {
+        let index = self.focus / 2;
+        if let Some(at) = self.info_open.iter().position(|m| *m == index) {
+            self.info_open.remove(at);
+        } else {
+            self.info_open.push(index);
+        }
+    }
+
+    fn rows_of_box_c(&self, flat: usize) -> Option<Vec<String>> {
+        let mut rows = self.rows_of_box(flat)?;
+        if flat % 2 == 1 && self.info_open.contains(&(flat / 2)) {
+            rows.extend(self.info_rows(flat / 2));
+        }
+        Some(rows)
+    }
+
+    pub fn info_rows(&self, index: usize) -> Vec<String> {
+        let Some(Some(info)) = self.infos.get(index) else {
+            return vec![String::from("no info")];
+        };
+        let time = match info.duration {
+            Some(span) => format!("{:.2}s", span.as_secs_f64()),
+            None => format!(
+                "running {:.1}s",
+                info.started.elapsed().as_secs_f64()
+            ),
+        };
+        let exit = match info.exit {
+            Some(Some(number)) => number.to_string(),
+            Some(None) => String::from("stopped"),
+            None => String::from("-"),
+        };
+        let count = self
+            .pairs
+            .get(index)
+            .map(|pair| pair.output.rows.len())
+            .unwrap_or(0);
+        vec![
+            format!("time  {}", time),
+            format!("exit  {}", exit),
+            format!("by    {}", info.by),
+            format!("cwd   {}", info.cwd),
+            format!("rows  {}", count),
+        ]
     }
 
     fn toggle_expand(&mut self) {
@@ -288,6 +341,10 @@ impl InputState {
             }
         }
         if let Some(code) = finished {
+            if let Some(Some(info)) = self.infos.last_mut() {
+                info.duration = Some(info.started.elapsed());
+                info.exit = Some(code);
+            }
             match code {
                 Some(0) => {}
                 Some(number) => pair.output.rows.push(format!("exit {}", number)),
@@ -340,6 +397,10 @@ impl InputState {
         }
         let number = self.pairs.len() + 1;
         let line = std::mem::take(&mut self.text);
+        let started = std::time::Instant::now();
+        let cwd = std::env::current_dir()
+            .map(|path| path.display().to_string())
+            .unwrap_or_default();
         let output_rows = if self.run_commands && crate::command_runner::is_fullscreen_line(&line) {
             crate::command_runner::request_fullscreen(&line);
             vec![String::from("running full screen")]
@@ -348,6 +409,23 @@ impl InputState {
         } else {
             vec![String::from("not run yet")]
         };
+        while self.infos.len() < self.pairs.len() {
+            self.infos.push(None);
+        }
+        let running = self.job.is_some();
+        let finished_ok = !running && self.run_commands;
+        self.infos.push(Some(crate::pair_screen::PairInfo {
+            started,
+            duration: if running {
+                None
+            } else {
+                Some(std::time::Duration::ZERO)
+            },
+            exit: if finished_ok { Some(Some(0)) } else { None },
+            cwd,
+            by: std::env::var("AIU_ACTOR")
+                .unwrap_or_else(|_| String::from("user")),
+        }));
         self.pairs.push(CommandPair {
             command: BoxFrame {
                 title: format!("command {}", number),
@@ -400,6 +478,7 @@ impl InputState {
                             self.cursor = None;
                             self.notice = String::from("input cleared");
                         }
+                        "o" => self.toggle_info(),
                         "y" => self.copy_last(false),
                         "Y" => self.copy_last(true),
                         "/" => self.open_search(),
@@ -661,5 +740,49 @@ mod tests {
         press_code(&mut state, KeyCode::Esc);
         type_text(&mut state, "q");
         assert!(state.quit);
+    }
+}
+
+impl InputState {
+    pub fn flashing(&self) -> bool {
+        self.notice.starts_with("copied") || self.notice == "nothing to copy" || self.notice == RUNNING_NOTICE
+    }
+
+    pub fn age_notice(&mut self) {
+        if !self.flashing() {
+            self.notice_age = 0;
+            return;
+        }
+        self.notice_age += 1;
+        if self.notice_age > 20 {
+            self.notice.clear();
+            self.notice_age = 0;
+        }
+    }
+}
+
+pub const RUNNING_NOTICE: &str = "❗ RUNNING COMMAND ❗";
+
+impl InputState {
+    pub fn pair_running(&self, pair: usize) -> bool {
+        self.job.is_some() && pair + 1 == self.pairs.len()
+    }
+
+    fn copy_running(&self, key: &str) -> bool {
+        match key {
+            "c" | "p" => self.pair_running(self.focus / 2),
+            _ => self
+                .marked
+                .iter()
+                .any(|flat| self.pair_running(*flat / 2)),
+        }
+    }
+
+    fn copy_notice(&self, lines: usize, running: bool) -> String {
+        if running {
+            String::from(RUNNING_NOTICE)
+        } else {
+            format!("copied {} lines", lines)
+        }
     }
 }

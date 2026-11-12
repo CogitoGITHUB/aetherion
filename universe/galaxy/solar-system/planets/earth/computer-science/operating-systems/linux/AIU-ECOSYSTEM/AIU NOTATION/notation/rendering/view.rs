@@ -12,7 +12,7 @@ struct View<'a> {
     plain: bool,
     out: String,
     last_blank: bool,
-    counters: [u32; 12],
+    numbers: notation::numbering::HeadingNumbers,
     seen_title: bool,
     problems: Vec<String>,
 }
@@ -246,10 +246,7 @@ impl<'a> View<'a> {
         match b.name.as_str() {
             "section" => {
                 let d = (depth + 1).min(11);
-                self.counters[d] += 1;
-                for k in d + 1..12 { self.counters[k] = 0; }
-                let label: Vec<String> = (1..=d).map(|k| self.counters[k].to_string()).collect();
-                let label = label.join(".");
+                let label = self.numbers.number_at(b.line).unwrap_or("").to_string();
                 let title = b.children.iter().find_map(|n| match n { Node::Block(c) if c.name == "title" => Some(c), _ => None });
                 match title {
                     Some(t) => {
@@ -290,16 +287,6 @@ impl<'a> View<'a> {
             }
             "paragraph" | "comment" => { self.gap(); self.paragraph(b); }
             "code" => { self.gap(); self.code(b); }
-            "heading" => {
-                let lv = decl(b, "level").and_then(|v| v.parse::<u32>().ok()).filter(|n| *n >= 1).unwrap_or(1);
-                let mut codes = if lv == 1 { vec![1, 36] } else { vec![1] };
-                codes.extend(self.style(b));
-                self.gap();
-                let t = self.text_of(b);
-                let s = self.sgr(&codes, &t);
-                self.out(&s);
-                self.gap();
-            }
             other => {
                 self.gap();
                 let s = self.sgr(&[2, 33], &format!("? unknown block: {}", other));
@@ -322,7 +309,7 @@ pub fn render_view(text: &str, width: usize, plain: bool, contracts: bool) -> St
     }
     let mut v = View {
         text, lines: text.split('\n').collect(), starts, cols: width.saturating_sub(2), plain,
-        out: String::new(), last_blank: true, counters: [0; 12], seen_title: false, problems: Vec::new(),
+        out: String::new(), last_blank: true, numbers: notation::numbering::HeadingNumbers::of(&tree), seen_title: false, problems: Vec::new(),
     };
     for n in &tree.nodes {
         v.node(n, 0);

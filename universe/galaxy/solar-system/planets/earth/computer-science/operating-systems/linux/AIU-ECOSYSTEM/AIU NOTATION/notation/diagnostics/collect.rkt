@@ -45,7 +45,8 @@
     section-missing
     section-out-of-order
     rule-violated
-    question-unverified))
+    question-unverified
+    duplicate-name))
 
 ;; link is the keyword a link declaration carries. A link is not a property:
 ;; a property is a hint for a reader, and a link names a target. The parser
@@ -68,7 +69,32 @@
   (define lines (page-lines page))
   (define targets (link-targets who (outline-nodes o)))
   (append (append-map (lambda (n) (walk-node lines who targets n)) (outline-nodes o))
-          (type-findings lines who (outline-nodes o))))
+          (type-findings lines who (outline-nodes o))
+          (duplicate-name-findings who (outline-nodes o))))
+
+;; duplicate-name-findings reports a block whose name: is already used by an
+;; earlier block of the same page. A block that carries a target is a link:
+;; the box it shows is a copy, so its children are not counted.
+(define (duplicate-name-findings who nodes)
+  (define seen (make-hash))
+  (define (visit n)
+    (cond
+      [(block-node? n)
+       (define name (property-of n (quote name)))
+       (define first-line (and name (hash-ref seen name #f)))
+       (when (and name (not first-line))
+         (hash-set! seen name (block-node-line n)))
+       (append
+        (if first-line
+            (list (finding (quote duplicate-name) who (block-node-line n) 0
+                           (format "the name ~a is already used by the block at line ~a" name first-line)
+                           "give this block its own name, a name is the link target and must be unique"))
+            (list))
+        (if (property-of n (quote target))
+            (list)
+            (append-map visit (block-node-children n))))]
+      [else (list)]))
+  (append-map visit nodes))
 
 ;; type-findings checks a page against the file type it declares with kind: on its
 ;; first block. A page with no kind: is not checked, so every old page stays valid.

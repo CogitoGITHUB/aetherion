@@ -20,8 +20,13 @@
       (let loop ([at (simplify-path (current-directory))])
         (define up (simplify-path (build-path at "..")))
         (cond [(directory-exists? (build-path at "ecosystem-manifest")) at]
-              [(equal? at up) #f]
+              [(equal? at up) (saved-root)]
               [else (loop up)]))))
+
+(define (saved-root)
+  (define f (build-path (find-system-path (quote home-dir)) ".local" "state" "aiu-ecosystem" "root"))
+  (define s (and (file-exists? f) (string-trim (file->string f))))
+  (and s (directory-exists? s) (string->path s)))
 
 (define (data-home)
   (define named (getenv "XDG_DATA_HOME"))
@@ -199,6 +204,7 @@
         (putenv "CARGO_PROFILE_RELEASE_CODEGEN_UNITS" "16")
         (putenv "CARGO_PROFILE_RELEASE_DEBUG" "0")
         (printf "live: building ~a in its source folder, target ~a\n" name (path->string target))
+        (putenv "PATH" (string-append (getenv "HOME") "/.cargo/bin:" (or (getenv "PATH") "")))
         (define exe (find-executable-path (car live-argv)))
         (define rc
           (if exe
@@ -229,6 +235,45 @@
            0])])]))
 
 (define (do-live-racket spec name src)
+  (define installs (cdr (cadr (assq (quote install) (cdr spec)))))
+  (define steps (cdr (cadr (assq (quote build) (cdr spec)))))
+  (define exe-step
+    (for/first ([s (in-list steps)]
+                #:when (and (pair? s) (eq? (car s) (quote run)) (>= (length s) 3)
+                            (list? (list-ref s 2)) (member "exe" (list-ref s 2))))
+      s))
+  (define entry
+    (and exe-step (path->string (build-path src (car (reverse (list-ref exe-step 2)))))))
+  (define live (build-path (prefix-dir) name "live"))
+  (make-directory* live)
+  (define (clear! link)
+    (define-values (base file-name must-be-dir) (split-path link))
+    (make-directory* base)
+    (when (or (link-exists? link) (file-exists? link)) (delete-file link)))
+  (define n
+    (for/sum ([b (in-list installs)])
+      (cond
+        [(and (pair? b) (eq? (car b) (quote copy-tree)))
+         (define link (build-path live (caddr b)))
+         (clear! link)
+         (make-file-or-directory-link (build-path src (cadr b)) link)
+         1]
+        [(and (pair? b) (eq? (car b) (quote bin)) entry)
+         (define link (build-path live (caddr b)))
+         (clear! link)
+         (display-to-file
+          (string-append "#!/bin/sh\nexport LANG=C.UTF-8 LC_ALL=C.UTF-8 PLTCOMPILEDROOTS=\"$HOME/aiu-compiled\"\nexec \"" (racket-bin) "\" -y \"" entry "\" \"$@\"\n")
+          link)
+         (file-or-directory-permissions link #o755)
+         1]
+        [else 0])))
+  (cond
+    [(= n 0) (printf "live: ~a has nothing to link\n" name) 1]
+    [else
+     (flip-link! name live)
+     (printf "live: ~a runs from its source folder, edits load after a restart, no build\n" name)
+     0]))
+(define (do-live-racket-old spec name src)
   (define installs (cdr (cadr (assq (quote install) (cdr spec)))))
   (define live (build-path (prefix-dir) name "live"))
   (make-directory* live)

@@ -51,7 +51,7 @@ def require-pinned-version [] {
 
 # -> string, the Racket this script measures
 def racket-exe [] {
-    let exe = ($nu.home-dir | path join "opt" "racket" "bin" "racket")
+    let exe = ($nu.home-dir | path join "opt" "racket-full" "bin" "racket")
     if not ($exe | path exists) {
         print --stderr $"startup: racket not found at ($exe)"
         exit $EXIT_NO_RACKET

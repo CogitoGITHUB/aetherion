@@ -63,6 +63,7 @@ fn run_screen() {
         };
         state.poll_job();
         state.tick += 1;
+        state.age_notice();
         if let Some(Event::Paste(text)) = &incoming {
             state.paste(text);
         }

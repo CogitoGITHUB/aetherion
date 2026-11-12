@@ -28,8 +28,8 @@
     (path->string (resolve-path (build-path "/proc" (number->string deepest) "cwd")))))
 
 (define (racket-executable)
-  (define exec "racket")
-  (or (find-executable-path exec) exec))
+  (define exec (path->string (build-path (find-system-path (quote home-dir)) "opt" "racket-full" "bin" "racket")))
+  exec)
 
 (define (bars-link-open)
   (putenv "LC_ALL" "C.utf8")

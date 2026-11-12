@@ -54,7 +54,6 @@ pub enum ErrorKind {
     UnclosedBlock,
     UnknownBlockName,
     MissingTitle,
-    BadHeadingLevel,
 }
 
 // ErrorKind holds the methods every error kind shares, so a caller does
@@ -68,7 +67,6 @@ impl ErrorKind {
             ErrorKind::UnclosedBlock => "unclosed-block",
             ErrorKind::UnknownBlockName => "unknown-block-name",
             ErrorKind::MissingTitle => "missing-title",
-            ErrorKind::BadHeadingLevel => "bad-heading-level",
         }
     }
 }
@@ -350,26 +348,6 @@ pub fn parse(buffer: &Buffer) -> Tree {
                         first_is_title = name == "title";
                     }
                     // A heading carries its depth in a `level:` declaration. A
-                    // level that cannot be read is reported on the declaration
-                    // line itself, and the heading falls back to level 1 so the
-                    // numbering never counts a level it could not read.
-                    if name == "heading" {
-                        for declaration in &declarations {
-                            if declaration.keyword == "level"
-                                && heading_level(std::slice::from_ref(declaration)).is_none()
-                            {
-                                push_error(
-                                    &mut open,
-                                    &mut top,
-                                    bad_heading_level(
-                                        declaration.span,
-                                        buffer.line_at(declaration.span.start),
-                                        &declaration.value,
-                                    ),
-                                );
-                            }
-                        }
-                    }
                     open.push(Block {
                         name,
                         span,
@@ -537,36 +515,6 @@ fn unknown_name(span: Span, line: usize, name: &str) -> ErrorNode {
     }
 }
 
-/// The level a heading block declares, or the default level 1.
-///
-/// A heading carries its depth in a `level:` declaration, so the block name
-/// stays one name instead of one name per depth. A heading with no `level:`
-/// line is a first-level heading. A `level:` value that is not a whole number
-/// of 1 or more is a `bad-heading-level` error and the block falls back to
-/// level 1, so the numbering never counts a level it could not read.
-pub fn heading_level(declarations: &[Declaration]) -> Option<u32> {
-    for declaration in declarations {
-        if declaration.keyword == "level" {
-            return match declaration.value.trim().parse::<u32>() {
-                Ok(level) if level >= 1 => Some(level),
-                _ => None,
-            };
-        }
-    }
-    None
-}
-
-/// The error a heading block gets when its `level:` value cannot be read.
-fn bad_heading_level(span: Span, line: usize, value: &str) -> ErrorNode {
-    ErrorNode {
-        kind: ErrorKind::BadHeadingLevel,
-        span,
-        line,
-        opener_line: None,
-        what: format!("the heading level \"{}\" is not a whole number of 1 or more", value),
-        what_to_do: "write the level as a number, for example \"level: 2\"".to_string(),
-    }
-}
 
 /// The 1-based line and character column of a byte offset, for a diagnosis.
 pub fn place_of(buffer: &Buffer, offset: usize) -> LineCol {

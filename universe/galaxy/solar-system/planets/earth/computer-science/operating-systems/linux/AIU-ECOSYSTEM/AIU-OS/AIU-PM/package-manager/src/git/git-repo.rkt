@@ -1023,7 +1023,7 @@
   ;; no PATH search, so the child could not exec and this test waited out
   ;; its whole bound. Both readers of this test are the same racket.
   (define racket-exe
-    (or (find-executable-path "racket") (find-system-path 'exec-file)))
+    (build-path (find-system-path (quote home-dir)) "opt" "racket-full" "bin" "racket"))
   (define holder
     (process* racket-exe (path->string holder-path)))
   (define holder-pid (list-ref holder 2))

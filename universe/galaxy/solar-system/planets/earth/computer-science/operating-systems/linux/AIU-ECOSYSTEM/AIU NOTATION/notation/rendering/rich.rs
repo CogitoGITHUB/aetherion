@@ -186,9 +186,7 @@ fn block_section(
     let columns = width.saturating_sub(indent + column_count(mark));
     let mut section = match block.name.as_str() {
         "title" => heading_lines(&body, columns, indent),
-        // A heading is a title with a number in front of it. The number is
-        // computed from where the heading sits, never written by the author.
-        "heading" => numbered_heading_lines(&body, columns, indent, numbers.number_at(block.line)),
+        "section" => String::new(),
         "paragraph" => paragraph_lines(&body, columns, indent, mark),
         "code" => code_box_lines(&body, columns, indent),
         // The parser turns an unregistered name into an error node before a
@@ -200,7 +198,7 @@ fn block_section(
     for child in &block.children {
         push_section(
             &mut section,
-            &render_node_rich(child, buffer, width, depth + 1, numbers),
+            &child_rich(block, child, buffer, width, depth, numbers),
         );
     }
     section
@@ -462,4 +460,26 @@ fn push_section(out: &mut String, section: &str) {
         out.push('\n');
     }
     out.push_str(section);
+}
+/// One child of a block. The title inside a section is drawn with the
+/// number of that section, every other child as usual.
+fn child_rich(
+    parent: &Block,
+    child: &Node,
+    buffer: &Buffer,
+    width: usize,
+    depth: usize,
+    numbers: &HeadingNumbers,
+) -> String {
+    if parent.name == "section" {
+        if let Node::Block(c) = child {
+            if c.name == "title" {
+                let indent = indent_for(depth + 1, width);
+                let body = lines_of_span(c.span, buffer, &readable_comments(c, buffer));
+                let columns = width.saturating_sub(indent);
+                return numbered_heading_lines(&body, columns, indent, numbers.number_at(parent.line));
+            }
+        }
+    }
+    render_node_rich(child, buffer, width, depth + 1, numbers)
 }

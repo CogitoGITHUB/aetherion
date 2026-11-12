@@ -76,3 +76,11 @@ pub fn draw_pairs(frame: &mut Frame, pairs: &[CommandPair]) {
         }
     }
 }
+
+pub struct PairInfo {
+    pub started: std::time::Instant,
+    pub duration: Option<std::time::Duration>,
+    pub exit: Option<Option<i32>>,
+    pub cwd: String,
+    pub by: String,
+}

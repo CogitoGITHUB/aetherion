@@ -45,14 +45,14 @@
     "")
   (define middle
     (append (if (has? "keys")
-                (if (or (pair? pending) (unbox menu-pinned) (not (member layer (list "visual" "write")))) (map (lambda (r) (body-line r width)) (let ([ls (string-split (menu-text layer pending (max 20 (- width 4))) "\n" #:trim? #f)]) ls)) (list (body-line (format "trigger ~a~a  ·  press ~a for keys" (bar-kname trig) waiting (bar-kname trig)) width)))
+                (if (or (pair? pending) (unbox menu-pinned) (not (member layer (list "visual" "write")))) (map (lambda (r) (body-line r width)) (let ([ls (string-split (menu-text layer pending (max 20 (- width 4))) "\n" #:trim? #f)]) ls)) null)
                 null)
             (if (and (has? "save") (unbox unsaved))
                 (list (edge-line "├" "┤" "save" "" width) (body-line "unsaved  SPC s saves" width))
                 null)))
   (if (null? names)
       null
-      (append (list (edge-line "╭" "╮" title stamp width)) middle (list (clock-rule-line "╰" "╯" width (and (has? "time") #t) (and (has? "date") #t))))))
+      (append (list (edge-line "╭" "╮" title stamp width)) middle (list (string-append "╰" (make-string (max 0 (- width 2)) (string-ref "─" 0)) "╯")))))
 
 (define (keys-body-rows layer pending width)
   (define trig (let ([t (assoc layer trigger-of)]) (if t (cdr t) "-")))
@@ -60,7 +60,7 @@
     (if (pair? pending) (format "  waiting after ~a" (string-join (map bar-kname pending) " ")) ""))
   (if (or (pair? pending) (unbox menu-pinned) (not (member layer (list "visual" "write"))))
       (map (lambda (r) (body-line r width)) (string-split (menu-text layer pending (max 20 (- width 4))) "\n" #:trim? #f))
-      (list (body-line (format "trigger ~a~a  ·  press ~a for keys" (bar-kname trig) waiting (bar-kname trig)) width))))
+      null))
 
 (define (cell-chars name layer g)
   (cond

@@ -406,7 +406,7 @@
     (node->block node o page-bytes)))
 
 ;; node->block describes one block. What a block becomes depends on its name:
-;; a title and a paragraph become their words, a heading becomes its level,
+;; a title and a paragraph become their words, a chapter title is its words,
 ;; its number and its words, a table becomes its shape, and anything else
 ;; becomes a data block that holds its words as a string.
 (define (node->block node o page-bytes)
@@ -415,10 +415,6 @@
   (cond
     [(eq? name 'title) (list 'title words)]
     [(eq? name 'paragraph) (list 'paragraph words)]
-    [(eq? name 'heading)
-     (list 'heading (list 'level (heading-level-of node)
-                          'number (or (number-at o (block-node-line node)) "")
-                          'text words))]
     [(eq? name 'table) (list 'table (table->spec (read-table node)))]
     ;; A code block keeps its own name in the JSON, because a code block is
     ;; not the same thing as a data block: its body was never read as
@@ -509,12 +505,6 @@
   (cond
     [(eq? kind 'title) (json-object-set! obj "title" spec)]
     [(eq? kind 'paragraph) (json-object-set! obj "paragraph" spec)]
-    [(eq? kind 'heading)
-     (json-object-set! obj "heading" (json-object '()))
-     (define inner (json-object-ref obj "heading"))
-     (json-object-set! inner "level" (spec-ref 'level spec 1))
-     (json-object-set! inner "number" (spec-ref 'number spec ""))
-     (json-object-set! inner "text" (spec-ref 'text spec ""))]
     [(eq? kind 'table)
      (json-object-set! obj "table" (table->json spec))]
     ;; A code block keeps its own key, so that a page that goes to JSON and
@@ -567,18 +557,13 @@
      (raise-err 'json "json.rkt" "a block object holds no key; a block says what it is")]
     [(string=? (car (car entries)) "title") (list 'title (cdr (car entries)))]
     [(string=? (car (car entries)) "paragraph") (list 'paragraph (cdr (car entries)))]
-    [(string=? (car (car entries)) "heading")
-     (define inner (cdr (car entries)))
-     (list 'heading (list 'level (json-ref inner "level" 1)
-                          'number (json-ref inner "number" "")
-                          'text (json-ref inner "text" "")))]
     [(string=? (car (car entries)) "table")
      (list 'table (json->table-spec (cdr (car entries))))]
     [(string=? (car (car entries)) "code") (list 'code (cdr (car entries)))]
     [(string=? (car (car entries)) "data") (list 'data (cdr (car entries)))]
     [else
      (raise-err 'json "json.rkt"
-                (format "~a is not a key a block may hold; the keys are title, paragraph, heading, table, code and data"
+                (format "~a is not a key a block may hold; the keys are title, paragraph, table, code and data"
                         (car (car entries))))]))
 
 ;; json->table-spec turns a JSON table object into a described table.

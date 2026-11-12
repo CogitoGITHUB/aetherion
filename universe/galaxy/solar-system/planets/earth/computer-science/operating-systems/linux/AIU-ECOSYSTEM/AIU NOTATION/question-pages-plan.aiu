@@ -57,43 +57,11 @@ section end
 
 section start
 title start
-Section 2: next questions
+Section 2: answered questions, see section 13
 title end
 
 paragraph start
-Existing answers point at ids like qadd5fe. Should each current question become a contract file that keeps its id, so no answer is orphaned?
-paragraph end
-
-paragraph start
-How is a contract file named inside its type folder: by its id, by a short title, or by a number?
-paragraph end
-
-paragraph start
-Where does the file type condition go, for example plan only: inside the contract next to the section condition?
-paragraph end
-
-paragraph start
-When does the notation system attach contracts: when the block is created, on every save, or on check? If the contract file changes later, do the attached copies update?
-paragraph end
-
-paragraph start
-How is read only enforced: the editor refuses edits inside the contract block, or the checker reports a changed contract?
-paragraph end
-
-paragraph start
-Does the right side todo mark apply to every existing todo line too, and what does populated mean: the contract has text, or the block has an answer?
-paragraph end
-
-paragraph start
-LSP: a real server over stdio now, or editor integration first and the server later?
-paragraph end
-
-paragraph start
-A subdirectory with its own .notation/ but no folder for some block type: fall back to the parent for that type, or no contracts for it?
-paragraph end
-
-paragraph start
-Do the required section lists stay in the file types for now, or move into .notation/ too?
+All nine questions of this section are answered in section 13 on 2026-11-12: every current question becomes a contract file that keeps its id, the file is named by its id, the file type condition sits inside the contract, the editor attaches contracts when it makes a block and every save re-syncs them, read only is enforced by the editor and by check, the todo mark applies to every todo, editor integration comes first and the LSP server later, a subdirectory without a folder for a type falls back to the parent, and the required section lists move into .notation/ as contracts.
 paragraph end
 
 section end
@@ -104,7 +72,7 @@ Section 3: the database comes first
 title end
 
 paragraph start
-Status: the contracts work is paused. The database is built first, because contracts, links, files and everything else will read from it.
+Status: resumed 2026-11-12. The database engine core and the indexers are done (section 12), so the contracts work continues, see section 13.
 paragraph end
 
 paragraph start
@@ -346,6 +314,45 @@ paragraph end
 
 paragraph start
 Open, in order: name filler for old blocks that have none, duplicate name as a check error, link as a registered block type, block types loaded per file in the folder command, then links and sync, the red delete popup in our own file manager, and idle autosave after 5 seconds.
+paragraph end
+
+section end
+
+section start
+title start
+Section 13: contract work order, decided 2026-11-12
+title end
+
+paragraph start
+Storage: one contract file per question, inside .notation/TYPE/ of the nearest directory base, named by its id. There is no single questions page. Every current question becomes a contract file and keeps its id, so no answer is orphaned.
+paragraph end
+
+paragraph start
+Creation: contracts are made and edited in the text editor, as files. There is no creation command and no TUI.
+paragraph end
+
+paragraph start
+Condition and text: the file type condition sits inside the contract next to the section condition. A contract is free text with no counting rules.
+paragraph end
+
+paragraph start
+Attaching: the editor attaches the contracts when it makes a block. aiu notation and every save sync them again, so a changed contract file updates every attached copy. Read only: the editor refuses edits inside a contract block, and check reports an attached contract that differs from its file.
+paragraph end
+
+paragraph start
+Todo mark: the right side mark applies to every todo. A contract counts as populated when its block has an answer.
+paragraph end
+
+paragraph start
+Inheritance: a .notation/ applies to its directory and every subdirectory. A subdirectory with its own .notation/ but no folder for some type falls back to the parent. Block types follow the same rule.
+paragraph end
+
+paragraph start
+Lists: the required section lists move into .notation/ as contracts. The hard coded the-contracts lists in filetypes/types are deleted after the contract files exist. LSP: editor integration first, the server later. The contract work is no longer paused, the database core and the indexers are done.
+paragraph end
+
+paragraph start
+Order of work: step 1, block type holes: fill name on old blocks, duplicate name as a check error, register link as a block type and let the indexer read link blocks, load block types per file, move how each type is drawn into its blocktypes file. Step 2, contracts: seed the contract files with ids kept, the loader, the missing contract error, delete the hard coded lists, fix filetypes/types/README.md. Step 3: links and sync, the red delete popup in our own file manager, idle autosave, the ecosystem server.
 paragraph end
 
 section end

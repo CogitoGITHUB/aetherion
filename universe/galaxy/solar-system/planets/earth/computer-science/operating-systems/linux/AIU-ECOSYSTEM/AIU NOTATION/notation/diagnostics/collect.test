@@ -1,6 +1,6 @@
 test mod-kinds
 level 2
 module ../../AIU NOTATION/notation/diagnostics/collect.rkt
-call (list? finding-kinds)
+call (let* ([ro (dynamic-require (quote (file "/root/home/shape/Ætherion/universe/galaxy/solar-system/planets/earth/computer-science/operating-systems/linux/AIU-ECOSYSTEM/AIU NOTATION/notation/model/outline.rkt")) (quote read-outline))] [d (lambda (t) (length (filter (lambda (k) (eq? k (quote duplicate-name))) (map finding-kind (collect-findings #f (ro t))))))]) (and (list? finding-kinds) (= 1 (d "NOTATION-DOCUMENT 1\nnode section a 1 0 2 10 0\ndecl name x 1 5\nnode section b 3 11 4 20 0\ndecl name x 3 16\nend\n")) (= 0 (d "NOTATION-DOCUMENT 1\nnode section a 1 0 2 10 0\ndecl name x 1 5\nnode section b 3 11 4 20 0\ndecl name y 3 16\nend\n"))))
 expect result equals #t
 expect seconds-under 20

@@ -32,3 +32,13 @@ Everything is built and installed through the PM. Never run cargo, raco or a sep
 - a failed update also includes the last lines of the server build log (~/.local/state/aiu-ecosystem/dev.log)
 - ecosystem deverrors: print all of them, ecosystem deverrors clear: wipe them
 - the multiplexer dev box shows only the error count
+
+## Launch line (when ecosystem is not on PATH)
+Run from the ecosystem root, one command, log to a file:
+
+export LANG=C.UTF-8 LC_ALL=C.UTF-8 PLTCOMPILEDROOTS=$HOME/aiu-compiled
+$HOME/opt/racket-full/bin/racket "AIU ECOSYSTEM/ecosystem/entry/ecosystem.rkt" live aiu-shell > /tmp/eco-live.log 2>&1
+
+- Replace "live aiu-shell" with any command from the list above.
+- Package name is aiu-shell (it includes aiu-shell-screen), not a crate name.
+- Read the result with: tail -c 1200 /tmp/eco-live.log

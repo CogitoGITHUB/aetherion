@@ -13,16 +13,11 @@
 ;;
 ;;   (list 'title "The first page")
 ;;   (list 'paragraph "The body of the page.")
-;;   (list 'heading (list 'level 2 'number "1.1" 'text "A subheading"))
 ;;   (list 'table (list 'caption "Prices"
 ;;                        'columns (list (list 'name "name" 'type "text" 'optional #f))
 ;;                        'header (list "name")
 ;;                        'rows (list (list 'id "r1" 'cells (list (list "Widget" #t))))))
 ;;   (list 'data <any JSON value>)
-;;
-;; The heading's number is written only as the level, never as the number: the
-;; number is computed from where the heading sits, so a page written from these
-;; blocks has the same numbers as the page it came from.
 ;;
 ;; Who calls it: the from-json command, and any caller that holds blocks as
 ;; data and wants a page.
@@ -49,7 +44,6 @@
   (cond
     [(eq? kind 'title) (simple-block "title" (second block))]
     [(eq? kind 'paragraph) (simple-block "paragraph" (second block))]
-    [(eq? kind 'heading) (heading-text (second block))]
     [(eq? kind 'table) (table-text (second block))]
     ;; A code block is written as a code block, with its body exactly as it
     ;; was, because the body of a code block is text the parser never read.
@@ -57,7 +51,7 @@
     [(eq? kind 'data) (data-text (second block))]
     [else
      (raise-err 'data "aiu-text.rkt"
-                (format "~a is not a block this file can write; the blocks that exist are title, paragraph, heading, table, code and data"
+                (format "~a is not a block this file can write; the blocks that exist are title, paragraph, table, code and data"
                         kind))]))
 
 ;; simple-block writes a block that holds nothing but its words.
@@ -66,18 +60,6 @@
                      (string-trim text)
                      (format "~a end" name))
                "\n"))
-
-;; heading-text writes a heading block. The level is written as a declaration
-;; when it is not the default, so the number that follows from it is computed
-;; by the same rule that numbers every other heading.
-(define (heading-text spec)
-  (define level (lookup 'level spec 1))
-  (define text (lookup 'text spec ""))
-  (define lines (list "heading start"))
-  (unless (= level 1)
-    (set! lines (append lines (list (format "level: ~a" level)))))
-  (set! lines (append lines (list (string-trim text) "heading end")))
-  (string-join lines "\n"))
 
 ;; table-text writes a table block: the caption, the columns, the header and
 ;; the rows, each on its own line with its keyword.

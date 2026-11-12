@@ -41,12 +41,10 @@
   (define tabs-plain (tab-rows tab-file width void))
   (define tabs
     (append (take tabs-plain 2)
-            (list (edge-line "├" "┤" "keys" "" width))
+            (if (null? (keys-body-rows layer pending width)) null (list (edge-line "├" "┤" "keys" "" width)))
             (keys-body-rows layer pending width)
             (drop tabs-plain 2)))
-  (if (and (pair? tabs) (pair? bars) (unbox tab-joined))
-      (append (drop-right tabs 1) (list (join-edge (car bars))) (cdr bars))
-      (append tabs bars)))
+  tabs)
 
 (define (serve)
   (define line (read-line))

@@ -20,7 +20,7 @@
 //! The Racket model has the same rule in its own numbering file, so a page
 //! numbered by the binary and a document numbered by the model agree.
 
-use crate::parser::{heading_level, Block, Node, Tree};
+use crate::parser::{Node, Tree};
 
 /// One heading and the number it was given.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -69,60 +69,44 @@ impl HeadingNumbers {
     }
 }
 
-/// The level a heading block declares, or 1 when it declares none.
-///
-/// A heading with a `level:` value that cannot be read was already reported
-/// by the parser as a `bad-heading-level` error; here it falls back to level
-/// 1 so the numbering never counts a level it could not read.
-fn level_of(block: &Block) -> u32 {
-    heading_level(&block.declarations).unwrap_or(1)
-}
+const NUMBERED: &str = "section";
 
-/// The number of every heading in the tree, in the order the headings appear.
-///
-/// The walk is the tree's own order: a block, then the blocks inside it. A
-/// heading nested inside a paragraph is numbered where it stands, so the
-/// numbering follows the page and not the block names.
 pub fn heading_numbers(tree: &Tree) -> Vec<NumberedHeading> {
     let mut counters: Vec<u32> = Vec::new();
     let mut out: Vec<NumberedHeading> = Vec::new();
     for node in &tree.nodes {
-        walk(node, &mut counters, &mut out);
+        walk(node, 0, &mut counters, &mut out);
     }
     out
 }
 
-/// Number the headings inside one node, then the nodes inside it.
-fn walk(node: &Node, counters: &mut Vec<u32>, out: &mut Vec<NumberedHeading>) {
+fn walk(node: &Node, depth: u32, counters: &mut Vec<u32>, out: &mut Vec<NumberedHeading>) {
     if let Node::Block(block) = node {
-        if block.name == "heading" {
-            let level = level_of(block);
-            take_number(counters, level);
+        let mut inner = depth;
+        if block.name == NUMBERED {
+            inner = depth + 1;
+            take_number(counters, inner);
             out.push(NumberedHeading {
-                number: number_text(counters, level),
-                level,
+                number: number_text(counters, inner),
+                level: inner,
                 line: block.line,
             });
         }
         for child in &block.children {
-            walk(child, counters, out);
+            walk(child, inner, counters, out);
         }
     }
 }
 
-/// Take the next number at this level and restart every deeper level.
 fn take_number(counters: &mut Vec<u32>, level: u32) {
     let index = (level - 1) as usize;
     while counters.len() <= index {
         counters.push(0);
     }
     counters[index] += 1;
-    // Every deeper level restarts, because a new heading at this level puts
-    // the headings under it back at their first number.
     counters.truncate(index + 1);
 }
 
-/// The number as it is written: the counters up to this level, joined with a dot.
 fn number_text(counters: &[u32], level: u32) -> String {
     let index = (level - 1) as usize;
     let taken: Vec<String> = counters

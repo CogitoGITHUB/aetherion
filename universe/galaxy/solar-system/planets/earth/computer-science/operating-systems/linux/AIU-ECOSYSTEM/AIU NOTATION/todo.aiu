@@ -10,37 +10,22 @@ Next
 title end
 
 paragraph start
-todo: notation question pages: the questions each paragraph, section and to-do type must answer live in an editable page at the base of a directory, not hard coded; every file in that directory and its subdirectories takes those questions, and the notation system reports an error where a file lacks an answer after the page changes. Idea only, not designed yet.
+todo: contract loader: contracts-of reads the contract files from the nearest .notation/TYPE/ folder up the tree, one file per question named by its id, replacing the hard coded the-contracts lists in filetypes/types; a subdirectory with its own .notation/ but no folder for a type falls back to the parent; plan section 13 step 2.
 Planned.
 paragraph end
 
 paragraph start
-todo: question page loader: contracts-of reads rules and questions from a questions.aiu page found at the nearest directory base up the tree, replacing the hard coded the-contracts lists in filetypes/types.
+todo: missing contract error: check reports a finding where a paragraph, section or to-do type has no contract file, where an answer points at an id with no contract file, and where an attached contract differs from its file; plan section 13 step 2.
 Planned.
 paragraph end
 
 paragraph start
-todo: missing question error: check reports a finding where a paragraph, section or to-do type has no question in the page, and where an answer points at a question id that no longer exists.
+todo: stale types readme: filetypes/types/README.md still names notation system/ and gate/check.nu; point it at the real paths and at the contract files in .notation/.
 Planned.
 paragraph end
 
 paragraph start
-todo: stale types readme: filetypes/types/README.md still names notation system/ and gate/check.nu; point it at the real paths and at the question pages.
-Planned.
-paragraph end
-
-paragraph start
-todo: delete hard coded contracts: seed .questions.aiu from the current rules and questions with their ids, then remove every the-contracts list from filetypes/types.
-Planned.
-paragraph end
-
-paragraph start
-todo: notation create command and TUI: list file types and block kinds, add, edit or remove a rule or question, write the nearest dot page; plan in question-pages-plan.aiu.
-Planned.
-paragraph end
-
-paragraph start
-todo: notation database: engine core and the files, blocks, links, names, tags, todos indexers are done and the folder command notation index saves .notation/index.db; the open parts are filed as their own to-dos
+todo: seed contract files: write one contract file per current rule and question with its id kept (answers point at ids like qadd5fe), then remove every the-contracts list from filetypes/types; plan section 13 step 2.
 Planned.
 paragraph end
 
@@ -82,12 +67,42 @@ Planned.
 paragraph end
 
 paragraph start
-todo: names: fill name: on old blocks that have none, and make a duplicate name a check error instead of a stderr line
+todo: names: fill name: on old blocks that have none
 Planned.
 paragraph end
 
 paragraph start
 todo: ecosystem server: the notation database is reachable through the shared ecosystem server so the editor, shell and multiplexer read the same index; plan in ecosystem-server-plan.aiu
+Planned.
+paragraph end
+
+paragraph start
+todo: book: every page type is book style. The book type has only title, section, paragraph, code, comment and answer. Add cover, title page, copyright page, preface, table of contents, chapters, figures, footnotes, references, bibliography, index and volume as block types in its blocktypes file
+Planned.
+paragraph end
+
+paragraph start
+todo: book edition: page numbers belong to one edition of a book. Generate contents, index and cross references from the tree, then page boundaries, headers and footers. Open decision: terminal page preview only, or also PDF export
+Planned.
+paragraph end
+
+paragraph start
+todo: numbering visible: the viewer already computes heading numbers (data/aiu-text.rkt) but no file shows them. Show the number on every block of every page, also flat pages with nothing nested. Numbers stay computed, never stored
+Planned.
+paragraph end
+
+paragraph start
+todo: table writing: a good way to write a table in the editor in the table start form of data/table.rkt. Insert a skeleton with caption, columns, header and one row, and check cells against columns. No HTML or LaTeX work
+Planned.
+paragraph end
+
+paragraph start
+todo: json mapping: to-json and from-json exist in data/json.rkt. Write what is lost (comments, formatting) in the types README and add a round trip test. The shell side is aiu-shell, nothing new
+Planned.
+paragraph end
+
+paragraph start
+todo: book plan: the full plan for books, sciences, skills, writing and reading mode, marks on the sides and compiled checklists is in book-plan.aiu. Work it step by step, close the holes of section 8 first, and write every change into that file
 Planned.
 paragraph end
 

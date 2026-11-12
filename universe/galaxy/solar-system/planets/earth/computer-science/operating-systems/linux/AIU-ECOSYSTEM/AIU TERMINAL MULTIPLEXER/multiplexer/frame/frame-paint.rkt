@@ -72,6 +72,7 @@
   (for ([entry (in-list entries)] #:when (> (length entry) 7))
     (define-values (x y width height grid scroll focused?) (apply values (for/list ([value (in-list entry)] [i (in-range 7)]) value)))
     (write-string (format "\u001b[~a;~aH\u001b[0m~a" (+ bar-count y 1) (+ x 1) (edge-line "┏" "┓" (list-ref entry 7) (list-ref entry 8) width)) out))
+  (for ([entry (in-list entries)] #:when (> (length entry) 9)) (define-values (x y width height) (apply values (for/list ([value (in-list entry)] [i (in-range 4)]) value))) (let ([e (string (integer->char 27))]) (write-string (format "~a[~a;~aH~a[0m~a" e (+ bar-count y height) (+ x 1) e (edge-line "┗" "┛" (list-ref entry 9) (list-ref entry 10) width)) out)))
   (for ([entry (in-list entries)])
     (define-values (x y width height grid scroll focused?) (apply values (for/list ([value (in-list entry)] [i (in-range 7)]) value)))
     (when (and focused? (pane-grid-shown grid) (zero? scroll) (pane-fits? grid width height))

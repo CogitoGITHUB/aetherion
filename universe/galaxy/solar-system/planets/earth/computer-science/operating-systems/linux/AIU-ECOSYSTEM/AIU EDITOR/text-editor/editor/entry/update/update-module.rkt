@@ -3,7 +3,7 @@
 
 (define (module-answer modpath expr)
   (define-values (code out)
-    (capture editor-root (or (find-executable-path "racket") "racket")
+    (capture editor-root (path->string (build-path (find-system-path (quote home-dir)) "opt" "racket-full" "bin" "racket"))
              (list "-l" "racket/base" "-e" (format "(require (file ~s))" modpath) "-e" "(display \"RESULT:\")" "-e" (format "(write ~a)" expr))))
   (define m (regexp-match #px"(?s:RESULT:(.*))$" out))
   (values (and (= code 0) m (string-trim (cadr m))) out))

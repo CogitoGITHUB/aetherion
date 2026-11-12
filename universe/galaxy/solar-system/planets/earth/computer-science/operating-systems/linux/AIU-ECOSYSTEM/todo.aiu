@@ -167,26 +167,6 @@ Planned.
 paragraph end
 
 paragraph start
-todo: dev mode server 2026-11-11: aiu-shell starts the ecosystem server by itself at launch; a dev mode flag file in the aiu-pm folder is read by the server, the multiplexer and the screen.
-Planned.
-paragraph end
-
-paragraph start
-todo: dev mode live 2026-11-11: while dev mode is on, changes load in real time with incremental builds. Leaving dev mode with its key builds everything that changed through the PM fingerprints.
-Planned.
-paragraph end
-
-paragraph start
-todo: dev mode keys 2026-11-11: two new keys in aiu-shell-screen, d turns dev mode on or off and D builds everything changed through the PM; both also work in the multiplexer.
-Planned.
-paragraph end
-
-paragraph start
-todo: multiplexer boxes 2026-11-11: a server status box at the top, and a red DEV MODE ACTIVE box detached from the tabs, shown only while dev mode is on.
-Planned.
-paragraph end
-
-paragraph start
 todo: pm only 2026-11-11: every build goes through the PM and the server, no separate builds; the multiplexer pane program now comes from the aiu-pm prefix, not the debug path.
 Planned.
 paragraph end
@@ -200,8 +180,13 @@ paragraph start
 todo: final build 2026-11-11: one full build of everything that changed at the end of this plan, using all CPU power, with the phone idle.
 Planned.
 paragraph end
-
-paragraph start
-todo: dev errors 2026-11-11: failed builds write the compile text to dev-errors/NAME.log; the dev box shows the count; ecosystem deverrors prints them.
-Planned.
-paragraph end
+2026-11-11 plan: find-root falls back to the saved root file (~/.local/state/aiu-ecosystem/root) so the server update build finds the manifest
+2026-11-11 plan: do-live-racket writes a launcher (racket -y ENTRY) into live/bin so ecosystem and multiplexer are live without raco exe
+2026-11-11 plan: remove every bare racket call (frame-bars.rkt, git-repo.rkt, startup.nu) so only opt/racket-full 9.3 is used; editor update-module.rkt left alone, system racket package removal after he sees the command
+2026-11-11 done: frame-bars.rkt and git-repo.rkt use opt/racket-full 9.3 only
+2026-11-11 done: startup.nu uses opt/racket-full
+2026-11-11 done: editor update-module.rkt uses opt/racket-full (he approved)
+2026-11-11 done: system racket removed, only opt/racket-full 9.3 remains
+2026-11-12 plan: mux DEV MODE in red on the pane top edge, needs per-cell color; the git box comes back as a line later
+2026-11-12 plan: shell bar: remove the trigger SPC, press SPC for keys line
+2026-11-11 plan: optional: move the mode line into the pane bottom edge

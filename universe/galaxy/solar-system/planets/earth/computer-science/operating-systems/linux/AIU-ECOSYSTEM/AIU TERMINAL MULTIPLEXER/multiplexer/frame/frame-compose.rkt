@@ -89,6 +89,7 @@
     (put-char! bottom (+ x width -1) (list-ref chars 3))
     (when (> (length entry) 7)
       (put-text! top x (edge-line "┏" "┓" (list-ref entry 7) (list-ref entry 8) width)))
+    (when (> (length entry) 9) (put-text! bottom x (edge-line "┗" "┛" (list-ref entry 9) (list-ref entry 10) width)))
     (when (and focused? fits? (zero? scroll) (pane-grid-shown grid))
       (set! cursor (list (+ top 1 (pane-grid-cursor-row grid))
                          (+ x 1 (pane-grid-cursor-column grid))

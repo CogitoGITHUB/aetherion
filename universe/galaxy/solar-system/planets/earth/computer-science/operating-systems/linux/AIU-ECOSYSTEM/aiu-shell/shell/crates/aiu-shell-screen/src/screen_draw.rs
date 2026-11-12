@@ -27,8 +27,11 @@ fn wrap_box_rows(rows: &[String], limit: usize) -> Vec<String> {
 }
 
 pub fn draw_screen(frame: &mut Frame, state: &InputState) {
+    let input_height: u16 = if state.mode == Mode::Visual && !state.flashing() { 0 } else { INPUT_HEIGHT };
     let full_area = frame.area();
-    let bar = crate::bar_view::bar_lines(state, full_area.width as usize, full_area.height, INPUT_HEIGHT + search_box_height(state, full_area.height));
+    let in_flow = !state.pairs.is_empty();
+    let center = !in_flow && input_height > 0 && state.mode != Mode::Search;
+    let bar = if center { crate::status_bar::status_lines(full_area.width as usize, full_area.height as usize / 3) } else if in_flow { Vec::new() } else { crate::bar_view::bar_lines(state, full_area.width as usize, full_area.height, input_height + search_box_height(state, full_area.height)) };
     let area = Rect {
         x: full_area.x,
         y: full_area.y,
@@ -39,9 +42,10 @@ pub fn draw_screen(frame: &mut Frame, state: &InputState) {
         return;
     }
     let search_height = search_box_height(state, area.height);
-    let pairs_height = area.height - INPUT_HEIGHT - search_height;
-    crate::bar_view::draw_bar(frame, &bar, full_area, pairs_height);
+    let pairs_height = area.height - input_height - search_height;
+    crate::bar_view::draw_bar(frame, &bar, full_area, 0);
     let width = area.width as usize;
+    let flow_bar = if in_flow { crate::bar_view::flow_rows(state, width) } else { Vec::new() };
     let mut lines: Vec<Line> = Vec::new();
     let mut focus_start: usize = 0;
     let mut focus_end: usize = 0;
@@ -53,8 +57,12 @@ pub fn draw_screen(frame: &mut Frame, state: &InputState) {
         for (current, _base, flat) in boxes {
             let focused = state.mode == Mode::Visual && state.focus == flat;
             let marked = state.marked.contains(&flat);
+let start_track = if state.mode == Mode::Visual { focused } else { flat / 2 + 1 == state.pairs.len() && flat % 2 == 0 };
+let end_track = if state.mode == Mode::Visual { focused } else { flat / 2 + 1 == state.pairs.len() };
             let failed = output_failed(&pair.output.rows);
-            let color = if failed {
+            let color = if state.pair_running(pair_index) {
+Color::Rgb(110, 110, 110)
+} else if failed {
                 Color::Red
             } else if state.mode == Mode::Visual && !focused && !marked {
                 Color::Rgb(110, 110, 110)
@@ -68,7 +76,7 @@ pub fn draw_screen(frame: &mut Frame, state: &InputState) {
             if marked {
                 style = style.add_modifier(Modifier::UNDERLINED);
             }
-            if focused {
+            if start_track {
                 focus_start = lines.len();
             }
             let running_box = state.job.is_some() && flat + 1 == state.pairs.len() * 2;
@@ -86,19 +94,38 @@ pub fn draw_screen(frame: &mut Frame, state: &InputState) {
             };
             let mut shown_box = shown_box;
             if running_box {
-                shown_box.title = format!("{} {} running", shown_box.title, spinner_frame(state.tick));
+                shown_box.title = format!("❗command running❗ {}", spinner_frame(state.tick));
             }
             for text in shown_box.lines(width) {
                 lines.push(Line::from(Span::styled(text, style)));
             }
-            if focused {
+            if flat % 2 == 1 && state.info_open.contains(&pair_index) {
+                let info_box = BoxFrame {
+                    title: format!("info {}", pair_index + 1),
+                    rows: state.info_rows(pair_index),
+                };
+                for text in info_box.lines(width) {
+                    lines.push(Line::from(Span::styled(text, style)));
+                }
+            }
+            if end_track {
                 focus_end = lines.len();
             }
         }
     }
+    if !flow_bar.is_empty() {
+        let _ = lines.pop();
+        for text in flow_bar {
+            let white = Style::default().fg(Color::White);
+            lines.push(Line::from(Span::styled(text, white)));
+        }
+        if state.mode != Mode::Visual {
+            focus_end = lines.len();
+        }
+    }
     let window = pairs_height as usize;
     let mut skip = lines.len().saturating_sub(window);
-    if state.mode == Mode::Visual {
+    if !state.pairs.is_empty() {
         let middle = (focus_start + focus_end) / 2;
         let pad = window / 2;
         let mut padded: Vec<Line> = Vec::new();
@@ -133,6 +160,7 @@ pub fn draw_screen(frame: &mut Frame, state: &InputState) {
         ),
     };
     let mut row = state.text.replace("\n", "⏎");
+    if state.flashing() { row = state.notice.clone(); }
     if state.mode == Mode::Insert || state.mode == Mode::Search {
         row.push_str("█");
     }
@@ -150,9 +178,33 @@ pub fn draw_screen(frame: &mut Frame, state: &InputState) {
         x: area.x,
         y: area.y + pairs_height + bar.len() as u16,
         width: area.width,
-        height: INPUT_HEIGHT,
+        height: input_height,
     };
-    let text = input_box.lines(width).join("\n");
+    let mut input_lines = input_box.lines(width);
+    let mut input_rect = input_rect;
+    if center {
+        let mut group = crate::bar_view::start_rows(width);
+        if let Some(top) = input_lines.first_mut() {
+            let body: String = top.chars().skip(1).collect();
+            let keep = body.chars().count().saturating_sub(1);
+            let middle: String = body.chars().take(keep).collect();
+            *top = format!("├{}┤", middle);
+        }
+        let dir_len = group.len() as u16;
+        let total = dir_len + input_lines.len() as u16;
+        group.extend(input_lines);
+        let mid = full_area.height / 2;
+        let limit = full_area.height.saturating_sub(total);
+        let top_y = mid.saturating_sub(dir_len + 1).min(limit);
+        input_rect = Rect {
+            x: area.x,
+            y: full_area.y + top_y,
+            width: area.width,
+            height: total.min(full_area.height),
+        };
+        input_lines = group;
+    }
+    let text = input_lines.join("\n");
     frame.render_widget(Paragraph::new(text).style(Style::default().fg(color)), input_rect);
     draw_search(frame, state, area, pairs_height + bar.len() as u16, search_height);
     crate::bar_view::draw_menu(frame, state, area);
@@ -170,7 +222,7 @@ fn spinner_frame(tick: usize) -> char {
 
 fn input_title(state: &InputState, title: &str) -> String {
     if state.job.is_some() {
-        format!("{} running  ctrl+c or ctrl+d stops", spinner_frame(state.tick))
+        String::new()
     } else if (state.mode == Mode::Visual) && !state.notice.is_empty() {
         format!("{}  {}", state.notice, title)
     } else {
@@ -192,7 +244,7 @@ fn search_box_height(state: &InputState, screen_height: u16) -> u16 {
     wanted.max(4).min(screen_height.saturating_sub(INPUT_HEIGHT + 1))
 }
 
-fn search_row(state: &InputState, position: usize, inner: usize) -> Line {
+fn search_row(state: &InputState, position: usize, inner: usize) -> Line<'_> {
     let (row_index, positions) = &state.search_matches[position];
     let row = &state.search_rows[*row_index];
     let selected = position == state.search_index;

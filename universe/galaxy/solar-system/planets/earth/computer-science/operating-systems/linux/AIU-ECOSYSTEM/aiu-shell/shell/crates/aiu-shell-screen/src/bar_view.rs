@@ -4,11 +4,8 @@ use ratatui::layout::Rect;
 use ratatui::style::{Color, Style};
 use ratatui::widgets::{Clear, Paragraph};
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::Mutex;
-use std::time::{SystemTime, UNIX_EPOCH};
 
 static MENU_OPEN: AtomicBool = AtomicBool::new(false);
-static CLOCK_CACHE: Mutex<(u64, String)> = Mutex::new((0, String::new()));
 
 pub fn toggle_menu() {
     MENU_OPEN.fetch_xor(true, Ordering::Relaxed);
@@ -22,26 +19,6 @@ fn menu_open() -> bool {
     MENU_OPEN.load(Ordering::Relaxed)
 }
 
-fn clock_text() -> String {
-    let minute = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map(|elapsed| elapsed.as_secs() / 60)
-        .unwrap_or(0);
-    let mut cache = match CLOCK_CACHE.lock() {
-        Ok(guard) => guard,
-        Err(_) => return String::new(),
-    };
-    if cache.1.is_empty() || cache.0 != minute {
-        let shown = std::process::Command::new("date")
-            .arg("+%H:%M  %Y-%m-%d")
-            .stdin(std::process::Stdio::null())
-            .output()
-            .map(|out| String::from_utf8_lossy(&out.stdout).trim().to_string())
-            .unwrap_or_default();
-        *cache = (minute, shown);
-    }
-    cache.1.clone()
-}
 
 fn cut(text: &str, width: usize) -> String {
     text.chars().take(width).collect()
@@ -69,22 +46,7 @@ fn body_line(text: &str, width: usize) -> String {
     format!("│ {} │", pad(text, inner))
 }
 
-fn clock_rule_line(width: usize) -> String {
-    let stamp = clock_text();
-    let used = 8 + stamp.chars().count();
-    if stamp.is_empty() || width < used + 6 {
-        return rule_line("╰", "╯", width);
-    }
-    format!("╰{}┤ {} ├────╯", "─".repeat(width - 2 - used), stamp)
-}
 
-fn mode_label(state: &InputState) -> &str {
-    match state.mode {
-        Mode::Visual => "visual general",
-        Mode::Insert => "insert",
-        Mode::Search => "search",
-    }
-}
 
 fn directory_path() -> String {
     std::env::current_dir()
@@ -99,18 +61,37 @@ fn directory_name() -> String {
         .unwrap_or_default()
 }
 
-fn bar_rows(state: &InputState, width: usize) -> Vec<String> {
-    let title = format!("{} [any] · {}", mode_label(state), directory_name());
-    let hint = match state.mode {
-        Mode::Visual => "trigger SPC  ·  press SPC for keys",
-        Mode::Insert => "esc visual  enter run  up down history  ctrl+r search",
-        Mode::Search => "type to filter  enter use  esc close",
-    };
+fn bar_rows(_state: &InputState, width: usize) -> Vec<String> {
+    let title = directory_name();
     vec![
         edge_line("╭", "╮", &title, width),
-        body_line(hint, width),
-        clock_rule_line(width),
+        rule_line("╰", "╯", width),
     ]
+}
+
+pub fn flow_rows(state: &InputState, width: usize) -> Vec<String> {
+    if width < 24 {
+        return Vec::new();
+    }
+    let by = state
+        .infos
+        .last()
+        .and_then(|info| info.as_ref())
+        .map(|info| info.by.clone())
+        .unwrap_or_else(|| String::from("user"));
+    let title = format!("{}: {}", by, directory_name());
+    let mut rows = bar_rows(state, width);
+    rows[0] = edge_line("╭", "╮", &title, width);
+    let first: Vec<char> = rows[0].chars().collect();
+    let middle: String = first[1..first.len() - 1].iter().collect();
+    rows[0] = format!("├{}┤", middle);
+    rows
+}
+
+pub fn start_rows(width: usize) -> Vec<String> {
+    let mut rows = tab_rows(width);
+    rows.pop();
+    rows
 }
 
 fn tab_rows(width: usize) -> Vec<String> {

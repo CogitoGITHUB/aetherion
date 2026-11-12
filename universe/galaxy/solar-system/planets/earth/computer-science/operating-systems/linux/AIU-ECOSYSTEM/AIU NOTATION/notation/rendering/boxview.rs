@@ -27,7 +27,7 @@ struct Boxes {
     starts: Vec<usize>,
     width: usize,
     plain: bool,
-    counters: [u32; 12],
+    numbers: notation::numbering::HeadingNumbers,
     seen_title: bool,
     problems: Vec<String>,
     cs: Vec<Contract>,
@@ -388,12 +388,7 @@ impl Boxes {
     /// Draw a section as a box holding its title rows, then its blocks, each in a box of its own.
     fn section(&mut self, b: &Block, depth: usize, width: usize) -> Vec<L> {
         let d = (depth + 1).min(11);
-        self.counters[d] += 1;
-        for k in d + 1..12 {
-            self.counters[k] = 0;
-        }
-        let num: Vec<String> = (1..=d).map(|k| self.counters[k].to_string()).collect();
-        let num = num.join(".");
+        let num = self.numbers.number_at(b.line).unwrap_or("").to_string();
         let title = b.children.iter().find_map(|n| match n { Node::Block(c) if c.name == "title" => Some(c), _ => None });
         let iw = width.saturating_sub(4);
         let mut head: Vec<L> = Vec::new();
@@ -483,10 +478,6 @@ impl Boxes {
                 for l in body {
                     inner.push(self.line(&[32], &clip(&l.replace("\t", "    "), iw)));
                 }
-            }
-            "heading" => {
-                let t = self.text_of(b);
-                inner.extend(self.wrapped(&[1, 36], &t, iw));
             }
             other => {
                 label = format!("unknown block: {}", other);
@@ -590,7 +581,7 @@ pub fn render_boxes(text: &str, width: usize, plain: bool, contracts: bool) -> S
         starts,
         width: width.saturating_sub(2).max(24),
         plain,
-        counters: [0; 12],
+        numbers: notation::numbering::HeadingNumbers::of(&tree),
         seen_title: false,
         problems: Vec::new(),
         cs,
@@ -725,7 +716,7 @@ pub fn fill_page(text: &str) -> Result<(String, Vec<String>), String> {
         starts,
         width: 60,
         plain: true,
-        counters: [0; 12],
+        numbers: notation::numbering::HeadingNumbers::default(),
         seen_title: false,
         problems: Vec::new(),
         cs,

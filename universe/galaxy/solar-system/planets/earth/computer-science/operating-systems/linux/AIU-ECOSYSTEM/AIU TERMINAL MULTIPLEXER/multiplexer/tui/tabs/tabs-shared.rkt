@@ -97,11 +97,11 @@
     (if ready (let ([l (tabs-arranged (cadr have) workspace-order workspace-hidden (tabs-last root))]) (tabs-mark-row l (index-of l (tabs-last root)) inner)) "reading folders"))
   (define buffer-text (tabs-mark-row (unbox tab-buffers) (unbox tab-buffer-current) inner))
   (define sections
-    (append (list (cons "git" (unbox tab-git-text)))
+    (append null
             (if (>= level 3) (list (cons "workspace" workspace-text)) null)
             (if (>= level 2) (list (cons "project" project-text)) null)
-            (if (>= level 2) (list (cons "buffer" buffer-text)) null)
-            (list (cons "tabs" tabs-text))))
+            (list (cons "buffer" buffer-text))
+            null))
   (append (list (edge-line "╭" "╮" (car (car sections)) "" width)
                 (body-line (cdr (car sections)) width))
           (append* (for/list ([s (in-list (cdr sections))])
