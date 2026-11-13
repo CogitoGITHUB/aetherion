@@ -8,7 +8,7 @@ paragraph start
 The default type allows every block and has no required sections. Use it when no other type fits, and pick a stricter type when one does.
 paragraph end
 
-section start
+chapter start
 title start
 Blocks
 title end
@@ -35,14 +35,14 @@ code end
 comment start
 The default type asks that every code block names its language.
 comment end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Nested
 title end
 
-section start
+chapter start
 title start
 A section inside a section
 title end
@@ -50,5 +50,5 @@ title end
 paragraph start
 A section can hold sections, and the viewer numbers them for you.
 paragraph end
-section end
-section end
+chapter end
+chapter end

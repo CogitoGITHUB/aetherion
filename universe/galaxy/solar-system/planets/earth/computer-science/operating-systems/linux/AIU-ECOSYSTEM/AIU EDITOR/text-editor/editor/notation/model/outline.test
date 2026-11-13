@@ -1,6 +1,0 @@
-test mod-outline
-level 2
-module notation/model/outline.rkt
-call (procedure? read-outline)
-expect result equals #t
-expect seconds-under 20

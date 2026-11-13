@@ -5,7 +5,7 @@
 (provide the-type the-contracts)
 
 ;; The journal type.
-(define the-type (file-type "journal" "dated entries of prose" (list "title" "section" "paragraph" "answer")))
+(define the-type (file-type "journal" "dated entries of prose" (list "title" "chapter" "paragraph" "answer")))
 
 ;; The contracts of a journal page. A rule is checked; a question is only reported.
 (define the-contracts

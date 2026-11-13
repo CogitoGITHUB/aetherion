@@ -1,0 +1,8 @@
+title start
+kind: default
+TEST
+title end
+
+paragraph start
+It works.
+paragraph end

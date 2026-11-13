@@ -186,7 +186,7 @@ fn block_section(
     let columns = width.saturating_sub(indent + column_count(mark));
     let mut section = match block.name.as_str() {
         "title" => heading_lines(&body, columns, indent),
-        "section" => String::new(),
+        "chapter" => String::new(),
         "paragraph" => paragraph_lines(&body, columns, indent, mark),
         "code" => code_box_lines(&body, columns, indent),
         // The parser turns an unregistered name into an error node before a
@@ -471,7 +471,7 @@ fn child_rich(
     depth: usize,
     numbers: &HeadingNumbers,
 ) -> String {
-    if parent.name == "section" {
+    if parent.name == "chapter" {
         if let Node::Block(c) = child {
             if c.name == "title" {
                 let indent = indent_for(depth + 1, width);

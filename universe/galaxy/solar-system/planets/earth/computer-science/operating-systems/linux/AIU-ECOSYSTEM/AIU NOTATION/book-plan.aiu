@@ -4,7 +4,7 @@ tags: notation book plan
 Plan: books, sciences, skills and reading mode
 title end
 
-section start
+chapter start
 title start
 Section 1: the idea
 title end
@@ -24,9 +24,9 @@ paragraph end
 paragraph start
 Everything stays computed from structure: numbers, contents, index, cross references, page numbers, checklists. None of it is stored by hand in the page.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 2: vocabulary
 title end
@@ -38,9 +38,9 @@ paragraph end
 paragraph start
 The book parts are block types, each one a .blocktype file: cover, title-page, copyright, preface, contents, chapter, figure, table, footnote, reference, bibliography, index, volume.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 3: two modes over the same source
 title end
@@ -56,9 +56,9 @@ paragraph end
 paragraph start
 Both modes work on the same file. Switching never changes the file. Everything stays keyboard driven.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 4: marks on the sides
 title end
@@ -74,9 +74,9 @@ paragraph end
 paragraph start
 A block can carry more than one mark. One block can feed several views.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 5: views compiled from marks
 title end
@@ -88,9 +88,9 @@ paragraph end
 paragraph start
 Progress (what is ticked, what was practiced, when) is not content. It is stored in its own file or in the database, never in the page, and it points to a block by its permanent name.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 6: connections and the database
 title end
@@ -102,9 +102,9 @@ paragraph end
 paragraph start
 Subdirectories and files for a field are created by the system so the structure stays consistent. This builds on the notation database and the ecosystem server already planned.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 7: order of work
 title end
@@ -140,9 +140,9 @@ paragraph end
 paragraph start
 Rule of work: before each step look for holes and amplifiers, and every time something is updated it is written into these files at once.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 8: holes to close before implementing
 title end
@@ -194,9 +194,9 @@ paragraph end
 paragraph start
 Decided, marks in links: marks are counted only in the original block, never in a shown copy. A routine file only refers to blocks, so it never makes a second step.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 9: amplifiers to consider
 title end
@@ -236,9 +236,9 @@ paragraph end
 paragraph start
 Routines with times: a routine step can carry how often it repeats.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 10: mark blocks and routines
 title end
@@ -270,9 +270,9 @@ paragraph end
 paragraph start
 Holes left: the name of the routine mode and its keys. What the check reports when a routine step points at a block that was moved or deleted. How the routine file is written, one reference block per step. Whether a routine can hold another routine.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 11: what reading mode shows and hides
 title end
@@ -292,9 +292,9 @@ paragraph end
 paragraph start
 Holes left: confirm that meta and format are not hidden by accident. How a shrunk question looks and how it is opened. Exam mode may show answers on demand, kept as an amplifier.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 12: links
 title end
@@ -338,9 +338,9 @@ paragraph end
 paragraph start
 Holes left: whether a link can be a prerequisite in a checklist across files, decided when compiled checklists are built. How a link to a whole book differs from a link to one chapter or one step. How long the trail is kept and whether it survives closing the editor. Whether buffer.rs holds a cursor position the trail can reuse.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 13: files, dirs and introductions
 title end
@@ -388,4 +388,4 @@ paragraph end
 paragraph start
 Remaining, numbering: json.rkt still writes heading. Remove heading everywhere: heading blocktype, parser level checks and bad-heading-level, rich.rs arm, aiu-text.rkt, targets.rkt, security, numbering.test. Rename section to chapter in 13 code files and 12 pages. Record a numbering test.
 paragraph end
-section end
+chapter end

@@ -12,7 +12,7 @@
 ;; The decision type.
 (define the-type
   (file-type "decision" "one decision: context, options, decision, consequences"
-             (list "title" "section" "paragraph" "code" "comment" "answer")))
+             (list "title" "chapter" "paragraph" "code" "comment" "answer")))
 
 ;; The contracts of a decision page. A rule is checked by the checker; a question is only
 ;; reported, because a person or an AI must judge it.

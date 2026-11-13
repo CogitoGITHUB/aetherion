@@ -12,7 +12,7 @@
 ;; The research type.
 (define the-type
   (file-type "research" "abstract, introduction, methods, results, discussion, references"
-             (list "title" "section" "paragraph" "code" "comment" "answer")))
+             (list "title" "chapter" "paragraph" "code" "comment" "answer")))
 
 ;; The contracts of a research page. A rule is checked; a question is only reported.
 (define the-contracts

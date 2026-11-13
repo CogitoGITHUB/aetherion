@@ -1,6 +1,0 @@
-test mod-gwrite
-level 2
-module ../../AIU NOTATION/notation/generation/write.rkt
-call (procedure? send-plans)
-expect result equals #t
-expect seconds-under 20

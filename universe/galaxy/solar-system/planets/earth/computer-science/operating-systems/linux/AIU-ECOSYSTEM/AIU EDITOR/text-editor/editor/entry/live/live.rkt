@@ -34,6 +34,7 @@
   (tab-show! (path->string file))
   (raw-mode)
   (display "\u001b[?1049h")
+    (display "\u001b[2J\u001b[H")
   (dynamic-wind
     (lambda () #f)
     (lambda ()

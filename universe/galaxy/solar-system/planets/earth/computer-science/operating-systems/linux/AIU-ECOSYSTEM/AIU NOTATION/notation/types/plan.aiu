@@ -8,7 +8,7 @@ paragraph start
 Use a plan page for work that has an end. It forces you to say what finished means, so the plan cannot be silently dropped.
 paragraph end
 
-section start
+chapter start
 title start
 Goal
 title end
@@ -21,9 +21,9 @@ asked: Can the goal be stated as one outcome, not an activity?
 Yes. One outcome that someone can time.
 answer end
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Steps
 title end
@@ -50,9 +50,9 @@ paragraph end
 comment start
 A comment inside a block belongs to that block. Use it for a reminder that is not part of the step.
 comment end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Done when
 title end
@@ -65,9 +65,9 @@ asked: Could someone check this without asking the author?
 Yes. Run the guide, then open the public link.
 answer end
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Open questions
 title end
@@ -81,4 +81,4 @@ asked: Who can answer each open question?
 Anna, and nobody else has a second machine.
 answer end
 paragraph end
-section end
+chapter end

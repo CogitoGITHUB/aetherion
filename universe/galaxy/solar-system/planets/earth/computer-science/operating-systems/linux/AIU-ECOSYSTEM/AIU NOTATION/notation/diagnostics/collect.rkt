@@ -351,7 +351,7 @@
 ;; page-section-titles lists the titles of the top-level sections of a page, in page order.
 (define (page-section-titles lines nodes)
   (for/list ([n (in-list nodes)]
-             #:when (and (block-node? n) (eq? (block-node-name n) 'section)))
+             #:when (and (block-node? n) (eq? (block-node-name n) 'chapter)))
     (define t
       (for/first ([c (in-list (block-node-children n))]
                   #:when (and (block-node? c) (eq? (block-node-name c) 'title)))
@@ -423,7 +423,7 @@
    (lambda (n)
      (cond
        [(not (block-node? n)) '()]
-       [(eq? (block-node-name n) 'section)
+       [(eq? (block-node-name n) 'chapter)
         (define t
           (for/first ([c (in-list (block-node-children n))]
                       #:when (and (block-node? c) (eq? (block-node-name c) 'title)))

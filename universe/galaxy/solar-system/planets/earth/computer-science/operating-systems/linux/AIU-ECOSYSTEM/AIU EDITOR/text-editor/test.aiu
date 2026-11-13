@@ -12,7 +12,7 @@ paragraph start
 This page teaches the editor and tests it at once. You are looking at a page drawn as boxes. One block is lit at a time, and the keys below move it, edit it and pick what it moves between. Read a part, press the keys it names, and see the lit block change.
 paragraph end
 
-section start
+chapter start
 title start
 1. Moving between blocks
 title end
@@ -25,7 +25,7 @@ paragraph start
 Space n jumps to the next block and space e to the end of the block. Space u shows more rows of the editor.
 paragraph end
 
-section start
+chapter start
 title start
 Sections nest
 title end
@@ -34,7 +34,7 @@ paragraph start
 This paragraph sits in a section inside a section. The drawing numbers sections for you, and h and t walk into nested sections in page order.
 paragraph end
 
-section start
+chapter start
 title start
 Three levels deep
 title end
@@ -42,11 +42,11 @@ title end
 paragraph start
 The deepest level in this page. If the lit block here matches the box you see, the level by level matching works.
 paragraph end
-section end
-section end
-section end
+chapter end
+chapter end
+chapter end
 
-section start
+chapter start
 title start
 2. Picking what h and t move between
 title end
@@ -75,9 +75,9 @@ paragraph end
 comment start
 Press k and walk: only comments are lit. Press l and walk: only titles are lit.
 comment end
-section end
+chapter end
 
-section start
+chapter start
 title start
 3. Todos
 title end
@@ -106,9 +106,9 @@ paragraph start
 todo: open the cursor cannot land on the todo tray after a block move
 This is a known bug, kept here as a real open todo.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 4. Editing
 title end
@@ -130,9 +130,9 @@ escape     save and leave
 space s    save
 space f    write the whole page
 code end
-section end
+chapter end
 
-section start
+chapter start
 title start
 5. Moving blocks
 title end
@@ -152,9 +152,9 @@ paragraph end
 paragraph start
 Press n and s to move the point left and right inside the block.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 6. The bar, the tabs and finding
 title end
@@ -182,9 +182,9 @@ space k  check the page
 space g  send
 space q  quit
 code end
-section end
+chapter end
 
-section start
+chapter start
 title start
 7. The home screen
 title end
@@ -198,7 +198,7 @@ language: nu
 aiutd test.aiu
 aiutd
 code end
-section end
+chapter end
 
 comment start
 End of the introduction. Press space k to check this page: a page that checks clean is a good sign for the whole editor.

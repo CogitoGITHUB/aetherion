@@ -4,7 +4,7 @@ tags: todo planned
 NOTATION TODO
 title end
 
-section start
+chapter start
 title start
 Next
 title end
@@ -106,4 +106,9 @@ todo: book plan: the full plan for books, sciences, skills, writing and reading 
 Planned.
 paragraph end
 
-section end
+paragraph start
+todo: editor uses notation: the editor builds against AIU NOTATION by path, with no copy in editor/notation, so the two cannot drift.
+Planned.
+paragraph end
+
+chapter end

@@ -84,7 +84,16 @@
 (define (run-editor args)
   (define edit? (and (pair? args) (string=? (car args) "edit")))
   (define tool? (and (pair? args) (member (car args) (list "update" "test" "docs" "trace" "record" "record-module")) #t))
-  (when edit?
+  (when (or (not (getenv "AIU_NOTATION_BIN"))
+          (string=? (getenv "AIU_NOTATION_BIN") ""))
+      (let ([notation-bin
+             (build-path (prefix-dir) "aiu-notation"
+                         "current" "bin" "notation")])
+        (when (file-exists? notation-bin)
+          (putenv "AIU_NOTATION_BIN"
+                  (path->string notation-bin)))))
+
+    (when edit?
     (quick-show (and (pair? (cdr args)) (cadr args))))
   (cond [tool? (update-run args)]
         [(and edit? (terminal-port? (current-input-port)))
@@ -214,7 +223,7 @@
         (define installs (cdr (cadr (assq (quote install) (cdr spec)))))
         (define pairs
           (for/list ([b (in-list installs)] #:when (and (pair? b) (eq? (car b) (quote bin))))
-            (cons (build-path target (substring (cadr b) (add1 (string-length td-name)))) (caddr b))))
+            (cons (if (and (> (string-length (cadr b)) (string-length td-name)) (string=? (substring (cadr b) 0 (string-length td-name)) td-name)) (build-path target (substring (cadr b) (add1 (string-length td-name)))) (build-path src (cadr b))) (caddr b))))
         (cond
           [(not (= rc 0))
            (printf "live: build failed for ~a (exit ~a), the installed version is untouched\n" name rc)
@@ -229,7 +238,7 @@
              (define-values (base file-name must-be-dir) (split-path link))
              (make-directory* base)
              (when (link-exists? link) (delete-file link))
-             (make-file-or-directory-link (car p) link))
+             (make-file-or-directory-link (car p) link)) (for ([b (in-list installs)] #:when (and (pair? b) (eq? (car b) (quote copy-tree)))) (define tl (build-path live (caddr b))) (when (or (link-exists? tl) (file-exists? tl)) (delete-file tl)) (make-file-or-directory-link (build-path src (cadr b)) tl))
            (flip-link! name live)
            (printf "live: ~a runs from the live build; ecosystem dev ~a on exit makes the full build\n" name name)
            0])])]))

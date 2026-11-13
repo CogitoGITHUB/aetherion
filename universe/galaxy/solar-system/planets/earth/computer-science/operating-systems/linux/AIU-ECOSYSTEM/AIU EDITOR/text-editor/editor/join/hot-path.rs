@@ -165,9 +165,6 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
                 ("bytes".to_string(), buffer::byte_len(&state).to_string()),
                 ("pending".to_string(), pending.to_string()),
             ];
-            for (name, value) in git_facts::facts(std::path::Path::new(&file)) {
-                facts.push((name, value));
-            }
             (true, facts)
         }
         rust_exports::OP_INSERT => {

@@ -35,7 +35,7 @@
 (define (walk node depth counters out)
   (when (block-node? node)
     (define inner
-      (if (eq? (block-node-name node) (quote section))
+      (if (eq? (block-node-name node) (quote chapter))
           (add1 depth)
           depth))
     (when (> inner depth)

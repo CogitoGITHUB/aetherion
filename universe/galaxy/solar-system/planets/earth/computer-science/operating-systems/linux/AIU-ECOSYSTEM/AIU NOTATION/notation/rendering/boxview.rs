@@ -283,7 +283,7 @@ impl Boxes {
     fn collect(&self, ns: &[Node], sec: &str, acc: &mut Vec<(String, String)>) {
         for n in ns {
             if let Node::Block(b) = n {
-                if b.name == "section" {
+                if b.name == "chapter" {
                     let t = b.children.iter().find_map(|c| match c { Node::Block(t) if t.name == "title" => Some(t), _ => None });
                     let title = t.map(|t| self.text_of(t)).unwrap_or_default();
                     self.collect(&b.children, &title, acc);
@@ -434,7 +434,7 @@ impl Boxes {
         let mut label = b.name.clone();
         let mut tcodes: Vec<u32> = vec![1];
         match b.name.as_str() {
-            "section" => return self.section(b, depth, width),
+            "chapter" => return self.section(b, depth, width),
             "title" => {
                 let text = self.text_of(b);
                 let mut codes: Vec<u32> = vec![1, 33];
@@ -652,7 +652,7 @@ impl Boxes {
     fn fill_walk(&self, ns: &[Node], sec: &str, add: &mut Vec<(usize, String)>, rep: &mut Vec<String>) {
         for n in ns {
             if let Node::Block(b) = n {
-                if b.name == "section" {
+                if b.name == "chapter" {
                     let t = b.children.iter().find_map(|c| match c { Node::Block(t) if t.name == "title" => Some(t), _ => None });
                     let title = t.map(|t| self.text_of(t)).unwrap_or_default();
                     self.fill_walk(&b.children, &title, add, rep);

@@ -11,7 +11,7 @@
 ;; The plan type.
 (define the-type
   (file-type "plan" "a goal, its steps, when it is done, what is open"
-             (list "title" "section" "paragraph" "comment" "answer")))
+             (list "title" "chapter" "paragraph" "comment" "answer")))
 
 ;; The contracts of a plan page. A rule is checked; a question is only reported.
 (define the-contracts

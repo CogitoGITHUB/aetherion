@@ -8,7 +8,7 @@ paragraph start
 Use a todo page for tasks. Each task is one short paragraph. A todo line under its start line marks it open or done, and sections group tasks by theme.
 paragraph end
 
-section start
+chapter start
 title start
 Open tasks
 title end
@@ -30,9 +30,9 @@ comment start
 Anna may have a spare laptop. Ask her again on Monday. A comment inside a block belongs to that block.
 comment end
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Done
 title end
@@ -50,9 +50,9 @@ todo: done contracts now show on every page
 Show the contracts without a flag.
 paragraph end
 comment end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Ideas
 title end
@@ -64,4 +64,4 @@ paragraph end
 comment start
 The questions under each block come from the todo type. Fill them in with an answer block; the answer is matched to its question by ID, so reordering questions never breaks it.
 comment end
-section end
+chapter end

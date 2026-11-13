@@ -8,7 +8,7 @@ paragraph start
 Use a decision page when you choose between options and want the reason to survive. This one is a worked example, so replace its text with your own.
 paragraph end
 
-section start
+chapter start
 title start
 Context
 title end
@@ -25,9 +25,9 @@ paragraph end
 comment start
 Keep the context short and factual. A stranger should understand it a year from now.
 comment end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Options
 title end
@@ -45,9 +45,9 @@ paragraph start
 todo: ask whether pictures need a fourth option
 Pictures and tables fit none of these options yet.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Decision
 title end
@@ -60,9 +60,9 @@ asked: Is it one choice, stated so someone can act on it?
 Yes. One folder and one format, with no exceptions.
 answer end
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Consequences
 title end
@@ -80,4 +80,4 @@ paragraph start
 todo: done folder created and the first fifty notes moved
 The move started the same week.
 paragraph end
-section end
+chapter end

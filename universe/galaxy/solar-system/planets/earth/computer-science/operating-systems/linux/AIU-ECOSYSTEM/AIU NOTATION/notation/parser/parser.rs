@@ -372,7 +372,7 @@ pub fn parse(buffer: &Buffer) -> Tree {
                   // blocks, never loose text. Its own declaration lines are not stray.
                   let in_section = match open.last() {
                       Some(b) => {
-                          b.name == "section"
+                          b.name == "chapter"
                               && !b.declarations.iter().any(|d| d.span.start == span.start)
                       }
                       None => false,
@@ -756,7 +756,7 @@ fn check_sections(nodes: &mut Vec<Node>) {
     for node in nodes.iter_mut() {
         if let Node::Block(block) = node {
             check_sections(&mut block.children);
-            if block.name == "section" {
+            if block.name == "chapter" {
                 let first = block.children.iter().find_map(|n| match n {
                     Node::Block(b) => Some(b.name.clone()),
                     _ => None,

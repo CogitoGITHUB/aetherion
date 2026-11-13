@@ -69,7 +69,7 @@ impl HeadingNumbers {
     }
 }
 
-const NUMBERED: &str = "section";
+const NUMBERED: &str = "chapter";
 
 pub fn heading_numbers(tree: &Tree) -> Vec<NumberedHeading> {
     let mut counters: Vec<u32> = Vec::new();

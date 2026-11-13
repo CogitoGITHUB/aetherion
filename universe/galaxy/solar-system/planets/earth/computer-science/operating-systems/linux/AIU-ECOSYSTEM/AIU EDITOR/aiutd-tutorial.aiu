@@ -4,7 +4,41 @@ tags: docs aiutd generated
 AIUTD TUTORIAL
 title end
 
-section start
+comment start
+Written by aiutd docs from the feature files whose tests pass. Do not edit by hand.
+comment end
+
+chapter start
+title start
+block-back
+title end
+
+paragraph start
+Recorded from a real run of the keys t t t h.
+paragraph end
+
+paragraph start
+Keys: t t t h
+paragraph end
+
+chapter end
+
+chapter start
+title start
+block-picks
+title end
+
+paragraph start
+Recorded from a real run of the keys p t t e t c t k t.
+paragraph end
+
+paragraph start
+Keys: p t t e t c t k t
+paragraph end
+
+chapter end
+
+chapter start
 title start
 Select, copy and paste
 title end
@@ -17,110 +51,188 @@ paragraph start
 Keys: space v, space y, space p
 paragraph end
 
-section end
+chapter end
 
-comment start
-Written by aiutd docs from the feature files whose tests pass. Do not edit by hand.
-comment end
-
-section start
+chapter start
 title start
-Backspace
+What AIU NOTATION can do
 title end
 
 paragraph start
-Backspace in the write layer takes back the character before the point.
+Read live from the notation files each time aiutd docs runs. A new blocktype file shows here by itself.
 paragraph end
 
-paragraph start
-Keys: space f, backspace
-paragraph end
-
-section end
-
-section start
+chapter start
 title start
-Several cursors
+Block: answer
 title end
 
 paragraph start
-Space c opens the cursor layer, down adds a cursor on the next line, f opens the write layer and typing applies to every cursor.
+The answer block is the answer to one contract question, kept inside the block it judges.
 paragraph end
 
 paragraph start
-Keys: space c, down, f
+Opaque: no
 paragraph end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
-Writing and saving
+Block: chapter
 title end
 
 paragraph start
-Space f opens the write layer, typing adds text, escape leaves it, space s saves the file.
+The chapter block is a block that holds its own title, text and sub-chapters.
 paragraph end
 
 paragraph start
-Keys: space f, escape, space s
+Opaque: no
 paragraph end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
-Moving between blocks
+Block: code
 title end
 
 paragraph start
-Press t to go to the next block of the page.
+The code block is text the parser does not read as notation.
 paragraph end
 
 paragraph start
-Keys: t
+Opaque: yes
 paragraph end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
- Undo layer
+Block: comment
 title end
 
 paragraph start
-Space u opens the undo layer, h steps back to an older saved version, k keeps it as the file.
+The comment block is a block of text the reader drops.
 paragraph end
 
 paragraph start
-Keys: space u, h, k
+Opaque: no
 paragraph end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
-Write layer tab keys
+Block: header
 title end
 
 paragraph start
-In the write layer tab s saves the file and tab tab goes back to the visual layer.
+The header block is the header row of a table.
 paragraph end
 
 paragraph start
-Keys: space f, tab s, tab tab
+Opaque: no
 paragraph end
 
-section end
+chapter end
 
-section start
+chapter start
+title start
+Block: paragraph
+title end
+
+paragraph start
+The paragraph block is ordinary prose, the everyday case.
+paragraph end
+
+paragraph start
+Opaque: no
+paragraph end
+
+chapter end
+
+chapter start
+title start
+Block: row
+title end
+
+paragraph start
+The row block is one row of a table.
+paragraph end
+
+paragraph start
+Opaque: no
+paragraph end
+
+chapter end
+
+chapter start
+title start
+Block: table
+title end
+
+paragraph start
+The table block is a table of rows.
+paragraph end
+
+paragraph start
+Opaque: no
+paragraph end
+
+chapter end
+
+chapter start
+title start
+Block: title
+title end
+
+paragraph start
+The title block is a heading that names the file.
+paragraph end
+
+paragraph start
+Opaque: no
+paragraph end
+
+chapter end
+
+chapter start
+title start
+File types
+title end
+
+paragraph start
+Known file types: book, decision, default, journal, module, note, plan, research, todo.
+paragraph end
+
+chapter end
+
+chapter end
+chapter start
 title start
 How to make tests
 title end
 
 paragraph start
-A test is recorded from a real run, not typed. Run: aiutd record NAME KEYS where KEYS are key names (space, escape, tab, return, up, down, left, right, backspace) or single characters, for example: aiutd record focus-on space z. The command runs the keys in the real editor, compares the screen and the file with a run of no keys, writes gate/tests/NAME.test and editor/features/NAME.feature from what changed, and keeps them only when the new test passes. The keys must end in visual mode, or the run hangs for 15 s. Then run aiutd docs, which writes this tutorial from the passing features. Check with aiutd test --level 2 --only NAME and aiutd update --level 2.
+A test is recorded from a real run, not typed. Run: aiutd record NAME KEYS where KEYS are key names (space, escape, tab, return, up, down, left, right, backspace) or single characters, for example: aiutd record focus-on space z. The command runs the keys in the real editor, compares the screen and the file with a run of no keys, writes gate/tests/NAME.test and editor/features/NAME.feature from what changed, and keeps them only when the new test passes. The keys must end in visual mode, or the run hangs for 15 s. Then run aiutd docs, which writes this tutorial from the passing features. Check with aiutd test --level 2 --only NAME and aiutd update --level 2. A module test calls one expression in one module and compares the printed answer. Run: aiutd record-module NAME MODULE-PATH EXPRESSION, for example: aiutd record-module update-table editor/entry/update/update-table.rkt "(first-n (list 1 2 3) 2)". The command runs the expression twice in a fresh racket, refuses an answer that differs between the two runs or cannot be a stable line, writes NAME.test beside the module and keeps it only when the new test passes. One source file gets one module test; give the expression as a list of several calls to test more than one function. Check with aiutd test --level 2 --only mod-NAME.
 paragraph end
 
-section end
+chapter end
+
+chapter start
+title start
+Commands of aiutd
+title end
+
+paragraph start
+aiutd FILE opens the file in the editor, and aiutd alone says a file is needed.
+aiutd update runs the compile, the tests at a level and the docs.
+aiutd test --level N runs the tests in gate/tests at that level.
+aiutd record NAME KEYS records a test from a real run of the keys.
+aiutd docs runs the test of every feature and writes this tutorial.
+aiutd trace is a tool verb, and the key trace is written to the trace log when AIU_TRACE is set.
+paragraph end
+
+chapter end
 

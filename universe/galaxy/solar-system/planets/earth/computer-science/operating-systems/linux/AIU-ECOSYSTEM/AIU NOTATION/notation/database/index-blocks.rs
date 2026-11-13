@@ -59,7 +59,7 @@ pub fn forget_blocks(store: &mut Store, source: &str) -> Result<(), String> {
 mod tests {
     use super::*;
 
-    const PAGE: &str = "section start\nparagraph start\nhello\nparagraph end\nsection end\n\nparagraph start\nbye\nparagraph end\n";
+    const PAGE: &str = "chapter start\nparagraph start\nhello\nparagraph end\nchapter end\n\nparagraph start\nbye\nparagraph end\n";
 
     fn paragraph_parents(store: &Store) -> Vec<String> {
         store
@@ -77,11 +77,11 @@ mod tests {
         assert_eq!(store.of_kind("block").len(), 3);
         let mut parents = paragraph_parents(&store);
         parents.sort();
-        assert_eq!(parents, vec!["".to_string(), "section".to_string()]);
+        assert_eq!(parents, vec!["".to_string(), "chapter".to_string()]);
         let inner = store
             .of_kind("block")
             .into_iter()
-            .find(|r| r.field("parent") == Some("section"))
+            .find(|r| r.field("parent") == Some("chapter"))
             .unwrap();
         assert_eq!(inner.field("depth"), Some("1"));
     }

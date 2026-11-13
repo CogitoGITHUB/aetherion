@@ -4,7 +4,7 @@ tags: todo aiutd planned
 AIUTD TODO
 title end
 
-section start
+chapter start
 title start
 Reading mode: RSVP and Bionic Reading
 title end
@@ -94,19 +94,19 @@ todo: combine RSVP and Bionic Reading into one reading mode.
 Planned.
 paragraph end
 
-section end
+chapter end
 
 comment start
 Every planned feature, first taken from the old docs (now deleted). Later this page is written by code from the feature registry, and a feature leaves it when its tests pass.
 comment end
 
-section start
+chapter start
 title start
 BORDER ALL THE TIME
 title end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Try by hand and fix
 title end
@@ -159,9 +159,9 @@ paragraph start
 todo: open type with 5 cursors and say if it lags
 Planned.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Speed and start path
 title end
@@ -185,9 +185,9 @@ paragraph start
 todo: open hot path binary lives in /tmp: rebuild or set AIU_HOT_PATH_BIN
 Planned.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Blocks and cursors
 title end
@@ -226,9 +226,9 @@ paragraph start
 todo: open raw line wider than the screen while a block is edited
 Planned.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Marks and bookmarks (docs/parts/plans-from-old-readmes.md)
 title end
@@ -262,9 +262,9 @@ paragraph start
 todo: open automatic marks: last change, last edit block, last visual block
 Planned.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Undo and git
 title end
@@ -313,9 +313,9 @@ paragraph start
 todo: open remove dead code of section 17 if still there
 Planned.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 New editor features
 title end
@@ -364,9 +364,9 @@ paragraph start
 todo: open scan limits (800 pages, 8 repositories, 4 folders deep) configurable
 Planned.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Housekeeping
 title end
@@ -380,23 +380,23 @@ paragraph start
 todo: open key tables of undo, cursor and select layers in the docs
 Planned.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Focus mode
 title end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
 Testing paused
 title end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
 Focus box types
 title end
@@ -405,9 +405,9 @@ paragraph start
 todo: open notation requires a title for every box type
 So that focus level 2 can show a title for each box type, the notation system has to require a title for every box type. This changes AIU NOTATION, a sibling folder, so it is a decision to take there and not a patch from the editor. Owner request 2026-11-01.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Tab management and the key table
 title end
@@ -416,9 +416,9 @@ paragraph start
 todo: tab management needs more features. There is no workspace management, no project management and no keys for them. These need real work: open, switch, close and list workspaces and projects, each with keys. Owner request 2026-11-02.
 todo: the mode line shows the available keys but only the keys alone. It needs a full table of every key with what it does, per layer. Owner request 2026-11-02.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 INSANELY IMPORTANT: the .aiu-memory file
 title end
@@ -428,9 +428,9 @@ todo: a .aiu-memory file kept in the directory the owner works in (workspace or 
 todo: feature 1 of .aiu-memory: the work placement is never lost on exit. Open tabs, their order, the current tab, the cursor and view place of each, and the open workspaces and projects are saved and restored.
 todo: feature 2 of .aiu-memory: workspace settings. A directory or workspace can say which projects it holds and which files and tabs open by themselves when aiutd starts there. The format and the rules need thinking first: where the file lives, what it holds, and how it relates to the plain text .aiu format. It must not use .org files and must not edit AIU NOTATION.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 URGENT: file manager in AIU ECOSYSTEM / FILE MANAGER/
 title end
@@ -440,9 +440,9 @@ todo: clone https://github.com/Canop/broot and https://github.com/alexpasmantier
 todo: combine them into one file manager, then add oil.nvim style editing: the directory is edited as a text buffer and saving applies the renames, moves, deletes and creates.
 todo: make aiutd use this file manager.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 AFTER THE FILE BREAKING: keys, folders and one test per file
 title end
@@ -453,9 +453,9 @@ todo: then sort the files into subfolders by subject. Many files share a subject
 todo: after that, move the key sets into their categories: the keys for tabs go in the tabs folder, and so on, so no key has to be hunted for.
 todo: move the test files the same way. Every file gets its own test file from that point, so the mechanic can test each file properly.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 AIU NOTATION files carry notation in their names
 title end
@@ -464,9 +464,9 @@ paragraph start
 todo: every file of the editor that belongs to AIU NOTATION (its modules, checks, tests and docs) gets notation in its file name, because these files sit in many folders. Then one search for notation finds all of them when AIU NOTATION is updated. Do not edit AIU NOTATION itself.
 todo: do this together with the subject subfolders, and keep the one-way rule: the editor requires the notation files, never the other way round.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Still to do: tests, gate and tui leftovers
 title end
@@ -477,36 +477,36 @@ todo: Rust tests in the gate. The Rust side of the editor gets its own tests, ru
 todo: errortrace run. Run the editor under errortrace once and fix what it finds. The details are in plan.md.
 todo: gutter files. gutter.rkt and gutterview.rkt are loose in editor/tui. Give the gutter its own folder, and give each file its own test file.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 ONE-WAY LINT CHECKS NOTHING
 title end
 paragraph start
 todo: the one-way lint prints NOTHING-TO-CHECK, so it enforces nothing. Find why it sees no Racket files (the project path holds the letter AE), put tui into its area table at its true place (entry and routes already require tui, and the key tables now live in tui folders), and make it fail for real on an upward require.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 TEST FILE PER SOURCE FILE
 title end
 paragraph start
 todo: test file per source file. A key test drives the live editor, so most modules cannot have one. Module tests are recorded with aiutd record-module NAME MODULE-PATH EXPRESSION (one file, one test, gate/tests/mod-NAME.test). A first batch is recorded; the rest of the Racket files follow, the live and tui files with key tests from aiutd record. The Rust files get their tests with the Rust tests in the gate item.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 COPY AND PASTE MECHANISM
 title end
 paragraph start
 todo: copy and paste mechanism. The mechanism in editor/tui/text/clip.rkt (the ring of copies, paste per cursor, the OSC 52 clipboard, the notes in clip-notes.rkt) needs improvements. The owner decides what changes; related items are copy-cut-paste and the OSC 52 clipboard check. Give it its own test file.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 NOTIFICATION HISTORY
 title end
@@ -528,4 +528,4 @@ todo: editor server: the editor has its own server and can connect to the shared
 Planned.
 paragraph end
 
-section end
+chapter end

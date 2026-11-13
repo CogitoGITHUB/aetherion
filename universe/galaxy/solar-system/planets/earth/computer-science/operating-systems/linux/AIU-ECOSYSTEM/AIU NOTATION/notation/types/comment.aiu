@@ -8,7 +8,7 @@ paragraph start
 This page shows two features. A comment can be attached to one block or to several blocks at once. A todo mark puts the word TODO down the left edge of any block.
 paragraph end
 
-section start
+chapter start
 title start
 A comment on one block
 title end
@@ -19,9 +19,9 @@ comment start
 This comment sits inside the paragraph it belongs to. The viewer draws it as its own box inside that block, so you see at once what it is about.
 comment end
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 A comment on two blocks
 title end
@@ -37,9 +37,9 @@ paragraph start
 Second block covered by the same comment.
 paragraph end
 comment end
-section end
+chapter end
 
-section start
+chapter start
 title start
 A todo mark
 title end
@@ -56,4 +56,4 @@ paragraph start
 todo: done viewer fixed, names now sit on the left
 Fix the viewer so block names sit on the left.
 paragraph end
-section end
+chapter end

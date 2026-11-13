@@ -1,6 +1,0 @@
-test mod-html
-level 2
-module ../../AIU NOTATION/notation/data/table-html.rkt
-call (procedure? escape-html)
-expect result equals #t
-expect seconds-under 20

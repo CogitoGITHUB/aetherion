@@ -8,7 +8,7 @@ paragraph start
 Use a book page for long writing: a chapter, a guide or an essay. The title names the chapter and each section covers one part of it.
 paragraph end
 
-section start
+chapter start
 title start
 The idea
 title end
@@ -25,9 +25,9 @@ paragraph end
 comment start
 A comment can sit in a block, or wrap several blocks as in the next section.
 comment end
-section end
+chapter end
 
-section start
+chapter start
 title start
 The method
 title end
@@ -49,4 +49,4 @@ code start
 language: bash
 aiu check page.aiu
 code end
-section end
+chapter end

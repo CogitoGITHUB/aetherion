@@ -99,10 +99,10 @@
 ;; section-text writes one section: its title block, then the blocks inside it (already
 ;; text).
 (define (section-text title body)
-  (string-append "section start\n"
+  (string-append "chapter start\n"
                  (block-text "title" (list title))
                  body
-                 "section end\n\n"))
+                 "chapter end\n\n"))
 
 ;; item-text writes one entry: a paragraph for a string, a code block for a code list, and
 ;; nothing when the type does not allow that block.
@@ -124,7 +124,7 @@
   (define name (file-type-name t))
   (define titles (required-sections-of name))
   (cond
-    [(not (allowed? t "section")) ""]
+    [(not (allowed? t "chapter")) ""]
     [(null? titles) (section-text "First section" (items-text t (text-of name "First section")))]
     [else
      (apply string-append
@@ -154,7 +154,7 @@
     (list "")
     (blk "paragraph" (list "This page shows two features. A comment can be attached to one block or to several blocks at once. A todo mark puts the word TODO down the left edge of any block."))
     (list "")
-    (blk "section"
+    (blk "chapter"
          (append
           (blk "title" (list "A comment on one block"))
           (list "")
@@ -162,7 +162,7 @@
                (append (list "Install the tool on a clean machine and run the checker on one page.")
                        (blk "comment" (list "This comment sits inside the paragraph it belongs to. The viewer draws it as its own box inside that block, so you see at once what it is about.")))))) 
     (list "")
-    (blk "section"
+    (blk "chapter"
          (append
           (blk "title" (list "A comment on two blocks"))
           (list "")
@@ -174,7 +174,7 @@
                 (list "")
                 (blk "paragraph" (list "Second block covered by the same comment."))))))
     (list "")
-    (blk "section"
+    (blk "chapter"
          (append
           (blk "title" (list "A todo mark"))
           (list "")
@@ -196,7 +196,7 @@
     (stack
      (blk "title" (list "kind: todo" "tags: todo viewer" "Todo page: tasks with marks, notes and answers"))
      (blk "paragraph" (list "Use a todo page for tasks. Each task is one short paragraph. A todo line under its start line marks it open or done, and sections group tasks by theme."))
-     (blk "section"
+     (blk "chapter"
           (stack
            (blk "title" (list "Open tasks"))
            (blk "paragraph"
@@ -209,7 +209,7 @@
                 (append (list "todo: waiting for Anna to name the second operating system"
                               "Test the install on a second operating system.")
                         (blk "comment" (list "Anna may have a spare laptop. Ask her again on Monday. A comment inside a block belongs to that block.")))))) 
-     (blk "section"
+     (blk "chapter"
           (stack
            (blk "title" (list "Done"))
            (blk "comment"
@@ -218,7 +218,7 @@
                         (blk "paragraph" (list "todo: done viewer fixed, block names now sit on the left" "Move the block names to the left edge."))
                         (list "")
                         (blk "paragraph" (list "todo: done contracts now show on every page" "Show the contracts without a flag."))))))
-     (blk "section"
+     (blk "chapter"
           (stack
            (blk "title" (list "Ideas"))
            (blk "paragraph" (list "A task with no todo line is just a note. Keep each task under forty words, and split it when it needs more."))
@@ -245,7 +245,7 @@
 
 ;; sec builds a section from its title and the blocks inside it.
 (define (sec title . kids)
-  (blk "section" (apply stack (cons (blk "title" (list title)) kids))))
+  (blk "chapter" (apply stack (cons (blk "title" (list title)) kids))))
 
 ;; note builds a comment from lines of text.
 (define (note . lines)

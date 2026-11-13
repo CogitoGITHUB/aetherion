@@ -1,6 +1,0 @@
-test mod-render
-level 2
-module ../../AIU NOTATION/notation/errors/render.rkt
-call (procedure? render-err)
-expect result equals #t
-expect seconds-under 20

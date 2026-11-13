@@ -1,0 +1,3 @@
+name: chapter
+kind: a block that holds its own title, text and sub-chapters
+opaque: no

@@ -1,6 +1,0 @@
-test mod-scan
-level 2
-module ../../AIU NOTATION/notation/literate/scan.rkt
-call (procedure? scan-chunks)
-expect result equals #t
-expect seconds-under 20

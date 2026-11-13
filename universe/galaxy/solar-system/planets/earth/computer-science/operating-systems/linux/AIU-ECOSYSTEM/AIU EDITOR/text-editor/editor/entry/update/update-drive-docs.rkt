@@ -10,13 +10,13 @@
 (define (howto-section)
   (define p (build-path editor-root "docs" "parts" "how-to-make-tests.md"))
   (if (file-exists? p)
-      (string-append "section start\ntitle start\nHow to make tests\ntitle end\n\nparagraph start\n"
+      (string-append "chapter start\ntitle start\nHow to make tests\ntitle end\n\nparagraph start\n"
                      (string-join (filter (lambda (l) (and (not (regexp-match? #rx"^#" l)) (not (string=? (string-trim l) "")))) (string-split (file->string p) "\n")) " ")
-                     "\nparagraph end\n\nsection end\n")
+                     "\nparagraph end\n\nchapter end\n")
       ""))
 
 (define (cli-section)
-  (string-append "section start\ntitle start\nCommands of aiutd\ntitle end\n\nparagraph start\n"
+  (string-append "chapter start\ntitle start\nCommands of aiutd\ntitle end\n\nparagraph start\n"
                  (string-join (list "aiutd FILE opens the file in the editor, and aiutd alone says a file is needed."
                                     "aiutd update runs the compile, the tests at a level and the docs."
                                     "aiutd test --level N runs the tests in gate/tests at that level."
@@ -24,7 +24,7 @@
                                     "aiutd docs runs the test of every feature and writes this tutorial."
                                     "aiutd trace is a tool verb, and the key trace is written to the trace log when AIU_TRACE is set.")
                               "\n")
-                 "\nparagraph end\n\nsection end\n"))
+                 "\nparagraph end\n\nchapter end\n"))
 (define (do-docs)
   (define fdir (and editor-root (build-path editor-root "editor" "features")))
   (cond
@@ -51,9 +51,9 @@
                "comment start" "Written by aiutd docs from the feature files whose tests pass. Do not edit by hand." "comment end" "")
          (append*
           (for/list ([r (in-list good)])
-            (append (list "section start" "title start" (car r) "title end" "")
+            (append (list "chapter start" "title start" (car r) "title end" "")
                     (append* (for/list ([d (in-list (caddr r))]) (list "paragraph start" d "paragraph end" "")))
-                    (list "paragraph start" (string-append "Keys: " (cadr r)) "paragraph end" "" "section end" "")))))
+                    (list "paragraph start" (string-append "Keys: " (cadr r)) "paragraph end" "" "chapter end" "")))))
         "\n"))
      (define md
        (string-join
@@ -61,8 +61,7 @@
                       "| feature | keys | test notes |" "|---|---|---|")
                 (for/list ([r (in-list good)]) (string-append "| " (car r) " | " (cadr r) " | " (cadddr r) " |")))
         "\n"))
-     (display-to-file (string-append aiu "\n" (howto-section) "\n" (cli-section) "\n") (build-path editor-root ".." "aiutd-tutorial.aiu") #:exists (quote truncate))
-     (display-to-file (string-append md "\n" (parts-text) "\n") (build-path editor-root ".." ".." "ai-starting-point.md") #:exists (quote truncate))
+     (display-to-file (string-append aiu "\n" (notation-section) (howto-section) "\n" (cli-section) "\n") (build-path editor-root ".." "aiutd-tutorial.aiu") #:exists (quote truncate))
      (define ok (andmap (lambda (r) (list-ref r 5)) rows))
      (for ([r (in-list rows)]) (log-step! 2 (string-append "doc:" (car r)) (list-ref r 4)))
      (define lines (for/list ([r (in-list rows)]) (step-line (string-append "doc:" (car r)) (list-ref r 4) (list-ref r 5))))
@@ -73,3 +72,52 @@
 
 
 (provide parts-text howto-section cli-section do-docs)
+
+(define (field-of ls key)
+  (define pre (string-append key ": "))
+  (or (for/first ([l (in-list ls)] #:when (string-prefix? l pre))
+        (substring l (string-length pre)))
+      ""))
+
+(define (notation-root)
+  (build-path editor-root ".." ".." "AIU NOTATION" "notation"))
+
+(define (blocktype-chapters)
+  (define d (build-path (notation-root) "blocktypes"))
+  (define ps
+    (if (directory-exists? d)
+        (sort (filter (lambda (q) (regexp-match? #rx"[.]blocktype$" (path->string q)))
+                      (directory-list d #:build? #t))
+              string<? #:key path->string)
+        (list)))
+  (append*
+   (for/list ([p (in-list ps)])
+     (define ls (file->lines p))
+     (define nm (field-of ls "name"))
+     (list "chapter start" "title start" (string-append "Block: " nm) "title end" ""
+           "paragraph start" (string-append "The " nm " block is " (field-of ls "kind") ".") "paragraph end" ""
+           "paragraph start" (string-append "Opaque: " (field-of ls "opaque")) "paragraph end" ""
+           "chapter end" ""))))
+
+(define (filetype-names)
+  (define d (build-path (notation-root) "filetypes" "types"))
+  (if (directory-exists? d)
+      (sort (for/list ([p (in-list (directory-list d))]
+                       #:when (let ([s (path->string p)])
+                                (not (or (regexp-match? #rx"^_" s) (regexp-match? #rx"README" s)))))
+              (regexp-replace #rx"[.]rkt$" (path->string p) ""))
+            string<?)
+      (list)))
+
+(define (notation-section)
+  (string-append
+   (string-join
+    (append
+     (list "chapter start" "title start" "What AIU NOTATION can do" "title end" ""
+           "paragraph start" "Read live from the notation files each time aiutd docs runs. A new blocktype file shows here by itself." "paragraph end" "")
+     (blocktype-chapters)
+     (list "chapter start" "title start" "File types" "title end" ""
+           "paragraph start" (string-append "Known file types: " (string-join (filetype-names) ", ") ".") "paragraph end" ""
+           "chapter end" "" "chapter end"))
+    "\n")
+   "\n"))

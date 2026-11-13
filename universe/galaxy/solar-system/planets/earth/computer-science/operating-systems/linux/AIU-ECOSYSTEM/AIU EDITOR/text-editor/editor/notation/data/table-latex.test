@@ -1,6 +1,0 @@
-test mod-latex
-level 2
-module ../../AIU NOTATION/notation/data/table-latex.rkt
-call (procedure? escape-latex)
-expect result equals #t
-expect seconds-under 20

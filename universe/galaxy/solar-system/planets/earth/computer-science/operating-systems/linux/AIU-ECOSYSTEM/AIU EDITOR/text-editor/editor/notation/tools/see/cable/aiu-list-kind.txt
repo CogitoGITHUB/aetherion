@@ -1,2 +1,0 @@
-blocks;the block names the parser knows
-types;the file types that load

@@ -4,7 +4,7 @@ tags: notation contracts
 Plan: aiu notation contracts
 title end
 
-section start
+chapter start
 title start
 Section 1: decided so far
 title end
@@ -53,9 +53,9 @@ paragraph start
 The hard coded the-contracts lists in filetypes/types are deleted once their questions exist as contract files.
 paragraph end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 2: answered questions, see section 13
 title end
@@ -64,9 +64,9 @@ paragraph start
 All nine questions of this section are answered in section 13 on 2026-11-12: every current question becomes a contract file that keeps its id, the file is named by its id, the file type condition sits inside the contract, the editor attaches contracts when it makes a block and every save re-syncs them, read only is enforced by the editor and by check, the todo mark applies to every todo, editor integration comes first and the LSP server later, a subdirectory without a folder for a type falls back to the parent, and the required section lists move into .notation/ as contracts.
 paragraph end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 3: the database comes first
 title end
@@ -87,9 +87,9 @@ paragraph start
 Needs: links and backlinks between files and blocks, fast search, direct queries on any file or block, files stay plain text as the source of truth, the index rebuilds from the files at any time.
 paragraph end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 4: database decisions
 title end
@@ -130,9 +130,9 @@ paragraph start
 Engine decision: written from zero in Rust inside notation, with no outside engine, so every feature stays under our control. Cozo, Datascript and the others were looked at and rejected.
 paragraph end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 5: names, links and reuse
 title end
@@ -165,9 +165,9 @@ paragraph start
 Admin files stay in the .notation/ directory: the database index.db, the contracts and anything else the notation system owns.
 paragraph end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 6: decisions on names and shown boxes
 title end
@@ -200,9 +200,9 @@ paragraph start
 Source of truth stays the files. The database finds which files show a box, and the files hold all the text.
 paragraph end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 8: decisions on saving, cycles and deletion
 title end
@@ -243,9 +243,9 @@ paragraph start
 The names registry lives in the database at the ecosystem root, and each directory database reports up to it.
 paragraph end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 10: answers to section 9
 title end
@@ -274,9 +274,9 @@ paragraph start
 Order of work: agreed on 2026-11-06: engine core, indexers one kind at a time, names, links and sync, red delete popup, autosave.
 paragraph end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 11: block types in .notation
 title end
@@ -297,9 +297,9 @@ paragraph start
 Still open: a subdirectory with its own .notation/ but no file for some type, whether it falls back to the parent, the same open question as for contracts; and how each type says how it is drawn.
 paragraph end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 12: progress 2026-11-06
 title end
@@ -316,9 +316,9 @@ paragraph start
 Open, in order: name filler for old blocks that have none, duplicate name as a check error, link as a registered block type, block types loaded per file in the folder command, then links and sync, the red delete popup in our own file manager, and idle autosave after 5 seconds.
 paragraph end
 
-section end
+chapter end
 
-section start
+chapter start
 title start
 Section 13: contract work order, decided 2026-11-12
 title end
@@ -355,4 +355,4 @@ paragraph start
 Order of work: step 1, block type holes: fill name on old blocks, duplicate name as a check error, register link as a block type and let the indexer read link blocks, load block types per file, move how each type is drawn into its blocktypes file. Step 2, contracts: seed the contract files with ids kept, the loader, the missing contract error, delete the hard coded lists, fix filetypes/types/README.md. Step 3: links and sync, the red delete popup in our own file manager, idle autosave, the ecosystem server.
 paragraph end
 
-section end
+chapter end

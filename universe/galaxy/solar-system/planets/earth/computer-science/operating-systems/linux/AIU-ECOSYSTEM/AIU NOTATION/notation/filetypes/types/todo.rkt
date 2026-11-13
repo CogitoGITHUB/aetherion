@@ -5,7 +5,7 @@
 (provide the-type the-contracts)
 
 ;; The todo type.
-(define the-type (file-type "todo" "tasks grouped in sections" (list "title" "section" "paragraph" "comment" "answer")))
+(define the-type (file-type "todo" "tasks grouped in sections" (list "title" "chapter" "paragraph" "comment" "answer")))
 
 ;; The contracts of a todo page. A rule is checked; a question is only reported.
 (define the-contracts

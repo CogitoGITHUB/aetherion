@@ -4,7 +4,7 @@ tags: journal workshop
 Journal page: a week in the workshop
 title end
 
-section start
+chapter start
 title start
 Monday: the viewer day
 title end
@@ -17,9 +17,9 @@ asked: What happened, and what was decided or learned?
 The viewer changed. I decided to keep the letters in the wall and hang the description under the box.
 answer end
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Tuesday: contracts and answers
 title end
@@ -33,4 +33,4 @@ asked: What happened, and what was decided or learned?
 Answers match by ID. I learned that the checker was counting nested lines, and fixed it.
 answer end
 paragraph end
-section end
+chapter end

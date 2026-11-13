@@ -66,7 +66,7 @@ pub fn duplicate_names(store: &Store) -> Vec<(String, Vec<String>)> {
 mod tests {
     use super::*;
 
-    const PAGE: &str = "paragraph start\nname: paragraph-one\nhello\nparagraph end\n\nsection start\nname: section-two\nparagraph start\nname: paragraph-three\nbye\nparagraph end\nsection end\n\nparagraph start\nunnamed\nparagraph end\n";
+    const PAGE: &str = "paragraph start\nname: paragraph-one\nhello\nparagraph end\n\nchapter start\nname: section-two\nparagraph start\nname: paragraph-three\nbye\nparagraph end\nchapter end\n\nparagraph start\nunnamed\nparagraph end\n";
 
     #[test]
     fn each_named_block_gets_one_record_and_unnamed_blocks_none() {

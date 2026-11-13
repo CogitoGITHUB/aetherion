@@ -244,7 +244,7 @@ impl<'a> View<'a> {
     fn block(&mut self, b: &Block, depth: usize) {
         let first = b.children.iter().find_map(|n| if let Node::Block(c) = n { Some(c) } else { None });
         match b.name.as_str() {
-            "section" => {
+            "chapter" => {
                 let d = (depth + 1).min(11);
                 let label = self.numbers.number_at(b.line).unwrap_or("").to_string();
                 let title = b.children.iter().find_map(|n| match n { Node::Block(c) if c.name == "title" => Some(c), _ => None });
@@ -385,7 +385,7 @@ impl<'a> View<'a> {
     fn placed<'t>(&self, nodes: &'t [Node], sec: &str, acc: &mut Vec<(&'t Block, String)>) {
         for n in nodes {
             if let Node::Block(b) = n {
-                if b.name == "section" {
+                if b.name == "chapter" {
                     let t = b.children.iter().find_map(|c| match c {
                         Node::Block(t) if t.name == "title" => Some(t),
                         _ => None,

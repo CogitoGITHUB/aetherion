@@ -8,7 +8,7 @@ paragraph start
 Use a research page when you investigate one question and want a reader to find the method and the results at once.
 paragraph end
 
-section start
+chapter start
 title start
 Abstract
 title end
@@ -21,9 +21,9 @@ asked: Does it state the question, the method, the result and a limit?
 Yes. It names the question, the method, the result and one limit.
 answer end
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Introduction
 title end
@@ -36,9 +36,9 @@ asked: Does it say why the question matters?
 Yes. The cost is paid every day, for years.
 answer end
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Methods
 title end
@@ -60,9 +60,9 @@ code end
 comment start
 A command goes in a code block so a reader can copy it. Always write the language under the start line.
 comment end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Results
 title end
@@ -75,9 +75,9 @@ asked: Does every claim point to evidence?
 Yes. Each count comes from the search log.
 answer end
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Discussion
 title end
@@ -95,9 +95,9 @@ paragraph start
 todo: find three people to repeat the test
 A repeat with other people would settle the limit above.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 References
 title end
@@ -110,4 +110,4 @@ asked: Does every source cited in the text appear here?
 Not yet. The list is empty because the text cites nothing.
 answer end
 paragraph end
-section end
+chapter end

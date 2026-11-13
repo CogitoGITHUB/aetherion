@@ -8,7 +8,7 @@ paragraph start
 Use a module page to document one piece of code so it can be understood without running it. Say what it is for first, then show it.
 paragraph end
 
-section start
+chapter start
 title start
 Purpose
 title end
@@ -26,9 +26,9 @@ paragraph start
 todo: decide whether it should refuse a text input
 The page leaves that out on purpose.
 paragraph end
-section end
+chapter end
 
-section start
+chapter start
 title start
 Code
 title end
@@ -46,4 +46,4 @@ code end
 comment start
 A code body is opaque, so a question about code cannot be answered inside it. A person answers it here, beside the code.
 comment end
-section end
+chapter end
