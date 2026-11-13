@@ -54,7 +54,18 @@
         (repaint session viewport)
         (set-box! paint-ready #t)
         (thread (lambda () (repaint session viewport)))
+        (define watcher
+          (thread
+           (lambda ()
+             (let watch ([last #f])
+               (sleep 0.4)
+               (size-forget!)
+               (let-values ([(c r) (terminal-size)])
+                 (when (and last (not (equal? last (cons c r))))
+                   (repaint session viewport))
+                 (watch (cons c r)))))))
         (key-loop session (current-input-port) viewport)
+        (kill-thread watcher)
         (define next (unbox tab-switch))
         (when next
           (set-box! tab-switch #f)

@@ -25,6 +25,9 @@ times. He may hand you only this file.
   with cd to its absolute path, written as one line. Relative paths
   after that.
 - Shell is aiu-shell, a Nushell fork. Wrap bash in bash -c "...".
+- aiutd on PATH is /usr/local/bin/aiutd, not the PM launcher.
+  It must export AIU_HOT_PATH_BIN and AIU_NOTATION_BIN (prefix
+  bins), else a stale hot-path runs and the first draw hangs.
 
 ## Rules
 - No git, no backup files, no guessed paths, no find over home, no

@@ -71,6 +71,8 @@
          (values columns rows))]
     [else (values 80 24)]))
 
+(define (size-forget!) (set-box! window-cache #f))
+
 (provide stty
          settings-file
          saved-settings
@@ -78,4 +80,5 @@
          save-settings
          restore-settings
          raw-mode
-         terminal-size)
+         terminal-size
+         size-forget!)
