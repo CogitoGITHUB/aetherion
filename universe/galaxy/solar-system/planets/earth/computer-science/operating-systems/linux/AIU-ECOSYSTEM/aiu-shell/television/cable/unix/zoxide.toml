@@ -7,12 +7,12 @@ requirements = ["zoxide"]
 command = "zoxide query -l"
 no_sort = true
 frecency = false
+display = "{split:/:-1}"
 
 [preview]
-command = "ls -la --color=always '{}'"
+command = "ls --short-names -la \"{}\" | table | ansi strip"
 
 [keybindings]
-enter = "actions:cd"
 ctrl-d = "actions:remove"
 
 [actions.cd]
@@ -24,3 +24,6 @@ mode = "execute"
 description = "Remove the selected directory from zoxide"
 command = "zoxide remove {}"
 mode = "fork"
+
+[ui.preview_panel]
+size = 80

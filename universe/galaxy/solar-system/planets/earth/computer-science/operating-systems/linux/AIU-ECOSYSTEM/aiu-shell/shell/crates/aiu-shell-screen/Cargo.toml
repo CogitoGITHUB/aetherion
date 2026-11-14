@@ -16,3 +16,5 @@ crossterm = { workspace = true, features = ["bracketed-paste"] }
 ratatui = { workspace = true }
 rusqlite = { workspace = true, features = ["bundled"] }
 libc = { workspace = true }
+starship = { path = "../../../starship", default-features = false }
+clap = { version = "4", features = ["derive", "std"] }

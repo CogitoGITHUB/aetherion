@@ -104,7 +104,13 @@ fn tab_rows(width: usize) -> Vec<String> {
         let rest: String = rows[0].chars().skip(1).collect();
         rows[0] = format!("\u{2026}{}", rest);
     }
-    let mut out = vec![edge_line("╭", "╮", "directory", width)];
+    let mut out = context_rows(width);
+    if out.is_empty() {
+        out.push(edge_line("╭", "╮", "directory", width));
+    } else {
+        out.pop();
+        out.push(edge_line("├", "┤", "directory", width));
+    }
     for row in rows {
         out.push(body_line(&row, width));
     }
@@ -302,4 +308,32 @@ pub fn draw_full_input(frame: &mut Frame, state: &InputState, area: Rect) {
         Paragraph::new(frame_box.lines(width).join("\n")).style(Style::default().fg(Color::White)),
         area,
     );
+}
+fn context_rows(width: usize) -> Vec<String> {
+    let parts = crate::context_bar::parts();
+    if parts.is_empty() {
+        return Vec::new();
+    }
+    let inner = width.saturating_sub(4).max(1);
+    let mut lines: Vec<String> = Vec::new();
+    let mut cur = String::new();
+    for p in parts {
+        let need = cur.chars().count() + 2 + p.chars().count();
+        if !cur.is_empty() && need > inner {
+            lines.push(std::mem::take(&mut cur));
+        }
+        if !cur.is_empty() {
+            cur.push_str("  ");
+        }
+        cur.push_str(&p);
+    }
+    if !cur.is_empty() {
+        lines.push(cur);
+    }
+    let mut out = vec![edge_line("╭", "╮", "aiu context", width)];
+    for l in lines {
+        out.push(body_line(&l, width));
+    }
+    out.push(rule_line("╰", "╯", width));
+    out
 }

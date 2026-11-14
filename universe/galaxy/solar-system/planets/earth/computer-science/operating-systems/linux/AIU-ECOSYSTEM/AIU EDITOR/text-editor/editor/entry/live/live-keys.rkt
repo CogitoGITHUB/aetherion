@@ -23,7 +23,7 @@
          "../../tui/bar/bar.rkt" (only-in "../../tui/bar/bar-state-shared.rkt" name-prompt)
          "../../tui/tabs/tabs-shared.rkt"
          "../../tui/tabs/finder.rkt"
-         "../../tui/keys/key-notes.rkt"
+         "../../tui/keys/key-notes.rkt" (only-in "../../tui/notify/notify.rkt" notify!)
          (only-in "../../tui/float/box-shared.rkt" paint-ready)
          "../../tui/gutter/gutter.rkt"
          "../../tui/gutter/gutterview.rkt"
@@ -41,10 +41,54 @@
     [(zero? n) '()]
     [else (for/list ([i (in-range n)]) (bytes-ref chunk i))]))
 
+(define in-paste (box #f))
+(define paste-hit (box #f))
+(define paste-shown (box #f))
+(define paste-begin (list 27 91 50 48 48 126))
+(define paste-end (list 27 91 50 48 49 126))
+
+(define (starts? l p)
+  (and (>= (length l) (length p)) (equal? (take l (length p)) p)))
+
+(define (strip-paste l)
+  (let loop ([l l] [out (list)])
+    (cond
+      [(null? l) (reverse out)]
+      [(unbox in-paste)
+       (if (starts? l paste-end)
+           (begin (set-box! in-paste #f) (loop (list-tail l 6) out))
+           (loop (cdr l) out))]
+      [(starts? l paste-begin)
+       (set-box! in-paste #t)
+       (set-box! paste-hit #t)
+       (loop (list-tail l 6) out)]
+      [else (loop (cdr l) (cons (car l) out))])))
+
+(define (drop-paste session got)
+  (cond
+    [(not (list? got)) got]
+    [(or (not (string=? (the-layer session) "write"))
+         (and (regexp-match? #rx"[.]aiu$" (path->string (session-file session)))
+              (unbox read-mode)))
+     (let ([r (strip-paste got)])
+       (when (unbox paste-hit)
+         (set-box! paste-hit #f)
+         (set-box! paste-shown #t)
+         (notify! "warn" "paste ignored: not in writing mode"))
+       r)]
+    [else (set-box! in-paste #f) got]))
+
+(define (emit-tabs!)
+  (when (getenv "AIU_IN_MULTIPLEXER")
+    (write-string (tab-osc) (current-output-port))
+    (flush-output (current-output-port))))
+
 (define (key-loop session port viewport)
   (define chunk (make-bytes 1024))
+  (emit-tabs!)
   (let loop ([buffer '()])
-    (define arrived (read-available port chunk))
+    (define arrived (drop-paste session (read-available port chunk)))
+    (when (unbox paste-shown) (set-box! paste-shown #f) (begin (repaint session viewport) (emit-tabs!)))
     (unless (eq? arrived 'eof)
       (let walk ([pending (append buffer arrived)])
         (cond
@@ -54,7 +98,7 @@
            (define result (act-on session pending))
            (trace-key! pending trace-t0 result session)
              (set-box! pending-keys (if (eq? (outcome-rest result) (quote wait)) (map car (key-runs pending)) (list)))
-           (repaint session viewport)
+           (begin (repaint session viewport) (emit-tabs!))
            (cond
              [(eq? (outcome-rest result) 'wait)
               (loop pending)]

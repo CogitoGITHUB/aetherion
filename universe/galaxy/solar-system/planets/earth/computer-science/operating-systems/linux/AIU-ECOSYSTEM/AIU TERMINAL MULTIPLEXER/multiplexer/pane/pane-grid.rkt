@@ -1,6 +1,6 @@
 #lang racket/base
 (require racket/list racket/string "pane-width.rkt")
-(provide (struct-out pane-grid) make-pane-grid pane-grid-feed! pane-grid-resize! pane-grid-osc52-hook)
+(provide (struct-out pane-grid) make-pane-grid pane-grid-feed! pane-grid-resize! pane-grid-osc52-hook pane-grid-tabs)
 
 (struct pane-grid (columns height rows cursor-row cursor-column style shown top bottom
                    pending-wrap parse-state parse-buffer history alternate saved-main
@@ -177,6 +177,7 @@
     (set-pane-grid-alternate! g #t)))
 
 (define (leave-alternate! g)
+  (hash-remove! pane-grid-tabs g)
   (when (pane-grid-alternate g)
     (define saved (pane-grid-saved-main g))
     (set-pane-grid-rows! g (fit-rows (car saved) (pane-grid-columns g) (pane-grid-height g)))
@@ -184,6 +185,7 @@
     (move-cursor! g (cadr saved) (caddr saved))))
 
 (define (reset-grid! g)
+  (hash-remove! pane-grid-tabs g)
   (set-pane-grid-rows! g (blank-rows (pane-grid-columns g) (pane-grid-height g)))
   (set-pane-grid-alternate! g #f)
   (set-pane-grid-style! g "")
@@ -277,12 +279,16 @@
          (write-string (string-append "\u001b]" body "\u0007"))
          (flush-output))))
 
+(define pane-grid-tabs (make-weak-hasheq))
+
 (define (osc-finish! g)
   (define body (pane-grid-parse-buffer g))
   (set-pane-grid-parse-state! g (quote ground))
   (set-pane-grid-parse-buffer! g "")
   (when (and (> (string-length body) 3) (< (string-length body) 30000) (string=? (substring body 0 3) "52;"))
-    ((unbox pane-grid-osc52-hook) body)))
+    ((unbox pane-grid-osc52-hook) body))
+  (when (and (> (string-length body) 5) (string=? (substring body 0 5) "7701;"))
+    (hash-set! pane-grid-tabs g (substring body 5))))
 
 (define (osc-char! g ch)
   (cond

@@ -1,0 +1,80 @@
+title start
+name: title-parts-test
+kind: book
+Parts test
+contract start
+id: qf123ae
+question: Does the title say what this chapter or section covers?
+contract end
+answer start
+for: qf123ae
+asked: Does the title say what this chapter or section covers?
+
+answer end
+title end
+
+cover start
+name: cover-a-cover
+A cover
+cover end
+
+copyright start
+name: copyright-copyright-page
+Copyright page
+copyright end
+
+preface start
+name: preface-a-preface
+A preface
+preface end
+
+contents start
+name: contents
+contents end
+
+chapter start
+name: section-one
+title start
+name: title-one
+One
+contract start
+id: qf123ae
+question: Does the title say what this chapter or section covers?
+contract end
+answer start
+for: qf123ae
+asked: Does the title say what this chapter or section covers?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-text
+Text
+figure start
+name: figure
+caption: A figure
+figure end
+footnote start
+name: footnote-a-note
+A note
+footnote end
+contract start
+id: qe995c0
+question: Does this paragraph hold one idea a reader could restate?
+contract end
+answer start
+for: qe995c0
+asked: Does this paragraph hold one idea a reader could restate?
+
+answer end
+paragraph end
+chapter end
+
+bibliography start
+name: bibliography
+bibliography end
+
+index start
+name: index
+index end

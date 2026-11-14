@@ -201,6 +201,14 @@ A chapter is numbered by nesting only, in Rust and Racket.
 No page used level. It left DECLARATION_KEYWORDS and
 property-keywords.
 paragraph end
+paragraph start
+Decided, book parts: cover, title-page, copyright, preface, contents, figure, footnote, reference, bibliography, index and volume are block types, one .blocktype file each, in the default folder and in the root .notation folder. The book type allows them. Chapter and table already existed. Contents, index and bibliography are computed from the tree, never typed.
+paragraph end
+
+paragraph start
+Decided, edition: page numbers belong to one edition and are computed, never stored in the page. Order of generation: contents, index and cross references from the tree, then page boundaries, then headers and footers. The first output is a terminal page preview only. PDF export stays step 7 of section 7, only when everything above is proven.
+paragraph end
+
 chapter end
 
 chapter start

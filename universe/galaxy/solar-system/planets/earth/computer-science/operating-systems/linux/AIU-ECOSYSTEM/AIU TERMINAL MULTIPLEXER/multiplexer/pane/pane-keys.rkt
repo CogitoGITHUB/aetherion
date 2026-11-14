@@ -12,7 +12,7 @@
 (define zoxide-pick-bytes (bytes-append (bytes 21) #"let d = (tv zoxide | str trim); if ($d | is-not-empty) { cd $d }\r"))
 (define delete-byte 127)
 
-(define (initial-key-state) (key-state "visual" (quote none) #f))
+(define (initial-key-state) (key-state "shell" (quote none) #f))
 (define (key-state-pending-text state) (if (eq? (key-state-pending state) (quote space)) "space" ""))
 (define (key-state-pinned-flag state) (if (key-state-pinned state) "1" "0"))
 

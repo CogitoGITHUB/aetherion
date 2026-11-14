@@ -10,6 +10,16 @@ Open holes
 title end
 
 paragraph start
+todo: workspace and project boxes show reading folders and change by themselves while a command runs; only the user may control them; find what triggers it
+Planned.
+paragraph end
+
+paragraph start
+todo: command running box title is broken; the title row merges into the next edge (user: dir) and the box edge is drawn wrong
+Planned.
+paragraph end
+
+paragraph start
 todo: multiplexer has its own copy of view-of and blockview.rkt; reading mode is not patched there
 Planned.
 paragraph end
@@ -49,10 +59,6 @@ todo: not answered: keep chapter edge look A; todo paragraph as one box instead 
 Planned.
 paragraph end
 
-paragraph start
-todo: double space exit from writing mode and w or i switch are in blocks-text.rkt by wrapping menu-or-visual; not confirmed by a tutorial chapter
-Planned.
-paragraph end
 section end
 
 section start

@@ -14,6 +14,12 @@
          "bar-rows-shared.rkt"
          "bar-commands.rkt")
 
+(define (file-edge width)
+  (define s (tab-strip width))
+  (if (string=? s "")
+      (rule-line "╭" "╮" width)
+      (edge-line "╭" "╮" s "" width)))
+
 (struct bar-plan (left right top bottom text overlay line?) #:transparent)
 
 (define (bar-plan-of session pending width height again)
@@ -42,7 +48,7 @@
        (cond [(and (pair? t) (pair? b) (unbox tab-joined))
               (append (drop-right t 1) (list (join-edge (car b))) (cdr b))]
              [else (append t b)]))
-     (define top-lines (if (unbox split-panes-on) (group "top") (append (group "top") (unbox title-rows) (list (rule-line "╭" "╮" width)))))
+     (define top-lines (if (unbox split-panes-on) (group "top") (append (group "top") (unbox title-rows) (list (file-edge width)))))
      (define bottom-lines (let ([g0 (if (pair? undo-lines) undo-lines (group "bottom"))]) (if (and (null? undo-lines) (string=? place "line")) g0 (if (unbox split-panes-on) g0 (cons (rule-line "╰" "╯" width) g0)))))
      (define top-n (length top-lines))
      (define sh (max 3 (- height top-n (length bottom-lines))))

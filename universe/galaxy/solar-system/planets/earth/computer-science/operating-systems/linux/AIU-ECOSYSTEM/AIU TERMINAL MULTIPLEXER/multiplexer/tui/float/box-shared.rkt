@@ -10,7 +10,7 @@
   (define mid (if (> (length parts) 1) (car parts) ""))
   (define right
     (if (null? parts) "" (list-ref parts (- (length parts) 1))))
-  (define head (string-append l "─┤ " left " ├"))
+  (define head (if (string=? left "") (string-append l "─") (string-append l "─┤ " left " ├")))
   (define tail0
     (if (string=? right "") "" (string-append "┤ " right " ├─")))
   (define tail

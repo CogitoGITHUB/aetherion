@@ -97,10 +97,8 @@
     (if ready (let ([l (tabs-arranged (cadr have) workspace-order workspace-hidden (tabs-last root))]) (tabs-mark-row l (index-of l (tabs-last root)) inner)) "reading folders"))
   (define buffer-text (tabs-mark-row (unbox tab-buffers) (unbox tab-buffer-current) inner))
   (define sections
-    (append (if (>= level 3) (list (cons "workspace" workspace-text)) null)
-            (if (>= level 2) (list (cons "project" project-text)) null)
-            (if (>= level 2) (list (cons "buffer" buffer-text)) null)
-            (list (cons "tabs" tabs-text)) (list (cons "git" (unbox tab-git-text)))))
+    (append (list (cons "workspace" workspace-text))
+            (list (cons "project" project-text))))
   (append (list (edge-line "╭" "╮" (car (car sections)) "" width)
                 (body-line (cdr (car sections)) width))
           (append* (for/list ([s (in-list (cdr sections))])
@@ -120,3 +118,24 @@
 (provide tab-git-text tab-buffers tab-buffer-current)
 (provide project-order project-hidden workspace-order workspace-hidden tabs-arranged)
 (provide tab-lists)
+
+(define (tab-strip width)
+  (define files (unbox tab-files))
+  (tabs-mark-row (tabs-labels files)
+                 (index-of files (unbox tab-current))
+                 (max 1 (- width 12))))
+
+(provide tab-strip)
+
+(define (tab-osc)
+  (define files (unbox tab-files))
+  (define at (index-of files (unbox tab-current)))
+  (string-append
+   "\u001b]7701;"
+   (string-join
+    (for/list ([n (in-list (tabs-labels files))] [i (in-naturals)])
+      (string-append (if (eqv? i at) "● " "○ ") n))
+    "  ")
+   "\u0007"))
+
+(provide tab-osc)

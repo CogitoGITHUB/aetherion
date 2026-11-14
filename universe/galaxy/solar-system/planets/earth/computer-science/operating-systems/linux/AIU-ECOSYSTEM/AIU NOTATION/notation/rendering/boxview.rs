@@ -472,6 +472,39 @@ impl Boxes {
                     inner.extend(self.wrapped(&[], &g, iw));
                 }
             }
+            "contents" => {
+                label = "contents".to_string();
+                tcodes = vec![1, 36];
+                for e in self.numbers.entries().to_vec() {
+                    let mut t: Vec<String> = Vec::new();
+                    let mut i = e.line;
+                    let end = e.line + 4;
+                    while i < end && self.lines.get(i).map_or(false, |l| l.trim() != "title start") { i += 1; }
+                    if i < end {
+                        i += 1;
+                        while let Some(l) = self.lines.get(i) {
+                            let s = l.trim();
+                            if s == "title end" { break; }
+                            if !s.starts_with("name:") { t.push(s.to_string()); }
+                            i += 1;
+                        }
+                    }
+                    let pad = "  ".repeat((e.level as usize).saturating_sub(1));
+                    let row = format!("{}{} {}", pad, e.number, t.join(" "));
+                    inner.push(self.line(&[], &clip(&row, iw)));
+                }
+            }
+            "figure" => {
+                label = "figure".to_string();
+                tcodes = vec![1, 36];
+                let cap = decl(b, "caption").unwrap_or_default();
+                let mut q: Vec<String> = Vec::new();
+                if !cap.is_empty() { q.push(format!("Figure: {}", cap)); }
+                q.extend(self.body(b));
+                for g in groups(&q) {
+                    inner.extend(self.wrapped(&[], &g, iw));
+                }
+            }
             other => {
                 label = format!("unknown block: {}", other);
                 tcodes = vec![2, 33];
@@ -497,7 +530,7 @@ impl Boxes {
             inner.push(divider());
             inner.extend(rows);
         }
-        let center = b.name != "code";
+        let center = b.name != "code" && b.name != "contents";
         match todo {
             Some(v) => self.todo_side(&named(b, &label), &tcodes, inner, width, center, &v),
             None => self.frame(&named(b, &label), &tcodes, inner, width, false, center),

@@ -35,24 +35,37 @@
             (rule-line "╰" "╯" width))
       (bar-rows-plain layer short pending g width names)))
 
+(define (center-edge l r text width)
+  (define room (max 0 (- width 2 (string-length text) 4)))
+  (define left (quotient room 2))
+  (string-append l (make-string left #\─) "┤ " text " ├"
+                 (make-string (- room left) #\─) r))
+
+(define (git-row g width)
+  (define t (with-handlers ([void (lambda (e) "git")]) (git-text g)))
+  (body-line (if (string? t) t "git") width))
+
 (define (bar-rows-plain layer short pending g width names)
   (define (has? n) (member n names))
-  (define trig (let ([t (assoc layer trigger-of)]) (if t (cdr t) "-")))
-  (define waiting
-    (if (pair? pending) (format "  waiting after ~a" (string-join (map bar-kname pending) " ")) ""))
-  (define title (if (has? "mode") (format "~a [~a] · ~a" (mode-label layer) (unbox kind-filter) short) "bar"))
-  (define stamp
-    "")
+  (define title
+    (if (has? "mode")
+        (format "~a [~a] · ~a" (mode-label layer) (unbox kind-filter) short)
+        "bar"))
+  (define shown?
+    (or (pair? pending) (unbox menu-pinned)
+        (not (member layer (list "visual" "write")))))
   (define middle
-    (append (if (has? "keys")
-                (if (or (pair? pending) (unbox menu-pinned) (not (member layer (list "visual" "write")))) (map (lambda (r) (body-line r width)) (let ([ls (string-split (menu-text layer pending (max 20 (- width 4))) "\n" #:trim? #f)]) ls)) (list (body-line (format "trigger ~a~a  ·  press ~a for keys" (bar-kname trig) waiting (bar-kname trig)) width)))
-                null)
+    (append (cond
+              [(and (has? "keys") shown?)
+               (map (lambda (r) (body-line r width))
+                    (string-split (menu-text layer pending (max 20 (- width 4))) "\n" #:trim? #f))]
+              [else (list (git-row g width))])
             (if (and (has? "save") (unbox unsaved))
                 (list (edge-line "├" "┤" "save" "" width) (body-line "unsaved  SPC s saves" width))
                 null)))
   (if (null? names)
       null
-      (append (list (edge-line "╭" "╮" title stamp width)) middle (list (clock-rule-line "╰" "╯" width (and (has? "time") #t) (and (has? "date") #t))))))
+      (append (list (center-edge "╭" "╮" title width)) middle (list (rule-line "╰" "╯" width)))))
 
 (define (cell-chars name layer g)
   (cond

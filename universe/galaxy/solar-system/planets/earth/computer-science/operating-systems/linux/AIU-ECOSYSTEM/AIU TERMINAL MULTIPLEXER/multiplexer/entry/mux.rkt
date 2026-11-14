@@ -45,12 +45,25 @@
          (if (> n 0) (format "DEV MODE errors ~a" n) "DEV MODE")]
         [(> n 0) (format "BUILD ERRORS ~a" n)]
         [else ""]))
-(define (top-label)
+(define (top-label layer)
   (define d (dev-text))
-  (string-append "server " (unbox server-state)
+  (string-append layer
                  (if (string=? d "") "" (string-append "  " d))))
-(define (bottom-label layer)
-  (string-append (clock-stamp 50 #t #t) "\u0001" layer))
+(define (bottom-label room)
+  (string-append (clock-stamp room #t #t) "\u0001" "aiu server " (unbox server-state)))
+
+(define (tabs-for unit default)
+  (define g (and unit (pane-unit-grid unit)))
+  (define t (and g (pane-grid-alternate g) (hash-ref pane-grid-tabs g #f)))
+  (if (and t (not (string=? t ""))) t default))
+
+(define (sync-app-layer! kb unit)
+  (when unit
+    (define l (key-state-layer (unbox kb)))
+    (when (member l (list "editor" "shell"))
+      (define want (if (hash-ref pane-grid-tabs (pane-unit-grid unit) #f) "editor" "shell"))
+      (unless (string=? l want)
+        (set-box! kb (key-state want (key-state-pending (unbox kb)) (key-state-pinned (unbox kb))))))))
 
 (define (run-multiplexer)
   (define-values (first-columns first-height) (terminal-size))
@@ -224,13 +237,14 @@
       (call-with-semaphore
        state-lock
        (lambda ()
+(sync-app-layer! key-state-box (focused-unit))
          (define focus-id (layout-focused-id (current-layout)))
          (define entries
            (for/list ([rect (in-list (region-rects))]
                       #:when (and (rect-fits? rect) (hash-ref panes (layout-rect-id rect) #f)))
              (define unit (hash-ref panes (layout-rect-id rect)))
              (append (list (layout-rect-x rect) (layout-rect-y rect) (layout-rect-width rect) (layout-rect-height rect)
-                   (pane-unit-grid unit) (unbox (pane-unit-scroll unit)) (equal? (layout-rect-id rect) focus-id)) (if (equal? (layout-rect-id rect) focus-id) (let ([ns (layout-buffers-names (unbox buffers-state))] [ci (layout-buffers-current-index (unbox buffers-state))]) (list (string-join (for/list ([n (in-list ns)] [i (in-naturals)]) (string-append (if (eqv? i ci) "● " "○ ") n)) "  ") (top-label) (string-append "● " (list-ref ns ci)) (bottom-label (format "~a" (key-state-layer (unbox key-state-box)))))) (list)))))
+                   (pane-unit-grid unit) (unbox (pane-unit-scroll unit)) (equal? (layout-rect-id rect) focus-id)) (if (equal? (layout-rect-id rect) focus-id) (let ([ns (layout-buffers-names (unbox buffers-state))] [ci (layout-buffers-current-index (unbox buffers-state))]) (list (tabs-for unit (string-join (for/list ([n (in-list ns)] [i (in-naturals)]) (string-append (if (eqv? i ci) "● " "○ ") n)) "  ")) (top-label "") (format "~a" (key-state-layer (unbox key-state-box))) (bottom-label (max 0 (- (unbox screen-columns) 43))))) (list)))))
          (call-with-semaphore lock (lambda () (compose-frame (unbox screen-columns) (unbox screen-height) (append (if (unbox float-shown) (map (lambda (entry) (list-set entry 6 #f)) entries) entries) (float-entries)) (unbox bar-rows)))))))
     (write-string (screen-diff-cells! text (unbox screen-columns) (unbox screen-height)) (current-output-port))
     (flush-output (current-output-port)))
