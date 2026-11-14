@@ -18,12 +18,21 @@
 
 (define view-cache (box #f))
 
+(define read-mode (box #t))
+
+(set-box! hide-hook (lambda (b) (and (unbox read-mode) (member (block-name b) (list "comment" "answer" "contract" "mark")) #t)))
+
+(define aiu-shown (box #f))
+
+(set-box! label-hook (lambda (layer) (and (unbox aiu-shown) (string=? layer "visual") (if (unbox read-mode) "reading" "writing"))))
+
 (define (drawn-view session raw width)
+  (set-box! aiu-shown #t)
   (define hit (unbox view-cache))
-  (if (and hit (equal? (car hit) raw) (equal? (cadr hit) width))
+  (if (and hit (equal? (car hit) raw) (equal? (cadr hit) width) (equal? (cadddr hit) (unbox read-mode)))
       (caddr hit)
-      (let ([drawn (view-of (session-file session) (session-journal session) width)])
-        (set-box! view-cache (list raw width drawn))
+      (let ([drawn (view-of (session-file session) (session-journal session) width (if (unbox read-mode) "read" "write"))])
+        (set-box! view-cache (list raw width drawn (unbox read-mode)))
         drawn)))
 
 (define (blockview-aiu? session)
@@ -141,7 +150,8 @@
 (hash-set! commands "leave-write" (lambda (session words) (let ([r (blockview-command-leave-write session words)]) (set-box! unsaved #f) (blockview-after-write (session-file session)) r)))
 
 (provide
-         drawn-view)
+         drawn-view
+         read-mode)
 
 (define (blockview-todo-state b)
   (define found

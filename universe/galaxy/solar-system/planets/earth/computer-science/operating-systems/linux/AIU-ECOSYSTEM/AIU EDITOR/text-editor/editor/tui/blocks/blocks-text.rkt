@@ -54,7 +54,11 @@
      (define cw (max 8 (- wb 4)))
      (define rel (max 0 (min (- (the-point session) lo) (- hi lo))))
      (define text-lines
-       (string-split (bytes->string/utf-8 (subbytes bs lo hi) #\?) "\n" #:trim? #f))
+       (let ([ls (string-split
+                  (bytes->string/utf-8 (subbytes bs lo hi) #\?)
+                  "\n"
+                  #:trim? #f)])
+         (if (null? ls) (list "") ls)))
      (define k
        (min (sub1 (length text-lines))
             (for/sum ([c (in-bytes (subbytes bs lo (+ lo rel)))]) (if (= c 10) 1 0))))
@@ -116,4 +120,17 @@
                       (block-name target)))]
     [else (blockview-command-edit session words)]))
 
-(hash-set! commands "block-text" (lambda (session words) (multi-clear!) (blockview-command-text session words)))
+(hash-set! commands "block-text" (lambda (session words) (multi-clear!) (if (unbox read-mode) (begin (set-box! read-mode #f) (cons #t "writing mode: all details shown")) (blockview-command-text session words))))
+
+(hash-set! commands "read-mode" (lambda (session words) (multi-clear!) (set-box! read-mode (not (unbox read-mode))) (cons #t (if (unbox read-mode) "reading mode" "writing mode: all details shown"))))
+
+(define orig-menu (hash-ref commands "menu-or-visual" #f))
+
+(hash-set! commands "menu-or-visual"
+  (lambda (session words)
+    (if (and orig-menu
+             (regexp-match? #rx"[.]aiu$" (path->string (session-file session)))
+             (not (unbox read-mode))
+             (string=? (the-layer session) "visual"))
+        (begin (set-box! read-mode #t) (cons #t "reading mode"))
+        (orig-menu session words))))

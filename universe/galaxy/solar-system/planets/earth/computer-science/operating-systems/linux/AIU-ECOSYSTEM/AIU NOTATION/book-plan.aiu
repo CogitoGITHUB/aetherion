@@ -194,6 +194,13 @@ paragraph end
 paragraph start
 Decided, marks in links: marks are counted only in the original block, never in a shown copy. A routine file only refers to blocks, so it never makes a second step.
 paragraph end
+
+paragraph start
+Decided, level: the level declaration is removed.
+A chapter is numbered by nesting only, in Rust and Racket.
+No page used level. It left DECLARATION_KEYWORDS and
+property-keywords.
+paragraph end
 chapter end
 
 chapter start

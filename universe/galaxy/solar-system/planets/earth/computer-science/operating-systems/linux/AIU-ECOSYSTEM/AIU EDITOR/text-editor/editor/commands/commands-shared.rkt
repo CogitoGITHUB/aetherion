@@ -109,13 +109,19 @@
 
 (define kind-filter (box "any"))
 
+(define label-hook (box #f))
+
 (define (mode-label layer)
+  (or (and (unbox label-hook) ((unbox label-hook) layer))
+      (mode-label-base layer)))
+
+(define (mode-label-base layer)
   (cond [(string=? layer "select") "visual selection"]
         [(string=? layer "visual") (if (string=? (unbox kind-filter) "any") "visual general" "visual navigation")]
         [else layer]))
 
 
-(provide kind-filter mode-label)
+(provide kind-filter mode-label label-hook)
 (define unsaved (box #f))
 
 (provide unsaved)

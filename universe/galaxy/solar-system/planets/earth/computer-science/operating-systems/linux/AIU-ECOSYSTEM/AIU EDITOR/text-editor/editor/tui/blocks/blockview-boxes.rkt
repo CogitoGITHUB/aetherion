@@ -2,7 +2,9 @@
 
 (require racket/list racket/string "../../bridge/document-shared.rkt" "../../bridge/host-shared.rkt")
 
-(provide blockview-plain (struct-out blockview-box) blockview-prefix blockview-end blockview-boxes blockview-kids blockview-seen blockview-assign blockview-ranges blockview-drawn blockview-inside blockview-target blockview-parent)
+(provide hide-hook blockview-plain (struct-out blockview-box) blockview-prefix blockview-end blockview-boxes blockview-kids blockview-seen blockview-assign blockview-ranges blockview-drawn blockview-inside blockview-target blockview-parent)
+
+(define hide-hook (box (lambda (b) #f)))
 
 (define (blockview-plain line)
   (regexp-replace* #px"\u001b\\[[0-9;]*m" line ""))
@@ -47,9 +49,8 @@
 
 (define (blockview-seen blocks b)
   (define kids
-    (filter (lambda (k) (not (string=? (block-name k) "answer")))
-            (blockview-kids blocks b)))
-  (if (and (string=? (block-name b) "section")
+    (filter (lambda (k) (not ((unbox hide-hook) k))) (blockview-kids blocks b)))
+  (if (and (string=? (block-name b) "chapter")
            (pair? kids)
            (string=? (block-name (car kids)) "title"))
       (cdr kids)
@@ -60,7 +61,7 @@
       (for/fold ([found ranges]) ([b (in-list wanted)] [bx (in-list boxes)])
         (define next
           (hash-set found (block-start b) (cons (blockview-box-from bx) (blockview-box-to bx))))
-        (if (member (block-name b) (list "section" "comment"))
+        (if (pair? (blockview-box-kids bx))
             (blockview-assign blocks (blockview-seen blocks b) (blockview-box-kids bx) next)
             next))
       ranges))
@@ -70,20 +71,19 @@
   (define blocks (page-blocks got))
   (define top
     (filter (lambda (b)
-              (and (= (block-depth b) 0) (not (string=? (block-name b) "answer"))))
+              (and (= (block-depth b) 0) (not (string=? (block-name b) "answer")) (not ((unbox hide-hook) b))))
             blocks))
   (blockview-assign blocks top (blockview-boxes plain 0 (vector-length plain) 0) (hash)))
 
 (define (blockview-drawn blocks)
   (define hidden
-    (for/list ([b (in-list blocks)] #:when (string=? (block-name b) "section"))
+    (for/list ([b (in-list blocks)] #:when (string=? (block-name b) "chapter"))
       (define kids (blockview-kids blocks b))
       (if (and (pair? kids) (string=? (block-name (car kids)) "title"))
           (block-start (car kids))
           -1)))
   (filter (lambda (b)
-            (and (not (string=? (block-name b) "answer"))
-                 (not (memv (block-start b) hidden))))
+            (and (not (memv (block-start b) hidden)) (not ((unbox hide-hook) b))))
           blocks))
 
 (define (blockview-inside blocks point)

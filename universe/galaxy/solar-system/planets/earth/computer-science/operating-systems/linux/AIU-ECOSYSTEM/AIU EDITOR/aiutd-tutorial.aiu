@@ -1,237 +1,704 @@
 title start
+name: title-aiutd-tutorial
 kind: default
 tags: docs aiutd generated
 AIUTD TUTORIAL
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 comment start
+name: comment-written-by-aiutd
 Written by aiutd docs from the feature files whose tests pass. Do not edit by hand.
 comment end
 
 chapter start
+name: section-blockback
 title start
+name: title-blockback
 block-back
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-recorded-from-a
 Recorded from a real run of the keys t t t h.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-keys-t-t
 Keys: t t t h
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end
 
 chapter start
+name: section-blockpicks
 title start
+name: title-blockpicks
 block-picks
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-recorded-from-a-2
 Recorded from a real run of the keys p t t e t c t k t.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-keys-p-t
 Keys: p t t e t c t k t
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end
 
 chapter start
+name: section-select-copy-and
 title start
+name: title-select-copy-and
 Select, copy and paste
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-space-v-starts
 Space v starts a selection, s extends it, space y copies, escape leaves the layer, space p pastes at the cursor.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-keys-space-v
 Keys: space v, space y, space p
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end
 
 chapter start
+name: section-what-aiu-notation
 title start
+name: title-what-aiu-notation
 What AIU NOTATION can do
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-read-live-from
 Read live from the notation files each time aiutd docs runs. A new blocktype file shows here by itself.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter start
+name: section-block-answer
 title start
+name: title-block-answer
 Block: answer
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-the-answer-block
 The answer block is the answer to one contract question, kept inside the block it judges.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-opaque-no
 Opaque: no
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end
 
 chapter start
+name: section-block-chapter
 title start
+name: title-block-chapter
 Block: chapter
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-the-chapter-block
 The chapter block is a block that holds its own title, text and sub-chapters.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-opaque-no-2
 Opaque: no
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end
 
 chapter start
+name: section-block-code
 title start
+name: title-block-code
 Block: code
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-the-code-block
 The code block is text the parser does not read as notation.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-opaque-yes
 Opaque: yes
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end
 
 chapter start
+name: section-block-comment
 title start
+name: title-block-comment
 Block: comment
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-the-comment-block
 The comment block is a block of text the reader drops.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-opaque-no-3
 Opaque: no
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end
 
 chapter start
+name: section-block-header
 title start
+name: title-block-header
 Block: header
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-the-header-block
 The header block is the header row of a table.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-opaque-no-4
 Opaque: no
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end
 
 chapter start
+name: section-block-paragraph
 title start
+name: title-block-paragraph
 Block: paragraph
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-the-paragraph-block
 The paragraph block is ordinary prose, the everyday case.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-opaque-no-5
 Opaque: no
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end
 
 chapter start
+name: section-block-row
 title start
+name: title-block-row
 Block: row
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-the-row-block
 The row block is one row of a table.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-opaque-no-6
 Opaque: no
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end
 
 chapter start
+name: section-block-table
 title start
+name: title-block-table
 Block: table
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-the-table-block
 The table block is a table of rows.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-opaque-no-7
 Opaque: no
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end
 
 chapter start
+name: section-block-title
 title start
+name: title-block-title
 Block: title
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-the-title-block
 The title block is a heading that names the file.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-opaque-no-8
 Opaque: no
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end
 
 chapter start
+name: section-file-types
 title start
+name: title-file-types
 File types
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-known-file-types
 Known file types: book, decision, default, journal, module, note, plan, research, todo.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end
 
 chapter end
 chapter start
+name: section-how-to-make
 title start
+name: title-how-to-make
 How to make tests
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-a-test-is
 A test is recorded from a real run, not typed. Run: aiutd record NAME KEYS where KEYS are key names (space, escape, tab, return, up, down, left, right, backspace) or single characters, for example: aiutd record focus-on space z. The command runs the keys in the real editor, compares the screen and the file with a run of no keys, writes gate/tests/NAME.test and editor/features/NAME.feature from what changed, and keeps them only when the new test passes. The keys must end in visual mode, or the run hangs for 15 s. Then run aiutd docs, which writes this tutorial from the passing features. Check with aiutd test --level 2 --only NAME and aiutd update --level 2. A module test calls one expression in one module and compares the printed answer. Run: aiutd record-module NAME MODULE-PATH EXPRESSION, for example: aiutd record-module update-table editor/entry/update/update-table.rkt "(first-n (list 1 2 3) 2)". The command runs the expression twice in a fresh racket, refuses an answer that differs between the two runs or cannot be a stable line, writes NAME.test beside the module and keeps it only when the new test passes. One source file gets one module test; give the expression as a list of several calls to test more than one function. Check with aiutd test --level 2 --only mod-NAME.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end
 
 chapter start
+name: section-commands-of-aiutd
 title start
+name: title-commands-of-aiutd
 Commands of aiutd
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-aiutd-file-opens
 aiutd FILE opens the file in the editor, and aiutd alone says a file is needed.
 aiutd update runs the compile, the tests at a level and the docs.
 aiutd test --level N runs the tests in gate/tests at that level.
 aiutd record NAME KEYS records a test from a real run of the keys.
 aiutd docs runs the test of every feature and writes this tutorial.
 aiutd trace is a tool verb, and the key trace is written to the trace log when AIU_TRACE is set.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end

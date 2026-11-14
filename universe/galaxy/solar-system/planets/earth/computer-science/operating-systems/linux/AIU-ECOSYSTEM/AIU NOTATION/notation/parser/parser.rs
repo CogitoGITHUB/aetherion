@@ -40,10 +40,11 @@ use crate::positions::{line_col_to_offset, offset_to_line_col, LineCol};
 use crate::block_registry::{is_opaque_name, is_registered};
 
 /// The registered declaration keywords (rule B). They are hints, never meaning.
-pub const DECLARATION_KEYWORDS: [&str; 19] = [
+pub const DECLARATION_KEYWORDS: [&str; 21] = [
     "for", "asked",
-    "tags", "kind", "language", "style", "theme", "color", "format", "font", "level", "caption", "column", "cell",
+    "tags", "kind", "language", "style", "theme", "color", "format", "font", "caption", "column", "cell",
     "row-id", "meta", "todo", "name", "target",
+    "id", "question", "state",
 ];
 
 /// The registered error names (rule E). All are severity error, no off switch.
@@ -347,7 +348,6 @@ pub fn parse(buffer: &Buffer) -> Tree {
                         saw_block = true;
                         first_is_title = name == "title";
                     }
-                    // A heading carries its depth in a `level:` declaration. A
                     open.push(Block {
                         name,
                         span,
@@ -368,7 +368,7 @@ pub fn parse(buffer: &Buffer) -> Tree {
                 // Inside a block a line is content, whatever it looks like.
                 // Outside a block there is no block to be content of, so the
                 // line is stray text and stays exactly where it is (rule b).
-                  // A line directly inside a section is stray text too: a section holds
+                  // A line directly inside a chapter is stray text too: a chapter holds
                   // blocks, never loose text. Its own declaration lines are not stray.
                   let in_section = match open.last() {
                       Some(b) => {

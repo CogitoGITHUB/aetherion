@@ -10,7 +10,7 @@
  (lambda (pair) (hash-set! commands (car pair) (blockview-kind-setter (cdr pair))))
  (list (cons "kind-any" "any")
        (cons "kind-paragraph" "paragraph")
-       (cons "kind-section" "section")
+       (cons "kind-section" "chapter")
        (cons "kind-code" "code")
        (cons "kind-comment" "comment")
        (cons "kind-title" "title")

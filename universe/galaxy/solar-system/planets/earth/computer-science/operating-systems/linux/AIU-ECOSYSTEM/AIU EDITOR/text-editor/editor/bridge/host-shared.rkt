@@ -41,11 +41,11 @@
 (define (page-answer? answer)
   (page? answer))
 
-(define (view-of file journal width)
+(define (view-of file journal width [mode "write"])
   (define answer
     (ask-hot "notation-view" (hasheq 'file (path->string file)
                                      'journal (path->string journal)
-                                     'width (number->string width))))
+                                     'width (number->string width) 'mode mode)))
   (if (response-ok answer)
       (hash-ref (response-data answer) 'text "")
       (format "~a: ~a — ~a"

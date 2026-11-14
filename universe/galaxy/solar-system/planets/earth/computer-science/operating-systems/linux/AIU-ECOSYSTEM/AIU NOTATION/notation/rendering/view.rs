@@ -172,11 +172,11 @@ impl<'a> View<'a> {
         self.gap();
         self.wrapped(&codes, &text);
         self.rule("═", text.chars().count());
-        if let Some(k) = decl(b, "kind").filter(|k| !k.is_empty()) {
+        if let Some(k) = decl(b, "kind").filter(|k| !k.is_empty() && !reading()) {
             let s = self.sgr(&[1, 36], &format!("kind: {}", k));
             self.out(&s);
         }
-        if let Some(t) = decl(b, "tags").filter(|t| !t.is_empty()) {
+        if let Some(t) = decl(b, "tags").filter(|t| !t.is_empty() && !reading()) {
             let s = self.sgr(&[2], &format!("tags: {}", t));
             self.out(&s);
         }
@@ -285,8 +285,10 @@ impl<'a> View<'a> {
                     self.gap();
                 }
             }
+            "comment" | "answer" | "mark" if reading() => { return; }
             "paragraph" | "comment" => { self.gap(); self.paragraph(b); }
             "code" => { self.gap(); self.code(b); }
+            "contract" => { if reading() { return; } }
             other => {
                 self.gap();
                 let s = self.sgr(&[2, 33], &format!("? unknown block: {}", other));
@@ -346,33 +348,16 @@ struct Contract {
     arg: String,
 }
 
-/// The contracts of one file type, read from contracts.dat in the target folder; None when the file is missing.
+/// The contracts of one file type, read from the nearest .notation folder.
 fn load_contracts(kind: &str) -> Option<Vec<Contract>> {
-    let mut cands: Vec<std::path::PathBuf> = Vec::new();
-    if let Ok(p) = std::env::var("AIU_CONTRACTS") { cands.push(p.into()); }
-    let mut exes: Vec<std::path::PathBuf> = Vec::new();
-    if let Some(a) = std::env::args().next() { exes.push(a.into()); }
-    if let Ok(b) = std::env::var("AIU_NOTATION_BIN") { exes.push(b.into()); }
-    if let Ok(e) = std::env::current_exe() { exes.push(e); }
-    for e in exes { for d in e.ancestors().skip(1).take(4) { cands.push(d.join("contracts.dat")); } }
-    let path = cands.into_iter().find(|p| p.exists())?;
-    let text = std::fs::read_to_string(path).ok()?;
-    let mut res = Vec::new();
-    for l in text.lines() {
-        let f: Vec<&str> = l.split('\t').collect();
-        if f.len() < 5 || f[0] != kind {
-            continue;
-        }
-        let rule = f[1] == "rule";
-        res.push(Contract {
-            rule,
-            section: f[2].to_string(),
-            block: f[3].to_string(),
-            name: if rule { f[4].to_string() } else { String::new() },
-            arg: if rule { f.get(5).unwrap_or(&"").to_string() } else { f[4].to_string() },
-        });
-    }
-    Some(res)
+    let rows = crate::contract_files::read(kind)?;
+    Some(rows.into_iter().map(|r| Contract {
+        rule: r.rule,
+        section: r.section,
+        block: r.block,
+        name: r.name,
+        arg: r.arg,
+    }).collect())
 }
 
 /// Whether a contract names this block in this section; the section * means any section.
@@ -429,7 +414,7 @@ impl<'a> View<'a> {
         let cs = match load_contracts(&kind) {
             Some(c) => c,
             None => {
-                let s = self.sgr(&[1, 31], "no contract data: run aiu see FILE --contracts once to write it");
+                let s = self.sgr(&[1, 31], "no .notation folder for this kind up the tree");
                 self.out(&s);
                 return;
             }
@@ -523,3 +508,9 @@ impl<'a> View<'a> {
 fn env_k(name: &str, default: usize) -> usize {
     std::env::var(name).ok().and_then(|v| v.parse().ok()).unwrap_or(default)
 }
+
+static READ: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+pub fn set_read(on: bool) { READ.store(on, std::sync::atomic::Ordering::Relaxed); }
+
+fn reading() -> bool { READ.load(std::sync::atomic::Ordering::Relaxed) }

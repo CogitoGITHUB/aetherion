@@ -19,7 +19,7 @@
 (define (git-on-layer layer)
   (unless (equal? layer (unbox last-layer))
     (set-box! last-layer layer)
-    (when (string=? layer "visual") (git-refresh-in-background))))
+    (when (and (string=? layer "visual") (>= (- (current-seconds) (unbox git-stamp)) 60)) (set-box! git-stamp (current-seconds)) (git-refresh-in-background))))
 
 (define (bar-stack layer short width pending)
   (git-on-layer layer)

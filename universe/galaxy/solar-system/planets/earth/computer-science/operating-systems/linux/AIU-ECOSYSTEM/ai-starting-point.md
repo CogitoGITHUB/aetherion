@@ -1,5 +1,7 @@
 # START HERE (for any AI)
 
+NEVER LEAVE OPEN HOLES. If you see a hole or a side effect in your own work, close it in the same script. Never write a known hole as a note to him.
+
 This file only explains how to work on this system. It holds no work,
 no progress and no next steps. The work is in the todo files and the
 plan files. Read ACTIVE WORK below, then go to the files it names.
@@ -30,6 +32,8 @@ times. He may hand you only this file.
   bins), else a stale hot-path runs and the first draw hangs.
 
 ## Rules
+- Say what you started only when you start something
+  new: one short line. Never recap it in later answers.
 - No git, no backup files, no guessed paths, no find over home, no
   comments in code.
 - Read first, then patch: grep -c every anchor, abort if the count is
@@ -54,6 +58,16 @@ times. He may hand you only this file.
 - Every decision and every change is written into the plan or todo
   file at once, so nothing depends on the chat.
 
+- No apostrophe inside a bash -c single-quoted script.
+- find -type f skips symlinks: use -L or the path.
+- Contracts live in .notation/TYPE/ID.rktd.
+- Live notation binary: $HOME/aiu-target/live/aiu-notation/release/notation (a symlink, find -type f misses it). Run it with 2>/dev/null, it prints a long block types line to stderr.
+- After a change, end the script by opening the test page: nushell line after the bash -c block, never inside it.
+
+
+- Make a page and open it in the editor in ONE nushell command: a double-quoted string with kind: in the title | save -f FILE.aiu, then aiutd FILE.aiu. Never bash -c, the editor needs the real tty. Opening adds the contracts.
+- FIX THE SHELL: it must run every normal TUI with the real terminal. No hard coded list of program names (is_fullscreen_line in command_runner.rs). Detect TUIs at runtime, for example by the alternate screen switch, so nothing is ever registered.
+
 ## How the PM works (verified, rules only)
 - Manifest: ecosystem-manifest/NAME.rktd. Keys: source, build,
   install. Entry code: AIU ECOSYSTEM/ecosystem/entry/ecosystem.rkt
@@ -61,7 +75,7 @@ times. He may hand you only this file.
 - (bin SRC DEST): SRC is read relative to the build target dir.
 - ecosystem live NAME runs the manifest cargo argv in the source
   folder with --target-dir swapped for ~/aiu-target/live/NAME.
-  Output lands in ~/aiu-target/live/NAME/debug/.
+  Output lands in ~/aiu-target/live/NAME/release/.
 - live: a bin SRC under the target dir is read from the live
   target. Any other bin SRC (a launcher script) is read from
   the source folder. Fixed in the pairs line of ecosystem.rkt.
@@ -98,3 +112,12 @@ times. He may hand you only this file.
 - aiutd docs must never write this file. Never add that back.
 - The editor builds against AIU NOTATION by path (editor/Cargo.toml).
   There is no copy of notation inside the editor. Never make one.
+
+## NEW FILE FLOW
+
+Make a .aiu file and open it in the editor. One Nushell command:
+
+"title start\nkind: default\nName\ntitle end\n" | save -f f.aiu
+aiutd f.aiu
+
+The title needs a kind: line. Opening runs notation fill and adds the contract rows. Never bash -c for aiutd, it needs the real tty.

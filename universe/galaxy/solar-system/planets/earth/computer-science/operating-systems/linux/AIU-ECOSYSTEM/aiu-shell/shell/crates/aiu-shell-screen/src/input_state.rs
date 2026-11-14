@@ -322,6 +322,43 @@ impl InputState {
         }
     }
 
+
+    pub fn run_alt(&mut self, terminal: &mut ratatui::DefaultTerminal) {
+        let alt = self.job.as_ref().map(|j| j.wants_terminal()).unwrap_or(false);
+        if !alt {
+            return;
+        }
+        let Some(mut job) = self.job.take() else { return };
+        let _ = crossterm::execute!(
+            std::io::stdout(),
+            crossterm::event::DisableBracketedPaste
+        );
+        let early = job.poll();
+        if let Some(pair) = self.pairs.last_mut() {
+            pair.output.rows.extend(early);
+        }
+        ratatui::restore();
+        let code = crate::command_runner::run_passthrough(&mut job);
+        *terminal = ratatui::init();
+        let _ = terminal.clear();
+        let _ = crossterm::execute!(
+            std::io::stdout(),
+            crossterm::event::EnableBracketedPaste
+        );
+        if let Some(Some(info)) = self.infos.last_mut() {
+            info.duration = Some(info.started.elapsed());
+            info.exit = Some(Some(code));
+        }
+        if let Some(pair) = self.pairs.last_mut() {
+            if code != 0 {
+                pair.output.rows.push(format!("exit {}", code));
+            }
+            if pair.output.rows.is_empty() {
+                pair.output.rows.push(String::new());
+            }
+        }
+    }
+
     pub fn poll_job(&mut self) {
         let Some(job) = self.job.as_mut() else {
             return;
@@ -401,10 +438,7 @@ impl InputState {
         let cwd = std::env::current_dir()
             .map(|path| path.display().to_string())
             .unwrap_or_default();
-        let output_rows = if self.run_commands && crate::command_runner::is_fullscreen_line(&line) {
-            crate::command_runner::request_fullscreen(&line);
-            vec![String::from("running full screen")]
-        } else if self.run_commands {
+        let output_rows = if self.run_commands {
             self.start_job(&line)
         } else {
             vec![String::from("not run yet")]
@@ -461,6 +495,30 @@ impl InputState {
                 if c.to_string() == "r" && self.mode != Mode::Search {
                     self.open_search();
                 }
+            }
+            return;
+        }
+
+        if self.job.is_some() {
+            let mut stop = false;
+            let mut bytes: Vec<u8> = Vec::new();
+            if let Some(job) = self.job.as_mut() {
+                let is_space = matches!(key.code, KeyCode::Char(c) if c == char::from(32u8));
+                stop = is_space && job.last_space;
+                job.last_space = is_space && !stop;
+                match key.code {
+                    KeyCode::Char(c) => bytes = c.to_string().into_bytes(),
+                    KeyCode::Enter => bytes.push(10),
+                    KeyCode::Backspace => bytes.push(127),
+                    KeyCode::Tab => bytes.push(9),
+                    KeyCode::Esc => bytes.push(27),
+                    _ => {}
+                }
+            }
+            if stop {
+                self.stop_job();
+            } else if let Some(job) = self.job.as_mut() {
+                job.write_input(&bytes);
             }
             return;
         }

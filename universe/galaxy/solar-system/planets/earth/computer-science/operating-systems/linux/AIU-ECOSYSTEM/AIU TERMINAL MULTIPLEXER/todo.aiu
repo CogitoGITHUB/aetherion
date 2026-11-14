@@ -10,6 +10,11 @@ Next
 title end
 
 paragraph start
+todo: hide pane key: with one pane or more, a key hides the focused pane, it is not killed. The tab of a hidden pane goes on a second row at the top of the pane box. Needs more planning before any code.
+Planned.
+paragraph end
+
+paragraph start
 todo: URGENT running command block: copy c still works but the copy notification says ❗ RUNNING COMMAND ❗ (Shape lost output copying a running block 3 times); do not touch mux z
 Planned.
 paragraph end

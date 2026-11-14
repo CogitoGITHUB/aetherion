@@ -1,8 +1,133 @@
 title start
 kind: default
-TEST
+tags: test showcase
+NOTATION SHOWCASE
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+answer end
+title end
+
+chapter start
+title start
+Chapter one: text
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+answer end
 title end
 
 paragraph start
-It works.
+An ordinary paragraph. It makes one point.
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+answer end
 paragraph end
+
+paragraph start
+A second paragraph, to see spacing between blocks.
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+Yes. It shows how an answer sits in its block.
+answer end
+paragraph end
+
+chapter start
+title start
+A nested chapter
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+answer end
+title end
+
+paragraph start
+A chapter inside a chapter, with its own number.
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+answer end
+paragraph end
+chapter end
+
+paragraph start
+todo: a to-do paragraph, written the way the todo files do it.
+Planned.
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+answer end
+paragraph end
+chapter end
+
+chapter start
+title start
+Chapter two: comments
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+answer end
+title end
+
+chapter start
+title start
+A chapter inside chapter two
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+answer end
+title end
+
+paragraph start
+A paragraph inside chapter 2.1.
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+answer end
+paragraph end
+chapter end
+
+comment start
+A single comment. The reader drops it.
+comment end
+
+comment start
+paragraph start
+This paragraph is wrapped in a comment.
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+answer end
+paragraph end
+
+paragraph start
+So is this one. Both are dropped together.
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+answer end
+paragraph end
+comment end
+chapter end
+
+chapter start
+title start
+Chapter three: code
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+answer end
+title end
+
+code start
+language: bash
+aiu check page.aiu
+code end
+
+code start
+language: racket
+(define (double x) (* 2 x))
+code end
+chapter end

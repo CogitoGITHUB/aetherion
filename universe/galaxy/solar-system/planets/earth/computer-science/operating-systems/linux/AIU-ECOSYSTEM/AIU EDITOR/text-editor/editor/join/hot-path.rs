@@ -135,7 +135,8 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
                 .trim()
                 .parse::<usize>()
                 .unwrap_or(56);
-            match notation_view(&text, width) {
+            let read = wire_json::arg(request, "mode").trim() == "read";
+            match notation_view(&text, width, &file, read) {
                 Ok(rendered) => (true, vec![("text".to_string(), rendered)]),
                 Err(why) => (
                     false,
@@ -157,6 +158,7 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
         }
         rust_exports::OP_OPEN => {
             let text = current_text(&file, &journal_path);
+            let text = if journal::records(&journal_path).is_empty() { let synced = sync_contracts(&text, &file); if synced != text { let _ = fs::write(&file, &synced); } synced } else { text };
             let state = buffer::new_buffer(&text);
             let pending = journal::records(&journal_path).len();
             let mut facts = vec![
@@ -170,6 +172,9 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
         rust_exports::OP_INSERT => {
             let more = wire_json::arg(request, "text");
             let text = current_text(&file, &journal_path);
+            if locked(&text, text.len(), 0, &more) {
+                return refused();
+            }
             let mut state = buffer::new_buffer(&text);
             let bytes = buffer::append(&mut state, &more);
             let record = format!("insert {}", journal::escape(&more));
@@ -185,6 +190,7 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
         }
         rust_exports::OP_SAVE => {
             let text = current_text(&file, &journal_path);
+            let text = sync_contracts(&text, &file);
             let before = fs::read_to_string(&file).unwrap_or_default();
             if let Err(why) = fs::write(&file, &text) {
                 return (
@@ -278,6 +284,9 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
                 .unwrap_or(0);
             let more = wire_json::arg(request, "text");
             let text = current_text(&file, &journal_path);
+            if locked(&text, at, 0, &more) {
+                return refused();
+            }
             let mut state = buffer::new_buffer(&text);
             let bytes = buffer::insert_at(&mut state, at, &more);
             let record = format!("insert-at {} {}", at, journal::escape(&more));
@@ -302,6 +311,9 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
                 .parse::<usize>()
                 .unwrap_or(0);
             let text = current_text(&file, &journal_path);
+            if count > 0 && locked(&text, at, count, "") {
+                return refused();
+            }
             let mut state = buffer::new_buffer(&text);
             let bytes = buffer::delete_at(&mut state, at, count);
             let record = format!("delete-at {} {}", at, count);
@@ -382,6 +394,52 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
     }
 }
 
+fn refused() -> (bool, Vec<(String, String)>) {
+    (
+        false,
+        vec![
+            ("kind".to_string(), "err-read-only".to_string()),
+            (
+                "what".to_string(),
+                "a contract block is read only".to_string(),
+            ),
+            (
+                "what_to_do".to_string(),
+                "edit outside the contract block".to_string(),
+            ),
+        ],
+    )
+}
+
+fn contract_spans(text: &str) -> Vec<(usize, usize)> {
+    let mut spans = Vec::new();
+    let mut open: Option<usize> = None;
+    let mut off = 0usize;
+    for line in text.split("\n") {
+        let t = line.trim();
+        if t == "contract start" && open.is_none() {
+            open = Some(off);
+        }
+        if t == "contract end" {
+            if let Some(s) = open.take() {
+                spans.push((s, off + line.len()));
+            }
+        }
+        off += line.len() + 1;
+    }
+    spans
+}
+
+fn locked(text: &str, at: usize, count: usize, more: &str) -> bool {
+    contract_spans(text).iter().any(|&(s, e)| {
+        if count == 0 {
+            (at > s && at <= e) || (at == s && !more.ends_with("\n"))
+        } else {
+            at < e + 1 && at + count > s
+        }
+    })
+}
+
 fn current_text(file: &str, journal_path: &str) -> String {
     let saved = match fs::read_to_string(file) {
         Ok(text) => text,
@@ -399,7 +457,34 @@ fn write_answer(answer_path: &str, ok: bool, data: &[(String, String)]) {
     }
 }
 
-fn notation_view(text: &str, width: usize) -> Result<String, String> {
+fn sync_contracts(text: &str, file: &str) -> String {
+    let named = std::env::var("AIU_NOTATION_BIN").unwrap_or_default();
+    if !file.ends_with(".aiu") || named.is_empty() {
+        return text.to_string();
+    }
+    let temp = std::env::temp_dir()
+        .join(format!("aiu-editor-sync-{}.aiu", std::process::id()));
+    if std::fs::write(&temp, text).is_err() {
+        return text.to_string();
+    }
+    let dir = std::path::Path::new(file)
+        .parent()
+        .map(|p| p.to_path_buf())
+        .unwrap_or_default();
+    let ran = std::process::Command::new(&named)
+        .env("AIU_PAGE_DIR", dir)
+        .arg("fill")
+        .arg(&temp)
+        .output();
+    let synced = match ran {
+        Ok(out) if out.status.success() => std::fs::read_to_string(&temp),
+        _ => Err(std::io::Error::from(std::io::ErrorKind::Other)),
+    };
+    let _ = std::fs::remove_file(&temp);
+    synced.unwrap_or_else(|_| text.to_string())
+}
+
+fn notation_view(text: &str, width: usize, file: &str, read: bool) -> Result<String, String> {
     let named = std::env::var("AIU_NOTATION_BIN").unwrap_or_default();
     let bin = if named.is_empty() {
         std::path::PathBuf::from(concat!(
@@ -417,8 +502,10 @@ fn notation_view(text: &str, width: usize) -> Result<String, String> {
     std::fs::write(&temp, text)
         .map_err(|e| format!("the page could not be written to draw it: {}", e))?;
     let drawn = std::process::Command::new(&bin)
+        .env("AIU_PAGE_DIR", std::path::Path::new(file).parent().map(|p| p.to_path_buf()).unwrap_or_default())
         .arg("view").arg(&temp)
         .arg("--width").arg(width.to_string())
+        .arg("--contracts").args(if read { vec!["--read"] } else { vec![] })
         .output();
     let _ = std::fs::remove_file(&temp);
     let output = drawn.map_err(|e| format!("the notation view could not run: {}", e))?;

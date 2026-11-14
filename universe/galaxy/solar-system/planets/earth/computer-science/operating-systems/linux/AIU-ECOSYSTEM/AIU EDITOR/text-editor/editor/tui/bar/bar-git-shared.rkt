@@ -82,6 +82,6 @@
        (set-box! git-busy #f)
        (when changed? (again))))))
 
-(define (git-stale!) (set-box! git-stamp 1))
+(define (git-stale!) (set-box! git-stamp (- (current-seconds) 50)))
 
 (provide git-info git-stamp git-busy git-out git-facts git-text git-letters git-refresh-maybe git-stale!)

@@ -62,6 +62,7 @@ fn run_screen() {
             None
         };
         state.poll_job();
+        state.run_alt(&mut terminal);
         state.tick += 1;
         state.age_notice();
         if let Some(Event::Paste(text)) = &incoming {
@@ -77,7 +78,12 @@ fn run_screen() {
             terminal = ratatui::init();
             let _ = execute!(stdout(), EnableBracketedPaste);
             if let Some(last) = state.pairs.last_mut() {
-                last.output.rows = vec![format!("full screen program ended, exit {}", code)];
+                if code != 0 {
+                last.output.rows.push(format!("exit {}", code));
+            }
+            if last.output.rows.is_empty() {
+                last.output.rows.push(String::new());
+            }
             }
         }
         if aiu_shell_screen::command_runner::take_jump() { let _ = execute!(stdout(), DisableBracketedPaste); ratatui::restore(); let _ = aiu_shell_screen::command_runner::pick_directory(); terminal = ratatui::init(); let _ = execute!(stdout(), EnableBracketedPaste); } if let Some(text) = state.pending_copy.take() {

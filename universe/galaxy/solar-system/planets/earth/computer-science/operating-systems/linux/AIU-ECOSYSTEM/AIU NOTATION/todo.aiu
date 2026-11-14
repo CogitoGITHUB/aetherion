@@ -9,26 +9,6 @@ title start
 Next
 title end
 
-paragraph start
-todo: contract loader: contracts-of reads the contract files from the nearest .notation/TYPE/ folder up the tree, one file per question named by its id, replacing the hard coded the-contracts lists in filetypes/types; a subdirectory with its own .notation/ but no folder for a type falls back to the parent; plan section 13 step 2.
-Planned.
-paragraph end
-
-paragraph start
-todo: missing contract error: check reports a finding where a paragraph, section or to-do type has no contract file, where an answer points at an id with no contract file, and where an attached contract differs from its file; plan section 13 step 2.
-Planned.
-paragraph end
-
-paragraph start
-todo: stale types readme: filetypes/types/README.md still names notation system/ and gate/check.nu; point it at the real paths and at the contract files in .notation/.
-Planned.
-paragraph end
-
-paragraph start
-todo: seed contract files: write one contract file per current rule and question with its id kept (answers point at ids like qadd5fe), then remove every the-contracts list from filetypes/types; plan section 13 step 2.
-Planned.
-paragraph end
-
 
 paragraph start
 todo: link blocks: link start and link end name a target box and can show it inside another file; the editor suggests names while typing.
@@ -67,7 +47,7 @@ Planned.
 paragraph end
 
 paragraph start
-todo: names: fill name: on old blocks that have none
+todo: names: a duplicate name is a check error, and a name is unique across the whole ecosystem through the database
 Planned.
 paragraph end
 
@@ -108,6 +88,14 @@ paragraph end
 
 paragraph start
 todo: editor uses notation: the editor builds against AIU NOTATION by path, with no copy in editor/notation, so the two cannot drift.
+Planned.
+paragraph end
+
+paragraph start
+todo: editor passes the page folder: the view call in
+hot-path.rs sets AIU_PAGE_DIR to the real file folder,
+because the view runs on a temp copy; until then the
+viewer falls back to the current folder to find .notation/.
 Planned.
 paragraph end
 

@@ -10,7 +10,7 @@ struct L {
     sep: bool,
 }
 
-/// One contract of a file type, as contracts.dat holds it; for a question, arg is the question text.
+/// One contract of a file type, as its contract file holds it; for a question, arg is the question text.
 struct Contract {
     rule: bool,
     section: String,
@@ -116,38 +116,17 @@ fn divider() -> L {
     L { s: String::new(), n: 0, sep: true }
 }
 
-/// The contracts of one file type, read from contracts.dat in the target folder; None when the file is missing.
+/// The contracts of one file type, read from the nearest .notation folder.
 fn load_contracts(kind: &str) -> Option<Vec<Contract>> {
-    let mut cands: Vec<std::path::PathBuf> = Vec::new();
-    if let Ok(p) = std::env::var("AIU_CONTRACTS") { cands.push(p.into()); }
-    let mut exes: Vec<std::path::PathBuf> = Vec::new();
-    if let Some(a) = std::env::args().next() { exes.push(a.into()); }
-    if let Ok(b) = std::env::var("AIU_NOTATION_BIN") { exes.push(b.into()); }
-    if let Ok(e) = std::env::current_exe() { exes.push(e); }
-    for e in exes {
-        for d in e.ancestors().skip(1).take(4) {
-            cands.push(d.join("contracts.dat"));
-        }
-    }
-    let path = cands.into_iter().find(|p| p.exists())?;
-    let text = std::fs::read_to_string(path).ok()?;
-    let mut res: Vec<Contract> = Vec::new();
-    for l in text.lines() {
-        let f: Vec<&str> = l.split("\t").collect();
-        if f.len() < 5 || f[0] != kind {
-            continue;
-        }
-        let rule = f[1] == "rule";
-        res.push(Contract {
-            rule,
-            section: f[2].to_string(),
-            block: f[3].to_string(),
-            name: if rule { f[4].to_string() } else { String::new() },
-            arg: if rule { f.get(5).unwrap_or(&"").to_string() } else { f[4].to_string() },
-            id: if rule { String::new() } else { f.get(5).unwrap_or(&"").to_string() },
-        });
-    }
-    Some(res)
+    let rows = crate::contract_files::read(kind)?;
+    Some(rows.into_iter().map(|r| Contract {
+        rule: r.rule,
+        section: r.section,
+        block: r.block,
+        name: r.name,
+        arg: r.arg,
+        id: r.id,
+    }).collect())
 }
 
 /// The drawing methods of the boxed view.
@@ -329,24 +308,23 @@ impl Boxes {
                 }
             } else {
                 qn += 1;
-                ask.extend(self.row("? ", &[33], &format!("{}Q{}: {}", tag, qn, c.arg), w));
+                
                 let ans = b.children.iter().find_map(|k| match k {
                     Node::Block(a) if a.name == "answer" && !c.id.is_empty() && decl(a, "for").as_deref() == Some(c.id.as_str()) => Some(a),
                     _ => None,
                 }).filter(|a| !self.text_of(a).is_empty());
-                ask.extend(self.row("  ", &[2], &"┄".repeat(w.saturating_sub(8).max(4)), w));
+                
                 match ans {
                     Some(a) => {
                         let saved = decl(a, "asked").unwrap_or_default();
                         if !saved.is_empty() && saved != c.arg {
                             ask.extend(self.row("≠ ", &[1, 33], &format!("STALE: the question changed. This answer was for: {}", saved), w));
                         }
-                        let t = self.text_of(a);
-                        ask.extend(self.row("✔ ", &[32], &t, w));
+                        
                         self.ok += 1;
                     }
                     None => {
-                        ask.extend(self.row("… ", &[2], "no answer yet", w));
+                        
                         self.open += 1;
                     }
                 }
@@ -364,7 +342,7 @@ impl Boxes {
         for n in ns {
             match n {
                 Node::Block(b) => {
-                    if b.span.start == skip || b.name == "answer" {
+                    if b.span.start == skip {
                         continue;
                     }
                     let mut one = self.draw(b, sec, depth, width);
@@ -423,7 +401,7 @@ impl Boxes {
         if inner.is_empty() {
             inner.push(self.line(&[], ""));
         }
-        self.frame(&format!("section {} · {}", num, ttext), &codes, inner, width, false, true)
+        self.frame(&format!("{} · {}", num, ttext), &codes, inner, width, false, true)
     }
 
     /// Draw one block as a box, with its contract rows under it when contracts are shown.
@@ -446,10 +424,10 @@ impl Boxes {
                 if first { inner.push(self.line(&[], "")); }
                 if depth == 0 && !self.seen_title {
                     self.seen_title = true;
-                    if let Some(k) = decl(b, "kind").filter(|k| !k.is_empty()) {
+                    if let Some(k) = decl(b, "kind").filter(|k| !k.is_empty() && !is_read()) {
                         inner.push(self.line(&[1, 36], &clip(&format!("kind: {}", k), iw)));
                     }
-                    if let Some(t) = decl(b, "tags").filter(|t| !t.is_empty()) {
+                    if let Some(t) = decl(b, "tags").filter(|t| !t.is_empty() && !is_read()) {
                         inner.push(self.line(&[2], &clip(&format!("tags: {}", t), iw)));
                     }
                 }
@@ -479,6 +457,21 @@ impl Boxes {
                     inner.push(self.line(&[32], &clip(&l.replace("\t", "    "), iw)));
                 }
             }
+            "answer" => {
+                label = "answer".to_string();
+                tcodes = vec![2, 33];
+                for g in groups(&self.body(b)) {
+                    inner.extend(self.wrapped(&[], &g, iw));
+                }
+            }
+            "contract" => {
+                label = "contract".to_string();
+                tcodes = vec![2, 33];
+                let q = vec![decl(b, "question").unwrap_or_default()];
+                for g in groups(&q) {
+                    inner.extend(self.wrapped(&[], &g, iw));
+                }
+            }
             other => {
                 label = format!("unknown block: {}", other);
                 tcodes = vec![2, 33];
@@ -506,8 +499,8 @@ impl Boxes {
         }
         let center = b.name != "code";
         match todo {
-            Some(v) => self.todo_side(&label, &tcodes, inner, width, center, &v),
-            None => self.frame(&label, &tcodes, inner, width, false, center),
+            Some(v) => self.todo_side(&named(b, &label), &tcodes, inner, width, center, &v),
+            None => self.frame(&named(b, &label), &tcodes, inner, width, false, center),
         }
     }
 
@@ -549,6 +542,10 @@ impl Boxes {
 
 /// The page drawn as boxes for a terminal of the given width, with colour unless plain and contracts on their blocks when asked.
 pub fn render_boxes(text: &str, width: usize, plain: bool, contracts: bool) -> String {
+    let reading = is_read();
+    let stripped = if reading { strip_hidden(text) } else { String::new() };
+    let text: &str = if reading { stripped.as_str() } else { text };
+    let contracts = contracts && !reading;
     let tree = parse(&Buffer::from_text(text));
     let mut starts = vec![0usize];
     for (i, _) in text.match_indices("\n") {
@@ -564,7 +561,7 @@ pub fn render_boxes(text: &str, width: usize, plain: bool, contracts: bool) -> S
         match &kind {
             None => note = Some("no kind: line, so no contract applies".to_string()),
             Some(k) => match load_contracts(k) {
-                None => note = Some("no contract data: run aiu see FILE --contracts once to write it".to_string()),
+                None => note = Some("no .notation folder for this kind up the tree".to_string()),
                 Some(c) => {
                     if c.is_empty() {
                         note = Some(format!("no contracts apply to the kind {}", k));
@@ -661,6 +658,7 @@ impl Boxes {
                 if b.name == "answer" {
                     continue;
                 }
+                sync_marks(self, b, sec, add, rep);
                 for c in &self.cs {
                     if c.rule || c.id.is_empty() || c.block != b.name || !(c.section == "*" || c.section == sec) {
                         continue;
@@ -673,7 +671,7 @@ impl Boxes {
                         rep.push(format!("line {}: code block skipped, question {} needs a person", b.line, c.id));
                         continue;
                     }
-                    add.push((self.end_line(b), format!("answer start\nfor: {}\nasked: {}\nanswer end", c.id, c.arg)));
+                    add.push((self.end_line(b), format!("answer start\nfor: {}\nasked: {}\n\nanswer end", c.id, c.arg)));
                 }
                 for k in &b.children {
                     if let Node::Block(a) = k {
@@ -697,6 +695,186 @@ impl Boxes {
     }
 }
 
+fn named(b: &Block, label: &str) -> String {
+    match decl(b, "name") {
+        Some(n) => n,
+        None => label.to_string(),
+    }
+}
+
+const NAMELESS: [&str; 3] = ["answer", "contract", "link"];
+
+fn name_words(text: &str) -> String {
+    let words: Vec<String> = text
+        .split_whitespace()
+        .map(|w| {
+            w.chars()
+                .filter(|c| c.is_alphanumeric())
+                .collect::<String>()
+                .to_lowercase()
+        })
+        .filter(|w| !w.is_empty())
+        .take(3)
+        .collect();
+    words.join("-")
+}
+
+fn name_used(nodes: &[Node], used: &mut Vec<String>) {
+    for n in nodes {
+        if let Node::Block(b) = n {
+            if let Some(x) = decl(b, "name") {
+                used.push(x);
+            }
+            name_used(&b.children, used);
+        }
+    }
+}
+
+fn name_fill(
+    v: &Boxes,
+    nodes: &[Node],
+    used: &mut Vec<String>,
+    add: &mut Vec<(usize, String)>,
+    rep: &mut Vec<String>,
+) {
+    for n in nodes {
+        if let Node::Block(b) = n {
+            let skip = NAMELESS.contains(&b.name.as_str());
+            if !skip && decl(b, "name").is_none() {
+                let label = if b.name == "chapter" {
+                    "section".to_string()
+                } else {
+                    b.name.clone()
+                };
+                let src = if b.name == "chapter" {
+                    b.children.iter().find_map(|k| match k {
+                        Node::Block(x) if x.name == "title" => {
+                            Some(v.text_of(x))
+                        }
+                        _ => None,
+                    })
+                } else {
+                    None
+                };
+                let src = src.unwrap_or_else(|| v.text_of(b));
+                let words = name_words(&src);
+                let stem = if words.is_empty() {
+                    label
+                } else {
+                    format!("{}-{}", label, words)
+                };
+                let mut name = stem.clone();
+                let mut n2 = 2;
+                while used.contains(&name) {
+                    name = format!("{}-{}", stem, n2);
+                    n2 += 1;
+                }
+                used.push(name.clone());
+                add.push((b.line + 1, format!("name: {}", name)));
+                rep.push(format!("line {}: named {}", b.line, name));
+            }
+            name_fill(v, &b.children, used, add, rep);
+        }
+    }
+}
+
+const DEL: &str = "\u{1}del";
+const SET: &str = "\u{1}set:";
+
+fn sync_marks(
+    v: &Boxes,
+    b: &Block,
+    sec: &str,
+    add: &mut Vec<(usize, String)>,
+    rep: &mut Vec<String>,
+) {
+    let kids: Vec<_> = b.children.iter()
+        .filter_map(|k| match k {
+            Node::Block(x) => Some(x),
+            _ => None,
+        })
+        .collect();
+    let find = |s: usize, e: usize, key: &str| {
+        (s..=e).find(|n| {
+            *n >= 1 && *n <= v.lines.len()
+                && v.lines[*n - 1].starts_with(key)
+        })
+    };
+    for c in &v.cs {
+        if c.rule || c.id.is_empty() || c.block != b.name {
+            continue;
+        }
+        if !(c.section == "*" || c.section == sec) {
+            continue;
+        }
+        let held = kids.iter().find(|x| {
+            x.name == "contract"
+                && decl(x, "id").as_deref() == Some(c.id.as_str())
+        });
+        match held {
+            None => {
+                let t = vec![
+                    "contract start".to_string(),
+                    format!("id: {}", c.id),
+                    format!("question: {}", c.arg),
+                    "contract end".to_string(),
+                ];
+                add.push((v.end_line(b), t.join("\n")));
+            }
+            Some(x) => {
+                let now = decl(x, "question").unwrap_or_default();
+                if now != c.arg {
+                    let end = v.end_line(x);
+                    if let Some(n) = find(x.line, end, "question:") {
+                        let t = format!("{}question: {}", SET, c.arg);
+                        add.push((n, t));
+                        rep.push(format!(
+                            "line {}: contract {} updated",
+                            x.line, c.id
+                        ));
+                    }
+                }
+            }
+        }
+    }
+    for x in kids.iter().filter(|x| x.name == "contract") {
+        let id = decl(x, "id").unwrap_or_default();
+        if v.cs.iter().any(|c| !c.rule && c.id == id) {
+            continue;
+        }
+        for n in x.line..=v.end_line(x) {
+            add.push((n, DEL.to_string()));
+        }
+        rep.push(format!("line {}: contract {} removed", x.line, id));
+    }
+    for a in kids.iter().filter(|x| x.name == "answer") {
+        let id = decl(a, "for").unwrap_or_default();
+        let saved = decl(a, "asked").unwrap_or_default();
+        let want = match v.cs.iter().find(|c| !c.rule && c.id == id) {
+            None => Some("retired"),
+            Some(c) if !saved.is_empty() && saved != c.arg => Some("stale"),
+            Some(_) => None,
+        };
+        let end = v.end_line(a);
+        let cur = find(a.line, end, "state:");
+        match (want, cur) {
+            (Some(w), Some(n)) => {
+                let now = v.lines[n - 1].trim().to_string();
+                if now != format!("state: {}", w) {
+                    add.push((n, format!("{}state: {}", SET, w)));
+                }
+            }
+            (Some(w), None) => {
+                if let Some(n) = find(a.line, end, "asked:") {
+                    add.push((n + 1, format!("state: {}", w)));
+                }
+            }
+            (None, Some(n)) => add.push((n, DEL.to_string())),
+            (None, None) => {}
+        }
+    }
+}
+
 /// The page with an empty answer slot added under every question that has none, and a report of what was added or needs a person.
 pub fn fill_page(text: &str) -> Result<(String, Vec<String>), String> {
     let tree = parse(&Buffer::from_text(text));
@@ -708,8 +886,10 @@ pub fn fill_page(text: &str) -> Result<(String, Vec<String>), String> {
         .find_map(|n| match n { Node::Block(b) if b.name == "title" => Some(b), _ => None })
         .and_then(|t| decl(t, "kind"))
         .and_then(|k| k.split_whitespace().next().map(|s| s.to_string()));
-    let k = kind.ok_or("no kind: line, so no questions apply")?;
-    let cs = load_contracts(&k).ok_or("no contract data: run aiu update, or aiu see FILE --contracts once")?;
+    let cs = kind
+        .as_ref()
+        .and_then(|k| load_contracts(k))
+        .unwrap_or_default();
     let v = Boxes {
         text: text.to_string(),
         lines: text.split("\n").map(|l| l.to_string()).collect(),
@@ -728,15 +908,59 @@ pub fn fill_page(text: &str) -> Result<(String, Vec<String>), String> {
     let mut add: Vec<(usize, String)> = Vec::new();
     let mut rep: Vec<String> = Vec::new();
     v.fill_walk(&tree.nodes, "", &mut add, &mut rep);
+    if kind.is_none() {
+        rep.push("no kind: line, so no questions apply".to_string());
+    }
+    let mut used: Vec<String> = Vec::new();
+    name_used(&tree.nodes, &mut used);
+    name_fill(&v, &tree.nodes, &mut used, &mut add, &mut rep);
     let mut out: Vec<String> = Vec::new();
     for (i, l) in v.lines.iter().enumerate() {
+        let mut line = Some(l.clone());
         for (ln, t) in &add {
-            if *ln == i + 1 {
+            if *ln != i + 1 {
+                continue;
+            }
+            if t == DEL {
+                line = None;
+            } else if let Some(s) = t.strip_prefix(SET) {
+                line = Some(s.to_string());
+            } else {
                 out.push(t.clone());
             }
         }
-        out.push(l.clone());
+        if let Some(s) = line {
+            out.push(s);
+        }
     }
-    rep.insert(0, format!("added {} answer slot(s)", add.len()));
+    let slots = add.iter()
+        .filter(|(_, t)| t.starts_with("answer start"))
+        .count();
+    rep.insert(0, format!("added {} answer slot(s)", slots));
     Ok((out.join("\n"), rep))
+}
+
+static READ: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+pub fn set_read(on: bool) { READ.store(on, std::sync::atomic::Ordering::Relaxed); }
+
+fn is_read() -> bool { READ.load(std::sync::atomic::Ordering::Relaxed) }
+
+fn strip_hidden(text: &str) -> String {
+    let hidden = ["comment", "answer", "contract", "mark"];
+    let mut out: Vec<&str> = Vec::new();
+    let mut skip: Option<String> = None;
+    for l in text.split("\n") {
+        let t = l.trim();
+        if let Some(name) = skip.clone() {
+            if t == format!("{} end", name) { skip = None; }
+            continue;
+        }
+        let mut hit = false;
+        for h in hidden.iter() {
+            if t == format!("{} start", h) { skip = Some(h.to_string()); hit = true; break; }
+        }
+        if !hit { out.push(l); }
+    }
+    out.join("\n")
 }

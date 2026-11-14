@@ -1,0 +1,1 @@
+(rule "*" "code" needs-declaration "language")

@@ -103,6 +103,10 @@ pub struct RunningJob {
     status: Option<Option<i32>>,
     quiet_polls: usize,
     pub exit: Option<Option<i32>>,
+    master: Option<std::fs::File>,
+    pub last_space: bool,
+    alt: std::sync::Arc<std::sync::atomic::AtomicBool>,
+    pending: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
 }
 
 impl RunningJob {
@@ -174,14 +178,14 @@ pub fn spawn_job(mut command: Command) -> Result<RunningJob, String> {
         pump_rows(Box::new(stream), sender.clone());
     }
     drop(sender);
-    Ok(RunningJob { child, receiver, status: None, quiet_polls: 0, exit: None })
+    Ok(RunningJob { child, receiver, status: None, quiet_polls: 0, exit: None, last_space: false, master: None, alt: Default::default(), pending: Default::default() })
 }
 
 pub fn start_line(line: &str) -> Result<RunningJob, String> {
     let binary = shell_binary();
     let mut command = Command::new(&binary);
     command.arg("--no-config-file").arg("-c").arg(line);
-    spawn_job(command).map_err(|error| format!("could not start {}: {}", binary.display(), error))
+    spawn_pty_job(command).map_err(|error| format!("could not start {}: {}", binary.display(), error))
 }
 
 #[cfg(test)]
@@ -259,10 +263,6 @@ mod tests {
 
 static FULLSCREEN_LINE: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
 
-pub fn is_fullscreen_line(line: &str) -> bool {
-    let first = line.split_whitespace().next().unwrap_or("");
-    ["tv", "aiutm", "vim", "nvim", "vi", "nano", "less", "man", "htop", "btop", "top", "emacs", "ssh", "fzf", "aiu-shell", "aiutd"].contains(&first)
-}
 
 pub fn request_fullscreen(line: &str) {
     if let Ok(mut slot) = FULLSCREEN_LINE.lock() {
@@ -312,4 +312,217 @@ pub fn dev_mode_toggle() -> String {
 }
 pub fn dev_build_all() -> String {
     if run_detached("update") { String::from("building everything changed through the pm, see devmode.log") } else { String::from("build: could not start ecosystem") }
+}
+
+fn has_alt(bytes: &[u8]) -> bool {
+    let marks: [&[u8]; 3] =
+        [b"\x1b[?1049h", b"\x1b[?1047h", b"\x1b[?47h"];
+    marks.iter().any(|m| bytes.windows(m.len()).any(|w| w == *m))
+}
+
+fn set_size(fd: i32, cols: u16, rows: u16) {
+    let ws = libc::winsize {
+        ws_row: rows,
+        ws_col: cols,
+        ws_xpixel: 0,
+        ws_ypixel: 0,
+    };
+    unsafe {
+        libc::ioctl(fd, libc::TIOCSWINSZ as _, &ws);
+    }
+}
+
+fn open_pty() -> std::io::Result<(std::fs::File, std::fs::File)> {
+    use std::os::fd::FromRawFd;
+    unsafe {
+        let m = libc::posix_openpt(libc::O_RDWR | libc::O_NOCTTY);
+        if m < 0 {
+            return Err(std::io::Error::last_os_error());
+        }
+        let master = std::fs::File::from_raw_fd(m);
+        if libc::grantpt(m) != 0 || libc::unlockpt(m) != 0 {
+            return Err(std::io::Error::last_os_error());
+        }
+        let mut name = [0 as libc::c_char; 128];
+        if libc::ptsname_r(m, name.as_mut_ptr(), 128) != 0 {
+            return Err(std::io::Error::last_os_error());
+        }
+        let s = libc::open(name.as_ptr(), libc::O_RDWR | libc::O_NOCTTY);
+        if s < 0 {
+            return Err(std::io::Error::last_os_error());
+        }
+        Ok((master, std::fs::File::from_raw_fd(s)))
+    }
+}
+
+
+fn pump_pty(
+    mut reader: std::fs::File,
+    sender: Sender<String>,
+    alt: std::sync::Arc<std::sync::atomic::AtomicBool>,
+    pending: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
+) {
+    std::thread::spawn(move || {
+        use std::os::fd::AsRawFd;
+        let fd = reader.as_raw_fd();
+        let mut buf = [0u8; 4096];
+        let mut acc: Vec<u8> = Vec::new();
+        let mut last = std::time::Instant::now();
+        let park = |acc: &Vec<u8>| {
+            if let Ok(mut p) = pending.lock() {
+                p.extend_from_slice(acc);
+            }
+            alt.store(true, std::sync::atomic::Ordering::SeqCst);
+        };
+        let raw_mode = || {
+            let mut t: libc::termios = unsafe { std::mem::zeroed() };
+            unsafe { libc::tcgetattr(fd, &mut t) == 0 && t.c_lflag & libc::ICANON == 0 }
+        };
+        loop {
+            let mut p = libc::pollfd { fd, events: libc::POLLIN, revents: 0 };
+            let ready = unsafe { libc::poll(&mut p, 1, 100) };
+            if ready > 0 {
+                let n = match reader.read(&mut buf) {
+                    Ok(0) | Err(_) => break,
+                    Ok(n) => n,
+                };
+                acc.extend_from_slice(&buf[..n]);
+                last = std::time::Instant::now();
+                if has_alt(&acc) || raw_mode() {
+                    park(&acc);
+                    return;
+                }
+                while let Some(i) = acc.iter().position(|b| *b == 10) {
+                    let line: Vec<u8> = acc.drain(..=i).collect();
+                    let text = String::from_utf8_lossy(&line)
+                        .replace("\t", "    ")
+                        .replace("\r", "");
+                    let row = strip_escapes(text.trim_end_matches("\n"));
+                    if sender.send(row).is_err() {
+                        return;
+                    }
+                }
+            } else {
+                let stalled = !acc.is_empty()
+                    && last.elapsed() > std::time::Duration::from_millis(500);
+                if stalled || raw_mode() {
+                    park(&acc);
+                    return;
+                }
+            }
+        }
+        if !acc.is_empty() {
+            let text = String::from_utf8_lossy(&acc).replace("\r", "");
+            let _ = sender.send(strip_escapes(&text));
+        }
+    });
+}
+
+pub fn spawn_pty_job(mut command: Command) -> Result<RunningJob, String> {
+    use std::os::fd::AsRawFd;
+    use std::os::unix::process::CommandExt;
+    let (master, slave) = open_pty().map_err(|e| e.to_string())?;
+    let (c, r) = crossterm::terminal::size().unwrap_or((80, 24));
+    set_size(master.as_raw_fd(), c, r);
+    let dup = |f: &std::fs::File| f.try_clone().map_err(|e| e.to_string());
+    command.stdin(Stdio::from(dup(&slave)?));
+    command.stdout(Stdio::from(dup(&slave)?));
+    command.stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            libc::setsid();
+            libc::ioctl(0, libc::TIOCSCTTY as _, 0);
+            Ok(())
+        });
+    }
+    let child = command.spawn().map_err(|e| e.to_string())?;
+    drop(command);
+    let reader = master.try_clone().map_err(|e| e.to_string())?;
+    let (sender, receiver) = channel();
+    let alt = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
+    let pending = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
+    pump_pty(reader, sender, alt.clone(), pending.clone());
+    Ok(RunningJob {
+        child,
+        receiver,
+        status: None,
+        quiet_polls: 0,
+        exit: None,
+        master: Some(master),
+        last_space: false,
+        alt,
+        pending,
+    })
+}
+
+impl RunningJob {
+    pub fn wants_terminal(&self) -> bool {
+        self.alt.load(std::sync::atomic::Ordering::SeqCst)
+    }
+}
+
+pub fn run_passthrough(job: &mut RunningJob) -> i32 {
+    use std::io::Write;
+    use std::os::fd::AsRawFd;
+    let Some(master) = job.master.as_ref().and_then(|m| m.try_clone().ok())
+    else {
+        return -1;
+    };
+    let _ = crossterm::terminal::enable_raw_mode();
+    let mut out = std::io::stdout();
+    let first = job.pending.lock().map(|p| p.clone()).unwrap_or_default();
+    let _ = out.write_all(&first);
+    let _ = out.flush();
+    let mut size = crossterm::terminal::size().unwrap_or((80, 24));
+    set_size(master.as_raw_fd(), size.0, size.1);
+    if let Ok(mut reader) = master.try_clone() {
+        std::thread::spawn(move || {
+            let mut buf = [0u8; 4096];
+            let mut out = std::io::stdout();
+            while let Ok(n) = reader.read(&mut buf) {
+                if n == 0 || out.write_all(&buf[..n]).is_err() {
+                    break;
+                }
+                let _ = out.flush();
+            }
+        });
+    }
+    let mut writer = master;
+    let code = loop {
+        let mut fds = libc::pollfd { fd: 0, events: libc::POLLIN, revents: 0 };
+        let ready = unsafe { libc::poll(&mut fds, 1, 40) };
+        if ready > 0 && fds.revents & libc::POLLIN != 0 {
+            let mut buf = [0u8; 1024];
+            let n = unsafe {
+                libc::read(0, buf.as_mut_ptr() as *mut libc::c_void, buf.len())
+            };
+            if n > 0 {
+                let _ = writer.write_all(&buf[..n as usize]);
+            }
+        }
+        if let Ok(now) = crossterm::terminal::size() {
+            if now != size {
+                size = now;
+                set_size(writer.as_raw_fd(), now.0, now.1);
+            }
+        }
+        if let Ok(Some(status)) = job.child.try_wait() {
+            break status.code().unwrap_or(-1);
+        }
+    };
+    std::thread::sleep(std::time::Duration::from_millis(80));
+    let _ = crossterm::terminal::disable_raw_mode();
+    job.status = Some(Some(code));
+    job.exit = Some(Some(code));
+    code
+}
+
+
+impl RunningJob {
+    pub fn write_input(&mut self, bytes: &[u8]) {
+        use std::io::Write;
+        if let Some(master) = self.master.as_mut() {
+            let _ = master.write_all(bytes);
+        }
+    }
 }

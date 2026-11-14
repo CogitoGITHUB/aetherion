@@ -1,0 +1,14 @@
+title start
+name: title-name
+kind: default
+Name
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end

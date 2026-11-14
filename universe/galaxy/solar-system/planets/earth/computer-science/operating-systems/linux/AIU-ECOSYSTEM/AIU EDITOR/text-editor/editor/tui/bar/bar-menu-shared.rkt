@@ -89,7 +89,7 @@
         (list "block-edit" "edit" "edit raw") (list "block-text" "edit" "edit text")
         (list "delete" "edit" "backspace")
         (list "kind-any" "kind" "any block") (list "kind-paragraph" "kind" "paragraph")
-        (list "kind-section" "kind" "section") (list "kind-code" "kind" "code")
+        (list "kind-section" "kind" "chapter") (list "kind-code" "kind" "code")
         (list "kind-comment" "kind" "comment") (list "kind-title" "kind" "title")
         (list "kind-todo" "todo" "any todo") (list "kind-todo-open" "todo" "open todo")
         (list "kind-todo-done" "todo" "done todo")

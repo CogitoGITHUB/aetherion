@@ -40,6 +40,7 @@
     (lambda ()
       (wire-start)
       (let next-round ([file file] [journal journal])
+        (ask-hot "open" (hasheq (quote file) (path->string (path->complete-path file)) (quote journal) (path->string (path->complete-path journal))))
         (define session (make-session file journal))
         (split-state-file-set! (path->string (path->complete-path file)))
     (trace-session! file)

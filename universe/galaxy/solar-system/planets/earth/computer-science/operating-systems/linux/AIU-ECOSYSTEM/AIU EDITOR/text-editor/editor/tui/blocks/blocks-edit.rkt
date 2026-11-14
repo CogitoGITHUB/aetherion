@@ -30,14 +30,32 @@
      (blockview-clamp! session start)
      result]))
 
+(define (blockview-skip-declarations bs from end)
+  (let loop ([i from])
+    (define nl
+      (let scan ([j i])
+        (cond
+          [(>= j end) #f]
+          [(= (bytes-ref bs j) 10) j]
+          [else (scan (add1 j))])))
+    (if (and nl
+             (regexp-match? #px#"^(for|asked|state): "
+                            (subbytes bs i nl)))
+        (loop (add1 nl))
+        i)))
+
 (define (blockview-first-content raw b)
   (define bs (string->bytes/utf-8 raw))
   (define end (min (block-end b) (bytes-length bs)))
-  (let loop ([i (block-start b)])
-    (cond
-      [(>= i end) (block-start b)]
-      [(= (bytes-ref bs i) 10) (min end (add1 i))]
-      [else (loop (add1 i))])))
+  (define lo
+    (let loop ([i (block-start b)])
+      (cond
+        [(>= i end) (block-start b)]
+        [(= (bytes-ref bs i) 10) (min end (add1 i))]
+        [else (loop (add1 i))])))
+  (if (equal? (block-name b) "answer")
+      (blockview-skip-declarations bs lo end)
+      lo))
 
 (define (blockview-step session words direction fallback)
   (define got (and (blockview-aiu? session)
@@ -85,8 +103,14 @@
      (cond
        [target
         (set-box! edit-start (block-start target))
-         (set-box! edit-mode "raw")
-         (set-box! edit-lo (block-start target))
+         (set-box! edit-mode
+                  (if (equal? (block-name target) "answer")
+                      "text"
+                      "raw"))
+         (set-box! edit-lo
+                  (if (equal? (block-name target) "answer")
+                      (blockview-first-content raw target)
+                      (block-start target)))
         (move-to session (blockview-first-content raw target))
         (cons #t (format "editing the ~a block: escape draws the page again"
                          (block-name target)))]
@@ -117,7 +141,7 @@
 
 (hash-set! commands "block-up" blockview-command-up)
 (hash-set! commands "block-down" blockview-command-down)
-(hash-set! commands "block-edit" blockview-command-edit)
+(hash-set! commands "block-edit" (lambda (session words) (if (unbox read-mode) (begin (set-box! read-mode #f) (cons #t "writing mode: all details shown")) (blockview-command-edit session words))))
 
 (for-each
  (lambda (name)

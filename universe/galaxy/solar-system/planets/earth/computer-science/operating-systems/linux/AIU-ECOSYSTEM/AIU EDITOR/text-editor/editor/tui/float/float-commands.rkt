@@ -33,7 +33,7 @@
 (define (todo-line-append! text)
   (define path (float-file-path "todo" (float-root)))
   (define body (file->string path))
-  (define ends (regexp-match-positions* #rx"section end" body))
+  (define ends (regexp-match-positions* #rx"chapter end" body))
   (define paragraph (string-append "paragraph start\ntodo: " text "\nPlanned.\nparagraph end\n\n"))
   (define at (if (null? ends) (string-length body) (car (car (reverse ends)))))
   (display-to-file (string-append (substring body 0 at) paragraph (substring body at)) path #:exists (quote replace)))

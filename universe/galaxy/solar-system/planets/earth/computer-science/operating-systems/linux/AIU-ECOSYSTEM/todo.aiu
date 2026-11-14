@@ -6,6 +6,57 @@ title end
 
 section start
 title start
+Open holes
+title end
+
+paragraph start
+todo: multiplexer has its own copy of view-of and blockview.rkt; reading mode is not patched there
+Planned.
+paragraph end
+
+paragraph start
+todo: reading mode is not a chapter in aiutd-tutorial.aiu yet; not done until it shows there
+Planned.
+paragraph end
+
+paragraph start
+todo: box glitches at the right edge; overlay paint code live-paint.rkt not read
+Planned.
+paragraph end
+
+paragraph start
+todo: mode line keeps saying reading after switching to a tab that is not a .aiu file
+Planned.
+paragraph end
+
+paragraph start
+todo: reading mode cuts blocks from the text before drawing (strip_hidden in boxview.rs); draw() not read
+Planned.
+paragraph end
+
+paragraph start
+todo: never tried: hot-path lock in contract blocks, stale marking of answers, aiu-shell pty passthrough test, status bar BUILD ERRORS check
+Planned.
+paragraph end
+
+paragraph start
+todo: names unique per file only; link is not a registered block type; step 3: links, sync, red delete popup, idle autosave
+Planned.
+paragraph end
+
+paragraph start
+todo: not answered: keep chapter edge look A; todo paragraph as one box instead of box and tray
+Planned.
+paragraph end
+
+paragraph start
+todo: double space exit from writing mode and w or i switch are in blocks-text.rkt by wrapping menu-or-visual; not confirmed by a tutorial chapter
+Planned.
+paragraph end
+section end
+
+section start
+title start
 Next
 title end
 

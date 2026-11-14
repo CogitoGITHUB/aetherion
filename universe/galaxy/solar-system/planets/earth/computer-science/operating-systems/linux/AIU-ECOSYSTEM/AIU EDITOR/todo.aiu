@@ -226,6 +226,16 @@ paragraph start
 todo: open raw line wider than the screen while a block is edited
 Planned.
 paragraph end
+
+paragraph start
+todo: open boxes side by side: n and s stay move-left and move-right and must move between boxes placed next to each other
+Planned.
+paragraph end
+
+paragraph start
+todo: open motion mode beside edit and view: free movement inside and between boxes, apart from the m layer that swaps blocks
+Planned.
+paragraph end
 chapter end
 
 chapter start

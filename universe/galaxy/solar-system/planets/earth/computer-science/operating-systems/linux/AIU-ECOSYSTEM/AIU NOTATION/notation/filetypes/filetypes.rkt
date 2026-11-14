@@ -3,7 +3,7 @@
 ;; Why: adding a file type means adding one module to filetypes/types/, with no edit here
 ;; or in the engine.
 ;; Called by: diagnostics/collect.rkt (the checker) and make-live.rkt.
-(require racket/runtime-path "type.rkt")
+(require racket/file racket/string racket/runtime-path "type.rkt")
 (provide (all-from-out "type.rkt") load-file-types file-type-named type-modules required-sections-of contracts-of)
 
 ;; The folder that holds one module per file type.
@@ -50,13 +50,25 @@
              (dynamic-require m 'the-sections (lambda () '()))))
       '()))
 
-;; contracts-of answers the contracts a file type carries, in order. A type module exports
-;; them as the-contracts, a list of (rule SECTION BLOCK NAME ARG) and (question SECTION
-;; BLOCK TEXT) entries; a type without that export carries none.
-(define (contracts-of name)
-  (or (for/or ([entry (in-list (sort (directory-list types-dir) path<?))])
-        (define m (entry-module entry))
-        (and m
-             (equal? (file-type-name (dynamic-require m 'the-type)) name)
-             (dynamic-require m 'the-contracts (lambda () '()))))
-      '()))
+(define-runtime-path here ".")
+
+(define (contract-folder start name)
+  (let loop ([dir (simplify-path (path->complete-path start))])
+    (define folder (build-path dir ".notation" name))
+    (cond
+      [(directory-exists? folder) folder]
+      [else
+       (define-values (base leaf dir?) (split-path dir))
+       (and (path? base) (loop base))])))
+
+(define (contracts-in folder)
+  (for/list ([f (in-list (sort (directory-list folder #:build? #t)
+                               path<?))]
+             #:when (string-suffix? (path->string f) ".rktd"))
+    (file->value f)))
+
+(define (contracts-of name [from #f])
+  (define folder
+    (if from (contract-folder from name)
+        (contract-folder here name)))
+  (if folder (contracts-in folder) (list)))

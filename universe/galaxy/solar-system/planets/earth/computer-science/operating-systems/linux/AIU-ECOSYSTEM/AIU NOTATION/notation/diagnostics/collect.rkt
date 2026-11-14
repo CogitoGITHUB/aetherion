@@ -46,7 +46,9 @@
     section-out-of-order
     rule-violated
     question-unverified
-    duplicate-name))
+    duplicate-name
+    contract-missing
+    answer-orphan))
 
 ;; link is the keyword a link declaration carries. A link is not a property:
 ;; a property is a hint for a reader, and a link names a target. The parser
@@ -482,12 +484,34 @@
 
 ;; contract-findings checks the contracts of the page's file type against the page. A type
 ;; without contracts, or a page whose text cannot be read, gives no findings.
+(define (page-folder who)
+  (with-handlers ([void (lambda (x) #f)])
+    (let-values ([(b l d) (split-path (path->complete-path who))])
+      (and (path? b) b))))
+
+(define (orphan-findings tl who cs)
+  (define ids
+    (for/list ([c (in-list cs)] #:when (eq? (car c) (quote question)))
+      (list-ref c 4)))
+  (for/list ([l (in-list tl)] [i (in-naturals 1)]
+             #:when (let ([m (regexp-match #px"^\\s*for:\\s*(q[0-9a-f]+)\\s*$" l)])
+                      (and m (not (member (cadr m) ids)))))
+    (finding (quote answer-orphan) who i 0
+             "an answer points at a question id with no contract file"
+             "restore the contract file with that id, or delete the answer")))
+
 (define (contract-findings lines who found nodes)
-  (define cs (contracts-of (file-type-name found)))
+  (define name (file-type-name found))
+  (define cs (contracts-of name (page-folder who)))
   (define tl (or lines (let ([text (read-page-text who)]) (and text (page-lines text)))))
   (cond
-    [(or (null? cs) (not tl)) '()]
+    [(not tl) (list)]
+    [(null? cs)
+     (list (finding (quote contract-missing) who 1 0
+                    (format "the ~a type has no contract files" name)
+                    (format "add contract files in .notation/~a/" name)))]
     [else
      (define ask? (equal? (getenv "AIU_QUESTIONS") "1"))
-     (append-map (lambda (p) (check-placed tl who cs ask? (car p) (cdr p)))
-                 (placed-blocks tl nodes ""))]))
+     (append (append-map (lambda (p) (check-placed tl who cs ask? (car p) (cdr p)))
+                         (placed-blocks tl nodes ""))
+             (orphan-findings tl who cs))]))

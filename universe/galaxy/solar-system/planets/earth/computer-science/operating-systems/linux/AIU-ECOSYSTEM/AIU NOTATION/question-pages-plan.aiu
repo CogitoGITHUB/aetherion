@@ -355,4 +355,18 @@ paragraph start
 Order of work: step 1, block type holes: fill name on old blocks, duplicate name as a check error, register link as a block type and let the indexer read link blocks, load block types per file, move how each type is drawn into its blocktypes file. Step 2, contracts: seed the contract files with ids kept, the loader, the missing contract error, delete the hard coded lists, fix filetypes/types/README.md. Step 3: links and sync, the red delete popup in our own file manager, idle autosave, the ecosystem server.
 paragraph end
 
+paragraph start
+Decided 2026-11-14: a contract file is one Racket list in
+a .rktd file. A question is named by its id, a rule by
+rule-BLOCK-NAME-ARG. contracts-of walks up from the page.
+paragraph end
+
+paragraph start
+Decided 2026-11-14: every save of a page with a kind runs
+notation fill on the text, so the answer slots of every
+contract are written into the file by the notation system.
+The editor sets AIU_PAGE_DIR so contracts and block types
+are found from the real folder of the page.
+paragraph end
+
 chapter end

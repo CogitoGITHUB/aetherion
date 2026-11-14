@@ -89,7 +89,7 @@ def main [cmd?: string, target?: path, extra?: string, --plain (-p), --contracts
     if ($cmd == "list") and (not $plain) and (is-terminal --stdout) and (not (which tv | is-empty)) { aiu-list-tv; return }
   let root = (^readlink -f $script_file | str trim | path dirname | path dirname | path dirname)
   let bin = ($root | path join notation target debug notation)
-  let cli = ($root | path join notation src entry cli.rkt)
+  let cli = ($root | path join notation entry cli.rkt)
   let view = ($root | path join tools see aiu)
   let rk = ($env.HOME | path join opt racket-full bin racket)
   let racket = ($env.AIU_RACKET? | default (if ($rk | path exists) { $rk } else { "racket" }))
@@ -115,7 +115,6 @@ def main [cmd?: string, target?: path, extra?: string, --plain (-p), --contracts
     return
   }
   if $cmd == "fill" {
-    refresh-contracts $root $racket
     run-external $bin "fill" $target
     return
   }
@@ -202,12 +201,12 @@ def update-package [root: string, bin: string, racket: string] {
   let repo = ($root | path dirname)
   let raco = ($racket | path dirname | path join raco)
   if ($raco | path exists) {
-    let c = (with-env {LC_ALL: "C.UTF-8"} { run-external $raco make ($root | path join notation src entry cli.rkt) ($root | path join notation src filetypes make-live.rkt) ($root | path join notation src filetypes dump-contracts.rkt) } | complete)
+    let c = (with-env {LC_ALL: "C.UTF-8"} { run-external $raco make ($root | path join notation entry cli.rkt) ($root | path join notation filetypes make-live.rkt) ($root | path join notation filetypes dump-contracts.rkt) } | complete)
     if $c.exit_code != 0 { print $c.stderr; error make {msg: "raco: compile failed"} }
     print "raco: compiled"
   }
 
-  let rust = (do { cd $root; glob notation/src/**/*.rs } | append [($root | path join notation Cargo.toml) ($root | path join notation Cargo.lock)])
+  let rust = (do { cd $root; glob notation/**/*.rs } | append [($root | path join notation Cargo.toml) ($root | path join notation Cargo.lock)])
   let newest_rust = ($rust | each {|p| ls $p | get modified | first } | sort | last)
   let bin_time = (if ($bin | path exists) { ls $bin | get modified | first } else { null })
   let stale_bin = (if $bin_time == null { true } else { $newest_rust > $bin_time })
@@ -219,13 +218,13 @@ def update-package [root: string, bin: string, racket: string] {
     print "rust: up to date"
   }
 
-  let sources = (do { cd $root; glob notation/src/filetypes/**/*.rkt })
+  let sources = (do { cd $root; glob notation/filetypes/**/*.rkt })
   let newest_source = ($sources | each {|p| ls $p | get modified | first } | sort | last)
   let pages = (do { cd $repo; glob types/*.aiu })
   let oldest_page = (if ($pages | is-empty) { null } else { $pages | each {|p| ls $p | get modified | first } | sort | first })
   let stale_pages = (if $oldest_page == null { true } else { $newest_source > $oldest_page })
   if $stale_pages {
-    let make = ($root | path join notation src filetypes make-live.rkt)
+    let make = ($root | path join notation filetypes make-live.rkt)
     let r = (with-env {LC_ALL: "C.UTF-8"} { run-external $racket $make } | complete)
     if $r.exit_code != 0 {
       print $r.stderr
@@ -235,16 +234,15 @@ def update-package [root: string, bin: string, racket: string] {
   } else {
     print "pages: up to date"
   }
-  refresh-contracts $root $racket
 }
 
 # list-package prints the block names the parser knows and the file types that load.
 def list-package [root: string, racket: string] {
-  let parser = ($root | path join notation src parser parser.rs)
+  let parser = ($root | path join notation parser parser.rs)
   let body = (open --raw $parser | lines | skip until {|l| $l | str contains "BLOCK_NAMES: ["} | skip 1 | take until {|l| ($l | str trim) == "];"})
   let names = ($body | str join " " | split row "\"" | enumerate | where {|x| ($x.index mod 2) == 1} | get item)
 
-  let ft = ($root | path join notation src filetypes filetypes.rkt)
+  let ft = ($root | path join notation filetypes filetypes.rkt)
   let expr = ["(require (file \"" $ft "\") racket/string) (for ([(n t) (in-hash (load-file-types))]) (printf \"~a|~a|~a\" (file-type-name t) (file-type-description t) (let ([b (file-type-allowed-blocks t)]) (if b (string-join b \" \") \"*\"))) (newline))"] | str join
   let r = (with-env {LC_ALL: "C.UTF-8"} { run-external $racket "-e" $expr } | complete)
   if $r.exit_code != 0 {
@@ -277,7 +275,7 @@ def new-page [root: string, racket: string, bin: string, kind, file] {
   let repo = ($root | path dirname)
   let raco = ($racket | path dirname | path join raco)
   if ($raco | path exists) {
-    let c = (with-env {LC_ALL: "C.UTF-8"} { run-external $raco make ($root | path join notation src entry cli.rkt) ($root | path join notation src filetypes make-live.rkt) ($root | path join notation src filetypes dump-contracts.rkt) } | complete)
+    let c = (with-env {LC_ALL: "C.UTF-8"} { run-external $raco make ($root | path join notation entry cli.rkt) ($root | path join notation filetypes make-live.rkt) ($root | path join notation filetypes dump-contracts.rkt) } | complete)
     if $c.exit_code != 0 { print $c.stderr; error make {msg: "raco: compile failed"} }
     print "raco: compiled"
   }
@@ -295,7 +293,7 @@ def new-page [root: string, racket: string, bin: string, kind, file] {
     error make {msg: $"($dest) already exists"}
   }
   cp $starter $dest
-  let cli = ($root | path join notation src entry cli.rkt)
+  let cli = ($root | path join notation entry cli.rkt)
   let r = (with-env {LC_ALL: "C.UTF-8", AIU_NOTATION_BIN: $bin} { run-external $racket $cli "check" $dest } | complete)
   print $"created ($dest)"
   print (($r.stdout + $r.stderr) | str trim)
@@ -310,7 +308,7 @@ def new-type [root: string, racket: string, name] {
   if not ($n =~ "^[a-z][a-z0-9-]*$") {
     error make {msg: "a type name is lowercase letters, digits and dashes, and starts with a letter"}
   }
-  let dir = ($root | path join notation src filetypes types)
+  let dir = ($root | path join notation filetypes types)
   let file = ($dir | path join $"($n).rkt")
   if ($file | path exists) or (($dir | path join $n) | path exists) {
     error make {msg: $"a file type named ($n) already exists"}
@@ -320,14 +318,11 @@ def new-type [root: string, racket: string, name] {
     ";; NAME.rkt -- the file type \"NAME\": one line saying what it is for."
     ";; Called by: filetypes.rkt (found by scanning filetypes/types/)."
     "(require \"_base.rkt\")"
-    "(provide the-type the-contracts)"
+    "(provide the-type)"
     ""
     ";; The NAME type."
     "(define the-type (file-type \"NAME\" \"edit this description\" (list \"title\" \"paragraph\")))"
     ""
-    ";; The contracts of the NAME type. A rule is checked; a question is only reported."
-    "(define the-contracts"
-    "  (list (list 'rule \"*\" \"paragraph\" 'max-words 250)))"
   ]
   let text = ($lines | str join "\n" | str replace --all "NAME" $n)
   ($text + "\n") | save $file
@@ -336,23 +331,12 @@ def new-type [root: string, racket: string, name] {
   print "next: set the description, the allowed blocks and the contracts in that file, then run aiu update"
 }
 
-# see-pair: the command that draws a page: the Rust view; for the contracts panel it first makes sure the data file is fresh.
+# see-pair: the command that draws a page: the Rust view.
 # Called by: the see command above. Arguments: the Racket binary, this script path, the extra flags.
 def see-pair [racket: string, view: string, flags: list] {
   let root = ($view | path dirname | path dirname | path dirname)
   let env_bin = ($env.AIU_NOTATION_BIN? | default "")
   let bin = (if ($env_bin | path exists) { $env_bin } else { $root | path join notation target debug notation })
-  if ($flags | any {|x| $x == "--contracts"}) { refresh-contracts $root $racket }
   [$bin "view"]
 }
 
-# refresh-contracts: writes notation/target/contracts.dat when it is missing or older than a file type module.
-# Called by: see-pair. Arguments: the project root, the Racket binary.
-def refresh-contracts [root: string, racket: string] {
-  let dat = ($root | path join notation target contracts.dat)
-  let types = ($root | path join notation src filetypes)
-  let stale = (if ($dat | path exists) { (^find $types -name "*.rkt" -newer $dat | str trim) != "" } else { true })
-  if $stale {
-    with-env {LC_ALL: "C.UTF-8"} { run-external $racket ($types | path join dump-contracts.rkt) $dat }
-  }
-}

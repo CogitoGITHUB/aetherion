@@ -11,6 +11,8 @@ use std::time::Instant;
 mod view;
 #[path = "rendering/boxview.rs"]
 mod boxview;
+#[path = "rendering/contract-files.rs"]
+mod contract_files;
 
 use notation::buffer::Buffer;
 use notation::parser::{parse, Node};
@@ -32,6 +34,14 @@ fn usage() {
 // command that knows it.
 
 /// Read the file, run the one command named, and exit with the code it earns.
+fn page_anchor(path: &str) -> std::path::PathBuf {
+    match std::env::var("AIU_PAGE_DIR") {
+        Ok(d) if !d.is_empty() => std::path::PathBuf::from(d).join("page.aiu"),
+        _ => std::path::PathBuf::from(path),
+    }
+}
+
+
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     if args.len() < 3 {
@@ -52,7 +62,8 @@ fn main() {
     }
     let command = args[1].clone();
     let path = args[2].clone();
-    if let Some(folder) = notation::block_registry::load_near(std::path::Path::new(&path)) {
+    contract_files::set_page(&path);
+    if let Some(folder) = notation::block_registry::load_near(&page_anchor(&path)) {
         eprintln!("notation: block types from {}", folder);
     }
 
@@ -73,7 +84,7 @@ fn main() {
             let mut contracts = false;
             let mut flat = false;
             while i < args.len() {
-                if args[i] == "--plain" { plain = true; } else if args[i] == "--contracts" { contracts = true; } else if args[i] == "--flat" { flat = true; }
+                if args[i] == "--plain" { plain = true; } else if args[i] == "--contracts" { contracts = true; } else if args[i] == "--flat" { flat = true; } else if args[i] == "--read" { boxview::set_read(true); }
                 else if args[i] == "--width" && i + 1 < args.len() { width = args[i + 1].parse().unwrap_or(56); i += 1; }
                 i += 1;
             }
