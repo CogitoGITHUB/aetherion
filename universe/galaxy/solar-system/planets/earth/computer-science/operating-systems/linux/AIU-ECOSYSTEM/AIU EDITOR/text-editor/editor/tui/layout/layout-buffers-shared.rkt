@@ -63,3 +63,16 @@
 
 (define (layout-buffers-tab-ids state)
   (layout-tab-ids (layout-buffer-layout (current-buffer state))))
+
+(define (layout-buffers-move state delta)
+  (define bs (layout-buffer-list-buffers state))
+  (define i (layout-buffer-list-current state))
+  (define j (+ i delta))
+  (if (or (< j 0) (>= j (length bs)))
+      state
+      (let* ([v (list->vector bs)] [a (vector-ref v i)])
+        (vector-set! v i (vector-ref v j))
+        (vector-set! v j a)
+        (layout-buffer-list (vector->list v) j))))
+
+(provide layout-buffers-move)

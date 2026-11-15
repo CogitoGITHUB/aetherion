@@ -10,13 +10,13 @@
       [else
        (define command
          (case (bytes-ref input i)
-           [(100) (quote focus-left)]
-           [(110) (quote focus-right)]
-           [(104) (quote focus-down)]
-           [(116) (quote focus-up)]
-           [(114) (quote split-right)]
-           [(115) (quote split-down)]
-           [(99) (quote close)]
+           [(104) (quote focus-left)]
+           [(115) (quote focus-right)]
+           [(116) (quote focus-down)]
+           [(110) (quote focus-up)]
+           [(118) (quote split-right)]
+           [(119) (quote split-down)]
+           [(99) (quote close)] [(100) (quote close)] [(72) (quote swap-left)] [(84) (quote swap-down)] [(78) (quote swap-up)] [(83) (quote swap-right)]
            [(102) (quote float-toggle)]
            [(49) (quote float-todo)]
            [(50) (quote float-journal)]

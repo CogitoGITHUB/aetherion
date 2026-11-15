@@ -121,3 +121,21 @@
 (provide tab-git-text tab-buffers tab-buffer-current)
 (provide project-order project-hidden workspace-order workspace-hidden tabs-arranged)
 (provide tab-lists)
+
+(define (tab-boxes file width again)
+  (define root (tabs-root file))
+  (tabs-scan-maybe root again)
+  (define have (unbox tab-lists))
+  (define ready (and have (string=? (car have) (path->string root))))
+  (define inner (max 1 (- width 4)))
+  (define ws-now (tabs-last root))
+  (define pr-now (tabs-project file root))
+  (define ws-list (if ready (tabs-arranged (cadr have) workspace-order workspace-hidden ws-now) (list)))
+  (define pr-list (if ready (tabs-arranged (caddr have) project-order project-hidden pr-now) (list)))
+  (define bufs (unbox tab-buffers))
+  (append
+   (if (> (length ws-list) 1) (list (cons "workspace" (tabs-mark-row ws-list (index-of ws-list ws-now) inner))) (list))
+   (if (> (length pr-list) 1) (list (cons "project" (tabs-mark-row pr-list (index-of pr-list pr-now) inner))) (list))
+   (if (> (length bufs) 1) (list (cons "buffer" (tabs-mark-row bufs (unbox tab-buffer-current) inner))) (list))))
+
+(provide tab-boxes)

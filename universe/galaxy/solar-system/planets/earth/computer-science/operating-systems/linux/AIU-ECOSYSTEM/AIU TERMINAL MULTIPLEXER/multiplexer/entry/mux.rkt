@@ -4,7 +4,7 @@
          "../pane/pane-keys.rkt" "../pane/pane-scroll-keys.rkt" "../pane/pane-buffer-keys.rkt" "../pane/pane-split-keys.rkt"
          "../tui/layout/layout-tree-shared.rkt" "../tui/layout/layout-buffers-shared.rkt" "../tui/float/float-state-shared.rkt"
          "../frame/frame-bars.rkt" "../frame/frame-paint.rkt" "../frame/frame-diff.rkt" "../frame/frame-compose.rkt"
-         "../machine/terminal.rkt"
+         "../machine/terminal.rkt" "../tui/tabs/tabs-mux-shared.rkt"
          (only-in "../tui/bar/bar-clock-shared.rkt" clock-stamp))
 
 (define session-name "shell")
@@ -132,6 +132,107 @@
   (define buffers-state (box (layout-buffers-new "main" 1)))
   (define pane-counter (box 1))
   (define buffer-counter (box 1))
+  (define buffer-prompt (box #f))
+  (define (prompt-label k)
+    (case k
+      [(pr-new) "name for the new project"]
+      [(pr-rename) "rename project"]
+      [(ws-new) "name for the new workspace"]
+      [(ws-rename) "rename workspace"]
+      [else "name for the new buffer"]))
+  (define (nav-text) (nv-text (unbox shell-cwd)))
+  (define (nav-cd! dir)
+    (when dir
+      (define unit (focused-unit))
+      (when (and unit
+                 (not (hash-ref pane-grid-tabs (pane-unit-grid unit) #f)))
+        (define port (pane-link-master-out (pane-unit-link unit)))
+        (write-bytes
+         (bytes-append (bytes 21)
+                       (string->bytes/utf-8
+                        (string-append "cd \"" dir "\""))
+                       (bytes 13))
+         port)
+        (flush-output port)))
+    (nv-touch!)
+    (set-box! dirty #t))
+  (define (nav-commit! kind nm)
+    (define cwd (unbox shell-cwd))
+    (case kind
+      [(pr-new) (nav-cd! (nv-new (quote project) cwd nm))]
+      [(pr-rename) (nav-cd! (nv-rename (quote project) cwd nm))]
+      [(ws-new) (nav-cd! (nv-new (quote workspace) cwd nm))]
+      [else (nav-cd! (nv-rename (quote workspace) cwd nm))]))
+  (define (nav-kind layer)
+    (cond
+      [(member layer (list "project" "project-move")) (quote project)]
+      [(member layer (list "workspace" "workspace-move"))
+       (quote workspace)]
+      [else #f]))
+  (define (nav-byte! kind b out)
+    (define layer (key-state-layer (unbox key-state-box)))
+    (define move?
+      (and (member layer (list "project-move" "workspace-move")) #t))
+    (define pin (key-state-pinned (unbox key-state-box)))
+    (define cwd (unbox shell-cwd))
+    (define name (symbol->string kind))
+    (define p (unbox buffer-prompt))
+    (define proj? (eq? kind (quote project)))
+    (cond
+      [p (prompt-byte! p b)]
+      [(memv b (list 27 32))
+       (if move?
+           (set-box! key-state-box
+                     (key-state name (quote none) pin))
+           (write-byte b out))]
+      [move?
+       (cond
+         [(memv b (list 104 72)) (nv-move kind cwd -1)]
+         [(memv b (list 115 84)) (nv-move kind cwd 1)]
+         [else (void)])]
+      [(= b 104) (nav-cd! (nv-step kind cwd -1))]
+      [(memv b (list 115 116)) (nav-cd! (nv-step kind cwd 1))]
+      [(= b 72) (nv-move kind cwd -1)]
+      [(= b 84) (nv-move kind cwd 1)]
+      [(= b 109)
+       (set-box! key-state-box
+                 (key-state (string-append name "-move")
+                            (quote none) pin))]
+      [(= b 114)
+       (set-box! buffer-prompt
+                 (cons (if proj? (quote pr-rename) (quote ws-rename))
+                       #""))]
+      [(= b 110)
+       (set-box! buffer-prompt
+                 (cons (if proj? (quote pr-new) (quote ws-new))
+                       #""))]
+      [(= b 100) (nav-cd! (nv-remove kind cwd))]
+      [(= b 99) (nav-cd! (nv-hide kind cwd))]
+      [(= b 111) (nv-open kind)]
+      [else (void)])
+    (nv-touch!))
+  (define (apply-nav-keys! input)
+    (define kind (nav-kind (key-state-layer (unbox key-state-box))))
+    (cond
+      [kind
+       (define out (open-output-bytes))
+       (for ([b (in-bytes input)]) (nav-byte! kind b out))
+       (set-box! dirty #t)
+       (get-output-bytes out)]
+      [else input]))
+  (define (prompt-text)
+    (define p (unbox buffer-prompt))
+    (if p
+        (string-append (if (eq? (car p) (quote rename)) "rename buffer" (prompt-label (car p))) "\u001e" (bytes->string/utf-8 (cdr p) #\?))
+        ""))
+  (define (bytes-chop buf)
+    (let loop ([n (bytes-length buf)])
+      (cond [(= n 0) #""]
+            [(= (bitwise-and (bytes-ref buf (sub1 n)) 192) 128) (loop (sub1 n))]
+            [else (subbytes buf 0 (sub1 n))])))
+  (define (next-buffer-name names)
+    (let loop ([n (add1 (length names))])
+      (if (member (number->string n) names) (loop (add1 n)) (number->string n))))
   (define panes (make-hash))
   (define dead-panes (box (list)))
   (define bar-cache (make-hash))
@@ -192,10 +293,10 @@
     (define state (unbox key-state-box))
     (list (if (member (key-state-layer state) (list "editor" "shell")) "write" (key-state-layer state)) (key-state-pending-text state)
           (key-state-pinned-flag state) (unbox screen-columns)
-          (layout-buffers-names (unbox buffers-state)) (layout-buffers-current-index (unbox buffers-state)) (unbox shell-cwd)))
+          (layout-buffers-names (unbox buffers-state)) (layout-buffers-current-index (unbox buffers-state)) (unbox shell-cwd) (prompt-text) (nav-text)))
   (define (ask-bars key)
     (bars-link-ask! bars (list-ref key 0) session-name (list-ref key 3)
-                    (list-ref key 1) (list-ref key 2) (list-ref key 4) (list-ref key 5) (list-ref key 6)))
+                    (list-ref key 1) (list-ref key 2) (list-ref key 4) (list-ref key 5) (list-ref key 6) (list-ref key 7) (list-ref key 8)))
   (define first-key (bars-key))
   (define first-rows (list "" ""))
   (hash-set! bar-cache first-key first-rows)
@@ -301,7 +402,7 @@
                       #:when (and (rect-fits? rect) (hash-ref panes (layout-rect-id rect) #f)))
              (define unit (hash-ref panes (layout-rect-id rect)))
              (append (list (layout-rect-x rect) (layout-rect-y rect) (layout-rect-width rect) (layout-rect-height rect)
-                   (pane-unit-grid unit) (unbox (pane-unit-scroll unit)) (equal? (layout-rect-id rect) focus-id)) (if (equal? (layout-rect-id rect) focus-id) (let ([ns (layout-buffers-names (unbox buffers-state))] [ci (layout-buffers-current-index (unbox buffers-state))]) (list (tabs-for unit (string-join (for/list ([n (in-list ns)] [i (in-naturals)]) (string-append (if (eqv? i ci) "● " "○ ") n)) "  ")) (top-label "") (format "~a" (key-state-layer (unbox key-state-box))) (bottom-label (unbox screen-columns)))) (list)))))
+                   (pane-unit-grid unit) (unbox (pane-unit-scroll unit)) (equal? (layout-rect-id rect) focus-id)) (if (equal? (layout-rect-id rect) focus-id) (let ([ns (layout-buffers-names (unbox buffers-state))] [ci (layout-buffers-current-index (unbox buffers-state))]) (list "" (top-label "") (format "~a" (key-state-layer (unbox key-state-box))) (bottom-label (unbox screen-columns)))) (list)))))
          (call-with-semaphore lock (lambda () (compose-frame (unbox screen-columns) (unbox screen-height) (append (if (unbox float-shown) (map (lambda (entry) (list-set entry 6 #f)) entries) entries) (float-entries)) (unbox bar-rows)))))))
     (for ([rect (in-list (region-rects))])
       (define unit (hash-ref panes (layout-rect-id rect) #f))
@@ -412,6 +513,10 @@
       [(focus-down) (update-layout! (lambda (layout) (layout-focus layout (quote down))))]
       [(split-right) (split-pane! (quote right))]
       [(split-down) (split-pane! (quote down))]
+      [(swap-left) (update-layout! (lambda (layout) (layout-move layout (quote left))))]
+      [(swap-right) (update-layout! (lambda (layout) (layout-move layout (quote right))))]
+      [(swap-up) (update-layout! (lambda (layout) (layout-move layout (quote up))))]
+      [(swap-down) (update-layout! (lambda (layout) (layout-move layout (quote down))))]
       [(float-toggle) (set-box! float-shown (not (unbox float-shown)))]
       [(float-todo) (show-float! 0)]
       [(float-journal) (show-float! 1)]
@@ -429,6 +534,51 @@
        (when (pair? commands) (fit-panes!))
        remaining]
       [else input]))
+  (define (prompt-commit! kind nm)
+    (set-box! buffer-prompt #f)
+    (call-with-semaphore
+     state-lock
+     (lambda ()
+       (define state (unbox buffers-state))
+       (cond
+         [(memq kind (quote (pr-new pr-rename ws-new ws-rename)))
+          (nav-commit! kind nm)]
+         [(eq? kind (quote rename))
+          (unless (string=? nm "") (set-box! buffers-state (layout-buffers-rename state nm)))]
+         [else
+          (define name (if (string=? nm "") (next-buffer-name (layout-buffers-names state)) nm))
+          (set-box! pane-counter (add1 (unbox pane-counter)))
+          (set-box! buffer-counter (add1 (unbox buffer-counter)))
+          (set-box! buffers-state (layout-buffers-add state name (unbox pane-counter)))])))
+    (fit-panes!))
+  (define (prompt-byte! p b)
+    (define kind (car p))
+    (define buf (cdr p))
+    (cond
+      [(= b 27) (set-box! buffer-prompt #f)]
+      [(or (= b 13) (= b 10)) (prompt-commit! kind (string-trim (bytes->string/utf-8 buf #\?)))]
+      [(or (= b 127) (= b 8)) (set-box! buffer-prompt (cons kind (bytes-chop buf)))]
+      [(>= b 32) (set-box! buffer-prompt (cons kind (bytes-append buf (bytes b))))]
+      [else (void)]))
+  (define (apply-prompt-keys! input)
+    (cond
+      [(member (key-state-layer (unbox key-state-box)) (list "buffer" "buffer-move"))
+       (define out (open-output-bytes))
+       (for ([b (in-bytes input)])
+         (define p (unbox buffer-prompt))
+         (cond
+           [p (prompt-byte! p b)]
+           [(string=? (key-state-layer (unbox key-state-box)) "buffer-move") (cond [(memv b (list 104 72)) (begin (call-with-semaphore state-lock (lambda () (set-box! buffers-state (layout-buffers-move (unbox buffers-state) -1)))) (fit-panes!))] [(memv b (list 115 84)) (begin (call-with-semaphore state-lock (lambda () (set-box! buffers-state (layout-buffers-move (unbox buffers-state) 1)))) (fit-panes!))] [(memv b (list 32 27)) (set-box! key-state-box (key-state "buffer" (quote none) (key-state-pinned (unbox key-state-box))))] [else (void)])]
+           [(= b 109) (set-box! key-state-box (key-state "buffer-move" (quote none) (key-state-pinned (unbox key-state-box))))]
+           [(= b 110) (set-box! buffer-prompt (cons (quote new) #""))]
+           [(= b 114) (set-box! buffer-prompt (cons (quote rename) #""))]
+           [(= b 72) (call-with-semaphore state-lock (lambda () (set-box! buffers-state (layout-buffers-move (unbox buffers-state) -1)))) (fit-panes!)]
+           [(= b 84) (call-with-semaphore state-lock (lambda () (set-box! buffers-state (layout-buffers-move (unbox buffers-state) 1)))) (fit-panes!)]
+           [(= b 100) (call-with-semaphore state-lock (lambda () (set-box! buffers-state (layout-buffers-close (unbox buffers-state))))) (fit-panes!)]
+           [else (write-byte b out)]))
+       (set-box! dirty #t)
+       (get-output-bytes out)]
+      [else (apply-nav-keys! input)]))
   (define (apply-pane-keys! input)
     (cond
       [(string=? (key-state-layer (unbox key-state-box)) "pane")
@@ -493,7 +643,7 @@
          (define layer-before (key-state-layer (unbox key-state-box)))
          (define-values (forwarded next-state quit?)
            (route-keys (unbox key-state-box)
-                       (apply-pane-keys! (apply-buffer-keys! (apply-scroll-keys! (subbytes buffer 0 amount))))))
+                       (apply-pane-keys! (apply-buffer-keys! (apply-prompt-keys! (apply-scroll-keys! (subbytes buffer 0 amount)))))))
          (let ([was (key-state-layer (unbox key-state-box))] [now (key-state-layer next-state)])
              (cond
                [#f (void)]

@@ -566,6 +566,26 @@ impl InputState {
                             self.notice = String::from("input cleared");
                         }
                         "o" => self.toggle_info(),
+                        "l" => {
+                            let n = self.pairs.len();
+                            if n > 1 {
+                                self.pairs.drain(0..n - 1);
+} else {
+self.pairs.clear();
+                            }
+                            let m = self.infos.len();
+                            if m > 1 {
+                                self.infos.drain(0..m - 1);
+} else {
+self.infos.clear();
+                            }
+                            self.marked.clear();
+                            self.expanded.clear();
+                            self.info_open.clear();
+                            self.focus = (self.pairs.len() * 2).saturating_sub(1);
+                            crate::bar_view::scroll_box(-1000000);
+                            self.notice = String::from("history cleared");
+                        }
 "j" => crate::splash_bar::toggle_git(),
 "k" => crate::splash_bar::toggle_home(),
                         "b" => crate::bar_view::scroll_any(-8),

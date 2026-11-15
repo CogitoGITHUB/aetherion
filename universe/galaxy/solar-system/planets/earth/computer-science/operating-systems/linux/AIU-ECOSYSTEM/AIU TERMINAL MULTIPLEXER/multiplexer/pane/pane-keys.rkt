@@ -20,7 +20,7 @@
   (define pinned (key-state-pinned state))
   (cond
     [(eq? (key-state-pending state) (quote space))
-     (values (bytes) (cond [(= byte 98) (key-state "buffer" (quote none) pinned)] [(= byte 119) (key-state "pane" (quote none) pinned)] [(= byte 101) (key-state "editor" (quote none) pinned)] [(= byte 115) (key-state "shell" (quote none) pinned)] [(= byte 120) (key-state "pane" (quote float) pinned)] [else (key-state "visual" (quote none) (if (= byte space-byte) (not pinned) pinned))]) #f)]
+     (values (bytes) (cond [(= byte 98) (key-state "buffer" (quote none) pinned)] [(= byte 119) (key-state "pane" (quote none) pinned)] [(= byte 112) (key-state "project" (quote none) pinned)] [(= byte 107) (key-state "workspace" (quote none) pinned)] [(= byte 101) (key-state "editor" (quote none) pinned)] [(= byte 115) (key-state "shell" (quote none) pinned)] [(= byte 120) (key-state "pane" (quote float) pinned)] [else (key-state "visual" (quote none) (if (= byte space-byte) (not pinned) pinned))]) #f)]
     [(= byte space-byte) (values (bytes) (key-state "visual" (quote space) pinned) #f)]
     [(= byte i-byte) (values (bytes) (key-state "write" (quote none) pinned) #f)]
     [(= byte z-byte) (values zoxide-pick-bytes state #f)]
@@ -52,7 +52,7 @@
     [else (values (bytes byte) state #f)]))
 
 (define (route-buffer state byte)
-  (if (or (= byte 27) (and (string=? (key-state-layer state) "pane") (or (= byte 120) (= byte 48))))
+  (if (or (= byte 27) (= byte 32) (and (string=? (key-state-layer state) "pane") (or (= byte 120) (= byte 48))))
       (values (bytes) (key-state "visual" (quote none) (key-state-pinned state)) #f)
       (values (bytes) state #f)))
 
@@ -66,7 +66,7 @@
          (define-values (forwarded next quit-now?)
            (if (string=? (key-state-layer state) "visual")
                (route-visual state byte)
-               (if (member (key-state-layer state) (list "buffer" "pane")) (route-buffer state byte) (if (member (key-state-layer state) (list "editor" "shell")) (route-app state byte) (route-write state byte)))))
+               (if (member (key-state-layer state) (list "buffer" "pane" "buffer-move" "project" "workspace" "project-move" "workspace-move")) (route-buffer state byte) (if (member (key-state-layer state) (list "editor" "shell")) (route-app state byte) (route-write state byte)))))
          (write-bytes forwarded out)
          (values next quit-now?)])))
   (values (get-output-bytes out) final quit?))

@@ -93,7 +93,7 @@
         (list "kind-comment" "kind" "comment") (list "kind-title" "kind" "title")
         (list "kind-todo" "todo" "any todo") (list "kind-todo-open" "todo" "open todo")
         (list "kind-todo-done" "todo" "done todo")
-        (list "tab-prev" "go" "tab before") (list "tab-next" "go" "tab after")
+        (list "tab-move-mode" "move" "move tabs") (list "tab-move-back" "leave" "back to tab") (list "tab-rename" "go" "rename tab") (list "project-move-mode" "move" "move projects") (list "project-move-back" "leave" "back to project") (list "workspace-move-mode" "move" "move workspaces") (list "workspace-move-back" "leave" "back to workspace") (list "tab-prev" "go" "tab before") (list "tab-next" "go" "tab after")
         (list "tab-open" "go" "open next page") (list "tab-close" "go" "close tab")
         (list "bar-place-next" "place" "next place") (list "bar-bottom" "place" "bottom")
         (list "bar-top" "place" "top") (list "bar-left" "place" "left")
@@ -130,7 +130,7 @@
         (list "project-prev" "go" "project before") (list "project-next" "go" "project after") (list "workspace-prev" "go" "workspace before") (list "workspace-next" "go" "workspace after")
         (list "project-move-left" "move" "project left") (list "project-move-right" "move" "project right") (list "project-close" "go" "hide project") (list "project-open" "go" "show hidden")
         (list "workspace-move-left" "move" "workspace left") (list "workspace-move-right" "move" "workspace right") (list "workspace-close" "go" "hide workspace") (list "workspace-open" "go" "show hidden")
-        (list "project-new" "go" "new project") (list "project-remove" "go" "remove project") (list "workspace-new" "go" "new workspace") (list "workspace-remove" "go" "remove workspace")
+        (list "project-new" "go" "new project") (list "project-rename" "go" "rename project") (list "project-remove" "go" "remove project") (list "workspace-new" "go" "new workspace") (list "workspace-rename" "go" "rename workspace") (list "workspace-remove" "go" "remove workspace")
         (list "leave-write" "leave" "save and leave") (list "mode" "leave" "other layer")))
 
 (define menu-group-order

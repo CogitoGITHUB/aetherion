@@ -37,11 +37,11 @@
     (subprocess #f #f (quote stdout) (racket-executable) server-path))
   (bars-link process in out (make-semaphore 1)))
 
-(define (bars-link-ask! link layer short width pending pinned buffer-names buffer-current cwd)
+(define (bars-link-ask! link layer short width pending pinned buffer-names buffer-current cwd [prompt ""] [nav ""])
   (call-with-semaphore
    (bars-link-lock link)
    (lambda ()
-     (write-string (format "~a\t~a\t~a\t~a\t~a\t~a\t~a\t~a\n" layer short width pending pinned (string-join buffer-names "\u001f") buffer-current cwd) (bars-link-out link))
+     (write-string (format "~a\t~a\t~a\t~a\t~a\t~a\t~a\t~a\t~a\t~a\n" layer short width pending pinned (string-join buffer-names "\u001f") buffer-current cwd prompt nav) (bars-link-out link))
      (flush-output (bars-link-out link))
      (let loop ([rows (list)])
        (define line (read-line (bars-link-in link)))

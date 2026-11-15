@@ -79,7 +79,7 @@
     (set-box! tab-files (append (unbox tab-files) (list file))))
   (set-box! tab-current file))
 
-(define (tab-rows file width again)
+(define (tab-rows-all file width again)
   (define level (min 3 (max 1 (unbox tab-count))))
   (define files (unbox tab-files))
   (define labels (tabs-labels files))
@@ -139,3 +139,25 @@
    "\u0007"))
 
 (provide tab-osc)
+
+(define (tab-rows file width again)
+  (define root (tabs-root file))
+  (tabs-scan-maybe root again)
+  (define have (unbox tab-lists))
+  (define ready (and have (string=? (car have) (path->string root))))
+  (define inner (max 1 (- width 4)))
+  (define ws-now (tabs-last root))
+  (define pr-now (tabs-project file root))
+  (define ws-list (if ready (tabs-arranged (cadr have) workspace-order workspace-hidden ws-now) (list)))
+  (define pr-list (if ready (tabs-arranged (caddr have) project-order project-hidden pr-now) (list)))
+  (define sections
+    (append
+     (if (> (length ws-list) 1) (list (cons "workspace" (tabs-mark-row ws-list (index-of ws-list ws-now) inner))) (list))
+     (if (> (length pr-list) 1) (list (cons "project" (tabs-mark-row pr-list (index-of pr-list pr-now) inner))) (list))))
+  (if (null? sections)
+      (list)
+      (append (list (edge-line "╭" "╮" (car (car sections)) "" width)
+                    (body-line (cdr (car sections)) width))
+              (append* (for/list ([s (in-list (cdr sections))])
+                         (list (edge-line "├" "┤" (car s) "" width) (body-line (cdr s) width))))
+              (list (rule-line "╰" "╯" width)))))

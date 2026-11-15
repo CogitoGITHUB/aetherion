@@ -259,3 +259,68 @@
 
 (for ([p (list (cons "project-new" command-project-new) (cons "workspace-new" command-workspace-new) (cons "project-remove" command-project-remove) (cons "workspace-remove" command-workspace-remove))])
   (hash-set! commands (car p) (cdr p)))
+
+(define (next-number dir)
+  (let loop ([n (add1 (length (tabs-dirs dir)))])
+    (if (directory-exists? (build-path dir (number->string n))) (loop (add1 n)) (number->string n))))
+
+(define (pick-name nm dir) (if (string=? nm "") (next-number dir) nm))
+
+(define (rename-dir! dir new label)
+  (cond
+    [(or (directory-exists? new) (file-exists? new)) (cons #t (string-append "that " label " already exists"))]
+    [else
+     (with-handlers ([(lambda (e) #t) (lambda (e) (cons #t (string-append "could not rename " label)))])
+       (define old (string-append (path->string dir) "/"))
+       (define fresh (string-append (path->string new) "/"))
+       (define (moved f) (if (and (string? f) (string-prefix? f old)) (string-append fresh (substring f (string-length old))) f))
+       (define cur (unbox tab-current))
+       (rename-file-or-directory dir new)
+       (set-box! tab-files (map moved (unbox tab-files)))
+       (set-box! tab-lists #f)
+       (tabs-go! (moved cur)))]))
+
+(define (command-project-new-auto session words)
+  (define-values (file root cur) (project-names session))
+  (ask-name! "project" (lambda (nm) (make-new! root (pick-name nm root) "project"))))
+
+(define (command-workspace-new-auto session words)
+  (define-values (file root cur) (project-names session))
+  (define up (tabs-parent root))
+  (if up
+      (ask-name! "workspace" (lambda (nm) (make-new! up (pick-name nm up) "workspace")))
+      (cons #t "no workspace folder")))
+
+(define (command-project-rename session words)
+  (define-values (file root cur) (project-names session))
+  (ask-name! "rename project" (lambda (nm) (rename-dir! (build-path root cur) (build-path root nm) "project"))))
+
+(define (command-workspace-rename session words)
+  (define-values (file root cur) (project-names session))
+  (define up (tabs-parent root))
+  (if up
+      (ask-name! "rename workspace" (lambda (nm) (rename-dir! root (build-path up nm) "workspace")))
+      (cons #t "no workspace folder")))
+
+(hash-set! commands "project-new" command-project-new-auto)
+(hash-set! commands "workspace-new" command-workspace-new-auto)
+(hash-set! commands "project-rename" command-project-rename)
+(hash-set! commands "workspace-rename" command-workspace-rename)
+(define (rename-tab! base cur nm)
+  (define new (path->string (build-path base nm)))
+  (cond
+    [(or (string=? nm ".aiu") (file-exists? new) (directory-exists? new)) (cons #t "that tab already exists")]
+    [else
+     (with-handlers ([(lambda (e) #t) (lambda (e) (cons #t "could not rename tab"))])
+       (rename-file-or-directory cur new)
+       (set-box! tab-files (map (lambda (f) (if (equal? f cur) new f)) (unbox tab-files)))
+       (set-box! tab-lists #f)
+       (tabs-go! new))]))
+(define (command-tab-rename session words)
+  (define cur (unbox tab-current))
+  (define-values (base name dir?) (split-path cur))
+  (ask-name! "rename tab" (lambda (nm) (rename-tab! base cur (if (regexp-match? #rx"[.]aiu$" nm) nm (string-append nm ".aiu"))))))
+(hash-set! commands "tab-rename" command-tab-rename)
+(for ([p (list (cons "tab-move-mode" "tab-move") (cons "project-move-mode" "project-move") (cons "workspace-move-mode" "workspace-move") (cons "tab-move-back" "tab") (cons "project-move-back" "project") (cons "workspace-move-back" "workspace"))])
+  (hash-set! commands (car p) (let ([layer (cdr p)]) (lambda (session words) (set-layer! session layer) (cons #t (string-append "layer: " layer))))))
+

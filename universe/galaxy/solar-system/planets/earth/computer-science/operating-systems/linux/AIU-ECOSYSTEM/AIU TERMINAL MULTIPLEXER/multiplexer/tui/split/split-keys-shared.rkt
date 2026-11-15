@@ -1,13 +1,13 @@
 #lang racket/base
 
 (define split-keys
-  (list (list "d" "pane-focus-left")
-        (list "n" "pane-focus-right")
-        (list "h" "pane-focus-down")
-        (list "t" "pane-focus-up")
-        (list "r" "pane-split-right")
-        (list "s" "pane-split-down")
-        (list "c" "pane-close")
+  (list (list "h" "pane-focus-left")
+        (list "s" "pane-focus-right")
+        (list "t" "pane-focus-down")
+        (list "n" "pane-focus-up")
+        (list "v" "pane-split-right")
+        (list "w" "pane-split-down")
+        (list "c" "pane-close") (list "d" "pane-close") (list "H" "pane-swap-left") (list "T" "pane-swap-down") (list "N" "pane-swap-up") (list "S" "pane-swap-right")
         (list "f" "float-toggle")
         (list "1" "float-todo")
         (list "2" "float-journal")
