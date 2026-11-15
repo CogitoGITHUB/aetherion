@@ -1,0 +1,201 @@
+//! `clock_state` — temporal boolean states (business-hours / weekend / night) as `Shape::Badge`.
+//! `Ok` when active, `Warn` when not.
+
+use chrono::{DateTime, Datelike, FixedOffset, Timelike, Weekday};
+use serde::Deserialize;
+
+use crate::fetcher::{FetchContext, RealtimeFetcher, Safety};
+use crate::payload::{BadgeData, Body, Payload, Status};
+use crate::render::Shape;
+use crate::samples;
+
+use super::common;
+
+const SHAPES: &[Shape] = &[Shape::Badge];
+
+pub struct ClockStateFetcher;
+
+#[derive(Debug, Default, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Options {
+    #[serde(default)]
+    pub timezone: Option<String>,
+    #[serde(default)]
+    pub kind: Option<Kind>,
+}
+
+#[derive(Debug, Clone, Copy, Default, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum Kind {
+    #[default]
+    BusinessHours,
+    Weekend,
+    Night,
+}
+
+impl RealtimeFetcher for ClockStateFetcher {
+    fn name(&self) -> &str {
+        "clock_state"
+    }
+    fn safety(&self) -> Safety {
+        Safety::Safe
+    }
+    fn description(&self) -> &'static str {
+        "Whether the current moment falls inside a named temporal window (business hours, weekend, night), rendered as a status badge that flips between `Ok` and `Warn`. Pick `kind` to choose which window."
+    }
+    fn shapes(&self) -> &[Shape] {
+        SHAPES
+    }
+    fn sample_body(&self, shape: Shape) -> Option<Body> {
+        match shape {
+            Shape::Badge => Some(samples::badge(Status::Ok, "open")),
+            _ => None,
+        }
+    }
+    fn compute(&self, ctx: &FetchContext) -> Payload {
+        let opts: Options = match common::parse_options(ctx.options.as_ref()) {
+            Ok(o) => o,
+            Err(msg) => return common::placeholder(&msg),
+        };
+        let now = common::now_in(opts.timezone.as_deref());
+        let (active, label) = match opts.kind.unwrap_or(Kind::BusinessHours) {
+            Kind::BusinessHours => business_hours(&now),
+            Kind::Weekend => weekend(&now),
+            Kind::Night => night(&now),
+        };
+        Payload {
+            icon: None,
+            status: None,
+            format: None,
+            body: Body::Badge(BadgeData {
+                status: if active { Status::Ok } else { Status::Warn },
+                label: label.into(),
+            }),
+        }
+    }
+}
+
+fn business_hours(now: &DateTime<FixedOffset>) -> (bool, &'static str) {
+    let weekday = !matches!(now.weekday(), Weekday::Sat | Weekday::Sun);
+    let in_hours = (9..17).contains(&now.hour());
+    let active = weekday && in_hours;
+    (active, if active { "open" } else { "closed" })
+}
+
+fn weekend(now: &DateTime<FixedOffset>) -> (bool, &'static str) {
+    let active = matches!(now.weekday(), Weekday::Sat | Weekday::Sun);
+    (active, if active { "weekend" } else { "weekday" })
+}
+
+fn night(now: &DateTime<FixedOffset>) -> (bool, &'static str) {
+    let active = !(6..22).contains(&now.hour());
+    (active, if active { "night" } else { "day" })
+}
+
+#[cfg(test)]
+mod tests {
+    use std::time::Duration;
+
+    use chrono::{TimeZone, Utc};
+
+    use super::*;
+
+    fn at(y: i32, mo: u32, d: u32, h: u32) -> DateTime<FixedOffset> {
+        Utc.with_ymd_and_hms(y, mo, d, h, 0, 0)
+            .unwrap()
+            .fixed_offset()
+    }
+
+    fn ctx(options: &str) -> FetchContext {
+        FetchContext {
+            widget_id: "s".into(),
+            timeout: Duration::from_secs(1),
+            shape: Some(Shape::Badge),
+            options: Some(toml::from_str(options).unwrap()),
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn business_hours_active_on_weekday_afternoon() {
+        // 2026-04-22 is a Wednesday.
+        assert!(business_hours(&at(2026, 4, 22, 14)).0);
+    }
+
+    #[test]
+    fn weekend_active_on_sunday() {
+        assert!(weekend(&at(2026, 4, 26, 12)).0);
+    }
+
+    #[test]
+    fn night_active_at_23h() {
+        assert!(night(&at(2026, 4, 22, 23)).0);
+    }
+
+    #[test]
+    fn helper_branches_cover_inactive_labels() {
+        assert_eq!(business_hours(&at(2026, 4, 25, 10)), (false, "closed"));
+        assert_eq!(weekend(&at(2026, 4, 22, 12)), (false, "weekday"));
+        assert_eq!(night(&at(2026, 4, 22, 12)), (false, "day"));
+    }
+
+    #[test]
+    fn fetcher_contract_and_samples_cover_catalog_surface() {
+        let fetcher = ClockStateFetcher;
+        assert_eq!(fetcher.name(), "clock_state");
+        assert_eq!(fetcher.safety(), Safety::Safe);
+        assert!(fetcher.description().contains("status badge"));
+        assert_eq!(fetcher.shapes(), SHAPES);
+        assert!(matches!(
+            fetcher.sample_body(Shape::Badge),
+            Some(Body::Badge(_))
+        ));
+        assert!(fetcher.sample_body(Shape::Text).is_none());
+    }
+
+    #[test]
+    fn compute_supports_each_non_default_kind() {
+        let weekend_body = ClockStateFetcher.compute(&ctx(r#"kind = "weekend""#)).body;
+        assert!(
+            matches!(
+                weekend_body,
+                Body::Badge(BadgeData { status: Status::Ok, ref label })
+                    if label == "weekend"
+            ) || matches!(
+                weekend_body,
+                Body::Badge(BadgeData { status: Status::Warn, ref label })
+                    if label == "weekday"
+            )
+        );
+
+        let night_body = ClockStateFetcher.compute(&ctx(r#"kind = "night""#)).body;
+        assert!(
+            matches!(
+                night_body,
+                Body::Badge(BadgeData { status: Status::Ok, ref label }) if label == "night"
+            ) || matches!(
+                night_body,
+                Body::Badge(BadgeData { status: Status::Warn, ref label }) if label == "day"
+            )
+        );
+    }
+
+    #[test]
+    fn invalid_options_return_placeholder() {
+        let body = ClockStateFetcher.compute(&ctx("unexpected = 1")).body;
+        assert!(matches!(
+            body,
+            Body::TextBlock(ref data)
+                if data
+                    .lines
+                    .first()
+                    .is_some_and(|line| line.contains("invalid options"))
+        ));
+    }
+
+    #[test]
+    fn emits_badge_body() {
+        let p = ClockStateFetcher.compute(&ctx(""));
+        assert!(matches!(p.body, Body::Badge(_)));
+    }
+}

@@ -8,3 +8,5 @@ pub mod screen_draw;
 pub mod bar_view;
 pub mod status_bar;
 pub mod context_bar;
+pub mod splash_bar;
+pub mod notify;

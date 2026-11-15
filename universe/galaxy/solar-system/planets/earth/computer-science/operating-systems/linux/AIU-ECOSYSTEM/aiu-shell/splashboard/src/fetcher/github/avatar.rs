@@ -1,0 +1,417 @@
+//! `github_avatar` — download an avatar PNG and expose it as `Body::Image`.
+//!
+//! - github.com: keeps the original public shortcut (`https://github.com/<user>.png`).
+//! - GHE: the public shortcut redirects to `/login`, so we indirect through
+//!   `/users/<login>` to get the server-signed `avatar_url`.
+//!
+//! Safety::Safe: the host is resolved via `client::host()` (env-var-only), so a malicious
+//! `.splashboard.toml` cannot redirect traffic to an attacker-chosen origin.
+//!
+//! Caching: the PNG is written to `$SPLASHBOARD_HOME/cache/avatars/<user>-<size>.png`. The
+//! fetcher framework already gates re-downloads via `refresh_interval`; we default to one day
+//! since avatars rarely change.
+
+use std::path::PathBuf;
+
+use async_trait::async_trait;
+use serde::Deserialize;
+
+use crate::options::OptionSchema;
+use crate::paths;
+use crate::payload::{Body, ImageData, Payload};
+use crate::render::Shape;
+
+use super::super::{FetchContext, FetchError, Fetcher, Safety};
+use super::client::{host, http, resolve_authenticated_user, rest_get, web_base};
+use super::common::cache_key;
+
+const DEFAULT_SIZE: u32 = 200;
+
+const OPTION_SCHEMAS: &[OptionSchema] = &[
+    OptionSchema {
+        name: "user",
+        type_hint: "string (github login)",
+        required: false,
+        default: Some("authenticated token user"),
+        description: "GitHub login to fetch the avatar for. Falls back to the `GITHUB_USER` env var, then to the login that owns `GH_TOKEN` / `GITHUB_TOKEN`.",
+    },
+    OptionSchema {
+        name: "size",
+        type_hint: "integer (px)",
+        required: false,
+        default: Some("200"),
+        description: "Requested avatar edge size in pixels. GitHub serves a square image of this size.",
+    },
+];
+
+/// Downloads the user's avatar PNG to the cache and emits an `Image` body pointing at it.
+pub struct GithubAvatar;
+
+#[derive(Debug, Default, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Options {
+    #[serde(default)]
+    pub user: Option<String>,
+    #[serde(default)]
+    pub size: Option<u32>,
+}
+
+#[async_trait]
+impl Fetcher for GithubAvatar {
+    fn name(&self) -> &str {
+        "github_avatar"
+    }
+    fn safety(&self) -> Safety {
+        Safety::Safe
+    }
+    fn description(&self) -> &'static str {
+        "A GitHub user's avatar PNG, downloaded once a day and rendered as an image. Useful as the visual hero next to a `github_user` text block."
+    }
+    fn refresh_interval(&self) -> u64 {
+        60 * 60 * 24
+    }
+    fn shapes(&self) -> &[Shape] {
+        &[Shape::Image]
+    }
+    fn option_schemas(&self) -> &[OptionSchema] {
+        OPTION_SCHEMAS
+    }
+    fn cache_key(&self, ctx: &FetchContext) -> String {
+        let extra = ctx
+            .options
+            .as_ref()
+            .and_then(|v| toml::to_string(v).ok())
+            .unwrap_or_default();
+        cache_key(self.name(), ctx, &extra)
+    }
+    fn sample_body(&self, _shape: Shape) -> Option<Body> {
+        None
+    }
+    async fn fetch(&self, ctx: &FetchContext) -> Result<Payload, FetchError> {
+        let opts: Options = parse_options(ctx.options.as_ref()).map_err(FetchError::Failed)?;
+        let user = resolve_user(opts.user.as_deref())
+            .await
+            .map_err(FetchError::Failed)?;
+        let size = opts.size.unwrap_or(DEFAULT_SIZE);
+        let path = download_avatar(&user, size).await?;
+        Ok(payload(Body::Image(ImageData {
+            path: path.to_string_lossy().into_owned(),
+        })))
+    }
+}
+
+async fn download_avatar(user: &str, size: u32) -> Result<PathBuf, FetchError> {
+    let out_dir = avatar_dir()
+        .ok_or_else(|| FetchError::Failed("$HOME not available for avatar cache".into()))?;
+    std::fs::create_dir_all(&out_dir)
+        .map_err(|e| FetchError::Failed(format!("create avatar cache dir: {e}")))?;
+    let url = if host().eq_ignore_ascii_case("github.com") {
+        format!("{}/{user}.png?size={size}", web_base())
+    } else {
+        resolve_ghe_avatar_url(user, size).await?
+    };
+    let res = http()
+        .get(&url)
+        .send()
+        .await
+        .map_err(|e| FetchError::Failed(format!("avatar request failed: {e}")))?;
+    let status = res.status();
+    if !status.is_success() {
+        return Err(FetchError::Failed(format!("avatar {status}")));
+    }
+    let bytes = res
+        .bytes()
+        .await
+        .map_err(|e| FetchError::Failed(format!("avatar body: {e}")))?;
+    // GitHub serves whichever image format the user uploaded, even when the URL ends in `.png`.
+    // The image crate decodes by extension hint, so we need to write the file with the right
+    // suffix or decoding fails.
+    let ext = image_extension(&bytes);
+    let path = out_dir.join(format!("{user}-{size}.{ext}"));
+    std::fs::write(&path, &bytes).map_err(|e| FetchError::Failed(format!("write avatar: {e}")))?;
+    Ok(path)
+}
+
+#[derive(Debug, Deserialize)]
+struct UserAvatar {
+    avatar_url: String,
+}
+
+/// GHE-only: resolve the server-signed avatar URL via `/users/<login>` and append a size
+/// query so the source is small enough for the media_image renderer.
+async fn resolve_ghe_avatar_url(user: &str, size: u32) -> Result<String, FetchError> {
+    let me: UserAvatar = rest_get(&format!("/users/{user}")).await?;
+    let sep = if me.avatar_url.contains('?') {
+        '&'
+    } else {
+        '?'
+    };
+    Ok(format!("{}{sep}s={size}", me.avatar_url))
+}
+
+fn image_extension(bytes: &[u8]) -> &'static str {
+    if bytes.starts_with(b"\x89PNG\r\n\x1a\n") {
+        "png"
+    } else if bytes.starts_with(&[0xff, 0xd8, 0xff]) {
+        "jpg"
+    } else {
+        "png"
+    }
+}
+
+fn avatar_dir() -> Option<PathBuf> {
+    paths::cache_dir().map(|d| d.join("avatars"))
+}
+
+async fn resolve_user(explicit: Option<&str>) -> Result<String, String> {
+    if let Some(u) = explicit.filter(|s| !s.is_empty()) {
+        return Ok(u.into());
+    }
+    if let Ok(u) = std::env::var("GITHUB_USER")
+        && !u.is_empty()
+    {
+        return Ok(u);
+    }
+    resolve_authenticated_user()
+        .await
+        .map_err(|e| format!("resolve github user: {e}"))
+}
+
+fn parse_options<T: serde::de::DeserializeOwned + Default>(
+    raw: Option<&toml::Value>,
+) -> Result<T, String> {
+    match raw {
+        None => Ok(T::default()),
+        Some(value) => value
+            .clone()
+            .try_into::<T>()
+            .map_err(|e| format!("invalid options: {e}")),
+    }
+}
+
+fn payload(body: Body) -> Payload {
+    Payload {
+        icon: None,
+        status: None,
+        format: None,
+        body,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::time::Duration;
+
+    use super::*;
+    use crate::fetcher::github::client;
+
+    struct EnvGuard {
+        _lock: std::sync::MutexGuard<'static, ()>,
+        restore: Vec<(&'static str, Option<String>)>,
+    }
+
+    impl EnvGuard {
+        fn set(pairs: &[(&'static str, Option<&str>)]) -> Self {
+            let lock = crate::paths::TEST_ENV_LOCK
+                .lock()
+                .unwrap_or_else(|e| e.into_inner());
+            let restore = pairs
+                .iter()
+                .map(|(k, v)| {
+                    let prev = std::env::var(k).ok();
+                    match v {
+                        Some(value) => unsafe { std::env::set_var(k, value) },
+                        None => unsafe { std::env::remove_var(k) },
+                    }
+                    (*k, prev)
+                })
+                .collect();
+            Self {
+                _lock: lock,
+                restore,
+            }
+        }
+    }
+
+    impl Drop for EnvGuard {
+        fn drop(&mut self) {
+            for (k, v) in &self.restore {
+                match v {
+                    Some(value) => unsafe { std::env::set_var(k, value) },
+                    None => unsafe { std::env::remove_var(k) },
+                }
+            }
+        }
+    }
+
+    fn ctx(options: Option<&str>, format: Option<&str>) -> FetchContext {
+        FetchContext {
+            widget_id: "avatar".into(),
+            format: format.map(str::to_string),
+            timeout: Duration::from_secs(1),
+            file_format: None,
+            shape: Some(Shape::Image),
+            options: options.map(|raw| toml::from_str(raw).unwrap()),
+            timezone: None,
+            locale: None,
+        }
+    }
+
+    #[test]
+    fn fetcher_contract_exposes_image_surface() {
+        let fetcher = GithubAvatar;
+        assert_eq!(
+            fetcher.description(),
+            "A GitHub user's avatar PNG, downloaded once a day and rendered as an image. Useful as the visual hero next to a `github_user` text block."
+        );
+        assert_eq!(fetcher.shapes(), &[Shape::Image]);
+        assert_eq!(fetcher.option_schemas().len(), 2);
+        assert_eq!(fetcher.option_schemas()[0].name, "user");
+        assert_eq!(fetcher.option_schemas()[1].name, "size");
+        assert_eq!(fetcher.sample_body(Shape::Image), None);
+    }
+
+    #[test]
+    fn cache_key_changes_with_options_and_format() {
+        let fetcher = GithubAvatar;
+        let base = fetcher.cache_key(&ctx(Some("user = 'alice'"), None));
+        let changed_options = fetcher.cache_key(&ctx(Some("user = 'alice'\nsize = 128"), None));
+        let changed_format = fetcher.cache_key(&ctx(Some("user = 'alice'"), Some("raw")));
+        assert_ne!(base, changed_options);
+        assert_ne!(base, changed_format);
+    }
+
+    #[test]
+    fn avatar_dir_lives_under_cache_dir() {
+        let tmp = tempfile::tempdir().unwrap();
+        let _g = EnvGuard::set(&[("SPLASHBOARD_HOME", Some(tmp.path().to_str().unwrap()))]);
+        assert_eq!(avatar_dir(), Some(tmp.path().join("cache").join("avatars")));
+    }
+
+    #[test]
+    fn payload_wraps_body_without_metadata() {
+        let body = Body::Image(ImageData {
+            path: "x.png".into(),
+        });
+        assert_eq!(
+            payload(body.clone()),
+            Payload {
+                icon: None,
+                status: None,
+                format: None,
+                body,
+            }
+        );
+    }
+
+    #[tokio::test]
+    async fn resolve_user_prefers_explicit_option() {
+        let _g = EnvGuard::set(&[("GITHUB_USER", Some("from-env"))]);
+        assert_eq!(resolve_user(Some("from-opt")).await.unwrap(), "from-opt");
+    }
+
+    #[tokio::test]
+    async fn resolve_user_falls_back_to_env() {
+        let _g = EnvGuard::set(&[("GITHUB_USER", Some("env-user"))]);
+        assert_eq!(resolve_user(None).await.unwrap(), "env-user");
+    }
+
+    #[tokio::test]
+    async fn resolve_user_empty_option_falls_through_to_env() {
+        let _g = EnvGuard::set(&[("GITHUB_USER", Some("env-user"))]);
+        assert_eq!(resolve_user(Some("")).await.unwrap(), "env-user");
+    }
+
+    #[tokio::test]
+    async fn resolve_user_without_env_or_token_surfaces_token_hint() {
+        let _g = EnvGuard::set(&[
+            ("GITHUB_USER", None),
+            ("GH_TOKEN", None),
+            ("GITHUB_TOKEN", None),
+        ]);
+        client::clear_authenticated_user_cache();
+        let err = resolve_user(None).await.unwrap_err();
+        client::clear_authenticated_user_cache();
+        assert!(err.contains("GH_TOKEN"), "unexpected error: {err}");
+    }
+
+    #[test]
+    fn options_default_when_absent() {
+        let opts: Options = parse_options(None).unwrap();
+        assert!(opts.user.is_none());
+        assert!(opts.size.is_none());
+    }
+
+    #[test]
+    fn options_reject_unknown_keys() {
+        let raw: toml::Value = toml::from_str("bogus = 1").unwrap();
+        assert!(parse_options::<Options>(Some(&raw)).is_err());
+    }
+
+    #[tokio::test]
+    async fn fetch_rejects_unknown_options() {
+        let fetcher = GithubAvatar;
+        let err = fetcher
+            .fetch(&ctx(Some("bogus = 1"), None))
+            .await
+            .unwrap_err();
+        assert!(matches!(err, FetchError::Failed(msg) if msg.contains("invalid options")));
+    }
+
+    #[tokio::test]
+    async fn fetch_uses_default_size_and_surfaces_cache_dir_failure() {
+        let tmp = tempfile::tempdir().unwrap();
+        let home = tmp.path().join("not-a-dir");
+        std::fs::write(&home, "x").unwrap();
+        let _g = EnvGuard::set(&[
+            ("SPLASHBOARD_HOME", Some(home.to_str().unwrap())),
+            ("GITHUB_USER", Some("env-user")),
+        ]);
+        let fetcher = GithubAvatar;
+        let err = fetcher.fetch(&ctx(None, None)).await.unwrap_err();
+        assert!(matches!(err, FetchError::Failed(msg) if msg.contains("create avatar cache dir")));
+    }
+
+    #[test]
+    fn image_extension_detects_png() {
+        assert_eq!(image_extension(b"\x89PNG\r\n\x1a\nrest"), "png");
+    }
+
+    #[test]
+    fn image_extension_detects_jpeg() {
+        assert_eq!(image_extension(&[0xff, 0xd8, 0xff, 0xdb, 0x00]), "jpg");
+    }
+
+    #[test]
+    fn image_extension_unknown_falls_back_to_png() {
+        assert_eq!(image_extension(&[0, 0, 0, 0]), "png");
+    }
+
+    /// Live smoke test — downloads the splashboard author's avatar and verifies the file looks
+    /// like a real PNG or JPEG. `#[ignore]` keeps CI offline-safe; run with
+    /// `cargo test -- --ignored fetcher::github::avatar::tests::live --nocapture`.
+    #[tokio::test]
+    #[ignore]
+    async fn live_downloads_image_under_cache_dir() {
+        let tmp = tempfile::tempdir().unwrap();
+        let _g = EnvGuard::set(&[("SPLASHBOARD_HOME", Some(tmp.path().to_str().unwrap()))]);
+        let path = download_avatar("unhappychoice", 64).await.unwrap();
+        eprintln!("wrote {}", path.display());
+        let bytes = std::fs::read(&path).unwrap();
+        assert!(
+            bytes.len() > 256,
+            "avatar suspiciously small: {} bytes",
+            bytes.len()
+        );
+        let ext = path
+            .extension()
+            .and_then(|s| s.to_str())
+            .unwrap_or_default();
+        assert!(matches!(ext, "png" | "jpg"), "unexpected extension {ext:?}");
+        match ext {
+            "png" => assert_eq!(&bytes[..8], b"\x89PNG\r\n\x1a\n"),
+            "jpg" => assert_eq!(&bytes[..3], &[0xff, 0xd8, 0xff]),
+            _ => unreachable!(),
+        }
+    }
+}

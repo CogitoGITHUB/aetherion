@@ -94,7 +94,7 @@ Color::Rgb(110, 110, 110)
             };
             let mut shown_box = shown_box;
             if running_box {
-                shown_box.title = format!("❗command running❗ {}", spinner_frame(state.tick));
+                shown_box.title = format!("command running {}", spinner_frame(state.tick));
             }
             for text in shown_box.lines(width) {
                 lines.push(Line::from(Span::styled(text, style)));
@@ -138,6 +138,9 @@ Color::Rgb(110, 110, 110)
         }
         lines = padded;
         skip = (middle + pad).saturating_sub(window / 2);
+        skip = crate::bar_view::box_skip(
+            state, focus_start, focus_end, pad, window, skip,
+        );
     }
     let shown: Vec<Line> = lines.into_iter().skip(skip).collect();
     let pairs_rect = Rect {
@@ -209,6 +212,8 @@ Color::Rgb(110, 110, 110)
     draw_search(frame, state, area, pairs_height + bar.len() as u16, search_height);
     crate::bar_view::draw_menu(frame, state, area);
     crate::bar_view::draw_full_input(frame, state, full_area);
+    crate::bar_view::draw_splash(frame, state, full_area);
+    crate::notify::draw_notify(frame, full_area);
 }
 
 fn output_failed(rows: &[String]) -> bool {

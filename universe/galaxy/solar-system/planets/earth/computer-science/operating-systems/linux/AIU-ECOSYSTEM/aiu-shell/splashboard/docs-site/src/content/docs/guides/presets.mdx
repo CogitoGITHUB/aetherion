@@ -1,0 +1,226 @@
+---
+title: Presets
+description: Nine curated dashboards you can adopt verbatim — pair one home with one project.
+---
+
+import homeSplash from '../../../assets/rendered/home_splash.html?raw';
+import homeDaily from '../../../assets/rendered/home_daily.html?raw';
+import homeGithub from '../../../assets/rendered/home_github.html?raw';
+import homeMinimal from '../../../assets/rendered/home_minimal.html?raw';
+import homeFeed from '../../../assets/rendered/home_feed.html?raw';
+import projectSplash from '../../../assets/rendered/project_splash.html?raw';
+import projectGithub from '../../../assets/rendered/project_github.html?raw';
+import projectMinimal from '../../../assets/rendered/project_minimal.html?raw';
+import projectCodebase from '../../../assets/rendered/project_codebase.html?raw';
+
+Nine curated dashboards — five home, four project. Pick one of each as a
+starting point and edit freely.
+
+- **Home presets** apply when the shell starts outside a git repo —
+  copy into `$HOME/.splashboard/home.dashboard.toml`.
+- **Project presets** apply when you `cd` into a git repo root — copy
+  into `./.splashboard/dashboard.toml` (ships with the repo) or
+  `$HOME/.splashboard/project.dashboard.toml` (fallback for every
+  repo root without its own dashboard).
+
+Template TOMLs live in
+[`src/templates/`](https://github.com/unhappychoice/splashboard/tree/main/src/templates).
+
+## Home presets
+
+### `home_splash` — terminal hero + greeting + clock
+
+A figlet of your terminal name, a time-of-day greeting, a large `HH:MM`
+clock, and the date.
+
+<div class="splash-landing" set:html={homeSplash} />
+
+| role | implementation |
+|---|---|
+| hero | `system` (kind = terminal) → `text_ascii` (figlet, ansi_shadow), wrapped in `animated_postfx` (particle_burst) |
+| greeting | `basic_static "good "` + `clock_derived` (kind = time_of_day) → `text_plain` |
+| clock | `clock` (format `%H:%M`) → `text_ascii` (figlet, standard), wrapped in `animated_postfx` (fade_in) |
+| date | `clock` (format `%A · %e %B %Y`) → `text_plain` |
+
+### `home_daily` — everything at a glance
+
+Quote of the day, a day-of-week + day-of-month hero, then calendar |
+almanac and world-clock | system side by side, with full-width
+time-elapsed gauges at the bottom.
+
+<div class="splash-landing" set:html={homeDaily} />
+
+| role | implementation |
+|---|---|
+| quote | `quote_of_day` → `text_plain` |
+| hero | `clock` (format `%a %e`) → `text_ascii` (blocks, quadrant) |
+| date | `clock` (format `%A · %e %B %Y · day %j of %Y`) → `text_plain` |
+| calendar | `clock` → `grid_calendar` |
+| almanac | `clock_almanac` (moon / season / zodiac / chinese / ISO week / day-of-year) → `grid_table` |
+| world clock | `clock_timezones` (UTC + 5 cities) → `grid_table` |
+| system | `system` (os / host / uptime / load / cpu / memory) → `grid_table` |
+| time elapsed | 5× `clock_ratio` (year / quarter / month / week / day) → `gauge_line` |
+
+Set `hemisphere = "south"` on the `almanac` widget if you're below the
+equator.
+
+### `home_github` — avatar + contributions + activity
+
+Avatar + handle + profile block, then contributions heatmap, open PRs /
+review queue, and a recent-notifications timeline.
+
+<div class="splash-landing" set:html={homeGithub} />
+
+| role | implementation |
+|---|---|
+| avatar | `github_avatar` → `media_image` (14×7) |
+| handle | `basic_static` → `text_plain` |
+| profile | `github_user` → `text_plain` |
+| contributions | `github_contributions` → `grid_heatmap` |
+| my PRs | `github_my_prs` → `list_plain` |
+| review queue | `github_review_requests` → `list_plain` |
+| notifications | `github_notifications` → `list_timeline` |
+
+Requires `gh auth login` (or `GITHUB_TOKEN`). Set `GITHUB_USER` — or
+have it resolvable from git config `user.email` — so the avatar and
+profile pick up your login. Edit the `handle` widget's `format` to
+match.
+
+### `home_minimal` — three quiet lines
+
+Time-of-day greeting, a one-line date, and the daily quote. No figlet,
+no heatmap — just enough to feel acknowledged without a dashboard
+taking over every shell start.
+
+<div class="splash-landing" set:html={homeMinimal} />
+
+| role | implementation |
+|---|---|
+| greeting | `basic_static "good "` + `clock_derived` (kind = time_of_day) → `text_plain` |
+| date | `clock` (format `%A · %e %B %Y · %H:%M`) → `text_plain` |
+| quote | `random_quote` (Text) → `text_plain` |
+
+Pairs naturally with `project_minimal` if you want the same restraint
+inside a repo.
+
+### `home_feed` — morning briefing
+
+A masthead with the date in figlet, a "good morning" greeting, live
+`Day · HH:MM`, and an almanac strip (moon · zodiac · day-of-year), all
+on a subtle header band. Body is 2 cols × 3 rows of curated feeds —
+HN | r/programming, Wired | BBC Tech, Engadget | Wikipedia on this
+day. Footer closes with a daily fortune.
+
+<div class="splash-landing" set:html={homeFeed} />
+
+| role | implementation |
+|---|---|
+| hero | `clock` (format `%a %e %b`) → `text_ascii` (blocks, quadrant) |
+| greeting | `basic_static "good "` + `clock_derived` (kind = time_of_day) → `text_plain` |
+| now | `clock` (format `%A · %H:%M`) → `text_plain` |
+| almanac | `clock_derived` × 3 (moon_phase / zodiac / day_of_year) → `text_plain` |
+| hacker news | `hackernews_top` → `list_links` |
+| r/programming | `reddit_subreddit_posts` → `list_links` |
+| wired | `rss` → `list_links` |
+| bbc tech | `rss` → `list_links` |
+| engadget | `rss` → `list_links` |
+| on this day | `wikipedia_on_this_day` → `list_links` |
+| fortune | `random_fortune` → `text_plain` |
+
+Network-class widgets (`rss`, `reddit_subreddit_posts`) render as a
+`🔒 requires trust` placeholder until the config is trusted. Installed
+to `$HOME/.splashboard/home.dashboard.toml` it's implicitly trusted;
+dropped into a project's `.splashboard/dashboard.toml` it needs
+`splashboard trust` first.
+
+## Project presets
+
+### `project_splash` — animated repo hero
+
+Repo name as a giant figlet with a particle-burst reveal, followed by
+slug / description / license. Nothing else. For repo owners who want
+`./.splashboard/dashboard.toml` to feel like a title screen when someone
+clones.
+
+<div class="splash-landing" set:html={projectSplash} />
+
+| role | implementation |
+|---|---|
+| hero | `git_repo_name` → `text_ascii` (figlet, ansi_shadow), wrapped in `animated_postfx` (particle_burst) |
+| subtitle | `github_repo` (slug / description / license) → `text_plain` |
+
+Swap the hero's `effect = "..."` for `stagger_reveal` / `matrix_rain` /
+`neon_flash` / `glitch_in` to audition other openings.
+
+### `project_github` — repo hero + activity grid
+
+Repo name as a figlet hero, slug / description / license subtitle, and
+a grid of activity panes: commits heatmap, top contributors, open PRs /
+issues, languages breakdown, recent releases.
+
+<div class="splash-landing" set:html={projectGithub} />
+
+| role | implementation |
+|---|---|
+| hero | `git_repo_name` → `text_ascii` (figlet, ansi_shadow) |
+| subtitle | `github_repo` (slug / description / license) → `text_plain` |
+| repo stats | `github_repo_stars` → `grid_table` (inline) |
+| languages | `github_languages` → `chart_bar` (horizontal) |
+| releases | `github_recent_releases` → `list_timeline` |
+| PRs | `github_repo_prs` → `list_plain` |
+| issues | `github_repo_issues` → `list_plain` |
+| commits | `git_commits_activity` → `grid_heatmap` |
+| top contributors | `git_contributors` → `chart_bar` |
+
+Requires `gh auth login` (or `GITHUB_TOKEN`). The repo is discovered
+from `git remote origin`, so any repo you cd into produces a tailored
+dashboard with no per-repo edits.
+
+### `project_minimal` — name, tag, last three commits
+
+Repo name, latest tag, and a three-entry commit timeline. Centred on a
+lot of whitespace, no figlet, no panels. Acknowledges the repo and says
+"here's what you were just doing" without taking over the screen —
+useful when you cd into the same project hundreds of times a day and
+want `project_github` to feel like a conscious choice rather
+than the default noise.
+
+<div class="splash-landing" set:html={projectMinimal} />
+
+| role | implementation |
+|---|---|
+| name | `git_repo_name` → `text_plain` |
+| tag | `git_latest_tag` (Text) → `text_plain` |
+| recent | `git_recent_commits` (shape = `"text_block"`, format = `"3"`) → `list_plain` |
+
+Fully offline — every widget reads local git, so the preset renders the
+same whether you're online, behind a firewall, or haven't run
+`gh auth login`.
+
+### `project_codebase` — repo personality at a glance
+
+Frame layout with the project title figlet at the centre, surrounded by
+analytics tiles: LOC by language, project age breakdown, comment density
+on the top row; files-by-dir on the left and largest-files on the right
+flanking the title; most-churned files, TODO comment list, and TODO
+hotspots on the bottom row.
+
+<div class="splash-landing" set:html={projectCodebase} />
+
+| role | implementation |
+|---|---|
+| title | `git_repo_name` → `text_ascii` (blocks, quadrant) |
+| age | `git_age` (Text, `format = "full"`) → `text_plain` |
+| LOC summary | `code_loc` (Text) → `text_plain` |
+| LOC by language | `code_loc` (Bars) → `list_ranking` |
+| project age | `git_age` (Entries) → `grid_table` |
+| comment density | `code_comments` (Bars, `unit = "loc"`) → `list_ranking` |
+| files by dir | `code_files` (Bars) → `list_ranking` |
+| largest files | `code_largest_files` (Bars) → `list_ranking` |
+| most churned | `git_churn` (Bars) → `list_ranking` |
+| TODO comments | `code_todos` (TextBlock) → `list_plain` |
+| TODO hotspots | `code_todos` (Bars) → `list_ranking` |
+
+Local-only — every widget reads git2 / the working tree, no network or
+auth. Sister to `project_github` (operational forge view) on the
+"what's the shape of this repo" axis.

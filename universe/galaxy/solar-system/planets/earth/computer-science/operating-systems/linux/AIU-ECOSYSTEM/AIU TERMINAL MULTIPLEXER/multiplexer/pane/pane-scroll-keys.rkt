@@ -21,4 +21,5 @@
          [(= byte 104) (loop (+ i 1) (cons (quote line-down) found))]
          [(= byte 84) (loop (+ i 1) (cons (quote page-up) found))]
          [(= byte 72) (loop (+ i 1) (cons (quote page-down) found))]
+         [(= byte 117) (loop (+ i 1) (cons (quote splash) found))]
          [else (stop)])])))

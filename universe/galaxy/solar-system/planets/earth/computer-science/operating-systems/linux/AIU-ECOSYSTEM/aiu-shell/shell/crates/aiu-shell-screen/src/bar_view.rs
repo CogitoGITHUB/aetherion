@@ -94,7 +94,7 @@ pub fn start_rows(width: usize) -> Vec<String> {
     rows
 }
 
-fn tab_rows(width: usize) -> Vec<String> {
+fn tab_base(width: usize) -> Vec<String> {
     let inner = width.saturating_sub(4).max(1);
     let chars: Vec<char> = directory_path().chars().collect();
     let mut rows: Vec<String> = chars.chunks(inner).map(|part| part.iter().collect()).collect();
@@ -309,7 +309,7 @@ pub fn draw_full_input(frame: &mut Frame, state: &InputState, area: Rect) {
         area,
     );
 }
-fn context_rows(width: usize) -> Vec<String> {
+fn context_box(width: usize) -> Vec<String> {
     let parts = crate::context_bar::parts();
     if parts.is_empty() {
         return Vec::new();
@@ -336,4 +336,134 @@ fn context_rows(width: usize) -> Vec<String> {
     }
     out.push(rule_line("╰", "╯", width));
     out
+}
+
+fn context_rows(width: usize) -> Vec<String> {
+    let git = crate::splash_bar::git_text(width.saturating_sub(4));
+    let mut ctx = context_box(width);
+    if git.is_empty() {
+        return ctx;
+    }
+    let mut out = vec![edge_line("╭", "╮", "aiu git", width)];
+    for l in git {
+        out.push(body_line(&l, width));
+    }
+    if ctx.is_empty() {
+        out.push(rule_line("╰", "╯", width));
+        return out;
+    }
+    ctx.remove(0);
+    out.push(edge_line("├", "┤", "aiu context", width));
+    out.extend(ctx);
+    out
+}
+
+pub fn home_rows(width: usize) -> Vec<String> {
+    let lines = crate::splash_bar::home_text(width.saturating_sub(4));
+    if lines.is_empty() {
+        return Vec::new();
+    }
+    let mut out = vec![edge_line("╭", "╮", "aiu home", width)];
+    for l in lines {
+        out.push(body_line(&l, width));
+    }
+    out.push(rule_line("╰", "╯", width));
+    out
+}
+
+fn tab_rows(width: usize) -> Vec<String> {
+    let mut out = tab_base(width);
+    let home = home_rows(width);
+    if home.is_empty() {
+        return out;
+    }
+    out.pop();
+    out.push(edge_line("├", "┤", "aiu home", width));
+    out.extend(home.into_iter().skip(1));
+    out
+}
+
+pub fn draw_splash(frame: &mut Frame, state: &InputState, area: Rect) {
+    if !crate::splash_bar::overlay_open() {
+        crate::splash_bar::set_offset(0);
+        return;
+    }
+    if state.mode != Mode::Visual {
+        crate::splash_bar::close_all();
+        return;
+    }
+    let width = area.width as usize;
+    if width < 24 || area.height < 4 {
+        return;
+    }
+    let shown = crate::splash_bar::overlay(width.saturating_sub(4));
+    let (name, mut lines) = match shown {
+        Some(x) => x,
+        None => return,
+    };
+    if lines.is_empty() {
+        lines.push(String::from("nothing to show here"));
+    }
+    let keep = area.height as usize - 2;
+    let max = lines.len().saturating_sub(keep);
+    let off = crate::splash_bar::offset().min(max);
+    crate::splash_bar::set_offset(off);
+    let rows: Vec<String> = lines.into_iter().skip(off).take(keep).collect();
+    let frame_box = crate::box_frame::BoxFrame {
+        title: format!("{}  up down scroll  j k close", name),
+        rows,
+    };
+    let text = frame_box.lines(width).join("\n");
+    frame.render_widget(Clear, area);
+    frame.render_widget(
+        Paragraph::new(text).style(Style::default().fg(Color::White)),
+        area,
+    );
+}
+
+static BOX_SCROLL: std::sync::atomic::AtomicIsize =
+    std::sync::atomic::AtomicIsize::new(0);
+static BOX_LAST: std::sync::atomic::AtomicUsize =
+    std::sync::atomic::AtomicUsize::new(usize::MAX);
+static BOX_OPEN: AtomicBool = AtomicBool::new(false);
+
+pub fn scroll_box(delta: isize) {
+    BOX_SCROLL.fetch_add(delta, Ordering::Relaxed);
+}
+
+pub fn scroll_any(delta: isize) {
+    if crate::splash_bar::overlay_open() {
+        crate::splash_bar::scroll(delta);
+    } else {
+        scroll_box(delta);
+    }
+}
+
+pub fn box_skip(
+    state: &InputState,
+    start: usize,
+    end: usize,
+    pad: usize,
+    window: usize,
+    base: usize,
+) -> usize {
+    let open = state.expanded.contains(&state.focus);
+    let last = BOX_LAST.swap(state.focus, Ordering::Relaxed);
+    let was = BOX_OPEN.swap(open, Ordering::Relaxed);
+    if last != state.focus || was != open {
+        BOX_SCROLL.store(0, Ordering::Relaxed);
+    }
+    if state.mode != Mode::Visual {
+        return base;
+    }
+    let height = end.saturating_sub(start);
+    if height <= window {
+        BOX_SCROLL.store(0, Ordering::Relaxed);
+        return base;
+    }
+    let max = (height - window) as isize;
+    let cur = BOX_SCROLL.load(Ordering::Relaxed);
+    let off = cur.max(0).min(max);
+    BOX_SCROLL.store(off, Ordering::Relaxed);
+    start + pad + off as usize
 }

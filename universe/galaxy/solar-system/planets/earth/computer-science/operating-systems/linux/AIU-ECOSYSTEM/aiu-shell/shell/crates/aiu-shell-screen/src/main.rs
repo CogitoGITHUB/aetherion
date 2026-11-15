@@ -55,6 +55,7 @@ fn run_screen() {
     let _ = execute!(stdout(), EnableBracketedPaste);
     let mut state = InputState::new_running();
     loop {
+        aiu_shell_screen::notify::take_notice(&mut state.notice, &mut state.notice_age);
         terminal.draw(|frame| draw_screen(frame, &state)).expect("draw");
         let incoming = if event::poll(Duration::from_millis(50)).unwrap_or(false) {
             Some(event::read().expect("event"))

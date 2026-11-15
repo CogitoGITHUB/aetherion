@@ -1,0 +1,10 @@
+(spec
+  (format-version 2)
+  (name aiu-splash)
+  (version "2.10.4")
+  (summary "the AIU splash screen")
+  (source (local "/root/home/shape/Ætherion/universe/galaxy/solar-system/planets/earth/computer-science/operating-systems/linux/AIU-ECOSYSTEM/aiu-shell/splashboard"))
+  (build (steps (run #:argv ("cargo" "build" "--offline" "--release" "--target-dir" "target" "--manifest-path" "Cargo.toml"))))
+  (install (prefix (bin "target/release/splashboard" "bin/aiu-splash")))
+  (license isc)
+  (homepage "https://example.invalid/"))

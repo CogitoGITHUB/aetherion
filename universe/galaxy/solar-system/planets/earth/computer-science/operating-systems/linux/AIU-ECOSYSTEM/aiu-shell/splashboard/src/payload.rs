@@ -1,0 +1,736 @@
+#![allow(dead_code)]
+
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct Payload {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub status: Option<Status>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub format: Option<String>,
+    #[serde(flatten)]
+    pub body: Body,
+}
+
+/// Data-shape of a fetched payload. Variants describe the **shape of the data**, not how it's
+/// rendered — the same shape can feed multiple renderers (e.g. `Text` feeds both the plain
+/// `text_plain` renderer and the big-text `text_ascii` renderer). Config's `render = "…"` picks the
+/// renderer, compat-checked against the shape at dispatch time.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(tag = "shape", content = "data", rename_all = "snake_case")]
+pub enum Body {
+    /// A single string. Used by anything that emits one logical row: clock time, greeting,
+    /// branch name, countdown label.
+    Text(TextData),
+    /// Zero or more lines of text. Used by anything intrinsically multi-line: recent commits,
+    /// worktrees, welcome notes, todo items.
+    TextBlock(TextBlockData),
+    /// A blob of Markdown source. Distinct shape (not a flavour of `Text` / `TextBlock`)
+    /// because the contract is "this string MUST be parsed as Markdown" — a fetcher emitting
+    /// it is committing to that semantic, and the matching renderer (`text_markdown`)
+    /// refuses anything else. Keeps random `Text` payloads from being rendered as Markdown
+    /// by mistake, and keeps `text_plain` from being asked to render Markdown source verbatim.
+    MarkdownTextBlock(MarkdownTextBlockData),
+    /// Zero or more lines of text where each line carries an optional URL. Renderers that
+    /// understand hyperlinks (`list_links`) wrap rows whose `url` is `Some(_)` in OSC 8 escape
+    /// sequences so modern terminals surface them as clickable. Renderers that don't honour
+    /// links can ignore the urls and render the text only. Right for feeds — HN top, GitHub
+    /// PRs/issues/releases — where each row has a canonical "open this" target.
+    LinkedTextBlock(LinkedTextBlockData),
+    /// `LinkedTextBlock` with a thumbnail column. Each item is a `(thumbnail?, title, url?,
+    /// subtitle?)` tuple. Right for media-feed widgets (RSS with images, YouTube channels,
+    /// Plex / Jellyfin recently-added, Reddit-with-thumbnails) where the thumbnail carries as
+    /// much glance value as the title. Items without `thumbnail_path` get a blank cell of the
+    /// same width so the text column stays aligned across rows.
+    ImageLinkedList(ImageLinkedListData),
+    /// Key/value rows. Used by system info, env dumps, anything label:value shaped.
+    Entries(EntriesData),
+    /// A single 0..=1 value with an optional display label. Gauges, progress bars, donuts.
+    Ratio(RatioData),
+    /// Sequence of unsigned integers. Sparklines, histograms, bar-height sequences.
+    NumberSeries(NumberSeriesData),
+    /// Sequence of `(x, y)` points, one or more series. Line charts, scatter.
+    PointSeries(PointSeriesData),
+    /// Labeled bars. BarChart, horizontal ranking.
+    Bars(BarsData),
+    /// Path to an image on disk.
+    Image(ImageData),
+    /// Small fixed-grid pixel-art sprite drawn cell-by-cell with truecolor half-blocks. Distinct
+    /// from `Image`: `Image` is a path the user (or fetcher) supplies, rendered through whatever
+    /// terminal-graphics protocol is available; `PixelArt` is inline RGBA data that always
+    /// renders with `▀` half-blocks and works in any terminal that supports truecolor.
+    PixelArt(PixelArtData),
+    /// A month view anchored at a specific date, optionally with highlighted events. Calendar
+    /// widget (and anything future that shows month-scale state) consumes this.
+    Calendar(CalendarData),
+    /// 2D grid of intensities. Used by the GitHub-style contribution graph, habit trackers, any
+    /// daily-metric heatmap. Renderer maps each cell into a bucketed color.
+    Heatmap(HeatmapData),
+    /// Single traffic-light status + short label. Used by CI, deploy, SLO, oncall — one
+    /// indicator per fetcher. Rows of badges are a composition concern handled by the nested
+    /// layout (`combined_status_row`), not by a multi-entry payload.
+    Badge(BadgeData),
+    /// Time-stamped events, newest first. Used by git_recent_commits, deploy history, ci
+    /// history. Timestamps are raw unix seconds so the renderer computes the `"3h ago"` label
+    /// at draw time — keeping cached payloads from going stale.
+    Timeline(TimelineData),
+    /// Structured error payload — what the user sees instead of a real fetch result when the
+    /// widget can't produce one (fetch failed / timed out, fetcher unknown, fetcher can't emit
+    /// the renderer's required shape, network widget under untrusted config). Bypasses the
+    /// shape × renderer dispatch entirely: `render_payload` short-circuits on `Body::Error` and
+    /// draws the message inline regardless of the configured renderer, since asking
+    /// `chart_bar` to render an error message via `Bars` would either silently drop it or
+    /// trigger a misleading "cannot display" warning. Real fetchers never emit this — only the
+    /// placeholder constructors in `crate::fetcher` and `crate::trust`.
+    Error(ErrorData),
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct ErrorData {
+    pub kind: ErrorKind,
+    /// First line of the error pill. Convention: lead with the affected source ("⚠ deariary",
+    /// "🔒 requires trust") so users can scan a multi-widget splash for which one needs
+    /// attention without reading the full sentence.
+    pub message: String,
+    /// Optional second line. Typically a follow-up hint ("see logs", "check `render` in
+    /// config"). `None` if the kind is self-explanatory or the area is too narrow for two
+    /// lines anyway.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub detail: Option<String>,
+}
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum ErrorKind {
+    /// Fetcher returned `Err` (HTTP failure, parse error, missing token, …).
+    Fetch,
+    /// Fetcher exceeded the runtime deadline.
+    Timeout,
+    /// Configured fetcher name is not in the registry — usually a config newer than the
+    /// installed binary.
+    UnknownFetcher,
+    /// Fetcher can't emit the shape its renderer requires; user needs to change `render` or
+    /// `fetcher` in config.
+    ShapeMismatch,
+    /// `Network`-class widget in an untrusted local config; user runs `splashboard trust` to
+    /// unlock.
+    RequiresTrust,
+}
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
+pub enum Status {
+    Ok,
+    Warn,
+    Error,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct TextData {
+    pub value: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct TextBlockData {
+    pub lines: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct MarkdownTextBlockData {
+    pub value: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct LinkedTextBlockData {
+    pub items: Vec<LinkedLine>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct LinkedLine {
+    pub text: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub url: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct ImageLinkedListData {
+    pub items: Vec<ImageLinkedItem>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct ImageLinkedItem {
+    pub title: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub url: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub thumbnail_path: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub subtitle: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct EntriesData {
+    pub items: Vec<Entry>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct Entry {
+    pub key: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub value: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub status: Option<Status>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct RatioData {
+    pub value: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub label: Option<String>,
+    /// Optional total the ratio is a fraction of (e.g. 365 when `value` is "day of year /
+    /// 365"). Populated by fetchers that know the underlying count so renderers can express
+    /// the fraction directly ("118 of 365"). Omitted when no sensible denominator exists —
+    /// renderers fall back to percent-only output.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub denominator: Option<u64>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct NumberSeriesData {
+    pub values: Vec<u64>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct PointSeriesData {
+    pub series: Vec<PointSeries>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct PointSeries {
+    pub name: String,
+    pub points: Vec<(f64, f64)>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct BarsData {
+    pub bars: Vec<Bar>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct Bar {
+    pub label: String,
+    pub value: u64,
+    /// Optional pre-formatted right-column text shown by text-first renderers (`list_ranking`).
+    /// Visual renderers (`chart_bar`, `chart_pie`) ignore this — they only consume `value`. Let
+    /// fetchers carry a unit (`"80h"`, `"1.5M peak"`, `"2024-07-03"`) so the value column reads
+    /// as the fetcher intended rather than a raw `u64`. Omitted = renderers fall back to the
+    /// numeric `value` printed as-is.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub value_label: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct ImageData {
+    pub path: String,
+}
+
+/// One pixel in a [`PixelArtData`] grid. `a = 0` means transparent — the renderer fills the
+/// terminal background through. Partial alpha is currently treated as opaque; the contract is
+/// "opaque or transparent" so the artist palette stays simple.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+pub struct PixelColor {
+    pub r: u8,
+    pub g: u8,
+    pub b: u8,
+    #[serde(default = "PixelColor::opaque_alpha")]
+    pub a: u8,
+}
+
+impl PixelColor {
+    pub const TRANSPARENT: Self = Self {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 0,
+    };
+
+    pub const fn opaque(r: u8, g: u8, b: u8) -> Self {
+        Self { r, g, b, a: 255 }
+    }
+
+    pub fn is_transparent(self) -> bool {
+        self.a == 0
+    }
+
+    fn opaque_alpha() -> u8 {
+        255
+    }
+}
+
+/// A small fixed-grid pixel-art sprite, rendered cell-by-cell with truecolor half-blocks. Right
+/// for sprite-scale ambient widgets (weather icon, system mood face) that need full colour but
+/// don't want a terminal-graphics-protocol dependency. Distinct from [`ImageData`], which is a
+/// path to a real raster image rendered via ratatui-image. Rows must be the same length; the
+/// renderer treats jagged rows as an error payload.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct PixelArtData {
+    /// Row-major grid; `pixels[0]` is the top row.
+    pub pixels: Vec<Vec<PixelColor>>,
+    /// Optional caption rendered under the sprite.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub label: Option<String>,
+}
+
+/// 2D grid of intensities, row-major (`cells[row][col]`). The renderer picks a bucket per cell
+/// via `thresholds` (explicit bucket boundaries) or an auto-quartile fallback when absent.
+/// Labels are optional and may be rendered along the edges if space allows.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct HeatmapData {
+    pub cells: Vec<Vec<u32>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub thresholds: Option<Vec<u32>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub row_labels: Option<Vec<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub col_labels: Option<Vec<String>>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct BadgeData {
+    pub status: Status,
+    pub label: String,
+}
+
+/// Time-stamped events for the timeline renderer. Timestamps are unix seconds UTC; the renderer
+/// formats a relative label (`"3h ago"`, `"yesterday"`, `"Apr 5"`) at draw time so cached
+/// payloads don't freeze stale relative strings.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct TimelineData {
+    pub events: Vec<TimelineEvent>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct TimelineEvent {
+    /// Unix seconds UTC.
+    pub timestamp: i64,
+    pub title: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub detail: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub status: Option<Status>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct CalendarData {
+    /// ISO year (e.g. 2026).
+    pub year: i32,
+    /// 1..=12.
+    pub month: u8,
+    /// Optional focus / "today" day, 1..=31. If set, the calendar renderer highlights it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub day: Option<u8>,
+    /// Extra days to mark (e.g. event days). Empty by default.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub events: Vec<u8>,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn round_trip(payload: &Payload) -> Payload {
+        let json = serde_json::to_string(payload).unwrap();
+        serde_json::from_str(&json).unwrap()
+    }
+
+    fn bare(body: Body) -> Payload {
+        Payload {
+            icon: None,
+            status: None,
+            format: None,
+            body,
+        }
+    }
+
+    #[test]
+    fn text_round_trips() {
+        let p = Payload {
+            icon: None,
+            status: None,
+            format: Some("{branch}".into()),
+            body: Body::Text(TextData {
+                value: "main".into(),
+            }),
+        };
+        assert_eq!(p, round_trip(&p));
+    }
+
+    #[test]
+    fn text_parses_from_spec_example() {
+        let json = r#"{"shape":"text","data":{"value":"main"}}"#;
+        let p: Payload = serde_json::from_str(json).unwrap();
+        assert!(matches!(p.body, Body::Text(_)));
+    }
+
+    #[test]
+    fn text_serializes_with_expected_shape_tag() {
+        let p = bare(Body::Text(TextData {
+            value: "main".into(),
+        }));
+        let v: serde_json::Value = serde_json::to_value(&p).unwrap();
+        assert_eq!(v["shape"], "text");
+        assert_eq!(v["data"]["value"], "main");
+    }
+
+    #[test]
+    fn text_block_round_trips() {
+        let p = bare(Body::TextBlock(TextBlockData {
+            lines: vec!["feat: a".into(), "fix: b".into()],
+        }));
+        assert_eq!(p, round_trip(&p));
+    }
+
+    #[test]
+    fn text_block_serializes_with_expected_shape_tag() {
+        let p = bare(Body::TextBlock(TextBlockData {
+            lines: vec!["a".into()],
+        }));
+        let v: serde_json::Value = serde_json::to_value(&p).unwrap();
+        assert_eq!(v["shape"], "text_block");
+        assert_eq!(v["data"]["lines"][0], "a");
+    }
+
+    #[test]
+    fn markdown_text_block_round_trips() {
+        let p = bare(Body::MarkdownTextBlock(MarkdownTextBlockData {
+            value: "# heading\n\n- a\n- b".into(),
+        }));
+        assert_eq!(p, round_trip(&p));
+    }
+
+    #[test]
+    fn markdown_text_block_serializes_with_expected_shape_tag() {
+        let p = bare(Body::MarkdownTextBlock(MarkdownTextBlockData {
+            value: "# x".into(),
+        }));
+        let v: serde_json::Value = serde_json::to_value(&p).unwrap();
+        assert_eq!(v["shape"], "markdown_text_block");
+        assert_eq!(v["data"]["value"], "# x");
+    }
+
+    #[test]
+    fn linked_text_block_round_trips() {
+        let p = bare(Body::LinkedTextBlock(LinkedTextBlockData {
+            items: vec![
+                LinkedLine {
+                    text: "234pt 56c  Show HN: x".into(),
+                    url: Some("https://example.com/x".into()),
+                },
+                LinkedLine {
+                    text: "no link here".into(),
+                    url: None,
+                },
+            ],
+        }));
+        assert_eq!(p, round_trip(&p));
+    }
+
+    #[test]
+    fn linked_text_block_serializes_with_expected_shape_tag() {
+        let p = bare(Body::LinkedTextBlock(LinkedTextBlockData {
+            items: vec![LinkedLine {
+                text: "hello".into(),
+                url: Some("https://example.com".into()),
+            }],
+        }));
+        let v: serde_json::Value = serde_json::to_value(&p).unwrap();
+        assert_eq!(v["shape"], "linked_text_block");
+        assert_eq!(v["data"]["items"][0]["text"], "hello");
+        assert_eq!(v["data"]["items"][0]["url"], "https://example.com");
+    }
+
+    #[test]
+    fn linked_text_block_omits_url_when_none() {
+        let p = bare(Body::LinkedTextBlock(LinkedTextBlockData {
+            items: vec![LinkedLine {
+                text: "hello".into(),
+                url: None,
+            }],
+        }));
+        let json = serde_json::to_string(&p).unwrap();
+        assert!(!json.contains("\"url\""), "json: {json:?}");
+    }
+
+    #[test]
+    fn image_linked_list_round_trips() {
+        let p = bare(Body::ImageLinkedList(ImageLinkedListData {
+            items: vec![
+                ImageLinkedItem {
+                    title: "Rust 1.99 released".into(),
+                    url: Some("https://example.com/rust".into()),
+                    thumbnail_path: Some("/tmp/rust.png".into()),
+                    subtitle: Some("rust-lang.org · 2h ago".into()),
+                },
+                ImageLinkedItem {
+                    title: "no thumbnail here".into(),
+                    url: None,
+                    thumbnail_path: None,
+                    subtitle: None,
+                },
+            ],
+        }));
+        assert_eq!(p, round_trip(&p));
+    }
+
+    #[test]
+    fn image_linked_list_serializes_with_expected_shape_tag() {
+        let p = bare(Body::ImageLinkedList(ImageLinkedListData {
+            items: vec![ImageLinkedItem {
+                title: "hello".into(),
+                url: Some("https://example.com".into()),
+                thumbnail_path: Some("/tmp/x.png".into()),
+                subtitle: None,
+            }],
+        }));
+        let v: serde_json::Value = serde_json::to_value(&p).unwrap();
+        assert_eq!(v["shape"], "image_linked_list");
+        assert_eq!(v["data"]["items"][0]["title"], "hello");
+        assert_eq!(v["data"]["items"][0]["url"], "https://example.com");
+        assert_eq!(v["data"]["items"][0]["thumbnail_path"], "/tmp/x.png");
+        assert!(v["data"]["items"][0].get("subtitle").is_none());
+    }
+
+    #[test]
+    fn image_linked_list_omits_optional_fields_when_none() {
+        let p = bare(Body::ImageLinkedList(ImageLinkedListData {
+            items: vec![ImageLinkedItem {
+                title: "only title".into(),
+                url: None,
+                thumbnail_path: None,
+                subtitle: None,
+            }],
+        }));
+        let json = serde_json::to_string(&p).unwrap();
+        assert!(!json.contains("\"url\""), "json: {json:?}");
+        assert!(!json.contains("\"thumbnail_path\""), "json: {json:?}");
+        assert!(!json.contains("\"subtitle\""), "json: {json:?}");
+    }
+
+    #[test]
+    fn entries_round_trips() {
+        let p = bare(Body::Entries(EntriesData {
+            items: vec![Entry {
+                key: "uptime".into(),
+                value: Some("3d".into()),
+                status: Some(Status::Ok),
+            }],
+        }));
+        assert_eq!(p, round_trip(&p));
+    }
+
+    #[test]
+    fn ratio_round_trips() {
+        let p = bare(Body::Ratio(RatioData {
+            value: 0.73,
+            label: Some("CPU".into()),
+            denominator: Some(100),
+        }));
+        assert_eq!(p, round_trip(&p));
+    }
+
+    #[test]
+    fn number_series_round_trips() {
+        let p = bare(Body::NumberSeries(NumberSeriesData {
+            values: vec![1, 2, 3],
+        }));
+        assert_eq!(p, round_trip(&p));
+    }
+
+    #[test]
+    fn point_series_round_trips() {
+        let p = bare(Body::PointSeries(PointSeriesData {
+            series: vec![PointSeries {
+                name: "temp".into(),
+                points: vec![(0.0, 20.0), (1.0, 21.5)],
+            }],
+        }));
+        assert_eq!(p, round_trip(&p));
+    }
+
+    #[test]
+    fn bars_round_trips() {
+        let p = bare(Body::Bars(BarsData {
+            bars: vec![
+                Bar {
+                    label: "a".into(),
+                    value: 3,
+                    value_label: None,
+                },
+                Bar {
+                    label: "b".into(),
+                    value: 5,
+                    value_label: None,
+                },
+            ],
+        }));
+        assert_eq!(p, round_trip(&p));
+    }
+
+    #[test]
+    fn shape_tag_uses_snake_case() {
+        let p = bare(Body::Bars(BarsData { bars: vec![] }));
+        let v: serde_json::Value = serde_json::to_value(&p).unwrap();
+        assert_eq!(v["shape"], "bars");
+    }
+
+    #[test]
+    fn single_line_via_text_variant() {
+        let p = bare(Body::Text(TextData {
+            value: "12:34".into(),
+        }));
+        assert_eq!(p, round_trip(&p));
+    }
+
+    #[test]
+    fn badge_round_trips() {
+        let p = bare(Body::Badge(BadgeData {
+            status: Status::Warn,
+            label: "deploy degraded".into(),
+        }));
+        assert_eq!(p, round_trip(&p));
+    }
+
+    #[test]
+    fn badge_serializes_with_expected_shape_tag() {
+        let p = bare(Body::Badge(BadgeData {
+            status: Status::Error,
+            label: "oncall paging".into(),
+        }));
+        let v: serde_json::Value = serde_json::to_value(&p).unwrap();
+        assert_eq!(v["shape"], "badge");
+        assert_eq!(v["data"]["status"], "error");
+        assert_eq!(v["data"]["label"], "oncall paging");
+    }
+
+    #[test]
+    fn timeline_round_trips() {
+        let p = bare(Body::Timeline(TimelineData {
+            events: vec![
+                TimelineEvent {
+                    timestamp: 1_700_000_000,
+                    title: "merged #42".into(),
+                    detail: Some("feat(render): heatmap".into()),
+                    status: Some(Status::Ok),
+                },
+                TimelineEvent {
+                    timestamp: 1_699_990_000,
+                    title: "opened #41".into(),
+                    detail: None,
+                    status: None,
+                },
+            ],
+        }));
+        assert_eq!(p, round_trip(&p));
+    }
+
+    #[test]
+    fn timeline_serializes_with_expected_shape_tag() {
+        let p = bare(Body::Timeline(TimelineData {
+            events: vec![TimelineEvent {
+                timestamp: 1_700_000_000,
+                title: "x".into(),
+                detail: None,
+                status: None,
+            }],
+        }));
+        let v: serde_json::Value = serde_json::to_value(&p).unwrap();
+        assert_eq!(v["shape"], "timeline");
+        assert_eq!(v["data"]["events"][0]["timestamp"], 1_700_000_000_i64);
+        assert_eq!(v["data"]["events"][0]["title"], "x");
+        assert!(v["data"]["events"][0].get("detail").is_none());
+        assert!(v["data"]["events"][0].get("status").is_none());
+    }
+
+    #[test]
+    fn image_round_trips() {
+        let p = bare(Body::Image(ImageData {
+            path: "/tmp/a.png".into(),
+        }));
+        assert_eq!(p, round_trip(&p));
+    }
+
+    #[test]
+    fn optional_fields_absent_in_serialization() {
+        let p = bare(Body::TextBlock(TextBlockData { lines: vec![] }));
+        let json = serde_json::to_string(&p).unwrap();
+        assert!(!json.contains("icon"));
+        assert!(!json.contains("status"));
+    }
+
+    #[test]
+    fn error_round_trips_with_full_field_set() {
+        // Locks the on-disk wire format for `Body::Error`. Cached `CacheEntryKind::Err`
+        // entries serialize this and must deserialize back identically after a process
+        // restart, otherwise the cache layer drops the placeholder mid-flight.
+        let p = bare(Body::Error(ErrorData {
+            kind: ErrorKind::Fetch,
+            message: "⚠ deariary 429".into(),
+            detail: Some("see logs".into()),
+        }));
+        assert_eq!(p, round_trip(&p));
+    }
+
+    #[test]
+    fn error_round_trips_without_detail() {
+        // Detail is `Option<String>` — round-trip must preserve `None` rather than
+        // collapsing it to an empty string, because the renderer treats the two distinctly
+        // (no detail = single-line layout vs detail = two-line message + hint).
+        let p = bare(Body::Error(ErrorData {
+            kind: ErrorKind::Timeout,
+            message: "⏱ timed out".into(),
+            detail: None,
+        }));
+        assert_eq!(p, round_trip(&p));
+        let json = serde_json::to_string(&p).unwrap();
+        assert!(
+            !json.contains("detail"),
+            "skip_serializing_if must drop None detail: {json}"
+        );
+    }
+
+    #[test]
+    fn error_serializes_with_expected_shape_tag_and_snake_case_kind() {
+        // Pins the canonical wire format so changes to the serde derives surface here
+        // rather than as silent breakage in cached payloads.
+        let p = bare(Body::Error(ErrorData {
+            kind: ErrorKind::ShapeMismatch,
+            message: "⚠ static_text can't emit bars".into(),
+            detail: Some("check `render` in config".into()),
+        }));
+        let v: serde_json::Value = serde_json::to_value(&p).unwrap();
+        assert_eq!(v["shape"], "error");
+        assert_eq!(v["data"]["kind"], "shape_mismatch");
+        assert_eq!(v["data"]["message"], "⚠ static_text can't emit bars");
+        assert_eq!(v["data"]["detail"], "check `render` in config");
+    }
+
+    #[test]
+    fn error_kind_covers_every_known_variant() {
+        // Exhaustive snake_case round-trip per ErrorKind so a new variant landing without
+        // a corresponding renaming convention trips this test.
+        for (kind, expected) in [
+            (ErrorKind::Fetch, "fetch"),
+            (ErrorKind::Timeout, "timeout"),
+            (ErrorKind::UnknownFetcher, "unknown_fetcher"),
+            (ErrorKind::ShapeMismatch, "shape_mismatch"),
+            (ErrorKind::RequiresTrust, "requires_trust"),
+        ] {
+            let s = serde_json::to_string(&kind).unwrap();
+            assert_eq!(s, format!("\"{expected}\""), "kind: {kind:?}");
+            let back: ErrorKind = serde_json::from_str(&s).unwrap();
+            assert_eq!(back, kind);
+        }
+    }
+}

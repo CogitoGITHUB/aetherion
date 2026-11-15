@@ -1,0 +1,92 @@
+---
+title: splashboard
+description: Customizable terminal splash rendered on shell startup and cd.
+template: splash
+hero:
+  title: splashboard
+  tagline: A customizable terminal splash rendered on shell startup and on directory change. Per-directory configs so different repos get different splashes automatically.
+  actions:
+    - text: Getting started
+      link: /guides/getting-started/
+      icon: right-arrow
+      variant: primary
+    - text: Concepts
+      link: /guides/concepts/
+      icon: open-book
+      variant: secondary
+    - text: GitHub
+      link: https://github.com/unhappychoice/splashboard
+      icon: external
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import projectGithub from '../../assets/rendered/project_github.html?raw';
+
+<div class="splash-landing" set:html={projectGithub} />
+
+## What is this
+
+Every new shell, every `cd` into a repo — instead of a blinking cursor, you
+see a dashboard of the things you actually care about: git status, CI
+health, PRs awaiting review, a contribution heatmap, the moon phase. One
+line in your shell rc and you're done.
+
+The killer feature: a repo that ships `./.splashboard/dashboard.toml`
+reshapes the splash to itself when you `cd` in. Competitor products
+(neofetch, fastfetch, starship) don't do this.
+
+## Start here
+
+<CardGrid>
+  <LinkCard
+    title="Getting started"
+    description="Install, wire into your shell, render your first splash."
+    href="/guides/getting-started/"
+  />
+  <LinkCard
+    title="Concepts"
+    description="The mental model — Widget = Fetcher + Renderer + Layout slot."
+    href="/guides/concepts/"
+  />
+  <LinkCard
+    title="Configuration"
+    description="The TOML schema: settings, dashboards, widgets, rows, render options."
+    href="/guides/configuration/"
+  />
+  <LinkCard
+    title="Presets"
+    description="Four curated dashboards you can copy verbatim."
+    href="/guides/presets/"
+  />
+  <LinkCard
+    title="Themes"
+    description="Six palettes plus per-token overrides."
+    href="/guides/themes/"
+  />
+  <LinkCard
+    title="Cookbook"
+    description="Credentials, per-repo splashes, custom widgets via ReadStore, light terminals."
+    href="/guides/cookbook/"
+  />
+</CardGrid>
+
+## Catalog
+
+<CardGrid>
+  <LinkCard
+    title="Reference overview"
+    description="Fetcher index, renderer index, and the shape × renderer compatibility matrix."
+    href="/reference/matrix/"
+  />
+  <LinkCard
+    title="Showcases"
+    description="Screenshots of splashboard in the wild — presets, themes, community dashboards."
+    href="/showcases/"
+  />
+  <LinkCard
+    title="Trust model"
+    description="Per-widget consent for project-local dashboards that want to talk to the network."
+    href="/guides/trust/"
+  />
+</CardGrid>

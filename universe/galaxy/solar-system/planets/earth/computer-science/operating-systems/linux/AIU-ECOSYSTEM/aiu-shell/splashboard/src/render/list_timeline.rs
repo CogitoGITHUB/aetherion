@@ -1,0 +1,615 @@
+use chrono::{Datelike, TimeZone, Utc};
+use ratatui::{
+    Frame,
+    layout::Rect,
+    style::Style,
+    text::{Line, Span},
+    widgets::Paragraph,
+};
+
+use crate::options::OptionSchema;
+use crate::payload::{Body, Status, TimelineData, TimelineEvent};
+use crate::theme::{self, ColorKey, Theme};
+use crate::time as t;
+
+use super::{Registry, RenderOptions, Renderer, Shape};
+
+#[derive(Debug, Clone, Default, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Options {
+    #[serde(default)]
+    pub date_format: Option<String>,
+}
+
+const COLOR_KEYS: &[ColorKey] = &[
+    theme::STATUS_OK,
+    theme::STATUS_WARN,
+    theme::STATUS_ERROR,
+    theme::TEXT_DIM,
+    theme::TEXT_SECONDARY,
+    theme::TEXT,
+];
+
+const OPTION_SCHEMAS: &[OptionSchema] = &[
+    OptionSchema {
+        name: "bullet",
+        type_hint: "\"●\" | \"•\" | \"▪\" | \"→\" | \"none\"",
+        required: false,
+        default: Some("none"),
+        description: "Glyph prefixed to each event after the time column. `none` (default) shows only the time column and title.",
+    },
+    OptionSchema {
+        name: "max_items",
+        type_hint: "positive integer",
+        required: false,
+        default: Some("all events"),
+        description: "Cap on rendered events, from the top. Older events are dropped when the list is longer than the cap.",
+    },
+    OptionSchema {
+        name: "date_format",
+        type_hint: "\"relative\" | \"absolute\"",
+        required: false,
+        default: Some("\"relative\""),
+        description: "How the time column is formatted. `relative` shows `2h` / `3d`; `absolute` shows `2026-04-23` (ISO date).",
+    },
+    OptionSchema {
+        name: "align",
+        type_hint: "\"left\" | \"center\" | \"right\"",
+        required: false,
+        default: Some("\"left\""),
+        description: "Horizontal alignment of the timeline within its cell.",
+    },
+];
+
+/// Time-stamped event list. Each row shows a compact relative prefix (`"3h"`, `"2d"`, `"Apr 5"`)
+/// computed at draw time against the current clock — cached payloads never freeze a stale
+/// "ago" string. Optional `detail` hangs under the title; `status` colours the title.
+pub struct ListTimelineRenderer;
+
+const SEPARATOR: &str = " │ ";
+
+impl Renderer for ListTimelineRenderer {
+    fn name(&self) -> &str {
+        "list_timeline"
+    }
+    fn description(&self) -> &'static str {
+        "Chronological events with a left-aligned time column (relative `3h` / `2d` or absolute ISO date) separated from the title by a vertical bar, and an optional indented detail row underneath. Status colours the title; pick this for commits, releases, notifications."
+    }
+    fn accepts(&self) -> &[Shape] {
+        &[Shape::Timeline]
+    }
+    fn color_keys(&self) -> &[ColorKey] {
+        COLOR_KEYS
+    }
+    fn option_schemas(&self) -> &[OptionSchema] {
+        OPTION_SCHEMAS
+    }
+    fn render(
+        &self,
+        frame: &mut Frame,
+        area: Rect,
+        body: &Body,
+        opts: &RenderOptions,
+        theme: &Theme,
+        _registry: &Registry,
+    ) {
+        if let Body::Timeline(d) = body {
+            render_timeline_at(frame, area, d, opts, Utc::now().timestamp(), theme);
+        }
+    }
+}
+
+fn render_timeline_at(
+    frame: &mut Frame,
+    area: Rect,
+    data: &TimelineData,
+    opts: &RenderOptions,
+    now: i64,
+    theme: &Theme,
+) {
+    let specific: Options = opts.parse_specific();
+    let events: Vec<&TimelineEvent> = data
+        .events
+        .iter()
+        .take(opts.max_items.unwrap_or(usize::MAX))
+        .collect();
+    let use_absolute = matches!(specific.date_format.as_deref(), Some("absolute"));
+    let timezone = opts.timezone.as_deref();
+    let locale = opts.locale.as_deref();
+    let prefixes: Vec<String> = events
+        .iter()
+        .map(|e| format_prefix(e.timestamp, now, use_absolute, timezone, locale))
+        .collect();
+    let prefix_width = prefixes
+        .iter()
+        .map(|p| p.chars().count())
+        .max()
+        .unwrap_or(0);
+    let bullet = bullet_for(opts.bullet.as_deref());
+    let dim = Style::default().fg(theme.text_dim);
+
+    let mut lines: Vec<Line> = Vec::with_capacity(events.len() * 2);
+    let mut content_width: usize = 0;
+    for (prefix, event) in prefixes.iter().zip(events.iter()) {
+        let head = format!("{}{SEPARATOR}{bullet}", pad_left(prefix, prefix_width));
+        content_width = content_width.max(head.chars().count() + event.title.chars().count());
+        lines.push(Line::from(vec![
+            Span::styled(head, dim),
+            Span::styled(event.title.clone(), status_style(event.status, theme)),
+        ]));
+        if let Some(detail) = &event.detail {
+            let indent = format!(
+                "{}{SEPARATOR}{}",
+                " ".repeat(prefix_width),
+                " ".repeat(bullet.chars().count())
+            );
+            content_width = content_width.max(indent.chars().count() + detail.chars().count());
+            lines.push(Line::from(vec![
+                Span::styled(indent, dim),
+                Span::styled(detail.clone(), Style::default().fg(theme.text_secondary)),
+            ]));
+        }
+    }
+
+    let target = align_rect(area, content_width as u16, opts.align.as_deref());
+    // Base `theme.text` so event titles without status, and any padding chars around
+    // styled spans, inherit the chrome colour instead of the terminal fg.
+    frame.render_widget(
+        Paragraph::new(lines).style(Style::default().fg(theme.text)),
+        target,
+    );
+}
+
+fn bullet_for(option: Option<&str>) -> String {
+    match option {
+        None | Some("none") | Some("") => String::new(),
+        Some(g) => format!("{g} "),
+    }
+}
+
+fn format_prefix(
+    ts: i64,
+    now: i64,
+    absolute: bool,
+    timezone: Option<&str>,
+    locale: Option<&str>,
+) -> String {
+    if absolute {
+        format_iso_date(ts, timezone, locale)
+    } else {
+        format_relative(ts, now, timezone, locale)
+    }
+}
+
+fn format_iso_date(ts: i64, timezone: Option<&str>, locale: Option<&str>) -> String {
+    let Some(utc) = Utc.timestamp_opt(ts, 0).single() else {
+        return "—".into();
+    };
+    let local = match t::parse_tz(timezone) {
+        Some(tz) => utc.with_timezone(&tz).fixed_offset(),
+        None => utc.with_timezone(&chrono::Local).fixed_offset(),
+    };
+    t::format_local(&local, "%Y-%m-%d", locale)
+}
+
+fn align_rect(area: Rect, content_width: u16, align: Option<&str>) -> Rect {
+    if content_width == 0 || content_width >= area.width {
+        return area;
+    }
+    let offset = match align {
+        Some("center") => (area.width - content_width) / 2,
+        Some("right") => area.width - content_width,
+        _ => return area,
+    };
+    Rect {
+        x: area.x + offset,
+        y: area.y,
+        width: content_width,
+        height: area.height,
+    }
+}
+
+fn pad_left(s: &str, width: usize) -> String {
+    let n = s.chars().count();
+    if n >= width {
+        return s.to_string();
+    }
+    let mut out = String::with_capacity(width);
+    out.extend(std::iter::repeat_n(' ', width - n));
+    out.push_str(s);
+    out
+}
+
+fn status_style(status: Option<Status>, theme: &Theme) -> Style {
+    match status {
+        Some(s) => Style::default().fg(super::status_badge::status_color(s, theme)),
+        None => Style::default(),
+    }
+}
+
+/// Relative label for `ts` seen from `now`. Past events shrink to `Ns`/`Nm`/`Nh`/`Nd`/`Nw`;
+/// anything older than ~4 weeks falls back to an absolute date so the label stays short. Future
+/// events get an `in …` prefix. Same clock for past and future keeps the column width stable.
+fn format_relative(ts: i64, now: i64, timezone: Option<&str>, locale: Option<&str>) -> String {
+    let delta = now - ts;
+    match t::format_relative_compact(delta, locale) {
+        Some(s) => s,
+        None => format_absolute(ts, now, timezone, locale),
+    }
+}
+
+fn format_absolute(ts: i64, now: i64, timezone: Option<&str>, locale: Option<&str>) -> String {
+    let Some(event_utc) = Utc.timestamp_opt(ts, 0).single() else {
+        return "—".into();
+    };
+    let event = match t::parse_tz(timezone) {
+        Some(tz) => event_utc.with_timezone(&tz).fixed_offset(),
+        None => event_utc.with_timezone(&chrono::Local).fixed_offset(),
+    };
+    let Some(now_utc) = Utc.timestamp_opt(now, 0).single() else {
+        return t::format_local(&event, "%Y-%m-%d", locale);
+    };
+    let now_local = match t::parse_tz(timezone) {
+        Some(tz) => now_utc.with_timezone(&tz).fixed_offset(),
+        None => now_utc.with_timezone(&chrono::Local).fixed_offset(),
+    };
+    if event.year() == now_local.year() {
+        t::format_local(&event, "%b %-d", locale)
+    } else {
+        t::format_local(&event, "%Y-%m-%d", locale)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::payload::{Body, Payload, Status, TimelineData, TimelineEvent};
+    use crate::render::test_utils::{line_text, render_to_buffer_with_spec};
+    use crate::render::{Registry, RenderSpec};
+    use ratatui::{Terminal, backend::TestBackend, buffer::Buffer};
+
+    fn render_at(data: &TimelineData, now: i64, w: u16, h: u16) -> Buffer {
+        let backend = TestBackend::new(w, h);
+        let mut terminal = Terminal::new(backend).unwrap();
+        let theme = Theme::default();
+        terminal
+            .draw(|f| render_timeline_at(f, f.area(), data, &RenderOptions::default(), now, &theme))
+            .unwrap();
+        terminal.backend().buffer().clone()
+    }
+
+    fn row_text(buf: &Buffer, y: u16) -> String {
+        (0..buf.area.width)
+            .map(|x| buf.cell((x, y)).unwrap().symbol().to_string())
+            .collect()
+    }
+
+    fn rel(ts: i64, now: i64) -> String {
+        format_relative(ts, now, Some("UTC"), None)
+    }
+
+    #[test]
+    fn format_relative_seconds_is_now() {
+        assert_eq!(rel(1_000, 1_030), "now");
+    }
+
+    #[test]
+    fn format_relative_minutes() {
+        assert_eq!(rel(0, 120), "2m");
+    }
+
+    #[test]
+    fn format_relative_minutes_rounds_half_up() {
+        assert_eq!(rel(0, 45), "1m");
+    }
+
+    #[test]
+    fn format_relative_hours() {
+        assert_eq!(rel(0, 3 * 3600), "3h");
+    }
+
+    #[test]
+    fn format_relative_days() {
+        assert_eq!(rel(0, 2 * 86_400), "2d");
+    }
+
+    #[test]
+    fn format_relative_weeks() {
+        assert_eq!(rel(0, 8 * 86_400), "1w");
+    }
+
+    #[test]
+    fn format_relative_falls_back_to_absolute_date_after_four_weeks() {
+        let now = Utc
+            .with_ymd_and_hms(2026, 4, 22, 0, 0, 0)
+            .single()
+            .unwrap()
+            .timestamp();
+        let ts = now - 60 * 86_400; // → 2026-02-21
+        assert_eq!(rel(ts, now), "Feb 21");
+    }
+
+    #[test]
+    fn format_relative_absolute_includes_year_across_boundary() {
+        // now = 2026-02-15, event 2025-11-20 → different year, ISO date.
+        let now = Utc
+            .with_ymd_and_hms(2026, 2, 15, 0, 0, 0)
+            .single()
+            .unwrap()
+            .timestamp();
+        let ts = Utc
+            .with_ymd_and_hms(2025, 11, 20, 0, 0, 0)
+            .single()
+            .unwrap()
+            .timestamp();
+        assert_eq!(rel(ts, now), "2025-11-20");
+    }
+
+    #[test]
+    fn format_relative_future_gets_in_prefix() {
+        assert_eq!(rel(3_600, 0), "in 1h");
+    }
+
+    #[test]
+    fn renders_event_title_with_relative_prefix() {
+        let data = TimelineData {
+            events: vec![TimelineEvent {
+                timestamp: 0,
+                title: "merged #42".into(),
+                detail: None,
+                status: None,
+            }],
+        };
+        let buf = render_at(&data, 3 * 3600, 40, 1);
+        let line = row_text(&buf, 0);
+        assert!(line.contains("3h"), "missing relative prefix: {line:?}");
+        assert!(line.contains("merged #42"), "missing title: {line:?}");
+    }
+
+    #[test]
+    fn detail_lands_on_next_row_indented() {
+        let data = TimelineData {
+            events: vec![TimelineEvent {
+                timestamp: 0,
+                title: "opened #41".into(),
+                detail: Some("widget catalog".into()),
+                status: None,
+            }],
+        };
+        let buf = render_at(&data, 3 * 3600, 40, 2);
+        let row0 = row_text(&buf, 0);
+        let row1 = row_text(&buf, 1);
+        assert!(row0.contains("opened #41"));
+        assert!(row1.contains("widget catalog"));
+        // Detail row starts with spaces, not with "3h".
+        assert!(!row1.trim_start().starts_with("3h"));
+    }
+
+    #[test]
+    fn status_colours_the_title() {
+        let data = TimelineData {
+            events: vec![TimelineEvent {
+                timestamp: 0,
+                title: "build failed".into(),
+                detail: None,
+                status: Some(Status::Error),
+            }],
+        };
+        let buf = render_at(&data, 60, 40, 1);
+        // Title follows the separator " │ " — scan for the 'b' of "build".
+        let row = row_text(&buf, 0);
+        let col = row.find("build").expect("title should appear") as u16;
+        assert_eq!(
+            buf.cell((col, 0)).unwrap().fg,
+            Theme::default().status_error
+        );
+    }
+
+    #[test]
+    fn prefixes_share_a_column_width() {
+        let data = TimelineData {
+            events: vec![
+                TimelineEvent {
+                    timestamp: 0,
+                    title: "old".into(),
+                    detail: None,
+                    status: None,
+                },
+                TimelineEvent {
+                    timestamp: 10 * 86_400 - 60, // still under 28d → "1w"
+                    title: "recent".into(),
+                    detail: None,
+                    status: None,
+                },
+            ],
+        };
+        // now = 10d past epoch: first event is "10d", second is "1w". Widths 3 and 2 — the
+        // "1w" row should be right-padded so the " │ " separator lines up with the "10d" row.
+        let buf = render_at(&data, 10 * 86_400, 40, 2);
+        let row0 = row_text(&buf, 0);
+        let row1 = row_text(&buf, 1);
+        let col0 = row0.find('│').unwrap();
+        let col1 = row1.find('│').unwrap();
+        assert_eq!(col0, col1, "separators misaligned: {row0:?} vs {row1:?}");
+    }
+
+    #[test]
+    fn timeline_is_the_default_renderer_for_timeline_shape() {
+        // Uses real Utc::now() through the public path — we only assert the title lands, not
+        // the prefix, since the relative label is clock-dependent.
+        let p = Payload {
+            icon: None,
+            status: None,
+            format: None,
+            body: Body::Timeline(TimelineData {
+                events: vec![TimelineEvent {
+                    timestamp: Utc::now().timestamp(),
+                    title: "right now".into(),
+                    detail: None,
+                    status: None,
+                }],
+            }),
+        };
+        let registry = Registry::with_builtins();
+        let buf = render_to_buffer_with_spec(&p, None, &registry, 40, 1);
+        assert!(line_text(&buf, 0).contains("right now"));
+    }
+
+    #[test]
+    fn max_items_caps_rendered_events() {
+        // Four events in the payload, opts.max_items = 2 → only the first two render.
+        let data = TimelineData {
+            events: (0..4)
+                .map(|i| TimelineEvent {
+                    timestamp: (i as i64) * 10,
+                    title: format!("evt-{i}"),
+                    detail: None,
+                    status: None,
+                })
+                .collect(),
+        };
+        let backend = TestBackend::new(40, 5);
+        let mut terminal = Terminal::new(backend).unwrap();
+        let theme = Theme::default();
+        let opts = RenderOptions {
+            max_items: Some(2),
+            ..RenderOptions::default()
+        };
+        terminal
+            .draw(|f| render_timeline_at(f, f.area(), &data, &opts, 1_000, &theme))
+            .unwrap();
+        let buf = terminal.backend().buffer().clone();
+        let joined: String = (0..5).map(|y| row_text(&buf, y)).collect();
+        assert!(joined.contains("evt-0"));
+        assert!(joined.contains("evt-1"));
+        assert!(
+            !joined.contains("evt-2"),
+            "unexpected third event: {joined:?}"
+        );
+    }
+
+    #[test]
+    fn absolute_date_format_emits_iso_date() {
+        let ts = Utc
+            .with_ymd_and_hms(2026, 4, 23, 0, 0, 0)
+            .single()
+            .unwrap()
+            .timestamp();
+        let data = TimelineData {
+            events: vec![TimelineEvent {
+                timestamp: ts,
+                title: "merged #42".into(),
+                detail: None,
+                status: None,
+            }],
+        };
+        let backend = TestBackend::new(40, 1);
+        let mut terminal = Terminal::new(backend).unwrap();
+        let theme = Theme::default();
+        let opts = RenderOptions::default().with_extra("date_format", "absolute");
+        terminal
+            .draw(|f| render_timeline_at(f, f.area(), &data, &opts, ts + 86_400, &theme))
+            .unwrap();
+        let buf = terminal.backend().buffer().clone();
+        let row = row_text(&buf, 0);
+        assert!(row.contains("2026-04-23"), "missing ISO date: {row:?}");
+    }
+
+    #[test]
+    fn timeline_renders_via_short_spec() {
+        let p = Payload {
+            icon: None,
+            status: None,
+            format: None,
+            body: Body::Timeline(TimelineData {
+                events: vec![TimelineEvent {
+                    timestamp: Utc::now().timestamp() - 120,
+                    title: "x".into(),
+                    detail: None,
+                    status: None,
+                }],
+            }),
+        };
+        let registry = Registry::with_builtins();
+        let spec = RenderSpec::Short("list_timeline".into());
+        let buf = render_to_buffer_with_spec(&p, Some(&spec), &registry, 20, 1);
+        assert!(line_text(&buf, 0).contains("x"));
+    }
+
+    #[test]
+    fn renderer_contract_and_direct_render_cover_catalog_surface() {
+        let renderer = ListTimelineRenderer;
+        assert_eq!(renderer.name(), "list_timeline");
+        assert!(renderer.description().contains("Chronological events"));
+        assert_eq!(renderer.accepts(), &[Shape::Timeline]);
+        assert_eq!(renderer.color_keys().len(), COLOR_KEYS.len());
+        assert_eq!(renderer.option_schemas().len(), OPTION_SCHEMAS.len());
+
+        let body = Body::Timeline(TimelineData {
+            events: vec![TimelineEvent {
+                timestamp: 0,
+                title: "evt".into(),
+                detail: None,
+                status: None,
+            }],
+        });
+        let backend = TestBackend::new(20, 1);
+        let mut terminal = Terminal::new(backend).unwrap();
+        let theme = Theme::default();
+        let registry = Registry::with_builtins();
+        terminal
+            .draw(|f| {
+                renderer.render(
+                    f,
+                    f.area(),
+                    &body,
+                    &RenderOptions::default(),
+                    &theme,
+                    &registry,
+                )
+            })
+            .unwrap();
+        let buf = terminal.backend().buffer().clone();
+        assert!(row_text(&buf, 0).contains("evt"));
+    }
+
+    #[test]
+    fn helper_branches_cover_bullet_alignment_and_padding() {
+        let area = Rect::new(10, 3, 20, 2);
+        assert_eq!(bullet_for(None), "");
+        assert_eq!(bullet_for(Some("•")), "• ");
+        assert_eq!(align_rect(area, 0, Some("center")), area);
+        assert_eq!(align_rect(area, 6, Some("center")), Rect::new(17, 3, 6, 2));
+        assert_eq!(align_rect(area, 6, Some("right")), Rect::new(24, 3, 6, 2));
+        assert_eq!(pad_left("3h", 4), "  3h");
+    }
+
+    #[test]
+    fn date_helpers_cover_invalid_and_local_timezone_fallbacks() {
+        let ts = Utc
+            .with_ymd_and_hms(2026, 4, 23, 0, 0, 0)
+            .single()
+            .unwrap()
+            .timestamp();
+        let event_local = Utc
+            .timestamp_opt(ts, 0)
+            .single()
+            .unwrap()
+            .with_timezone(&chrono::Local)
+            .fixed_offset();
+        let iso_local = t::format_local(&event_local, "%Y-%m-%d", None);
+        let day_local = t::format_local(&event_local, "%b %-d", None);
+
+        assert_eq!(format_iso_date(i64::MAX, Some("UTC"), None), "—");
+        assert_eq!(format_iso_date(ts, Some("bad/tz"), None), iso_local);
+        assert_eq!(format_absolute(i64::MAX, ts, Some("UTC"), None), "—");
+        assert_eq!(
+            format_absolute(ts, i64::MAX, Some("bad/tz"), None),
+            iso_local
+        );
+        assert_eq!(
+            format_absolute(ts, ts + 60, Some("bad/tz"), None),
+            day_local
+        );
+    }
+}

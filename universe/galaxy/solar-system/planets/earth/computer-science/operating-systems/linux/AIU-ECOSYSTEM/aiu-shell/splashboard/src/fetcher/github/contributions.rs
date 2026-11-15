@@ -1,0 +1,446 @@
+//! `github_contributions` — the GitHub contribution graph (草). GraphQL is the only API that
+//! exposes the per-day counts; REST v3 has no equivalent. `Safe` (fixed query, fetches only
+//! the authenticated user's own calendar).
+
+use async_trait::async_trait;
+use chrono::{Datelike, NaiveDate};
+use serde::Deserialize;
+
+use crate::options::OptionSchema;
+use crate::payload::{Body, HeatmapData, NumberSeriesData, Payload};
+use crate::render::Shape;
+use crate::samples;
+
+use super::super::{FetchContext, FetchError, Fetcher, Safety};
+use super::client::graphql;
+use super::common::{cache_key, parse_options, payload};
+
+const SHAPES: &[Shape] = &[Shape::Heatmap, Shape::NumberSeries];
+
+const OPTION_SCHEMAS: &[OptionSchema] = &[OptionSchema {
+    name: "login",
+    type_hint: "string",
+    required: false,
+    default: Some("viewer"),
+    description: "GitHub login to fetch the contribution calendar for. Defaults to the authenticated user.",
+}];
+
+const QUERY_VIEWER: &str = "\
+query { viewer { login contributionsCollection { contributionCalendar { weeks { contributionDays { date contributionCount } } } } } }";
+
+const QUERY_USER: &str = "\
+query($login: String!) { user(login: $login) { contributionsCollection { contributionCalendar { weeks { contributionDays { date contributionCount } } } } } }";
+
+pub struct GithubContributions;
+
+#[derive(Debug, Default, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Options {
+    #[serde(default)]
+    pub login: Option<String>,
+}
+
+#[async_trait]
+impl Fetcher for GithubContributions {
+    fn name(&self) -> &str {
+        "github_contributions"
+    }
+    fn safety(&self) -> Safety {
+        Safety::Safe
+    }
+    fn description(&self) -> &'static str {
+        "The GitHub contribution calendar (kusa) as a year-long heatmap of daily commit counts. Defaults to the authenticated viewer; pass `login` to show another user. `NumberSeries` collapses the calendar to one value per week for sparkline-style rendering."
+    }
+    fn refresh_interval(&self) -> u64 {
+        60 * 60
+    }
+    fn shapes(&self) -> &[Shape] {
+        SHAPES
+    }
+    fn option_schemas(&self) -> &[OptionSchema] {
+        OPTION_SCHEMAS
+    }
+    fn cache_key(&self, ctx: &FetchContext) -> String {
+        let login = ctx
+            .options
+            .as_ref()
+            .and_then(|v| v.get("login"))
+            .and_then(|v| v.as_str())
+            .unwrap_or("");
+        cache_key(self.name(), ctx, login)
+    }
+    fn sample_body(&self, shape: Shape) -> Option<Body> {
+        match shape {
+            Shape::Heatmap => Some(samples::heatmap_grid(7, 52)),
+            Shape::NumberSeries => Some(Body::NumberSeries(NumberSeriesData {
+                values: vec![3, 4, 7, 5, 11, 9, 13, 8, 6, 15, 12, 18],
+            })),
+            _ => None,
+        }
+    }
+    async fn fetch(&self, ctx: &FetchContext) -> Result<Payload, FetchError> {
+        let opts: Options = parse_options(ctx.options.as_ref()).map_err(FetchError::Failed)?;
+        let calendar = match opts.login.as_deref() {
+            None => fetch_viewer().await?,
+            Some(login) => fetch_user(login).await?,
+        };
+        let body = match ctx.shape.unwrap_or(Shape::Heatmap) {
+            Shape::NumberSeries => Body::NumberSeries(to_weekly_series(&calendar)),
+            _ => Body::Heatmap(to_heatmap(&calendar)),
+        };
+        Ok(payload(body))
+    }
+}
+
+#[derive(Debug, Deserialize)]
+struct Calendar {
+    weeks: Vec<Week>,
+}
+
+#[derive(Debug, Deserialize)]
+struct Week {
+    #[serde(rename = "contributionDays")]
+    contribution_days: Vec<Day>,
+}
+
+#[derive(Debug, Deserialize)]
+struct Day {
+    date: String,
+    #[serde(rename = "contributionCount")]
+    contribution_count: u32,
+}
+
+async fn fetch_viewer() -> Result<Calendar, FetchError> {
+    #[derive(Debug, Deserialize)]
+    struct Viewer {
+        viewer: UserNode,
+    }
+    #[derive(Debug, Deserialize)]
+    struct UserNode {
+        #[serde(rename = "contributionsCollection")]
+        contributions_collection: Collection,
+    }
+    #[derive(Debug, Deserialize)]
+    struct Collection {
+        #[serde(rename = "contributionCalendar")]
+        contribution_calendar: Calendar,
+    }
+    let data: Viewer = graphql(QUERY_VIEWER, serde_json::json!({})).await?;
+    Ok(data.viewer.contributions_collection.contribution_calendar)
+}
+
+async fn fetch_user(login: &str) -> Result<Calendar, FetchError> {
+    #[derive(Debug, Deserialize)]
+    struct UserWrap {
+        user: Option<UserNode>,
+    }
+    #[derive(Debug, Deserialize)]
+    struct UserNode {
+        #[serde(rename = "contributionsCollection")]
+        contributions_collection: Collection,
+    }
+    #[derive(Debug, Deserialize)]
+    struct Collection {
+        #[serde(rename = "contributionCalendar")]
+        contribution_calendar: Calendar,
+    }
+    let data: UserWrap = graphql(QUERY_USER, serde_json::json!({ "login": login })).await?;
+    let user = data
+        .user
+        .ok_or_else(|| FetchError::Failed(format!("github: user {login:?} not found")))?;
+    Ok(user.contributions_collection.contribution_calendar)
+}
+
+/// GraphQL returns weeks ordered oldest-to-newest with 7 days each (Sunday-first). We pivot to
+/// `cells[weekday][week_index]` to match the heatmap renderer's row-major expectation.
+fn to_heatmap(cal: &Calendar) -> HeatmapData {
+    let weeks = cal.weeks.len();
+    let mut cells: Vec<Vec<u32>> = (0..7).map(|_| vec![0; weeks]).collect();
+    for (wi, week) in cal.weeks.iter().enumerate() {
+        for day in &week.contribution_days {
+            if let Some(weekday) = weekday_index(&day.date) {
+                cells[weekday][wi] = day.contribution_count;
+            }
+        }
+    }
+    HeatmapData {
+        cells,
+        thresholds: None,
+        row_labels: None,
+        col_labels: Some(month_labels(cal)),
+    }
+}
+
+fn to_weekly_series(cal: &Calendar) -> NumberSeriesData {
+    NumberSeriesData {
+        values: cal
+            .weeks
+            .iter()
+            .map(|w| {
+                u64::from(
+                    w.contribution_days
+                        .iter()
+                        .map(|d| d.contribution_count)
+                        .sum::<u32>(),
+                )
+            })
+            .collect(),
+    }
+}
+
+fn weekday_index(raw: &str) -> Option<usize> {
+    let date = NaiveDate::parse_from_str(raw, "%Y-%m-%d").ok()?;
+    // ISO weekday: Mon=0..Sun=6. GitHub's weeks start Sunday, so shift to Sun=0..Sat=6.
+    let wd = date.weekday().num_days_from_sunday() as usize;
+    Some(wd)
+}
+
+/// One short month name per week column, set only on the week whose range crosses a month
+/// boundary so the renderer can paint a top axis without overlapping labels.
+fn month_labels(cal: &Calendar) -> Vec<String> {
+    let mut out: Vec<String> = vec![String::new(); cal.weeks.len()];
+    let mut last_month: u32 = 0;
+    for (wi, week) in cal.weeks.iter().enumerate() {
+        for day in &week.contribution_days {
+            if let Some(date) = NaiveDate::parse_from_str(&day.date, "%Y-%m-%d").ok()
+                && date.day() == 1
+                && date.month() != last_month
+            {
+                out[wi] = short_month(date.month());
+                last_month = date.month();
+                break;
+            }
+        }
+    }
+    out
+}
+
+fn short_month(m: u32) -> String {
+    [
+        "", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ]
+    .get(m as usize)
+    .copied()
+    .unwrap_or("")
+    .to_string()
+}
+
+#[cfg(test)]
+mod tests {
+    use std::future::Future;
+    use std::time::Duration;
+
+    use super::*;
+
+    struct EnvGuard {
+        _lock: std::sync::MutexGuard<'static, ()>,
+        restore: Vec<(&'static str, Option<String>)>,
+    }
+
+    impl EnvGuard {
+        fn set(pairs: &[(&'static str, Option<&str>)]) -> Self {
+            let lock = crate::paths::TEST_ENV_LOCK
+                .lock()
+                .unwrap_or_else(|e| e.into_inner());
+            let restore = pairs
+                .iter()
+                .map(|(key, value)| {
+                    let previous = std::env::var(key).ok();
+                    match value {
+                        Some(value) => unsafe { std::env::set_var(key, value) },
+                        None => unsafe { std::env::remove_var(key) },
+                    }
+                    (*key, previous)
+                })
+                .collect();
+            Self {
+                _lock: lock,
+                restore,
+            }
+        }
+    }
+
+    impl Drop for EnvGuard {
+        fn drop(&mut self) {
+            self.restore.iter().for_each(|(key, value)| match value {
+                Some(value) => unsafe { std::env::set_var(key, value) },
+                None => unsafe { std::env::remove_var(key) },
+            });
+        }
+    }
+
+    fn day(date: &str, count: u32) -> Day {
+        Day {
+            date: date.into(),
+            contribution_count: count,
+        }
+    }
+
+    fn week(days: Vec<Day>) -> Week {
+        Week {
+            contribution_days: days,
+        }
+    }
+
+    fn run_async<F: Future>(future: F) -> F::Output {
+        tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap()
+            .block_on(future)
+    }
+
+    #[test]
+    fn heatmap_has_seven_rows_and_week_count_columns() {
+        let cal = Calendar {
+            weeks: vec![week(vec![day("2026-04-19", 1), day("2026-04-20", 2)])],
+        };
+        let h = to_heatmap(&cal);
+        assert_eq!(h.cells.len(), 7);
+        assert!(h.cells.iter().all(|r| r.len() == 1));
+    }
+
+    #[test]
+    fn sunday_lands_in_row_zero() {
+        // 2026-04-19 is a Sunday.
+        let cal = Calendar {
+            weeks: vec![week(vec![day("2026-04-19", 9)])],
+        };
+        let h = to_heatmap(&cal);
+        assert_eq!(h.cells[0][0], 9);
+    }
+
+    #[test]
+    fn weekly_series_sums_contributions_per_week() {
+        let cal = Calendar {
+            weeks: vec![
+                week(vec![day("2026-04-19", 1), day("2026-04-20", 2)]),
+                week(vec![day("2026-04-26", 3), day("2026-04-27", 4)]),
+            ],
+        };
+        let series = to_weekly_series(&cal);
+        assert_eq!(series.values, vec![3, 7]);
+    }
+
+    #[test]
+    fn fetcher_contract_cache_key_and_samples_cover_supported_shapes() {
+        let fetcher = GithubContributions;
+        let default_key = fetcher.cache_key(&FetchContext::default());
+        let user_key = fetcher.cache_key(&FetchContext {
+            format: Some("json".into()),
+            timeout: Duration::from_secs(1),
+            shape: Some(Shape::NumberSeries),
+            options: Some(toml::from_str("login = \"octocat\"").unwrap()),
+            ..Default::default()
+        });
+
+        assert_eq!(fetcher.name(), "github_contributions");
+        assert_eq!(fetcher.safety(), Safety::Safe);
+        assert!(fetcher.description().contains("kusa"));
+        assert_eq!(fetcher.shapes(), &[Shape::Heatmap, Shape::NumberSeries]);
+        assert_eq!(fetcher.default_shape(), Shape::Heatmap);
+        assert_eq!(fetcher.option_schemas().len(), 1);
+        assert_eq!(fetcher.option_schemas()[0].name, "login");
+        assert_eq!(fetcher.option_schemas()[0].default, Some("viewer"));
+        assert!(default_key.starts_with("github_contributions-"));
+        assert_ne!(default_key, user_key);
+
+        let Some(Body::Heatmap(heatmap)) = fetcher.sample_body(Shape::Heatmap) else {
+            panic!("expected heatmap sample");
+        };
+        assert_eq!(heatmap.cells.len(), 7);
+        assert!(heatmap.cells.iter().all(|row| row.len() == 52));
+
+        let Some(Body::NumberSeries(series)) = fetcher.sample_body(Shape::NumberSeries) else {
+            panic!("expected number series sample");
+        };
+        assert_eq!(series.values, vec![3, 4, 7, 5, 11, 9, 13, 8, 6, 15, 12, 18]);
+        assert!(fetcher.sample_body(Shape::Text).is_none());
+    }
+
+    #[test]
+    fn heatmap_labels_new_months_and_ignores_invalid_dates() {
+        let cal = Calendar {
+            weeks: vec![
+                week(vec![day("2026-04-01", 4), day("not-a-date", 99)]),
+                week(vec![day("2026-04-08", 2), day("2026-05-01", 7)]),
+                week(vec![day("2026-05-03", 5)]),
+            ],
+        };
+        let heatmap = to_heatmap(&cal);
+
+        assert_eq!(
+            heatmap.col_labels,
+            Some(vec!["Apr".into(), "May".into(), "".into()])
+        );
+        assert_eq!(heatmap.cells[3][0], 4);
+        assert_eq!(heatmap.cells[5][1], 7);
+        assert_eq!(heatmap.cells[0][2], 5);
+    }
+
+    #[test]
+    fn month_helpers_reject_invalid_dates_and_out_of_range_months() {
+        assert_eq!(weekday_index("not-a-date"), None);
+        assert_eq!(short_month(0), "");
+        assert_eq!(short_month(13), "");
+    }
+
+    #[test]
+    fn fetch_rejects_unknown_options() {
+        let err = run_async(GithubContributions.fetch(&FetchContext {
+            timeout: Duration::from_secs(1),
+            options: Some(toml::from_str("bogus = true").unwrap()),
+            ..Default::default()
+        }))
+        .unwrap_err();
+
+        assert!(matches!(
+            err,
+            FetchError::Failed(message) if message.contains("invalid options")
+        ));
+    }
+
+    #[test]
+    fn viewer_and_user_helpers_require_token_before_graphql() {
+        let _guard = EnvGuard::set(&[("GH_TOKEN", None), ("GITHUB_TOKEN", None)]);
+
+        let viewer = run_async(fetch_viewer()).unwrap_err();
+        let user = run_async(fetch_user("octocat")).unwrap_err();
+
+        assert!(matches!(
+            viewer,
+            FetchError::Failed(message) if message.contains("GH_TOKEN / GITHUB_TOKEN not set")
+        ));
+        assert!(matches!(
+            user,
+            FetchError::Failed(message) if message.contains("GH_TOKEN / GITHUB_TOKEN not set")
+        ));
+    }
+
+    #[test]
+    fn fetch_requires_token_for_viewer_and_explicit_user_paths() {
+        let _guard = EnvGuard::set(&[("GH_TOKEN", None), ("GITHUB_TOKEN", None)]);
+
+        let viewer = run_async(GithubContributions.fetch(&FetchContext {
+            timeout: Duration::from_secs(1),
+            ..Default::default()
+        }))
+        .unwrap_err();
+        let user = run_async(GithubContributions.fetch(&FetchContext {
+            timeout: Duration::from_secs(1),
+            shape: Some(Shape::NumberSeries),
+            options: Some(toml::from_str("login = \"octocat\"").unwrap()),
+            ..Default::default()
+        }))
+        .unwrap_err();
+
+        assert!(matches!(
+            viewer,
+            FetchError::Failed(message) if message.contains("GH_TOKEN / GITHUB_TOKEN not set")
+        ));
+        assert!(matches!(
+            user,
+            FetchError::Failed(message) if message.contains("GH_TOKEN / GITHUB_TOKEN not set")
+        ));
+    }
+}

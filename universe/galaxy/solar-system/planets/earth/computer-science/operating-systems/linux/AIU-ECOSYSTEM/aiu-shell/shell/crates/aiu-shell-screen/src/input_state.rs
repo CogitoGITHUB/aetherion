@@ -206,25 +206,28 @@ impl InputState {
     }
 
     fn move_in_boxes(&mut self, key: &str) {
+        if self.expanded.contains(&self.focus) {
+            match key {
+                "t" => {
+                    crate::bar_view::scroll_box(-3);
+                    return;
+                }
+                "h" => {
+                    crate::bar_view::scroll_box(3);
+                    return;
+                }
+                _ => {}
+            }
+        }
         let total = self.pairs.len() * 2;
         match key {
             "t" => {
-                if self.focus >= 2 {
-                    self.focus -= 2;
-                }
-            }
-            "h" => {
-                if self.focus + 2 < total {
-                    self.focus += 2;
-                }
-            }
-            "d" => {
-                if self.focus % 2 == 1 {
+                if self.focus >= 1 {
                     self.focus -= 1;
                 }
             }
-            "n" => {
-                if self.focus % 2 == 0 && self.focus + 1 < total {
+            "h" => {
+                if self.focus + 1 < total {
                     self.focus += 1;
                 }
             }
@@ -504,7 +507,7 @@ impl InputState {
             let mut bytes: Vec<u8> = Vec::new();
             if let Some(job) = self.job.as_mut() {
                 let is_space = matches!(key.code, KeyCode::Char(c) if c == char::from(32u8));
-                stop = is_space && job.last_space;
+                stop = false;
                 job.last_space = is_space && !stop;
                 match key.code {
                     KeyCode::Char(c) => bytes = c.to_string().into_bytes(),
@@ -518,15 +521,33 @@ impl InputState {
             if stop {
                 self.stop_job();
             } else if let Some(job) = self.job.as_mut() {
-                job.write_input(&bytes);
+                let _ = &bytes;
             }
             return;
         }
         match self.mode {
             Mode::Visual => {
+                if !crate::splash_bar::overlay_open() {
+                    match key.code {
+                        KeyCode::Down => crate::bar_view::scroll_box(3),
+                        KeyCode::Up => crate::bar_view::scroll_box(-3),
+                        KeyCode::PageDown => crate::bar_view::scroll_box(12),
+                        KeyCode::PageUp => crate::bar_view::scroll_box(-12),
+                        _ => {}
+                    }
+                }
+                if crate::splash_bar::overlay_open() {
+                    match key.code {
+                        KeyCode::Down => crate::splash_bar::scroll(3),
+                        KeyCode::Up => crate::splash_bar::scroll(-3),
+                        KeyCode::PageDown => crate::splash_bar::scroll(12),
+                        KeyCode::PageUp => crate::splash_bar::scroll(-12),
+                        _ => {}
+                    }
+                }
                 if let KeyCode::Char(c) = key.code {
                     match c.to_string().as_str() {
-                        "t" | "h" | "d" | "n" | "e" | "s" | "c" | "p" | "a" => self.move_in_boxes(c.to_string().as_str()),
+                        "t" | "h" | "e" | "s" | "c" | "p" | "a" => self.move_in_boxes(c.to_string().as_str()),
                         "i" => {
                             crate::bar_view::close_menu();
                             self.mode = Mode::Insert;
@@ -537,12 +558,21 @@ impl InputState {
                             self.notice = String::from("input cleared");
                         }
                         "o" => self.toggle_info(),
+"j" => crate::splash_bar::toggle_git(),
+"k" => crate::splash_bar::toggle_home(),
+                        "b" => crate::bar_view::scroll_any(-8),
+                        "g" => {
+                            let saved = std::mem::take(&mut self.text);
+                            self.text = String::from("git gg");
+                            self.keep_line();
+                            self.text = saved;
+                        }
                         "y" => self.copy_last(false),
                         "Y" => self.copy_last(true),
                         "/" => self.open_search(),
                         " " => crate::bar_view::toggle_menu(),
                         "f" => crate::bar_view::toggle_full_input(),
-                        "m" => { self.notice = crate::command_runner::dev_mode_toggle(); } "M" => { self.notice = crate::command_runner::dev_build_all(); } "z" => crate::command_runner::request_jump(), "Z" => { self.notice = crate::command_runner::add_current_dir(); } "q" => self.quit = true,
+                        "m" => { self.notice = crate::command_runner::dev_mode_toggle(); } "M" => { self.notice = crate::command_runner::dev_build_all(); } "z" => crate::command_runner::request_jump(), "Z" => { self.notice = crate::command_runner::add_current_dir(); } "q" => crate::command_runner::quit_key(&mut self.quit),
                         _ => {}
                     }
                 }

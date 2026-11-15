@@ -1,0 +1,228 @@
+//! `random_fortune` — bundled Unix-style fortune cookies. One entry per day, deterministic
+//! by epoch days so the cookie advances at midnight and drifts through the calendar year
+//! over year. Distinct from `random_quote`: cookies are anonymous, irreverent, and may
+//! span multiple lines (haikus, short verses, multi-line aphorisms). Zero-config, zero
+//! I/O, infallible.
+
+use std::sync::LazyLock;
+
+use chrono::{DateTime, Datelike, FixedOffset, Local};
+
+use crate::fetcher::{FetchContext, RealtimeFetcher, Safety};
+use crate::payload::{Body, Payload, TextBlockData, TextData};
+use crate::render::Shape;
+use crate::samples;
+
+const SHAPES: &[Shape] = &[Shape::TextBlock, Shape::Text];
+
+/// Cookie strings parsed from `data.txt`. Format: `%`-separated entries; entries may be
+/// single-line one-liners or multi-line short verses. Newlines inside an entry are
+/// preserved verbatim for `TextBlock` (one row per line); `Text` collapses them with
+/// ` · ` separators to honour the single-string contract.
+static COOKIES: LazyLock<Vec<String>> = LazyLock::new(|| parse(include_str!("data.txt")));
+
+pub struct RandomFortuneFetcher;
+
+impl RealtimeFetcher for RandomFortuneFetcher {
+    fn name(&self) -> &str {
+        "random_fortune"
+    }
+    fn safety(&self) -> Safety {
+        Safety::Safe
+    }
+    fn description(&self) -> &'static str {
+        "Picks one bundled Unix-style fortune cookie, advancing once per calendar day. Distinct from `random_quote`: cookies are anonymous and irreverent and may span multiple lines (haikus, short verses), with no attribution line."
+    }
+    fn shapes(&self) -> &[Shape] {
+        SHAPES
+    }
+    fn sample_body(&self, shape: Shape) -> Option<Body> {
+        let cookie = first_cookie()?;
+        Some(match shape {
+            Shape::Text => samples::text(&single_line(cookie)),
+            Shape::TextBlock => samples::text_block(&cookie.lines().collect::<Vec<_>>()),
+            _ => return None,
+        })
+    }
+    fn compute(&self, ctx: &FetchContext) -> Payload {
+        let cookie = pick(&now());
+        let body = match ctx.shape.unwrap_or(Shape::TextBlock) {
+            Shape::Text => Body::Text(TextData {
+                value: single_line(cookie),
+            }),
+            _ => Body::TextBlock(TextBlockData {
+                lines: cookie.lines().map(str::to_string).collect(),
+            }),
+        };
+        Payload {
+            icon: None,
+            status: None,
+            format: None,
+            body,
+        }
+    }
+}
+
+fn now() -> DateTime<FixedOffset> {
+    Local::now().fixed_offset()
+}
+
+/// Epoch-days modulo cookie count. Deterministic per calendar day; drifts year over year.
+fn pick(now: &DateTime<FixedOffset>) -> &'static str {
+    let entries: &'static [String] = &COOKIES;
+    let idx = (now.num_days_from_ce() as usize) % entries.len();
+    entries[idx].as_str()
+}
+
+fn first_cookie() -> Option<&'static str> {
+    let entries: &'static [String] = &COOKIES;
+    entries.first().map(String::as_str)
+}
+
+fn single_line(cookie: &str) -> String {
+    cookie.lines().collect::<Vec<_>>().join(" · ")
+}
+
+/// Parse `%`-separated entries. Trims surrounding whitespace per entry, drops empties.
+/// Internal newlines are preserved so multi-line cookies render as multiple lines.
+/// Normalises CRLF → LF first so Windows checkouts (autocrlf) parse identically.
+fn parse(raw: &str) -> Vec<String> {
+    raw.replace("\r\n", "\n")
+        .split("\n%\n")
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .map(str::to_string)
+        .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use std::time::Duration;
+
+    use chrono::{TimeZone, Utc};
+
+    use super::*;
+
+    fn at(y: i32, m: u32, d: u32) -> DateTime<FixedOffset> {
+        Utc.with_ymd_and_hms(y, m, d, 12, 0, 0)
+            .unwrap()
+            .fixed_offset()
+    }
+
+    fn ctx(shape: Option<Shape>) -> FetchContext {
+        FetchContext {
+            widget_id: "f".into(),
+            timeout: Duration::from_secs(1),
+            shape,
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn default_shape_is_text_block() {
+        let p = RandomFortuneFetcher.compute(&ctx(None));
+        assert!(matches!(
+            p.body,
+            Body::TextBlock(ref d) if !d.lines.is_empty()
+        ));
+    }
+
+    #[test]
+    fn text_shape_returns_single_string() {
+        let p = RandomFortuneFetcher.compute(&ctx(Some(Shape::Text)));
+        assert!(matches!(p.body, Body::Text(ref d) if !d.value.is_empty()));
+    }
+
+    #[test]
+    fn sample_body_returns_none_for_unsupported_shape() {
+        assert!(RandomFortuneFetcher.sample_body(Shape::Image).is_none());
+    }
+
+    #[test]
+    fn pick_is_stable_within_a_day() {
+        assert_eq!(pick(&at(2026, 4, 24)), pick(&at(2026, 4, 24)));
+    }
+
+    #[test]
+    fn pick_advances_with_epoch_day() {
+        assert_ne!(pick(&at(2026, 4, 24)), pick(&at(2026, 4, 25)));
+    }
+
+    #[test]
+    fn pick_drifts_year_over_year() {
+        // Year-stable rotation would lock the same cookie to the same date forever.
+        assert_ne!(pick(&at(2026, 4, 24)), pick(&at(2027, 4, 24)));
+    }
+
+    #[test]
+    fn cookie_list_meets_size_floor() {
+        let len = COOKIES.len();
+        assert!(len >= 365, "COOKIES has {} entries, want >= 365", len);
+    }
+
+    #[test]
+    fn parse_preserves_multiline_cookie() {
+        let cookies = parse("Line one\nLine two\n%\nSingle.\n");
+        assert_eq!(cookies.len(), 2);
+        assert_eq!(cookies[0], "Line one\nLine two");
+        assert_eq!(cookies[1], "Single.");
+    }
+
+    #[test]
+    fn parse_drops_empty_chunks() {
+        assert!(parse("\n%\n\n%\n").is_empty());
+    }
+
+    #[test]
+    fn single_line_joins_multi_line_cookie() {
+        assert_eq!(
+            single_line("Line one\nLine two\nLine three"),
+            "Line one · Line two · Line three"
+        );
+        assert_eq!(single_line("Just one line"), "Just one line");
+    }
+
+    #[test]
+    fn text_shape_collapses_newlines() {
+        let p = RandomFortuneFetcher.compute(&ctx(Some(Shape::Text)));
+        assert!(
+            matches!(p.body, Body::Text(ref d) if !d.value.contains('\n')),
+            "Text body must be single-line, got: {:?}",
+            p.body
+        );
+    }
+
+    #[test]
+    fn cookie_list_has_no_duplicates() {
+        use std::collections::HashSet;
+        let unique = COOKIES
+            .iter()
+            .map(|cookie| cookie.as_str())
+            .collect::<HashSet<_>>();
+        assert_eq!(unique.len(), COOKIES.len());
+    }
+
+    #[test]
+    fn parse_handles_crlf_line_endings() {
+        // Windows checkouts under git autocrlf convert LF to CRLF; without
+        // normalisation the entire data file collapses to a single entry on Windows.
+        let lf = "First.\n%\nSecond.\n";
+        let crlf = lf.replace('\n', "\r\n");
+        assert_eq!(parse(lf).len(), 2);
+        assert_eq!(parse(&crlf).len(), 2);
+        assert_eq!(parse(lf), parse(&crlf));
+    }
+
+    #[test]
+    fn text_block_splits_multiline_cookie_into_lines() {
+        // Synthetic test bypassing the real registry — the production cookie at today's
+        // index might be single-line, so we exercise the branch directly.
+        let body = Body::TextBlock(TextBlockData {
+            lines: "a\nb\nc".lines().map(str::to_string).collect(),
+        });
+        assert!(matches!(
+            body,
+            Body::TextBlock(ref d) if d.lines == ["a", "b", "c"]
+        ));
+    }
+}

@@ -141,15 +141,23 @@ impl RunningJob {
         rows
     }
 
-    pub fn stop(&mut self) {
+    fn kill_group(&mut self) {
+        let pid = self.child.id() as i32;
+        unsafe {
+            libc::kill(-pid, libc::SIGKILL);
+        }
         let _ = self.child.kill();
+    }
+
+    pub fn stop(&mut self) {
+        self.kill_group();
     }
 }
 
 impl Drop for RunningJob {
     fn drop(&mut self) {
         if self.exit.is_none() {
-            let _ = self.child.kill();
+            self.kill_group();
         }
         let _ = self.child.wait();
     }
@@ -524,5 +532,16 @@ impl RunningJob {
         if let Some(master) = self.master.as_mut() {
             let _ = master.write_all(bytes);
         }
+    }
+}
+
+pub fn quit_key(quit: &mut bool) {
+    if std::env::var_os("AIU_IN_MULTIPLEXER").is_some() {
+        use std::io::Write;
+        let mut out = std::io::stdout();
+        let _ = out.write_all(b"\x1b]7702;quit\x07");
+        let _ = out.flush();
+    } else {
+        *quit = true;
     }
 }

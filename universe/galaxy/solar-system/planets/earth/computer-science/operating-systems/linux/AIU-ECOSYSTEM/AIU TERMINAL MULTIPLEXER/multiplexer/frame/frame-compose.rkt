@@ -95,3 +95,10 @@
                          (+ x 1 (pane-grid-cursor-column grid))
                          #t))))
   (cons cells cursor))
+
+(provide overlay-text!)
+(define (overlay-text! cells columns rows r c text)
+  (for ([ch (in-string text)] [i (in-naturals)])
+    (define cc (+ c i))
+    (when (and (>= r 0) (< r rows) (>= cc 0) (< cc columns))
+      (vector-set! (vector-ref cells r) cc (cons ch plain-style)))))

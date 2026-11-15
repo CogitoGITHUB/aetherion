@@ -1,0 +1,664 @@
+//! Render a whole dashboard TOML to an inline HTML `<pre>` without running any fetchers.
+//!
+//! Uses each fetcher's `sample_body()` (the same source of truth the per-widget reference
+//! previews use) composed through the real layout engine. Result: a docs-site surface that
+//! shows exactly what the splash looks like when you adopt a config, with zero network /
+//! filesystem access at build time.
+
+use std::collections::HashMap;
+use std::fs;
+use std::path::Path;
+use std::time::Duration;
+
+use anyhow::{Context, Result};
+use ratatui::Terminal;
+use ratatui::backend::TestBackend;
+use ratatui::layout::Rect;
+use ratatui::style::Style;
+use ratatui::widgets::Block;
+
+use splashboard::config::{Config, DashboardConfig, SettingsConfig, WidgetConfig};
+use splashboard::fetcher::{FetchContext, RegisteredFetcher, Registry as FetcherRegistry};
+use splashboard::layout as layout_engine;
+use splashboard::payload::{Body, ImageData, Payload, TextBlockData, TextData};
+use splashboard::render::{
+    Registry as RenderRegistry, RenderOptions, RenderSpec, Shape, default_renderer_for,
+};
+use splashboard::theme::Theme;
+
+use crate::html_snapshot::buffer_to_html_dashboard;
+
+/// Bundled placeholder PNG for `Image` widgets whose fetcher has no `sample_body` (e.g.
+/// `github_avatar`, `random_cat`, `random_dog`, `code_language_logo`). Materialised to a temp
+/// file once per xtask run; `media_image` then renders it through `ratatui_image`'s halfblocks
+/// protocol so the gallery shows actual coloured pixels in the slot instead of a blank
+/// rectangle. The `_image_placeholder.png` asset is a simple camera icon — chosen over the
+/// `</>`-glyph `_generic.png` (which doubles as `code_language_logo`'s own fallback) because a
+/// camera reads as "image goes here" across every image-shape fetcher (avatars, pet portraits,
+/// code logos), whereas `</>` only really fits the language-logo case.
+const PLACEHOLDER_IMAGE_BYTES: &[u8] = include_bytes!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../assets/_image_placeholder.png"
+));
+
+pub fn render_config_html(config_path: &Path, width: u16, height: u16) -> Result<String> {
+    render_config_html_with_theme(config_path, width, height, Theme::default())
+}
+
+pub fn render_config_html_with_theme(
+    config_path: &Path,
+    width: u16,
+    height: u16,
+    theme: Theme,
+) -> Result<String> {
+    let body = fs::read_to_string(config_path)
+        .with_context(|| format!("read {}", config_path.display()))?;
+    let dashboard = DashboardConfig::parse(&body)
+        .map_err(|e| anyhow::anyhow!("parse {}: {e}", config_path.display()))?;
+    let config = Config::from_parts(SettingsConfig::default(), dashboard);
+    let fetchers = FetcherRegistry::with_builtins();
+    let renderers = RenderRegistry::with_builtins();
+    let payloads = sample_payloads(&config.widgets, &fetchers, &renderers);
+    let specs = widget_specs(&config.widgets);
+    let root = config.to_layout();
+
+    // All widgets already have sample payloads → none are "loading". Passing an empty map
+    // keeps the runtime's loading-placeholder branch disabled for the preview.
+    let loading: HashMap<String, Shape> = HashMap::new();
+    let backend = TestBackend::new(width, height);
+    let mut terminal = Terminal::new(backend).context("init offscreen terminal")?;
+    terminal
+        .draw(|frame| {
+            let area = Rect::new(0, 0, width, height);
+            frame.render_widget(Block::default().style(Style::default().bg(theme.bg)), area);
+            layout_engine::draw(
+                frame,
+                area,
+                &root,
+                &payloads,
+                &specs,
+                &renderers,
+                &theme,
+                &config.general,
+                &loading,
+            );
+        })
+        .context("draw dashboard")?;
+    Ok(buffer_to_html_dashboard(
+        terminal.backend().buffer(),
+        theme.bg,
+    ))
+}
+
+/// Resolve a `Payload` per widget. Realtime fetchers (`clock`, `clock_derived`, `system`, …)
+/// compute live through their real pipeline so format / options land in the output; cached
+/// fetchers fall back to `sample_body` since running them would need network / disk access.
+fn sample_payloads(
+    widgets: &[WidgetConfig],
+    fetchers: &FetcherRegistry,
+    renderers: &RenderRegistry,
+) -> HashMap<String, Payload> {
+    widgets
+        .iter()
+        .filter_map(|w| {
+            let fetcher = fetchers.get(&w.fetcher)?;
+            let shape = resolve_shape(w, &fetcher, renderers)?;
+            if let Some(realtime) = fetcher.as_realtime() {
+                let ctx = FetchContext {
+                    widget_id: w.id.clone(),
+                    format: w.format.clone(),
+                    timeout: Duration::from_millis(50),
+                    file_format: None,
+                    shape: Some(shape),
+                    options: w.options.clone(),
+                    timezone: None,
+                    locale: None,
+                };
+                return Some((w.id.clone(), realtime.compute(&ctx)));
+            }
+            let body = override_from_format(w, shape)
+                .or_else(|| fetcher.sample_body(shape))
+                .or_else(|| placeholder_for(shape))?;
+            Some((
+                w.id.clone(),
+                Payload {
+                    icon: None,
+                    status: None,
+                    format: w.format.clone(),
+                    body,
+                },
+            ))
+        })
+        .collect()
+}
+
+/// Last-chance fallback when neither the fetcher's `sample_body` nor `override_from_format`
+/// produces a body. Today the only shape we synthesise here is `Image` — anything else stays
+/// `None` and the widget gets dropped from the payload map (rendering a blank slot is the
+/// right behaviour for, say, an unimplemented `Heatmap` sample).
+fn placeholder_for(shape: Shape) -> Option<Body> {
+    match shape {
+        Shape::Image => placeholder_image_path()
+            .map(|path| {
+                Body::Image(ImageData {
+                    path: path.to_string_lossy().into_owned(),
+                })
+            })
+            .ok(),
+        _ => None,
+    }
+}
+
+fn placeholder_image_path() -> Result<std::path::PathBuf> {
+    use std::sync::OnceLock;
+    static CACHED: OnceLock<std::path::PathBuf> = OnceLock::new();
+    if let Some(path) = CACHED.get() {
+        return Ok(path.clone());
+    }
+    let path = std::env::temp_dir().join(format!(
+        "splashboard-xtask-image-placeholder-{}.png",
+        std::process::id()
+    ));
+    if !path.exists() {
+        fs::write(&path, PLACEHOLDER_IMAGE_BYTES)
+            .with_context(|| format!("write placeholder image to {}", path.display()))?;
+    }
+    let _ = CACHED.set(path.clone());
+    Ok(path)
+}
+
+fn resolve_shape(
+    w: &WidgetConfig,
+    fetcher: &RegisteredFetcher,
+    renderers: &RenderRegistry,
+) -> Option<Shape> {
+    let shapes = fetcher.shapes();
+    let accepted = w
+        .render
+        .as_ref()
+        .and_then(|spec| renderers.get(spec.renderer_name()))
+        .map(|r| r.accepts().to_vec());
+    if let Some(accepted) = accepted {
+        if let Some(shape) = shapes.iter().find(|s| accepted.contains(s)) {
+            return Some(*shape);
+        }
+        if let Some(&first) = accepted.first() {
+            return Some(first);
+        }
+    }
+    Some(fetcher.default_shape())
+}
+
+/// `basic_static` lets each widget carry a literal via `format = "..."`; honour it so the
+/// preview matches what the user would see. Other fetchers don't use widget.format for sample
+/// output, so this is a no-op for them.
+fn override_from_format(w: &WidgetConfig, shape: Shape) -> Option<Body> {
+    if w.fetcher != "basic_static" {
+        return None;
+    }
+    let fmt = w.format.as_ref()?;
+    Some(match shape {
+        Shape::Text => Body::Text(TextData { value: fmt.clone() }),
+        Shape::TextBlock => Body::TextBlock(TextBlockData {
+            lines: fmt.lines().map(String::from).collect(),
+        }),
+        _ => return None,
+    })
+}
+
+fn widget_specs(widgets: &[WidgetConfig]) -> HashMap<String, RenderSpec> {
+    widgets
+        .iter()
+        .map(|w| {
+            let spec = w.render.clone().unwrap_or_else(|| {
+                RenderSpec::Short(default_renderer_for(Shape::Text).to_string())
+            });
+            (w.id.clone(), deanimate(spec))
+        })
+        .collect()
+}
+
+/// Strip animated wrappers so the snapshot shows the effect's final state instead of
+/// whatever happens to be on screen at process-start t=0 (which is near-invisible for
+/// `fade_in` / `coalesce` / most other tachyonfx effects). The inner renderer keeps every
+/// style option (font, color, align, …) that was carried on the outer spec.
+///
+/// - `animated_postfx` → its declared `inner` (default `text_plain` if absent).
+/// - `animated_typewriter` → `text_plain` (the typewriter's final rested state).
+fn deanimate(spec: RenderSpec) -> RenderSpec {
+    match spec {
+        RenderSpec::Short(ref name) if name == "animated_typewriter" => {
+            RenderSpec::Short("text_plain".into())
+        }
+        RenderSpec::Full {
+            ref type_name,
+            ref options,
+        } if type_name == "animated_typewriter" => RenderSpec::Full {
+            type_name: "text_plain".into(),
+            options: strip_wrapper_extras(options.clone()),
+        },
+        RenderSpec::Short(ref name) if name == "animated_postfx" => {
+            RenderSpec::Short("text_plain".into())
+        }
+        RenderSpec::Full {
+            ref type_name,
+            ref options,
+        } if type_name == "animated_postfx" => RenderSpec::Full {
+            type_name: inner_renderer_name(options),
+            options: strip_wrapper_extras(options.clone()),
+        },
+        RenderSpec::Short(ref name) if name == "animated_boot" => {
+            RenderSpec::Short("text_plain".into())
+        }
+        RenderSpec::Full {
+            ref type_name,
+            ref options,
+        } if type_name == "animated_boot" => RenderSpec::Full {
+            type_name: inner_renderer_name(options),
+            options: strip_wrapper_extras(options.clone()),
+        },
+        RenderSpec::Short(ref name) if name == "animated_scanlines" => {
+            RenderSpec::Short("text_plain".into())
+        }
+        RenderSpec::Full {
+            ref type_name,
+            ref options,
+        } if type_name == "animated_scanlines" => RenderSpec::Full {
+            type_name: inner_renderer_name(options),
+            options: strip_wrapper_extras(options.clone()),
+        },
+        RenderSpec::Short(ref name) if name == "animated_splitflap" => {
+            RenderSpec::Short("text_plain".into())
+        }
+        RenderSpec::Full {
+            ref type_name,
+            ref options,
+        } if type_name == "animated_splitflap" => RenderSpec::Full {
+            type_name: inner_renderer_name(options),
+            options: strip_wrapper_extras(options.clone()),
+        },
+        RenderSpec::Short(ref name) if name == "animated_wave" => {
+            RenderSpec::Short("text_plain".into())
+        }
+        RenderSpec::Full {
+            ref type_name,
+            ref options,
+        } if type_name == "animated_wave" => RenderSpec::Full {
+            type_name: inner_renderer_name(options),
+            options: strip_wrapper_extras(options.clone()),
+        },
+        RenderSpec::Short(ref name) if name == "animated_figlet_morph" => RenderSpec::Full {
+            type_name: "text_ascii".into(),
+            options: RenderOptions {
+                style: Some("figlet".into()),
+                ..RenderOptions::default()
+            }
+            .with_extra("font", "ansi_shadow"),
+        },
+        RenderSpec::Full {
+            ref type_name,
+            ref options,
+        } if type_name == "animated_figlet_morph" => {
+            let resting_font = font_sequence(options)
+                .and_then(|seq| seq.last().cloned())
+                .unwrap_or_else(|| "ansi_shadow".into());
+            RenderSpec::Full {
+                type_name: "text_ascii".into(),
+                options: RenderOptions {
+                    style: Some("figlet".into()),
+                    color: options.color.clone(),
+                    align: options.align.clone(),
+                    ..RenderOptions::default()
+                }
+                .with_extra("font", resting_font),
+            }
+        }
+        other => other,
+    }
+}
+
+fn inner_renderer_name(opts: &RenderOptions) -> String {
+    opts.extra_str("inner")
+        .map(String::from)
+        .unwrap_or_else(|| "text_plain".into())
+}
+
+/// Drop animation-wrapper-only extras before forwarding the options bag to the inner renderer.
+/// Inner renderers like `text_ascii` deserialise `raw` with `deny_unknown_fields`, so a leftover
+/// `inner = "text_ascii"` (or `effect`, `boot_lines`, …) would silently fail parsing and
+/// collapse the whole bag to defaults — losing `font`, `pixel_size`, etc. Stripping these
+/// preserves the user-set inner-renderer options through the deanimate transform.
+const WRAPPER_ONLY_EXTRAS: &[&str] = &["inner", "effect", "boot_lines", "font_sequence"];
+
+fn strip_wrapper_extras(mut opts: RenderOptions) -> RenderOptions {
+    for key in WRAPPER_ONLY_EXTRAS {
+        opts = opts.without_extra(key);
+    }
+    opts
+}
+
+fn font_sequence(opts: &RenderOptions) -> Option<Vec<String>> {
+    opts.extra_string_array("font_sequence")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::path::PathBuf;
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    fn widget(id: &str, fetcher: &str) -> WidgetConfig {
+        WidgetConfig {
+            id: id.into(),
+            fetcher: fetcher.into(),
+            render: None,
+            format: None,
+            refresh_interval: None,
+            file_format: None,
+            options: None,
+        }
+    }
+
+    fn write_dashboard(body: &str) -> PathBuf {
+        let unique = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let path = std::env::temp_dir().join(format!(
+            "splashboard-dashboard-snapshot-{unique}-{}.toml",
+            std::process::id()
+        ));
+        fs::write(&path, body).unwrap();
+        path
+    }
+
+    #[test]
+    fn render_config_html_renders_basic_static_dashboard() {
+        let path = write_dashboard(
+            r#"
+[[widget]]
+id = "hello"
+fetcher = "basic_static"
+format = "Hi"
+render = "list_plain"
+
+[[row]]
+height = { length = 1 }
+  [[row.child]]
+  widget = "hello"
+"#,
+        );
+        let html = render_config_html(&path, 12, 4).unwrap();
+        fs::remove_file(path).unwrap();
+
+        assert!(html.starts_with("<pre class=\"splash-snapshot\">"));
+        assert!(html.contains("<span class=\"c\">H</span>"));
+        assert!(html.contains("<span class=\"c\">i</span>"));
+        assert!(html.ends_with("</pre>"));
+    }
+
+    #[test]
+    fn render_config_html_surfaces_read_and_parse_errors() {
+        let missing = std::env::temp_dir().join(format!(
+            "splashboard-dashboard-snapshot-missing-{}.toml",
+            std::process::id()
+        ));
+        let read_err = render_config_html(&missing, 12, 4).unwrap_err().to_string();
+        assert!(read_err.contains("read"));
+
+        let path = write_dashboard("not valid toml");
+        let parse_err = render_config_html(&path, 12, 4).unwrap_err().to_string();
+        fs::remove_file(path).unwrap();
+        assert!(parse_err.contains("parse"));
+    }
+
+    #[test]
+    fn sample_payloads_use_realtime_compute_and_basic_static_override() {
+        let fetchers = FetcherRegistry::with_builtins();
+        let renderers = RenderRegistry::with_builtins();
+
+        let mut static_widget = widget("static", "basic_static");
+        static_widget.format = Some("alpha\nbeta".into());
+        static_widget.render = Some(RenderSpec::Short("list_plain".into()));
+
+        let mut clock_widget = widget("clock", "clock");
+        clock_widget.render = Some(RenderSpec::Short("grid_table".into()));
+
+        let payloads = sample_payloads(&[static_widget, clock_widget], &fetchers, &renderers);
+
+        assert!(matches!(
+            &payloads.get("static").unwrap().body,
+            Body::TextBlock(TextBlockData { lines })
+                if lines == &vec![String::from("alpha"), String::from("beta")]
+        ));
+        assert!(matches!(
+            payloads.get("clock").map(|payload| &payload.body),
+            Some(Body::Entries(_))
+        ));
+    }
+
+    #[test]
+    fn resolve_shape_prefers_shared_shape_and_falls_back_to_renderer_shape() {
+        let fetchers = FetcherRegistry::with_builtins();
+        let renderers = RenderRegistry::with_builtins();
+        let fetcher = fetchers.get("basic_static").unwrap();
+
+        let mut shared = widget("shared", "basic_static");
+        shared.render = Some(RenderSpec::Short("list_plain".into()));
+        assert_eq!(
+            resolve_shape(&shared, &fetcher, &renderers),
+            Some(Shape::TextBlock)
+        );
+
+        let mut mismatch = widget("mismatch", "basic_static");
+        mismatch.render = Some(RenderSpec::Short("status_badge".into()));
+        assert_eq!(
+            resolve_shape(&mismatch, &fetcher, &renderers),
+            Some(Shape::Badge)
+        );
+    }
+
+    #[test]
+    fn resolve_shape_falls_back_to_fetcher_default_when_renderer_is_unknown() {
+        let fetchers = FetcherRegistry::with_builtins();
+        let renderers = RenderRegistry::with_builtins();
+        let fetcher = fetchers.get("basic_static").unwrap();
+
+        let mut unknown = widget("unknown", "basic_static");
+        unknown.render = Some(RenderSpec::Short("not_a_renderer".into()));
+
+        assert_eq!(
+            resolve_shape(&unknown, &fetcher, &renderers),
+            Some(fetcher.default_shape())
+        );
+    }
+
+    #[test]
+    fn override_from_format_only_applies_to_basic_static_text_shapes() {
+        let mut static_widget = widget("static", "basic_static");
+        static_widget.format = Some("alpha\nbeta".into());
+
+        assert!(matches!(
+            override_from_format(&static_widget, Shape::Text),
+            Some(Body::Text(TextData { value })) if value == "alpha\nbeta"
+        ));
+        assert!(matches!(
+            override_from_format(&static_widget, Shape::TextBlock),
+            Some(Body::TextBlock(TextBlockData { lines }))
+                if lines == vec![String::from("alpha"), String::from("beta")]
+        ));
+        assert!(override_from_format(&static_widget, Shape::Badge).is_none());
+        assert!(override_from_format(&widget("clock", "clock"), Shape::Text).is_none());
+    }
+
+    #[test]
+    fn widget_specs_default_and_deanimate_wrapped_renderers() {
+        let plain = widget("plain", "basic_static");
+
+        let mut typewriter = widget("typewriter", "basic_static");
+        typewriter.render = Some(RenderSpec::Short("animated_typewriter".into()));
+
+        let mut postfx = widget("postfx", "basic_static");
+        postfx.render = Some(RenderSpec::Full {
+            type_name: "animated_postfx".into(),
+            options: RenderOptions {
+                align: Some("center".into()),
+                ..RenderOptions::default()
+            }
+            .with_extra("inner", "list_plain"),
+        });
+
+        let specs = widget_specs(&[plain, typewriter, postfx]);
+
+        assert!(matches!(
+            specs.get("plain"),
+            Some(RenderSpec::Short(name)) if name == "text_plain"
+        ));
+        assert!(matches!(
+            specs.get("typewriter"),
+            Some(RenderSpec::Short(name)) if name == "text_plain"
+        ));
+        assert!(matches!(
+            specs.get("postfx"),
+            Some(RenderSpec::Full { type_name, options })
+                if type_name == "list_plain" && options.align.as_deref() == Some("center")
+        ));
+    }
+
+    #[test]
+    fn deanimate_collapses_wrapper_families_to_resting_inner_renderers() {
+        for name in [
+            "animated_boot",
+            "animated_postfx",
+            "animated_scanlines",
+            "animated_splitflap",
+            "animated_typewriter",
+            "animated_wave",
+        ] {
+            assert!(matches!(
+                deanimate(RenderSpec::Short(name.into())),
+                RenderSpec::Short(inner) if inner == "text_plain"
+            ));
+        }
+
+        for name in [
+            "animated_boot",
+            "animated_postfx",
+            "animated_scanlines",
+            "animated_splitflap",
+            "animated_wave",
+        ] {
+            let spec = RenderSpec::Full {
+                type_name: name.into(),
+                options: RenderOptions::default(),
+            };
+            assert!(matches!(
+                deanimate(spec),
+                RenderSpec::Full { type_name, .. } if type_name == "text_plain"
+            ));
+        }
+    }
+
+    #[test]
+    fn deanimate_preserves_full_typewriter_options() {
+        let spec = RenderSpec::Full {
+            type_name: "animated_typewriter".into(),
+            options: RenderOptions {
+                align: Some("center".into()),
+                color: Some("panel_title".into()),
+                ..RenderOptions::default()
+            },
+        };
+
+        assert!(matches!(
+            deanimate(spec),
+            RenderSpec::Full { type_name, options }
+                if type_name == "text_plain"
+                    && options.align.as_deref() == Some("center")
+                    && options.color.as_deref() == Some("panel_title")
+        ));
+    }
+
+    #[test]
+    fn deanimate_figlet_morph_uses_last_font_and_preserves_style_options() {
+        let spec = RenderSpec::Full {
+            type_name: "animated_figlet_morph".into(),
+            options: RenderOptions {
+                align: Some("right".into()),
+                color: Some("panel_title".into()),
+                ..RenderOptions::default()
+            }
+            .with_extra("font_sequence", vec!["small", "doom"]),
+        };
+
+        let deanimated = deanimate(spec);
+
+        assert!(matches!(
+            deanimated,
+            RenderSpec::Full { type_name, options }
+                if type_name == "text_ascii"
+                    && options.style.as_deref() == Some("figlet")
+                    && options.align.as_deref() == Some("right")
+                    && options.color.as_deref() == Some("panel_title")
+                    && options.extra_str("font") == Some("doom")
+        ));
+    }
+
+    #[test]
+    fn deanimate_short_figlet_morph_uses_default_resting_font() {
+        assert!(matches!(
+            deanimate(RenderSpec::Short("animated_figlet_morph".into())),
+            RenderSpec::Full { type_name, options }
+                if type_name == "text_ascii"
+                    && options.style.as_deref() == Some("figlet")
+                    && options.extra_str("font") == Some("ansi_shadow")
+        ));
+    }
+
+    /// Regression: `animated_postfx` carries `inner` / `effect` extras alongside the
+    /// inner renderer's options (`font`, `pixel_size`, …). Forwarding the bag verbatim to
+    /// `text_ascii` tripped its `deny_unknown_fields` parser and silently collapsed the
+    /// options to defaults — `home_splash` would render in the `standard` font instead of
+    /// the configured `ansi_shadow`. Stripping the wrapper-only extras lets the inner
+    /// renderer keep its real options.
+    #[test]
+    fn deanimate_postfx_strips_wrapper_extras_so_inner_options_survive() {
+        let spec = RenderSpec::Full {
+            type_name: "animated_postfx".into(),
+            options: RenderOptions {
+                style: Some("figlet".into()),
+                color: Some("panel_title".into()),
+                align: Some("center".into()),
+                ..RenderOptions::default()
+            }
+            .with_extra("inner", "text_ascii")
+            .with_extra("effect", "particle_burst")
+            .with_extra("font", "ansi_shadow"),
+        };
+
+        match deanimate(spec) {
+            RenderSpec::Full { type_name, options } => {
+                assert_eq!(type_name, "text_ascii");
+                assert_eq!(options.style.as_deref(), Some("figlet"));
+                assert_eq!(options.extra_str("font"), Some("ansi_shadow"));
+                assert_eq!(options.extra_str("inner"), None);
+                assert_eq!(options.extra_str("effect"), None);
+
+                // The flattened bag must round-trip cleanly through text_ascii's Options
+                // parser — deny_unknown_fields will reject any leftover wrapper extras.
+                #[derive(serde::Deserialize, Debug, Default)]
+                #[serde(deny_unknown_fields)]
+                struct AsciiOptions {
+                    #[serde(default)]
+                    font: Option<String>,
+                    #[serde(default)]
+                    #[allow(dead_code)]
+                    pixel_size: Option<String>,
+                }
+                let parsed: AsciiOptions = options.parse_specific();
+                assert_eq!(parsed.font.as_deref(), Some("ansi_shadow"));
+            }
+            other => panic!("expected Full, got {other:?}"),
+        }
+    }
+}

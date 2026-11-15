@@ -10,12 +10,12 @@ Open holes
 title end
 
 paragraph start
-todo: workspace and project boxes show reading folders and change by themselves while a command runs; only the user may control them; find what triggers it
+todo: Ctrl-c must kill the running process; today it sends the job to the background and it keeps running
 Planned.
 paragraph end
 
 paragraph start
-todo: command running box title is broken; the title row merges into the next edge (user: dir) and the box edge is drawn wrong
+todo: workspace and project boxes show reading folders and change by themselves while a command runs; only the user may control them; find what triggers it
 Planned.
 paragraph end
 

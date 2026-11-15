@@ -121,3 +121,7 @@ Make a .aiu file and open it in the editor. One Nushell command:
 aiutd f.aiu
 
 The title needs a kind: line. Opening runs notation fill and adds the contract rows. Never bash -c for aiutd, it needs the real tty.
+- aiu-splash reads SPLASHBOARD_HOME or ~/.splashboard, never ~/.config/splashboard. Theme: ~/.splashboard/settings.toml.
+- Rust inside bash -c: no char literals (apostrophe). Insert lines with a sed file: /pat/i TEXT on one line. Rename a fn BEFORE appending a new fn with the old name.
+- Splash boxes in the shell show REAL splashboard dashboard output, never self made info.
+- aiu-splash dump project|home WIDTH prints a dashboard as plain text, no tty needed. Heredoc with a double-quoted delimiter keeps code literal inside bash -c.

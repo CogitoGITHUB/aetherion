@@ -288,7 +288,8 @@
   (when (and (> (string-length body) 3) (< (string-length body) 30000) (string=? (substring body 0 3) "52;"))
     ((unbox pane-grid-osc52-hook) body))
   (when (and (> (string-length body) 5) (string=? (substring body 0 5) "7701;"))
-    (hash-set! pane-grid-tabs g (substring body 5))))
+    (hash-set! pane-grid-tabs g (substring body 5)))
+  (osc-quit-check! body))
 
 (define (osc-char! g ch)
   (cond
@@ -340,3 +341,10 @@
   (set-pane-grid-top! g 0)
   (set-pane-grid-bottom! g (sub1 height))
   (move-cursor! g (- (pane-grid-cursor-row g) (if drop? overflow 0)) (pane-grid-cursor-column g)))
+
+(define pane-grid-quit-hook (box void))
+(provide pane-grid-quit-hook)
+(define (osc-quit-check! body)
+  (when (and (> (string-length body) 5)
+             (string=? (substring body 0 5) "7702;"))
+    ((unbox pane-grid-quit-hook))))

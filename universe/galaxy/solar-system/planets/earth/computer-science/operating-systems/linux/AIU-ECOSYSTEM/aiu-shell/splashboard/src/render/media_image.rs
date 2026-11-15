@@ -1,0 +1,525 @@
+use std::io::IsTerminal;
+use std::sync::OnceLock;
+
+use image::{DynamicImage, Rgba};
+use ratatui::{
+    Frame,
+    layout::Rect,
+    style::{Color, Style},
+    widgets::Paragraph,
+};
+use ratatui_image::{
+    Resize, StatefulImage,
+    picker::{Picker, ProtocolType},
+};
+
+use crate::options::OptionSchema;
+use crate::payload::{Body, ImageData};
+use crate::theme::{self, ColorKey, Theme};
+
+use super::{Registry, RenderOptions, Renderer, Shape};
+
+#[derive(Debug, Clone, Default, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Options {
+    #[serde(default)]
+    pub fit: Option<String>,
+    #[serde(default)]
+    pub max_width: Option<u16>,
+    #[serde(default)]
+    pub max_height: Option<u16>,
+}
+
+const COLOR_KEYS: &[ColorKey] = &[theme::TEXT];
+
+const OPTION_SCHEMAS: &[OptionSchema] = &[
+    OptionSchema {
+        name: "align",
+        type_hint: "\"left\" | \"center\" | \"right\"",
+        required: false,
+        default: Some("\"left\""),
+        description: "Horizontal placement within the available cell when the image is narrower (after `max_width` / `fit = \"contain\"`).",
+    },
+    OptionSchema {
+        name: "fit",
+        type_hint: "\"contain\" | \"cover\" | \"stretch\"",
+        required: false,
+        default: Some("\"contain\""),
+        description: "How the image is sized into its box. `contain` preserves aspect; `cover` fills the box and crops overflow; `stretch` warps to fit.",
+    },
+    OptionSchema {
+        name: "max_width",
+        type_hint: "cells (u16)",
+        required: false,
+        default: Some("area width"),
+        description: "Upper bound on image width in cells.",
+    },
+    OptionSchema {
+        name: "max_height",
+        type_hint: "cells (u16)",
+        required: false,
+        default: Some("area height"),
+        description: "Upper bound on image height in cells.",
+    },
+    OptionSchema {
+        name: "padding",
+        type_hint: "cells (u16)",
+        required: false,
+        default: Some("0"),
+        description: "Uniform inset inside the image cell (all four sides). Applied before alignment and sizing.",
+    },
+];
+
+pub struct MediaImageRenderer;
+
+impl Renderer for MediaImageRenderer {
+    fn name(&self) -> &str {
+        "media_image"
+    }
+    fn description(&self) -> &'static str {
+        "Embeds a raster image using the best protocol the terminal advertises (kitty, sixel, iTerm2) and falls back to half-block ASCII elsewhere. Honours `fit` (contain / cover / stretch) plus `max_width` / `max_height` / `padding` for placement."
+    }
+    fn accepts(&self) -> &[Shape] {
+        &[Shape::Image]
+    }
+    fn color_keys(&self) -> &[ColorKey] {
+        COLOR_KEYS
+    }
+    fn option_schemas(&self) -> &[OptionSchema] {
+        OPTION_SCHEMAS
+    }
+    fn render(
+        &self,
+        frame: &mut Frame,
+        area: Rect,
+        body: &Body,
+        opts: &RenderOptions,
+        theme: &Theme,
+        _registry: &Registry,
+    ) {
+        if let Body::Image(d) = body {
+            render_image_payload(frame, area, d, opts, theme);
+        }
+    }
+}
+
+fn render_image_payload(
+    frame: &mut Frame,
+    area: Rect,
+    data: &ImageData,
+    opts: &RenderOptions,
+    theme: &Theme,
+) {
+    let target = compute_target(area, opts);
+    match render_image(frame, target, &data.path, opts, theme) {
+        Ok(()) => {}
+        Err(msg) => frame.render_widget(
+            Paragraph::new(msg).style(Style::default().fg(theme.text)),
+            target,
+        ),
+    }
+}
+
+fn render_image(
+    frame: &mut Frame,
+    area: Rect,
+    path: &str,
+    opts: &RenderOptions,
+    theme: &Theme,
+) -> Result<(), String> {
+    let specific: Options = opts.parse_specific();
+    draw_thumbnail(frame, area, path, specific.fit.as_deref(), theme)
+}
+
+/// Draws an image file into `area` using the shared `ratatui-image` pipeline. Exposed for
+/// renderers that need a thumbnail cell inside a larger composition (`list_cards`) without
+/// duplicating the picker / load / theme-bg plumbing. Returns the same `Err` strings
+/// `media_image` would surface so callers can fall back to a blank cell or text glyph.
+pub(crate) fn draw_thumbnail(
+    frame: &mut Frame,
+    area: Rect,
+    path: &str,
+    fit: Option<&str>,
+    theme: &Theme,
+) -> Result<(), String> {
+    if area.width == 0 || area.height == 0 {
+        return Ok(());
+    }
+    let img = load_image(path)?;
+    let mut p = picker();
+    if let Some(rgba) = solid_rgba(theme.bg) {
+        p.set_background_color(Some(rgba));
+    }
+    let mut protocol = p.new_resize_protocol(img);
+    let widget = StatefulImage::default().resize(resize_mode(fit));
+    frame.render_stateful_widget(widget, area, &mut protocol);
+    Ok(())
+}
+
+/// Map a ratatui [`Color`] to an opaque `Rgba<u8>` for `ratatui_image`'s letterbox /
+/// transparent-pixel fill. Only `Color::Rgb` resolves; everything else (including
+/// `Color::Reset`, indexed colours, ANSI named colours) returns `None` so the picker keeps
+/// its default transparent-black, letting the terminal's own background show through.
+fn solid_rgba(color: Color) -> Option<Rgba<u8>> {
+    match color {
+        Color::Rgb(r, g, b) => Some(Rgba([r, g, b, 255])),
+        _ => None,
+    }
+}
+
+/// Apply padding, `max_width`/`max_height`, and alignment to produce the final cell rect the
+/// image protocol draws into. Padding shrinks first — it's "inner margin" the whole layout sees
+/// as empty — then max_* caps the body, then alignment places that box inside what remains of
+/// the original area.
+fn compute_target(area: Rect, opts: &RenderOptions) -> Rect {
+    let specific: Options = opts.parse_specific();
+    let padded = apply_padding(area, opts.padding.unwrap_or(0));
+    let capped_w = specific
+        .max_width
+        .map_or(padded.width, |m| m.min(padded.width));
+    let capped_h = specific
+        .max_height
+        .map_or(padded.height, |m| m.min(padded.height));
+    let x_offset = match opts.align.as_deref() {
+        Some("center") => padded.width.saturating_sub(capped_w) / 2,
+        Some("right") => padded.width.saturating_sub(capped_w),
+        _ => 0,
+    };
+    Rect {
+        x: padded.x + x_offset,
+        y: padded.y,
+        width: capped_w,
+        height: capped_h,
+    }
+}
+
+fn apply_padding(area: Rect, padding: u16) -> Rect {
+    let pad_x = padding.min(area.width / 2);
+    let pad_y = padding.min(area.height / 2);
+    Rect {
+        x: area.x + pad_x,
+        y: area.y + pad_y,
+        width: area.width.saturating_sub(pad_x * 2),
+        height: area.height.saturating_sub(pad_y * 2),
+    }
+}
+
+fn resize_mode(fit: Option<&str>) -> Resize {
+    match fit {
+        Some("cover") => Resize::Crop(None),
+        Some("stretch") => Resize::Scale(None),
+        _ => Resize::Fit(None),
+    }
+}
+
+fn picker() -> Picker {
+    static CACHED: OnceLock<Picker> = OnceLock::new();
+    CACHED.get_or_init(detect_picker).clone()
+}
+
+fn detect_picker() -> Picker {
+    let mut picker = if std::io::stdin().is_terminal() {
+        Picker::from_query_stdio().unwrap_or_else(|_| Picker::halfblocks())
+    } else {
+        Picker::halfblocks()
+    };
+    if is_iterm2_env(|k| std::env::var(k).ok()) {
+        picker.set_protocol_type(ProtocolType::Iterm2);
+    }
+    picker
+}
+
+/// iTerm2 (and tools that set `LC_TERMINAL=iTerm2`, e.g. iTerm2 over SSH) responds to the
+/// Kitty graphics capability query positively in current versions but doesn't render the
+/// resulting `APC G ...` chunks reliably — base64 payload bytes leak through as visible
+/// "garbage" characters. The native OSC 1337 inline-image protocol is the only thing iTerm2
+/// renders without artifacts, so force it whenever the environment says we're inside iTerm2.
+fn is_iterm2_env(env: impl Fn(&str) -> Option<String>) -> bool {
+    env("TERM_PROGRAM")
+        .as_deref()
+        .is_some_and(|s| s.contains("iTerm"))
+        || env("LC_TERMINAL")
+            .as_deref()
+            .is_some_and(|s| s.contains("iTerm"))
+}
+
+fn load_image(path: &str) -> Result<DynamicImage, String> {
+    image::ImageReader::open(path)
+        .map_err(|e| format!("[image: {e}]"))?
+        .decode()
+        .map_err(|e| format!("[image decode: {e}]"))
+}
+
+#[cfg(test)]
+mod tests {
+    use image::{Rgba, RgbaImage};
+    use ratatui::{Terminal, backend::TestBackend};
+
+    use super::*;
+    use crate::payload::{ImageData, Payload, TextData};
+    use crate::render::test_utils::{line_text, render_to_buffer};
+    use crate::theme::Theme;
+
+    fn payload(path: &str) -> Payload {
+        Payload {
+            icon: None,
+            status: None,
+            format: None,
+            body: Body::Image(ImageData { path: path.into() }),
+        }
+    }
+
+    #[test]
+    fn renderer_contract_exposes_image_surface() {
+        let renderer = MediaImageRenderer;
+        assert_eq!(renderer.name(), "media_image");
+        assert!(renderer.description().contains("kitty"));
+        assert_eq!(renderer.accepts(), &[Shape::Image]);
+        assert_eq!(renderer.color_keys().len(), 1);
+        assert_eq!(renderer.color_keys()[0].name, theme::TEXT.name);
+        assert_eq!(renderer.option_schemas().len(), 5);
+        assert_eq!(renderer.option_schemas()[0].name, "align");
+        assert_eq!(renderer.option_schemas()[1].name, "fit");
+    }
+
+    #[test]
+    fn falls_back_to_text_when_path_missing() {
+        let buf = render_to_buffer(&payload("/does/not/exist.png"), 40, 5);
+        let content: String = (0..5)
+            .map(|y| line_text(&buf, y))
+            .collect::<Vec<_>>()
+            .join(" ");
+        assert!(content.contains("image"));
+    }
+
+    #[test]
+    fn render_ignores_non_image_body() {
+        let backend = TestBackend::new(8, 3);
+        let mut terminal = Terminal::new(backend).unwrap();
+        terminal
+            .draw(|frame| {
+                MediaImageRenderer.render(
+                    frame,
+                    frame.area(),
+                    &Body::Text(TextData {
+                        value: "ignored".into(),
+                    }),
+                    &RenderOptions::default(),
+                    &Theme::default(),
+                    &Registry::with_builtins(),
+                );
+            })
+            .unwrap();
+        let rendered = terminal.backend().buffer().clone();
+        let content: String = (0..rendered.area.height)
+            .map(|y| line_text(&rendered, y))
+            .collect::<Vec<_>>()
+            .join("");
+        assert!(content.trim().is_empty());
+    }
+
+    #[test]
+    fn valid_png_renders_without_error_fallback() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("sample.png");
+        RgbaImage::from_pixel(2, 2, Rgba([255, 0, 0, 255]))
+            .save(&path)
+            .unwrap();
+
+        let backend = TestBackend::new(8, 4);
+        let mut terminal = Terminal::new(backend).unwrap();
+        terminal
+            .draw(|frame| {
+                assert!(
+                    render_image(
+                        frame,
+                        frame.area(),
+                        path.to_str().unwrap(),
+                        &RenderOptions::default(),
+                        &Theme::default(),
+                    )
+                    .is_ok()
+                );
+            })
+            .unwrap();
+        let rendered = terminal.backend().buffer().clone();
+        let content: String = (0..rendered.area.height)
+            .map(|y| line_text(&rendered, y))
+            .collect::<Vec<_>>()
+            .join(" ");
+        let painted = (0..rendered.area.height).any(|y| {
+            (0..rendered.area.width).any(|x| {
+                let style = rendered.cell((x, y)).unwrap().style();
+                style.fg.is_some() || style.bg.is_some()
+            })
+        });
+
+        assert!(!content.contains("[image"));
+        assert!(painted);
+    }
+
+    #[test]
+    fn load_image_reports_decode_errors() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("not-an-image.png");
+        std::fs::write(&path, "plain text").unwrap();
+        let err = load_image(path.to_str().unwrap()).unwrap_err();
+        assert!(err.contains("image decode"));
+    }
+
+    #[test]
+    fn draw_thumbnail_skips_zero_sized_area() {
+        // Defence-in-depth guard: a zero-width or zero-height cell returns `Ok` before any
+        // image load, so a degenerate layout slot can't surface a spurious `[image: …]` error.
+        // Only reachable by calling `draw_thumbnail` directly — the public render path never
+        // hands a renderer a zero-sized area.
+        let backend = TestBackend::new(8, 4);
+        let mut terminal = Terminal::new(backend).unwrap();
+        terminal
+            .draw(|frame| {
+                let zero_width = Rect {
+                    x: 0,
+                    y: 0,
+                    width: 0,
+                    height: 4,
+                };
+                let zero_height = Rect {
+                    x: 0,
+                    y: 0,
+                    width: 8,
+                    height: 0,
+                };
+                assert!(
+                    draw_thumbnail(
+                        frame,
+                        zero_width,
+                        "/does/not/exist.png",
+                        None,
+                        &Theme::default(),
+                    )
+                    .is_ok()
+                );
+                assert!(
+                    draw_thumbnail(
+                        frame,
+                        zero_height,
+                        "/does/not/exist.png",
+                        Some("cover"),
+                        &Theme::default(),
+                    )
+                    .is_ok()
+                );
+            })
+            .unwrap();
+    }
+
+    #[test]
+    fn padding_shrinks_area_uniformly() {
+        let area = Rect {
+            x: 0,
+            y: 0,
+            width: 20,
+            height: 10,
+        };
+        let opts = RenderOptions {
+            padding: Some(2),
+            ..RenderOptions::default()
+        };
+        let out = compute_target(area, &opts);
+        assert_eq!(
+            out,
+            Rect {
+                x: 2,
+                y: 2,
+                width: 16,
+                height: 6
+            }
+        );
+    }
+
+    #[test]
+    fn max_width_caps_and_center_align_positions_box() {
+        let area = Rect {
+            x: 0,
+            y: 0,
+            width: 30,
+            height: 10,
+        };
+        let opts = RenderOptions {
+            align: Some("center".into()),
+            ..RenderOptions::default()
+        }
+        .with_extra("max_width", 10u16);
+        let out = compute_target(area, &opts);
+        assert_eq!(out.width, 10);
+        assert_eq!(out.x, 10);
+    }
+
+    #[test]
+    fn max_height_caps_below_area_height() {
+        let area = Rect {
+            x: 0,
+            y: 0,
+            width: 20,
+            height: 20,
+        };
+        let opts = RenderOptions::default().with_extra("max_height", 5u16);
+        let out = compute_target(area, &opts);
+        assert_eq!(out.height, 5);
+    }
+
+    #[test]
+    fn right_align_pushes_box_to_far_edge() {
+        let area = Rect {
+            x: 0,
+            y: 0,
+            width: 30,
+            height: 10,
+        };
+        let opts = RenderOptions {
+            align: Some("right".into()),
+            ..RenderOptions::default()
+        }
+        .with_extra("max_width", 10u16);
+        let out = compute_target(area, &opts);
+        assert_eq!(out.x, 20);
+        assert_eq!(out.width, 10);
+    }
+
+    #[test]
+    fn solid_rgba_maps_only_rgb_colors() {
+        assert_eq!(
+            super::solid_rgba(Color::Rgb(0x12, 0x34, 0x56)),
+            Some(Rgba([0x12, 0x34, 0x56, 255])),
+        );
+        assert_eq!(super::solid_rgba(Color::Reset), None);
+        assert_eq!(super::solid_rgba(Color::Indexed(7)), None);
+        assert_eq!(super::solid_rgba(Color::Red), None);
+    }
+
+    #[test]
+    fn resize_mode_maps_fit_option() {
+        assert!(matches!(resize_mode(Some("cover")), Resize::Crop(_)));
+        assert!(matches!(resize_mode(Some("stretch")), Resize::Scale(_)));
+        assert!(matches!(resize_mode(Some("contain")), Resize::Fit(_)));
+        assert!(matches!(resize_mode(None), Resize::Fit(_)));
+    }
+
+    #[test]
+    fn iterm2_env_detection_matches_expected_terminals() {
+        let with = |pairs: &[(&str, &str)]| {
+            let map: std::collections::HashMap<String, String> = pairs
+                .iter()
+                .map(|(k, v)| (k.to_string(), v.to_string()))
+                .collect();
+            super::is_iterm2_env(|k| map.get(k).cloned())
+        };
+        assert!(with(&[("TERM_PROGRAM", "iTerm.app")]));
+        assert!(with(&[("LC_TERMINAL", "iTerm2")]));
+        assert!(with(
+            &[("TERM_PROGRAM", "tmux"), ("LC_TERMINAL", "iTerm2"),]
+        ));
+        assert!(!with(&[("TERM_PROGRAM", "Apple_Terminal")]));
+        assert!(!with(&[]));
+    }
+}

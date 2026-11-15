@@ -178,3 +178,77 @@ Piece 5 lives in aiu-shell-screen: in boxes mode c copies the focused box, p cop
 paragraph end
 
 section end
+
+section start
+title start
+Section 10: aiu splash
+title end
+
+paragraph start
+The splash screen is built into the shell and rebranded as AIU. Source: aiu-shell/splashboard, cloned from unhappychoice/splashboard. The hook in the nushell config is removed at the end.
+paragraph end
+
+paragraph start
+The git part sits on top of the aiu context section. The home part sits below the whole shell box and stays attached to it. Both are one line when retracted. Both open and close with keys, in their own mode. The key for the mode is not chosen yet. Space is kept small, so they stay retracted by default.
+paragraph end
+
+paragraph start
+Both parts are cached. The home part loads once when the shell opens. The git part refreshes when the folder changes, and the jump with zoxide is the normal way. Expanding or resizing never reloads.
+paragraph end
+
+paragraph start
+The ecosystem server fetches and caches the data. Without the server the shell uses its own cache. Both show real splash output. aiu-splash dump project or home WIDTH prints the dashboard as plain text, the shell boxes show it. Retracted shows the first line. Git is the project dashboard, home is the home dashboard. Git is cached by folder, home loads once. j toggles git, k toggles home.
+paragraph end
+
+
+paragraph start
+Keys decided. In the shell, j and k enter the splash mode. In the multiplexer, u opens the splash in a floating pane at 80 percent of the screen and u hides it. The splash adapts to every float size (40, 60, 80, 100 and grow or shrink) with no extra setup. Both keys are checked free before the code is written.
+paragraph end
+
+paragraph start
+The splash binary is the package aiu-splash, built from aiu-shell/splashboard through ecosystem-manifest/aiu-splash.rktd. The multiplexer float runs aiu-splash watch, which is the full screen mode of the splashboard source. The shell parts link the same source as a library.
+paragraph end
+
+paragraph start
+Home dashboard boxes: rounded border, title on the left as a dash and bar before the name, same look as the notation boxview frame. Applied in the home dashboard file in the splashboard folder. The project dashboard gets the same look after the GitHub token decision.
+paragraph end
+
+paragraph start
+Splash overlay: j opens the full git dashboard, k the full home dashboard, each over the whole screen with warning lines hidden. Up, Down, PageUp, PageDown scroll it. j or k closes it. The bar keeps showing one line each.
+paragraph end
+
+paragraph start
+Notifications: every shell notice is a box in the top right corner, titled with its level, wrapped, stacked up to three, gone after 2 seconds for info, 3 for warn, 5 for error. Same as the text editor notify module. Error is red. The bottom input box no longer shows notices.
+paragraph end
+
+paragraph start
+Box scroll: an expanded box taller than the screen opens at its top. Up, Down, PageUp, PageDown scroll it, and so do b (up) and g (down). The same keys scroll the splash overlay.
+paragraph end
+
+paragraph start
+Quit confirm: q in the multiplexer opens a centered box that asks to quit. Enter or space quits, n stays.
+paragraph end
+section end
+
+section start
+title start
+Section 11: pinned reminders
+title end
+
+paragraph start
+A pin box at the bottom of the shell screen holds pinned reminders. It is hidden when nothing is pinned.
+paragraph end
+
+paragraph start
+A key opens the box to add a pin. The key is not chosen yet.
+paragraph end
+
+paragraph start
+The shell has a command for it: pin TEXT adds a reminder, pin list shows them, unpin N removes one. Claude uses the same command to pin things for him.
+paragraph end
+
+paragraph start
+Pins are kept in one plain file, so they survive restarts and the multiplexer shows the same pins. The file location is chosen when it is built.
+paragraph end
+
+section end

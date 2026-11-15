@@ -10,6 +10,24 @@
 (define session-name "shell")
 (define stty-program "/usr/bin/stty")
 (define bar-refresh-milliseconds 1000)
+(define quit-ask (box #f))
+(define (quit-box-lines)
+  (define w 34)
+  (define (row text)
+    (string-append "│ " text
+                   (make-string (max 0 (- w 4 (string-length text))) #\space)
+                   " │"))
+  (list (string-append "╭─┤ quit ├" (make-string (- w 11) #\─) "╮")
+        (row "Quit the multiplexer?")
+        (row "enter or space  quit")
+        (row "n  stay")
+        (string-append "╰" (make-string (- w 2) #\─) "╯")))
+(define (draw-quit-box! cells columns rows)
+  (define lines (quit-box-lines))
+  (define top (max 0 (quotient (- rows (length lines)) 2)))
+  (define left (max 0 (quotient (- columns 34) 2)))
+  (for ([l (in-list lines)] [i (in-naturals)])
+    (overlay-text! cells columns rows (+ top i) left l)))
 (define size-check-milliseconds 400)
 
 (define status-home (or (getenv "HOME") ""))
@@ -45,12 +63,15 @@
          (if (> n 0) (format "DEV MODE errors ~a" n) "DEV MODE")]
         [(> n 0) (format "BUILD ERRORS ~a" n)]
         [else ""]))
-(define (top-label layer)
-  (define d (dev-text))
-  (string-append layer
-                 (if (string=? d "") "" (string-append "  " d))))
-(define (bottom-label room)
-  (string-append (clock-stamp room #t #t) "\u0001" "aiu server " (unbox server-state)))
+(define (top-label layer) layer)
+(define (bottom-label columns)
+  (define n (error-count))
+  (define r
+    (string-append "aiu server " (if (equal? (unbox server-state) "running") "●" "○")
+                   "  aiu dev " (if (dev-on?) "●" "○")
+                   (if (> n 0) (format " errors ~a" n) "")))
+  (string-append (clock-stamp (max 0 (- columns (string-length r) 25)) #t #t)
+                 "\u0001" r))
 
 (define (tabs-for unit default)
   (define g (and unit (pane-unit-grid unit)))
@@ -98,7 +119,7 @@
   (define (tile-count) (length (filter (lambda (id) (>= id 0)) (hash-keys panes))))
   (define (open-float-pane! id columns rows)
     (void)
-    (define unit (pane-unit-open id columns rows (unbox shell-cwd)))
+    (define unit (if (= id (float-pane-id-of 3)) (pane-unit-open-program id columns rows (string-append (or (getenv "HOME") "") "/.local/share/aiu-pm/prefix/aiu-splash/live/bin/aiu-splash") (list "watch")) (pane-unit-open id columns rows (unbox shell-cwd))))
     (hash-set! panes id unit)
     (start-output-thread! unit))
   (define (fit-float!)
@@ -244,8 +265,10 @@
                       #:when (and (rect-fits? rect) (hash-ref panes (layout-rect-id rect) #f)))
              (define unit (hash-ref panes (layout-rect-id rect)))
              (append (list (layout-rect-x rect) (layout-rect-y rect) (layout-rect-width rect) (layout-rect-height rect)
-                   (pane-unit-grid unit) (unbox (pane-unit-scroll unit)) (equal? (layout-rect-id rect) focus-id)) (if (equal? (layout-rect-id rect) focus-id) (let ([ns (layout-buffers-names (unbox buffers-state))] [ci (layout-buffers-current-index (unbox buffers-state))]) (list (tabs-for unit (string-join (for/list ([n (in-list ns)] [i (in-naturals)]) (string-append (if (eqv? i ci) "● " "○ ") n)) "  ")) (top-label "") (format "~a" (key-state-layer (unbox key-state-box))) (bottom-label (max 0 (- (unbox screen-columns) 43))))) (list)))))
+                   (pane-unit-grid unit) (unbox (pane-unit-scroll unit)) (equal? (layout-rect-id rect) focus-id)) (if (equal? (layout-rect-id rect) focus-id) (let ([ns (layout-buffers-names (unbox buffers-state))] [ci (layout-buffers-current-index (unbox buffers-state))]) (list (tabs-for unit (string-join (for/list ([n (in-list ns)] [i (in-naturals)]) (string-append (if (eqv? i ci) "● " "○ ") n)) "  ")) (top-label "") (format "~a" (key-state-layer (unbox key-state-box))) (bottom-label (unbox screen-columns)))) (list)))))
          (call-with-semaphore lock (lambda () (compose-frame (unbox screen-columns) (unbox screen-height) (append (if (unbox float-shown) (map (lambda (entry) (list-set entry 6 #f)) entries) entries) (float-entries)) (unbox bar-rows)))))))
+    (when (unbox quit-ask)
+      (draw-quit-box! (car text) (unbox screen-columns) (unbox screen-height)))
     (write-string (screen-diff-cells! text (unbox screen-columns) (unbox screen-height)) (current-output-port))
     (flush-output (current-output-port)))
 
@@ -279,7 +302,19 @@
          (loop key now)]
         [else (loop last-key last-time)])))
 
+  (define (splash-toggle!)
+    (call-with-semaphore
+     state-lock
+     (lambda ()
+       (if (and (unbox float-shown) (= (unbox float-index) 3))
+           (set-box! float-shown #f)
+           (when (file-exists? (string-append (or (getenv "HOME") "") "/.local/share/aiu-pm/prefix/aiu-splash/live/bin/aiu-splash")) (set-box! float-preset 80) (show-float! 3)))))
+    (fit-panes!))
   (define (apply-scroll-command! command)
+    (if (eq? command (quote splash))
+        (splash-toggle!)
+        (apply-scroll-command-pane! command)))
+  (define (apply-scroll-command-pane! command)
     (call-with-semaphore
      state-lock
      (lambda ()
@@ -364,13 +399,29 @@
        remaining]
       [else input]))
 
+  (define startup-splash (box #f))
   (define paste-active (box #f))
   (define (key-loop)
     (define buffer (make-bytes 4096))
     (let loop ()
       (define amount (read-bytes-avail! buffer (current-input-port)))
+      (when (and (unbox startup-splash) (not (eof-object? amount)))
+        (set-box! startup-splash #f)
+        (call-with-semaphore state-lock
+          (lambda () (set-box! float-shown #f)))
+        (fit-panes!)
+        (set-box! dirty #t))
       (cond
         [(eof-object? amount) (semaphore-post finished)]
+        [(and (unbox quit-ask) (> amount 0))
+         (define b (bytes-ref buffer 0))
+         (cond
+           [(or (= b 13) (= b 10) (= b 32)) (semaphore-post finished)]
+           [(or (= b 110) (= b 78))
+            (set-box! quit-ask #f)
+            (set-box! dirty #t)
+            (loop)]
+           [else (loop)])]
         [(and (getenv "AIU_PANE_PROGRAM")
               (> amount 0)
               (focused-unit)
@@ -386,7 +437,7 @@
               (focused-unit)
               (string=? (key-state-layer (unbox key-state-box)) "visual")
               (eq? (key-state-pending (unbox key-state-box)) (quote none))
-              (not (memv (bytes-ref buffer 0) (list 32 105 27))))
+              (not (memv (bytes-ref buffer 0) (list 32 105 27 113))))
          (write-bytes (subbytes buffer 0 amount) (pane-link-master-out (pane-unit-link (focused-unit))))
          (flush-output (pane-link-master-out (pane-unit-link (focused-unit))))
          (loop)]
@@ -411,8 +462,14 @@
            (flush-output (pane-link-master-out (pane-unit-link unit))))
          (show-cached-bars!)
          (set-box! dirty #t)
-         (if quit? (semaphore-post finished) (loop))])))
+         (if quit? (begin (set-box! quit-ask #t) (set-box! dirty #t) (loop)) (loop))])))
 
+  (set-box! pane-grid-quit-hook
+            (lambda ()
+              (set-box! quit-ask #t)
+              (set-box! dirty #t)))
+  (splash-toggle!)
+  (set-box! startup-splash (unbox float-shown))
   (fit-panes!)
   (dynamic-wind
    (lambda ()

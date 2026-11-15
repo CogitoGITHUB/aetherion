@@ -1,0 +1,66 @@
+[workspace]
+members = [".", "xtask"]
+default-members = ["."]
+resolver = "2"
+
+[profile.release]
+codegen-units = 1
+lto = "thin"
+strip = "symbols"
+
+[package]
+name = "splashboard"
+version = "2.10.4"
+edition = "2024"
+authors = ["Yuji Ueki <unhappychoice@gmail.com>"]
+description = "A customizable terminal splash screen with plugin-based data sources"
+license = "ISC"
+repository = "https://github.com/unhappychoice/splashboard"
+homepage = "https://github.com/unhappychoice/splashboard"
+readme = "README.md"
+keywords = ["tui", "splash", "dashboard", "terminal", "ratatui"]
+categories = ["command-line-utilities"]
+
+[package.metadata.binstall]
+pkg-url = "{ repo }/releases/download/v{ version }/{ name }-v{ version }-{ target }{ archive-suffix }"
+pkg-fmt = "tgz"
+
+[package.metadata.binstall.overrides.x86_64-pc-windows-msvc]
+pkg-fmt = "zip"
+
+[dependencies]
+ratatui = { version = "0.30", features = ["widget-calendar", "serde"] }
+time = "0.3"
+figlet-rs = "1.0"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "1.1"
+dirs = "7"
+clap = { version = "4", features = ["derive"] }
+tui-big-text = "0.8"
+tui-piechart = "1.0"
+tachyonfx = { version = "0.25", default-features = false, features = ["std"] }
+ratatui-image = { version = "11", default-features = false, features = ["crossterm"] }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "webp", "gif"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "process"] }
+async-trait = "0.1"
+sha2 = "0.11"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std", "unstable-locales"] }
+chrono-tz = { version = "0.10", default-features = false }
+sysinfo = { version = "0.40", default-features = false, features = ["disk", "system"] }
+starship-battery = "0.12"
+netdev = "0.47"
+netstat2 = "0.11"
+gix = { version = "0.87", default-features = false, features = ["revision", "status", "blob-diff", "max-performance-safe", "comfort", "sha1"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "gzip"] }
+url = "2"
+tracing = { version = "0.1", default-features = false, features = ["std", "attributes"] }
+tracing-subscriber = { version = "0.3", default-features = false, features = ["fmt", "env-filter"] }
+tracing-appender = "0.2"
+tui-markdown = "0.3.7"
+feed-rs = { version = "3", default-features = false }
+tokei = { version = "15", default-features = false }
+regex = "1.12.3"
+
+[dev-dependencies]
+tempfile = "3"
