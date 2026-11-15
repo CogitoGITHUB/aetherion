@@ -42,10 +42,15 @@ pub fn draw_screen(frame: &mut Frame, state: &InputState) {
         return;
     }
     let search_height = search_box_height(state, area.height);
-    let pairs_height = area.height - input_height - search_height;
+    let mid_want = in_flow && state.mode != Mode::Search && full_area.width >= 24 && full_area.height >= 24;
+    let mid_dir = if mid_want { crate::bar_view::start_rows(full_area.width as usize).len() as u16 } else { 0 };
+    let mid_total = mid_dir + if input_height > 0 { input_height } else { 1 };
+    let mid_top = (full_area.height / 2).saturating_sub(mid_dir + 1).min(full_area.height.saturating_sub(mid_total));
+    let mid_flow = mid_want && mid_top >= 4;
+    let pairs_height = if mid_flow { mid_top } else { area.height - input_height - search_height };
     crate::bar_view::draw_bar(frame, &bar, full_area, 0);
     let width = area.width as usize;
-    let flow_bar = if in_flow { crate::bar_view::flow_rows(state, width) } else { Vec::new() };
+    let flow_bar = if in_flow && !mid_flow { crate::bar_view::flow_rows(state, width) } else { Vec::new() };
     let mut lines: Vec<Line> = Vec::new();
     let mut focus_start: usize = 0;
     let mut focus_end: usize = 0;
@@ -123,6 +128,13 @@ Color::Rgb(110, 110, 110)
             focus_end = lines.len();
         }
     }
+    let (pairs_height, mid_top) = if mid_flow && lines.len() > mid_top as usize {
+        let limit = full_area.height.saturating_sub(mid_total) as usize;
+        let grown = lines.len().min(limit).max(mid_top as usize) as u16;
+        (grown, grown)
+    } else {
+        (pairs_height, mid_top)
+    };
     let window = pairs_height as usize;
     let mut skip = lines.len().saturating_sub(window);
     if !state.pairs.is_empty() {
@@ -141,6 +153,14 @@ Color::Rgb(110, 110, 110)
         skip = crate::bar_view::box_skip(
             state, focus_start, focus_end, pad, window, skip,
         );
+    }
+    if mid_flow && (state.mode != Mode::Visual || state.focus + 1 == state.pairs.len() * 2) && !state.pairs.is_empty() {
+        let pad = window / 2;
+        skip = (lines.len() - pad).saturating_sub(window);
+    }
+    if state.job.is_some() && !state.pairs.is_empty() && (state.mode != Mode::Visual || state.focus + 1 == state.pairs.len() * 2) {
+        let tail = (focus_end + window / 2).saturating_sub(window);
+        skip = skip.max(tail);
     }
     let shown: Vec<Line> = lines.into_iter().skip(skip).collect();
     let pairs_rect = Rect {
@@ -207,12 +227,45 @@ Color::Rgb(110, 110, 110)
         };
         input_lines = group;
     }
+    if mid_flow {
+        let mut group = crate::bar_view::start_rows(width);
+        if input_height > 0 {
+            if let Some(top) = input_lines.first_mut() {
+                let body: String = top.chars().skip(1).collect();
+                let keep = body.chars().count().saturating_sub(1);
+                let middle: String = body.chars().take(keep).collect();
+                *top = format!("├{}┤", middle);
+            }
+            group.extend(input_lines);
+        } else {
+            group.push(crate::bar_view::close_rule(width));
+        }
+        input_rect = Rect {
+            x: area.x,
+            y: full_area.y + mid_top,
+            width: area.width,
+            height: (group.len() as u16).min(full_area.height),
+        };
+        input_lines = group;
+    }
     let text = input_lines.join("\n");
     frame.render_widget(Paragraph::new(text).style(Style::default().fg(color)), input_rect);
     draw_search(frame, state, area, pairs_height + bar.len() as u16, search_height);
     crate::bar_view::draw_menu(frame, state, area);
     crate::bar_view::draw_full_input(frame, state, full_area);
     crate::bar_view::draw_splash(frame, state, full_area);
+    if state.job.is_some() {
+        let tone = pulse_color(state.tick);
+        for cell in frame.buffer_mut().content.iter_mut() {
+            if cell.symbol().trim().is_empty() {
+                continue;
+            }
+            let fg = cell.fg;
+            if fg == Color::Red || fg == Color::White || fg == Color::Reset || fg == Color::Rgb(110, 110, 110) {
+                cell.set_fg(tone);
+            }
+        }
+    }
     crate::notify::draw_notify(frame, full_area);
 }
 
@@ -342,4 +395,21 @@ fn draw_search(
         height: search_height,
     };
     frame.render_widget(Paragraph::new(lines), rect);
+}
+
+fn pulse_level(tick: usize) -> u8 {
+    let phase = tick % 30;
+    let up = if phase < 15 { phase } else { 30 - phase };
+    (110 + up * 145 / 15) as u8
+}
+
+fn pulse_color(tick: usize) -> Color {
+    let stops = [(110.0, 110.0, 110.0), (255.0, 255.0, 255.0), (220.0, 40.0, 40.0)];
+    let phase = tick % 60;
+    let seg = phase / 20;
+    let t = (phase % 20) as f32 / 20.0;
+    let from = stops[seg];
+    let to = stops[(seg + 1) % 3];
+    let mix = |a: f32, b: f32| (a + (b - a) * t) as u8;
+    Color::Rgb(mix(from.0, to.0), mix(from.1, to.1), mix(from.2, to.2))
 }

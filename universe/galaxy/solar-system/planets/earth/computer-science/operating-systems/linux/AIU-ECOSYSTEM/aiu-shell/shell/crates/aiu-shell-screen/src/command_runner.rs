@@ -545,3 +545,19 @@ pub fn quit_key(quit: &mut bool) {
         *quit = true;
     }
 }
+
+pub fn report_running(on: bool) {
+    use std::io::Write;
+    use std::sync::atomic::{AtomicBool, Ordering};
+    static LAST: AtomicBool = AtomicBool::new(false);
+    if std::env::var_os("AIU_IN_MULTIPLEXER").is_none() {
+        return;
+    }
+    if LAST.swap(on, Ordering::Relaxed) == on {
+        return;
+    }
+    let bytes: &[u8] = if on { b"\x1b]7703;1\x07" } else { b"\x1b]7703;0\x07" };
+    let mut out = std::io::stdout();
+    let _ = out.write_all(bytes);
+    let _ = out.flush();
+}

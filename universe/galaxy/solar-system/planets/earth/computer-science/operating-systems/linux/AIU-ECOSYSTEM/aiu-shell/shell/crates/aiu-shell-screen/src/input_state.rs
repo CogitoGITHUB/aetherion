@@ -208,6 +208,14 @@ impl InputState {
     fn move_in_boxes(&mut self, key: &str) {
         if self.expanded.contains(&self.focus) {
             match key {
+                "n" => {
+                    crate::bar_view::scroll_box(-1000000);
+                    return;
+                }
+                "s" => {
+                    crate::bar_view::scroll_box(1000000);
+                    return;
+                }
                 "t" => {
                     crate::bar_view::scroll_box(-3);
                     return;
@@ -547,7 +555,7 @@ impl InputState {
                 }
                 if let KeyCode::Char(c) = key.code {
                     match c.to_string().as_str() {
-                        "t" | "h" | "e" | "s" | "c" | "p" | "a" => self.move_in_boxes(c.to_string().as_str()),
+                        "t" | "h" | "n" | "e" | "s" | "c" | "p" | "a" => self.move_in_boxes(c.to_string().as_str()),
                         "i" => {
                             crate::bar_view::close_menu();
                             self.mode = Mode::Insert;
@@ -872,5 +880,11 @@ impl InputState {
         } else {
             format!("copied {} lines", lines)
         }
+    }
+}
+
+impl InputState {
+    pub fn is_running(&self) -> bool {
+        self.job.is_some()
     }
 }

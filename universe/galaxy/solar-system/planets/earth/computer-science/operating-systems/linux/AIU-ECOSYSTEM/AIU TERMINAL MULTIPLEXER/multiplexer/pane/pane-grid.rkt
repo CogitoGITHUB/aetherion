@@ -289,7 +289,8 @@
     ((unbox pane-grid-osc52-hook) body))
   (when (and (> (string-length body) 5) (string=? (substring body 0 5) "7701;"))
     (hash-set! pane-grid-tabs g (substring body 5)))
-  (osc-quit-check! body))
+  (osc-quit-check! body)
+  (osc-run-grid! g body))
 
 (define (osc-char! g ch)
   (cond
@@ -348,3 +349,19 @@
   (when (and (> (string-length body) 5)
              (string=? (substring body 0 5) "7702;"))
     ((unbox pane-grid-quit-hook))))
+
+(define pane-grid-run-flag (box #f))
+(provide pane-grid-run-flag)
+(define (osc-run-check! body)
+  (when (and (> (string-length body) 5)
+             (string=? (substring body 0 5) "7703;"))
+    (set-box! pane-grid-run-flag (string=? body "7703;1"))))
+
+(define pane-grid-running (make-weak-hasheq))
+(provide pane-grid-running pane-grid-any-running?)
+(define (pane-grid-any-running?)
+  (for/or ([(k v) (in-hash pane-grid-running)]) v))
+(define (osc-run-grid! g body)
+  (when (and (> (string-length body) 5)
+             (string=? (substring body 0 5) "7703;"))
+    (hash-set! pane-grid-running g (string=? body "7703;1"))))

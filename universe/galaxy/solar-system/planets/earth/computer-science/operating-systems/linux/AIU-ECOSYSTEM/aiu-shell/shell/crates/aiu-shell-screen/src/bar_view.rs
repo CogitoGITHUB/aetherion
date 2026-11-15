@@ -467,3 +467,7 @@ pub fn box_skip(
     BOX_SCROLL.store(off, Ordering::Relaxed);
     start + pad + off as usize
 }
+
+pub fn close_rule(width: usize) -> String {
+    rule_line("╰", "╯", width)
+}
