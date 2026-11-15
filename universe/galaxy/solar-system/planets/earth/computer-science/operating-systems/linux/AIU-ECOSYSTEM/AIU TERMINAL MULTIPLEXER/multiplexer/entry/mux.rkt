@@ -11,8 +11,15 @@
 (define stty-program "/usr/bin/stty")
 (define bar-refresh-milliseconds 1000)
 (define quit-ask (box #f))
-(define (pulse-rect! cells columns rows bar-count x y w h)
-  (define sgr (pulse-sgr))
+(define (pulse-sgr2 red?)
+  (if red?
+      (pulse-sgr)
+      (let* ([p (modulo (quotient (inexact->exact (floor (current-inexact-milliseconds))) 50) 40)]
+             [up (if (< p 20) p (- 40 p))]
+             [v (+ 110 (quotient (* up 145) 20))])
+        (format "\u001b[38;2;~a;~a;~am" v v v))))
+(define (pulse-rect! cells columns rows bar-count x y w h red?)
+  (define sgr (pulse-sgr2 red?))
   (for* ([r (in-range (+ bar-count y) (min rows (+ bar-count y h)))]
          [c (in-range x (min columns (+ x w)))])
     (define row (vector-ref cells r))
@@ -301,7 +308,8 @@
       (when (and unit (hash-ref pane-grid-running (pane-unit-grid unit) #f))
         (pulse-rect! (car text) (unbox screen-columns) (unbox screen-height)
                      (length (unbox bar-rows)) (layout-rect-x rect) (layout-rect-y rect)
-                     (layout-rect-width rect) (layout-rect-height rect))))
+                     (layout-rect-width rect) (layout-rect-height rect)
+                     (eqv? 2 (hash-ref pane-grid-running (pane-unit-grid unit) #f)))))
     (when (unbox quit-ask)
       (draw-quit-box! (car text) (unbox screen-columns) (unbox screen-height)))
     (write-string (screen-diff-cells! text (unbox screen-columns) (unbox screen-height)) (current-output-port))

@@ -364,4 +364,4 @@
 (define (osc-run-grid! g body)
   (when (and (> (string-length body) 5)
              (string=? (substring body 0 5) "7703;"))
-    (hash-set! pane-grid-running g (string=? body "7703;1"))))
+    (hash-set! pane-grid-running g (cond [(string=? body "7703;1") 1] [(string=? body "7703;2") 2] [else #f]))))

@@ -561,3 +561,19 @@ pub fn report_running(on: bool) {
     let _ = out.write_all(bytes);
     let _ = out.flush();
 }
+
+pub fn report_run_state(state: u8) {
+    use std::io::Write;
+    use std::sync::atomic::{AtomicU8, Ordering};
+    static LAST: AtomicU8 = AtomicU8::new(0);
+    if std::env::var_os("AIU_IN_MULTIPLEXER").is_none() {
+        return;
+    }
+    if LAST.swap(state, Ordering::Relaxed) == state {
+        return;
+    }
+    let text = format!("\x1b]7703;{}\x07", state);
+    let mut out = std::io::stdout();
+    let _ = out.write_all(text.as_bytes());
+    let _ = out.flush();
+}

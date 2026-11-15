@@ -888,3 +888,15 @@ impl InputState {
         self.job.is_some()
     }
 }
+
+impl InputState {
+    pub fn run_state(&self) -> u8 {
+        if self.job.is_none() {
+            return 0;
+        }
+        let bad = self.pairs.last().map(|p| {
+            p.output.rows.iter().any(|r| r.starts_with("Error:") || r.starts_with("exit "))
+        });
+        if bad.unwrap_or(false) { 2 } else { 1 }
+    }
+}

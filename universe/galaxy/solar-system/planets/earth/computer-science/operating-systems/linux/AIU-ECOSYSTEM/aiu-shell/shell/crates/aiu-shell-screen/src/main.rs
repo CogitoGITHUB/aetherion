@@ -63,7 +63,7 @@ fn run_screen() {
             None
         };
         state.poll_job();
-        aiu_shell_screen::command_runner::report_running(state.is_running());
+        aiu_shell_screen::command_runner::report_run_state(state.run_state());
         state.run_alt(&mut terminal);
         state.tick += 1;
         state.age_notice();

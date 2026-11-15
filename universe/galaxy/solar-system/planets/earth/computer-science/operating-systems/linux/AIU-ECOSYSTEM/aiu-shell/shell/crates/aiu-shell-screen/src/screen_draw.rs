@@ -255,7 +255,8 @@ Color::Rgb(110, 110, 110)
     crate::bar_view::draw_full_input(frame, state, full_area);
     crate::bar_view::draw_splash(frame, state, full_area);
     if state.job.is_some() {
-        let tone = pulse_color(state.tick);
+        let errored = state.pairs.last().map(|p| output_failed(&p.output.rows)).unwrap_or(false);
+        let tone = pulse_color_for(state.tick, errored);
         for cell in frame.buffer_mut().content.iter_mut() {
             if cell.symbol().trim().is_empty() {
                 continue;
@@ -412,4 +413,14 @@ fn pulse_color(tick: usize) -> Color {
     let to = stops[(seg + 1) % 3];
     let mix = |a: f32, b: f32| (a + (b - a) * t) as u8;
     Color::Rgb(mix(from.0, to.0), mix(from.1, to.1), mix(from.2, to.2))
+}
+
+fn pulse_color_for(tick: usize, red: bool) -> Color {
+    if red {
+        return pulse_color(tick);
+    }
+    let phase = tick % 40;
+    let up = if phase < 20 { phase } else { 40 - phase };
+    let v = (110 + up * 145 / 20) as u8;
+    Color::Rgb(v, v, v)
 }
