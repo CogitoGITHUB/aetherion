@@ -3,7 +3,7 @@ use std::io::{BufRead, BufReader, Read};
 use std::process::{Child, Command, Stdio};
 use std::sync::mpsc::{Receiver, Sender, TryRecvError, channel};
 
-const MAX_ROWS: usize = 200;
+pub const MAX_ROWS: usize = 20000;
 
 fn strip_escapes(text: &str) -> String {
     let escape = char::from(27u8);
@@ -256,10 +256,10 @@ mod tests {
 
     #[test]
     fn long_output_is_cut() {
-        let text = "x\n".repeat(300);
+        let text = "x\n".repeat(30000);
         let rows = format_output(text.as_bytes(), b"", Some(0));
-        assert_eq!(rows.len(), 201);
-        assert_eq!(rows[200], "... output cut");
+        assert_eq!(rows.len(), 20001);
+        assert_eq!(rows[20000], "... output cut");
     }
 
     #[test]

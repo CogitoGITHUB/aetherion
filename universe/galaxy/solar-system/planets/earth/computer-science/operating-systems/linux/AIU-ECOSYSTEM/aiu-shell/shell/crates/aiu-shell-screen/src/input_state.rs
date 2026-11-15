@@ -371,7 +371,7 @@ impl InputState {
         let Some(pair) = self.pairs.last_mut() else {
             return;
         };
-        let limit = 200;
+        let limit = crate::command_runner::MAX_ROWS;
         for row in new_rows {
             let count = pair.output.rows.len();
             if count == limit {
