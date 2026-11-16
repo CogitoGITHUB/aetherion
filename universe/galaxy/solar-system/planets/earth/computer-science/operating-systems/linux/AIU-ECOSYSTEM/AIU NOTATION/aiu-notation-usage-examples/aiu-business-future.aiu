@@ -1,0 +1,2242 @@
+title start
+name: title-a-i-u
+kind: default
+tags: aiu, business, future, architecture, strategy
+A I U   B U S I N E S S   F U T U R E
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+pin start
+name: pin-top-read
+top
+read
+paragraph start
+name: paragraph-work-in-progress
+WORK IN PROGRESS — ALL DIRECTIONS.
+This document is provisional. Its structure, scope, assumptions, and proposals remain open to revision in every direction.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+pin end
+
+chapter start
+name: section-purpose-and-direction
+title start
+name: section-title-purpose-and
+Purpose and direction
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-aiu-is-to
+AIU is to become the structural language and operational foundation of the business ecosystem. Its purpose is not merely to store documents. It should organize knowledge, preserve decisions, coordinate work, support research, document processes, and provide a structured interface between human work and AI-assisted operations.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-business-itself
+The business itself will serve as the proving ground for the notation. Real projects, research, services, publishing, client work, and operational demands will expose what the system needs to support.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-longterm-objective
+The long-term objective is to make the business understandable, reproducible, measurable, delegable, and scalable.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-business-architecture
+title start
+name: section-title-business-architecture
+Business architecture
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-the-business-consists
+The business consists of connected operational domains. AIU should provide a consistent structure across them without forcing every domain into an identical workflow.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter start
+name: section-knowledge-and-documentation
+title start
+name: section-title-knowledge-and
+Knowledge and documentation
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-store-foundational-knowledge
+Store foundational knowledge, concepts, definitions, manuals, standards, technical documentation, lessons, and institutional knowledge.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-distinguish-established-knowledge
+Distinguish established knowledge from assumptions, hypotheses, proposals, and unresolved questions. Preserve sources and the reasoning behind important conclusions.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-research-and-intelligence
+title start
+name: section-title-research-and
+Research and intelligence
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-organize-market-research
+Organize market research, competitor analysis, customer research, technology monitoring, industry developments, legal research, and specialist investigations.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-research-should-produce
+Research should produce traceable findings, source references, identified gaps, contradictions, and conclusions. AI-assisted research should inspect existing knowledge before producing new material.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-strategy-and-decisions
+title start
+name: section-title-strategy-and
+Strategy and decisions
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-document-strategic-objectives
+Document strategic objectives, available options, constraints, selected directions, rejected alternatives, and expected consequences.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-preserve-the-reasoning
+Preserve the reasoning behind important choices. Future capabilities should compare proposals against previous decisions, current constraints, and documented objectives.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-projects-and-execution
+title start
+name: section-title-projects-and
+Projects and execution
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-organize-initiatives-into
+Organize initiatives into projects, plans, milestones, tasks, dependencies, deliverables, and completion criteria.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-every-project-should
+Every project should have a defined purpose, expected result, responsible parties, relevant resources, and a way to determine whether it is complete.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-execution-records-must
+Execution records must distinguish planned work from completed work.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-operations-and-procedures
+title start
+name: section-title-operations-and
+Operations and procedures
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-document-repeatable-procedures
+Document repeatable procedures for research, production, publishing, customer communication, sales, administration, maintenance, quality assurance, and service delivery.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-procedures-should-be
+Procedures should be understandable and executable by another person without requiring the original author to explain every step.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-products-and-services
+title start
+name: section-title-products-and
+Products and services
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-document-each-offer
+Document each offer, its audience, the problem addressed, scope, deliverables, process, requirements, limitations, pricing logic, and quality standards.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-connect-service-delivery
+Connect service delivery to the research, skills, tools, procedures, and evidence required to perform it.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-build-a-path
+Build a path from acquired skills to demonstrable capabilities, packaged offers, client delivery, and repeatable contracts.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-publishing-and-distribution
+title start
+name: section-title-publishing-and
+Publishing and distribution
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-organize-creator-brands
+Organize creator brands, channels, editorial strategy, content research, production workflows, publishing schedules, audience development, and monetization.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-keep-general-publishing
+Keep general publishing operations distinct from specialist subject operations while allowing shared research, assets, standards, and infrastructure.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-use-content-performance
+Use content performance and audience feedback to inform future editorial and business decisions.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-finance-and-administration
+title start
+name: section-title-finance-and
+Finance and administration
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-organize-budgets-expenses
+Organize budgets, expenses, revenue, pricing, contracts, taxes, compliance, subscriptions, assets, and financial obligations.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-keep-financial-plans
+Keep financial plans distinct from actual financial records. Document assumptions and evidence behind projections and investment decisions.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+chapter end
+
+chapter start
+name: section-aiu-as-the
+title start
+name: section-title-aiu-as
+AIU as the business knowledge system
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-aiu-should-provide
+AIU should provide one consistent way to structure information across the business. Its hierarchy should preserve the main domains while future relationship capabilities connect information across them.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter start
+name: section-page-types-as
+title start
+name: section-title-page-types
+Page types as working instruments
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-use-note-pages
+Use note pages for individual ideas and knowledge; research pages for investigations; decision pages for context, options, decisions, and consequences; plan pages for goals, steps, completion conditions, and open questions.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-use-todo-pages
+Use todo pages for actionable tasks; journal pages for events and progress; module pages for reusable systems and technical components; book pages for extensive manuals, policies, and publications.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-use-the-default
+Use the default page type when a subject requires a combination of supported block types.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-contracts-and-quality
+title start
+name: section-title-contracts-and
+Contracts and quality control
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-use-notation-contracts
+Use notation contracts to define quality expectations for different types of content.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-research-should-be
+Research should be checked for clear questions, supported claims, source quality, and unresolved gaps. Decisions should be checked for context, alternatives, reasoning, and consequences.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-plans-should-be
+Plans should be checked for measurable goals, actionable steps, and completion conditions. Procedures should be checked for clarity, completeness, prerequisites, and reproducibility.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-content-should-be
+Content should be checked for factual accuracy, audience relevance, and production requirements. A checklist does not, by itself, prove the truth or quality of its answers.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-names-tags-terms
+title start
+name: section-title-names-tags
+Names, tags, terms, and indexing
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-use-tags-to
+Use tags to classify pages, permanent block names where stable identification is needed, and index terms to make important concepts discoverable.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-use-generated-contents
+Use generated contents, index, numbering, and bibliography rather than manually maintaining information that the notation can compute.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-future-indexing-should
+Future indexing should support queries across business domains, not merely list files.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-tables-and-structured
+title start
+name: section-title-tables-and
+Tables and structured records
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-use-tables-when
+Use tables when information has repeated fields and benefits from consistent structure.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-potential-records-include
+Potential records include research sources, competitors, offers, equipment, expenses, clients, leads, contracts, publishing metrics, and project status.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-define-field-meaning
+Define field meaning and data requirements before building large collections. Keep structured operational records distinct from explanatory prose.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+chapter end
+
+chapter start
+name: section-aiassisted-business-operations
+title start
+name: section-title-aiassisted-business
+AI-assisted business operations
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-ai-should-operate
+AI should operate as a controlled worker within the knowledge architecture, not as an independent source of untraceable changes.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter start
+name: section-research-workers
+title start
+name: section-title-research-workers
+Research workers
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-read-relevant-existing
+Read relevant existing pages before beginning new research. Identify missing information and formulate a bounded research assignment.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-gather-evidence-compare
+Gather evidence, compare sources, identify disagreements, distinguish facts from claims, and record uncertainty.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-prepare-proposed-aiu
+Prepare proposed AIU material with source references and references to the pages it informs. Use only relationship features that are actually implemented.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-present-findings-for
+Present findings for human review before changing authoritative business knowledge.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-planning-and-analysis
+title start
+name: section-title-planning-and
+Planning and analysis workers
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-inspect-project-plans
+Inspect project plans, decisions, tasks, and documented constraints. Identify missing prerequisites, conflicting objectives, duplicated effort, dependencies, and risks.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-prepare-proposed-plans
+Prepare proposed plans and recommendations with their reasoning. Do not silently change approved decisions or mark work complete without evidence.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-monitoring-workers
+title start
+name: section-title-monitoring-workers
+Monitoring workers
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-monitor-selected-sources
+Monitor selected sources and subjects according to defined topics, geographic scope, source rules, and update frequency.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-classify-incoming-information
+Classify incoming information and compare it with existing knowledge. Identify significant changes, contradictions, emerging developments, and information requiring human attention.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-preserve-timestamps-source
+Preserve timestamps, source identity, and the distinction between new information and verified conclusions.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-production-and-delivery
+title start
+name: section-title-production-and
+Production and delivery workers
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-assist-with-research
+Assist with research preparation, content briefs, production checklists, documentation, client deliverables, and quality reviews.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-use-approved-procedures
+Use approved procedures and project requirements as operating constraints. Require review for consequential external communication, publication, contractual commitments, and changes to authoritative records.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-ai-worker-governance
+title start
+name: section-title-ai-worker
+AI worker governance
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-every-worker-should
+Every worker should have a defined purpose, scope, permitted inputs, expected output, tools, limits, and review requirements.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-record-the-source
+Record the source material used and the changes proposed. Separate read access, proposal access, and permission to modify authoritative information.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-provide-failure-handling
+Provide failure handling, human escalation, audit history, and recovery procedures. Never treat generated text as verified evidence merely because it is stored in an AIU page.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+chapter end
+
+chapter start
+name: section-business-workflows
+title start
+name: section-title-business-workflows
+Business workflows
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-aiu-should-gradually
+AIU should gradually support complete workflows that move from an initial need to a verified result.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter start
+name: section-research-to-decision
+title start
+name: section-title-research-to
+Research to decision
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-identify-a-question
+Identify a question or business problem. Locate relevant existing knowledge. Research missing information. Compare evidence and alternatives.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-record-a-decision
+Record a decision with its reasoning and consequences. Convert the decision into an actionable plan.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-project-to-completion
+title start
+name: section-title-project-to
+Project to completion
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-define-the-intended
+Define the intended result. Identify prerequisites, resources, risks, and dependencies. Break the work into tasks and milestones.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-track-execution-and
+Track execution and record evidence of completion. Review the outcome and document lessons.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-skill-to-service
+title start
+name: section-title-skill-to
+Skill to service
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-identify-a-skill
+Identify a skill and define its practical capabilities. Document methods, tools, standards, and limitations.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-create-evidence-of
+Create evidence of competence through projects and demonstrable results. Package the capability into a defined service or product.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-document-acquisition-client
+Document acquisition, client communication, delivery, review, and improvement.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-client-delivery
+title start
+name: section-title-client-delivery
+Client delivery
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-record-the-client
+Record the client requirement and agreed scope. Define deliverables, deadlines, responsibilities, acceptance criteria, and contractual boundaries.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-connect-delivery-tasks
+Connect delivery tasks to the procedures and resources required. Preserve delivery evidence, client feedback, and lessons for future work.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-continuous-improvement
+title start
+name: section-title-continuous-improvement
+Continuous improvement
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-collect-operational-results
+Collect operational results and identify recurring failures or bottlenecks. Investigate causes rather than merely recording symptoms.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-propose-changes-to
+Propose changes to procedures, tools, training, or business structure. Record approved changes and evaluate whether they improve results.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+chapter end
+
+chapter start
+name: section-business-intelligence-and
+title start
+name: section-title-business-intelligence
+Business intelligence and measurement
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-the-system-should
+The system should distinguish between what the business knows, what it intends to do, and what actually happened.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter start
+name: section-performance-domains
+title start
+name: section-title-performance-domains
+Performance domains
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-marketing-reach-traffic
+Marketing: reach, traffic, conversion, acquisition cost, and audience growth.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-publishing-output-consistency
+Publishing: output, consistency, retention, engagement, and distribution.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-sales-leads-proposals
+Sales: leads, proposals, conversion, contracts, and revenue.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-services-delivery-time
+Services: delivery time, cost, quality, client satisfaction, and repeat business.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-finance-revenue-expenses
+Finance: revenue, expenses, margins, cash flow, and investment.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-operations-completion-time
+Operations: completion time, workload, bottlenecks, errors, and process reliability.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-research-coverage-source
+Research: coverage, source quality, freshness, unresolved questions, and verification status.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-reporting
+title start
+name: section-title-reporting
+Reporting
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-future-reports-should
+Future reports should answer practical questions across the business.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-what-is-preventing
+What is preventing a project from progressing? Which decisions are waiting for evidence? Which offers lack documented delivery procedures?
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-which-business-areas
+Which business areas are affected by a change in a platform, regulation, or supplier? Where are resources being consumed without measurable progress?
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-which-processes-repeatedly
+Which processes repeatedly require correction? Reports must be derived from actual records and clearly identify missing or stale information.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+chapter end
+
+chapter start
+name: section-relationships-and-crossdomain
+title start
+name: section-title-relationships-and
+Relationships and cross-domain navigation
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-hierarchy-provides-organization
+Hierarchy provides organization, but business information also needs relationships across branches.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-future-relationship-capabilities
+Future relationship capabilities should connect research to decisions, decisions to projects, projects to tasks, tasks to procedures, procedures to offers, and offers to performance records.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-relationships-should-have
+Relationships should have defined meaning and direction. A reference to another page should not become an ambiguous collection of arbitrary connections.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-current-link
+The current link and target functionality is planned and must not be treated as operational until implemented and tested.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-until-then-use
+Until then, use currently supported hierarchy, tags, names, terms, references, and indexing mechanisms.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-development-roadmap
+title start
+name: section-title-development-roadmap
+Development roadmap
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-development-must-follow
+Development must follow actual business needs and the capabilities already implemented in the notation.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter start
+name: section-stage-one-existing
+title start
+name: section-title-stage-one
+Stage one: existing capabilities
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-use-existing-page
+Use existing page types for business documentation. Use chapters and nested blocks to structure domains and projects.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-use-contracts-and
+Use contracts and answers for documented quality checks. Use tags, names, terms, contents, index, bibliography, todos, and supported tables.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-keep-authoritative-documentation
+Keep authoritative documentation accurate and update the notation reference whenever functionality changes.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-stage-two-retrieval
+title start
+name: section-title-stage-two
+Stage two: retrieval and structure
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-improve-queries-across
+Improve queries across pages, blocks, tags, names, terms, and task states.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-develop-reports-for
+Develop reports for open work, pending decisions, missing documentation, and project progress.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-improve-structured-records
+Improve structured records and validation for recurring business data. Define stable identifiers and relationship semantics before building complex cross-domain navigation.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-stage-three-controlled
+title start
+name: section-title-stage-three
+Stage three: controlled automation
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-introduce-ai-workers
+Introduce AI workers with explicit scopes and review boundaries. Build repeatable workflows for research, planning, reporting, content preparation, and operational documentation.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-add-change-proposals
+Add change proposals, provenance, audit history, and recovery mechanisms. Connect external services only where they solve a documented business requirement.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-stage-four-operational
+title start
+name: section-title-stage-four
+Stage four: operational intelligence
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-develop-crossdomain-analysis
+Develop cross-domain analysis and business reporting. Connect plans, execution records, client delivery, and performance measurements.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-support-dependency-analysis
+Support dependency analysis, impact analysis, risk detection, and resource planning. Use actual operational evidence to improve the business and the tools.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-stage-five-scalable
+title start
+name: section-title-stage-five
+Stage five: scalable business infrastructure
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-support-delegation-training
+Support delegation, training, permissions, repeatable service delivery, and multi-person operations.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-integrate-the-aiu
+Integrate the AIU ecosystem with the wider business infrastructure where justified.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-develop-reliable-workflows
+Develop reliable workflows for international clients, contracts, compliance, and delivery. Keep the architecture modular so individual business domains can evolve without destabilizing the whole system.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+chapter end
+
+chapter start
+name: section-implementation-boundaries
+title start
+name: section-title-implementation-boundaries
+Implementation boundaries
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-do-not-describe
+Do not describe planned features as existing functionality.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-current-notation
+The current notation supports structured pages, nesting, page types, declarations, contracts, answers, computed numbering, contents, indexing, bibliography, todo extraction, supported tables, rendering, and terminal edition preview as described in the current reference.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-links-and-targetbased
+Links and target-based navigation are not yet usable. Some registered declarations have no implemented effect.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-advanced-business-queries
+Advanced business queries, cross-domain reporting, relationship graphs, AI workers, workflow execution, permissions, and external integrations require additional development.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-pdf-export-and
+PDF export and other planned features must remain marked as planned until implemented.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-when-the-notation
+When the notation changes, update the authoritative reference and revise this plan to match the actual system.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-operating-principles
+title start
+name: section-title-operating-principles
+Operating principles
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-maintain-one-source
+Maintain one source of truth for each authoritative decision or record. Preserve provenance by retaining where information came from and how conclusions were reached.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-separate-facts-assumptions
+Separate facts, assumptions, proposals, decisions, and completed actions. Compute derived information instead of maintaining duplicate manual copies.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-prefer-explicit-structure
+Prefer explicit structure over ambiguous conventions. Keep business knowledge understandable to humans and usable by tools.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-automate-repeatable-work
+Automate repeatable work while retaining human authority over consequential decisions.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-build-only-what
+Build only what solves a demonstrated need, but design the architecture so future capabilities can be added cleanly.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-definition-of-success
+title start
+name: section-title-definition-of
+Definition of success
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-aiu-succeeds-as
+AIU succeeds as a business foundation when the business can reliably organize its knowledge, explain its decisions, coordinate its work, reproduce its procedures, evaluate its results, and delegate suitable tasks without losing context or control.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-it-should-become
+It should become possible to inspect a business initiative and understand its purpose, evidence, decisions, execution state, dependencies, resources, risks, deliverables, and results from one coherent structured environment.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-final-objective
+The final objective is not a larger archive. It is a business that can understand itself, improve itself, and scale its operations through a structured and verifiable system.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+chapter end
