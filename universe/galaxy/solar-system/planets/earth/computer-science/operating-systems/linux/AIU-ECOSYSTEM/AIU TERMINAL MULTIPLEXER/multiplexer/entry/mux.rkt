@@ -406,7 +406,7 @@
          (call-with-semaphore lock (lambda () (compose-frame (unbox screen-columns) (unbox screen-height) (append (if (unbox float-shown) (map (lambda (entry) (list-set entry 6 #f)) entries) entries) (float-entries)) (unbox bar-rows)))))))
     (for ([rect (in-list (region-rects))])
       (define unit (hash-ref panes (layout-rect-id rect) #f))
-      (when (and unit (hash-ref pane-grid-running (pane-unit-grid unit) #f))
+      (when (and unit (not (pane-grid-alternate (pane-unit-grid unit))) (hash-ref pane-grid-running (pane-unit-grid unit) #f))
         (pulse-rect! (car text) (unbox screen-columns) (unbox screen-height)
                      (length (unbox bar-rows)) (layout-rect-x rect) (layout-rect-y rect)
                      (layout-rect-width rect) (layout-rect-height rect)

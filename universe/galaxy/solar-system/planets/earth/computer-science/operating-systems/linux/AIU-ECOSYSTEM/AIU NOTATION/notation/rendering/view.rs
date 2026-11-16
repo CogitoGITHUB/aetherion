@@ -326,9 +326,15 @@ self.tag(b);
     fn block(&mut self, b: &Block, depth: usize) {
         let first = b.children.iter().find_map(|n| if let Node::Block(c) = n { Some(c) } else { None });
         match b.name.as_str() {
-            "chapter" => {
+            "chapter" | "appendix" | "part" => {
                 let d = (depth + 1).min(11);
+                let kd = if b.name == "part" { depth } else { d };
                 let label = self.numbers.number_at(b.line).unwrap_or("").to_string();
+                let label = if label.is_empty() {
+                    b.name.clone()
+                } else {
+                    label
+                };
                 let title = b.children.iter().find_map(|n| match n { Node::Block(c) if c.name == "title" => Some(c), _ => None });
                 match title {
                     Some(t) => {
@@ -349,7 +355,7 @@ self.tag(b);
                     if let (Node::Block(c), Some(t)) = (n, title) {
                         if c.span.start == t.span.start { continue; }
                     }
-                    self.node(n, d);
+                    self.node(n, kd);
                 }
                 return;
             }
@@ -368,7 +374,7 @@ self.tag(b);
                 }
             }
             "comment" | "answer" | "mark" if reading() => { return; }
-            "paragraph" | "comment" | "reference" | "footnote" | "cover" | "title-page" | "copyright" | "preface" | "volume" => { self.gap(); self.paragraph(b); }
+            "paragraph" | "abstract" | "dedication" | "epigraph" | "acknowledgments" | "comment" | "reference" | "footnote" | "cover" | "title-page" | "copyright" | "preface" | "volume" => { self.gap(); self.paragraph(b); }
             "definition" | "example" | "exercise" | "callout" | "pin" => {
                 self.gap();
                 self.content_headed(b);

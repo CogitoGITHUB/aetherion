@@ -210,13 +210,6 @@ exercise     a task for the reader
 space        blank room, printed for hand work
 formula      an equation, opaque text
 callout      a boxed remark: note, warning, tip
-Structure
-part         groups chapters, above the chapter level
-appendix     material kept out of the body
-glossary     computed from the definition blocks
-Front and back
-abstract     short summary before the body
-dedication, epigraph, acknowledgments
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -297,9 +290,6 @@ name: code-a-content-list
 language: text
 A  content: list, steps, definition, example, exercise,
    space, formula, callout
-B  structure: part, appendix, glossary
-C  front and back: abstract, dedication, epigraph,
-   acknowledgments
 D  edition for paper: page size, margins, roman numbers
    for front matter, space printed blank
 E  PDF export, moved up from last

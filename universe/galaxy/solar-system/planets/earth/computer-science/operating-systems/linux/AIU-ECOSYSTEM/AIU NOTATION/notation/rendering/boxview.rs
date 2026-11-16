@@ -262,7 +262,7 @@ impl Boxes {
     fn collect(&self, ns: &[Node], sec: &str, acc: &mut Vec<(String, String)>) {
         for n in ns {
             if let Node::Block(b) = n {
-                if b.name == "chapter" {
+                if is_sect(&b.name) {
                     let t = b.children.iter().find_map(|c| match c { Node::Block(t) if t.name == "title" => Some(t), _ => None });
                     let title = t.map(|t| self.text_of(t)).unwrap_or_default();
                     self.collect(&b.children, &title, acc);
@@ -390,7 +390,8 @@ impl Boxes {
                 self.problems.push(format!("line {}: chapter has no title block", l));
             }
         }
-        let kids = self.nodes(&b.children, skip, &ttext, d, iw);
+        let dk = if b.name == "part" { depth } else { d };
+        let kids = self.nodes(&b.children, skip, &ttext, dk, iw);
         let mut inner: Vec<L> = Vec::new();
         let has_head = !head.is_empty();
         inner.extend(head);
@@ -401,6 +402,11 @@ impl Boxes {
         if inner.is_empty() {
             inner.push(self.line(&[], ""));
         }
+        let num = if num.is_empty() {
+            b.name.clone()
+        } else {
+            num
+        };
         self.frame(&format!("{} · {}", num, ttext), &codes, inner, width, false, true)
     }
 
@@ -412,7 +418,9 @@ impl Boxes {
         let mut label = b.name.clone();
         let mut tcodes: Vec<u32> = vec![1];
         match b.name.as_str() {
-            "chapter" => return self.section(b, depth, width),
+            "chapter" | "appendix" | "part" => {
+                return self.section(b, depth, width);
+            }
             "title" => {
                 let text = self.text_of(b);
                 let mut codes: Vec<u32> = vec![1, 33];
@@ -494,6 +502,13 @@ impl Boxes {
                     inner.push(self.line(&[], &clip(&row, iw)));
                 }
             }
+            "glossary" => {
+                label = "glossary".to_string();
+                tcodes = vec![1, 36];
+                for row in self.glossary_rows() {
+                    inner.extend(self.wrapped(&[], &row, iw));
+                }
+            }
             "index" => {
                 label = "index".to_string();
                 tcodes = vec![1, 36];
@@ -508,7 +523,7 @@ impl Boxes {
                     inner.extend(self.wrapped(&[], &format!("[{}] {}", i + 1, row), iw));
                 }
             }
-            "reference" | "footnote" | "cover" | "title-page" | "copyright" | "preface" | "volume" => {
+            "abstract" | "dedication" | "epigraph" | "acknowledgments" | "reference" | "footnote" | "cover" | "title-page" | "copyright" | "preface" | "volume" => {
                 label = b.name.clone();
                 tcodes = vec![1, 36];
                 for g in groups(&self.body(b)) {
@@ -759,7 +774,7 @@ impl Boxes {
     fn fill_walk(&self, ns: &[Node], sec: &str, add: &mut Vec<(usize, String)>, rep: &mut Vec<String>) {
         for n in ns {
             if let Node::Block(b) = n {
-                if b.name == "chapter" {
+                if is_sect(&b.name) {
                     let t = b.children.iter().find_map(|c| match c { Node::Block(t) if t.name == "title" => Some(t), _ => None });
                     let title = t.map(|t| self.text_of(t)).unwrap_or_default();
                     self.fill_walk(&b.children, &title, add, rep);
@@ -810,6 +825,10 @@ fn named(b: &Block, label: &str) -> String {
         Some(n) => n,
         None => label.to_string(),
     }
+}
+
+fn is_sect(name: &str) -> bool {
+    name == "chapter" || name == "appendix" || name == "part"
 }
 
 const NAMELESS: [&str; 3] = ["answer", "contract", "link"];
@@ -1173,6 +1192,49 @@ impl Boxes {
                 self.walk_refs(&b.children, rows);
             }
         }
+    }
+
+    fn walk_defs(
+        &self,
+        nodes: &[Node],
+        rows: &mut std::collections::BTreeMap<String, String>,
+    ) {
+        for n in nodes {
+            if let Node::Block(b) = n {
+                if b.name == "definition" {
+                    let body = self.body(b);
+                    let mut it = body
+                        .iter()
+                        .filter(|l| !l.trim().is_empty());
+                    let term = it
+                        .next()
+                        .map(|l| l.trim().to_string())
+                        .unwrap_or_default();
+                    let rest: Vec<String> =
+                        it.map(|l| l.trim().to_string()).collect();
+                    if !term.is_empty() {
+                        rows.insert(term, rest.join(" "));
+                    }
+                }
+                self.walk_defs(&b.children, rows);
+            }
+        }
+    }
+
+    fn glossary_rows(&self) -> Vec<String> {
+        let tree = parse(&Buffer::from_text(&self.text));
+        let mut rows: std::collections::BTreeMap<String, String> =
+            std::collections::BTreeMap::new();
+        self.walk_defs(&tree.nodes, &mut rows);
+        let mut out: Vec<String> = Vec::new();
+        for (term, meaning) in rows {
+            if meaning.is_empty() {
+                out.push(term);
+            } else {
+                out.push(format!("{}: {}", term, meaning));
+            }
+        }
+        out
     }
 
     fn index_rows(&self) -> Vec<String> {

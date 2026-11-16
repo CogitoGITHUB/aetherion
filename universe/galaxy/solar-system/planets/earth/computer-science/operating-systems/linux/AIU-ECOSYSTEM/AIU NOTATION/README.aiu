@@ -231,6 +231,14 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -295,6 +303,14 @@ paragraph start
 Brake early and smoothly.
 paragraph end
 chapter end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -467,6 +483,14 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 table start
@@ -511,10 +535,17 @@ contract  |  the question text copied from its file, read only  |  no
 copyright  |  the copyright page of a book  |  no
 cover  |  the cover of a book, title and author only  |  no
 figure  |  a figure with a caption  |  no
+abstract  |  a short summary placed before the body of a book  |  no
+acknowledgments  |  thanks to the people who helped the book  |  no
+appendix  |  material kept out of the body, lettered A, B, C, first block is its title  |  no
+dedication  |  the dedication page of a book  |  no
+epigraph  |  a short quotation placed at the start of a book or chapter  |  no
 footnote  |  a note shown at the foot of the page that cites it  |  no
+glossary  |  the glossary of terms, computed from the definition blocks  |  no
 header  |  the header row of a table  |  no
 index  |  the index of terms, computed from the tree  |  no
 paragraph  |  ordinary prose, the everyday case  |  no
+part  |  groups chapters, above the chapter level, first block is its title  |  no
 preface  |  the preface of a book  |  no
 reference  |  one cited source, collected by the bibliography  |  no
 row  |  one row of a table  |  no
@@ -531,6 +562,14 @@ space  |  blank room for hand work, first line is the line count  |  no
 formula  |  an equation, text the parser does not read  |  yes
 callout  |  a boxed remark, first line is note, warning or tip  |  no
 pin  |  keeps its blocks on screen, first line is top or bottom, then write or read, then hide  |  no
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -654,6 +693,14 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -728,6 +775,14 @@ cell: 9.99
 cell:
 row end
 table end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -841,6 +896,14 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -924,6 +987,14 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -968,6 +1039,14 @@ asked: Does the paragraph make one point?
 Yes. One point: braking.
 answer end
 paragraph end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -1112,6 +1191,14 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -1151,7 +1238,7 @@ title end
 
 paragraph start
 name: paragraph-book-pages-allow
-Book pages allow cover, title-page, copyright, preface,
+Book pages allow cover, title-page, copyright, abstract, dedication, epigraph, acknowledgments, preface,
 contents, figure, footnote, reference, bibliography, index and
 volume besides the usual blocks. Contents, index and
 bibliography are computed from the tree and never typed: write
@@ -1172,6 +1259,14 @@ name: code-contents-start-contents
 language: text
 contents start
 contents end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -1250,6 +1345,14 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -1273,7 +1376,7 @@ paragraph end
 paragraph start
 name: paragraph-a-figure-shows
 A figure shows its caption declaration as a line starting with
-the word Figure. Cover, title-page, copyright, preface, footnote
+the word Figure. Cover, title-page, copyright, abstract, dedication, epigraph, acknowledgments, preface, footnote
 and volume are drawn as boxes of plain text.
 contract start
 id: q94fc72
@@ -1373,6 +1476,19 @@ asked: Does the paragraph make one point?
 answer end
 paragraph end
 paragraph start
+name: paragraph-the-book-structure
+The structure blocks give a book its shape. A part groups chapters and sits above the chapter level. It holds its own title as first block and takes no number, so chapters keep counting across parts. An appendix is a chapter kept out of the body, numbered with letters A, B and C, and its sub-chapters A.1, A.2. A glossary is never typed, it is computed from the definition blocks, one row per term in sorted order, the way the index is computed from the term declarations. Why, a book needs groups above its chapters, a place for side material, and a list of its own terms with no second copy to keep in sync.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+paragraph start
 name: paragraph-a-pinned-block
 A pinned block also stays in the page body, so it shows twice, unless the pin has the hide word.
 That is on purpose: the pin keeps it in sight while the page
@@ -1421,6 +1537,14 @@ definition end
 space start
 12
 space end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -1528,6 +1652,14 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -1600,6 +1732,14 @@ name: code-title-startnkind-defaultnnamentitle
 language: text
 "title start\nkind: default\nName\ntitle end\n" | save -f f.aiu
 aiutd f.aiu
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?

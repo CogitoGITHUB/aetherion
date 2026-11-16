@@ -64,7 +64,7 @@
           g)))
   (define cs (unbox cur-start))
   (and cs (page? got)
-       (let ([ups (filter (lambda (b) (and (string=? (block-name b) "chapter") (<= (block-start b) cs) (< cs (block-end b)))) (page-blocks got))])
+       (let ([ups (filter (lambda (b) (and (member (block-name b) (list "chapter" "appendix")) (<= (block-start b) cs) (< cs (block-end b)))) (page-blocks got))])
          (and (pair? ups)
               (let* ([ch (argmax block-depth ups)]
                      [lines (string-split (drawn-view session raw width) "\n" #:trim? #f)]

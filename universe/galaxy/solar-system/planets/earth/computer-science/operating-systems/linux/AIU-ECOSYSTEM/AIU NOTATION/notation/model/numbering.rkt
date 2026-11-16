@@ -11,11 +11,39 @@
 (define (heading-numbers o)
   (define counters (box (list)))
   (define out (box (list)))
+  (set! apps-count 0)
   (for ([node (in-list (outline-nodes o))])
     (walk node 0 counters out))
   (reverse (unbox out)))
 
+(define apps-count 0)
+
 (define (walk node depth counters out)
+  (if (and (block-node? node)
+           (eq? (block-node-name node) (quote appendix)))
+      (walk-appendix node depth out)
+      (walk-plain node depth counters out)))
+
+(define (walk-appendix node depth out)
+  (set! apps-count (add1 apps-count))
+  (define letter
+    (string (integer->char (+ 64 (min apps-count 26)))))
+  (set-box! out
+            (cons (list letter (add1 depth) (block-node-line node))
+                  (unbox out)))
+  (define own (box (list)))
+  (define sub (box (list)))
+  (for ([child (in-list (block-node-children node))])
+    (walk child 1 own sub))
+  (for ([h (in-list (reverse (unbox sub)))])
+    (define parts (string-split (first h) "." #:trim? #f))
+    (set-box! out
+              (cons (list (string-join (cons letter (cdr parts)) ".")
+                          (+ (second h) depth)
+                          (third h))
+                    (unbox out)))))
+
+(define (walk-plain node depth counters out)
   (when (block-node? node)
     (define inner
       (if (eq? (block-node-name node) (quote chapter))
@@ -55,7 +83,8 @@
 (define unnumbered
   (list (quote title) (quote comment) (quote answer)
         (quote contract) (quote row) (quote header)
-        (quote contents) (quote index) (quote bibliography) (quote pin)))
+        (quote contents) (quote index) (quote bibliography) (quote pin)
+        (quote glossary) (quote part)))
 
 (define (block-label chapter local)
   (if (string=? chapter "")
@@ -73,7 +102,7 @@
     (when (block-node? node)
       (define name (block-node-name node))
       (cond
-        [(eq? name (quote chapter))
+        [(memq name (quote (chapter appendix)))
          (define found
            (for/or ([entry (in-list chapters)])
              (and (= (third entry) (block-node-line node))

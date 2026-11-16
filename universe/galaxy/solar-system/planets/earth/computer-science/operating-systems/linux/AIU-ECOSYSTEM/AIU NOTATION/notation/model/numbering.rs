@@ -43,16 +43,18 @@ impl HeadingNumbers {
 
 const NUMBERED: &str = "chapter";
 
-const UNNUMBERED: [&str; 10] = [
+const UNNUMBERED: [&str; 12] = [
     "title", "comment", "answer", "contract", "row", "header",
     "contents", "index", "bibliography", "pin",
+    "glossary", "part",
 ];
 
 pub fn heading_numbers(tree: &Tree) -> Vec<NumberedHeading> {
     let mut counters: Vec<u32> = Vec::new();
     let mut out: Vec<NumberedHeading> = Vec::new();
+    let mut apps = 0u32;
     for node in &tree.nodes {
-        walk(node, 0, &mut counters, &mut out);
+        walk(node, 0, &mut counters, &mut apps, &mut out);
     }
     out
 }
@@ -61,9 +63,34 @@ fn walk(
     node: &Node,
     depth: u32,
     counters: &mut Vec<u32>,
+    apps: &mut u32,
     out: &mut Vec<NumberedHeading>,
 ) {
     if let Node::Block(block) = node {
+        if block.name == "appendix" {
+            *apps += 1;
+            let code = (64 + (*apps).min(26)) as u8;
+            let letter = char::from(code).to_string();
+            out.push(NumberedHeading {
+                number: letter.clone(),
+                level: depth + 1,
+                line: block.line,
+            });
+            let mut own: Vec<u32> = Vec::new();
+            let mut none = 0u32;
+            let mut sub: Vec<NumberedHeading> = Vec::new();
+            for child in &block.children {
+                walk(child, 1, &mut own, &mut none, &mut sub);
+            }
+            for mut h in sub {
+                let rest = h.number.splitn(2, ".").nth(1)
+                    .unwrap_or("").to_string();
+                h.number = format!("{}.{}", letter, rest);
+                h.level += depth;
+                out.push(h);
+            }
+            return;
+        }
         let mut inner = depth;
         if block.name == NUMBERED {
             inner = depth + 1;
@@ -75,7 +102,7 @@ fn walk(
             });
         }
         for child in &block.children {
-            walk(child, inner, counters, out);
+            walk(child, inner, counters, apps, out);
         }
     }
 }
@@ -109,7 +136,7 @@ fn number_blocks(
 ) {
     for node in nodes {
         if let Node::Block(block) = node {
-            if block.name == NUMBERED {
+            if block.name == NUMBERED || block.name == "appendix" {
                 let found = chapters.iter().find(|c| c.line == block.line);
                 let own = found.map(|c| c.number.clone()).unwrap_or_default();
                 let mut inner = 0u32;
