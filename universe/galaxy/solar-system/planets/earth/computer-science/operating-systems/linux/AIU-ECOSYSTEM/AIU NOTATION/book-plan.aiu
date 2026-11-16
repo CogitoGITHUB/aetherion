@@ -1,406 +1,1749 @@
 title start
+name: title-plan-books-sciences
 kind: default
 tags: notation book plan
 Plan: books, sciences, skills and reading mode
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 chapter start
+name: section-current-work-one
 title start
+name: title-current-work-one
+Current work: one book for everything
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-read-this-chapter
+Read this chapter first. It overrides Section 7 until it is
+finished. Marks, links, dirs and the database are parked. The
+goal now: a book file that covers every kind of subject and can
+become a physical paper book.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter start
+name: section-the-rule
+title start
+name: title-the-rule
+The rule
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-decided-one-format
+Decided, one format: the book is the only long format. There
+are no page types for tutorial, how-to, reference, explanation,
+research or review. One book covers all of them. Only todo stays
+a separate simple type.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-decided-subject-first
+Decided, subject first: before writing a file, break its subject
+into every question the subject needs. Those questions become
+the contracts and the blueprint of that subject.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-decided-contracts-contracts
+Decided, contracts: contracts stay malleable files. Nothing is
+hard coded per subject, and anyone can write their own.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-decided-physical-goal
+Decided, physical goal: every file must be able to become a
+paper book. A math book has theory, examples and exercises. Each
+exercise leaves blank room to solve it by hand on a separate
+page. Attaching the solved pages back is parked.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-decided-content-blocks
+Decided, content blocks: steps, example and exercise are
+content, visible in reading mode. The marks rule, step, fact,
+routine and card stay parked as in Section 4. When marks are
+built, the mark step is renamed so the two never clash.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-decided-parked-marks
+Decided, parked: marks, links, dirs and introductions, the
+database, Atlas, compiled checklists and rules, attaching
+solved pages.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-block-types-to
+title start
+name: title-block-types-to
+Block types to build first
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-each-type-is
+Each type is a .blocktype file in .notation/blocktypes with a
+copy in AIU NOTATION/notation/blocktypes. The parser accepts a
+type from the file alone. Drawing lives in code: view.rs,
+boxview.rs, rich.rs, json.rkt, aiu-text.rkt, make-live.rkt and
+the Racket register file. A type is done only when it shows in
+aiutd-tutorial.aiu and has a recorded test.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+code start
+name: code-content-build-first
+language: text
+Content, build first
+list         items, bullets or numbered
+steps        ordered actions of a tutorial or technique
+definition   a term and its meaning
+example      a worked example
+exercise     a task for the reader
+space        blank room, printed for hand work
+formula      an equation, opaque text
+callout      a boxed remark: note, warning, tip
+Structure
+part         groups chapters, above the chapter level
+appendix     material kept out of the body
+glossary     computed from the definition blocks
+Front and back
+abstract     short summary before the body
+dedication, epigraph, acknowledgments
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+code end
+
+paragraph start
+name: paragraph-not-blocks-a
+Not blocks: a chapter-end summary or key points is a chapter. A
+foreword is a preface.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-holes-to-close
+Holes to close while building: steps may just be a list with an
+order declaration, decide before building both. How the kind of
+a callout is written. How the length of a space is written: a new
+declaration is registered in parser.rs, properties.rkt and the
+README. Formula as plain text or LaTeX text. Inline bold, italic
+and code inside a sentence do not exist, style works on a whole
+block only: decide if it is needed.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-order-of-work
+title start
+name: title-order-of-work
+Order of work
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+code start
+name: code-a-content-list
+language: text
+A  content: list, steps, definition, example, exercise,
+   space, formula, callout
+A2 pin hide word: top hide or bottom read hide on the pin first
+   line hides the body copy in reading mode only, never in
+   writing mode. The editor must still get the pin rows. Pins
+   are unnumbered, blocks inside keep the enclosing numbers.
+   Open: numbering.rkt must agree with numbering.rs on pin.
+B  structure: part, appendix, glossary
+C  front and back: abstract, dedication, epigraph,
+   acknowledgments
+D  edition for paper: page size, margins, roman numbers
+   for front matter, space printed blank
+E  PDF export, moved up from last
+F  README: the rule, one skeleton for a book, a math book
+   example, a news file as background, intro and code
+G  README review: verify every claim against code
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+code end
+
+paragraph start
+name: paragraph-every-step-closes
+Every step closes all its holes in one script: block files,
+drawing code, README lines, tutorial through aiutd docs and the
+recorded test. A step is deleted from this list only after he
+confirms on screen.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-where-we-stopped
+title start
+name: title-where-we-stopped
+Where we stopped
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-nothing-in-steps
+Step A is built and was seen on screen: the 8 content blocks.
+Left: delete AIU NOTATION/test-blocks.aiu and the A line in
+Order of work after he confirms. Docs are paused: never run
+aiutd docs or touch aiutd-tutorial.aiu until he says, and the
+recorded tests for the 8 blocks wait too. Next: A2, B, C, D, E,
+F, G. Step G is the README review from the handoff: verify every
+claim, and write the effect of theme, format, font, meta and
+state. Not yet updated for the 8 blocks: json.rkt, aiu-text.rkt,
+make-live.rkt, rich.rs (draws them as plain prose).
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-speed-the-editor
+Speed: the editor repaint now skips while more keys wait
+(live-keys.rkt). He said it is acceptable. If lag returns,
+measure the time per draw. The notation view still starts a
+process per draw in hot-path.rs; the real fix is moving view,
+boxview and contract_files into lib.rs.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter end
+
+chapter start
+name: section-section-1-the
+title start
+name: title-section-1-the
 Section 1: the idea
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-one-source-many
 One source, many uses. A page is written once and then read as a book, run as a checklist, kept as rules, followed as a routine or practiced as memorization cards. Writing is only one use of a page.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-everything-works-offline
 Everything works offline. Every file and directory is readable in the terminal with the same structure and automation as today. Nothing is stuck online. Printing and export come last, only after everything else is finished and proven.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-a-field-a
 A field (a law, a skill, a science) is built from many files in many directories joined by connections. Example: driving school leads to driving itself, which needs the driving laws and the driving skills, and connects to mechanics and off-roading. From such a field one complete checklist, one book or one practice set is compiled.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-everything-stays-computed
 Everything stays computed from structure: numbers, contents, index, cross references, page numbers, checklists. None of it is stored by hand in the page.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 chapter end
 
 chapter start
+name: section-section-2-vocabulary
 title start
+name: title-section-2-vocabulary
 Section 2: vocabulary
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-chapter-replaces-section
 chapter replaces section, and title is the only heading: heading blocks are removed. Chapters hold chapters. Every other name on the book side is renamed to match. The number is computed from nesting, never written.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-the-book-parts
 The book parts are block types, each one a .blocktype file: cover, title-page, copyright, preface, contents, chapter, figure, table, footnote, reference, bibliography, index, volume.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 chapter end
 
 chapter start
+name: section-section-3-two
 title start
+name: title-section-3-two
 Section 3: two modes over the same source
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-writing-mode-every
 Writing mode: every detail and every technical part is visible: declarations, contracts, questions, answers, todos, comments, names, targets, marks. This is the editor as it is now.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-reading-mode-the
 Reading mode: the technical parts are hidden. The text is properly formatted like a presentation, with numbers, chapters, tables and figures drawn in their final form. An entire file, book or science can be read linearly and fast, in a mind map style that unfolds. No technical question is shown in reading mode.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-both-modes-work
 Both modes work on the same file. Switching never changes the file. Everything stays keyboard driven.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 chapter end
 
 chapter start
+name: section-section-4-marks
 title start
+name: title-section-4-marks
 Section 4: marks on the sides
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-the-author-marks
 The author marks a block as a rule, a step, a fact, a routine or a card. Marking is explicit, so what a checklist contains is predictable and checkable.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-in-writing-mode
 In writing mode a mark is drawn on the side of the block: a check box for a step that belongs to a checklist, a rule sign on the other side for a rule. In reading mode the marks are hidden.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-a-block-can
 A block can carry more than one mark. One block can feed several views.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 chapter end
 
 chapter start
+name: section-section-5-views
 title start
+name: title-section-5-views
 Section 5: views compiled from marks
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-checklist-the-steps
 Checklist: the steps of a field in order, across files. Rules: every rule of a field in one list. Routines: steps that repeat. Practice: facts and cards for memorization. Book: chapters in order with generated parts.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-progress-what-is
 Progress (what is ticked, what was practiced, when) is not content. It is stored in its own file or in the database, never in the page, and it points to a block by its permanent name.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 chapter end
 
 chapter start
+name: section-section-6-connections
 title start
+name: title-section-6-connections
 Section 6: connections and the database
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-connections-between-files
 Connections between files use the existing name: and target: of blocks. The notation database holds the connections so a compiled view can pull from any directory. The files stay the truth: the database can always be rebuilt from them.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-subdirectories-and-files
 Subdirectories and files for a field are created by the system so the structure stays consistent. This builds on the notation database and the ecosystem server already planned.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 chapter end
 
 chapter start
+name: section-section-7-order
 title start
+name: title-section-7-order
 Section 7: order of work
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-step-1-remove
 Step 1: remove heading, rename section to chapter, number chapters by nesting and show the number on every chapter title, also on flat pages. Rust and Racket numbering stay in agreement.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-step-2-load
 Step 2: load block types per file (already a todo), then the book parts and the marked block types: rule, step, fact, routine, card.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-step-3-writing
 Step 3: writing mode and reading mode, with marks on the sides in writing mode only.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-step-4-connections
 Step 4: connections and the database for fields.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-step-5-compiled
 Step 5: compiled views: checklist, rules, routines, practice, book with contents, index, bibliography and cross references.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-step-6-edition
 Step 6: edition: page size, margins, headers, footers, page numbers that belong to one edition.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-step-7-last
 Step 7 (last, only when everything above is proven): export and printing.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-rule-of-work
 Rule of work: before each step look for holes and amplifiers, and every time something is updated it is written into these files at once.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 chapter end
 
 chapter start
+name: section-section-8-holes
 title start
+name: title-section-8-holes
 Section 8: holes to close before implementing
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-decided-rename-there
 Decided, rename: there is no heading block any more. Only title is used. No existing page uses heading start, so nothing is migrated. The heading blocktype file and the heading code in the parser and in numbering.rs are removed.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-chapter-chapter
 Decided, chapter: chapter replaces section. A chapter holds its own title, text and chapters inside it. The number is computed from how deep the chapter sits and is shown on its title. Hole left: numbering.rs numbers heading blocks by level, so it is reworked to number chapters by nesting, in Rust and Racket together.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-marks-a
 Decided, marks: a mark is a block of its own. It sits inside the block it marks, like answer, or wraps several blocks, like comment. Both forms are allowed. The names are decided in section 10.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-reading-mode
 Decided, reading mode: everything technical that is not part of reading the information is hidden. Visible: titles, chapters, text, code, tables, figures, footnotes, nothing else. The exact list is in section 11.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-progress-identity-if
 Progress identity: if a block is renamed or moved, its progress must follow. Needs a permanent id, not only the name.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-moved-or-deleted
 Moved or deleted files: connections to them must be reported by the check, not silently broken.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-order-across-files
 Order across files: a checklist over several files needs an order. Decide how prerequisites are written (needs and leads-to) and what happens on a cycle.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-conflicting-rules-two
 Conflicting rules: two laws can disagree, or change by place and date. Decide whether a rule carries a scope.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-terminal-width-reading
 Terminal width: reading mode must wrap to the screen width, with no line past it.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-navigation-how-to
 Navigation: how to jump between chapters, back to the mind map level, and to a connected file while reading.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-database-rebuild-how
 Database rebuild: how long a full rebuild takes on the phone and when it runs.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-marks-in
 Decided, marks in links: marks are counted only in the original block, never in a shown copy. A routine file only refers to blocks, so it never makes a second step.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-level-the
 Decided, level: the level declaration is removed.
 A chapter is numbered by nesting only, in Rust and Racket.
 No page used level. It left DECLARATION_KEYWORDS and
 property-keywords.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 paragraph start
+name: paragraph-decided-book-parts
 Decided, book parts: cover, title-page, copyright, preface, contents, figure, footnote, reference, bibliography, index and volume are block types, one .blocktype file each, in the default folder and in the root .notation folder. The book type allows them. Chapter and table already existed. Contents, index and bibliography are computed from the tree, never typed.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-edition-page
 Decided, edition: page numbers belong to one edition and are computed, never stored in the page. Order of generation: contents, index and cross references from the tree, then page boundaries, then headers and footers. The first output is a terminal page preview only. PDF export stays step 7 of section 7, only when everything above is proven.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 chapter end
 
 chapter start
+name: section-section-9-amplifiers
 title start
+name: title-section-9-amplifiers
 Section 9: amplifiers to consider
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-learning-path-prerequisites
 Learning path: prerequisites give the order in which a skill or science is learned, for example driving school before driving.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-spaced-practice-cards
 Spaced practice: cards are scheduled by when they were last practiced. Only the schedule is stored, in the progress file.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-coverage-report-which
 Coverage report: which rules have no checklist step, which facts have no card, which chapters have no mark at all.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-exam-mode-reading
 Exam mode: reading mode with the answers hidden, for self testing.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-glossary-built-from
 Glossary: built from the facts and the index terms of a field.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-field-templates-a
 Field templates: a starting set of files for a law, a skill or a science, created by one command.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-mind-map-view
 Mind map view of the connections of a field, read in the terminal.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-reading-bookmark-reading
 Reading bookmark: reading mode remembers where you stopped, stored as progress.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-routines-with-times
 Routines with times: a routine step can carry how often it repeats.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 chapter end
 
 chapter start
+name: section-section-10-mark
 title start
+name: title-section-10-mark
 Section 10: mark blocks and routines
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-the-mark-blocks
 The mark blocks are rule, step, fact, routine and card. Each one is a block of its own and each one is a .blocktype file. Marks sit inside a block or wrap several blocks.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-a-routine-is
 A routine is a wrapper. It wraps step blocks, because a routine is made of steps.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-making-a-routine
 Making a routine creates a file for it, to learn or practice something. The file refers to the marked blocks in the original files by their names. Its numbering is automatic. The order is changed by moving the blocks in that file, and the original files are not changed.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-routine-mode-starting
 Routine mode: starting a routine walks through the original files and shows the specific part of each step, one after the other.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-pause-the-routine
 Pause: the routine can be paused at any step and the file can be read as normal, so the reader can look around in the book and then go on. The place where it stopped is progress, kept in the progress file and not in the page.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-modular-a-block
 Modular: a block can be in several routines, a routine file can be moved or copied alone, and the original files never know which routines use them.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-holes-left-the
 Holes left: the name of the routine mode and its keys. What the check reports when a routine step points at a block that was moved or deleted. How the routine file is written, one reference block per step. Whether a routine can hold another routine.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 chapter end
 
 chapter start
+name: section-section-11-what
 title start
+name: title-section-11-what
 Section 11: what reading mode shows and hides
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-visible-in-reading
 Visible in reading mode: the blocks title, chapter, paragraph, code, table, header, row, and later figure and footnote. The declarations that change how the text reads: language, caption, column, cell, format, style, font, theme, color.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-hidden-in-reading
 Hidden in reading mode: the blocks comment, answer and every mark block (rule, step, fact, routine, card). The declarations tags, kind, for, asked, name, todo, meta, row-id and level. A todo line is hidden as a line, never the whole block. The target line is hidden too, but the link it makes stays visible, see section 12.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-questions-and-contracts
 Questions and contracts exist so the author is reminded again and again of the context, the rule or the reminder that belongs to a kind of block, for example the questions of a title. There are many of them, everywhere, so in writing mode they are shown shrunk, not in full, and opened on demand. In reading mode they are hidden.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-holes-left-confirm
 Holes left: confirm that meta and format are not hidden by accident. How a shrunk question looks and how it is opened. Exam mode may show answers on demand, kept as an amplifier.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 chapter end
 
 chapter start
+name: section-section-12-links
 title start
+name: title-section-12-links
 Section 12: links
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-a-link-is
 A link is always visible, in reading mode and in writing mode, so the reader sees at all times where it goes to and where it comes from. The sign of a link is its target written in parentheses after the linked text. The editor draws the parentheses by itself, they are never typed and never stored.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-example-there-is
 Example: there is a driving school book and a driving book. In the driving book a link block holds the face "Once you finish driving school" and the target, and the page shows the text followed by the target in parentheses. In reading mode it shows where it goes to. In writing mode the block can be changed.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-this-needs-more
 This needs more thought before anything is built. The aim is a really good linking system that shows to where and from where.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-link-kind
 Decided, link kind: the kind of a link (a plain reference or a prerequisite) is written as a declaration on the block, so the text stays clean to read.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-backlinks-the
 Decided, backlinks: the places a block is linked from are shown next to the block itself, never in a separate list or place. They are computed from the database, never written by hand.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-jump-trail
 Decided, jump trail: following a link marks the spot you left. A back key returns to that spot. If you jump several times, the trail keeps every spot, and two keys exist: back goes one jump at a time, and original goes straight to the place where the trail started, however many jumps were made. The trail is progress, kept outside the page.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-link-writing
 Decided, link writing: a link is written as a block, link start and link end, like every other block. Completion in the editor, like code completion, offers the existing names while the link is typed. When one is chosen, the editor closes the block with link end. The file stores only the target name. The editor draws the target in parentheses after the text, for example: bla bla (target). The block is the stored form and the parentheses are only drawn.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-link-block
 Decided, link block: a link block holds two declarations. face: is the text the reader sees, and target: is the name of the block or file it points to. Example: link start, face: Once you finish driving school, target: driving-school, link end. The page shows the face followed by the target in parentheses. face is a new declaration keyword and must be registered in model/properties.rkt when this is built. The earlier needs: declaration is deleted because there is no clear need for it yet.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-link-destination
 Decided, link destination: the parentheses always show the full target: the book, the computed chapter number and the title, for example (Driving school book: 3.2 Getting started). It is computed from the target, never stored, so it stays correct when chapters move. A link with no face: shows the full target as its text as well, so face: is optional. A target that is gone shows as broken, with its stored name and the word missing, and the check reports it.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-holes-left-whether
 Holes left: whether a link can be a prerequisite in a checklist across files, decided when compiled checklists are built. How a link to a whole book differs from a link to one chapter or one step. How long the trail is kept and whether it survives closing the editor. Whether buffer.rs holds a cursor position the trail can reuse.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 chapter end
 
 chapter start
+name: section-section-13-files
 title start
+name: title-section-13-files
 Section 13: files, dirs and introductions
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
 title end
 
 paragraph start
+name: paragraph-decided-naming-a
 Decided, naming: a file is called a file and a dir is called a dir. Book is no longer a kind of dir. Book is the way things are written inside files: chapters, computed numbering, reading mode, marks and links. There is no shelf and no master book as a kind.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-introduction-every
 Decided, introduction: every dir has an introduction file that controls it, because a dir holds many files. Making something with the o key creates the dir and its introduction together, automatically. Dirs without an introduction are reported by the check.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-master-the
 Decided, master: the introductions are listed upward. The introduction of a dir lists the introductions of the dirs inside it, for example universe, galaxy, planets, earth. The top introduction is the master of all. When something is made, the author chooses where it goes: under an existing entry, or beside it in the same category. The new introduction is added to its parent list automatically.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-reading-reading
 Decided, reading: reading a dir in reading mode walks through its introduction, then its files and dirs in order. A link shows the full path in the parentheses and stores only the name, so moving or renaming never breaks a link.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-bundle-a
 Decided, bundle: a bundle groups several files or dirs on the same subject, for example driving law, driving skill and driving school. It is a file with an ordered list of links, so the order gives the learning path.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-order-files
 Decided, order: files and dirs are never numbered by hand and their names carry no numbers. The order is held by the introduction of each dir as an ordered list of its children. Numbers are computed from position. The order is changed in a tree view, like a tree file manager, by moving an entry up, down, in or out, and the tree view rewrites the lists. The lists stay plain text, so the files stay the truth.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-no-lost
 Decided, no lost file: in the tree view nothing can be lost, every file and dir has a place. The master introduction holds all categories and each category holds its own subcategories, so the whole system opens as one mind map style view. The database indexes this tree and is rebuilt from the introductions.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-tree-view
 Decided, tree view: the tree view is a fork of broot, 1.55.0 is installed, with its source changed directly, the same way the shell was forked, instead of configuring it. Every move, create and rename goes through the ecosystem and the database, so nothing is ever outside it. This is a later step: it comes only after the writing system works, because writing the files comes first.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-decided-order-of
 Decided, order of work: first the writing system (chapter rename, numbering, marks, links, reading mode), then the tree view fork. Until then dirs and files are made by hand.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-holes-left-how
 Holes left: how a move changes the dir on disk and both parent lists without a half done state. A file or dir on disk that is not in its parent list is proposed to show in an unplaced group and be reported by the check. Whether a bundle can hold other bundles. Rename the word book in sections 1 to 12 and the existing book file type to the new words. Whether the old heading todo wording needs changing.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
+name: paragraph-remaining-numbering-jsonrkt
 Remaining, numbering: json.rkt still writes heading. Remove heading everywhere: heading blocktype, parser level checks and bad-heading-level, rich.rs arm, aiu-text.rkt, targets.rkt, security, numbering.test. Rename section to chapter in 13 code files and 12 pages. Record a numbering test.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 chapter end

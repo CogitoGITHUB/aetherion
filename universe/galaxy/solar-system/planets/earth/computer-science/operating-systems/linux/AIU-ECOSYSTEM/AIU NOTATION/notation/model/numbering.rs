@@ -43,9 +43,9 @@ impl HeadingNumbers {
 
 const NUMBERED: &str = "chapter";
 
-const UNNUMBERED: [&str; 9] = [
+const UNNUMBERED: [&str; 10] = [
     "title", "comment", "answer", "contract", "row", "header",
-    "contents", "index", "bibliography",
+    "contents", "index", "bibliography", "pin",
 ];
 
 pub fn heading_numbers(tree: &Tree) -> Vec<NumberedHeading> {

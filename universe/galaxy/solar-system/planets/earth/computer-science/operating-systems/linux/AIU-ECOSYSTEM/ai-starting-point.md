@@ -8,9 +8,10 @@ plan files. Read ACTIVE WORK below, then go to the files it names.
 
 ## ACTIVE WORK
 Area: AIU NOTATION
-Read: AIU NOTATION/todo.aiu, AIU NOTATION/book-plan.aiu
-Then: follow the todo and the plan. Decided items start with
-"Decided", open items are in the "Holes left" lines.
+Read: AIU NOTATION/book-plan.aiu, chapter Current work: one
+book for everything, first. Not the todo.
+Then: follow its order of work A to G. Parked items stay
+parked. Decided items start with Decided.
 
 When the area changes, replace only the lines inside this block.
 Never add steps, results or status here. Never write what was done.
@@ -48,6 +49,19 @@ times. He may hand you only this file.
 - ecosystem is not on PATH in bash -c: run the racket line from
   HOW-TO-USE.md with PLTCOMPILEDROOTS. Read /tmp/eco-live.log.
 - Do not touch the mux z key.
+- OPEN THE EDITOR IN THE SAME CODE BLOCK, ONLY FOR NOTATION FILES. Open only .aiu files, with aiutd FILE.aiu, after the bash -c block inside the SAME code block, and only when the change touches notation or the editor and a .aiu test page shows it. NEVER open .md, .rkt, .rs, .test or any other file, and never after a read-only step or an edit of a non-notation file. Never a second block. If no test page fits a notation change, make a small one in the same block.
+- ALL CHANGES IN TMP FIRST. Every script copies each file it will change to /tmp, edits ONLY the /tmp copies, validates them (anchor counts, racket load, line counts), and only if EVERY step passed does it cp them over the real files, all at the end together. Any failure at any step: delete the tmp copies, touch no real file, print what failed. Never patch a real file in place and restore later: a half-applied change is the worst case. Builds run only after the copy-over, and a failed build restores from the saved originals.
+- DOCS PAUSED: never run aiutd docs and never touch AIU EDITOR/
+  aiutd-tutorial.aiu until he says so. This overrides every rule
+  here that says a capability must show in the tutorial or have
+  a recorded test. Now only the book plan and the README matter.
+- Every finished step of the book plan updates AIU NOTATION/
+  README.aiu in the same script, so the why of every addition
+  is always written down.
+- When the whole book plan is done, do a final README pass:
+  every feature gets an explanation, its why and an example.
+  Before it, clarify his goals with him, one short question at
+  a time, so no hole and no false claim stays in the README.
 - Never write a done line in a todo before he confirms on screen.
   When an item is finished, delete it.
 - Keep plan, todo and this file compact: when work is done, delete

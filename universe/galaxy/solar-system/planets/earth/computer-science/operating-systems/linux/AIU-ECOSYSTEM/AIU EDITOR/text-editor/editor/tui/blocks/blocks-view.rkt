@@ -2,7 +2,7 @@
 
 (require racket/list racket/string "../../commands/commands-shared.rkt" "../../machine/terminal.rkt" "../../bridge/document-shared.rkt" "../../bridge/host-shared.rkt" "../float/pins.rkt" "blocks-kind.rkt" "blockview.rkt" "blocks-text.rkt")
 
-(provide block-overlay)
+(provide block-overlay auto-pins)
 
 (define (blockview-view-overlay-base session raw width height got)
   (define lines (string-split (drawn-view session raw width) "\n" #:trim? #f))
@@ -44,7 +44,7 @@
          (define k (if rng (+ (- (cdr rng) (car rng)) 1) 0))
          (define inside? (and rng (>= (car rng) lo) (<= (cdr rng) hi)))
          (cond
-           [(and shown? (not inside?) (<= (+ to bo k) visible))
+           [(and shown? (or (= (length p) 5) (not inside?)) (<= (+ to bo k) visible))
             (define top? (equal? (cadr p) "top"))
             (define start (if top? (+ lo to) (+ (- hi bo k) 1)))
             (define colour (if (= i (unbox pin-sel)) "\u001b[97m" "\u001b[90m"))
@@ -201,3 +201,26 @@
     [writing? #f]
     [else (blockview-view-overlay session raw width height got)]))
 
+
+(define (auto-pins session raw bl)
+  (define manual (pins-now))
+  (define lines (list->vector (string-split raw "\n" #:trim? #f)))
+  (define now (if (unbox read-mode) "read" "write"))
+  (define (words b)
+    (define n (block-start-line b))
+    (or (for/first ([i (in-range n (min (vector-length lines) (+ n 3)))]
+                    #:when (let ([ws (string-split (vector-ref lines i))])
+                             (and (pair? ws) (member (car ws) (list "top" "bottom")))))
+          (string-split (vector-ref lines i)))
+        (list "top")))
+  (define (mode-of ws) (if (pair? (cdr ws)) (cadr ws) "both"))
+  (define mine
+    (for/list ([b (in-list bl)]
+               #:when (and (string=? (block-name b) "pin")
+                           (not (ormap (lambda (p) (equal? (car p) (block-start b))) manual))
+                           (member (mode-of (words b)) (list "both" now))))
+      (cons b (words b))))
+  (define (make e) (list (block-start (car e)) (cadr e) #f #t (quote auto)))
+  (append (map make (filter (lambda (e) (string=? (mode-of (cdr e)) "both")) mine))
+          (map make (filter (lambda (e) (not (string=? (mode-of (cdr e)) "both"))) mine))
+          manual))

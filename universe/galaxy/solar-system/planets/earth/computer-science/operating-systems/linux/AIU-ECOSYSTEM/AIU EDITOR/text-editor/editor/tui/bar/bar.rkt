@@ -49,7 +49,7 @@
               (append (drop-right t 1) (list (join-edge (car b))) (cdr b))]
              [else (append t b)]))
      (define top-lines (if (unbox split-panes-on) (group "top") (append (group "top") (unbox title-rows) (list (file-edge width)))))
-     (define bottom-lines (let ([g0 (if (pair? undo-lines) undo-lines (group "bottom"))]) (if (and (null? undo-lines) (string=? place "line")) g0 (if (unbox split-panes-on) g0 (cons (rule-line "╰" "╯" width) g0)))))
+     (define bottom-lines (let ([g0 (if (pair? undo-lines) undo-lines (group "bottom"))]) (if (and (null? undo-lines) (string=? place "line")) g0 (if (unbox split-panes-on) g0 (cons (rule-line "╰" "╯" width) (append (unbox pin-bottom-rows) g0))))))
      (define top-n (length top-lines))
      (define sh (max 3 (- height top-n (length bottom-lines))))
      (define left-names

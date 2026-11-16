@@ -98,7 +98,8 @@
            (define result (act-on session pending))
            (trace-key! pending trace-t0 result session)
              (set-box! pending-keys (if (eq? (outcome-rest result) (quote wait)) (map car (key-runs pending)) (list)))
-           (begin (repaint session viewport) (emit-tabs!))
+           (unless (and (outcome-go-on? result) (or (pair? (outcome-rest result)) (sync/timeout 0 port)))
+             (repaint session viewport) (emit-tabs!))
            (cond
              [(eq? (outcome-rest result) 'wait)
               (loop pending)]

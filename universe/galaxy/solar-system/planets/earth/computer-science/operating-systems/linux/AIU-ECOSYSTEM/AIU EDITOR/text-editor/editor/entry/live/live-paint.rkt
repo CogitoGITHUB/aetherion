@@ -29,7 +29,7 @@
          "../../tui/gutter/gutterview.rkt"
          (only-in "../../machine/directories-shared.rkt" journal-path-for))
 
-(require (only-in "../../tui/bar/bar-state-shared.rkt" title-rows split-panes-on) "../../tui/split/split-state.rkt" "../../tui/split/split-layout.rkt" "../../tui/split/split-overlay.rkt" "../../tui/split/split-view.rkt" (only-in "../../tui/float/pins.rkt" pins-now first-start cur-start)) (require (only-in "../../tui/float/box-shared.rkt" edge-line rule-line body-line draw-at) (only-in "../../tui/float/float-state-shared.rkt" float-visible float-active float-share float-rect float-names float-tabs-text float-current-file))
+(require (only-in "../../tui/bar/bar-state-shared.rkt" title-rows pin-bottom-rows split-panes-on) "../../tui/split/split-state.rkt" "../../tui/split/split-layout.rkt" "../../tui/split/split-overlay.rkt" "../../tui/split/split-view.rkt" (only-in "../../tui/float/pins.rkt" pins-now first-start cur-start)) (require (only-in "../../tui/float/box-shared.rkt" edge-line rule-line body-line draw-at) (only-in "../../tui/float/float-state-shared.rkt" float-visible float-active float-share float-rect float-names float-tabs-text float-current-file))
 
 (provide repaint page-view pending-keys viewport-top live-multi-overlay)
 
@@ -39,7 +39,7 @@
       (drawn-view session raw width)
       raw))
 
-(define (title-box-of session width)
+(define (title-box-page session width)
   (define name (path->string (session-file session)))
   (define p (and (string-suffix? name ".aiu") (unbox first-start) (pair? (pins-now)) (car (pins-now))))
   (cond
@@ -50,6 +50,35 @@
          (for/list ([l (in-list ls)] [i (in-range (add1 end))]) l)
          (list))]
     [else (list)]))
+
+(define page-cache (box #f))
+
+(define (chapter-pin-label session width)
+  (define raw (session-text session))
+  (define hit (unbox page-cache))
+  (define got
+    (if (and hit (equal? (car hit) raw))
+        (cdr hit)
+        (let ([g (page-of (session-file session) (session-journal session))])
+          (set-box! page-cache (cons raw g))
+          g)))
+  (define cs (unbox cur-start))
+  (and cs (page? got)
+       (let ([ups (filter (lambda (b) (and (string=? (block-name b) "chapter") (<= (block-start b) cs) (< cs (block-end b)))) (page-blocks got))])
+         (and (pair? ups)
+              (let* ([ch (argmax block-depth ups)]
+                     [lines (string-split (drawn-view session raw width) "\n" #:trim? #f)]
+                     [rng (hash-ref (blockview-ranges got lines) (block-start ch) #f)])
+                (and rng (< (car rng) (length lines))
+                     (let ([m (regexp-match #rx"┤ (.*?) ├" (blockview-plain (list-ref lines (car rng))))])
+                       (and m (cadr m)))))))))
+
+(define (title-box-chapter session width)
+  (define name (path->string (session-file session)))
+  (define label (and (string-suffix? name ".aiu") (not (multi-raw? session)) (chapter-pin-label session width)))
+  (if label
+      (list (edge-line "╭" "╮" label "" width) (rule-line "╰" "╯" width))
+      (title-box-page session width)))
 
 (define paint-lock (make-semaphore 1))
 
@@ -151,3 +180,37 @@
   (if (and shown? (multi-live? session))
       ((unbox multi-text-hook) raw top (max 1 (- height 1)) offset left width (the-layer session) (the-point session))
       ""))
+
+(define (pin-rows session width)
+  (define raw (session-text session))
+  (define hit (unbox page-cache))
+  (define got
+    (if (and hit (equal? (car hit) raw))
+        (cdr hit)
+        (let ([g (page-of (session-file session) (session-journal session))])
+          (set-box! page-cache (cons raw g))
+          g)))
+  (cond
+    [(page? got)
+     (define ps (filter (lambda (p) (= (length p) 5)) (auto-pins session raw (page-blocks got))))
+     (define lines (list->vector (string-split (drawn-view session raw width) "\n" #:trim? #f)))
+     (define rngs (blockview-ranges got (vector->list lines)))
+     (define (rows side)
+       (apply append
+              (for/list ([p (in-list ps)] #:when (equal? (cadr p) side))
+                (let ([r (hash-ref rngs (car p) #f)])
+                  (if r
+                      (for/list ([i (in-range (car r) (add1 (cdr r)))] #:when (< i (vector-length lines)))
+                        (vector-ref lines i))
+                      (list))))))
+     (values (rows "top") (rows "bottom"))]
+    [else (values (list) (list))]))
+
+(define (title-box-of session width)
+  (define name (path->string (session-file session)))
+  (define-values (tp bt)
+    (if (and (string-suffix? name ".aiu") (not (multi-raw? session)))
+        (pin-rows session width)
+        (values (list) (list))))
+  (set-box! pin-bottom-rows bt)
+  (append tp (title-box-chapter session width)))

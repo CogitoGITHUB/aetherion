@@ -19,7 +19,7 @@
 
 (define split-panes-on (box #f))
 
-(define title-rows (box (list)))
+(define title-rows (box (list))) (define pin-bottom-rows (box (list))) (provide pin-bottom-rows)
 
 (provide split-panes-on title-rows bar-place bar-saved bar-style bar-count focus-on bar-order bar-places bar-kname)
 

@@ -215,6 +215,79 @@ self.tag(b);
         }
     }
 
+    /// Items one per line: bullets for a list, numbers for steps.
+    fn content_items(&mut self, b: &Block) {
+        self.tag(b);
+        let mut n = 0;
+        for l in self.body(b) {
+            if l.trim().is_empty() { continue; }
+            n += 1;
+            let mark = if b.name == "steps" {
+                format!("{}.", n)
+            } else {
+                "•".to_string()
+            };
+            self.wrapped(&[], &format!("{} {}", mark, l.trim()));
+        }
+    }
+
+    /// A head line, then the body: definition, example, exercise, callout.
+    fn content_headed(&mut self, b: &Block) {
+        self.tag(b);
+        let lines = self.body(b);
+        let blank = |l: &&String| l.trim().is_empty();
+        let mut rest = lines.iter().skip_while(blank);
+        let head = rest.next().cloned().unwrap_or_default();
+        let tail: Vec<String> = rest.cloned().collect();
+        let name = format!("{} · {}", b.name, head.trim());
+        let s = self.sgr(&[1, 36], &name);
+        self.out(&s);
+        for (k, g) in groups(&tail).iter().enumerate() {
+            if k > 0 { self.gap(); }
+            self.wrapped(&[], g);
+        }
+    }
+
+    /// An equation in a frame, as written.
+    fn content_formula(&mut self, b: &Block) {
+        self.tag(b);
+        let mut body = self.body(b);
+        while body.first().map_or(false, |l| l.trim().is_empty()) {
+            body.remove(0);
+        }
+        while body.last().map_or(false, |l| l.trim().is_empty()) {
+            body.pop();
+        }
+        let top = self.sgr(&[2], "┌─ formula");
+        self.out(&top);
+        for l in body {
+            let bar = self.sgr(&[2], "│ ");
+            let s = format!("{}{}", bar, self.sgr(&[32], &l));
+            self.out(&s);
+        }
+        let bottom = self.sgr(&[2], "└─");
+        self.out(&bottom);
+    }
+
+    /// Blank room for hand work. The first line is the number of lines.
+    fn content_space(&mut self, b: &Block) {
+        self.tag(b);
+        let body = self.body(b);
+        let first = body.iter().find(|l| !l.trim().is_empty());
+        let rows = first
+            .and_then(|l| l.trim().parse::<usize>().ok())
+            .unwrap_or(8).min(60);
+        let name = format!("┌─ space · {} lines", rows);
+        let top = self.sgr(&[2], &name);
+        self.out(&top);
+        for _ in 0..rows {
+            let s = self.sgr(&[2], "│");
+            self.out(&s);
+        }
+        let bottom = self.sgr(&[2], "└─");
+        self.out(&bottom);
+    }
+
     /// Print a code block in a frame, exactly as written.
     fn code(&mut self, b: &Block) {
 self.tag(b);
@@ -296,6 +369,13 @@ self.tag(b);
             }
             "comment" | "answer" | "mark" if reading() => { return; }
             "paragraph" | "comment" | "reference" | "footnote" | "cover" | "title-page" | "copyright" | "preface" | "volume" => { self.gap(); self.paragraph(b); }
+            "definition" | "example" | "exercise" | "callout" | "pin" => {
+                self.gap();
+                self.content_headed(b);
+            }
+            "list" | "steps" => { self.gap(); self.content_items(b); }
+            "formula" => { self.gap(); self.content_formula(b); }
+            "space" => { self.gap(); self.content_space(b); }
             "code" => { self.gap(); self.code(b); }
             "contract" => { if reading() { return; } }
             other => {

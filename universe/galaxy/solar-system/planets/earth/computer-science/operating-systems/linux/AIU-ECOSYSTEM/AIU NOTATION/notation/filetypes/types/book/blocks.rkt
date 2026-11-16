@@ -4,4 +4,4 @@
 (provide book-blocks)
 
 ;; The block names a book may use.
-(define book-blocks (list "title" "chapter" "paragraph" "code" "comment" "answer" "cover" "title-page" "copyright" "preface" "contents" "figure" "footnote" "reference" "bibliography" "index" "volume"))
+(define book-blocks (list "title" "chapter" "paragraph" "code" "comment" "answer" "cover" "title-page" "copyright" "preface" "contents" "figure" "footnote" "reference" "bibliography" "index" "volume" "list" "steps" "definition" "example" "exercise" "space" "formula" "callout" "pin"))

@@ -515,6 +515,61 @@ impl Boxes {
                     inner.extend(self.wrapped(&[], &g, iw));
                 }
             }
+            "definition" | "example" | "exercise" | "callout" | "pin" => {
+                let lines = self.body(b);
+                let blank = |l: &&String| l.trim().is_empty();
+                let mut rest = lines.iter().skip_while(blank);
+                let head = rest.next().cloned().unwrap_or_default();
+                let tail: Vec<String> = rest.cloned().collect();
+                inner.push(self.line(&[1, 36], &clip(head.trim(), iw)));
+                tcodes = vec![1, 36];
+                for g in groups(&tail) {
+                    inner.extend(self.wrapped(&[], &g, iw));
+                }
+            }
+            "list" | "steps" => {
+                label = b.name.clone();
+                tcodes = vec![1, 36];
+                let mut n = 0;
+                for l in self.body(b) {
+                    if l.trim().is_empty() { continue; }
+                    n += 1;
+                    let mark = if b.name == "steps" {
+                        format!("{}.", n)
+                    } else {
+                        "•".to_string()
+                    };
+                    let item = format!("{} {}", mark, l.trim());
+                    inner.extend(self.wrapped(&[], &item, iw));
+                }
+            }
+            "formula" => {
+                label = "formula".to_string();
+                tcodes = vec![1, 36];
+                let mut body = self.body(b);
+                while body.first().map_or(false, |l| l.trim().is_empty()) {
+                    body.remove(0);
+                }
+                while body.last().map_or(false, |l| l.trim().is_empty()) {
+                    body.pop();
+                }
+                for l in body {
+                    let t = l.replace("\t", "    ");
+                    inner.push(self.line(&[32], &clip(&t, iw)));
+                }
+            }
+            "space" => {
+                let body = self.body(b);
+                let first = body.iter().find(|l| !l.trim().is_empty());
+                let rows = first
+                    .and_then(|l| l.trim().parse::<usize>().ok())
+                    .unwrap_or(8).min(60);
+                label = format!("space · {} lines", rows);
+                tcodes = vec![2];
+                for _ in 0..rows {
+                    inner.push(self.line(&[], ""));
+                }
+            }
             "figure" => {
                 label = "figure".to_string();
                 tcodes = vec![1, 36];
