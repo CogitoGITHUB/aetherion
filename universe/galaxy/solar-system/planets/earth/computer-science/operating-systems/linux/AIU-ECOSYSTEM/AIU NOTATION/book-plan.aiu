@@ -290,8 +290,8 @@ name: code-a-content-list
 language: text
 A  content: list, steps, definition, example, exercise,
    space, formula, callout
-D  edition for paper: page size, margins, roman numbers
-   for front matter, space printed blank
+D  edition for paper: still open:
+   margins (--margin), paper size names
 E  PDF export, moved up from last
 F  README: the rule, one skeleton for a book, a math book
    example, a news file as background, intro and code

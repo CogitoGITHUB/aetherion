@@ -1489,6 +1489,10 @@ asked: Does the paragraph make one point?
 answer end
 paragraph end
 paragraph start
+name: paragraph-the-edition-numbers
+The edition command cuts a book into pages. Everything before the first chapter or part is front matter and is numbered with roman numerals, i, ii, iii. The body then starts on a fresh page numbered 1, and the footer reads page 1 of N counting body pages only. Why, a printed book keeps its front matter out of the count so that page 1 is where the reading starts, and the index shows the same body numbers.
+paragraph end
+paragraph start
 name: paragraph-a-pinned-block
 A pinned block also stays in the page body, so it shows twice, unless the pin has the hide word.
 That is on purpose: the pin keeps it in sight while the page
