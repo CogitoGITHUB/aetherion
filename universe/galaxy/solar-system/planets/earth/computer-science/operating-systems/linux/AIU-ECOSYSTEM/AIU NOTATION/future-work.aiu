@@ -2,7 +2,7 @@ title start
 name: title-plan-books-sciences
 kind: default
 tags: notation book plan
-Plan: books, sciences, skills and reading mode
+Future work: books, sciences, skills and the todo
 contract start
 id: qd2fa77
 question: Does the title say what the page is about?
@@ -32,10 +32,7 @@ title end
 
 paragraph start
 name: paragraph-read-this-chapter
-Read this chapter first. It overrides Section 7 until it is
-finished. Marks, links, dirs and the database are parked. The
-goal now: a book file that covers every kind of subject and can
-become a physical paper book.
+Nothing here is active. The book format and its syntax are done. Everything in this file is future work, parked until he says so.
 contract start
 id: q94fc72
 question: Does the paragraph make one point?
@@ -255,7 +252,7 @@ a callout is written. How the length of a space is written: a new
 declaration is registered in parser.rs, properties.rkt and the
 README. Formula as plain text or LaTeX text. Inline bold, italic
 and code inside a sentence do not exist, style works on a whole
-block only: decide if it is needed.
+block only: parked by decision.
 contract start
 id: q94fc72
 question: Does the paragraph make one point?
@@ -288,14 +285,7 @@ title end
 code start
 name: code-a-content-list
 language: text
-A  content: list, steps, definition, example, exercise,
-   space, formula, callout
-D  edition for paper: still open:
-   margins (--margin), paper size names
-E  PDF export, moved up from last
-F  README: the rule, one skeleton for a book, a math book
-   example, a news file as background, intro and code
-G  README review: verify every claim against code
+E  PDF export: parked, only screen formatting now
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -355,15 +345,7 @@ title end
 
 paragraph start
 name: paragraph-nothing-in-steps
-Step A is built and was seen on screen: the 8 content blocks.
-Left: delete AIU NOTATION/test-blocks.aiu and the A line in
-Order of work after he confirms. Docs are paused: never run
-aiutd docs or touch aiutd-tutorial.aiu until he says, and the
-recorded tests for the 8 blocks wait too. Next: A2, B, C, D, E,
-F, G. Step G is the README review from the handoff: verify every
-claim, and write the effect of theme, format, font, meta and
-state. Not yet updated for the 8 blocks: json.rkt, aiu-text.rkt,
-make-live.rkt, rich.rs (draws them as plain prose).
+Done and seen on screen: the content blocks, the research blocks, quote, aside, break, margins and paper sizes, and the contracts command. Not updated for the new blocks: json.rkt, aiu-text.rkt, make-live.rkt, rich.rs. The notation view still starts a process per draw in hot-path.rs; the real fix is moving view, boxview and contract_files into lib.rs. Inline bold, italic and code, and a style file for a folder, are parked. PDF export is parked.
 contract start
 id: q94fc72
 question: Does the paragraph make one point?
@@ -1738,5 +1720,94 @@ for: q94fc72
 asked: Does the paragraph make one point?
 
 answer end
+paragraph end
+chapter end
+
+chapter start
+title start
+Future work from the todo
+title end
+paragraph start
+todo: link blocks: link start and link end name a target box and can show it inside another file; the editor suggests names while typing.
+Planned.
+paragraph end
+
+paragraph start
+todo: idle autosave: after 5 seconds without typing in write mode, show a notification, leave write mode and save.
+Planned.
+paragraph end
+
+paragraph start
+todo: safe delete: refuse deleting anything not tracked by git unless approved; if shown in other files, ask yes or no in a red popup first.
+Planned.
+paragraph end
+
+paragraph start
+todo: own file manager for safe delete: the git tracked check, the untracked approval word and the red popup for boxes shown elsewhere live in our own file manager; see plan section 10.
+Planned.
+paragraph end
+
+paragraph start
+todo: block type drawing: view.rs, boxview.rs, rich.rs, json.rkt, aiu-text.rkt and make-live.rkt still match block names in code; move how each type is drawn into its blocktypes file so a new type needs no code edit.
+Planned.
+paragraph end
+
+
+paragraph start
+todo: register link as a block type in .notation/blocktypes and Racket elements/register.rkt, then make the links indexer read parsed link blocks instead of text lines
+Planned.
+paragraph end
+
+paragraph start
+todo: the folder index loads block types from the folder nearest to the first file only; load them per file or per folder
+Planned.
+paragraph end
+
+paragraph start
+todo: names: a duplicate name inside one page is already a check error (collect.rkt). Left: a name used twice across the ecosystem is only a stderr line in index-folder.rs; make it a check error through the database, with its places
+Planned.
+paragraph end
+
+paragraph start
+todo: ecosystem server: the notation database is reachable through the shared ecosystem server so the editor, shell and multiplexer read the same index; plan in ecosystem-server-plan.aiu
+Planned.
+paragraph end
+
+
+
+
+paragraph start
+todo: table writing: a good way to write a table in the editor in the table start form of data/table.rkt. Insert a skeleton with caption, columns, header and one row, and check cells against columns. No HTML or LaTeX work
+Planned.
+paragraph end
+
+paragraph start
+todo: json mapping: to-json and from-json exist in data/json.rkt. Write what is lost (comments, formatting) in the types README and add a round trip test. The shell side is aiu-shell, nothing new
+Planned.
+paragraph end
+
+paragraph start
+todo: book plan: the full plan for books, sciences, skills, writing and reading mode, marks on the sides and compiled checklists is in book-plan.aiu. Work it step by step, close the holes of section 8 first, and write every change into that file
+Planned.
+paragraph end
+
+
+
+paragraph start
+todo: README.aiu: one live page with everything the notation
+can do and an example of each, built from the code and files
+where possible, updated on every feature change, and read first
+in every AI session that makes pages with the notation
+Planned.
+paragraph end
+
+paragraph start
+todo: lists of figures and tables, computed like contents
+Planned.
+paragraph end
+paragraph start
+todo: named references and citations, parked until the
+notation database exists
+Planned.
 paragraph end
 chapter end

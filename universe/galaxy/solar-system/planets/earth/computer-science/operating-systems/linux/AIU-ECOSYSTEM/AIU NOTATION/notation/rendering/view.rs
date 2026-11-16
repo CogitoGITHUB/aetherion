@@ -374,8 +374,8 @@ self.tag(b);
                 }
             }
             "comment" | "answer" | "mark" if reading() => { return; }
-            "paragraph" | "abstract" | "dedication" | "epigraph" | "acknowledgments" | "comment" | "reference" | "footnote" | "cover" | "title-page" | "copyright" | "preface" | "volume" => { self.gap(); self.paragraph(b); }
-            "definition" | "example" | "exercise" | "callout" | "pin" => {
+            "paragraph" | "aside" | "quote" | "abstract" | "dedication" | "epigraph" | "acknowledgments" | "comment" | "reference" | "footnote" | "cover" | "title-page" | "copyright" | "preface" | "volume" => { self.gap(); self.paragraph(b); }
+            "definition" | "example" | "exercise" | "claim" | "evidence" | "hypothesis" | "remark" | "callout" | "pin" => {
                 self.gap();
                 self.content_headed(b);
             }

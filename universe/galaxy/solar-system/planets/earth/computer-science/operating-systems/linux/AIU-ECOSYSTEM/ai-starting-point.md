@@ -7,11 +7,9 @@ no progress and no next steps. The work is in the todo files and the
 plan files. Read ACTIVE WORK below, then go to the files it names.
 
 ## ACTIVE WORK
-Area: AIU NOTATION
-Read: AIU NOTATION/book-plan.aiu, chapter Current work: one
-book for everything, first. Not the todo.
-Then: follow its order of work A to G. Parked items stay
-parked. Decided items start with Decided.
+Area: none. The book format and syntax are finished.
+All parked work is in AIU NOTATION/future-work.aiu. Start
+nothing from it until he says so.
 
 When the area changes, replace only the lines inside this block.
 Never add steps, results or status here. Never write what was done.
@@ -79,7 +77,17 @@ times. He may hand you only this file.
 - After a change, end the script by opening the test page: nushell line after the bash -c block, never inside it.
 
 
-- Make a page and open it in the editor in ONE nushell command: a double-quoted string with kind: in the title | save -f FILE.aiu, then aiutd FILE.aiu. Never bash -c, the editor needs the real tty. Opening adds the contracts.
+- NEW PAGE: write it with a bash -c heredoc (double-quoted
+  delimiter), then in the SAME block run
+  /usr/local/bin/aiu-contracts FILE.aiu. It fills every contract
+  and answer slot, writes them into the file and prints the open
+  questions: id, block type and name, question. No editor is
+  needed for contracts. --all also lists the answered ones.
+- ANSWER THE CONTRACTS: follow NEW FILE FLOW below, three moves,
+  three answers. Never skip the last move: he must see the raw
+  file with every answer in place. Answers are short honest facts
+  about that block, never filler. The id repeats for every block
+  of one kind, so match by block name, never by id alone.
 - FIX THE SHELL: it must run every normal TUI with the real terminal. No hard coded list of program names (is_fullscreen_line in command_runner.rs). Detect TUIs at runtime, for example by the alternate screen switch, so nothing is ever registered.
 
 ## How the PM works (verified, rules only)
@@ -129,12 +137,39 @@ times. He may hand you only this file.
 
 ## NEW FILE FLOW
 
-Make a .aiu file and open it in the editor. One Nushell command:
+Three moves, one answer each. Verified on a three paragraph page.
 
-"title start\nkind: default\nName\ntitle end\n" | save -f f.aiu
-aiutd f.aiu
+MOVE 1, make the page and get the contracts. One bash -c block:
+write the file with a heredoc (double-quoted delimiter), then
+  /usr/local/bin/aiu-contracts FILE.aiu
+It fills every contract and answer slot, writes them into the
+file and prints: open: N, then per question the id, block type,
+block name and the question. Title needs a kind: line. Refuse if
+the file exists. He pastes the output back.
 
-The title needs a kind: line. Opening runs notation fill and adds the contract rows. Never bash -c for aiutd, it needs the real tty.
+MOVE 2, answer. One bash -c block, /tmp copy only:
+- cp FILE to /tmp/x.aiu. Write /tmp/ans.awk: BEGIN holds one
+  a["block-name"] = "answer text" per printed question. Rules:
+  on contract start or answer start set inx to that word, on
+  contract end or answer end clear it. On any other X start push
+  a stack, on X end pop. On the first name: line outside a
+  contract or answer, store it as the name of the stack top.
+  On asked: inside an answer, print the line, then print the
+  answer for that stack top name. Count hits and misses into a
+  file in the END block.
+- Run awk to /tmp/x2.aiu. Abort unless hits equal the number of
+  open questions and misses are 0.
+- Run aiu-contracts on /tmp/x2.aiu: it must print open: 0, else
+  abort. Only then cp /tmp/x2.aiu over FILE, delete the tmp files.
+- End the same block with: grep -v "^$" FILE | cut -c1-68
+
+MOVE 3 is that last grep: the raw file with every contract and
+answer in place. He pastes it back. Check each answer sits under
+the right block, after its asked: line. Done only then.
+
+Open the editor only when he asks to see the page: a nushell
+line, aiutd FILE.aiu, never bash -c, it needs the real tty.
+
 - aiu-splash reads SPLASHBOARD_HOME or ~/.splashboard, never ~/.config/splashboard. Theme: ~/.splashboard/settings.toml.
 - Rust inside bash -c: no char literals (apostrophe). Insert lines with a sed file: /pat/i TEXT on one line. Rename a fn BEFORE appending a new fn with the old name.
 - Splash boxes in the shell show REAL splashboard dashboard output, never self made info.

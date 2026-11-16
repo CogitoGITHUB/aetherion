@@ -239,6 +239,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -303,6 +307,10 @@ paragraph start
 Brake early and smoothly.
 paragraph end
 chapter end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -491,6 +499,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 table start
@@ -562,6 +574,10 @@ space  |  blank room for hand work, first line is the line count  |  no
 formula  |  an equation, text the parser does not read  |  yes
 callout  |  a boxed remark, first line is note, warning or tip  |  no
 pin  |  keeps its blocks on screen, first line is top or bottom, then write or read, then hide  |  no
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -676,7 +692,12 @@ id  |  contract  |  the question id
 question  |  contract  |  the question text
 state  |  any block  |  registered, not used yet
 term  |  any block  |  index terms, comma separated
+break  |  any block  |  before or keep, edition only
 target  |  link  |  registered for links, planned
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -807,6 +828,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -880,6 +905,10 @@ plan  |  chapters Goal, Steps, Done when, Open questions
 module  |  chapters Purpose, Code
 research  |  investigate a question and report results
 book  |  long writing, allows the book parts
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -995,6 +1024,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -1039,6 +1072,10 @@ asked: Does the paragraph make one point?
 Yes. One point: braking.
 answer end
 paragraph end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -1199,6 +1236,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -1291,6 +1332,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -1321,6 +1366,10 @@ paragraph end
 reference start
 Highway Code, 2024
 reference end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -1490,7 +1539,36 @@ answer end
 paragraph end
 paragraph start
 name: paragraph-the-edition-numbers
-The edition command cuts a book into pages. Everything before the first chapter or part is front matter and is numbered with roman numerals, i, ii, iii. The body then starts on a fresh page numbered 1, and the footer reads page 1 of N counting body pages only. Why, a printed book keeps its front matter out of the count so that page 1 is where the reading starts, and the index shows the same body numbers.
+The edition command cuts a book into pages. Everything before the first chapter or part is front matter: the title, dedication, epigraph, abstract and acknowledgments. It is numbered with roman numerals, i, ii, iii. These blocks carry block numbers like any other block, so the edition command skips them by name when it looks for where the body starts. Why, otherwise the dedication would be taken for the first body block and the body page numbers would shift. The body then starts on a fresh page numbered 1, and the footer reads page 1 of N counting body pages only. Why, a printed book keeps its front matter out of the count so that page 1 is where the reading starts, and the index shows the same body numbers.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+paragraph start
+name: paragraph-the-edition-paper
+The edition command takes --paper a6, a5, a4 or letter, which sets the page width and the lines per page, and --margin N, which keeps N blank columns on the left and right of every page. Why: a book on paper needs a known page size and room for the thumb. An explicit --width or --lines always wins over the paper, in any order. An unknown paper name stops with an error, so a typo never prints the wrong size.
+paragraph end
+paragraph start
+name: paragraph-research-blocks
+The blocks claim, evidence, hypothesis and remark are for research. The first line is the name, as with example and exercise, and the rest is the body. They are numbered in their chapter like every content block. Why: research is claims and the support for them, so each part gets its own box and its own number. The quote block is a quotation, and its last line is the attribution, drawn after a dash. Why: a quote in the middle of a chapter needs its speaker, and an epigraph only works at the front of a book.
+paragraph end
+paragraph start
+name: paragraph-the-aside
+The aside block is a small note drawn directly under the block it belongs to, indented so it reads as a note on that block. Write it right after its block. Why: everything is a box, so a side column is not needed, and the note stays next to the text it explains.
+paragraph end
+paragraph start
+name: paragraph-the-break
+Any block takes a break declaration. The value before starts that block on a new page in the edition. The value keep never splits the block over two pages: when it does not fit the rest of the page, it moves whole to the next page. Why: a chapter should open on a fresh page, and an exercise with its space should stay in one piece on paper. The declaration changes only the edition, never the screen view. A block taller than one page is cut as before.
+paragraph end
+paragraph start
+name: paragraph-the-contracts-command
+The contracts command is run as notation contracts FILE. It adds every missing contract and answer slot, writes them into the file, and prints only the open questions: the contract id, the block type and name it sits in, and the question. Why: a new page no longer has to be opened in the editor to get its contracts, and the printed list can be handed back to be answered. Answered questions are not listed, unless the flag --all is added: then every contract is listed and the answered ones are marked answered. The launcher aiu-contracts FILE runs the same command from any folder. Running it twice changes nothing.
 paragraph end
 paragraph start
 name: paragraph-a-pinned-block
@@ -1541,6 +1619,10 @@ definition end
 space start
 12
 space end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -1664,6 +1746,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -1736,6 +1822,10 @@ name: code-title-startnkind-defaultnnamentitle
 language: text
 "title start\nkind: default\nName\ntitle end\n" | save -f f.aiu
 aiutd f.aiu
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?

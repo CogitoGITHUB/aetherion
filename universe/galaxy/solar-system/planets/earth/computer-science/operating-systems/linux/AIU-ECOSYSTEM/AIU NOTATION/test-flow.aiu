@@ -1,0 +1,74 @@
+title start
+name: title-flow-test
+kind: book
+Flow Test
+contract start
+id: qf123ae
+question: Does the title say what this chapter or section covers?
+contract end
+answer start
+for: qf123ae
+asked: Does the title say what this chapter or section covers?
+Yes. It names the page as a flow test.
+
+answer end
+title end
+chapter start
+name: section-three-paragraphs
+title start
+name: title-three-paragraphs
+Three Paragraphs
+contract start
+id: qf123ae
+question: Does the title say what this chapter or section covers?
+contract end
+answer start
+for: qf123ae
+asked: Does the title say what this chapter or section covers?
+Yes. It says the chapter holds three paragraphs.
+
+answer end
+title end
+paragraph start
+name: paragraph-a-page-is
+A page is a plain text file made of blocks.
+contract start
+id: qe995c0
+question: Does this paragraph hold one idea a reader could restate?
+contract end
+answer start
+for: qe995c0
+asked: Does this paragraph hold one idea a reader could restate?
+Yes. A page is a plain text file made of blocks.
+
+answer end
+paragraph end
+paragraph start
+name: paragraph-each-block-can
+Each block can carry a contract, which is a question about it.
+contract start
+id: qe995c0
+question: Does this paragraph hold one idea a reader could restate?
+contract end
+answer start
+for: qe995c0
+asked: Does this paragraph hold one idea a reader could restate?
+Yes. A block can carry a contract, which is a question.
+
+answer end
+paragraph end
+paragraph start
+name: paragraph-an-answer-is
+An answer is written under its question so nothing stays open.
+contract start
+id: qe995c0
+question: Does this paragraph hold one idea a reader could restate?
+contract end
+answer start
+for: qe995c0
+asked: Does this paragraph hold one idea a reader could restate?
+Yes. An answer sits under its question so none stays open.
+
+answer end
+paragraph end
+chapter end

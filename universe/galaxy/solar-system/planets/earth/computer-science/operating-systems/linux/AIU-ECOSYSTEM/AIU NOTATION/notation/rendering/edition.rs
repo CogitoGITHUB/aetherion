@@ -29,6 +29,19 @@ fn strip(s: &str) -> String {
     out
 }
 
+fn is_front(row: &str) -> bool {
+    let n = match row.find(" · ") {
+        Some(p) => p + " · ".len(),
+        None => return false,
+    };
+    let rest = &row[n..];
+    let end = rest.find(" ├").unwrap_or(rest.len());
+    matches!(
+        &rest[..end],
+        "dedication" | "epigraph" | "abstract" | "acknowledgments"
+    )
+}
+
 fn box_label(row: &str) -> Option<String> {
     let start = row.find("╭─┤ ")? + "╭─┤ ".len();
     let rest = &row[start..];
@@ -38,39 +51,60 @@ fn box_label(row: &str) -> Option<String> {
     Some(num.to_string())
 }
 
-pub fn render(text: &str, name: &str, width: usize, lines: usize) -> String {
+fn pad_to(out: &mut Vec<String>, body: usize) {
+    while out.len() % body != 0 {
+        out.push(String::new());
+    }
+}
+
+fn lay(text: &str, body: usize) -> (Vec<String>, usize) {
+    let mut out: Vec<String> = Vec::new();
+    let mut fp = 0usize;
+    let mut seen = false;
+    for row in text.lines() {
+        if row.contains("\u{E000}") {
+            pad_to(&mut out, body);
+            continue;
+        }
+        if let Some(at) = row.find("\u{E001}") {
+            let digits: String = row[at + 3..]
+                .chars()
+                .take_while(|c| c.is_ascii_digit())
+                .collect();
+            let n: usize = digits.parse().unwrap_or(0);
+            if n > 0 && n <= body && out.len() % body + n > body {
+                pad_to(&mut out, body);
+            }
+            continue;
+        }
+        if !seen && box_label(row).is_some() && !is_front(row) {
+            seen = true;
+            pad_to(&mut out, body);
+            fp = out.len() / body;
+        }
+        out.push(row.to_string());
+    }
+    (out, fp)
+}
+
+pub fn render(text: &str, name: &str, width: usize, lines: usize, margin: usize) -> String {
     let body = lines.max(8) - 4;
+    let inner = width.saturating_sub(margin * 2).max(20);
     crate::boxview::set_pages(Vec::new());
-    let first = strip(&crate::boxview::render_boxes(text, width, true, false));
+    crate::boxview::set_edition(true);
+    let first = strip(&crate::boxview::render_boxes(text, inner, true, false));
+    let (rows1, fp) = lay(&first, body);
     let mut pages: Vec<(String, usize)> = Vec::new();
-    let f1 = first.lines().position(|r| box_label(r).is_some());
-    let pad = match f1 {
-        Some(f) => (body - f % body) % body,
-        None => 0,
-    };
-    let fp = match f1 {
-        Some(f) => (f + pad) / body,
-        None => 0,
-    };
-    for (i, row) in first.lines().enumerate() {
+    for (i, row) in rows1.iter().enumerate() {
         if let Some(label) = box_label(row) {
             if !pages.iter().any(|p| p.0 == label) {
-                pages.push((label, (i + pad) / body + 1 - fp));
+                pages.push((label, (i / body + 1).saturating_sub(fp)));
             }
         }
     }
     crate::boxview::set_pages(pages);
-    let second = strip(&crate::boxview::render_boxes(text, width, true, false));
-    let mut rows: Vec<&str> = second.lines().collect();
-    let f2 = rows.iter().position(|r| box_label(r).is_some());
-    let mut fp2 = 0usize;
-    if let Some(f) = f2 {
-        let q = (body - f % body) % body;
-        for _ in 0..q {
-            rows.insert(f, "");
-        }
-        fp2 = (f + q) / body;
-    }
+    let second = strip(&crate::boxview::render_boxes(text, inner, true, false));
+    let (rows, fp2) = lay(&second, body);
     let total = ((rows.len() + body - 1) / body).max(1);
     let file = std::path::Path::new(name)
         .file_name()
@@ -83,7 +117,8 @@ pub fn render(text: &str, name: &str, width: usize, lines: usize) -> String {
         let to = (from + body).min(rows.len());
         out.push_str(&format!("{}\n{}\n", file, rule));
         for k in from..to {
-            out.push_str(rows[k]);
+            out.push_str(&" ".repeat(margin));
+            out.push_str(&rows[k]);
             out.push_str("\n");
         }
         for _ in (to - from)..body {

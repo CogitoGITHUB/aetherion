@@ -345,8 +345,25 @@ impl Boxes {
                     if b.span.start == skip {
                         continue;
                     }
-                    let mut one = self.draw(b, sec, depth, width);
-                    if depth == 0 && !out.is_empty() {
+                    let aside = b.name == "aside";
+                    let w2 = if aside { width.saturating_sub(4) } else { width };
+                    let mut one = self.draw(b, sec, depth, w2);
+                    if aside {
+                        for l in one.iter_mut() {
+                            l.s = format!("  {}  ", l.s);
+                            l.n += 4;
+                        }
+                    }
+                    if edition_on() {
+                        let how = decl(b, "break").unwrap_or_default();
+                        if how.trim() == "before" {
+                            one.insert(0, self.line(&[], "\u{E000}"));
+                        } else if how.trim() == "keep" {
+                            let m = format!("\u{E001}{}", one.len());
+                            one.insert(0, self.line(&[], &m));
+                        }
+                    }
+                    if depth == 0 && !out.is_empty() && !aside {
                         out.push(self.line(&[], ""));
                     }
                     out.append(&mut one);
@@ -523,14 +540,32 @@ impl Boxes {
                     inner.extend(self.wrapped(&[], &format!("[{}] {}", i + 1, row), iw));
                 }
             }
-            "abstract" | "dedication" | "epigraph" | "acknowledgments" | "reference" | "footnote" | "cover" | "title-page" | "copyright" | "preface" | "volume" => {
+            "aside" | "abstract" | "dedication" | "epigraph" | "acknowledgments" | "reference" | "footnote" | "cover" | "title-page" | "copyright" | "preface" | "volume" => {
                 label = b.name.clone();
                 tcodes = vec![1, 36];
                 for g in groups(&self.body(b)) {
                     inner.extend(self.wrapped(&[], &g, iw));
                 }
             }
-            "definition" | "example" | "exercise" | "callout" | "pin" => {
+            "quote" => {
+                label = b.name.clone();
+                tcodes = vec![1, 36];
+                let body: Vec<String> = self
+                    .body(b)
+                    .into_iter()
+                    .filter(|l| !l.trim().is_empty())
+                    .collect();
+                let n = body.len();
+                let keep = if n > 1 { n - 1 } else { n };
+                for g in groups(&body[..keep]) {
+                    inner.extend(self.wrapped(&[], &g, iw));
+                }
+                if n > 1 {
+                    let who = format!("— {}", body[n - 1].trim());
+                    inner.push(self.line(&[2], &clip(&who, iw)));
+                }
+            }
+            "definition" | "example" | "exercise" | "claim" | "evidence" | "hypothesis" | "remark" | "callout" | "pin" => {
                 let lines = self.body(b);
                 let blank = |l: &&String| l.trim().is_empty();
                 let mut rest = lines.iter().skip_while(blank);
@@ -1067,6 +1102,17 @@ pub fn fill_page(text: &str) -> Result<(String, Vec<String>), String> {
         .count();
     rep.insert(0, format!("added {} answer slot(s)", slots));
     Ok((out.join("\n"), rep))
+}
+
+static EDITION: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+pub fn set_edition(on: bool) {
+    EDITION.store(on, std::sync::atomic::Ordering::Relaxed);
+}
+
+fn edition_on() -> bool {
+    EDITION.load(std::sync::atomic::Ordering::Relaxed)
 }
 
 static READ: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
