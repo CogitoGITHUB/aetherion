@@ -187,8 +187,8 @@ fn block_section(
     let mut section = match block.name.as_str() {
         "title" => heading_lines(&body, columns, indent),
         "chapter" => String::new(),
-        "paragraph" => paragraph_lines(&body, columns, indent, mark),
-        "code" => code_box_lines(&body, columns, indent),
+        "paragraph" => format!("{}{}", number_line(block, numbers, indent), paragraph_lines(&body, columns, indent, mark)),
+        "code" => format!("{}{}", number_line(block, numbers, indent), code_box_lines(&body, columns, indent)),
         // The parser turns an unregistered name into an error node before a
         // block with that name ever reaches here, so this arm only runs for a
         // tree built by hand. No name is drawn and the body is drawn as prose:
@@ -461,6 +461,17 @@ fn push_section(out: &mut String, section: &str) {
     }
     out.push_str(section);
 }
+fn number_line(
+    block: &Block,
+    numbers: &HeadingNumbers,
+    indent: usize,
+) -> String {
+    match numbers.block_number_at(block.line) {
+        Some(n) => format!("{}{}\n", " ".repeat(indent), n),
+        None => String::new(),
+    }
+}
+
 /// One child of a block. The title inside a section is drawn with the
 /// number of that section, every other child as usual.
 fn child_rich(

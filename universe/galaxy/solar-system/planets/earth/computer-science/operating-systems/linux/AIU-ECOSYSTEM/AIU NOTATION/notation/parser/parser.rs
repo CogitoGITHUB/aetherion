@@ -40,11 +40,11 @@ use crate::positions::{line_col_to_offset, offset_to_line_col, LineCol};
 use crate::block_registry::{is_opaque_name, is_registered};
 
 /// The registered declaration keywords (rule B). They are hints, never meaning.
-pub const DECLARATION_KEYWORDS: [&str; 21] = [
+pub const DECLARATION_KEYWORDS: [&str; 22] = [
     "for", "asked",
     "tags", "kind", "language", "style", "theme", "color", "format", "font", "caption", "column", "cell",
     "row-id", "meta", "todo", "name", "target",
-    "id", "question", "state",
+    "id", "question", "state", "term",
 ];
 
 /// The registered error names (rule E). All are severity error, no off switch.
@@ -770,8 +770,8 @@ fn check_sections(nodes: &mut Vec<Node>) {
                             span: Span::empty(block.span.start),
                             line: opened,
                             opener_line: Some(opened),
-                            what: format!("the section opened at line {} does not start with a title block", opened),
-                            what_to_do: "start the section with \"title start\" and \"title end\"".to_string(),
+                            what: format!("the chapter opened at line {} does not start with a title block", opened),
+                            what_to_do: "start the chapter with \"title start\" and \"title end\"".to_string(),
                         }),
                     );
                 }

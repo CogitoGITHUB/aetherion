@@ -1,11 +1,4 @@
 #lang racket/base
-;; One job: the chapter numbers (1, 1.1, 1.1.2) computed from nesting.
-;; A section block takes the next number at its depth and restarts every
-;; deeper level. The number is never written, never authored.
-;;
-;; Who calls it: the reader that draws an outline, and the editor that asks
-;; for the number of the heading under the cursor.
-
 (require racket/list
          racket/string
          "nodes.rkt"
@@ -13,21 +6,11 @@
          "properties.rkt"
          "../errors/raise.rkt")
 
-;; Provided so a caller can read the numbers of a document and look one up by
-;; the line the heading starts on.
-(provide heading-numbers number-at)
+(provide heading-numbers number-at block-numbers block-number-at)
 
-;; heading-numbers reads the document and answers the numbers of its
-;; headings, in the order the headings appear. Each number is a list of three
-;; fields: the number as it is written ("1", "1.1"), the level, and the line
-;; the heading starts on.
-;;
-;; The walk is the tree's own order: a block, then the blocks inside it. A
-;; heading nested inside a paragraph is numbered where it stands, so the
-;; numbering follows the page and not the block names.
 (define (heading-numbers o)
-  (define counters (box '()))
-  (define out (box '()))
+  (define counters (box (list)))
+  (define out (box (list)))
   (for ([node (in-list (outline-nodes o))])
     (walk node 0 counters out))
   (reverse (unbox out)))
@@ -48,28 +31,73 @@
     (for ([child (in-list (block-node-children node))])
       (walk child inner counters out))))
 
-;; Take the next number at this level and restart every deeper level.
 (define (take-number counters level)
   (define index (sub1 level))
   (define grown
     (if (> (length counters) index)
-      (append counters '())
-      (append counters (make-list (- (add1 index) (length counters)) 0))))
-  (define bumped (append grown '()))
-  (set! bumped (list-set bumped index (add1 (list-ref bumped index))))
-  ;; Every deeper level restarts, because a new heading at this level puts the
-  ;; headings under it back at their first number.
+      (append counters (list))
+      (append counters
+              (make-list (- (add1 index) (length counters)) 0))))
+  (define bumped (append grown (list)))
+  (set! bumped
+        (list-set bumped index (add1 (list-ref bumped index))))
   (take bumped (add1 index)))
 
-;; The number as it is written: the counters up to this level, joined with a dot.
 (define (number-text counters level)
   (string-join (map number->string (take counters level)) "."))
 
-;; number-at answers the number of the heading that starts on this line, or #f
-;; when the line holds no heading. A caller that holds one node asks this for
-;; the line that node is on.
 (define (number-at o line)
-  (define found (for/or ([entry (in-list (heading-numbers o))])
-                  (and (= (third entry) line) entry)))
+  (define found
+    (for/or ([entry (in-list (heading-numbers o))])
+      (and (= (third entry) line) entry)))
   (and found (first found)))
 
+(define unnumbered
+  (list (quote title) (quote comment) (quote answer)
+        (quote contract) (quote row) (quote header)
+        (quote contents) (quote index) (quote bibliography)))
+
+(define (block-label chapter local)
+  (if (string=? chapter "")
+      local
+      (string-append chapter ">" local)))
+
+(define (block-numbers o)
+  (define chapters (heading-numbers o))
+  (define out (box (list)))
+  (number-nodes (outline-nodes o) "" "" (box 0) chapters out)
+  (reverse (unbox out)))
+
+(define (number-nodes nodes chapter chain count chapters out)
+  (for ([node (in-list nodes)])
+    (when (block-node? node)
+      (define name (block-node-name node))
+      (cond
+        [(eq? name (quote chapter))
+         (define found
+           (for/or ([entry (in-list chapters)])
+             (and (= (third entry) (block-node-line node))
+                  (first entry))))
+         (number-nodes (block-node-children node)
+                       (or found "") "" (box 0) chapters out)]
+        [(memq name unnumbered)
+         (number-nodes (block-node-children node)
+                       chapter chain count chapters out)]
+        [else
+         (set-box! count (add1 (unbox count)))
+         (define local
+           (if (string=? chain "")
+               (number->string (unbox count))
+               (string-append chain "." (number->string (unbox count)))))
+         (set-box! out
+                   (cons (list (block-label chapter local)
+                               (block-node-line node))
+                         (unbox out)))
+         (number-nodes (block-node-children node)
+                       chapter local (box 0) chapters out)]))))
+
+(define (block-number-at o line)
+  (define found
+    (for/or ([entry (in-list (block-numbers o))])
+      (and (= (second entry) line) entry)))
+  (and found (first found)))

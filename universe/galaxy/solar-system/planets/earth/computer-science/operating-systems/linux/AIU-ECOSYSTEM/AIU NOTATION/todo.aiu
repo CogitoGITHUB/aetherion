@@ -47,7 +47,7 @@ Planned.
 paragraph end
 
 paragraph start
-todo: names: a duplicate name is a check error, and a name is unique across the whole ecosystem through the database
+todo: names: a duplicate name inside one page is already a check error (collect.rkt). Left: a name used twice across the ecosystem is only a stderr line in index-folder.rs; make it a check error through the database, with its places
 Planned.
 paragraph end
 
@@ -56,20 +56,8 @@ todo: ecosystem server: the notation database is reachable through the shared ec
 Planned.
 paragraph end
 
-paragraph start
-todo: book: every page type is book style. The book type has only title, section, paragraph, code, comment and answer. Add cover, title page, copyright page, preface, table of contents, chapters, figures, footnotes, references, bibliography, index and volume as block types in its blocktypes file
-Planned.
-paragraph end
 
-paragraph start
-todo: book edition: page numbers belong to one edition of a book. Generate contents, index and cross references from the tree, then page boundaries, headers and footers. Open decision: terminal page preview only, or also PDF export
-Planned.
-paragraph end
 
-paragraph start
-todo: numbering visible: the viewer already computes heading numbers (data/aiu-text.rkt) but no file shows them. Show the number on every block of every page, also flat pages with nothing nested. Numbers stay computed, never stored
-Planned.
-paragraph end
 
 paragraph start
 todo: table writing: a good way to write a table in the editor in the table start form of data/table.rkt. Insert a skeleton with caption, columns, header and one row, and check cells against columns. No HTML or LaTeX work
@@ -86,16 +74,13 @@ todo: book plan: the full plan for books, sciences, skills, writing and reading 
 Planned.
 paragraph end
 
-paragraph start
-todo: editor uses notation: the editor builds against AIU NOTATION by path, with no copy in editor/notation, so the two cannot drift.
-Planned.
-paragraph end
+
 
 paragraph start
-todo: editor passes the page folder: the view call in
-hot-path.rs sets AIU_PAGE_DIR to the real file folder,
-because the view runs on a temp copy; until then the
-viewer falls back to the current folder to find .notation/.
+todo: README.aiu: one live page with everything the notation
+can do and an example of each, built from the code and files
+where possible, updated on every feature change, and read first
+in every AI session that makes pages with the notation
 Planned.
 paragraph end
 

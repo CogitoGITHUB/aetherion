@@ -380,15 +380,15 @@
      (append
       (for/list ([t (in-list missing)])
         (finding 'section-missing who line 0
-                 (format "a ~a page needs a section titled ~a" type t)
-                 (format "add a section whose title is ~a; a ~a page holds the sections ~a"
+                 (format "a ~a page needs a chapter titled ~a" type t)
+                 (format "add a chapter whose title is ~a; a ~a page holds the sections ~a"
                          t type wanted)))
       (if (equal? present expected)
           '()
           (list (finding 'section-out-of-order who line 0
-                         (format "the sections of this ~a page are not in the order the type requires"
+                         (format "the chapters of this ~a page are not in the order the type requires"
                                  type)
-                         (format "put the sections in this order: ~a" wanted)))))]))
+                         (format "put the chapters in this order: ~a" wanted)))))]))
 
 ;; block-raw-lines answers the lines between a block's start line and its end line, leaving out the lines of blocks nested inside it.
 (define (block-raw-lines lines n)
@@ -456,7 +456,7 @@
 
 ;; where-text names the place a contract speaks about.
 (define (where-text sec)
-  (if (equal? sec "") "the page" (format "the section ~a" sec)))
+  (if (equal? sec "") "the page" (format "the chapter ~a" sec)))
 
 ;; check-placed answers the findings of every contract that applies to one block. Rules
 ;; are checked always. Questions are semantic: the checker cannot answer them, so they

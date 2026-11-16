@@ -11,6 +11,8 @@ use std::time::Instant;
 mod view;
 #[path = "rendering/boxview.rs"]
 mod boxview;
+#[path = "rendering/edition.rs"]
+mod edition;
 #[path = "rendering/contract-files.rs"]
 mod contract_files;
 
@@ -107,6 +109,17 @@ fn main() {
                     std::process::exit(2);
                 }
             }
+        }
+        "edition" => {
+            let mut width = 56usize;
+            let mut lines = 40usize;
+            let mut i = 3usize;
+            while i + 1 < args.len() {
+                if args[i] == "--width" { width = args[i + 1].parse().unwrap_or(56); }
+                if args[i] == "--lines" { lines = args[i + 1].parse().unwrap_or(40); }
+                i += 1;
+            }
+            print!("{}", edition::render(&text, &path, width, lines));
         }
         "parse" => {
             let started = Instant::now();

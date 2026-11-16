@@ -1,0 +1,1397 @@
+title start
+name: title-aiu-notation-everything
+kind: default
+tags: notation reference readme
+AIU NOTATION: everything it can do
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+contents start
+name: contents
+contents end
+
+chapter start
+name: section-what-this-is
+title start
+name: title-what-this-is
+What this is
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-aiu-notation-is
+AIU NOTATION is a plain text format for pages. A page is a file
+ending in .aiu, made of blocks. One source is read many ways: as
+boxes, as rich text, as plain text, by checks and by a database.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-two-programs-read
+Two programs read the same pages. The notation binary in Rust
+holds the parser, the views and the database. The Racket model
+holds the outline, numbering, page types and checks. The editor
+aiutd builds against the Rust crate by path.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-whatever-can-be
+Whatever can be computed is computed and never stored by hand:
+chapter numbers, block numbers, contents, index, bibliography
+and page numbers.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-this-page-is
+This page is the reference. Change it in the same step as any
+feature change, and read it first when making new pages.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-a-page
+title start
+name: title-a-page
+A page
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-a-page-starts
+A page starts with one title block. It holds the kind
+declaration, which picks the page type, optional tags, and then
+the title text.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+code start
+name: code-title-start-kind
+language: text
+title start
+kind: note
+tags: note idea
+Note page: one idea, said once
+title end
+
+paragraph start
+One idea, said once.
+paragraph end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+code end
+
+paragraph start
+name: paragraph-a-page-without
+A page without a title block is a problem. A chapter must also
+start with its own title block, otherwise the check reports a
+missing title.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-blocks-and-syntax
+title start
+name: title-blocks-and-syntax
+Blocks and syntax
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-a-block-opens
+A block opens with its name and the word start on a line of its
+own, and closes with the name and the word end. Blocks nest. The
+lines between are the content.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+code start
+name: code-chapter-start-title
+language: text
+chapter start
+title start
+Driving
+title end
+
+paragraph start
+Brake early and smoothly.
+paragraph end
+chapter end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+code end
+
+paragraph start
+name: paragraph-a-line-made
+A line made of a keyword, a colon and a value is a declaration
+when the keyword is registered. Any other line is text. So a
+text line must never start with a registered keyword and a
+colon: reword it, or put it in a code block.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-a-blank-line
+A blank line inside a block splits its text into groups, drawn
+as separate paragraphs.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-code-blocks-are
+Code blocks are opaque: the parser does not read their content,
+so examples of the syntax are safe there. A code block needs a
+language declaration.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-parser-reports
+The parser reports five errors: stray text outside any block, an
+end that does not match, a block never closed, a block name that
+is not registered, and a missing title at the start of a
+chapter. The roundtrip command proves a page prints back byte
+for byte.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-check-also
+The check also reports a name used twice in one page, and a
+missing or out of order chapter when the page type requires
+chapter titles.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-block-types
+title start
+name: title-block-types
+Block types
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-block-types-are
+Block types are .blocktype files in .notation/blocktypes, found
+from the nearest .notation folder up the tree. The parser needs
+only the file to accept a new type. Drawing a type still lives
+in code.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+code start
+language: text
+name: figure
+kind: a figure with a caption
+opaque: no
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+code end
+
+table start
+name: table
+caption: The registered block types
+column: block text
+column: meaning text
+column: opaque text
+header start
+name: header
+cell: block
+cell: meaning
+cell: opaque
+header end
+row start
+name: row
+cell: answer
+cell: the answer to one contract question, kept inside the block it judges
+cell: no
+row end
+row start
+name: row-2
+cell: bibliography
+cell: the list of sources, computed from the references
+cell: no
+row end
+row start
+name: row-3
+cell: chapter
+cell: a block that holds its own title, text and sub-chapters
+cell: no
+row end
+table end
+
+code start
+language: text
+code  |  text the parser does not read as notation  |  yes
+comment  |  a block of text the reader drops  |  no
+contents  |  the table of contents, computed from the chapter tree  |  no
+contract  |  the question text copied from its file, read only  |  no
+copyright  |  the copyright page of a book  |  no
+cover  |  the cover of a book, title and author only  |  no
+figure  |  a figure with a caption  |  no
+footnote  |  a note shown at the foot of the page that cites it  |  no
+header  |  the header row of a table  |  no
+index  |  the index of terms, computed from the tree  |  no
+paragraph  |  ordinary prose, the everyday case  |  no
+preface  |  the preface of a book  |  no
+reference  |  one cited source, collected by the bibliography  |  no
+row  |  one row of a table  |  no
+table  |  a table of rows  |  no
+title-page  |  the title page of a book  |  no
+title  |  a heading that names the file  |  no
+volume  |  one volume of a book that has several  |  no
+code end
+
+paragraph start
+name: paragraph-a-chapter-holds
+A chapter holds its own title, text and chapters. A comment
+wraps one or more blocks and is dropped by the reader. An answer
+sits inside the block it judges. Contract rows are copied from
+files and are read only. Rows and headers belong inside a table.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-declarations
+title start
+name: title-declarations
+Declarations
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+table start
+name: table-2
+caption: The 22 registered declarations
+column: keyword text
+column: used on text
+column: meaning text
+header start
+name: header-2
+cell: keyword
+cell: used on
+cell: meaning
+header end
+row start
+name: row-22
+cell: tags
+cell: title
+cell: words that classify the page
+row end
+row start
+name: row-23
+cell: kind
+cell: title
+cell: the page type
+row end
+row start
+name: row-24
+cell: language
+cell: code
+cell: the language of the code box, required
+row end
+table end
+
+code start
+language: text
+style  |  any block  |  bold, dim, italic, underline
+color  |  any block  |  red green yellow blue magenta cyan white gray
+theme  |  any block  |  registered, effect not written down yet
+format  |  any block  |  registered, effect not written down yet
+font  |  any block  |  registered, effect not written down yet
+caption  |  table, figure  |  the caption
+column  |  table  |  a column: name, type, optional
+cell  |  header, row  |  one cell, empty means missing
+row-id  |  row  |  optional row identifier
+meta  |  table  |  registered, effect not written down yet
+todo  |  any block  |  open or done, then the task text
+name  |  any block  |  permanent name, unique in a page
+for  |  answer  |  the id of the question answered
+asked  |  answer  |  the question text as asked
+id  |  contract  |  the question id
+question  |  contract  |  the question text
+state  |  any block  |  registered, not used yet
+term  |  any block  |  index terms, comma separated
+target  |  link  |  registered for links, planned
+code end
+
+paragraph start
+name: paragraph-rust-and-racket
+Rust and Racket register the same list. A todo marks the box of
+its block with TODO or DONE in the corner; a todo value that
+starts with neither word counts as open. Opening a page in the
+editor adds the names that are missing. Style and color apply to
+the text of the block they sit on.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-tables
+title start
+name: title-tables
+Tables
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-a-table-is
+A table is a structure of its own, written with declarations and
+no punctuation. A column says what a cell under it holds and
+whether it may be left empty.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+code start
+name: code-table-start-caption
+language: text
+table start
+caption: Prices
+column: name text
+column: price number
+column: note text optional
+header start
+cell: name
+cell: price
+cell: note
+header end
+row start
+row-id: r1
+cell: Widget
+cell: 9.99
+cell:
+row end
+table end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+code end
+
+paragraph start
+name: paragraph-a-cell-with
+A cell with an empty value is a missing value, allowed only in a
+column marked optional. Column types come from a fixed list, and
+the validator names a type it does not know. The Racket tools
+turn a table into JSON, HTML and LaTeX.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-page-types
+title start
+name: title-page-types
+Page types
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+table start
+name: table-3
+caption: The nine page types
+column: type text
+column: what it is for text
+header start
+name: header-3
+cell: type
+cell: what it is for
+header end
+row start
+name: row-44
+cell: default
+cell: allows every block
+row end
+row start
+name: row-45
+cell: note
+cell: one idea: a title and paragraphs only
+row end
+row start
+name: row-46
+cell: journal
+cell: write what happened
+row end
+table end
+
+code start
+language: text
+todo  |  tasks, one per paragraph, grouped in chapters
+decision  |  chapters Context, Options, Decision, Consequences
+plan  |  chapters Goal, Steps, Done when, Open questions
+module  |  chapters Purpose, Code
+research  |  investigate a question and report results
+book  |  long writing, allows the book parts
+code end
+
+paragraph start
+name: paragraph-a-page-picks
+A page picks its type with the kind declaration in its title.
+Type files live in filetypes/types, one .rkt per type, and the
+check rejects blocks the type does not allow. The types README
+says how to make a type.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-questions-answers-and
+title start
+name: title-questions-answers-and
+Questions, answers and rules
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-contracts-remind-the
+Contracts remind the author what a kind of block needs. They are
+files in .notation/TYPE, one Racket list per file. A question is
+put to a block kind in a chapter; a rule is checked by the
+checker.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+code start
+name: code-question-paragraph-does
+language: text
+(question "*" "paragraph" "Does the paragraph make one point?" "q94fc72")
+(rule "*" "code" needs-declaration "language")
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+code end
+
+paragraph start
+name: paragraph-the-star-means
+The star means any chapter. The nearest .notation/TYPE folder up
+the tree wins, and a folder with its own .notation but no folder
+for a type falls back to the parent.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-a-question-shows
+A question shows in the page as a read only contract block, and
+the author answers it inside the block it judges.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+code start
+name: code-paragraph-start-brake
+language: text
+paragraph start
+Brake early and smoothly.
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+Yes. One point: braking.
+answer end
+paragraph end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+code end
+
+paragraph start
+name: paragraph-opening-a-page
+Opening a page in the editor, or running the fill command, adds
+an empty answer slot under every question that has none. It
+never touches an answer already written. The view command with
+the contracts flag draws each rule and question under its block
+and counts them as ok, broken, open or unchecked.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-numbering
+title start
+name: title-numbering
+Numbering
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-numbers-are-computed
+Numbers are computed from nesting and never written. Chapters
+number 1, 1.1, 1.1.1 by how deep they sit.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-every-other-block
+Every other block gets a number too. Before the arrow stands the
+chapter number. After it stands the full chain of blocks down to
+that block, joined with dots, at any depth. A page with no
+chapter has no arrow. Copy a block to another place and its
+number follows its new place.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+table start
+name: table-4
+caption: Block numbers
+column: where the block sits text
+column: number text
+header start
+name: header-4
+cell: where the block sits
+cell: number
+header end
+row start
+name: row-53
+cell: flat page, 3rd block
+cell: 3
+row end
+row start
+name: row-54
+cell: flat page, 3rd block, nested 2nd, nested 1st
+cell: 3.2.1
+row end
+row start
+name: row-55
+cell: chapter 1, 2nd block
+cell: 1>2
+row end
+table end
+
+code start
+language: text
+chapter 1, 2nd block, nested 1st  |  1>2.1
+chapter 2.1, 3rd, nested 2nd, nested 4th, nested 1st  |  2.1>3.2.4.1
+chapter 2.1.3.1.2, 1st block  |  2.1.3.1.2>1
+code end
+
+paragraph start
+name: paragraph-not-numbered-title
+Not numbered: title, comment, answer, contract, row, header,
+contents, index and bibliography. A comment that wraps blocks
+does not break the count of its neighbours. Reading mode shows
+chapter numbers only.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-book-parts-index
+title start
+name: title-book-parts-index
+Book parts, index and edition
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-book-pages-allow
+Book pages allow cover, title-page, copyright, preface,
+contents, figure, footnote, reference, bibliography, index and
+volume besides the usual blocks. Contents, index and
+bibliography are computed from the tree and never typed: write
+the empty block where it belongs.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+code start
+name: code-contents-start-contents
+language: text
+contents start
+contents end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+code end
+
+paragraph start
+name: paragraph-the-index-lists
+The index lists every term from the term declarations, with the
+block number and the page of each. Write terms on any block,
+separated by commas. The bibliography lists every reference
+block as [1], [2] in page order.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+code start
+name: code-paragraph-start-term
+language: text
+paragraph start
+term: braking, safety
+Brake early and smoothly.
+paragraph end
+
+reference start
+Highway Code, 2024
+reference end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+code end
+
+paragraph start
+name: paragraph-the-edition-command
+The edition command prints the page as pages: a header with the
+file name, a footer reading page N of M, and page numbers p.N
+beside contents and index entries. Pages break at a fixed line
+count, so a box can split across pages. It is a terminal
+preview; PDF export comes last.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-a-figure-shows
+A figure shows its caption declaration as a line starting with
+the word Figure. Cover, title-page, copyright, preface, footnote
+and volume are drawn as boxes of plain text.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-views-and-commands
+title start
+name: title-views-and-commands
+Views and commands
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-the-notation-binary
+The notation binary is built only through the ecosystem PM, and
+runs from ~/aiu-target/live/aiu-notation/release/notation after
+the live build. Never run cargo or raco by hand.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+table start
+name: table-5
+caption: Commands
+column: command text
+column: what it does text
+header start
+name: header-5
+cell: command
+cell: what it does
+header end
+row start
+name: row-59
+cell: notation view FILE
+cell: boxes; flags --plain --contracts --flat --read --width N
+row end
+row start
+name: row-60
+cell: notation fill FILE
+cell: add empty answer slots under questions
+row end
+row start
+name: row-61
+cell: notation parse FILE
+cell: the parsed document and the parse time
+row end
+table end
+
+code start
+language: text
+notation render FILE  |  plain text render
+notation render-rich FILE  |  unicode render
+notation roundtrip FILE  |  prove the print back is identical
+notation todos FILE  |  list every todo with its line
+notation edition FILE  |  pages; flags --width W --lines L
+notation index FOLDER  |  build .notation/index.db for the folder
+aiutd FILE  |  open in the editor, needs a real tty
+aiutd update  |  compile, tests at a level, docs
+aiutd test --level N  |  run tests; --only NAME for one
+aiutd record NAME KEYS  |  record a test from a real run
+aiutd record-module NAME PATH EXPR  |  record a module test
+aiutd docs  |  write the tutorial from the notation files
+code end
+
+paragraph start
+name: paragraph-reading-mode-the
+Reading mode, the read flag, hides comment, answer and contract
+blocks and block numbers, and keeps titles, chapters, text and
+code. It is partly built; the plan lists more to hide.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-index-command
+The index command reads every .aiu file under a folder and saves
+records for files, blocks, tags, todos, links and names. It
+reports a name used in two places.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-making-a-page
+title start
+name: title-making-a-page
+Making a page
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-from-nushell-one
+From nushell, one command makes a page and a second opens it in
+the editor. Run aiutd in the real terminal, never inside bash -c.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+code start
+name: code-title-startnkind-defaultnnamentitle
+language: text
+"title start\nkind: default\nName\ntitle end\n" | save -f f.aiu
+aiutd f.aiu
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
+code end
+
+paragraph start
+name: paragraph-opening-runs-fill
+Opening runs fill and adds the contract rows and the missing
+names. Pick the kind first: the type decides which blocks and
+chapters the check accepts.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-planned-not-usable
+title start
+name: title-planned-not-usable
+Planned, not usable yet
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-links-a-target
+Links: a target declaration and a link block name a box and show
+it inside another file. The design is still open, so do not use
+links yet.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-mark-blocks-rule
+Mark blocks rule, step, fact, routine and card, full writing and
+reading modes, compiled views such as checklist, rules, routines
+and practice, permanent block ids, and connections with a
+database for whole fields.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-idle-autosave-safe
+Idle autosave, safe delete, a table skeleton in the editor, and
+PDF export.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+
+chapter start
+name: section-rules-for-writing
+title start
+name: title-rules-for-writing
+Rules for writing pages
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-start-every-page
+Start every page with a title block that holds the kind and the
+title.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-pick-the-kind
+Pick the kind that matches the purpose, then write the chapters
+that kind needs.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-one-idea-per
+One idea per paragraph. Anything that is not prose goes in a
+code block with a language.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-never-type-numbers
+Never type numbers, contents, index, bibliography or page
+numbers. Write the empty block and let the tool compute it.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-never-start-a
+Never start a text line with a registered keyword and a colon.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-never-write-a
+Never write a heading block or a level declaration; both are
+gone. Use chapter blocks and nest them.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-give-a-name
+Give a name only when another page needs it, and keep it unique.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-after-writing-open
+After writing, open the page in the editor and check that no
+problem box shows.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+chapter end
+

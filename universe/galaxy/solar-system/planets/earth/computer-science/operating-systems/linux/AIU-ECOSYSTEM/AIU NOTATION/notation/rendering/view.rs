@@ -196,8 +196,16 @@ impl<'a> View<'a> {
         self.gap();
     }
 
+fn tag(&mut self, b: &Block) {
+if reading() { return; }
+if let Some(n) = self.numbers.block_number_at(b.line) {
+let s = self.sgr(&[2], n);
+self.out(&s);
+}
+}
     /// Print a paragraph or comment, wrapped, one group at a time.
     fn paragraph(&mut self, b: &Block) {
+self.tag(b);
         let codes = self.style(b);
         for (k, g) in groups(&self.body(b)).iter().enumerate() {
             if k > 0 {
@@ -209,6 +217,7 @@ impl<'a> View<'a> {
 
     /// Print a code block in a frame, exactly as written.
     fn code(&mut self, b: &Block) {
+self.tag(b);
         let lang = decl(b, "language").unwrap_or("").to_string();
         let label = if lang.is_empty() { "code".to_string() } else { lang };
         let mut body = self.body(b);
@@ -254,13 +263,13 @@ impl<'a> View<'a> {
                         self.heading(d, &label, &text, t);
                         if first.map_or(true, |f| f.span.start != t.span.start) {
                             let l = self.line_of(t.span.start);
-                            self.problems.push(format!("line {}: a section title must be its first block", l));
+                            self.problems.push(format!("line {}: a chapter title must be its first block", l));
                         }
                     }
                     None => {
-                        self.heading(d, &label, "(untitled section)", b);
+                        self.heading(d, &label, "(untitled chapter)", b);
                         let l = self.line_of(b.span.start);
-                        self.problems.push(format!("line {}: section has no title block", l));
+                        self.problems.push(format!("line {}: chapter has no title block", l));
                     }
                 }
                 for n in &b.children {
@@ -286,7 +295,7 @@ impl<'a> View<'a> {
                 }
             }
             "comment" | "answer" | "mark" if reading() => { return; }
-            "paragraph" | "comment" => { self.gap(); self.paragraph(b); }
+            "paragraph" | "comment" | "reference" | "footnote" | "cover" | "title-page" | "copyright" | "preface" | "volume" => { self.gap(); self.paragraph(b); }
             "code" => { self.gap(); self.code(b); }
             "contract" => { if reading() { return; } }
             other => {

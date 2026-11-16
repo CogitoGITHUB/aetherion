@@ -371,7 +371,7 @@ impl Boxes {
         let iw = width.saturating_sub(4);
         let mut head: Vec<L> = Vec::new();
         let mut skip = usize::MAX;
-        let mut ttext = "(untitled section)".to_string();
+        let mut ttext = "(untitled chapter)".to_string();
         let mut codes: Vec<u32> = match d { 1 => vec![1, 36], 2 => vec![1, 34], _ => vec![1] };
         match title {
             Some(t) => {
@@ -381,13 +381,13 @@ impl Boxes {
                 let first = b.children.iter().find_map(|n| if let Node::Block(c) = n { Some(c) } else { None });
                 if first.map_or(true, |f| f.span.start != t.span.start) {
                     let l = self.line_of(t.span.start);
-                    self.problems.push(format!("line {}: a section title must be its first block", l));
+                    self.problems.push(format!("line {}: a chapter title must be its first block", l));
                 }
                 head = self.rows(t, &ttext, iw, "title: ");
             }
             None => {
                 let l = self.line_of(b.span.start);
-                self.problems.push(format!("line {}: section has no title block", l));
+                self.problems.push(format!("line {}: chapter has no title block", l));
             }
         }
         let kids = self.nodes(&b.children, skip, &ttext, d, iw);
@@ -490,8 +490,29 @@ impl Boxes {
                         }
                     }
                     let pad = "  ".repeat((e.level as usize).saturating_sub(1));
-                    let row = format!("{}{} {}", pad, e.number, t.join(" "));
+                    let row = match page_of(&e.number) { Some(p) => format!("{}{} {}  p.{}", pad, e.number, t.join(" "), p), None => format!("{}{} {}", pad, e.number, t.join(" ")) };
                     inner.push(self.line(&[], &clip(&row, iw)));
+                }
+            }
+            "index" => {
+                label = "index".to_string();
+                tcodes = vec![1, 36];
+                for row in self.index_rows() {
+                    inner.push(self.line(&[], &clip(&row, iw)));
+                }
+            }
+            "bibliography" => {
+                label = "bibliography".to_string();
+                tcodes = vec![1, 36];
+                for (i, row) in self.reference_rows().iter().enumerate() {
+                    inner.extend(self.wrapped(&[], &format!("[{}] {}", i + 1, row), iw));
+                }
+            }
+            "reference" | "footnote" | "cover" | "title-page" | "copyright" | "preface" | "volume" => {
+                label = b.name.clone();
+                tcodes = vec![1, 36];
+                for g in groups(&self.body(b)) {
+                    inner.extend(self.wrapped(&[], &g, iw));
                 }
             }
             "figure" => {
@@ -530,10 +551,11 @@ impl Boxes {
             inner.push(divider());
             inner.extend(rows);
         }
+let shown = match self.numbers.block_number_at(b.line) { Some(n) if !is_read() => format!("{} · {}", n, named(b, &label)), _ => named(b, &label) };
         let center = b.name != "code" && b.name != "contents";
         match todo {
-            Some(v) => self.todo_side(&named(b, &label), &tcodes, inner, width, center, &v),
-            None => self.frame(&named(b, &label), &tcodes, inner, width, false, center),
+            Some(v) => self.todo_side(&shown, &tcodes, inner, width, center, &v),
+            None => self.frame(&shown, &tcodes, inner, width, false, center),
         }
     }
 
@@ -996,4 +1018,88 @@ fn strip_hidden(text: &str) -> String {
         if !hit { out.push(l); }
     }
     out.join("\n")
+}
+
+static PAGES: std::sync::Mutex<Vec<(String, usize)>> =
+    std::sync::Mutex::new(Vec::new());
+
+pub fn set_pages(pages: Vec<(String, usize)>) {
+    if let Ok(mut held) = PAGES.lock() {
+        *held = pages;
+    }
+}
+
+fn page_of(label: &str) -> Option<usize> {
+    let held = PAGES.lock().ok()?;
+    held.iter().find(|p| p.0 == label).map(|p| p.1)
+}
+
+impl Boxes {
+    fn label_of(&self, b: &Block) -> String {
+        match self.numbers.number_at(b.line) {
+            Some(n) => n.to_string(),
+            None => match self.numbers.block_number_at(b.line) {
+                Some(n) => n.to_string(),
+                None => format!("line {}", b.line),
+            },
+        }
+    }
+
+    fn walk_terms(
+        &self,
+        nodes: &[Node],
+        terms: &mut std::collections::BTreeMap<String, Vec<String>>,
+    ) {
+        for n in nodes {
+            if let Node::Block(b) = n {
+                if let Some(t) = decl(b, "term") {
+                    let label = self.label_of(b);
+                    for one in t.split(",") {
+                        let one = one.trim();
+                        if !one.is_empty() {
+                            terms.entry(one.to_string()).or_default().push(label.clone());
+                        }
+                    }
+                }
+                self.walk_terms(&b.children, terms);
+            }
+        }
+    }
+
+    fn walk_refs(&self, nodes: &[Node], rows: &mut Vec<String>) {
+        for n in nodes {
+            if let Node::Block(b) = n {
+                if b.name == "reference" {
+                    rows.push(self.body(b).join(" ").trim().to_string());
+                }
+                self.walk_refs(&b.children, rows);
+            }
+        }
+    }
+
+    fn index_rows(&self) -> Vec<String> {
+        let tree = parse(&Buffer::from_text(&self.text));
+        let mut terms: std::collections::BTreeMap<String, Vec<String>> =
+            std::collections::BTreeMap::new();
+        self.walk_terms(&tree.nodes, &mut terms);
+        let mut rows: Vec<String> = Vec::new();
+        for (term, labels) in terms {
+            let places: Vec<String> = labels
+                .iter()
+                .map(|l| match page_of(l) {
+                    Some(p) => format!("{} p.{}", l, p),
+                    None => l.clone(),
+                })
+                .collect();
+            rows.push(format!("{}  {}", term, places.join(", ")));
+        }
+        rows
+    }
+
+    fn reference_rows(&self) -> Vec<String> {
+        let tree = parse(&Buffer::from_text(&self.text));
+        let mut rows: Vec<String> = Vec::new();
+        self.walk_refs(&tree.nodes, &mut rows);
+        rows
+    }
 }
