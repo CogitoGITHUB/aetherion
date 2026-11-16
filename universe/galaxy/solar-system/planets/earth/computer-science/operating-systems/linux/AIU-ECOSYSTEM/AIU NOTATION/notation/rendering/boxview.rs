@@ -1057,6 +1057,8 @@ pub fn set_read(on: bool) { READ.store(on, std::sync::atomic::Ordering::Relaxed)
 fn is_read() -> bool { READ.load(std::sync::atomic::Ordering::Relaxed) }
 
 fn strip_hidden(text: &str) -> String {
+    let pinned = if keep() { text.to_string() } else { strip_pins(text) };
+    let text = pinned.as_str();
     let hidden = ["comment", "answer", "contract", "mark"];
     let mut out: Vec<&str> = Vec::new();
     let mut skip: Option<String> = None;
@@ -1071,6 +1073,47 @@ fn strip_hidden(text: &str) -> String {
             if t == format!("{} start", h) { skip = Some(h.to_string()); hit = true; break; }
         }
         if !hit { out.push(l); }
+    }
+    out.join("\n")
+}
+
+static KEEP: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+pub fn set_keep(on: bool) {
+    KEEP.store(on, std::sync::atomic::Ordering::Relaxed);
+}
+
+fn keep() -> bool { KEEP.load(std::sync::atomic::Ordering::Relaxed) }
+
+fn pin_hides(lines: &[&str], at: usize) -> bool {
+    for l in lines.iter().skip(at + 1).take(3) {
+        let w: Vec<&str> = l.split_whitespace().collect();
+        if !w.is_empty() && (w[0] == "top" || w[0] == "bottom") {
+            return w.contains(&"hide");
+        }
+    }
+    false
+}
+
+fn strip_pins(text: &str) -> String {
+    let lines: Vec<&str> = text.split("\n").collect();
+    let mut out: Vec<&str> = Vec::new();
+    let mut i = 0;
+    while i < lines.len() {
+        if lines[i].trim() == "pin start" && pin_hides(&lines, i) {
+            let mut depth = 0;
+            while i < lines.len() {
+                let t = lines[i].trim();
+                if t == "pin start" { depth += 1; }
+                if t == "pin end" { depth -= 1; }
+                i += 1;
+                if depth == 0 { break; }
+            }
+            continue;
+        }
+        out.push(lines[i]);
+        i += 1;
     }
     out.join("\n")
 }

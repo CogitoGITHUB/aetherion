@@ -193,8 +193,8 @@
   (cond
     [(page? got)
      (define ps (filter (lambda (p) (= (length p) 5)) (auto-pins session raw (page-blocks got))))
-     (define lines (list->vector (string-split (drawn-view session raw width) "\n" #:trim? #f)))
-     (define rngs (blockview-ranges got (vector->list lines)))
+     (define lines (list->vector (string-split (pins-view session raw width) "\n" #:trim? #f)))
+     (define rngs (pins-ranges got (vector->list lines)))
      (define (rows side)
        (apply append
               (for/list ([p (in-list ps)] #:when (equal? (cadr p) side))

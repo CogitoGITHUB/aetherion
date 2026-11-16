@@ -213,7 +213,10 @@
                              (and (pair? ws) (member (car ws) (list "top" "bottom")))))
           (string-split (vector-ref lines i)))
         (list "top")))
-  (define (mode-of ws) (if (pair? (cdr ws)) (cadr ws) "both"))
+  (define (mode-of ws)
+    (if (and (pair? (cdr ws)) (member (cadr ws) (list "read" "write")))
+        (cadr ws)
+        "both"))
   (define mine
     (for/list ([b (in-list bl)]
                #:when (and (string=? (block-name b) "pin")

@@ -227,6 +227,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -291,6 +295,10 @@ paragraph start
 Brake early and smoothly.
 paragraph end
 chapter end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -455,6 +463,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 table start
@@ -518,7 +530,11 @@ exercise  |  a task for the reader, first line is its name  |  no
 space  |  blank room for hand work, first line is the line count  |  no
 formula  |  an equation, text the parser does not read  |  yes
 callout  |  a boxed remark, first line is note, warning or tip  |  no
-pin  |  keeps its blocks on screen, first line is top or bottom, then write or read  |  no
+pin  |  keeps its blocks on screen, first line is top or bottom, then write or read, then hide  |  no
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -634,6 +650,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -708,6 +728,10 @@ cell: 9.99
 cell:
 row end
 table end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -813,6 +837,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -892,6 +920,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -936,6 +968,10 @@ asked: Does the paragraph make one point?
 Yes. One point: braking.
 answer end
 paragraph end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -1072,6 +1108,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -1152,6 +1192,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -1182,6 +1226,10 @@ paragraph end
 reference start
 Highway Code, 2024
 reference end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -1306,8 +1354,27 @@ asked: Does the paragraph make one point?
 answer end
 paragraph end
 paragraph start
+name: paragraph-the-hide-word
+The hide word removes the body copy of a pin in reading mode.
+Write it last on the first line, for example top hide or bottom
+read hide. In reading mode the pin stays on screen and its block
+is gone from the page body, so a reader sees it once. In writing
+mode hide does nothing, the body copy always stays. Why: a reader
+on a small screen does not need the same note twice, a writer
+needs the whole page.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+paragraph start
 name: paragraph-a-pinned-block
-A pinned block also stays in the page body, so it shows twice.
+A pinned block also stays in the page body, so it shows twice, unless the pin has the hide word.
 That is on purpose: the pin keeps it in sight while the page
 scrolls, and the body copy keeps the page complete. Pins show
 their real block numbers, but a pin block takes no number of
@@ -1354,6 +1421,10 @@ definition end
 space start
 12
 space end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -1453,6 +1524,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -1525,6 +1600,10 @@ name: code-title-startnkind-defaultnnamentitle
 language: text
 "title start\nkind: default\nName\ntitle end\n" | save -f f.aiu
 aiutd f.aiu
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?

@@ -86,7 +86,7 @@ fn main() {
             let mut contracts = false;
             let mut flat = false;
             while i < args.len() {
-                if args[i] == "--plain" { plain = true; } else if args[i] == "--contracts" { contracts = true; } else if args[i] == "--flat" { flat = true; } else if args[i] == "--read" { boxview::set_read(true); }
+                if args[i] == "--plain" { plain = true; } else if args[i] == "--contracts" { contracts = true; } else if args[i] == "--flat" { flat = true; } else if args[i] == "--read" { boxview::set_read(true); } else if args[i] == "--keep-pins" { boxview::set_keep(true); }
                 else if args[i] == "--width" && i + 1 < args.len() { width = args[i + 1].parse().unwrap_or(56); i += 1; }
                 i += 1;
             }

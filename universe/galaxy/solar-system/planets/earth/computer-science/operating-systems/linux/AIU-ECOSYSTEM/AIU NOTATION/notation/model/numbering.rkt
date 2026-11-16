@@ -55,7 +55,7 @@
 (define unnumbered
   (list (quote title) (quote comment) (quote answer)
         (quote contract) (quote row) (quote header)
-        (quote contents) (quote index) (quote bibliography)))
+        (quote contents) (quote index) (quote bibliography) (quote pin)))
 
 (define (block-label chapter local)
   (if (string=? chapter "")

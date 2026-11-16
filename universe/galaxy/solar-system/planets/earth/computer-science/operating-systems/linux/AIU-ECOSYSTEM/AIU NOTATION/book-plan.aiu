@@ -233,6 +233,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -293,11 +297,6 @@ name: code-a-content-list
 language: text
 A  content: list, steps, definition, example, exercise,
    space, formula, callout
-A2 pin hide word: top hide or bottom read hide on the pin first
-   line hides the body copy in reading mode only, never in
-   writing mode. The editor must still get the pin rows. Pins
-   are unnumbered, blocks inside keep the enclosing numbers.
-   Open: numbering.rkt must agree with numbering.rs on pin.
 B  structure: part, appendix, glossary
 C  front and back: abstract, dedication, epigraph,
    acknowledgments
@@ -307,6 +306,10 @@ E  PDF export, moved up from last
 F  README: the rule, one skeleton for a book, a math book
    example, a news file as background, intro and code
 G  README review: verify every claim against code
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?

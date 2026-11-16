@@ -22,12 +22,67 @@
 
 (set-box! hide-hook (lambda (b) (and (unbox read-mode) (member (block-name b) (list "comment" "answer" "contract" "mark")) #t)))
 
+(define hide-spans (box (list)))
+(define span-cache (box #f))
+(define pins-cache (box #f))
+(let ([old (unbox hide-hook)])
+  (set-box! hide-hook
+    (lambda (b)
+      (or (old b)
+          (and (unbox read-mode)
+               (ormap (lambda (s)
+                        (and (<= (car s) (block-start-line b))
+                             (<= (block-end-line b) (cdr s))))
+                      (unbox hide-spans))
+               #t)))))
+(define (pin-hides? lines n)
+  (define ws
+    (for/first ([i (in-range n (min (vector-length lines) (+ n 3)))]
+                #:when (let ([w (string-split (vector-ref lines i))])
+                         (and (pair? w)
+                              (member (car w) (list "top" "bottom")))))
+      (string-split (vector-ref lines i))))
+  (and ws (member "hide" ws) #t))
+(define (hide-spans-of session raw)
+  (define hit (unbox span-cache))
+  (if (and hit (equal? (car hit) raw))
+      (cdr hit)
+      (let ([spans
+             (with-handlers ([(lambda (e) #t) (lambda (e) (list))])
+               (let ([lines (list->vector (string-split raw "\n" #:trim? #f))]
+                     [got (page-of (session-file session)
+                                   (session-journal session))])
+                 (for/list ([b (in-list (page-blocks got))]
+                            #:when (and (string=? (block-name b) "pin")
+                                        (pin-hides? lines (block-start-line b))))
+                   (cons (block-start-line b) (block-end-line b)))))])
+        (set-box! span-cache (cons raw spans))
+        spans)))
+(define (pins-ranges got lines)
+  (define saved (unbox hide-spans))
+  (set-box! hide-spans (list))
+  (begin0 (blockview-ranges got lines)
+          (set-box! hide-spans saved)))
+(define (pins-view session raw width)
+  (if (unbox read-mode)
+      (let ([hit (unbox pins-cache)])
+        (set-box! aiu-shown #t)
+        (if (and hit (equal? (car hit) raw) (equal? (cadr hit) width))
+            (caddr hit)
+            (let ([drawn (view-of (session-file session)
+                                  (session-journal session)
+                                  width "read-pins")])
+              (set-box! pins-cache (list raw width drawn))
+              drawn)))
+      (drawn-view session raw width)))
 (define aiu-shown (box #f))
 
 (set-box! label-hook (lambda (layer) (and (unbox aiu-shown) (string=? layer "visual") (if (unbox read-mode) "reading" "writing"))))
 
 (define (drawn-view session raw width)
   (set-box! aiu-shown #t)
+  (set-box! hide-spans
+            (if (unbox read-mode) (hide-spans-of session raw) (list)))
   (define hit (unbox view-cache))
   (if (and hit (equal? (car hit) raw) (equal? (cadr hit) width) (equal? (cadddr hit) (unbox read-mode)))
       (caddr hit)
@@ -151,7 +206,9 @@
 
 (provide
          drawn-view
-         read-mode)
+         read-mode
+         pins-view
+         pins-ranges)
 
 (define (blockview-todo-state b)
   (define found

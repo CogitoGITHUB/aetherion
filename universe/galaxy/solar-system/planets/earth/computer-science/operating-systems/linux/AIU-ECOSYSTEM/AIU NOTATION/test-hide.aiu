@@ -1,0 +1,32 @@
+title start
+name: title-hide-test
+kind: default
+Hide test
+contract start
+id: qd2fa77
+question: Does the title say what the page is about?
+contract end
+answer start
+for: qd2fa77
+asked: Does the title say what the page is about?
+
+answer end
+title end
+pin start
+name: pin-top-hide-pinned
+top hide
+PINNED copy
+pin end
+paragraph start
+name: paragraph-body-text
+BODY text
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end

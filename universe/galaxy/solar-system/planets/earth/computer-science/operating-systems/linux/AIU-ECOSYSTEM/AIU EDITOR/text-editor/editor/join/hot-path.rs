@@ -135,8 +135,8 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
                 .trim()
                 .parse::<usize>()
                 .unwrap_or(56);
-            let read = wire_json::arg(request, "mode").trim() == "read";
-            match notation_view(&text, width, &file, read) {
+            let read = wire_json::arg(request, "mode").trim().to_string();
+            match notation_view(&text, width, &file, &read) {
                 Ok(rendered) => (true, vec![("text".to_string(), rendered)]),
                 Err(why) => (
                     false,
@@ -484,7 +484,7 @@ fn sync_contracts(text: &str, file: &str) -> String {
     synced.unwrap_or_else(|_| text.to_string())
 }
 
-fn notation_view(text: &str, width: usize, file: &str, read: bool) -> Result<String, String> {
+fn notation_view(text: &str, width: usize, file: &str, read: &str) -> Result<String, String> {
     let named = std::env::var("AIU_NOTATION_BIN").unwrap_or_default();
     let bin = if named.is_empty() {
         std::path::PathBuf::from(concat!(
@@ -505,7 +505,11 @@ fn notation_view(text: &str, width: usize, file: &str, read: bool) -> Result<Str
         .env("AIU_PAGE_DIR", std::path::Path::new(file).parent().map(|p| p.to_path_buf()).unwrap_or_default())
         .arg("view").arg(&temp)
         .arg("--width").arg(width.to_string())
-        .arg("--contracts").args(if read { vec!["--read"] } else { vec![] })
+        .arg("--contracts").args(match read {
+            "read" => vec!["--read"],
+            "read-pins" => vec!["--read", "--keep-pins"],
+            _ => vec![],
+        })
         .output();
     let _ = std::fs::remove_file(&temp);
     let output = drawn.map_err(|e| format!("the notation view could not run: {}", e))?;
