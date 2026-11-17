@@ -1,0 +1,10 @@
+(spec
+  (format-version 2)
+  (name aiu-notation-wasm)
+  (version "0.1.0")
+  (summary "the AIU notation system as wasm")
+  (source (local "/root/home/shape/Ætherion/universe/galaxy/solar-system/planets/earth/computer-science/operating-systems/linux/AIU-ECOSYSTEM/AIU NOTATION"))
+  (build (steps (run #:argv ("nice" "-n" "19" "cargo" "build" "--offline" "--release" "-j" "2" "--target" "wasm32-unknown-unknown" "--target-dir" "notation/target-wasm" "--manifest-path" "notation/Cargo.toml"))))
+  (install (prefix (bin "notation/target-wasm/wasm32-unknown-unknown/release/notation.wasm" "bin/notation.wasm")))
+  (license mit)
+  (homepage "https://example.invalid/"))

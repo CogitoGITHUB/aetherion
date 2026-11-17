@@ -1731,6 +1731,8 @@ AIU_SERVER_PORT  |  HTTP port on 127.0.0.1, default 8080
 AIU_WEBSITE_DIR  |  folder the HTTP door serves, default website
 ws://127.0.0.1:PORT  |  WebSocket door, one command per text message
 changed  |  text pushed to every WebSocket client after a reindex
+ecosystem live aiu-notation-wasm  |  build notation.wasm for the browser
+ecosystem live aiu-website  |  build bridge.wasm, the website wasm
 aiutd FILE  |  open in the editor, needs a real tty
 aiutd update  |  compile, tests at a level, docs
 aiutd test --level N  |  run tests; --only NAME for one
@@ -1902,6 +1904,50 @@ answer start
 for: q94fc72
 asked: Does the paragraph make one point?
 Yes. It explains the WebSocket door and why it exists.
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-notation-wasm
+The notation crate also builds to WebAssembly. Why: the website
+runs the same parser and index code in the browser, so it reads
+index.db with no second implementation to keep in step. The
+command ecosystem live aiu-notation-wasm runs cargo build for the
+target wasm32-unknown-unknown and links notation.wasm into the
+package bin folder. No source change was needed: file and
+environment calls compile for wasm and only fail when called, and
+the website uses the in-memory parts only. Example: after the
+command, bin/notation.wasm exists in the aiu-notation-wasm prefix.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+Yes. It explains the wasm build of the crate and why it exists.
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-website-bridge
+The website folder holds a small wasm bridge. Why: the browser
+must load the saved index into the same Store the server uses,
+with no second reader to keep in step. The bridge crate uses the
+notation crate by path and exports alloc, free_buf, load_index and
+block_count. A loader of about 10 lines of JS fetches bridge.wasm
+and index.db, copies the bytes into wasm memory and calls
+load_index, which returns the block count. The command ecosystem
+live aiu-website builds it. Example: after load FOLDER, the page
+index.html on the HTTP door prints blocks followed by the count.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+Yes. It explains the wasm bridge that loads the index in the browser.
 answer end
 paragraph end
 

@@ -305,49 +305,6 @@ No. It is a measured risk, step 1 answers it.
 answer end
 paragraph end
 paragraph start
-name: paragraph-step-5a-gate
-Step 5a. Gate the 6 files that touch fs, env, process or
-thread, so the notation crate compiles for wasm. Native build
-stays the same.
-contract start
-id: q5e9296
-question: Is each step one action that can be finished and checked?
-contract end
-answer start
-for: q5e9296
-asked: Is each step one action that can be finished and checked?
-Yes. Done when the native build and the notation tests still pass.
-answer end
-paragraph end
-paragraph start
-name: paragraph-step-5b-wasm
-Step 5b. PM manifest step that builds the notation crate to
-wasm with cargo build --target wasm32-unknown-unknown. The target
-is already installed.
-contract start
-id: q5e9296
-question: Is each step one action that can be finished and checked?
-contract end
-answer start
-for: q5e9296
-asked: Is each step one action that can be finished and checked?
-Yes. Done when the PM build writes a wasm file.
-answer end
-paragraph end
-paragraph start
-name: paragraph-step-5c-store
-Step 5c. The browser loads index.db into Store.
-contract start
-id: q5e9296
-question: Is each step one action that can be finished and checked?
-contract end
-answer start
-for: q5e9296
-asked: Is each step one action that can be finished and checked?
-Yes. Done when a test page in the browser prints the block count.
-answer end
-paragraph end
-paragraph start
 name: paragraph-step-6a-bridge
 Step 6a. Wasm bridge: the website sends a command to the
 server and reads the answer. No interface.

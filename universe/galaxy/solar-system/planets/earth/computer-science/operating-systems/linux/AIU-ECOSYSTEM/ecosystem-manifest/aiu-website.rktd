@@ -1,0 +1,10 @@
+(spec
+  (format-version 2)
+  (name aiu-website)
+  (version "0.1.0")
+  (summary "the website wasm bridge")
+  (source (local "/root/home/shape/Ætherion/universe/galaxy/solar-system/planets/earth/computer-science/operating-systems/linux/AIU-ECOSYSTEM/AIU ECOSYSTEM"))
+  (build (steps (run #:argv ("nice" "-n" "19" "cargo" "build" "--offline" "--release" "-j" "2" "--target" "wasm32-unknown-unknown" "--target-dir" "website/target" "--manifest-path" "website/Cargo.toml"))))
+  (install (prefix (bin "website/target/wasm32-unknown-unknown/release/bridge.wasm" "bin/bridge.wasm")))
+  (license mit)
+  (homepage "https://example.invalid/"))

@@ -102,6 +102,7 @@ times. He may hand you only this file.
   install. Entry code: AIU ECOSYSTEM/ecosystem/entry/ecosystem.rkt
   (live branch, then do-live-racket after it).
 - (bin SRC DEST): SRC is read relative to the build target dir.
+- Wasm manifest: add --target wasm32-unknown-unknown to the cargo argv and write bin SRC as TARGETDIR/wasm32-unknown-unknown/release/FILE.wasm.
 - ecosystem live NAME runs the manifest cargo argv in the source
   folder with --target-dir swapped for ~/aiu-target/live/NAME.
   Output lands in ~/aiu-target/live/NAME/release/.
