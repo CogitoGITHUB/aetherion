@@ -5,3 +5,10 @@ version = 4
 [[package]]
 name = "ecosystem-server"
 version = "0.1.0"
+dependencies = [
+ "notation",
+]
+
+[[package]]
+name = "notation"
+version = "0.1.0"

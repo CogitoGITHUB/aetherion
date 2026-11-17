@@ -1720,6 +1720,17 @@ notation roundtrip FILE  |  prove the print back is identical
 notation todos FILE  |  list every todo with its line
 notation edition FILE  |  pages; flags --width W --lines L
 notation index FOLDER  |  build .notation/index.db for the folder
+ecosystem-server load FOLDER  |  server indexes and keeps the index
+ecosystem-server links FILE  |  links written in a file of the index
+ecosystem-server backlinks NAME  |  links that point to a block name
+ecosystem-server broken  |  links whose target does not exist
+ecosystem-server names  |  every block name with its file
+ecosystem-server reload  |  reindex the folder of the last load
+ecosystem-server git FILE  |  repo, git name and email, clean or dirty
+AIU_SERVER_PORT  |  HTTP port on 127.0.0.1, default 8080
+AIU_WEBSITE_DIR  |  folder the HTTP door serves, default website
+ws://127.0.0.1:PORT  |  WebSocket door, one command per text message
+changed  |  text pushed to every WebSocket client after a reindex
 aiutd FILE  |  open in the editor, needs a real tty
 aiutd update  |  compile, tests at a level, docs
 aiutd test --level N  |  run tests; --only NAME for one
@@ -1787,6 +1798,116 @@ asked: Does the paragraph make one point?
 
 answer end
 paragraph end
+paragraph start
+name: paragraph-the-server-load
+The server command load FOLDER indexes a folder like notation
+index and also keeps the index in the memory of the running
+server. Why: one index serves every package, so later commands
+read it without a new walk. It answers the counts of files,
+blocks and records, or one error line. Example: load on this
+folder answers loaded 17 files 1443 blocks 2011 records.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+Yes. It explains the server load command and why.
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-server-reads
+The server reads the loaded index with four commands. links FILE
+lists the links written in one file, by the path the index uses,
+with target, relation and mode. backlinks NAME lists every link
+that points to the block NAME, so when page 2 links to page 1,
+page 1 shows it at once. Backlinks are computed on every ask and
+never stored, so they cannot go stale. broken lists links whose
+target does not exist. names lists every block name with its
+file. Each answers one line, or an error when no index is loaded.
+Example: backlinks p-b answers backlinks 1 a.aiu:6 reference.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+Yes. It explains the four server read commands and why.
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-server-reload-git
+The command reload reindexes the folder of the last load, so a
+file changed by hand shows up without typing the folder again.
+Why: the server never watches the disk. The command git FILE
+reports the git repo that holds the file, found by walking up to
+the nearest .git, whether user.name and user.email are set, and
+whether that one file is clean or dirty. Why: every save is a
+local git commit, so a missing name or email must be seen before
+it breaks a save. Only the one file is checked, because a full
+status of a large repo takes seconds. Example: git on a page
+answers git REPO name yes email yes dirty.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+Yes. It explains reload and git and why each exists.
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-server-http
+The server has a second door: HTTP on 127.0.0.1, port 8080 or
+AIU_SERVER_PORT. Why: the website is wasm in a browser and a
+browser cannot use the Unix socket. GET /index.db returns the
+saved index of the last load. GET of any other path serves a
+file from the website folder, and a path with two dots is
+refused. POST /cmd runs the body as one command, through the same
+handler as the socket, so every door answers alike. The stop
+command is refused over HTTP. Example: POST /cmd with the body
+names answers the block names of the loaded folder.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+Yes. It explains the HTTP door and why it exists.
+answer end
+paragraph end
+paragraph start
+name: paragraph-the-server-websocket
+The HTTP port also speaks WebSocket. Why: the mind map must
+update while you edit, and a browser cannot wait for the server
+with plain requests. A GET with the Upgrade: websocket header on
+any path switches the connection to WebSocket. Each text message
+is one command, answered through the same handler as the socket,
+and stop is refused. After every load or reload the server pushes
+the text changed to all connected clients. Dead connections are
+dropped, so one slow client never blocks the rest. Example:
+connect, send ping, get pong; run reload and get changed.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+Yes. It explains the WebSocket door and why it exists.
+answer end
+paragraph end
+
+
+
+
 
 chapter end
 

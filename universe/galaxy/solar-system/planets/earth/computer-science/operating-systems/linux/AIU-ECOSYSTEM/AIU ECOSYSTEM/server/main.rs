@@ -1,7 +1,9 @@
+mod ws;
 use std::collections::BTreeMap;
 use std::env;
 use std::fs;
 use std::io::{BufRead, BufReader, Write};
+use std::net::{TcpListener, TcpStream};
 use std::os::unix::net::{UnixListener, UnixStream};
 use std::path::PathBuf;
 use std::process;
@@ -116,7 +118,50 @@ fn start_dev(names: Vec<String>, dev: &Arc<Mutex<DevState>>) -> String {
     format!("started {}", started_label)
 }
 
-fn handle(words: &[&str], programs: &mut BTreeMap<String, String>, started: u64, dev: &Arc<Mutex<DevState>>) -> (String, bool) {
+fn read_db(db: &Arc<Mutex<Option<notation::database_store::Store>>>, f: impl FnOnce(&notation::database_store::Store) -> String) -> String {
+    let guard = db.lock().unwrap_or_else(|e| e.into_inner());
+    match guard.as_ref() {
+        Some(store) => f(store),
+        None => String::from("error no index, run load FOLDER first"),
+    }
+}
+static ROOT: Mutex<Option<String>> = Mutex::new(None);
+fn git_out(dir: &std::path::Path, args: &[&str]) -> Option<String> {
+    let out = Command::new("git").arg("-C").arg(dir).args(args).output().ok()?;
+    if !out.status.success() {
+        return None;
+    }
+    Some(String::from_utf8_lossy(&out.stdout).trim().to_string())
+}
+fn git_report(file: &str) -> String {
+    let mut p = PathBuf::from(file);
+    if p.is_relative() {
+        let root = ROOT.lock().unwrap_or_else(|e| e.into_inner()).clone();
+        if let Some(r) = root {
+            p = PathBuf::from(r).join(p);
+        }
+    }
+    let dir = if p.is_dir() {
+        p.clone()
+    } else {
+        p.parent().map(|x| x.to_path_buf()).unwrap_or_else(|| PathBuf::from("."))
+    };
+    let repo = match git_out(&dir, &["rev-parse", "--show-toplevel"]) {
+        Some(r) => r,
+        None => return format!("error no git repo or git missing for {}", file),
+    };
+    let yn = |b: bool| if b { "yes" } else { "no" };
+    let name = git_out(&dir, &["config", "user.name"]).is_some();
+    let email = git_out(&dir, &["config", "user.email"]).is_some();
+    let target = p.to_string_lossy().to_string();
+    let state = match git_out(&dir, &["status", "--porcelain", "--", target.as_str()]) {
+        Some(s) if s.is_empty() => "clean",
+        Some(_) => "dirty",
+        None => "unknown",
+    };
+    format!("git {} name {} email {} {}", repo, yn(name), yn(email), state)
+}
+fn handle(words: &[&str], programs: &mut BTreeMap<String, String>, started: u64, dev: &Arc<Mutex<DevState>>, db: &Arc<Mutex<Option<notation::database_store::Store>>>) -> (String, bool) {
     match words {
         ["ping"] => (String::from("pong"), false),
         ["status"] => (
@@ -141,11 +186,211 @@ fn handle(words: &[&str], programs: &mut BTreeMap<String, String>, started: u64,
             let mode = if state.running { "running" } else { "idle" };
             (format!("dev {} {} last {}", mode, state.names, state.last), false)
         }
+        ["links", rest @ ..] if !rest.is_empty() => {
+            let file = rest.join(" ");
+            (read_db(db, |s| {
+                let rows: Vec<String> = s.of_kind("link").iter()
+                    .filter(|r| r.source == file)
+                    .map(|r| format!("{} {} {} {}", r.field("name").unwrap_or(""), r.field("target").unwrap_or(""), r.field("relation").unwrap_or(""), r.field("mode").unwrap_or("")))
+                    .collect();
+                format!("links {} {}", rows.len(), rows.join(";"))
+            }), false)
+        }
+        ["backlinks", rest @ ..] if !rest.is_empty() => {
+            let target = rest.join(" ");
+            (read_db(db, |s| {
+                let rows: Vec<String> = notation::database_index_links::backlinks_of(s, &target)
+                    .iter().map(|(k, r)| format!("{} {}", k, r)).collect();
+                format!("backlinks {} {}", rows.len(), rows.join(";"))
+            }), false)
+        }
+        ["broken"] => (read_db(db, |s| {
+            let rows: Vec<String> = notation::database_index_links::broken_links(s)
+                .iter().map(|(p, t)| format!("{} {}", p, if t.is_empty() { "<nothing>" } else { t.as_str() })).collect();
+            format!("broken {} {}", rows.len(), rows.join(";"))
+        }), false),
+        ["names"] => (read_db(db, |s| {
+            let rows: Vec<String> = s.of_kind("name").iter()
+                .map(|r| format!("{} {}", r.field("name").unwrap_or(""), r.source))
+                .collect();
+            format!("names {} {}", rows.len(), rows.join(";"))
+        }), false),
+        ["git", rest @ ..] if !rest.is_empty() => (git_report(&rest.join(" ")), false),
+        ["reload"] => {
+            let root = ROOT.lock().unwrap_or_else(|e| e.into_inner()).clone();
+            match root {
+                Some(r) => handle(&["load", r.as_str()], programs, started, dev, db),
+                None => (String::from("error no folder loaded, run load FOLDER first"), false),
+            }
+        }
+        ["load", rest @ ..] if !rest.is_empty() => {
+            let root = std::path::PathBuf::from(rest.join(" "));
+            match notation::database_index_folder::index_folder(&root) {
+                Err(e) => (format!("error {}", e.replace("\n", " ")), false),
+                Ok(_) => {
+                    let file = root.join(".notation").join("index.db");
+                    match notation::database_file_format::load(&file) {
+                        Err(e) => (format!("error {}", e.replace("\n", " ")), false),
+                        Ok(store) => {
+                            let answer = format!(
+                                "loaded {} files {} blocks {} records",
+                                store.of_kind("file").len(),
+                                store.of_kind("block").len(),
+                                store.len()
+                            );
+                            *ROOT.lock().unwrap_or_else(|e| e.into_inner()) = Some(root.to_string_lossy().to_string());
+                            *db.lock().unwrap_or_else(|e| e.into_inner()) = Some(store);
+                            ws::broadcast("changed");
+                            (answer, false)
+                        }
+                    }
+                }
+            }
+        }
         ["stop"] => (String::from("stopping"), true),
         _ => (String::from("error unknown request"), false),
     }
 }
 
+type Db = Arc<Mutex<Option<notation::database_store::Store>>>;
+type Programs = Arc<Mutex<BTreeMap<String, String>>>;
+fn kind(rel: &str) -> String {
+    let ext = rel.rsplit(".").next().unwrap_or("");
+    let t = match ext {
+        "html" => "text/html; charset=utf-8",
+        "js" => "text/javascript; charset=utf-8",
+        "css" => "text/css; charset=utf-8",
+        "json" => "application/json",
+        "wasm" => "application/wasm",
+        "txt" => "text/plain; charset=utf-8",
+        _ => "application/octet-stream",
+    };
+    t.to_string()
+}
+fn http_file(path: &str) -> (u16, String, Vec<u8>) {
+    let clean = path.split("?").next().unwrap_or("");
+    let plain = |code: u16, text: &str| (code, String::from("text/plain; charset=utf-8"), text.as_bytes().to_vec());
+    if clean == "/index.db" {
+        let root = ROOT.lock().unwrap_or_else(|e| e.into_inner()).clone();
+        return match root {
+            None => plain(404, "error no index, run load FOLDER first"),
+            Some(r) => match fs::read(PathBuf::from(r).join(".notation").join("index.db")) {
+                Ok(bytes) => (200, kind("index.db"), bytes),
+                Err(e) => plain(404, &format!("error {}", e)),
+            },
+        };
+    }
+    let mut rel = clean.trim_start_matches("/").to_string();
+    if rel.is_empty() {
+        rel = String::from("index.html");
+    }
+    if rel.contains("..") || rel.contains("\0") {
+        return plain(403, "error forbidden path");
+    }
+    let dir = match env::var("AIU_WEBSITE_DIR") {
+        Ok(p) if !p.is_empty() => PathBuf::from(p),
+        _ => PathBuf::from("website"),
+    };
+    match fs::read(dir.join(&rel)) {
+        Ok(bytes) => (200, kind(&rel), bytes),
+        Err(_) => plain(404, "error not found"),
+    }
+}
+fn http_conn(stream: TcpStream, programs: &Programs, dev: &Arc<Mutex<DevState>>, db: &Db, started: u64) {
+    let _ = stream.set_read_timeout(Some(Duration::from_secs(5)));
+    let mut reader = BufReader::new(&stream);
+    let mut first = String::new();
+    if reader.read_line(&mut first).is_err() {
+        return;
+    }
+    let mut wskey = String::new();
+    let mut upgrade = false;
+    let mut len = 0usize;
+    loop {
+        let mut h = String::new();
+        if reader.read_line(&mut h).is_err() {
+            return;
+        }
+        let t = h.trim_end().to_lowercase();
+        if t.starts_with("sec-websocket-key:") {
+            wskey = h.trim_end()[18..].trim().to_string();
+        }
+        if t.starts_with("upgrade:") && t.contains("websocket") {
+            upgrade = true;
+        }
+        if t.is_empty() {
+            break;
+        }
+        if let Some(v) = t.strip_prefix("content-length:") {
+            len = v.trim().parse().unwrap_or(0);
+        }
+    }
+    let plain = |code: u16, text: &str| (code, String::from("text/plain; charset=utf-8"), text.as_bytes().to_vec());
+    if upgrade && !wskey.is_empty() && first.starts_with("GET ") {
+        ws::serve(&stream, &wskey, reader, programs, dev, db, started);
+        return;
+    }
+    let parts: Vec<&str> = first.split_whitespace().collect();
+    let (code, ctype, data) = if len > 1_000_000 {
+        plain(413, "error body too large")
+    } else {
+        let mut body = vec![0u8; len];
+        if len > 0 && std::io::Read::read_exact(&mut reader, &mut body).is_err() {
+            return;
+        }
+        match parts.as_slice() {
+            ["POST", "/cmd", ..] => {
+                let text = String::from_utf8_lossy(&body).to_string();
+                let words: Vec<&str> = text.split_whitespace().collect();
+                if words == ["stop"] {
+                    plain(403, "error stop only from the socket")
+                } else {
+                    let mut map = programs.lock().unwrap_or_else(|e| e.into_inner());
+                    let (answer, _) = handle(&words, &mut map, started, dev, db);
+                    plain(200, &answer)
+                }
+            }
+            ["GET", path, ..] => http_file(path),
+            _ => plain(405, "error method not allowed"),
+        }
+    };
+    let reason = match code {
+        200 => "OK",
+        403 => "Forbidden",
+        404 => "Not Found",
+        405 => "Method Not Allowed",
+        413 => "Payload Too Large",
+        _ => "Error",
+    };
+    let head = format!("HTTP/1.1 {} {}\r\nContent-Type: {}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n", code, reason, ctype, data.len());
+    let mut out = &stream;
+    let _ = out.write_all(head.as_bytes());
+    let _ = out.write_all(&data);
+}
+fn http_door(programs: Programs, dev: Arc<Mutex<DevState>>, db: Db, started: u64) {
+    let port: u16 = match env::var("AIU_SERVER_PORT") {
+        Ok(p) => p.parse().unwrap_or(8080),
+        Err(_) => 8080,
+    };
+    let listener = match TcpListener::bind(("127.0.0.1", port)) {
+        Ok(l) => l,
+        Err(e) => {
+            println!("http door off at port {}: {}", port, e);
+            return;
+        }
+    };
+    println!("http door at 127.0.0.1:{}", port);
+    for conn in listener.incoming() {
+        let stream = match conn {
+            Ok(s) => s,
+            Err(_) => continue,
+        };
+        let p = Arc::clone(&programs);
+        let d = Arc::clone(&dev);
+        let b = Arc::clone(&db);
+        thread::spawn(move || http_conn(stream, &p, &d, &b, started));
+    }
+}
 fn serve() -> i32 {
     let path = socket_path();
     if ask("ping").is_ok() {
@@ -167,26 +412,45 @@ fn serve() -> i32 {
         }
     };
     let started = now_seconds();
-    let mut programs: BTreeMap<String, String> = BTreeMap::new();
+    let programs: Arc<Mutex<BTreeMap<String, String>>> = Arc::new(Mutex::new(BTreeMap::new()));
     let dev = Arc::new(Mutex::new(DevState { running: false, names: String::new(), last: String::from("none") }));
+    let db: Arc<Mutex<Option<notation::database_store::Store>>> = Arc::new(Mutex::new(None));
     println!("server up at {} pid {}", path.display(), process::id());
+    {
+        let p = Arc::clone(&programs);
+        let d = Arc::clone(&dev);
+        let b = Arc::clone(&db);
+        thread::spawn(move || http_door(p, d, b, started));
+    }
     for conn in listener.incoming() {
-        let mut stream = match conn {
+        let stream = match conn {
             Ok(s) => s,
             Err(_) => continue,
         };
-        let _ = stream.set_read_timeout(Some(Duration::from_secs(5)));
-        let mut line = String::new();
-        if BufReader::new(&stream).read_line(&mut line).is_err() {
-            continue;
-        }
-        let words: Vec<&str> = line.split_whitespace().collect();
-        let (answer, stop) = handle(&words, &mut programs, started, &dev);
-        let _ = stream.write_all(answer.as_bytes());
-        let _ = stream.write_all(b"\n");
-        if stop {
-            break;
-        }
+        let programs = Arc::clone(&programs);
+        let dev = Arc::clone(&dev);
+        let db = Arc::clone(&db);
+        let sock = path.clone();
+        thread::spawn(move || {
+            let mut stream = stream;
+            let _ = stream.set_read_timeout(Some(Duration::from_secs(5)));
+            let mut line = String::new();
+            if BufReader::new(&stream).read_line(&mut line).is_err() {
+                return;
+            }
+            let words: Vec<&str> = line.split_whitespace().collect();
+            let (answer, stop) = {
+                let mut map = programs.lock().unwrap_or_else(|e| e.into_inner());
+                handle(&words, &mut map, started, &dev, &db)
+            };
+            let _ = stream.write_all(answer.as_bytes());
+            let _ = stream.write_all(b"\n");
+            if stop {
+                let _ = fs::remove_file(&sock);
+                println!("server stopped");
+                process::exit(0);
+            }
+        });
     }
     let _ = fs::remove_file(&path);
     println!("server stopped");
