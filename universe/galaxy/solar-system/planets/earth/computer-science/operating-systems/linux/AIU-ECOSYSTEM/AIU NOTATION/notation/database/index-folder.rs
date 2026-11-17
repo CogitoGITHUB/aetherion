@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 use crate::database_file_format::save;
 use crate::database_index_blocks::index_blocks;
 use crate::database_index_files::index_file;
-use crate::database_index_links::index_links;
+use crate::database_index_links::{broken_links, index_links};
 use crate::database_index_names::{duplicate_names, index_names};
 use crate::database_index_tags::index_tags;
 use crate::database_index_todos::index_todos;
@@ -75,13 +75,21 @@ pub fn index_folder(root: &Path) -> Result<String, String> {
     for (name, places) in duplicate_names(&store) {
         eprintln!("notation: duplicate name {} at {}", name, places.join(", "));
     }
+    let broken = broken_links(&store);
+    for (place, target) in &broken {
+        let shown = if target.is_empty() { "<nothing>" } else { target.as_str() };
+        eprintln!("notation: broken link to {} at {}", shown, place);
+    }
+    let dups = duplicate_names(&store).len();
     let database = root.join(".notation").join("index.db");
     save(&store, &database).map_err(|e| format!("cannot save {}: {}", database.display(), e))?;
     Ok(format!(
-        "indexed {} files, {} records, {} unreadable, saved {}",
+        "indexed {} files, {} records, {} unreadable, {} duplicate names, {} broken links, saved {}",
         indexed,
         store.len(),
         unreadable,
+        dups,
+        broken.len(),
         database.display()
     ))
 }

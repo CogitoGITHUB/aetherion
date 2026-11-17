@@ -7,9 +7,9 @@ no progress and no next steps. The work is in the todo files and the
 plan files. Read ACTIVE WORK below, then go to the files it names.
 
 ## ACTIVE WORK
-Area: none. The book format and syntax are finished.
-All parked work is in AIU NOTATION/future-work.aiu. Start
-nothing from it until he says so.
+Area: database server, then mind map.
+Plan: ecosystem-database-plan.aiu, approved by Shape.
+Read the whole plan, then do the first step left, in order.
 
 When the area changes, replace only the lines inside this block.
 Never add steps, results or status here. Never write what was done.
@@ -60,6 +60,13 @@ times. He may hand you only this file.
   every feature gets an explanation, its why and an example.
   Before it, clarify his goals with him, one short question at
   a time, so no hole and no false claim stays in the README.
+- After every finished notation feature, update AIU NOTATION/
+  README.aiu in the same script. Now and then refresh the AI
+  intro with what the AI can do new. When the database server
+  runs, the intro names its commands.
+- The product uses local git always (commits, no remote). The rule No git is only for my own work on the code.
+- rustup and cargo live in HOME/.cargo/bin, not on PATH in bash -c.
+  Default toolchain stable 1.99.0, wasm32-unknown-unknown installed.
 - Never write a done line in a todo before he confirms on screen.
   When an item is finished, delete it.
 - Keep plan, todo and this file compact: when work is done, delete

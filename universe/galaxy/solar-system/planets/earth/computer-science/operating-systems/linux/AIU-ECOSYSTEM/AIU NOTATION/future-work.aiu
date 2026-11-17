@@ -1727,25 +1727,9 @@ chapter start
 title start
 Future work from the todo
 title end
-paragraph start
-todo: link blocks: link start and link end name a target box and can show it inside another file; the editor suggests names while typing.
-Planned.
-paragraph end
 
-paragraph start
-todo: idle autosave: after 5 seconds without typing in write mode, show a notification, leave write mode and save.
-Planned.
-paragraph end
 
-paragraph start
-todo: safe delete: refuse deleting anything not tracked by git unless approved; if shown in other files, ask yes or no in a red popup first.
-Planned.
-paragraph end
 
-paragraph start
-todo: own file manager for safe delete: the git tracked check, the untracked approval word and the red popup for boxes shown elsewhere live in our own file manager; see plan section 10.
-Planned.
-paragraph end
 
 paragraph start
 todo: block type drawing: view.rs, boxview.rs, rich.rs, json.rkt, aiu-text.rkt and make-live.rkt still match block names in code; move how each type is drawn into its blocktypes file so a new type needs no code edit.
@@ -1753,10 +1737,6 @@ Planned.
 paragraph end
 
 
-paragraph start
-todo: register link as a block type in .notation/blocktypes and Racket elements/register.rkt, then make the links indexer read parsed link blocks instead of text lines
-Planned.
-paragraph end
 
 paragraph start
 todo: the folder index loads block types from the folder nearest to the first file only; load them per file or per folder
@@ -1776,10 +1756,6 @@ paragraph end
 
 
 
-paragraph start
-todo: table writing: a good way to write a table in the editor in the table start form of data/table.rkt. Insert a skeleton with caption, columns, header and one row, and check cells against columns. No HTML or LaTeX work
-Planned.
-paragraph end
 
 paragraph start
 todo: json mapping: to-json and from-json exist in data/json.rkt. Write what is lost (comments, formatting) in the types README and add a round trip test. The shell side is aiu-shell, nothing new
@@ -1808,6 +1784,83 @@ paragraph end
 paragraph start
 todo: named references and citations, parked until the
 notation database exists
+Planned.
+paragraph end
+paragraph start
+todo: links step 5: the ecosystem server serves the database, then the
+editor links work: completion, backlinks, jump trail. See the
+editor todo chapter on links.
+Planned.
+paragraph end
+paragraph start
+todo: links step 6: mind map website, local first, public later. It
+reads the database through the server and shows where a block
+goes to and where it comes from.
+Planned.
+paragraph end
+paragraph start
+todo: links holes to decide: prerequisite across files in compiled
+checklists, link to a whole book versus a chapter or a step, how
+long the trail is kept and if it survives closing the editor.
+Planned.
+paragraph end
+paragraph start
+todo: in-page: nested items in list and steps, so a step holds its own
+sub-steps and an item holds sub-items at any depth.
+Planned.
+paragraph end
+paragraph start
+todo: in-page: page type rules for order, count and parent-child. One
+abstract only, before the body. Evidence only inside a chapter
+that has a claim. An exercise followed by a space.
+Planned.
+paragraph end
+paragraph start
+todo: in-page: evidence belongs to a claim, as a child or by pointing
+at a sibling. The check reports a claim with no support.
+Planned.
+paragraph end
+paragraph start
+todo: in-page: table rules. Unique row-id check, required column
+combinations, computed cells such as totals.
+Planned.
+paragraph end
+paragraph start
+todo: in-page: inline marks inside a paragraph for a term, a quoted
+name or a mention, so the index and glossary can be fed from the
+sentence itself.
+Planned.
+paragraph end
+paragraph start
+todo: in-page: running counters for figures, tables and examples, like
+Figure 3 and Table 2. Check what exists, add what is missing.
+Planned.
+paragraph end
+paragraph start
+todo: links embed: a link block with embed: yes draws the target block
+or chapter inside this file, live from the original. Register embed
+and mode as declarations. Needs the database to find the source file
+and the span of the target block.
+Planned.
+paragraph end
+paragraph start
+todo: links edit in place: in an embedded box the cursor edits the
+original. The change is written into the source file at the span of
+the target block, then the file is reindexed. Both files show one
+text.
+Planned.
+paragraph end
+paragraph start
+todo: links edit here only: mode copy stores a local copy in this file
+with its from: target. It shows when it differs from the original,
+with keys to pull the original or push the copy.
+Planned.
+paragraph end
+paragraph start
+todo: links embed holes: source open in another buffer, target moved or
+renamed, a write that fails halfway, nested embeds and loops, safe
+delete warning for a block embedded elsewhere, git view of an edit
+made through another file.
 Planned.
 paragraph end
 chapter end

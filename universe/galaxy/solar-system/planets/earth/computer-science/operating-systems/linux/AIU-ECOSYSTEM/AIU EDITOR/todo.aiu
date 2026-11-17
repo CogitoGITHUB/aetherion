@@ -3,6 +3,45 @@ kind: todo
 tags: todo aiutd planned
 AIUTD TODO
 title end
+chapter start
+name: section-links-and-notation
+title start
+name: title-links-and-notation
+From NOTATION: links and notation tie-ins
+title end
+paragraph start
+todo: link blocks: link start and link end name a target box and can show it inside another file; the editor suggests names while typing.
+Planned.
+paragraph end
+paragraph start
+todo: idle autosave: after 5 seconds without typing in write mode, show a notification, leave write mode and save.
+Planned.
+paragraph end
+paragraph start
+todo: safe delete: refuse deleting anything not tracked by git unless approved; if shown in other files, ask yes or no in a red popup first.
+Planned.
+paragraph end
+paragraph start
+todo: own file manager for safe delete: the git tracked check, the untracked approval word and the red popup for boxes shown elsewhere live in our own file manager; see plan section 10.
+Planned.
+paragraph end
+paragraph start
+todo: table writing: a good way to write a table in the editor in the table start form of data/table.rkt. Insert a skeleton with caption, columns, header and one row, and check cells against columns. No HTML or LaTeX work
+Planned.
+paragraph end
+paragraph start
+todo: link jump trail: keys back and original. Back goes one jump,
+original goes to where the trail started. The trail is progress,
+kept outside the page. Check if buffer.rs holds a cursor position
+the trail can reuse.
+Planned.
+paragraph end
+paragraph start
+todo: link backlinks: draw the places a block is linked from next to
+the block, computed from the database, never typed.
+Planned.
+paragraph end
+chapter end
 
 chapter start
 title start

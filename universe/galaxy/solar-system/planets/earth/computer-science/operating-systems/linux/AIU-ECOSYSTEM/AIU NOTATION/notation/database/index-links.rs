@@ -5,23 +5,42 @@ use crate::parser::{parse, Node};
 
 const KIND: &str = "link";
 
-struct OpenLink {
-    line: usize,
-    name: String,
-    target: String,
-    header_open: bool,
-}
-
-fn collect_opaque_lines_for_links(nodes: &[Node], buffer: &Buffer, out: &mut Vec<(usize, usize)>) {
+fn collect_links(
+    nodes: &[Node],
+    buffer: &Buffer,
+    source: &str,
+    parent: &str,
+    out: &mut Vec<Record>,
+) {
     for node in nodes {
         if let Node::Block(block) = node {
-            if block.is_opaque() {
-                let end_line = buffer.line_at(block.span.end);
-                if end_line > block.line + 1 {
-                    out.push((block.line + 1, end_line - 1));
-                }
+            let mut inner = parent.to_string();
+            if block.name == "link" {
+                let get = |key: &str| {
+                    block
+                        .declarations
+                        .iter()
+                        .find(|d| d.keyword == key)
+                        .map(|d| d.value.trim().to_string())
+                        .unwrap_or_default()
+                };
+                let name = get("name");
+                let end = buffer.line_at(block.span.end.saturating_sub(1));
+                let key = format!("{}:{}", source, block.line);
+                out.push(
+                    Record::new(KIND, &key, source)
+                        .with_field("name", &name)
+                        .with_field("face", &get("face"))
+.with_field("relation", &{ let r = get("relation"); if r.is_empty() { "reference".to_string() } else { r } })
+.with_field("mode", &{ let m = get("mode"); if m.is_empty() { "link".to_string() } else { m } })
+                        .with_field("target", &get("target"))
+                        .with_field("line", &block.line.to_string())
+                        .with_field("end-line", &end.to_string())
+                        .with_field("parent", parent),
+                );
+                inner = name;
             }
-            collect_opaque_lines_for_links(&block.children, buffer, out);
+            collect_links(&block.children, buffer, source, &inner, out);
         }
     }
 }
@@ -29,52 +48,8 @@ fn collect_opaque_lines_for_links(nodes: &[Node], buffer: &Buffer, out: &mut Vec
 pub fn link_records(source: &str, text: &str) -> Vec<Record> {
     let buffer = Buffer::from_text(text);
     let tree = parse(&buffer);
-    let mut opaque: Vec<(usize, usize)> = Vec::new();
-    collect_opaque_lines_for_links(&tree.nodes, &buffer, &mut opaque);
-    let mut open: Vec<OpenLink> = Vec::new();
     let mut out: Vec<Record> = Vec::new();
-    for (index, line) in text.split("\n").enumerate() {
-        let number = index + 1;
-        let hidden = opaque.iter().any(|(first, last)| number >= *first && number <= *last);
-        if hidden {
-            continue;
-        }
-        let trimmed = line.trim();
-        if trimmed == "link start" {
-            open.push(OpenLink {
-                line: number,
-                name: String::new(),
-                target: String::new(),
-                header_open: true,
-            });
-        } else if trimmed == "link end" {
-            if let Some(done) = open.pop() {
-                let parent = match open.last() {
-                    Some(outer) => outer.name.clone(),
-                    None => String::new(),
-                };
-                let key = format!("{}:{}", source, done.line);
-                out.push(
-                    Record::new(KIND, &key, source)
-                        .with_field("name", &done.name)
-                        .with_field("target", &done.target)
-                        .with_field("line", &done.line.to_string())
-                        .with_field("end-line", &number.to_string())
-                        .with_field("parent", &parent),
-                );
-            }
-        } else if let Some(current) = open.last_mut() {
-            if current.header_open {
-                if let Some(words) = trimmed.strip_prefix("name:") {
-                    current.name = words.trim().to_string();
-                } else if let Some(words) = trimmed.strip_prefix("target:") {
-                    current.target = words.trim().to_string();
-                } else {
-                    current.header_open = false;
-                }
-            }
-        }
-    }
+    collect_links(&tree.nodes, &buffer, source, "", &mut out);
     out
 }
 
@@ -84,6 +59,41 @@ pub fn index_links(store: &mut Store, source: &str, text: &str) -> Result<(), St
 
 pub fn forget_links(store: &mut Store, source: &str) -> Result<(), String> {
     store.replace_source(source, KIND, Vec::new())
+}
+
+pub fn broken_links(store: &Store) -> Vec<(String, String)> {
+    let mut known: std::collections::HashSet<String> = std::collections::HashSet::new();
+    for r in store.of_kind("name") {
+        if let Some(n) = r.field("name") {
+            known.insert(n.to_string());
+        }
+    }
+    for r in store.of_kind("file") {
+        known.insert(r.key.clone());
+        if let Some(last) = r.key.rsplit("/").next() {
+            known.insert(last.to_string());
+        }
+    }
+    let mut out: Vec<(String, String)> = Vec::new();
+    for r in store.of_kind("link") {
+        let t = r.field("target").unwrap_or("").trim().to_string();
+        if t.is_empty() || !known.contains(&t) {
+            out.push((r.key.clone(), t));
+        }
+    }
+    out.sort();
+    out
+}
+
+pub fn backlinks_of(store: &Store, target: &str) -> Vec<(String, String)> {
+    let mut out: Vec<(String, String)> = Vec::new();
+    for r in store.of_kind("link") {
+        if r.field("target").unwrap_or("").trim() == target {
+            out.push((r.key.clone(), r.field("relation").unwrap_or("reference").to_string()));
+        }
+    }
+    out.sort();
+    out
 }
 
 #[cfg(test)]

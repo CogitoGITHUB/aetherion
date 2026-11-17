@@ -574,6 +574,7 @@ space  |  blank room for hand work, first line is the line count  |  no
 formula  |  an equation, text the parser does not read  |  yes
 callout  |  a boxed remark, first line is note, warning or tip  |  no
 pin  |  keeps its blocks on screen, first line is top or bottom, then write or read, then hide  |  no
+link  |  a link to a block or file, with face and target  |  no
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -641,7 +642,7 @@ title end
 
 table start
 name: table-2
-caption: The 22 registered declarations
+caption: The 26 registered declarations
 column: keyword text
 column: used on text
 column: meaning text
@@ -693,7 +694,10 @@ question  |  contract  |  the question text
 state  |  any block  |  registered, not used yet
 term  |  any block  |  index terms, comma separated
 break  |  any block  |  before or keep, edition only
-target  |  link  |  registered for links, planned
+target  |  link  |  the name of the block or file it points to
+face  |  link  |  the text the reader sees, optional
+relation  |  link  |  reference or prerequisite, reference if missing
+mode  |  link  |  link, live or copy, link if missing
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -1896,9 +1900,9 @@ title end
 
 paragraph start
 name: paragraph-links-a-target
-Links: a target declaration and a link block name a box and show
-it inside another file. The design is still open, so do not use
-links yet.
+Links: the link block is registered with its face and target
+declarations. The box view draws the face, then the target in
+parentheses: chapter number and title when the target is on the page, else its name. The index saves every link block, read from the parsed tree, with face, target, relation, mode and parent. The index run reports every link whose target is no block name and no file, and every name used twice, with their places and counts. Backlinks are computed from the link records, never stored. Mode live and copy and the editor are not built yet.
 contract start
 id: q94fc72
 question: Does the paragraph make one point?

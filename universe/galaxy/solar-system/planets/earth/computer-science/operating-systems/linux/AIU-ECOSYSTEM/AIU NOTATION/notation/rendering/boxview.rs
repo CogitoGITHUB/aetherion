@@ -35,6 +35,7 @@ struct Boxes {
     broken: usize,
     open: usize,
     unchecked: usize,
+    names: Vec<(String, String, String)>,
 }
 
 /// The colour codes a block may ask for with a color: line.
@@ -472,6 +473,16 @@ impl Boxes {
                     inner.extend(self.wrapped(&codes, g, iw));
                 }
             }
+            "link" => {
+                let target = decl(b, "target").unwrap_or_default();
+                let face = decl(b, "face").unwrap_or_default();
+                let dest = match self.names.iter().find(|(n, _, _)| *n == target.trim()) {
+                    Some((_, num, title)) => format!("({}: {})", num, title),
+                    None => format!("({})", target.trim()),
+                };
+                let text = if face.trim().is_empty() { dest } else { format!("{} {}", face.trim(), dest) };
+                inner.extend(self.wrapped(&[], &text, iw));
+            }
             "code" => {
                 let lang = decl(b, "language").unwrap_or_default();
                 label = if lang.is_empty() { "code".to_string() } else { format!("code · {}", lang) };
@@ -746,8 +757,12 @@ pub fn render_boxes(text: &str, width: usize, plain: bool, contracts: bool) -> S
         broken: 0,
         open: 0,
         unchecked: 0,
+        names: Vec::new(),
     };
     let mut present: Vec<(String, String)> = Vec::new();
+    let mut nm: Vec<(String, String, String)> = Vec::new();
+    v.collect_names(&tree.nodes, &mut nm);
+    v.names = nm;
     v.collect(&tree.nodes, "", &mut present);
     let wd = v.width;
     let page = v.nodes(&tree.nodes, usize::MAX, "", 0, wd);
@@ -1068,6 +1083,7 @@ pub fn fill_page(text: &str) -> Result<(String, Vec<String>), String> {
         broken: 0,
         open: 0,
         unchecked: 0,
+        names: Vec::new(),
     };
     let mut add: Vec<(usize, String)> = Vec::new();
     let mut rep: Vec<String> = Vec::new();
@@ -1205,6 +1221,28 @@ impl Boxes {
                 Some(n) => n.to_string(),
                 None => format!("line {}", b.line),
             },
+        }
+    }
+
+    fn collect_names(&self, ns: &[Node], out: &mut Vec<(String, String, String)>) {
+        for n in ns {
+            if let Node::Block(b) = n {
+                if let Some(nm) = decl(b, "name") {
+                    let title = match b.name.as_str() {
+                        "chapter" | "appendix" | "part" => b
+                            .children
+                            .iter()
+                            .find_map(|c| match c {
+                                Node::Block(t) if t.name == "title" => Some(self.text_of(t)),
+                                _ => None,
+                            })
+                            .unwrap_or_default(),
+                        _ => self.text_of(b).chars().take(40).collect(),
+                    };
+                    out.push((nm.trim().to_string(), self.label_of(b), title));
+                }
+                self.collect_names(&b.children, out);
+            }
         }
     }
 
