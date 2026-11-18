@@ -1,3 +1,12 @@
+RULE 0 (THEME): NEVER configure a theme in any program or
+config file (no settings.toml, no tv theme, no generated
+files, no sync scripts). Every program reads colors ONLY
+from my theme engine (themes/active, via theme.rkt in Racket
+or a small module that reads the same files in Rust). One
+file edit must recolor everything. Splash and tv already do
+this (aiu-shell/splashboard/src/theme/aiu.rs and
+aiu-shell/television/television/config/themes/aiu.rs).
+
 # START HERE (for any AI)
 
 NEVER LEAVE OPEN HOLES. If you see a hole or a side effect in your own work, close it in the same script. Never write a known hole as a note to him.
