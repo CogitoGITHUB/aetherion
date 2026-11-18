@@ -5,6 +5,7 @@ use crate::database_file_format::save;
 use crate::database_index_blocks::index_blocks;
 use crate::database_index_files::index_file;
 use crate::database_index_links::{broken_links, index_links};
+use crate::database_index_layouts::index_layouts;
 use crate::database_index_names::{duplicate_names, index_names};
 use crate::database_index_tags::index_tags;
 use crate::database_index_todos::index_todos;
@@ -69,6 +70,7 @@ pub fn index_folder(root: &Path) -> Result<String, String> {
         index_tags(&mut store, &source, &text)?;
         index_todos(&mut store, &source, &text)?;
         index_links(&mut store, &source, &text)?;
+        index_layouts(&mut store, &source, &text)?;
         index_names(&mut store, &source, &text)?;
         indexed += 1;
     }

@@ -83,7 +83,7 @@ Decided. Shape builds the structure by hand. Every branch has a
 master file. Layout and direction are written in the files, and
 nothing arranges itself. The server, the editor and the map check
 each other.
-Decided. A file sets its box position with a place: x y
+Replaced by layout files, see layout-plan.aiu. Old rule. A file sets its box position with a place: x y
 declaration in its title block. The index holds it as the
 place field. A file without it is drawn in a wrapped row in
 index order, so no file is hidden while Shape places the rest.
@@ -191,3 +191,10 @@ No. It is a placeholder that waits for decisions, not one action.
 answer end
 paragraph end
 chapter end
+
+paragraph start
+Master view status. Cards use fill, arrow and grid from /theme. Layout boxes, captions and arrows are real HTML, see layout-plan.aiu.
+Test pages are in AIU NOTATION/demo and link in a ring. Open:
+card size and layout still live in lib.rs and must move to
+notation. Titles stop at the first nested block.
+paragraph end

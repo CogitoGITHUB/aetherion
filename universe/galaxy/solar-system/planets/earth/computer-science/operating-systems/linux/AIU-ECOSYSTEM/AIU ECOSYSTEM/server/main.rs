@@ -469,7 +469,7 @@ fn theme_text() -> String {
     let mut roles: Vec<(String, String)> = vec![
         ("text", "#ffffff"), ("dim", "#6e6e6e"),
         ("error", "#dc2828"), ("bg", "none"),
-        ("corner", "round"),
+        ("corner", "round"), ("fill", "none"), ("arrow", "head"), ("grid", "on"),
     ]
     .into_iter()
     .map(|(a, b)| (a.to_string(), b.to_string()))

@@ -1,0 +1,105 @@
+title start
+Layout plan
+title end
+
+paragraph start
+name: paragraph-layout-goal
+Goal. The master view shows boxes inside boxes. Where each box
+sits is written in layout files, never inside the content
+files. Shape builds every layout by hand. Nothing arranges
+itself.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-replace
+Decided. Layout files replace the place declaration in the title
+block. A file that is in no layout is still drawn in a wrapped
+row, so no file is hidden. Files in no layout still read the old
+place declaration until Shape removes it.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-rules
+Decided. A layout file only says which files appear in its box
+and where. It holds no content. Positions are relative to the
+box. Links are by name and never by position. A layout can nest
+another layout as a box. Version one stays tiny.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-modular
+Decided. Layouts are modular. One file may appear in many
+layouts. There is no hard-coded layout and no switch. The page
+reads every layout in the notation folder and draws them all
+combined. Layouts only combine, they never replace each other.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-one-card
+Decided. One card per file. All layouts merge into one map. A
+link arrow attaches to the one card of its file.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-no-fight
+Decided. Layouts can never error or fight each other. A file
+placed twice takes the spot from the fixed order of layout name,
+then line order, and the other placement is ignored silently. A
+loop of nested layouts is skipped at the repeat. A line naming a
+missing file is skipped. Two cards on one spot: the later card
+moves to the next free spot. The order by layout name is a pick
+that Shape may change.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-syntax
+Decided. A layout is written like all other notation: a block
+with start and end lines and declarations inside. It reuses
+declarations the parser already knows, so the parser needs no
+change. Shape: a layout block with a name, holding card blocks
+and box blocks. A card has a target file. A box has a target
+layout. Both have a place of x y. The block types are layout,
+card and box, in both blocktypes folders.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-caption
+Decided. Every layout, card and box may carry a caption, which
+is its description. The map shows it under the title. A box
+caption on a nested box wins over the caption of its layout.
+paragraph end
+
+paragraph start
+name: paragraph-layout-confirmed
+Confirmed on screen. Link blocks are indexed. The index holds a
+layout-item record per layout, card and box. Nested boxes are
+drawn from them, with files in no layout in a row below.
+paragraph end
+
+paragraph start
+name: paragraph-layout-written
+Written, not yet confirmed on screen. The master view is real
+HTML now. The wasm gives the page a scene with boxes, cards and
+arrow endpoints. The page draws rounded boxes, descriptions and
+curved SVG arrows with colors and corners from the theme only.
+Layout width no longer changes with zoom. Demo layouts in
+AIU NOTATION/demo carry captions.
+paragraph end
+
+paragraph start
+name: paragraph-layout-open
+Open. Card and box sizes, spacing and the arrow curve still live
+in lib.rs and the page and must move to notation settings.
+Remove the old place fallback. Zoom levels: far shows box
+titles, close shows cards. Focus on tap: light a card and its
+linked files. Table view as a second reading of the same index.
+Descriptions for plain files that are in no layout.
+paragraph end
+
+paragraph start
+name: paragraph-layout-inspiration
+Ideas to borrow. Obsidian Canvas: layout is its own file. C4
+model: boxes inside boxes with zoom levels. D2 and Graphviz
+clusters: nested containers written in text. Maps of content:
+one note that only lists and arranges others.
+paragraph end

@@ -1,0 +1,19 @@
+title start
+Demo Alpha
+title end
+
+paragraph start
+First demo page.
+paragraph end
+
+link start
+name: l1-alpha
+target: demo/beta.aiu
+face: next
+link end
+
+link start
+name: l2-alpha
+target: demo/gamma.aiu
+face: also
+link end

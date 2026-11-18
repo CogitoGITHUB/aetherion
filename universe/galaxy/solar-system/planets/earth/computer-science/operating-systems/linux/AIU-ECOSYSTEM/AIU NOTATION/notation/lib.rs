@@ -70,6 +70,9 @@ pub mod database_index_tags;
 #[path = "database/index-links.rs"]
 pub mod database_index_links;
 
+#[path = "database/index-layouts.rs"]
+pub mod database_index_layouts;
+
 #[path = "database/index-names.rs"]
 pub mod database_index_names;
 

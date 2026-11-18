@@ -3,6 +3,7 @@
   const dec = new TextDecoder(), enc = new TextEncoder();
   let e, ox = 0, oy = 0, z = 1, pts = [];
   let T = {}, tsig = "", pend = null;
+  let ver = 0, lsig = "", wl = null;
   let ov = null, st = null, mv = false;
   const mk = (tag, css, txt) => {
     const e = document.createElement(tag);
@@ -72,7 +73,7 @@
     document.body.appendChild(ov);
   };
   const tap = (x, y) => {
-    const ok = e.pick(cv.width / z, ox + x / z, oy + y / z);
+    const ok = e.pick(Math.round(innerWidth), ox + x / z, oy + y / z);
     if (ok > 0) openFile(str(e.pick_ptr(), e.pick_len()));
   };
   addEventListener("keydown", (v) => { if (v.key === "Escape") closeFile(); });
@@ -86,6 +87,7 @@
     g.lineTo(x + r, y2); g.arcTo(x, y2, x, y2 - r, r);
     g.lineTo(x, y + r); g.arcTo(x, y, x + r, y, r);
     g.lineTo(x + r, y);
+    if (T.fill && T.fill !== "none") { g.fillStyle = T.fill; g.fill(); }
     g.stroke();
   };
   const ink = (r) => (T[r] && T[r] !== "none" ? T[r] : "CanvasText");
@@ -116,6 +118,7 @@
     },
     line: (x, y, a, b) => {
       g.strokeStyle = ink("dim"); g.beginPath(); g.moveTo(x, y); g.lineTo(a, b);
+      if (T.arrow === "none" || T.arrow === "plain") { g.stroke(); return; }
       const t = Math.atan2(b - y, a - x), h = 10;
       g.moveTo(a, b); g.lineTo(a - h * Math.cos(t - 0.4), b - h * Math.sin(t - 0.4));
       g.moveTo(a, b); g.lineTo(a - h * Math.cos(t + 0.4), b - h * Math.sin(t + 0.4));
@@ -124,6 +127,59 @@
     text: (p, n, x, y) => { g.fillStyle = ink("text"); g.fillText(str(p, n), x, y); },
   } });
   e = w.instance.exports;
+  const render = () => {
+    if (!e || !e.scene) return;
+    const w = Math.round(innerWidth);
+    if (!wl) {
+      wl = mk("div", "position:fixed;left:0;top:0;transform-origin:0 0;pointer-events:none;font:15px/1.4 system-ui,sans-serif");
+      document.body.appendChild(wl);
+    }
+    const sig = ver + "|" + w + "|" + tsig;
+    if (sig !== lsig) {
+      lsig = sig;
+      wl.textContent = "";
+      let s = null;
+      try {
+        const n = e.scene(w);
+        s = JSON.parse(str(e.scene_ptr(), n));
+      } catch (x) { s = null; }
+      if (s) {
+        const dim = ink("dim"), fg = ink("text");
+        const bg = T.bg && T.bg !== "none" ? T.bg : "Canvas";
+        const fill = T.fill && T.fill !== "none" ? T.fill : bg;
+        const rad = T.corner === "square" ? 0 : 12;
+        s.f.forEach((f) => {
+          const d = mk("div", `position:absolute;box-sizing:border-box;left:${f.x}px;top:${f.y}px;width:${f.w}px;height:${f.h}px;border:1px solid ${dim};border-radius:${rad}px`);
+          d.appendChild(mk("span", `position:absolute;top:-10px;left:14px;padding:0 8px;font-size:13px;font-weight:600;background:${bg};color:${fg}`, f.t));
+          if (f.d) d.appendChild(mk("div", `position:absolute;left:16px;right:16px;top:14px;font-size:12px;line-height:1.35;color:${dim};display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden`, f.d));
+          wl.appendChild(d);
+        });
+        const sv = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        sv.setAttribute("style", "position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible");
+        const head = T.arrow !== "none" && T.arrow !== "plain";
+        const me = head ? " marker-end=\"url(#ah)\"" : "";
+        let h = "";
+        if (head) h += `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" fill="${dim}"/></marker></defs>`;
+        s.l.forEach((l) => {
+          const x1 = l[0], y1 = l[1], x2 = l[2], y2 = l[3];
+          const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+          const d = Math.abs(x2 - x1) >= Math.abs(y2 - y1)
+            ? `M${x1} ${y1}C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}`
+            : `M${x1} ${y1}C${x1} ${my} ${x2} ${my} ${x2} ${y2}`;
+          h += `<path d="${d}" fill="none" stroke="${dim}" stroke-width="1.5"${me}/>`;
+        });
+        sv.innerHTML = h;
+        wl.appendChild(sv);
+        s.c.forEach((c) => {
+          const d = mk("div", `position:absolute;box-sizing:border-box;left:${c.x}px;top:${c.y}px;width:${s.bw}px;height:${s.bh}px;padding:10px 12px;overflow:hidden;background:${fill};border:1px solid ${dim};border-radius:${rad}px`);
+          d.appendChild(mk("div", `font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:${fg}`, c.t));
+          if (c.d) d.appendChild(mk("div", `margin-top:3px;font-size:12px;line-height:1.35;color:${dim};display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden`, c.d));
+          wl.appendChild(d);
+        });
+      }
+    }
+    wl.style.transform = "scale(" + z + ") translate(" + (-ox) + "px," + (-oy) + "px)";
+  };
   const paint = () => {
     cv.width = innerWidth; cv.height = innerHeight;
     g.setTransform(1, 0, 0, 1, 0, 0);
@@ -131,13 +187,13 @@
     if (T.bg && T.bg !== "none") { g.fillStyle = T.bg; g.fillRect(0, 0, cv.width, cv.height); }
     const s = 48 * z;
     const fx = ((((-ox * z) % s) + s) % s) - s, fy = ((((-oy * z) % s) + s) % s) - s;
-    g.globalAlpha = 0.25; g.strokeStyle = ink("dim"); g.lineWidth = 1; g.beginPath();
+    g.globalAlpha = T.grid === "off" ? 0 : 0.25; g.strokeStyle = ink("dim"); g.lineWidth = 1; g.beginPath();
     for (let x = fx; x < cv.width; x += s) { g.moveTo(x, 0); g.lineTo(x, cv.height); }
     for (let y = fy; y < cv.height; y += s) { g.moveTo(0, y); g.lineTo(cv.width, y); }
     g.stroke();
     g.globalAlpha = 1; g.setTransform(z, 0, 0, z, 0, 0);
-    g.lineWidth = 1.5 / z; g.font = "14px monospace"; g.textBaseline = "top";
-    e.draw(cv.width / z, cv.height / z, ox, oy);
+    g.lineWidth = 1.5 / z; g.font = "600 14px system-ui,sans-serif"; g.textBaseline = "top";
+    render();
   };
   const zoomAt = (mx, my, nz, nx, ny) => {
     const k = Math.min(4, Math.max(0.2, nz));
@@ -146,7 +202,7 @@
   };
   const load = async () => {
     const d = new Uint8Array(await (await fetch("index.db")).arrayBuffer()), p = put(d);
-    e.load_index(p, d.length); e.free_buf(p, d.length); paint();
+    e.load_index(p, d.length); e.free_buf(p, d.length); ver++; paint();
   };
   ws.onmessage = (m) => {
     const b = enc.encode(m.data), p = put(b);

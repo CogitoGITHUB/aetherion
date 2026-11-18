@@ -1,0 +1,23 @@
+layout start
+name: demo-main
+caption: Test layout with three linked pages and one nested box.
+card start
+target: demo/alpha.aiu
+place: 0 0
+caption: Start of the ring. Links to beta and gamma.
+card end
+card start
+target: demo/beta.aiu
+place: 1 0
+caption: Second page. Links to gamma and delta.
+card end
+card start
+target: demo/gamma.aiu
+place: 2 0
+caption: Third page. Links to delta and alpha.
+card end
+box start
+target: demo-inner
+place: 0 1
+box end
+layout end

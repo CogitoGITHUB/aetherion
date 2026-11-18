@@ -229,3 +229,30 @@ line, aiutd FILE.aiu, never bash -c, it needs the real tty.
   aiu-shell-screen command_runner.rs, key arm in input_state.rs.
 - Keys already taken in Visual: t h n e s c p a i x o l j k b
   g y Y / space f m M z Z d q. Free: r u v w(now used) and more.
+- /theme also has fill, arrow (head, plain, none), grid (on, off).
+- Demo pages with links: AIU NOTATION/demo (5 files, ring).
+- Block names come from the nearest .notation/blocktypes
+  folder, searched upward from the file. The root one
+  (.notation/blocktypes) had no link.blocktype, so links
+  were never indexed. Copy the type there when a block
+  kind is ignored. Default set: AIU NOTATION/notation/
+  blocktypes (44 files, root had 43, only link was missing).
+- Layout plan: AIU NOTATION/layout-plan.aiu. Layout files
+  replace place. Read it before touching the master view.
+- New block types go in both blocktypes folders: the default
+  AIU NOTATION/notation/blocktypes and the root .notation/
+  blocktypes. layout, card and box were added this way.
+- Test layouts: AIU NOTATION/demo/layout-main.aiu and
+  layout-inner.aiu. Syntax: layout block with name, card
+  blocks (target, place: x y), box blocks (target: layout name).
+- Index kind layout-item (index-layouts.rs): fields what
+  (card or box), target, place, layout (parent name), line.
+- Master view: lib.rs arrange() builds frames and cards from
+  layout-item records, draw() paints frames first via rect
+  and text. Files in no layout are drawn by plain() below.
+- Master view is HTML now: loader.js render() builds a layer
+  from the wasm scene (lib.rs scene, scene_ptr: JSON with boxes,
+  cards, arrow endpoints). Canvas only paints bg and grid.
+- Descriptions: caption declaration in layout, card, box.
+  index-layouts.rs writes it, also one record with what=layout.
+- Layout width is the window width, not divided by zoom.

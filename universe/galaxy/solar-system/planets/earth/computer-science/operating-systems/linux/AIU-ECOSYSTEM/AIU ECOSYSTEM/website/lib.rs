@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::sync::Mutex;
 
 use notation::database_store::Store;
@@ -7,10 +7,10 @@ static DB: Mutex<Option<Store>> = Mutex::new(None);
 static LAST: Mutex<String> = Mutex::new(String::new());
 
 const BOX_W: f64 = 240.0;
-const BOX_H: f64 = 64.0;
+const BOX_H: f64 = 76.0;
 const GAP: f64 = 24.0;
 const STEP_X: f64 = 264.0;
-const STEP_Y: f64 = 88.0;
+const STEP_Y: f64 = 100.0;
 const MARGIN: f64 = 200.0;
 const MAX_CHARS: usize = 26;
 
@@ -96,12 +96,215 @@ fn parse_place(s: &str) -> Option<(f64, f64)> {
     Some((x, y))
 }
 
+struct Frame {
+    title: String,
+    x: f64,
+    y: f64,
+    w: f64,
+    h: f64,
+}
+
+struct Item {
+    what: String,
+    target: String,
+    place: Option<(f64, f64)>,
+    caption: String,
+}
+
+const PAD: f64 = 16.0;
+const HEAD: f64 = 56.0;
+
+fn resolve(t: &str, titles: &HashMap<String, String>) -> Option<String> {
+    let t = t.trim();
+    if titles.contains_key(t) {
+        return Some(t.to_string());
+    }
+    let mut keys: Vec<&String> = titles.keys().collect();
+    keys.sort();
+    for k in keys {
+        if k.rsplit("/").next() == Some(t) {
+            return Some(k.clone());
+        }
+    }
+    None
+}
+
+fn build(
+    name: &str,
+    groups: &HashMap<String, Vec<Item>>,
+    titles: &HashMap<String, String>,
+    placed: &mut HashSet<String>,
+    path: &mut Vec<String>,
+) -> (Vec<Boxed>, Vec<Frame>, f64, f64) {
+    let mut cards: Vec<Boxed> = Vec::new();
+    let mut frames: Vec<Frame> = Vec::new();
+    let mut taken: HashSet<(i64, i64)> = HashSet::new();
+    let mut mw = PAD + BOX_W + PAD;
+    let mut mh = HEAD + BOX_H + PAD;
+    path.push(name.to_string());
+    if let Some(items) = groups.get(name) {
+        for it in items {
+            let mut file: Option<String> = None;
+            if it.what == "box" {
+                if path.iter().any(|p| p == &it.target)
+                    || !groups.contains_key(&it.target)
+                {
+                    continue;
+                }
+            } else {
+                match resolve(&it.target, titles) {
+                    Some(k) => {
+                        if placed.contains(&k) {
+                            continue;
+                        }
+                        file = Some(k);
+                    }
+                    None => continue,
+                }
+            }
+            let (mut px, mut py) = it.place.unwrap_or((0.0, 0.0));
+            let mut guard = 0;
+            while taken.contains(&(px.round() as i64, py.round() as i64))
+                && guard < 1000
+            {
+                px += 1.0;
+                guard += 1;
+            }
+            taken.insert((px.round() as i64, py.round() as i64));
+            let x = PAD + px * STEP_X;
+            let y = HEAD + py * STEP_Y;
+            if let Some(k) = file {
+                placed.insert(k.clone());
+                desc_set(&format!("k:{}", k), &it.caption);
+                let title = titles.get(&k).cloned().unwrap_or_default();
+                cards.push(Boxed { key: k, title, x, y });
+                mw = mw.max(x + BOX_W + PAD);
+                mh = mh.max(y + BOX_H + PAD);
+            } else {
+                let (c, f, w, h) =
+                    { desc_set(&format!("l:{}", it.target), &it.caption); build(&it.target, groups, titles, placed, path) };
+                frames.push(Frame { title: it.target.clone(), x, y, w, h });
+                for mut b in c {
+                    b.x += x;
+                    b.y += y;
+                    cards.push(b);
+                }
+                for mut g in f {
+                    g.x += x;
+                    g.y += y;
+                    frames.push(g);
+                }
+                mw = mw.max(x + w + PAD);
+                mh = mh.max(y + h + PAD);
+            }
+        }
+    }
+    path.pop();
+    (cards, frames, mw, mh)
+}
+
+fn arrange(store: &Store, width: f64) -> (Vec<Boxed>, Vec<Frame>) {
+    *DESC.lock().unwrap_or_else(|e| e.into_inner()) = None;
+    let files = store.of_kind("file");
+    let mut titles: HashMap<String, String> = HashMap::new();
+    for r in &files {
+        titles.insert(r.key.clone(), r.field("title").unwrap_or("").to_string());
+    }
+    let recs = store.of_kind("layout-item");
+    let mut rows: Vec<(String, i64, String, Item)> = Vec::new();
+    for r in &recs {
+        let lay = r.field("layout").unwrap_or("").trim().to_string();
+        if lay.is_empty() {
+            continue;
+        }
+        if r.field("what") == Some("layout") {
+            desc_set(&format!("l:{}", lay), r.field("caption").unwrap_or("").trim());
+            continue;
+        }
+        let line = r
+            .field("line")
+            .and_then(|s| s.parse::<i64>().ok())
+            .unwrap_or(0);
+        rows.push((
+            r.source.clone(),
+            line,
+            lay,
+            Item {
+                what: r.field("what").unwrap_or("").to_string(),
+                target: r.field("target").unwrap_or("").trim().to_string(),
+                place: r.field("place").and_then(parse_place),
+                caption: r.field("caption").unwrap_or("").trim().to_string(),
+            },
+        ));
+    }
+    rows.sort_by(|a, b| (a.0.clone(), a.1).cmp(&(b.0.clone(), b.1)));
+    let mut groups: HashMap<String, Vec<Item>> = HashMap::new();
+    let mut nested: HashSet<String> = HashSet::new();
+    for (_, _, lay, item) in rows {
+        if item.what == "box" {
+            nested.insert(item.target.clone());
+        }
+        groups.entry(lay).or_default().push(item);
+    }
+    let mut names: Vec<String> = groups.keys().cloned().collect();
+    names.sort();
+    let mut placed: HashSet<String> = HashSet::new();
+    let mut cards: Vec<Boxed> = Vec::new();
+    let mut frames: Vec<Frame> = Vec::new();
+    let mut sx = GAP;
+    let mut sy = GAP;
+    let mut rowh: f64 = 0.0;
+    let mut any = false;
+    for name in &names {
+        if nested.contains(name) {
+            continue;
+        }
+        let mut path: Vec<String> = Vec::new();
+        let (c, f, w, h) = build(name, &groups, &titles, &mut placed, &mut path);
+        if sx > GAP && sx + w > width {
+            sx = GAP;
+            sy += rowh + GAP;
+            rowh = 0.0;
+        }
+        frames.push(Frame { title: name.clone(), x: sx, y: sy, w, h });
+        for mut b in c {
+            b.x += sx;
+            b.y += sy;
+            cards.push(b);
+        }
+        for mut g in f {
+            g.x += sx;
+            g.y += sy;
+            frames.push(g);
+        }
+        sx += w + GAP;
+        rowh = rowh.max(h);
+        any = true;
+    }
+    let top = if any { sy + rowh } else { 0.0 };
+    let mut rest = plain(store, width, &placed, top);
+    cards.append(&mut rest);
+    (cards, frames)
+}
+
 fn layout(store: &Store, width: f64) -> Vec<Boxed> {
+    arrange(store, width).0
+}
+
+fn plain(
+    store: &Store,
+    width: f64,
+    skip: &HashSet<String>,
+    top: f64,
+) -> Vec<Boxed> {
     let files = store.of_kind("file");
     let mut out: Vec<Boxed> = Vec::new();
     let mut loose: Vec<(String, String)> = Vec::new();
     let mut last_row: f64 = -1.0;
     for r in &files {
+        if skip.contains(&r.key) {
+            continue;
+        }
         let title = r.field("title").unwrap_or("").to_string();
         match r.field("place").and_then(parse_place) {
             Some((px, py)) => {
@@ -112,7 +315,7 @@ fn layout(store: &Store, width: f64) -> Vec<Boxed> {
                     key: r.key.clone(),
                     title,
                     x: GAP + px * STEP_X,
-                    y: GAP + py * STEP_Y,
+                    y: GAP + py * STEP_Y + top,
                 });
             }
             None => loose.push((r.key.clone(), title)),
@@ -127,10 +330,120 @@ fn layout(store: &Store, width: f64) -> Vec<Boxed> {
             key,
             title,
             x: GAP + col * STEP_X,
-            y: GAP + row * STEP_Y,
+            y: GAP + row * STEP_Y + top,
         });
     }
     out
+}
+
+static SCENE: Mutex<String> = Mutex::new(String::new());
+static DESC: Mutex<Option<HashMap<String, String>>> = Mutex::new(None);
+
+fn desc_set(k: &str, v: &str) {
+    if v.is_empty() {
+        return;
+    }
+    let mut g = DESC.lock().unwrap_or_else(|e| e.into_inner());
+    g.get_or_insert_with(HashMap::new)
+        .insert(k.to_string(), v.to_string());
+}
+
+fn desc_get(k: &str) -> String {
+    let g = DESC.lock().unwrap_or_else(|e| e.into_inner());
+    match g.as_ref().and_then(|m| m.get(k)) {
+        Some(v) => v.clone(),
+        None => String::new(),
+    }
+}
+
+fn jq(s: &str) -> String {
+    let mut o = String::from("\"");
+    for c in s.chars() {
+        match c as u32 {
+            34 => o.push_str("\\\""),
+            92 => o.push_str("\\\\"),
+            x if x < 32 => o.push_str(" "),
+            _ => o.push(c),
+        }
+    }
+    o.push_str("\"");
+    o
+}
+
+#[no_mangle]
+pub extern "C" fn scene(width: f64) -> usize {
+    let guard = DB.lock().unwrap_or_else(|e| e.into_inner());
+    let store = match guard.as_ref() {
+        Some(s) => s,
+        None => return 0,
+    };
+    let (boxes, frames) = arrange(store, width);
+    let mut o = format!("{{\"bw\":{},\"bh\":{},\"f\":[", BOX_W, BOX_H);
+    for (i, f) in frames.iter().enumerate() {
+        if i > 0 {
+            o.push_str(",");
+        }
+        o.push_str(&format!(
+            "{{\"t\":{},\"d\":{},\"x\":{},\"y\":{},\"w\":{},\"h\":{}}}",
+            jq(&f.title),
+            jq(&desc_get(&format!("l:{}", f.title))),
+            f.x, f.y, f.w, f.h
+        ));
+    }
+    o.push_str("],\"c\":[");
+    for (i, b) in boxes.iter().enumerate() {
+        if i > 0 {
+            o.push_str(",");
+        }
+        let t = if b.title.is_empty() {
+            b.key.rsplit("/").next().unwrap_or(&b.key).to_string()
+        } else {
+            b.title.clone()
+        };
+        o.push_str(&format!(
+            "{{\"k\":{},\"t\":{},\"d\":{},\"x\":{},\"y\":{}}}",
+            jq(&b.key),
+            jq(&t),
+            jq(&desc_get(&format!("k:{}", b.key))),
+            b.x, b.y
+        ));
+    }
+    o.push_str("],\"l\":[");
+    let mut idx: HashMap<&str, usize> = HashMap::new();
+    for (i, b) in boxes.iter().enumerate() {
+        idx.insert(b.key.as_str(), i);
+    }
+    let names = name_map(store);
+    let mut first = true;
+    for r in store.of_kind("link") {
+        let from = match idx.get(r.source.as_str()) {
+            Some(i) => *i,
+            None => continue,
+        };
+        let target = r.field("target").unwrap_or("").trim();
+        let to = match names.get(target).and_then(|k| idx.get(k.as_str())) {
+            Some(i) => *i,
+            None => continue,
+        };
+        if from == to {
+            continue;
+        }
+        let (ax, ay, bx, by) = anchors(&boxes[from], &boxes[to]);
+        if !first {
+            o.push_str(",");
+        }
+        first = false;
+        o.push_str(&format!("[{},{},{},{}]", ax, ay, bx, by));
+    }
+    o.push_str("]}");
+    let n = o.len();
+    *SCENE.lock().unwrap_or_else(|e| e.into_inner()) = o;
+    n
+}
+
+#[no_mangle]
+pub extern "C" fn scene_ptr() -> *const u8 {
+    SCENE.lock().unwrap_or_else(|e| e.into_inner()).as_ptr()
 }
 
 fn name_map(store: &Store) -> HashMap<String, String> {
@@ -265,7 +578,14 @@ pub extern "C" fn draw(width: f64, height: f64, sx: f64, sy: f64) -> i32 {
         Some(s) => s,
         None => return -1,
     };
-    let boxes = layout(store, width);
+    let (boxes, frames) = arrange(store, width);
+    unsafe {
+        for f in &frames {
+            rect(f.x - sx, f.y - sy, f.w, f.h);
+            let l = f.title.clone();
+            text(l.as_ptr(), l.len(), f.x - sx + 12.0, f.y - sy + 8.0);
+        }
+    }
     let index: HashMap<&str, usize> = boxes
         .iter()
         .enumerate()

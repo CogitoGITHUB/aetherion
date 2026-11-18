@@ -1,0 +1,3 @@
+name: box
+kind: a nested layout shown as a box inside a layout box, with place
+opaque: no

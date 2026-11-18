@@ -44,6 +44,7 @@ fn declared_title(buffer: &Buffer, nodes: &[Node]) -> String {
                 for line in &all[1..all.len() - 1] {
                     let t = line.trim();
                     let decl = block.declarations.iter().any(|d| t.starts_with(&format!("{}:", d.keyword)));
+                    if t.ends_with(" start") { break; }
                     if !decl && !t.is_empty() {
                         parts.push(t.to_string());
                     }

@@ -1,0 +1,14 @@
+layout start
+name: demo-inner
+caption: Nested box with the last two pages of the ring.
+card start
+target: demo/delta.aiu
+place: 0 0
+caption: Fourth page. Links to epsilon and alpha.
+card end
+card start
+target: demo/epsilon.aiu
+place: 1 0
+caption: Fifth page. Links to alpha and beta.
+card end
+layout end

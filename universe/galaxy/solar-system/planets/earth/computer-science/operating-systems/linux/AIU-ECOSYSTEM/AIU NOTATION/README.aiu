@@ -2016,6 +2016,10 @@ place: x y declaration in its title block, indexed as the place
 field. Why: nothing arranges itself, Shape places every file by
 hand. A file without place is drawn in a wrapped row in index
 order, so no file is hidden. Example: place: 3 4 in a title.
+Replaced. Layout files now decide where boxes sit. A layout block
+holds card blocks and box blocks, each with a target and a place
+of x y, and a caption for the description. The page reads every
+layout and draws them combined. See layout-plan.aiu.
 Drawing: the wasm lays out every box and calls rect, line and
 text, three functions the loader provides, so the browser only
 paints. Why: all logic stays in Rust. Example: scrolling draws
