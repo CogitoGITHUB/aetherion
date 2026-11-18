@@ -2335,3 +2335,20 @@ paragraph end
 
 chapter end
 
+
+paragraph start
+name: paragraph-master-view-scope
+Master view scope. The page draws only files whose path starts
+with the SCOPE folder in website/lib.rs, now demo/. Why: to demo
+layouts without outside files breaking the view. The index still
+holds every file. To see all files, set SCOPE to an empty text.
+paragraph end
+
+paragraph start
+name: paragraph-master-view-one-place
+Layouts home and scope. Layout files live in notation/layouts,
+the same place as block types, so they survive when a demo folder
+is deleted. This replaces any earlier note naming .notation/layouts.
+The page draws only files under SCOPE, now demo/. To see all
+files, set SCOPE to an empty text.
+paragraph end

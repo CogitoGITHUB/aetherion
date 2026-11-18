@@ -302,7 +302,7 @@ fn plain(
     let mut loose: Vec<(String, String)> = Vec::new();
     let mut last_row: f64 = -1.0;
     for r in &files {
-        if skip.contains(&r.key) {
+        if skip.contains(&r.key) || !r.key.starts_with(SCOPE) {
             continue;
         }
         let title = r.field("title").unwrap_or("").to_string();
@@ -336,6 +336,7 @@ fn plain(
     out
 }
 
+const SCOPE: &str = "demo/";
 static SCENE: Mutex<String> = Mutex::new(String::new());
 static DESC: Mutex<Option<HashMap<String, String>>> = Mutex::new(None);
 

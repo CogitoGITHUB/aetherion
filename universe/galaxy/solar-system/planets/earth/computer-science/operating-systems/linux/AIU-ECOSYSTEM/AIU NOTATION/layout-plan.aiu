@@ -103,3 +103,22 @@ model: boxes inside boxes with zoom levels. D2 and Graphviz
 clusters: nested containers written in text. Maps of content:
 one note that only lists and arranges others.
 paragraph end
+
+paragraph start
+name: paragraph-layout-decided-scope
+Decided. The master view has a folder scope, set in lib.rs as
+SCOPE. Now it is demo/. Files outside the scope are not drawn,
+but they stay in the index and are never deleted. Files inside
+the scope that are in no layout still wrap in a row below.
+Open: move SCOPE into notation settings.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-one-place
+Decided. Layout files live in AIU NOTATION/notation/layouts, beside
+blocktypes and types, never in demo and never in .notation. This
+replaces any earlier note that named .notation/layouts. Deleting
+demo never loses them. The master view has a folder scope, SCOPE
+in website/lib.rs, now demo/. Files outside it stay in the index.
+Open: move SCOPE into notation settings.
+paragraph end

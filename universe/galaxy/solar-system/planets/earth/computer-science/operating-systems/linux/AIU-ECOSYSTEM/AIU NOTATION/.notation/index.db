@@ -1434,6 +1434,20 @@ F	end-line	2333
 F	depth	2
 F	parent	paragraph
 F	declared-name	
+R	block	README.aiu:2339	README.aiu
+F	block	paragraph
+F	line	2339
+F	end-line	2345
+F	depth	0
+F	parent	
+F	declared-name	paragraph-master-view-scope
+R	block	README.aiu:2347	README.aiu
+F	block	paragraph
+F	line	2347
+F	end-line	2354
+F	depth	0
+F	parent	
+F	declared-name	paragraph-master-view-one-place
 R	block	README.aiu:248	README.aiu
 F	block	paragraph
 F	line	248
@@ -5760,62 +5774,6 @@ F	end-line	13
 F	depth	0
 F	parent	
 F	declared-name	l1-gamma
-R	block	demo/layout-inner.aiu:1	demo/layout-inner.aiu
-F	block	layout
-F	line	1
-F	end-line	14
-F	depth	0
-F	parent	
-F	declared-name	demo-inner
-R	block	demo/layout-inner.aiu:4	demo/layout-inner.aiu
-F	block	card
-F	line	4
-F	end-line	8
-F	depth	1
-F	parent	layout
-F	declared-name	
-R	block	demo/layout-inner.aiu:9	demo/layout-inner.aiu
-F	block	card
-F	line	9
-F	end-line	13
-F	depth	1
-F	parent	layout
-F	declared-name	
-R	block	demo/layout-main.aiu:1	demo/layout-main.aiu
-F	block	layout
-F	line	1
-F	end-line	23
-F	depth	0
-F	parent	
-F	declared-name	demo-main
-R	block	demo/layout-main.aiu:14	demo/layout-main.aiu
-F	block	card
-F	line	14
-F	end-line	18
-F	depth	1
-F	parent	layout
-F	declared-name	
-R	block	demo/layout-main.aiu:19	demo/layout-main.aiu
-F	block	box
-F	line	19
-F	end-line	22
-F	depth	1
-F	parent	layout
-F	declared-name	
-R	block	demo/layout-main.aiu:4	demo/layout-main.aiu
-F	block	card
-F	line	4
-F	end-line	8
-F	depth	1
-F	parent	layout
-F	declared-name	
-R	block	demo/layout-main.aiu:9	demo/layout-main.aiu
-F	block	card
-F	line	9
-F	end-line	13
-F	depth	1
-F	parent	layout
-F	declared-name	
 R	block	future-work.aiu:1	future-work.aiu
 F	block	title
 F	line	1
@@ -8483,6 +8441,20 @@ F	end-line	3
 F	depth	0
 F	parent	
 F	declared-name	
+R	block	layout-plan.aiu:107	layout-plan.aiu
+F	block	paragraph
+F	line	107
+F	end-line	114
+F	depth	0
+F	parent	
+F	declared-name	paragraph-layout-decided-scope
+R	block	layout-plan.aiu:116	layout-plan.aiu
+F	block	paragraph
+F	line	116
+F	end-line	124
+F	depth	0
+F	parent	
+F	declared-name	paragraph-layout-decided-one-place
 R	block	layout-plan.aiu:13	layout-plan.aiu
 F	block	paragraph
 F	line	13
@@ -8567,6 +8539,62 @@ F	end-line	105
 F	depth	0
 F	parent	
 F	declared-name	paragraph-layout-inspiration
+R	block	notation/layouts/layout-inner.aiu:1	notation/layouts/layout-inner.aiu
+F	block	layout
+F	line	1
+F	end-line	14
+F	depth	0
+F	parent	
+F	declared-name	demo-inner
+R	block	notation/layouts/layout-inner.aiu:4	notation/layouts/layout-inner.aiu
+F	block	card
+F	line	4
+F	end-line	8
+F	depth	1
+F	parent	layout
+F	declared-name	
+R	block	notation/layouts/layout-inner.aiu:9	notation/layouts/layout-inner.aiu
+F	block	card
+F	line	9
+F	end-line	13
+F	depth	1
+F	parent	layout
+F	declared-name	
+R	block	notation/layouts/layout-main.aiu:1	notation/layouts/layout-main.aiu
+F	block	layout
+F	line	1
+F	end-line	23
+F	depth	0
+F	parent	
+F	declared-name	demo-main
+R	block	notation/layouts/layout-main.aiu:14	notation/layouts/layout-main.aiu
+F	block	card
+F	line	14
+F	end-line	18
+F	depth	1
+F	parent	layout
+F	declared-name	
+R	block	notation/layouts/layout-main.aiu:19	notation/layouts/layout-main.aiu
+F	block	box
+F	line	19
+F	end-line	22
+F	depth	1
+F	parent	layout
+F	declared-name	
+R	block	notation/layouts/layout-main.aiu:4	notation/layouts/layout-main.aiu
+F	block	card
+F	line	4
+F	end-line	8
+F	depth	1
+F	parent	layout
+F	declared-name	
+R	block	notation/layouts/layout-main.aiu:9	notation/layouts/layout-main.aiu
+F	block	card
+F	line	9
+F	end-line	13
+F	depth	1
+F	parent	layout
+F	declared-name	
 R	block	notation/types/book.aiu:1	notation/types/book.aiu
 F	block	title
 F	line	1
@@ -10601,9 +10629,9 @@ R	file	README.aiu	README.aiu
 F	kind	default
 F	title	AIU NOTATION: everything it can do
 F	place	
-F	lines	2337
-F	bytes	63875
-F	blocks	309
+F	lines	2354
+F	bytes	64560
+F	blocks	311
 F	errors	0
 R	file	aiu-notation-usage-examples/aiu-business-future.aiu	aiu-notation-usage-examples/aiu-business-future.aiu
 F	kind	default
@@ -10653,22 +10681,6 @@ F	lines	19
 F	bytes	221
 F	blocks	4
 F	errors	0
-R	file	demo/layout-inner.aiu	demo/layout-inner.aiu
-F	kind	
-F	title	
-F	place	
-F	lines	14
-F	bytes	304
-F	blocks	3
-F	errors	1
-R	file	demo/layout-main.aiu	demo/layout-main.aiu
-F	kind	
-F	title	
-F	place	
-F	lines	23
-F	bytes	462
-F	blocks	5
-F	errors	1
 R	file	future-work.aiu	future-work.aiu
 F	kind	default
 F	title	Future work: books, sciences, skills and the todo
@@ -10681,10 +10693,26 @@ R	file	layout-plan.aiu	layout-plan.aiu
 F	kind	
 F	title	Layout plan
 F	place	
-F	lines	105
-F	bytes	3968
-F	blocks	13
+F	lines	124
+F	bytes	4766
+F	blocks	15
 F	errors	0
+R	file	notation/layouts/layout-inner.aiu	notation/layouts/layout-inner.aiu
+F	kind	
+F	title	
+F	place	
+F	lines	14
+F	bytes	304
+F	blocks	3
+F	errors	1
+R	file	notation/layouts/layout-main.aiu	notation/layouts/layout-main.aiu
+F	kind	
+F	title	
+F	place	
+F	lines	23
+F	bytes	462
+F	blocks	5
+F	errors	1
 R	file	notation/types/book.aiu	notation/types/book.aiu
 F	kind	book
 F	title	Book page: a chapter on how notes become pages
@@ -10797,56 +10825,56 @@ F	lines	32
 F	bytes	545
 F	blocks	7
 F	errors	0
-R	layout-item	demo/layout-inner.aiu:1	demo/layout-inner.aiu
+R	layout-item	notation/layouts/layout-inner.aiu:1	notation/layouts/layout-inner.aiu
 F	what	layout
 F	target	
 F	place	
 F	layout	demo-inner
 F	caption	Nested box with the last two pages of the ring.
 F	line	1
-R	layout-item	demo/layout-inner.aiu:4	demo/layout-inner.aiu
+R	layout-item	notation/layouts/layout-inner.aiu:4	notation/layouts/layout-inner.aiu
 F	what	card
 F	target	demo/delta.aiu
 F	place	0 0
 F	layout	demo-inner
 F	caption	Fourth page. Links to epsilon and alpha.
 F	line	4
-R	layout-item	demo/layout-inner.aiu:9	demo/layout-inner.aiu
+R	layout-item	notation/layouts/layout-inner.aiu:9	notation/layouts/layout-inner.aiu
 F	what	card
 F	target	demo/epsilon.aiu
 F	place	1 0
 F	layout	demo-inner
 F	caption	Fifth page. Links to alpha and beta.
 F	line	9
-R	layout-item	demo/layout-main.aiu:1	demo/layout-main.aiu
+R	layout-item	notation/layouts/layout-main.aiu:1	notation/layouts/layout-main.aiu
 F	what	layout
 F	target	
 F	place	
 F	layout	demo-main
 F	caption	Test layout with three linked pages and one nested box.
 F	line	1
-R	layout-item	demo/layout-main.aiu:14	demo/layout-main.aiu
+R	layout-item	notation/layouts/layout-main.aiu:14	notation/layouts/layout-main.aiu
 F	what	card
 F	target	demo/gamma.aiu
 F	place	2 0
 F	layout	demo-main
 F	caption	Third page. Links to delta and alpha.
 F	line	14
-R	layout-item	demo/layout-main.aiu:19	demo/layout-main.aiu
+R	layout-item	notation/layouts/layout-main.aiu:19	notation/layouts/layout-main.aiu
 F	what	box
 F	target	demo-inner
 F	place	0 1
 F	layout	demo-main
 F	caption	
 F	line	19
-R	layout-item	demo/layout-main.aiu:4	demo/layout-main.aiu
+R	layout-item	notation/layouts/layout-main.aiu:4	notation/layouts/layout-main.aiu
 F	what	card
 F	target	demo/alpha.aiu
 F	place	0 0
 F	layout	demo-main
 F	caption	Start of the ring. Links to beta and gamma.
 F	line	4
-R	layout-item	demo/layout-main.aiu:9	demo/layout-main.aiu
+R	layout-item	notation/layouts/layout-main.aiu:9	notation/layouts/layout-main.aiu
 F	what	card
 F	target	demo/beta.aiu
 F	place	1 0
@@ -11303,6 +11331,14 @@ R	name	README.aiu:2321	README.aiu
 F	name	paragraph-after-writing-open
 F	block	paragraph
 F	line	2321
+R	name	README.aiu:2339	README.aiu
+F	name	paragraph-master-view-scope
+F	block	paragraph
+F	line	2339
+R	name	README.aiu:2347	README.aiu
+F	name	paragraph-master-view-one-place
+F	block	paragraph
+F	line	2347
 R	name	README.aiu:248	README.aiu
 F	name	paragraph-a-page-without
 F	block	paragraph
@@ -12331,14 +12367,6 @@ R	name	demo/gamma.aiu:9	demo/gamma.aiu
 F	name	l1-gamma
 F	block	link
 F	line	9
-R	name	demo/layout-inner.aiu:1	demo/layout-inner.aiu
-F	name	demo-inner
-F	block	layout
-F	line	1
-R	name	demo/layout-main.aiu:1	demo/layout-main.aiu
-F	name	demo-main
-F	block	layout
-F	line	1
 R	name	future-work.aiu:1	future-work.aiu
 F	name	title-plan-books-sciences
 F	block	title
@@ -12867,6 +12895,14 @@ R	name	future-work.aiu:993	future-work.aiu
 F	name	paragraph-database-rebuild-how
 F	block	paragraph
 F	line	993
+R	name	layout-plan.aiu:107	layout-plan.aiu
+F	name	paragraph-layout-decided-scope
+F	block	paragraph
+F	line	107
+R	name	layout-plan.aiu:116	layout-plan.aiu
+F	name	paragraph-layout-decided-one-place
+F	block	paragraph
+F	line	116
 R	name	layout-plan.aiu:13	layout-plan.aiu
 F	name	paragraph-layout-decided-replace
 F	block	paragraph
@@ -12915,6 +12951,14 @@ R	name	layout-plan.aiu:99	layout-plan.aiu
 F	name	paragraph-layout-inspiration
 F	block	paragraph
 F	line	99
+R	name	notation/layouts/layout-inner.aiu:1	notation/layouts/layout-inner.aiu
+F	name	demo-inner
+F	block	layout
+F	line	1
+R	name	notation/layouts/layout-main.aiu:1	notation/layouts/layout-main.aiu
+F	name	demo-main
+F	block	layout
+F	line	1
 R	name	test-blocks.aiu:1	test-blocks.aiu
 F	name	title-step-a-test
 F	block	title

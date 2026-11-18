@@ -256,3 +256,12 @@ line, aiutd FILE.aiu, never bash -c, it needs the real tty.
 - Descriptions: caption declaration in layout, card, box.
   index-layouts.rs writes it, also one record with what=layout.
 - Layout width is the window width, not divided by zoom.
+- ONE PLACE RULE: every notation asset lives in AIU NOTATION/
+  notation/ (blocktypes, types, layouts). Never in demo, never in
+  a .notation folder: .notation holds only index.db and the
+  root blocktypes copy, and the indexer skips it. Before creating
+  or moving files, ask where the same kind already lives.
+- Layout files: AIU NOTATION/notation/layouts. Indexed by the
+  normal walk, no indexer change.
+- Master view scope: SCOPE in website/lib.rs, now demo/. Files
+  outside stay in the index.
