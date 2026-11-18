@@ -7,8 +7,8 @@ no progress and no next steps. The work is in the todo files and the
 plan files. Read ACTIVE WORK below, then go to the files it names.
 
 ## ACTIVE WORK
-Area: database server, then mind map.
-Plan: ecosystem-database-plan.aiu, approved by Shape.
+Area: themes for every package. Database plan paused.
+Plan: ecosystem-theme-plan.aiu.
 Read the whole plan, then do the first step left, in order.
 
 When the area changes, replace only the lines inside this block.
@@ -103,6 +103,7 @@ times. He may hand you only this file.
   (live branch, then do-live-racket after it).
 - (bin SRC DEST): SRC is read relative to the build target dir.
 - Wasm manifest: add --target wasm32-unknown-unknown to the cargo argv and write bin SRC as TARGETDIR/wasm32-unknown-unknown/release/FILE.wasm.
+- Wasm extern imports need #[link(wasm_import_module = "env")], else rust-lld fails with undefined symbol.
 - ecosystem live NAME runs the manifest cargo argv in the source
   folder with --target-dir swapped for ~/aiu-target/live/NAME.
   Output lands in ~/aiu-target/live/NAME/release/.

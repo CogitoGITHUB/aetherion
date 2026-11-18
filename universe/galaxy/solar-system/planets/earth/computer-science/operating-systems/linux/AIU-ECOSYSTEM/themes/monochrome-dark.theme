@@ -1,0 +1,5 @@
+name = monochrome-dark
+text = white
+dim = #6e6e6e
+error = red
+bg = none

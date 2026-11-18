@@ -56,8 +56,8 @@ pub fn draw_screen(frame: &mut Frame, state: &InputState) {
     let mut focus_end: usize = 0;
     for (pair_index, pair) in state.pairs.iter().enumerate() {
         let boxes = [
-            (&pair.command, Color::White, pair_index * 2),
-            (&pair.output, Color::White, pair_index * 2 + 1),
+            (&pair.command, crate::theme::text(), pair_index * 2),
+            (&pair.output, crate::theme::text(), pair_index * 2 + 1),
         ];
         for (current, _base, flat) in boxes {
             let focused = state.mode == Mode::Visual && state.focus == flat;
@@ -66,13 +66,13 @@ let start_track = if state.mode == Mode::Visual { focused } else { flat / 2 + 1 
 let end_track = if state.mode == Mode::Visual { focused } else { flat / 2 + 1 == state.pairs.len() };
             let failed = output_failed(&pair.output.rows);
             let color = if state.pair_running(pair_index) {
-Color::Rgb(110, 110, 110)
+crate::theme::dim()
 } else if failed {
-                Color::Red
+                crate::theme::error()
             } else if state.mode == Mode::Visual && !focused && !marked {
-                Color::Rgb(110, 110, 110)
+                crate::theme::dim()
             } else {
-                Color::White
+                crate::theme::text()
             };
             let mut style = Style::default().fg(color);
             if focused {
@@ -121,7 +121,7 @@ Color::Rgb(110, 110, 110)
     if !flow_bar.is_empty() {
         let _ = lines.pop();
         for text in flow_bar {
-            let white = Style::default().fg(Color::White);
+            let white = Style::default().fg(crate::theme::text());
             lines.push(Line::from(Span::styled(text, white)));
         }
         if state.mode != Mode::Visual {
@@ -174,12 +174,12 @@ Color::Rgb(110, 110, 110)
     let (title, color) = match state.mode {
         Mode::Visual => (
             "input  f full screen edit  z jump  Z add dir",
-            Color::White,
+            crate::theme::text(),
         ),
-        Mode::Insert => ("input insert  esc visual  enter run  up down history  ctrl+r search", Color::White),
+        Mode::Insert => ("input insert  esc visual  enter run  up down history  ctrl+r search", crate::theme::text()),
         Mode::Search => (
             "input search  type to filter  enter use  esc close",
-            Color::White,
+            crate::theme::text(),
         ),
     };
     let mut row = state.text.replace("\n", "⏎");
@@ -262,7 +262,7 @@ Color::Rgb(110, 110, 110)
                 continue;
             }
             let fg = cell.fg;
-            if fg == Color::Red || fg == Color::White || fg == Color::Reset || fg == Color::Rgb(110, 110, 110) {
+            if fg == crate::theme::error() || fg == crate::theme::text() || fg == Color::Reset || fg == crate::theme::dim() {
                 cell.set_fg(tone);
             }
         }
@@ -307,17 +307,17 @@ fn search_row(state: &InputState, position: usize, inner: usize) -> Line<'_> {
     let (row_index, positions) = &state.search_matches[position];
     let row = &state.search_rows[*row_index];
     let selected = position == state.search_index;
-    let border = Style::default().fg(Color::White);
+    let border = Style::default().fg(crate::theme::text());
     let base = if selected {
-        Style::default().fg(Color::White).add_modifier(Modifier::BOLD)
+        Style::default().fg(crate::theme::text()).add_modifier(Modifier::BOLD)
     } else {
-        Style::default().fg(Color::White)
+        Style::default().fg(crate::theme::text())
     };
-    let light = Style::default().fg(Color::White).add_modifier(Modifier::BOLD).add_modifier(Modifier::UNDERLINED);
+    let light = Style::default().fg(crate::theme::text()).add_modifier(Modifier::BOLD).add_modifier(Modifier::UNDERLINED);
     let (mark, mark_color) = match row.exit {
-        Some(0) => ("✓", Color::White),
-        Some(_) => ("✗", Color::Red),
-        None => (" ", Color::White),
+        Some(0) => ("✓", crate::theme::text()),
+        Some(_) => ("✗", crate::theme::error()),
+        None => (" ", crate::theme::text()),
     };
     let age = match row.when_ms {
         Some(then) => format_age(now_milliseconds(), then),
@@ -340,7 +340,7 @@ fn search_row(state: &InputState, position: usize, inner: usize) -> Line<'_> {
     spans.push(Span::styled(" ".repeat(command_width - used + 1), base));
     if show_meta {
         spans.push(Span::styled(mark, Style::default().fg(mark_color)));
-        spans.push(Span::styled(tail, Style::default().fg(Color::White)));
+        spans.push(Span::styled(tail, Style::default().fg(crate::theme::text())));
     }
     spans.push(Span::styled(" │", border));
     Line::from(spans)
@@ -376,7 +376,7 @@ fn draw_search(
         rows: Vec::new(),
     }
     .lines(width);
-    let border = Style::default().fg(Color::White);
+    let border = Style::default().fg(crate::theme::text());
     let mut lines: Vec<Line> = Vec::new();
     lines.push(Line::from(Span::styled(edges[0].clone(), border)));
     for _ in 0..(visible - (end - first)) {
@@ -405,7 +405,9 @@ fn pulse_level(tick: usize) -> u8 {
 }
 
 fn pulse_color(tick: usize) -> Color {
-    let stops = [(110.0, 110.0, 110.0), (255.0, 255.0, 255.0), (220.0, 40.0, 40.0)];
+    let stops = [crate::theme::rgb("dim"),
+        crate::theme::rgb("text"),
+        crate::theme::rgb("error")];
     let phase = tick % 60;
     let seg = phase / 20;
     let t = (phase % 20) as f32 / 20.0;
@@ -421,6 +423,9 @@ fn pulse_color_for(tick: usize, red: bool) -> Color {
     }
     let phase = tick % 40;
     let up = if phase < 20 { phase } else { 40 - phase };
-    let v = (110 + up * 145 / 20) as u8;
-    Color::Rgb(v, v, v)
+    let t = up as f32 / 20.0;
+    let a = crate::theme::rgb("dim");
+    let b = crate::theme::rgb("text");
+    let m = |x: f32, y: f32| (x + (y - x) * t) as u8;
+    Color::Rgb(m(a.0, b.0), m(a.1, b.1), m(a.2, b.2))
 }

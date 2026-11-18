@@ -324,7 +324,7 @@ impl InputState {
     }
 
     fn start_job(&mut self, line: &str) -> Vec<String> {
-        if let Some(message) = crate::command_runner::try_cd(line) { return vec![message]; } match start_line(line) {
+        if let Some(message) = crate::command_runner::try_theme(line) { return vec![message]; } if let Some(message) = crate::command_runner::try_cd(line) { return vec![message]; } match start_line(line) {
             Ok(job) => {
                 self.job = Some(job);
                 Vec::new()

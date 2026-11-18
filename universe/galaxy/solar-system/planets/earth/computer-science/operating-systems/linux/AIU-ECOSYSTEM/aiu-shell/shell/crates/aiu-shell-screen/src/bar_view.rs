@@ -155,7 +155,7 @@ pub fn draw_bar(frame: &mut Frame, lines: &[String], full: Rect, inner_height: u
         height: lines.len() as u16,
     };
     frame.render_widget(
-        Paragraph::new(lines.iter().map(|l| match l.split_once("\u{1}") { Some((a, b)) => ratatui::text::Line::from(vec![ratatui::text::Span::styled(a.to_string(), Style::default().fg(Color::White)), ratatui::text::Span::styled(b.to_string(), Style::default().fg(Color::Red).add_modifier(ratatui::style::Modifier::BOLD))]), None => ratatui::text::Line::from(l.clone()) }).collect::<Vec<ratatui::text::Line>>()).style(Style::default().fg(Color::White)),
+        Paragraph::new(lines.iter().map(|l| match l.split_once("\u{1}") { Some((a, b)) => ratatui::text::Line::from(vec![ratatui::text::Span::styled(a.to_string(), Style::default().fg(crate::theme::text())), ratatui::text::Span::styled(b.to_string(), Style::default().fg(crate::theme::error()).add_modifier(ratatui::style::Modifier::BOLD))]), None => ratatui::text::Line::from(l.clone()) }).collect::<Vec<ratatui::text::Line>>()).style(Style::default().fg(crate::theme::text())),
         rect,
     );
 }
@@ -250,7 +250,7 @@ pub fn draw_menu(frame: &mut Frame, state: &InputState, area: Rect) {
     };
     let text = lines.into_iter().take(count).collect::<Vec<String>>().join("\n");
     frame.render_widget(Clear, rect);
-    frame.render_widget(Paragraph::new(text).style(Style::default().fg(Color::White)), rect);
+    frame.render_widget(Paragraph::new(text).style(Style::default().fg(crate::theme::text())), rect);
 }
 
 static FULL_INPUT: AtomicBool = AtomicBool::new(false);
@@ -305,7 +305,7 @@ pub fn draw_full_input(frame: &mut Frame, state: &InputState, area: Rect) {
     };
     frame.render_widget(Clear, area);
     frame.render_widget(
-        Paragraph::new(frame_box.lines(width).join("\n")).style(Style::default().fg(Color::White)),
+        Paragraph::new(frame_box.lines(width).join("\n")).style(Style::default().fg(crate::theme::text())),
         area,
     );
 }
@@ -416,7 +416,7 @@ pub fn draw_splash(frame: &mut Frame, state: &InputState, area: Rect) {
     let text = frame_box.lines(width).join("\n");
     frame.render_widget(Clear, area);
     frame.render_widget(
-        Paragraph::new(text).style(Style::default().fg(Color::White)),
+        Paragraph::new(text).style(Style::default().fg(crate::theme::text())),
         area,
     );
 }

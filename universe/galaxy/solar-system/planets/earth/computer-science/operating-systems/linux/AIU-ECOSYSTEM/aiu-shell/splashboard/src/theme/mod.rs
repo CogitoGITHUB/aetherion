@@ -39,6 +39,7 @@ use ratatui::style::Color;
 use serde::Deserialize;
 
 pub mod presets;
+pub mod aiu;
 
 /// Metadata describing one semantic colour token a renderer consumes. Lives next to the
 /// renderer's declaration so it can't drift out of sync with what the code actually reads.
@@ -201,6 +202,9 @@ impl Theme {
     /// whole palette. An unknown preset name is logged on stderr and treated as no preset —
     /// rendering still proceeds with the default rather than crashing the splash.
     pub fn from_config(cfg: &ThemeConfig) -> Self {
+        aiu::apply(Self::from_config_base(cfg))
+    }
+    fn from_config_base(cfg: &ThemeConfig) -> Self {
         let mut t = match cfg.preset.as_deref() {
             None => Self::default(),
             Some(name) => match presets::by_name(name) {

@@ -129,11 +129,12 @@
        next)]
     [else (set-box! free-block #f) (blockview-center from to visible)]))
 
+(require (only-in "../theme/theme.rkt" theme-sgr))
 (define (blockview-kind-line got target range i)
   (if (and (> (car range) 0) (= i (- (car range) 1)))
       (let ([chain (let loop ([b target] [acc (list)])
                      (if b (loop (blockview-parent (page-blocks got) b) (cons (block-name b) acc)) acc))])
-        (string-append "\u001b[90m" (string-join chain " > ") "\u001b[0m"))
+        (string-append (theme-sgr "dim") (string-join chain " > ") "\u001b[0m"))
       ""))
 (define (blockview-command-view-up session words)
   (set-box! top-line (max 1 (- (unbox top-line) 3)))

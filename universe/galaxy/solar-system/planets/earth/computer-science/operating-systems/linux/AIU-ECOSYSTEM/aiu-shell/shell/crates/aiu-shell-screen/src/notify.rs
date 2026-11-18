@@ -113,9 +113,9 @@ pub fn draw_notify(frame: &mut Frame, area: Rect) {
             height: h,
         };
         let color = if level == "error" {
-            Color::Red
+            crate::theme::error()
         } else {
-            Color::White
+            crate::theme::text()
         };
         frame.render_widget(Clear, rect);
         frame.render_widget(

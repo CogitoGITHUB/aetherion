@@ -577,3 +577,37 @@ pub fn report_run_state(state: u8) {
     let _ = out.write_all(text.as_bytes());
     let _ = out.flush();
 }
+
+pub fn try_theme(line: &str) -> Option<String> {
+    let mut it = line.split_whitespace();
+    if it.next()? != "aiu-theme" {
+        return None;
+    }
+    let dir = match crate::theme::dir() {
+        Some(d) => d,
+        None => return Some("aiu-theme: no theme folder".to_string()),
+    };
+    let name = match it.next() {
+        Some(n) => n.to_string(),
+        None => {
+            let mut names: Vec<String> = std::fs::read_dir(&dir)
+                .ok()?
+                .filter_map(|e| e.ok())
+                .filter_map(|e| e.file_name().into_string().ok())
+                .filter_map(|f| f.strip_suffix(".theme").map(|s| s.to_string()))
+                .collect();
+            names.sort();
+            return Some(names.join(" "));
+        }
+    };
+    let ok = !name.is_empty() && name.bytes().all(|b|
+        b.is_ascii_alphanumeric() || b == 45 || b == 95);
+    if !ok || !dir.join(format!("{}.theme", name)).is_file() {
+        return Some(format!("aiu-theme: unknown theme {}", name));
+    }
+    if std::fs::write(dir.join("active"), format!("{}\n", name)).is_err() {
+        return Some("aiu-theme: cannot write active".to_string());
+    }
+    crate::theme::reload();
+    Some(format!("theme {}", name))
+}

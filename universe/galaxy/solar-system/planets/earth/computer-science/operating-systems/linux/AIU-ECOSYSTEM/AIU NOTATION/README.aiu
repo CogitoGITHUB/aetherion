@@ -1733,6 +1733,11 @@ ws://127.0.0.1:PORT  |  WebSocket door, one command per text message
 changed  |  text pushed to every WebSocket client after a reindex
 ecosystem live aiu-notation-wasm  |  build notation.wasm for the browser
 ecosystem live aiu-website  |  build bridge.wasm, the website wasm
+bridge command(ptr,len)  |  wasm export, sends one command to the server
+bridge answer_ptr, answer_len  |  wasm exports, the last answer text
+ecosystem-server write PATH  |  text on the next lines, writes the file and commits
+ecosystem-server delete PATH  |  saves in a commit, deletes, commits again
+ecosystem-server move FROM  |  target on the next line, moves and commits
 aiutd FILE  |  open in the editor, needs a real tty
 aiutd update  |  compile, tests at a level, docs
 aiutd test --level N  |  run tests; --only NAME for one
@@ -1948,6 +1953,81 @@ answer start
 for: q94fc72
 asked: Does the paragraph make one point?
 Yes. It explains the wasm bridge that loads the index in the browser.
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-website-commands
+The wasm bridge can send commands to the server and read the
+answers, with no interface at all. Why: the website must use the
+same commands as every other package, so it needs no second API.
+The loader opens a WebSocket to the HTTP port and gives wasm one
+function, send. The wasm export command sends a command text
+through it. Each answer comes back as a message, the loader hands
+it to on_message, and answer_ptr and answer_len read the last
+answer. Example: command with the text ping makes the last answer
+pong.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+Yes. It explains how the wasm bridge sends commands and reads answers.
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-write-commands
+The server writes files with three commands: write, delete and
+move. Why: every writer must change files the same way, and git
+must keep every state so nothing is ever lost. The first line is
+the command and the path. For write, the text follows on the next
+lines. For move, the target path is the second line. Because they
+need a newline, they work over HTTP and WebSocket and answer an
+error on the Unix socket. Each command is one local git commit in
+the nearest repo. Delete and move first commit the file as it is,
+and refuse if that commit fails. A missing repo or git is reported
+and never blocks the write. The index is not updated by a write
+yet, the reload command does that. Example: delete a file, then
+restore it from the commit before.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+Yes. It explains the write commands and the commit each one makes.
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-the-mindmap-plan
+The mind map has its own plan file, ecosystem-mindmap-plan.aiu.
+Why: the map is drawn by wasm from the server index and its rules
+must be written before any drawing exists. The plan fixes that
+every file is a box with its title, that boxes sit inside boxes,
+that the map always opens on the master view with the links as
+connections, and that expanding a box by key comes after the first
+drawing works. Where a box sits is written in the file: a
+place: x y declaration in its title block, indexed as the place
+field. Why: nothing arranges itself, Shape places every file by
+hand. A file without place is drawn in a wrapped row in index
+order, so no file is hidden. Example: place: 3 4 in a title.
+Drawing: the wasm lays out every box and calls rect, line and
+text, three functions the loader provides, so the browser only
+paints. Why: all logic stays in Rust. Example: scrolling draws
+only the boxes near the screen.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+Partly. It explains why the mind map has its own plan file, then how boxes are placed and drawn.
 answer end
 paragraph end
 

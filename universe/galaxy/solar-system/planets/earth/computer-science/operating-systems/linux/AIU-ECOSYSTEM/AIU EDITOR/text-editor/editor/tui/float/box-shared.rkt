@@ -29,7 +29,8 @@
      (string-append "\u001b[" (number->string (+ row i)) ";" (number->string col) "H" l))
    ""))
 
-(define (white s) (string-append "\u001b[97m" s "\u001b[0m"))
+(require (only-in "../theme/theme.rkt" theme-sgr))
+(define (white s) (string-append (theme-sgr "text") s "\u001b[0m"))
 
 (define paint-ready (box #f))
 

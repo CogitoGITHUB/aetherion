@@ -1,6 +1,7 @@
 #lang racket/base
 (require racket/string "../float/box-shared.rkt")
 
+(require (only-in "../theme/theme.rkt" theme-sgr))
 (define notify-repaint (box void))
 
 (define notes (box null))
@@ -39,7 +40,7 @@
     (append (list (edge-line "╭" "╮" level "" w))
             (map (lambda (l) (body-line l w)) (wrap (cadr note) (- w 4)))
             (list (rule-line "╰" "╯" w))))
-  (define color (if (string=? level "error") "\u001b[31m" "\u001b[97m"))
+  (define color (if (string=? level "error") (theme-sgr "error") (theme-sgr "text")))
   (map (lambda (r) (string-append color r "\u001b[0m")) rows))
 
 (define (notify-overlay width height row)

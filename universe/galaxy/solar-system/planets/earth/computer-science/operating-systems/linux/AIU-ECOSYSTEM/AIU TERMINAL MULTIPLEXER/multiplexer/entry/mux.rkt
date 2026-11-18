@@ -7,17 +7,19 @@
          "../machine/terminal.rkt" "../tui/tabs/tabs-mux-shared.rkt"
          (only-in "../tui/bar/bar-clock-shared.rkt" clock-stamp))
 
+(require (only-in "../tui/theme/theme.rkt" theme-sgr theme-rgb))
 (define session-name "shell")
 (define stty-program "/usr/bin/stty")
 (define bar-refresh-milliseconds 1000)
 (define quit-ask (box #f))
+(define (rv r) (let ([c (theme-rgb r)]) (cond [(vector? c) c] [(list? c) (list->vector c)] [else (vector 255 255 255)])))
 (define (pulse-sgr2 red?)
   (if red?
       (pulse-sgr)
       (let* ([p (modulo (quotient (inexact->exact (floor (current-inexact-milliseconds))) 50) 40)]
              [up (if (< p 20) p (- 40 p))]
-             [v (+ 110 (quotient (* up 145) 20))])
-        (format "\u001b[38;2;~a;~a;~am" v v v))))
+             [t (/ up 20.0)] [a (rv "dim")] [b (rv "text")] [m (lambda (i) (inexact->exact (floor (+ (vector-ref a i) (* t (- (vector-ref b i) (vector-ref a i)))))))])
+        (format "\u001b[38;2;~a;~a;~am" (m 0) (m 1) (m 2)))))
 (define (pulse-rect! cells columns rows bar-count x y w h red?)
   (define sgr (pulse-sgr2 red?))
   (for* ([r (in-range (+ bar-count y) (min rows (+ bar-count y h)))]
@@ -34,7 +36,7 @@
   (define phase (pulse-phase))
   (define seg (quotient phase 20))
   (define t (/ (modulo phase 20) 20.0))
-  (define stops (vector (vector 110 110 110) (vector 255 255 255) (vector 220 40 40)))
+  (define stops (vector (rv "dim") (rv "text") (rv "error")))
   (define from (vector-ref stops seg))
   (define to (vector-ref stops (modulo (+ seg 1) 3)))
   (define (mix i)

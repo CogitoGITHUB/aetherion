@@ -17,14 +17,6 @@ struct View<'a> {
     problems: Vec<String>,
 }
 
-/// The colour codes a block may ask for with a color: line.
-fn color_code(name: &str) -> Option<u32> {
-    match name.to_lowercase().as_str() {
-        "red" => Some(31), "green" => Some(32), "yellow" => Some(33), "blue" => Some(34),
-        "magenta" => Some(35), "cyan" => Some(36), "white" => Some(37),
-        "gray" | "grey" => Some(90), _ => None,
-    }
-}
 
 /// The value of one declaration of a block, if it has it.
 fn decl<'b>(b: &'b Block, key: &str) -> Option<&'b str> {
@@ -113,13 +105,10 @@ impl<'a> View<'a> {
 
     /// Colour the text with ANSI codes, unless plain.
     fn sgr(&self, codes: &[u32], s: &str) -> String {
-        let kept: Vec<u32> = codes.iter().copied().filter(|n| *n < 30).collect();
-        let codes = &kept[..];
         if self.plain || codes.is_empty() || s.is_empty() {
             return s.to_string();
         }
-        let c: Vec<String> = codes.iter().map(|n| n.to_string()).collect();
-        format!("\x1b[{}m{}\x1b[0m", c.join(";"), s)
+        crate::theme::paint(codes, s)
     }
 
     /// Print one line.
@@ -142,9 +131,6 @@ impl<'a> View<'a> {
         let mut v = Vec::new();
         for t in decl(b, "style").unwrap_or("").split_whitespace() {
             match t { "bold" => v.push(1), "dim" => v.push(2), "italic" => v.push(3), "underline" => v.push(4), _ => {} }
-        }
-        if let Some(c) = decl(b, "color").and_then(color_code) {
-            v.push(c);
         }
         v
     }

@@ -11,6 +11,7 @@ use serde::Deserialize;
 use super::get_config_dir;
 
 pub mod builtin;
+pub mod aiu;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Color {
@@ -117,6 +118,9 @@ pub struct Theme {
 
 impl Theme {
     pub fn from_name(name: &str) -> Self {
+        aiu::apply(Self::from_name_base(name))
+    }
+    fn from_name_base(name: &str) -> Self {
         Self::from_path(
             &get_config_dir()
                 .join("themes")

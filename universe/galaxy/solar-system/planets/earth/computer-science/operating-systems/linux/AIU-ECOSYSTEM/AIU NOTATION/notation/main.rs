@@ -11,6 +11,8 @@ use std::time::Instant;
 mod view;
 #[path = "rendering/boxview.rs"]
 mod boxview;
+#[path = "rendering/theme.rs"]
+mod theme;
 #[path = "rendering/edition.rs"]
 mod edition;
 #[path = "rendering/contract-files.rs"]

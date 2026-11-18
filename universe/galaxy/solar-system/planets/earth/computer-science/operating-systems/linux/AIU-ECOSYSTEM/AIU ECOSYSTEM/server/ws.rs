@@ -200,7 +200,7 @@ pub fn serve(
                 } else {
                     let mut map =
                         programs.lock().unwrap_or_else(|e| e.into_inner());
-                    crate::handle(&words, &mut map, started, dev, db).0
+                    crate::handle_raw(&text, &mut map, started, dev, db).0
                 };
                 send_to(id, 1, answer.as_bytes());
             }

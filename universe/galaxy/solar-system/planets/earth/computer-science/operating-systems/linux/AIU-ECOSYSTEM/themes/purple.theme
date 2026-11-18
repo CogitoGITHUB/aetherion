@@ -1,0 +1,5 @@
+name = purple
+text = #d7afff
+dim = #875faf
+error = #ff5f87
+bg = none

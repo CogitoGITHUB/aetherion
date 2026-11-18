@@ -2,6 +2,7 @@
 
 (require racket/list racket/string "../../commands/commands-shared.rkt" "../../machine/terminal.rkt" "../../bridge/document-shared.rkt" "../../bridge/host-shared.rkt" "../float/pins.rkt" "blocks-kind.rkt" "blockview.rkt" "blocks-text.rkt")
 
+(require (only-in "../theme/theme.rkt" theme-sgr))
 (provide block-overlay auto-pins)
 
 (define (blockview-view-overlay-base session raw width height got)
@@ -47,7 +48,7 @@
            [(and shown? (or (= (length p) 5) (not inside?)) (<= (+ to bo k) visible))
             (define top? (equal? (cadr p) "top"))
             (define start (if top? (+ lo to) (+ (- hi bo k) 1)))
-            (define colour (if (= i (unbox pin-sel)) "\u001b[97m" "\u001b[90m"))
+            (define colour (if (= i (unbox pin-sel)) (theme-sgr "text") (theme-sgr "dim")))
             (for ([j (in-range k)])
               (define idx (+ (car rng) j))
               (vector-set! v (+ start j) (if (< idx (vector-length lv)) (string-append colour (blockview-plain (vector-ref lv idx)) "\u001b[0m") "")))

@@ -346,7 +346,7 @@ fn http_conn(stream: TcpStream, programs: &Programs, dev: &Arc<Mutex<DevState>>,
                     plain(403, "error stop only from the socket")
                 } else {
                     let mut map = programs.lock().unwrap_or_else(|e| e.into_inner());
-                    let (answer, _) = handle(&words, &mut map, started, dev, db);
+                    let (answer, _) = handle_raw(&text, &mut map, started, dev, db);
                     plain(200, &answer)
                 }
             }
@@ -438,10 +438,9 @@ fn serve() -> i32 {
             if BufReader::new(&stream).read_line(&mut line).is_err() {
                 return;
             }
-            let words: Vec<&str> = line.split_whitespace().collect();
             let (answer, stop) = {
                 let mut map = programs.lock().unwrap_or_else(|e| e.into_inner());
-                handle(&words, &mut map, started, &dev, &db)
+                handle_raw(&line, &mut map, started, &dev, &db)
             };
             let _ = stream.write_all(answer.as_bytes());
             let _ = stream.write_all(b"\n");
@@ -480,3 +479,138 @@ fn main() {
 }
 
 
+
+fn abs_path(p: &str) -> PathBuf {
+    let q = PathBuf::from(p);
+    if q.is_relative() {
+        let root = ROOT.lock().unwrap_or_else(|e| e.into_inner()).clone();
+        if let Some(r) = root {
+            return PathBuf::from(r).join(q);
+        }
+    }
+    q
+}
+
+fn commit_for(p: &std::path::Path, paths: &[&std::path::Path], msg: &str) -> String {
+    let mut d = match p.parent() {
+        Some(x) => x,
+        None => return String::from("not committed, no parent folder"),
+    };
+    while !d.is_dir() {
+        d = match d.parent() {
+            Some(x) => x,
+            None => return String::from("not committed, no parent folder"),
+        };
+    }
+    let repo = match git_out(d, &["rev-parse", "--show-toplevel"]) {
+        Some(r) => r,
+        None => return String::from("not committed, no git repo or git missing"),
+    };
+    let r = std::path::Path::new(&repo);
+    let names: Vec<String> = paths.iter().map(|x| x.to_string_lossy().to_string()).collect();
+    let mut add: Vec<&str> = vec!["add", "-A", "--"];
+    let mut st: Vec<&str> = vec!["status", "--porcelain", "--"];
+    let mut cm: Vec<&str> = vec!["commit", "-q", "-m", msg, "--"];
+    for n in &names {
+        add.push(n.as_str());
+        st.push(n.as_str());
+        cm.push(n.as_str());
+    }
+    if git_out(r, &add).is_none() {
+        return String::from("not committed, git add failed");
+    }
+    match git_out(r, &st) {
+        Some(s) if s.is_empty() => return String::from("no change to commit"),
+        None => return String::from("not committed, git status failed"),
+        _ => {}
+    }
+    if git_out(r, &cm).is_some() {
+        String::from("committed")
+    } else {
+        String::from("not committed, git commit failed, check user.name and user.email")
+    }
+}
+
+fn save_first(p: &std::path::Path, why: &str) -> Result<(), String> {
+    let s = commit_for(p, &[p], &format!("save {} before {}", p.display(), why));
+    if s == "committed" || s == "no change to commit" {
+        Ok(())
+    } else {
+        Err(format!("error {}, nothing changed", s))
+    }
+}
+
+fn file_write(path: &str, content: Option<&str>) -> String {
+    let content = match content {
+        Some(c) if !c.is_empty() => c,
+        _ => return String::from("error write needs content after a newline, use HTTP or WebSocket"),
+    };
+    let p = abs_path(path);
+    if let Some(d) = p.parent() {
+        if let Err(e) = fs::create_dir_all(d) {
+            return format!("error {}", e);
+        }
+    }
+    if let Err(e) = fs::write(&p, content) {
+        return format!("error {}", e);
+    }
+    format!("written {} {}", path, commit_for(&p, &[&p], &format!("write {}", path)))
+}
+
+fn file_delete(path: &str) -> String {
+    let p = abs_path(path);
+    if !p.is_file() {
+        return format!("error not a file {}", path);
+    }
+    if let Err(e) = save_first(&p, "delete") {
+        return e;
+    }
+    if let Err(e) = fs::remove_file(&p) {
+        return format!("error {}", e);
+    }
+    format!("deleted {} {}", path, commit_for(&p, &[&p], &format!("delete {}", path)))
+}
+
+fn file_move(from: &str, to: Option<&str>) -> String {
+    let to = match to.map(|t| t.trim()) {
+        Some(t) if !t.is_empty() => t,
+        _ => return String::from("error move needs the target on a second line, use HTTP or WebSocket"),
+    };
+    let a = abs_path(from);
+    let b = abs_path(to);
+    if !a.is_file() {
+        return format!("error not a file {}", from);
+    }
+    if let Err(e) = save_first(&a, "move") {
+        return e;
+    }
+    if b.is_file() {
+        if let Err(e) = save_first(&b, "overwrite") {
+            return e;
+        }
+    }
+    if let Some(d) = b.parent() {
+        if let Err(e) = fs::create_dir_all(d) {
+            return format!("error {}", e);
+        }
+    }
+    if let Err(e) = fs::rename(&a, &b) {
+        return format!("error {}", e);
+    }
+    let msg = format!("move {} to {}", from, to);
+    format!("moved {} to {} {}", from, to, commit_for(&a, &[&a, &b], &msg))
+}
+
+fn handle_raw(text: &str, programs: &mut BTreeMap<String, String>, started: u64, dev: &Arc<Mutex<DevState>>, db: &Db) -> (String, bool) {
+    let (first, rest) = match text.split_once("\n") {
+        Some((a, b)) => (a.trim_end_matches("\r"), Some(b)),
+        None => (text, None),
+    };
+    let words: Vec<&str> = first.split_whitespace().collect();
+    match words.as_slice() {
+        ["write", p @ ..] if !p.is_empty() => (file_write(&p.join(" "), rest), false),
+        ["delete", p @ ..] if !p.is_empty() => (file_delete(&p.join(" ")), false),
+        ["move", p @ ..] if !p.is_empty() => (file_move(&p.join(" "), rest), false),
+        _ => handle(&words, programs, started, dev, db),
+    }
+}

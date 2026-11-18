@@ -10,3 +10,4 @@ pub mod status_bar;
 pub mod context_bar;
 pub mod splash_bar;
 pub mod notify;
+pub mod theme;

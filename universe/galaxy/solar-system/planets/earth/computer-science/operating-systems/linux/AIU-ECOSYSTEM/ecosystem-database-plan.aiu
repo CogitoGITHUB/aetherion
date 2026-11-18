@@ -305,48 +305,6 @@ No. It is a measured risk, step 1 answers it.
 answer end
 paragraph end
 paragraph start
-name: paragraph-step-6a-bridge
-Step 6a. Wasm bridge: the website sends a command to the
-server and reads the answer. No interface.
-contract start
-id: q5e9296
-question: Is each step one action that can be finished and checked?
-contract end
-answer start
-for: q5e9296
-asked: Is each step one action that can be finished and checked?
-Yes. Done when a wasm test prints the answer of ping.
-answer end
-paragraph end
-paragraph start
-name: paragraph-step-6b-write
-Step 6b. Write commands over the bridge: write, delete, move.
-Each one is committed to the local git by the server.
-contract start
-id: q5e9296
-question: Is each step one action that can be finished and checked?
-contract end
-answer start
-for: q5e9296
-asked: Is each step one action that can be finished and checked?
-Yes. Done when a delete from wasm is a git commit that restores.
-answer end
-paragraph end
-paragraph start
-name: paragraph-step-6c-plan
-Step 6c. Mind map plan in its own file ecosystem-mindmap-plan.aiu:
-box nesting, where layout is stored, loading in parts.
-contract start
-id: q5e9296
-question: Is each step one action that can be finished and checked?
-contract end
-answer start
-for: q5e9296
-asked: Is each step one action that can be finished and checked?
-Yes. Done when the plan file exists with open: 0 and he approves.
-answer end
-paragraph end
-paragraph start
 name: paragraph-step-6d-draw
 Step 6d. Draw the mind map, only after 6c is approved.
 contract start

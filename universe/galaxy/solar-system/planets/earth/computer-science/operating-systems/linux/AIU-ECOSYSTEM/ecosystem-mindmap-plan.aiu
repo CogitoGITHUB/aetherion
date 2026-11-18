@@ -1,0 +1,158 @@
+title start
+name: title-plan-mindmap
+kind: plan
+tags: ecosystem mindmap website
+Plan: the mind map
+title end
+
+chapter start
+name: section-goal
+title start
+name: title-goal
+Goal
+title end
+paragraph start
+name: paragraph-the-mindmap-goal
+The mind map shows the notation files in the browser as boxes,
+drawn by wasm from the index served by the ecosystem server. It
+always opens on the master view: every file is a box with its
+title, and the links between files are drawn as connections. A
+box expands by a key.
+contract start
+id: q575f3b
+question: Can the goal be stated as one outcome, not an activity?
+contract end
+answer start
+for: q575f3b
+asked: Can the goal be stated as one outcome, not an activity?
+Yes. One outcome: the notation files shown as boxes in the browser.
+
+answer end
+paragraph end
+paragraph start
+name: paragraph-decided-box
+Decided. Every file is one box. The outline of the box is the
+file, and its title is written in it. Boxes sit inside boxes,
+never dots. Nothing is drawn as a point.
+contract start
+id: q575f3b
+question: Can the goal be stated as one outcome, not an activity?
+contract end
+answer start
+for: q575f3b
+asked: Can the goal be stated as one outcome, not an activity?
+No. It records a decision, not the goal.
+
+answer end
+paragraph end
+paragraph start
+name: paragraph-decided-open
+Decided. The map never opens on one file. It opens on the
+master view, which shows every file of the index as a box with
+its title and the connections between them.
+contract start
+id: q575f3b
+question: Can the goal be stated as one outcome, not an activity?
+contract end
+answer start
+for: q575f3b
+asked: Can the goal be stated as one outcome, not an activity?
+No. It records a decision, not the goal.
+
+answer end
+paragraph end
+paragraph start
+name: paragraph-decided-expand
+Decided. A box expands by a key. The key opens a short list of
+options, chosen by keyboard. The keys and the options are not
+designed yet. They wait until the first drawing works.
+contract start
+id: q575f3b
+question: Can the goal be stated as one outcome, not an activity?
+contract end
+answer start
+for: q575f3b
+asked: Can the goal be stated as one outcome, not an activity?
+No. It records a decision, not the goal.
+
+answer end
+paragraph end
+paragraph start
+name: paragraph-decided-structure
+Decided. Shape builds the structure by hand. Every branch has a
+master file. Layout and direction are written in the files, and
+nothing arranges itself. The server, the editor and the map check
+each other.
+Decided. A file sets its box position with a place: x y
+declaration in its title block. The index holds it as the
+place field. A file without it is drawn in a wrapped row in
+index order, so no file is hidden while Shape places the rest.
+contract start
+id: q575f3b
+question: Can the goal be stated as one outcome, not an activity?
+contract end
+answer start
+for: q575f3b
+asked: Can the goal be stated as one outcome, not an activity?
+No. It records a decision, not the goal.
+
+answer end
+paragraph end
+paragraph start
+name: paragraph-decided-loading
+Decided. The index loads in parts. Only the boxes on screen plus
+a margin are drawn, so scrolling stays fast. It scales to the
+machine, phone now and laptop later.
+contract start
+id: q575f3b
+question: Can the goal be stated as one outcome, not an activity?
+contract end
+answer start
+for: q575f3b
+asked: Can the goal be stated as one outcome, not an activity?
+No. It records a decision, not the goal.
+
+answer end
+paragraph end
+chapter end
+
+chapter start
+name: section-steps
+title start
+name: title-steps
+Steps
+title end
+paragraph start
+name: paragraph-step-m2-boxes
+Step M2. Draw the master view. The wasm reads the index, draws
+one box per file with its title, and draws the links between
+files as connections. Done when a test page shows every file of
+a small folder as a box with its links.
+contract start
+id: q5e9296
+question: Is each step one action that can be finished and checked?
+contract end
+answer start
+for: q5e9296
+asked: Is each step one action that can be finished and checked?
+Yes. One action: draw every file as a box with its links on a test page.
+
+answer end
+paragraph end
+paragraph start
+name: paragraph-step-m3-expand
+Step M3. Expand by key. Written only after M2 works and Shape
+has chosen the keys and the options. Done when this step has its
+own plan lines.
+contract start
+id: q5e9296
+question: Is each step one action that can be finished and checked?
+contract end
+answer start
+for: q5e9296
+asked: Is each step one action that can be finished and checked?
+No. It is a placeholder that waits for decisions, not one action.
+
+answer end
+paragraph end
+chapter end

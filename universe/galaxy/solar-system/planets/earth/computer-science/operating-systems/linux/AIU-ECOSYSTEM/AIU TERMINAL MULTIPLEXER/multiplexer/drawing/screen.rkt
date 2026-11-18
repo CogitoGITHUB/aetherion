@@ -1,6 +1,6 @@
 #lang racket/base
 
-(require racket/list
+(require (only-in "../tui/theme/theme.rkt" theme-sgr) racket/list
          racket/string)
 
 (define (ansi code)
@@ -47,10 +47,10 @@
 (define (footer-string mode-line width)
   (cond [(string=? mode-line "") ""]
         [(regexp-match? #rx"\n" mode-line)
-         (string-append (ansi "97m")
+         (string-append (theme-sgr "text")
                         (string-join (map (lambda (l) (fit l width)) (string-split mode-line "\n" #:trim? #f)) "\n")
                         (ansi "0m"))]
-        [else (string-append (ansi "7m") (fit mode-line width) (ansi "27m"))]))
+        [else (string-append (theme-sgr "text") (ansi "7m") (fit mode-line width) (ansi "27m") (ansi "39m"))]))
 
 (define (paint text point width height top mode-line cursor? preformatted?
                #:offset [offset 0] #:left [left 0] #:full [full width] #:overlay [overlay ""])

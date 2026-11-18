@@ -38,14 +38,6 @@ struct Boxes {
     names: Vec<(String, String, String)>,
 }
 
-/// The colour codes a block may ask for with a color: line.
-fn color_code(name: &str) -> Option<u32> {
-    match name.to_lowercase().as_str() {
-        "red" => Some(31), "green" => Some(32), "yellow" => Some(33), "blue" => Some(34),
-        "magenta" => Some(35), "cyan" => Some(36), "white" => Some(37),
-        "gray" | "grey" => Some(90), _ => None,
-    }
-}
 
 /// The value of one declaration of a block, if it has it.
 fn decl(b: &Block, key: &str) -> Option<String> {
@@ -175,19 +167,15 @@ impl Boxes {
         if self.plain || codes.is_empty() || s.is_empty() {
             return s.to_string();
         }
-        let c: Vec<String> = codes.iter().map(|n| n.to_string()).collect();
-        format!("\x1b[{}m{}\x1b[0m", c.join(";"), s)
+        crate::theme::paint(codes, s)
     }
 
-    /// Style the text with ANSI codes, never a colour: only the todo box keeps red.
+    /// Style the text with ANSI codes and theme roles.
     fn sgr(&self, codes: &[u32], s: &str) -> String {
-        let kept: Vec<u32> = codes.iter().copied().filter(|n| *n < 30).collect();
-        let codes = &kept[..];
         if self.plain || codes.is_empty() || s.is_empty() {
             return s.to_string();
         }
-        let c: Vec<String> = codes.iter().map(|n| n.to_string()).collect();
-        format!("\x1b[{}m{}\x1b[0m", c.join(";"), s)
+        crate::theme::paint(codes, s)
     }
 
     /// The style and colour codes a block asks for.
@@ -196,9 +184,6 @@ impl Boxes {
         let st = decl(b, "style").unwrap_or_default();
         for t in st.split_whitespace() {
             match t { "bold" => v.push(1), "dim" => v.push(2), "italic" => v.push(3), "underline" => v.push(4), _ => {} }
-        }
-        if let Some(c) = decl(b, "color").and_then(|c| color_code(&c)) {
-            v.push(c);
         }
         v
     }

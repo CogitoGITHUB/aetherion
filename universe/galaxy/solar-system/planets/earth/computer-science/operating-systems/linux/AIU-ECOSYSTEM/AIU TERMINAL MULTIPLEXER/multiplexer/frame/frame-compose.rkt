@@ -1,5 +1,6 @@
 #lang racket/base
 (require "../pane/pane-grid.rkt" "../tui/float/box-shared.rkt")
+(require (only-in "../tui/theme/theme.rkt" theme-sgr))
 (provide compose-frame)
 
 (define blank-cell (vector-ref (vector-ref (pane-grid-rows (make-pane-grid 1 1)) 0) 0))
@@ -46,7 +47,7 @@
   (define (put! r c cell)
     (when (and (>= r 0) (< r rows) (>= c 0) (< c columns))
       (vector-set! (vector-ref cells r) c cell)))
-  (define (put-char! r c ch) (put! r c (cons ch plain-style)))
+  (define (put-char! r c ch) (put! r c (cons ch (string-append plain-style (theme-sgr "text")))))
   (define (put-text! r c text)
     (for ([ch (in-string text)] [i (in-naturals)]) (put-char! r (+ c i) ch)))
   (define bar-count (length bar-rows))

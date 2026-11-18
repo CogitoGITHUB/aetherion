@@ -40,11 +40,11 @@ use crate::positions::{line_col_to_offset, offset_to_line_col, LineCol};
 use crate::block_registry::{is_opaque_name, is_registered};
 
 /// The registered declaration keywords (rule B). They are hints, never meaning.
-pub const DECLARATION_KEYWORDS: [&str; 26] = [
+pub const DECLARATION_KEYWORDS: [&str; 27] = [
     "for", "asked",
     "tags", "kind", "language", "style", "theme", "color", "format", "font", "caption", "column", "cell",
     "row-id", "meta", "todo", "name", "target",
-    "id", "question", "state", "term", "break", "face", "relation", "mode",
+    "id", "question", "state", "term", "break", "face", "relation", "mode", "place",
 ];
 
 /// The registered error names (rule E). All are severity error, no off switch.
