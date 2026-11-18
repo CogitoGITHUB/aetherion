@@ -302,6 +302,125 @@ fn kind(rel: &str) -> String {
     };
     t.to_string()
 }
+fn jstr(s: &str) -> String {
+    let mut o = String::from("\"");
+    for c in s.chars() {
+        match c as u32 {
+            34 => o.push_str("\\\""),
+            92 => o.push_str("\\\\"),
+            10 => o.push_str("\\n"),
+            13 => {}
+            9 => o.push_str("\\t"),
+            x if x < 32 => o.push_str(&format!("\\u{:04x}", x)),
+            _ => o.push(c),
+        }
+    }
+    o.push_str("\"");
+    o
+}
+fn body_of(b: &notation::parser::Block, text: &str) -> String {
+    let end = b.span.end.min(text.len());
+    let seg = match text.get(b.span.start..end) {
+        Some(s) => s,
+        None => return String::new(),
+    };
+    let mut skip: Vec<(usize, usize)> = Vec::new();
+    for d in &b.declarations {
+        skip.push((d.span.start, d.span.end));
+    }
+    for n in &b.children {
+        let s = n.span();
+        skip.push((s.start, s.end));
+    }
+    let mut lines: Vec<String> = Vec::new();
+    let mut off = b.span.start;
+    let mut first = true;
+    for l in seg.split("\n") {
+        let at = off;
+        off += l.len() + 1;
+        if first {
+            first = false;
+            continue;
+        }
+        if skip.iter().any(|s| at >= s.0 && at < s.1) {
+            continue;
+        }
+        lines.push(l.trim_end_matches("\r").to_string());
+    }
+    while lines.last().map_or(false, |l| l.trim().is_empty()) {
+        lines.pop();
+    }
+    let endl = format!("{} end", b.name);
+    if lines.last().map_or(false, |l| l.trim() == endl) {
+        lines.pop();
+    }
+    if b.name == "code" {
+        return lines.join("\n");
+    }
+    let mut out = String::new();
+    let mut gap = false;
+    for l in &lines {
+        let t = l.trim();
+        if t.is_empty() {
+            gap = true;
+            continue;
+        }
+        if !out.is_empty() {
+            out.push_str(if gap { "\n\n" } else { " " });
+        }
+        gap = false;
+        out.push_str(t);
+    }
+    out
+}
+fn doc_block(b: &notation::parser::Block, text: &str, nums: &notation::numbering::HeadingNumbers, out: &mut String) {
+    out.push_str("{\"n\":");
+    out.push_str(&jstr(&b.name));
+    out.push_str(",\"l\":");
+    out.push_str(&jstr(nums.number_at(b.line).unwrap_or("")));
+    out.push_str(",\"x\":");
+    out.push_str(&jstr(&body_of(b, text)));
+    out.push_str(",\"d\":[");
+    for (i, d) in b.declarations.iter().enumerate() {
+        if i > 0 {
+            out.push_str(",");
+        }
+        out.push_str("[");
+        out.push_str(&jstr(&d.keyword));
+        out.push_str(",");
+        out.push_str(&jstr(&d.value));
+        out.push_str("]");
+    }
+    out.push_str("],\"c\":[");
+    let mut first = true;
+    for n in &b.children {
+        if let notation::parser::Node::Block(c) = n {
+            if !first {
+                out.push_str(",");
+            }
+            first = false;
+            doc_block(c, text, nums, out);
+        }
+    }
+    out.push_str("]}");
+}
+fn doc_json(text: &str) -> String {
+    let tree = notation::parser::parse(&notation::buffer::Buffer::from_text(text));
+    let nums = notation::numbering::HeadingNumbers::of(&tree);
+    let mut out = String::from("[");
+    let mut first = true;
+    for n in &tree.nodes {
+        if let notation::parser::Node::Block(b) = n {
+            if !first {
+                out.push_str(",");
+            }
+            first = false;
+            doc_block(b, text, &nums, &mut out);
+        }
+    }
+    out.push_str("]");
+    out
+}
 fn theme_hex(v: &str) -> Option<String> {
     if v == "none" {
         return Some(String::from("none"));
@@ -379,6 +498,7 @@ fn http_file(path: &str) -> (u16, String, Vec<u8>) {
     let clean = path.split("?").next().unwrap_or("");
     let plain = |code: u16, text: &str| (code, String::from("text/plain; charset=utf-8"), text.as_bytes().to_vec());
     if let Some(q) = path.strip_prefix("/file?k=") {
+        let q = q.split("&w=").next().unwrap_or(q);
         let b = q.as_bytes();
         let mut key: Vec<u8> = Vec::new();
         let mut i = 0;
@@ -404,9 +524,12 @@ fn http_file(path: &str) -> (u16, String, Vec<u8>) {
         let root = ROOT.lock().unwrap_or_else(|e| e.into_inner()).clone();
         return match root {
             None => plain(404, "error no folder loaded"),
-            Some(r) => match fs::read(PathBuf::from(r).join(&key)) {
-                Ok(bytes) => (200, String::from("text/plain; charset=utf-8"), bytes),
-                Err(e) => plain(404, &format!("error {}", e)),
+            Some(r) => {
+                let full = PathBuf::from(r).join(&key);
+                match fs::read_to_string(&full) {
+                    Ok(t) => (200, String::from("application/json; charset=utf-8"), doc_json(&t).into_bytes()),
+                    Err(e) => plain(404, &format!("error {}", e)),
+                }
             },
         };
     }

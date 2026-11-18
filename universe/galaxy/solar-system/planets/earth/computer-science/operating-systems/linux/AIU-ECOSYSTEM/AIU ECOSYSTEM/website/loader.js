@@ -4,6 +4,55 @@
   let e, ox = 0, oy = 0, z = 1, pts = [];
   let T = {}, tsig = "", pend = null;
   let ov = null, st = null, mv = false;
+  const mk = (tag, css, txt) => {
+    const e = document.createElement(tag);
+    if (css) e.style.cssText = css;
+    if (txt !== undefined) e.textContent = txt;
+    return e;
+  };
+  const block = (b, top) => {
+    const dim = ink("dim"), fg = ink("text"), err = ink("error");
+    const bg = T.bg && T.bg !== "none" ? T.bg : "Canvas";
+    const rad = T.corner === "square" ? "0" : "12px";
+    if (b.n === "contract") return mk("div");
+    if (b.n === "answer" && !b.x) return mk("div");
+    if (b.n === "title" && top) {
+      const h = mk("div", "text-align:center;padding:30px 14px 32px;border:1px solid " + dim + ";border-radius:" + rad);
+      h.appendChild(mk("div", "font-size:26px;font-weight:700;letter-spacing:.2em;line-height:1.35;text-transform:uppercase;color:" + fg, b.x));
+      b.d.forEach((p) => {
+        if (p[0] !== "name") h.appendChild(mk("div", "margin-top:12px;font-size:13px;color:" + dim, p[0] + ": " + p[1]));
+      });
+      return h;
+    }
+    const sec = b.n === "chapter" || b.n === "appendix" || b.n === "part";
+    let kids = b.c, head = "";
+    if (sec && kids.length && kids[0].n === "title") { head = kids[0].x; kids = kids.slice(1); }
+    const hot = b.n === "todo" && b.d.some((p) => p[1] === "open");
+    const e = mk("div", "position:relative;border:1px " + (b.n === "answer" ? "dashed " : "solid ") + (hot ? err : dim) + ";border-radius:" + rad + ";padding:20px 16px 14px;margin-top:" + (sec ? "28px" : "20px"));
+    const lab = (b.l ? b.l + " \u00b7 " : "") + (sec ? (head || b.n) : b.n);
+    e.appendChild(mk("span", "position:absolute;top:-10px;left:16px;padding:0 8px;font-size:12px;background:" + bg + ";color:" + (hot ? err : dim), lab));
+    if (b.x) {
+      const code = b.n === "code", mute = b.n === "comment";
+      e.appendChild(mk("div", code ? "font:13px monospace;white-space:pre;overflow-x:auto;color:" + fg : "white-space:pre-wrap;color:" + (mute ? dim + ";font-style:italic" : fg), b.x));
+    }
+    b.d.forEach((p) => {
+      if (p[0] === "name" || p[0] === "for" || p[0] === "asked") return;
+      e.appendChild(mk("div", "margin-top:8px;font-size:12px;color:" + (p[1] === "open" ? err : dim), p[0] + ": " + p[1]));
+    });
+    kids.forEach((k) => e.appendChild(block(k, false)));
+    return e;
+  };
+  const draw = (t) => {
+    const root = mk("div", "max-width:760px;margin:0 auto;padding-bottom:40px");
+    let j = null;
+    try { j = JSON.parse(t); } catch (x) { j = null; }
+    if (!Array.isArray(j)) {
+      root.appendChild(mk("div", "color:" + ink("error"), t));
+      return root;
+    }
+    j.forEach((b, i) => root.appendChild(block(b, i === 0)));
+    return root;
+  };
   const closeFile = () => { if (ov) { ov.remove(); ov = null; } };
   const openFile = async (k) => {
     let t;
@@ -13,8 +62,8 @@
     closeFile();
     const bg = T.bg && T.bg !== "none" ? T.bg : "Canvas";
     ov = document.createElement("div");
-    ov.style.cssText = "position:fixed;inset:0;overflow:auto;box-sizing:border-box;padding:56px 16px 24px;white-space:pre-wrap;word-break:break-word;font:14px monospace;touch-action:pan-y;background:" + bg + ";color:" + ink("text");
-    ov.textContent = t;
+    ov.style.cssText = "position:fixed;inset:0;overflow:auto;box-sizing:border-box;padding:56px 16px 24px;font:15px/1.5 system-ui,sans-serif;touch-action:pan-y;background:" + bg + ";color:" + ink("text");
+    ov.appendChild(draw(t));
     const b = document.createElement("div");
     b.textContent = "close  " + k;
     b.style.cssText = "position:fixed;top:0;left:0;right:0;padding:14px 16px;cursor:pointer;background:" + bg + ";color:" + ink("dim");

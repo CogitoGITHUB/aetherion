@@ -106,6 +106,21 @@ times. He may hand you only this file.
   of one kind, so match by block name, never by id alone.
 - FIX THE SHELL: it must run every normal TUI with the real terminal. No hard coded list of program names (is_fullscreen_line in command_runner.rs). Detect TUIs at runtime, for example by the alternate screen switch, so nothing is ever registered.
 
+- READ THIS FILE FIRST, every session, before asking for any other
+  read. Never guess a path or a command: they are written here.
+- WEBSITE DRAWS STRUCTURE: the page never shows terminal text or
+  color codes. The server sends blocks as data from the notation
+  parser and the page draws them as a real UI. Colors and corners
+  come only from /theme.
+
+## Server facts (verified)
+- ecosystem-server serve: HTTP door 127.0.0.1:8080, routes /theme,
+  /index.db, /cmd (POST), /ws, /file?k=KEY (file blocks as
+  JSON). Log: ~/.local/state/aiu-ecosystem/
+  server.log
+- Website folder: AIU ECOSYSTEM/website (index.html, loader.js,
+  lib.rs). Last loaded notation folder: state file notation-root.
+
 ## How the PM works (verified, rules only)
 - Manifest: ecosystem-manifest/NAME.rktd. Keys: source, build,
   install. Entry code: AIU ECOSYSTEM/ecosystem/entry/ecosystem.rkt

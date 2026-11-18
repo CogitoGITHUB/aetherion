@@ -158,7 +158,9 @@ answer end
 paragraph end
 paragraph start
 name: paragraph-step-m2c-open
-Step M2c. The server route /file?k=KEY returns the file text.
+Step M2c. The server route /file?k=KEY returns the blocks of the file as
+JSON from the notation parser. The page draws them as cards.
+Colors and corners come only from /theme, never from the page.
 Press a box and the file opens full screen on the
 page as readable text, so Shape reads it in the web. A key or
 a back tap returns to the map. Done when Shape sees it on screen.
