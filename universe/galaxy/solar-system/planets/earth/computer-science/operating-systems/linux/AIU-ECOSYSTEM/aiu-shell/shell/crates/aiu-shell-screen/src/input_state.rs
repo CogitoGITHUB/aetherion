@@ -600,7 +600,7 @@ self.infos.clear();
                         "/" => self.open_search(),
                         " " => crate::bar_view::toggle_menu(),
                         "f" => crate::bar_view::toggle_full_input(),
-                        "m" => { self.notice = crate::command_runner::dev_mode_toggle(); } "M" => { self.notice = crate::command_runner::dev_build_all(); } "z" => crate::command_runner::request_jump(), "Z" => { self.notice = crate::command_runner::add_current_dir(); } "q" => crate::command_runner::quit_key(&mut self.quit),
+                        "m" => { self.notice = crate::command_runner::dev_mode_toggle(); } "M" => { self.notice = crate::command_runner::dev_build_all(); } "z" => crate::command_runner::request_jump(), "Z" => { self.notice = crate::command_runner::add_current_dir(); } "d" => crate::command_runner::request_theme_picker(), "w" => { self.notice = crate::command_runner::open_website(); }, "q" => crate::command_runner::quit_key(&mut self.quit),
                         _ => {}
                     }
                 }

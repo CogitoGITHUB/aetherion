@@ -1,5 +1,5 @@
 name = monochrome-dark
-text = white
+text = #ffffff
 dim = #6e6e6e
-error = red
-bg = none
+error = #dc2828
+bg = #000000

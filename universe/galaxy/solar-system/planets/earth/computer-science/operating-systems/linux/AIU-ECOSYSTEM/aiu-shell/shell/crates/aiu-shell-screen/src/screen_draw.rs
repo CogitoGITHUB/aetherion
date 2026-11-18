@@ -173,7 +173,7 @@ crate::theme::dim()
 
     let (title, color) = match state.mode {
         Mode::Visual => (
-            "input  f full screen edit  z jump  Z add dir",
+            "input  f full screen edit  z jump  Z add dir  w website",
             crate::theme::text(),
         ),
         Mode::Insert => ("input insert  esc visual  enter run  up down history  ctrl+r search", crate::theme::text()),

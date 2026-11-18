@@ -278,7 +278,27 @@ pub fn request_fullscreen(line: &str) {
     }
 }
 
-static JUMP_REQUEST: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false); pub fn request_jump() { JUMP_REQUEST.store(true, std::sync::atomic::Ordering::Relaxed); } pub fn take_jump() -> bool { JUMP_REQUEST.swap(false, std::sync::atomic::Ordering::Relaxed) } pub fn pick_directory() -> Option<String> { let out = Command::new("tv").arg("zoxide").stdin(std::process::Stdio::inherit()).stderr(std::process::Stdio::inherit()).stdout(std::process::Stdio::piped()).output().ok()?; let path = String::from_utf8_lossy(&out.stdout).trim().to_string(); if !out.status.success() || path.is_empty() { return None; } std::env::set_current_dir(&path).ok()?; Some(path) } fn jump_bin() -> String { format!("{}/.local/share/aiu-pm/prefix/aiu-jump/current/bin/aiu-shell-jump", std::env::var("HOME").unwrap_or_default()) } pub fn add_current_dir() -> String { let cwd = match std::env::current_dir() { Ok(c) => c, Err(e) => return format!("add failed: {e}") }; match Command::new(jump_bin()).arg("add").arg(&cwd).status() { Ok(s) if s.success() => format!("added {}", cwd.display()), _ => String::from("zoxide add failed") } } pub fn try_cd(line: &str) -> Option<String> { let mut parts = line.split_whitespace(); if parts.next()? != "cd" { return None; } let rest: Vec<&str> = parts.collect(); let target = rest.join(" "); let home = std::env::var("HOME").unwrap_or_default(); let expanded = if target.is_empty() || target == "~" { home.clone() } else if let Some(r) = target.strip_prefix("~/") { format!("{home}/{r}") } else { target.clone() }; if std::path::Path::new(&expanded).is_dir() { return Some(match std::env::set_current_dir(&expanded) { Ok(_) => format!("cd {expanded}"), Err(e) => format!("cd failed: {e}") }); } let out = Command::new(jump_bin()).arg("query").args(&rest).output().ok()?; let path = String::from_utf8_lossy(&out.stdout).trim().to_string(); if out.status.success() && !path.is_empty() && std::env::set_current_dir(&path).is_ok() { Some(format!("z {path}")) } else { Some(format!("cd: no match for {target}")) } } pub fn take_fullscreen() -> Option<String> {
+static JUMP_REQUEST: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false); pub fn request_jump() { JUMP_REQUEST.store(true, std::sync::atomic::Ordering::Relaxed); } pub fn take_jump() -> bool { JUMP_REQUEST.swap(false, std::sync::atomic::Ordering::Relaxed) } pub fn pick_directory() -> Option<String> { let out = Command::new("tv").arg("zoxide").stdin(std::process::Stdio::inherit()).stderr(std::process::Stdio::inherit()).stdout(std::process::Stdio::piped()).output().ok()?; let path = String::from_utf8_lossy(&out.stdout).trim().to_string(); if !out.status.success() || path.is_empty() { return None; } std::env::set_current_dir(&path).ok()?; Some(path) } fn jump_bin() -> String { format!("{}/.local/share/aiu-pm/prefix/aiu-jump/current/bin/aiu-shell-jump", std::env::var("HOME").unwrap_or_default()) } pub fn add_current_dir() -> String { let cwd = match std::env::current_dir() { Ok(c) => c, Err(e) => return format!("add failed: {e}") }; match Command::new(jump_bin()).arg("add").arg(&cwd).status() { Ok(s) if s.success() => format!("added {}", cwd.display()), _ => String::from("zoxide add failed") } } pub fn try_cd(line: &str) -> Option<String> { let mut parts = line.split_whitespace(); if parts.next()? != "cd" { return None; } let rest: Vec<&str> = parts.collect(); let target = rest.join(" "); let home = std::env::var("HOME").unwrap_or_default(); let expanded = if target.is_empty() || target == "~" { home.clone() } else if let Some(r) = target.strip_prefix("~/") { format!("{home}/{r}") } else { target.clone() }; if std::path::Path::new(&expanded).is_dir() { return Some(match std::env::set_current_dir(&expanded) { Ok(_) => format!("cd {expanded}"), Err(e) => format!("cd failed: {e}") }); } let out = Command::new(jump_bin()).arg("query").args(&rest).output().ok()?; let path = String::from_utf8_lossy(&out.stdout).trim().to_string(); if out.status.success() && !path.is_empty() && std::env::set_current_dir(&path).is_ok() { Some(format!("z {path}")) } else { Some(format!("cd: no match for {target}")) } } static THEME_REQUEST: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+pub fn request_theme_picker() { THEME_REQUEST.store(true, std::sync::atomic::Ordering::Relaxed); }
+pub fn take_theme_picker() -> bool { THEME_REQUEST.swap(false, std::sync::atomic::Ordering::Relaxed) }
+pub fn open_website() -> String {
+    let url = "http://127.0.0.1:8080";
+    let ok = std::process::Command::new("termux-open-url")
+        .arg(url)
+        .stdin(std::process::Stdio::null())
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .status()
+        .map(|s| s.success())
+        .unwrap_or(false);
+    if ok {
+        format!("opening {}", url)
+    } else {
+        format!("open in browser: {}", url)
+    }
+}
+pub fn pick_theme() { let _ = Command::new("tv").arg("aiu-themes").stdin(std::process::Stdio::inherit()).stderr(std::process::Stdio::inherit()).stdout(std::process::Stdio::piped()).output(); crate::theme::reload(); }
+pub fn take_fullscreen() -> Option<String> {
     FULLSCREEN_LINE.lock().ok().and_then(|mut slot| slot.take())
 }
 
@@ -579,6 +599,7 @@ pub fn report_run_state(state: u8) {
 }
 
 pub fn try_theme(line: &str) -> Option<String> {
+    if line.trim() == "aiu-theme" { request_theme_picker(); return Some(String::from("theme picker")); }
     let mut it = line.split_whitespace();
     if it.next()? != "aiu-theme" {
         return None;

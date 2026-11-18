@@ -174,6 +174,74 @@ fn fit(title: &str, key: &str) -> String {
     }
 }
 
+fn wrap(s: &str) -> Vec<String> {
+    let w = 24;
+    let mut lines: Vec<String> = Vec::new();
+    let mut cur = String::new();
+    for word in s.split_whitespace() {
+        let mut word: String = word.to_string();
+        while word.chars().count() > w {
+            if !cur.is_empty() {
+                lines.push(cur.clone());
+                cur.clear();
+            }
+            lines.push(word.chars().take(w).collect());
+            word = word.chars().skip(w).collect();
+        }
+        let sep = if cur.is_empty() { 0 } else { 1 };
+        if cur.chars().count() + sep + word.chars().count() > w
+            && !cur.is_empty()
+        {
+            lines.push(cur.clone());
+            cur.clear();
+        }
+        if !cur.is_empty() {
+            cur.push_str(" ");
+        }
+        cur.push_str(&word);
+    }
+    if !cur.is_empty() {
+        lines.push(cur);
+    }
+    if lines.len() > 3 {
+        lines.truncate(3);
+        let mut l: String = lines[2].chars().take(w - 1).collect();
+        l.push_str("…");
+        lines[2] = l;
+    }
+    lines
+}
+
+static PICK: Mutex<String> = Mutex::new(String::new());
+
+#[no_mangle]
+pub extern "C" fn pick(width: f64, wx: f64, wy: f64) -> i32 {
+    let guard = DB.lock().unwrap_or_else(|e| e.into_inner());
+    let store = match guard.as_ref() {
+        Some(s) => s,
+        None => return -1,
+    };
+    for b in layout(store, width).iter().rev() {
+        if wx >= b.x && wx <= b.x + BOX_W
+            && wy >= b.y && wy <= b.y + BOX_H
+        {
+            *PICK.lock().unwrap_or_else(|e| e.into_inner()) = b.key.clone();
+            return 1;
+        }
+    }
+    0
+}
+
+#[no_mangle]
+pub extern "C" fn pick_ptr() -> *const u8 {
+    PICK.lock().unwrap_or_else(|e| e.into_inner()).as_ptr()
+}
+
+#[no_mangle]
+pub extern "C" fn pick_len() -> usize {
+    PICK.lock().unwrap_or_else(|e| e.into_inner()).len()
+}
+
 fn anchors(a: &Boxed, b: &Boxed) -> (f64, f64, f64, f64) {
     let dx = b.x - a.x;
     let dy = b.y - a.y;
@@ -233,7 +301,16 @@ pub extern "C" fn draw(width: f64, height: f64, sx: f64, sy: f64) -> i32 {
             if seen(b.x, b.y, BOX_W, BOX_H) {
                 rect(b.x - sx, b.y - sy, BOX_W, BOX_H);
                 let t = fit(&b.title, &b.key);
-                text(t.as_ptr(), t.len(), b.x - sx + 8.0, b.y - sy + 8.0);
+                let _ = &t;
+                let full = if b.title.is_empty() {
+                    b.key.rsplit("/").next().unwrap_or(&b.key).to_string()
+                } else {
+                    b.title.clone()
+                };
+                for (i, l) in wrap(&full).iter().enumerate() {
+                    text(l.as_ptr(), l.len(), b.x - sx + 12.0,
+                        b.y - sy + 8.0 + 17.0 * i as f64);
+                }
                 drawn += 1;
             }
         }

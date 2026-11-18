@@ -140,6 +140,39 @@ Yes. One action: draw every file as a box with its links on a test page.
 answer end
 paragraph end
 paragraph start
+name: paragraph-step-m2b-look
+Step M2b. Box look from the theme. Boxes are rounded with the
+title written inside the box on up to three lines. The theme role corner (round or square)
+comes from /theme. Next: box_frame.rs in the CLI reads corner
+too, then keyboard focus (focus bold, the others dim). Done when
+Shape sees it on screen.
+contract start
+id: q5e9296
+question: Is each step one action that can be finished and checked?
+contract end
+answer start
+for: q5e9296
+asked: Is each step one action that can be finished and checked?
+
+answer end
+paragraph end
+paragraph start
+name: paragraph-step-m2c-open
+Step M2c. The server route /file?k=KEY returns the file text.
+Press a box and the file opens full screen on the
+page as readable text, so Shape reads it in the web. A key or
+a back tap returns to the map. Done when Shape sees it on screen.
+contract start
+id: q5e9296
+question: Is each step one action that can be finished and checked?
+contract end
+answer start
+for: q5e9296
+asked: Is each step one action that can be finished and checked?
+
+answer end
+paragraph end
+paragraph start
 name: paragraph-step-m3-expand
 Step M3. Expand by key. Written only after M2 works and Shape
 has chosen the keys and the options. Done when this step has its

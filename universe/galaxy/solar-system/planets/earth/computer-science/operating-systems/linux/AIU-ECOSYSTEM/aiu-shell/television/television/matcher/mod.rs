@@ -64,7 +64,7 @@ where
 /// Defaults to 4 if the number of available threads cannot be determined.
 pub fn matcher_threads() -> usize {
     available_parallelism()
-        .map(|n| n.get().saturating_sub(3).min(32))
+        .map(|n| n.get().saturating_sub(3).clamp(1, 32))
         .unwrap_or(4)
 }
 

@@ -59,6 +59,13 @@ gray, error red, bg none: terminals are transparent and the
 website sets no background.
 paragraph end
 paragraph start
+name: paragraph-decided-black
+Decided by Shape on 2026-11-18. The background is #000000 in
+every theme, so bg is never none. This replaces the earlier
+bg none line. Every theme name ends in -dark, so the name
+reminds that the background is black.
+paragraph end
+paragraph start
 name: paragraph-decided-file
 The active theme is one small plain file that every tool reads.
 A bad theme is fixed by editing that file, with no rebuild. Own

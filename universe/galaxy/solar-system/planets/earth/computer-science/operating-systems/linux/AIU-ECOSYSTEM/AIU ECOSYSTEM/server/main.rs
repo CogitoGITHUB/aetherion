@@ -126,6 +126,39 @@ fn read_db(db: &Arc<Mutex<Option<notation::database_store::Store>>>, f: impl FnO
     }
 }
 static ROOT: Mutex<Option<String>> = Mutex::new(None);
+fn state_dir() -> PathBuf {
+    let home = env::var("HOME").unwrap_or_else(|_| String::from("."));
+    PathBuf::from(home)
+        .join(".local")
+        .join("state")
+        .join("aiu-ecosystem")
+}
+fn state_text(name: &str) -> Option<String> {
+    let t = fs::read_to_string(state_dir().join(name)).ok()?;
+    let t = t.trim().to_string();
+    if t.is_empty() { None } else { Some(t) }
+}
+fn website_dir() -> PathBuf {
+    if let Ok(p) = env::var("AIU_WEBSITE_DIR") {
+        if !p.is_empty() {
+            return PathBuf::from(p);
+        }
+    }
+    if let Some(p) = state_text("website-dir") {
+        if PathBuf::from(&p).join("index.html").is_file() {
+            return PathBuf::from(p);
+        }
+    }
+    if let Some(r) = state_text("root") {
+        let d = PathBuf::from(r)
+            .join("AIU ECOSYSTEM")
+            .join("website");
+        if d.join("index.html").is_file() {
+            return d;
+        }
+    }
+    PathBuf::from("website")
+}
 fn git_out(dir: &std::path::Path, args: &[&str]) -> Option<String> {
     let out = Command::new("git").arg("-C").arg(dir).args(args).output().ok()?;
     if !out.status.success() {
@@ -239,6 +272,8 @@ fn handle(words: &[&str], programs: &mut BTreeMap<String, String>, started: u64,
                                 store.len()
                             );
                             *ROOT.lock().unwrap_or_else(|e| e.into_inner()) = Some(root.to_string_lossy().to_string());
+                            let full = fs::canonicalize(&root).unwrap_or(root.clone());
+                            let _ = fs::write(state_dir().join("notation-root"), full.to_string_lossy().to_string());
                             *db.lock().unwrap_or_else(|e| e.into_inner()) = Some(store);
                             ws::broadcast("changed");
                             (answer, false)
@@ -267,9 +302,118 @@ fn kind(rel: &str) -> String {
     };
     t.to_string()
 }
+fn theme_hex(v: &str) -> Option<String> {
+    if v == "none" {
+        return Some(String::from("none"));
+    }
+    if v.len() == 7 && v.starts_with("#")
+        && v[1..].bytes().all(|b| b.is_ascii_hexdigit())
+    {
+        return Some(v.to_lowercase());
+    }
+    let h = match v {
+        "black" => "#000000",
+        "red" => "#dc2828",
+        "green" => "#28c828",
+        "yellow" => "#dcc828",
+        "blue" => "#3c64e6",
+        "magenta" => "#c83cc8",
+        "cyan" => "#28c8c8",
+        "white" => "#ffffff",
+        "gray" | "grey" => "#6e6e6e",
+        _ => return None,
+    };
+    Some(String::from(h))
+}
+fn theme_text() -> String {
+    let dir = match env::var("AIU_THEME_DIR") {
+        Ok(d) if PathBuf::from(&d).is_dir() => Some(PathBuf::from(d)),
+        _ => {
+            let home = env::var("HOME").unwrap_or_default();
+            fs::read_to_string(
+                PathBuf::from(home).join(".config/aiu/theme-dir"))
+                .ok()
+                .map(|d| PathBuf::from(d.trim()))
+                .filter(|p| p.is_dir())
+        }
+    };
+    let body = dir.and_then(|d| {
+        let n = fs::read_to_string(d.join("active")).ok()?;
+        let n = n.trim().to_string();
+        if n.is_empty()
+            || !n.bytes().all(|b| b.is_ascii_alphanumeric() || b == 45 || b == 95)
+        {
+            return None;
+        }
+        fs::read_to_string(d.join(format!("{}.theme", n))).ok()
+    });
+    let mut roles: Vec<(String, String)> = vec![
+        ("text", "#ffffff"), ("dim", "#6e6e6e"),
+        ("error", "#dc2828"), ("bg", "none"),
+        ("corner", "round"),
+    ]
+    .into_iter()
+    .map(|(a, b)| (a.to_string(), b.to_string()))
+    .collect();
+    if let Some(body) = body {
+        for l in body.lines() {
+            if let Some((k, v)) = l.split_once("=") {
+                if let Some(c) = theme_hex(v.trim()).or_else(|| {
+                    let t = v.trim();
+                    if k.trim() == "corner"
+                        && (t == "round" || t == "square")
+                    { Some(t.to_string()) } else { None }
+                }) {
+                    for r in roles.iter_mut() {
+                        if r.0 == k.trim() {
+                            r.1 = c.clone();
+                        }
+                    }
+                }
+            }
+        }
+    }
+    roles.iter().map(|r| format!("{}={}\n", r.0, r.1)).collect::<String>()
+}
 fn http_file(path: &str) -> (u16, String, Vec<u8>) {
     let clean = path.split("?").next().unwrap_or("");
     let plain = |code: u16, text: &str| (code, String::from("text/plain; charset=utf-8"), text.as_bytes().to_vec());
+    if let Some(q) = path.strip_prefix("/file?k=") {
+        let b = q.as_bytes();
+        let mut key: Vec<u8> = Vec::new();
+        let mut i = 0;
+        while i < b.len() {
+            if b[i] == 37u8 && i + 2 < b.len() {
+                let h = std::str::from_utf8(&b[i + 1..i + 3]).ok()
+                    .and_then(|h| u8::from_str_radix(h, 16).ok());
+                if let Some(v) = h {
+                    key.push(v);
+                    i += 3;
+                    continue;
+                }
+            }
+            key.push(b[i]);
+            i += 1;
+        }
+        let key = String::from_utf8_lossy(&key).to_string();
+        if key.is_empty() || key.contains("..") || key.contains("\0")
+            || key.starts_with("/")
+        {
+            return plain(403, "error forbidden path");
+        }
+        let root = ROOT.lock().unwrap_or_else(|e| e.into_inner()).clone();
+        return match root {
+            None => plain(404, "error no folder loaded"),
+            Some(r) => match fs::read(PathBuf::from(r).join(&key)) {
+                Ok(bytes) => (200, String::from("text/plain; charset=utf-8"), bytes),
+                Err(e) => plain(404, &format!("error {}", e)),
+            },
+        };
+    }
+    if clean == "/theme" {
+        return (200, String::from("text/plain; charset=utf-8"),
+            theme_text().into_bytes());
+    }
     if clean == "/index.db" {
         let root = ROOT.lock().unwrap_or_else(|e| e.into_inner()).clone();
         return match root {
@@ -287,10 +431,7 @@ fn http_file(path: &str) -> (u16, String, Vec<u8>) {
     if rel.contains("..") || rel.contains("\0") {
         return plain(403, "error forbidden path");
     }
-    let dir = match env::var("AIU_WEBSITE_DIR") {
-        Ok(p) if !p.is_empty() => PathBuf::from(p),
-        _ => PathBuf::from("website"),
-    };
+    let dir = website_dir();
     match fs::read(dir.join(&rel)) {
         Ok(bytes) => (200, kind(&rel), bytes),
         Err(_) => plain(404, "error not found"),
@@ -416,6 +557,23 @@ fn serve() -> i32 {
     let dev = Arc::new(Mutex::new(DevState { running: false, names: String::new(), last: String::from("none") }));
     let db: Arc<Mutex<Option<notation::database_store::Store>>> = Arc::new(Mutex::new(None));
     println!("server up at {} pid {}", path.display(), process::id());
+    if let Ok(w) = env::var("AIU_WEBSITE_DIR") {
+        if !w.is_empty() {
+            let _ = fs::write(state_dir().join("website-dir"), w);
+        }
+    }
+    if let Some(r) = state_text("notation-root") {
+        let p = Arc::clone(&programs);
+        let d = Arc::clone(&dev);
+        let b = Arc::clone(&db);
+        thread::spawn(move || {
+            let _keep = p;
+            let mut map: BTreeMap<String, String> = BTreeMap::new();
+            let line = format!("load {}", r);
+            let a = handle_raw(&line, &mut map, started, &d, &b).0;
+            println!("startup load: {}", a);
+        });
+    }
     {
         let p = Arc::clone(&programs);
         let d = Arc::clone(&dev);

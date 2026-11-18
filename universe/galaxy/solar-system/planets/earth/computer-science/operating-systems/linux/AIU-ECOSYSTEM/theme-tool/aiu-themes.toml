@@ -1,0 +1,20 @@
+[metadata]
+name = "aiu-themes"
+description = "Pick the active theme"
+
+[source]
+command = "aiu-theme list"
+no_sort = true
+
+[preview]
+cached = false
+command = "aiu-theme preview \"{}\""
+
+[keybindings]
+enter = "actions:pick"
+
+[actions.pick]
+description = "make the chosen theme active"
+command = "aiu-theme set {}"
+shell = "bash"
+mode = "execute"

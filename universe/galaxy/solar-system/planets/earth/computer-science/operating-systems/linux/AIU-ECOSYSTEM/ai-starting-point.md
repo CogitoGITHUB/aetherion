@@ -192,3 +192,25 @@ line, aiutd FILE.aiu, never bash -c, it needs the real tty.
 - Rust inside bash -c: no char literals (apostrophe). Insert lines with a sed file: /pat/i TEXT on one line. Rename a fn BEFORE appending a new fn with the old name.
 - Splash boxes in the shell show REAL splashboard dashboard output, never self made info.
 - aiu-splash dump project|home WIDTH prints a dashboard as plain text, no tty needed. Heredoc with a double-quoted delimiter keeps code literal inside bash -c.
+
+## Server (built in, no variables)
+- Website and notation index are ONE server: ecosystem-server
+  serve, HTTP 127.0.0.1:8080, socket in
+  ~/.local/state/aiu-ecosystem/, log server.log there.
+- Autostart: aiu-shell repl.rs runs "ecosystem serve" when the
+  shell starts in a terminal. Does nothing if already running.
+- Website folder, in order: AIU_WEBSITE_DIR, state file
+  website-dir, state file root + "AIU ECOSYSTEM/website",
+  then relative "website". Works from any folder.
+- Index: every load saves its folder to state file
+  notation-root. The server reloads it at start.
+- Real index is in "AIU NOTATION/.notation". The .notation in
+  the ecosystem root is stale (11-06).
+- After a build: ecosystem stop, then ecosystem serve.
+
+## Key w (shell input bar, Visual mode)
+- w opens the website (http://127.0.0.1:8080) in the phone
+  browser via termux-open-url. Code: open_website in
+  aiu-shell-screen command_runner.rs, key arm in input_state.rs.
+- Keys already taken in Visual: t h n e s c p a i x o l j k b
+  g y Y / space f m M z Z d q. Free: r u v w(now used) and more.

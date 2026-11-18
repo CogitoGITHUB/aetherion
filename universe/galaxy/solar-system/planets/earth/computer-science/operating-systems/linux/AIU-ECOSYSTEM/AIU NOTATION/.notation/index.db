@@ -667,7 +667,7 @@ F	declared-name	code-steps-start-open
 R	block	README.aiu:1655	README.aiu
 F	block	chapter
 F	line	1655
-F	end-line	1811
+F	end-line	2038
 F	depth	0
 F	parent	
 F	declared-name	section-views-and-commands
@@ -772,7 +772,7 @@ F	declared-name
 R	block	README.aiu:1714	README.aiu
 F	block	code
 F	line	1714
-F	end-line	1758
+F	end-line	1775
 F	depth	1
 F	parent	chapter
 F	declared-name	code-notation-render-file
@@ -783,89 +783,61 @@ F	end-line	179
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:1760	README.aiu
+R	block	README.aiu:1777	README.aiu
 F	block	paragraph
-F	line	1760
-F	end-line	1774
+F	line	1777
+F	end-line	1791
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-reading-mode-the
-R	block	README.aiu:1765	README.aiu
+R	block	README.aiu:1782	README.aiu
 F	block	contract
-F	line	1765
-F	end-line	1768
+F	line	1782
+F	end-line	1785
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1769	README.aiu
+R	block	README.aiu:1786	README.aiu
 F	block	answer
-F	line	1769
-F	end-line	1773
+F	line	1786
+F	end-line	1790
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1776	README.aiu
+R	block	README.aiu:1793	README.aiu
 F	block	paragraph
-F	line	1776
-F	end-line	1790
+F	line	1793
+F	end-line	1807
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-the-index-command
-R	block	README.aiu:1781	README.aiu
+R	block	README.aiu:1798	README.aiu
 F	block	contract
-F	line	1781
-F	end-line	1784
+F	line	1798
+F	end-line	1801
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1785	README.aiu
+R	block	README.aiu:1802	README.aiu
 F	block	answer
-F	line	1785
-F	end-line	1789
+F	line	1802
+F	end-line	1806
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1791	README.aiu
+R	block	README.aiu:1808	README.aiu
 F	block	paragraph
-F	line	1791
-F	end-line	1808
+F	line	1808
+F	end-line	1825
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-the-server-load
-R	block	README.aiu:1799	README.aiu
+R	block	README.aiu:1816	README.aiu
 F	block	contract
-F	line	1799
-F	end-line	1802
+F	line	1816
+F	end-line	1819
 F	depth	2
 F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1803	README.aiu
-F	block	answer
-F	line	1803
-F	end-line	1807
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1813	README.aiu
-F	block	chapter
-F	line	1813
-F	end-line	1903
-F	depth	0
-F	parent	
-F	declared-name	section-making-a-page
-R	block	README.aiu:1815	README.aiu
-F	block	title
-F	line	1815
-F	end-line	1827
-F	depth	1
-F	parent	chapter
-F	declared-name	title-making-a-page
-R	block	README.aiu:1818	README.aiu
-F	block	contract
-F	line	1818
-F	end-line	1821
-F	depth	2
-F	parent	title
 F	declared-name	
 R	block	README.aiu:182	README.aiu
 F	block	paragraph
@@ -874,41 +846,55 @@ F	end-line	196
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-a-page-starts
-R	block	README.aiu:1822	README.aiu
+R	block	README.aiu:1820	README.aiu
 F	block	answer
-F	line	1822
-F	end-line	1826
-F	depth	2
-F	parent	title
-F	declared-name	
-R	block	README.aiu:1829	README.aiu
-F	block	paragraph
-F	line	1829
-F	end-line	1842
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-from-nushell-one
-R	block	README.aiu:1833	README.aiu
-F	block	contract
-F	line	1833
-F	end-line	1836
+F	line	1820
+F	end-line	1824
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1837	README.aiu
-F	block	answer
-F	line	1837
+R	block	README.aiu:1827	README.aiu
+F	block	paragraph
+F	line	1827
+F	end-line	1847
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-server-reads
+R	block	README.aiu:1838	README.aiu
+F	block	contract
+F	line	1838
 F	end-line	1841
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1844	README.aiu
-F	block	code
-F	line	1844
-F	end-line	1885
+R	block	README.aiu:1842	README.aiu
+F	block	answer
+F	line	1842
+F	end-line	1846
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1849	README.aiu
+F	block	paragraph
+F	line	1849
+F	end-line	1870
 F	depth	1
 F	parent	chapter
-F	declared-name	code-title-startnkind-defaultnnamentitle
+F	declared-name	paragraph-the-server-reload-git
+R	block	README.aiu:1861	README.aiu
+F	block	contract
+F	line	1861
+F	end-line	1864
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1865	README.aiu
+F	block	answer
+F	line	1865
+F	end-line	1869
+F	depth	2
+F	parent	paragraph
+F	declared-name	
 R	block	README.aiu:187	README.aiu
 F	block	contract
 F	line	187
@@ -916,27 +902,34 @@ F	end-line	190
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1887	README.aiu
+R	block	README.aiu:1872	README.aiu
 F	block	paragraph
-F	line	1887
-F	end-line	1901
+F	line	1872
+F	end-line	1892
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-opening-runs-fill
-R	block	README.aiu:1892	README.aiu
+F	declared-name	paragraph-the-server-http
+R	block	README.aiu:1883	README.aiu
 F	block	contract
-F	line	1892
-F	end-line	1895
+F	line	1883
+F	end-line	1886
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1896	README.aiu
+R	block	README.aiu:1887	README.aiu
 F	block	answer
-F	line	1896
-F	end-line	1900
+F	line	1887
+F	end-line	1891
 F	depth	2
 F	parent	paragraph
 F	declared-name	
+R	block	README.aiu:1893	README.aiu
+F	block	paragraph
+F	line	1893
+F	end-line	1913
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-server-websocket
 R	block	README.aiu:19	README.aiu
 F	block	paragraph
 F	line	19
@@ -944,20 +937,20 @@ F	end-line	35
 F	depth	1
 F	parent	pin
 F	declared-name	paragraph-this-pin-shows
-R	block	README.aiu:1905	README.aiu
-F	block	chapter
-F	line	1905
-F	end-line	1969
-F	depth	0
-F	parent	
-F	declared-name	section-planned-not-usable
-R	block	README.aiu:1907	README.aiu
-F	block	title
-F	line	1907
-F	end-line	1919
-F	depth	1
-F	parent	chapter
-F	declared-name	title-planned-not-usable
+R	block	README.aiu:1904	README.aiu
+F	block	contract
+F	line	1904
+F	end-line	1907
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1908	README.aiu
+F	block	answer
+F	line	1908
+F	end-line	1912
+F	depth	2
+F	parent	paragraph
+F	declared-name	
 R	block	README.aiu:191	README.aiu
 F	block	answer
 F	line	191
@@ -965,27 +958,13 @@ F	end-line	195
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1910	README.aiu
-F	block	contract
-F	line	1910
-F	end-line	1913
-F	depth	2
-F	parent	title
-F	declared-name	
-R	block	README.aiu:1914	README.aiu
-F	block	answer
-F	line	1914
-F	end-line	1918
-F	depth	2
-F	parent	title
-F	declared-name	
-R	block	README.aiu:1921	README.aiu
+R	block	README.aiu:1915	README.aiu
 F	block	paragraph
-F	line	1921
+F	line	1915
 F	end-line	1935
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-links-a-target
+F	declared-name	paragraph-the-notation-wasm
 R	block	README.aiu:1926	README.aiu
 F	block	contract
 F	line	1926
@@ -1003,65 +982,44 @@ F	declared-name
 R	block	README.aiu:1937	README.aiu
 F	block	paragraph
 F	line	1937
-F	end-line	1952
+F	end-line	1957
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-mark-blocks-rule
-R	block	README.aiu:1943	README.aiu
+F	declared-name	paragraph-the-website-bridge
+R	block	README.aiu:1948	README.aiu
 F	block	contract
-F	line	1943
-F	end-line	1946
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1947	README.aiu
-F	block	answer
-F	line	1947
+F	line	1948
 F	end-line	1951
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1954	README.aiu
-F	block	paragraph
-F	line	1954
-F	end-line	1967
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-idle-autosave-safe
-R	block	README.aiu:1958	README.aiu
-F	block	contract
-F	line	1958
-F	end-line	1961
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1962	README.aiu
+R	block	README.aiu:1952	README.aiu
 F	block	answer
-F	line	1962
-F	end-line	1966
+F	line	1952
+F	end-line	1956
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1971	README.aiu
-F	block	chapter
-F	line	1971
-F	end-line	2105
-F	depth	0
-F	parent	
-F	declared-name	section-rules-for-writing
-R	block	README.aiu:1973	README.aiu
-F	block	title
-F	line	1973
-F	end-line	1985
+R	block	README.aiu:1959	README.aiu
+F	block	paragraph
+F	line	1959
+F	end-line	1979
 F	depth	1
 F	parent	chapter
-F	declared-name	title-rules-for-writing
-R	block	README.aiu:1976	README.aiu
+F	declared-name	paragraph-the-website-commands
+R	block	README.aiu:1970	README.aiu
 F	block	contract
-F	line	1976
-F	end-line	1979
+F	line	1970
+F	end-line	1973
 F	depth	2
-F	parent	title
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1974	README.aiu
+F	block	answer
+F	line	1974
+F	end-line	1978
+F	depth	2
+F	parent	paragraph
 F	declared-name	
 R	block	README.aiu:198	README.aiu
 F	block	code
@@ -1070,178 +1028,409 @@ F	end-line	246
 F	depth	1
 F	parent	chapter
 F	declared-name	code-title-start-kind
-R	block	README.aiu:1980	README.aiu
-F	block	answer
-F	line	1980
-F	end-line	1984
-F	depth	2
-F	parent	title
-F	declared-name	
-R	block	README.aiu:1987	README.aiu
+R	block	README.aiu:1981	README.aiu
 F	block	paragraph
-F	line	1987
-F	end-line	2000
+F	line	1981
+F	end-line	2004
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-start-every-page
-R	block	README.aiu:1991	README.aiu
-F	block	contract
-F	line	1991
-F	end-line	1994
-F	depth	2
-F	parent	paragraph
-F	declared-name	
+F	declared-name	paragraph-the-write-commands
 R	block	README.aiu:1995	README.aiu
-F	block	answer
+F	block	contract
 F	line	1995
-F	end-line	1999
+F	end-line	1998
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2002	README.aiu
-F	block	paragraph
-F	line	2002
-F	end-line	2015
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-pick-the-kind
+R	block	README.aiu:1999	README.aiu
+F	block	answer
+F	line	1999
+F	end-line	2003
+F	depth	2
+F	parent	paragraph
+F	declared-name	
 R	block	README.aiu:2006	README.aiu
-F	block	contract
+F	block	paragraph
 F	line	2006
-F	end-line	2009
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:2010	README.aiu
-F	block	answer
-F	line	2010
-F	end-line	2014
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:2017	README.aiu
-F	block	paragraph
-F	line	2017
-F	end-line	2030
+F	end-line	2032
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-one-idea-per
-R	block	README.aiu:2021	README.aiu
+F	declared-name	paragraph-the-mindmap-plan
+R	block	README.aiu:2023	README.aiu
 F	block	contract
-F	line	2021
-F	end-line	2024
+F	line	2023
+F	end-line	2026
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2025	README.aiu
+R	block	README.aiu:2027	README.aiu
 F	block	answer
-F	line	2025
-F	end-line	2029
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:2032	README.aiu
-F	block	paragraph
-F	line	2032
-F	end-line	2045
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-never-type-numbers
-R	block	README.aiu:2036	README.aiu
-F	block	contract
-F	line	2036
-F	end-line	2039
+F	line	2027
+F	end-line	2031
 F	depth	2
 F	parent	paragraph
 F	declared-name	
 R	block	README.aiu:2040	README.aiu
-F	block	answer
+F	block	chapter
 F	line	2040
-F	end-line	2044
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:2047	README.aiu
-F	block	paragraph
-F	line	2047
-F	end-line	2059
+F	end-line	2130
+F	depth	0
+F	parent	
+F	declared-name	section-making-a-page
+R	block	README.aiu:2042	README.aiu
+F	block	title
+F	line	2042
+F	end-line	2054
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-never-start-a
-R	block	README.aiu:2050	README.aiu
+F	declared-name	title-making-a-page
+R	block	README.aiu:2045	README.aiu
 F	block	contract
-F	line	2050
+F	line	2045
+F	end-line	2048
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:2049	README.aiu
+F	block	answer
+F	line	2049
 F	end-line	2053
 F	depth	2
-F	parent	paragraph
+F	parent	title
 F	declared-name	
-R	block	README.aiu:2054	README.aiu
-F	block	answer
-F	line	2054
-F	end-line	2058
+R	block	README.aiu:2056	README.aiu
+F	block	paragraph
+F	line	2056
+F	end-line	2069
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-from-nushell-one
+R	block	README.aiu:2060	README.aiu
+F	block	contract
+F	line	2060
+F	end-line	2063
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2061	README.aiu
-F	block	paragraph
-F	line	2061
-F	end-line	2074
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-never-write-a
-R	block	README.aiu:2065	README.aiu
-F	block	contract
-F	line	2065
+R	block	README.aiu:2064	README.aiu
+F	block	answer
+F	line	2064
 F	end-line	2068
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2069	README.aiu
-F	block	answer
-F	line	2069
-F	end-line	2073
+R	block	README.aiu:2071	README.aiu
+F	block	code
+F	line	2071
+F	end-line	2112
+F	depth	1
+F	parent	chapter
+F	declared-name	code-title-startnkind-defaultnnamentitle
+R	block	README.aiu:2114	README.aiu
+F	block	paragraph
+F	line	2114
+F	end-line	2128
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-opening-runs-fill
+R	block	README.aiu:2119	README.aiu
+F	block	contract
+F	line	2119
+F	end-line	2122
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2076	README.aiu
+R	block	README.aiu:2123	README.aiu
+F	block	answer
+F	line	2123
+F	end-line	2127
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2132	README.aiu
+F	block	chapter
+F	line	2132
+F	end-line	2196
+F	depth	0
+F	parent	
+F	declared-name	section-planned-not-usable
+R	block	README.aiu:2134	README.aiu
+F	block	title
+F	line	2134
+F	end-line	2146
+F	depth	1
+F	parent	chapter
+F	declared-name	title-planned-not-usable
+R	block	README.aiu:2137	README.aiu
+F	block	contract
+F	line	2137
+F	end-line	2140
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:2141	README.aiu
+F	block	answer
+F	line	2141
+F	end-line	2145
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:2148	README.aiu
 F	block	paragraph
-F	line	2076
-F	end-line	2088
+F	line	2148
+F	end-line	2162
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-links-a-target
+R	block	README.aiu:2153	README.aiu
+F	block	contract
+F	line	2153
+F	end-line	2156
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2157	README.aiu
+F	block	answer
+F	line	2157
+F	end-line	2161
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2164	README.aiu
+F	block	paragraph
+F	line	2164
+F	end-line	2179
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-mark-blocks-rule
+R	block	README.aiu:2170	README.aiu
+F	block	contract
+F	line	2170
+F	end-line	2173
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2174	README.aiu
+F	block	answer
+F	line	2174
+F	end-line	2178
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2181	README.aiu
+F	block	paragraph
+F	line	2181
+F	end-line	2194
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-idle-autosave-safe
+R	block	README.aiu:2185	README.aiu
+F	block	contract
+F	line	2185
+F	end-line	2188
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2189	README.aiu
+F	block	answer
+F	line	2189
+F	end-line	2193
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2198	README.aiu
+F	block	chapter
+F	line	2198
+F	end-line	2332
+F	depth	0
+F	parent	
+F	declared-name	section-rules-for-writing
+R	block	README.aiu:2200	README.aiu
+F	block	title
+F	line	2200
+F	end-line	2212
+F	depth	1
+F	parent	chapter
+F	declared-name	title-rules-for-writing
+R	block	README.aiu:2203	README.aiu
+F	block	contract
+F	line	2203
+F	end-line	2206
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:2207	README.aiu
+F	block	answer
+F	line	2207
+F	end-line	2211
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:2214	README.aiu
+F	block	paragraph
+F	line	2214
+F	end-line	2227
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-start-every-page
+R	block	README.aiu:2218	README.aiu
+F	block	contract
+F	line	2218
+F	end-line	2221
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2222	README.aiu
+F	block	answer
+F	line	2222
+F	end-line	2226
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2229	README.aiu
+F	block	paragraph
+F	line	2229
+F	end-line	2242
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-pick-the-kind
+R	block	README.aiu:2233	README.aiu
+F	block	contract
+F	line	2233
+F	end-line	2236
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2237	README.aiu
+F	block	answer
+F	line	2237
+F	end-line	2241
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2244	README.aiu
+F	block	paragraph
+F	line	2244
+F	end-line	2257
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-one-idea-per
+R	block	README.aiu:2248	README.aiu
+F	block	contract
+F	line	2248
+F	end-line	2251
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2252	README.aiu
+F	block	answer
+F	line	2252
+F	end-line	2256
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2259	README.aiu
+F	block	paragraph
+F	line	2259
+F	end-line	2272
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-never-type-numbers
+R	block	README.aiu:2263	README.aiu
+F	block	contract
+F	line	2263
+F	end-line	2266
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2267	README.aiu
+F	block	answer
+F	line	2267
+F	end-line	2271
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2274	README.aiu
+F	block	paragraph
+F	line	2274
+F	end-line	2286
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-never-start-a
+R	block	README.aiu:2277	README.aiu
+F	block	contract
+F	line	2277
+F	end-line	2280
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2281	README.aiu
+F	block	answer
+F	line	2281
+F	end-line	2285
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2288	README.aiu
+F	block	paragraph
+F	line	2288
+F	end-line	2301
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-never-write-a
+R	block	README.aiu:2292	README.aiu
+F	block	contract
+F	line	2292
+F	end-line	2295
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2296	README.aiu
+F	block	answer
+F	line	2296
+F	end-line	2300
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2303	README.aiu
+F	block	paragraph
+F	line	2303
+F	end-line	2315
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-give-a-name
-R	block	README.aiu:2079	README.aiu
+R	block	README.aiu:2306	README.aiu
 F	block	contract
-F	line	2079
-F	end-line	2082
+F	line	2306
+F	end-line	2309
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2083	README.aiu
+R	block	README.aiu:2310	README.aiu
 F	block	answer
-F	line	2083
-F	end-line	2087
+F	line	2310
+F	end-line	2314
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2090	README.aiu
+R	block	README.aiu:2317	README.aiu
 F	block	paragraph
-F	line	2090
-F	end-line	2103
+F	line	2317
+F	end-line	2330
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-after-writing-open
-R	block	README.aiu:2094	README.aiu
+R	block	README.aiu:2321	README.aiu
 F	block	contract
-F	line	2094
-F	end-line	2097
+F	line	2321
+F	end-line	2324
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2098	README.aiu
+R	block	README.aiu:2325	README.aiu
 F	block	answer
-F	line	2098
-F	end-line	2102
+F	line	2325
+F	end-line	2329
 F	depth	2
 F	parent	paragraph
 F	declared-name	
@@ -10123,102 +10312,136 @@ F	parent	title
 F	declared-name	
 R	file	README.aiu	README.aiu
 F	kind	default
-F	lines	2106
-F	bytes	54179
-F	blocks	282
+F	title	AIU NOTATION: everything it can do contract start id: qd2fa77 question: Does the title say what the page is about? contract end answer start for: qd2fa77 asked: Does the title say what the page is about? answer end
+F	place	
+F	lines	2333
+F	bytes	63627
+F	blocks	309
 F	errors	0
 R	file	aiu-notation-usage-examples/aiu-business-future.aiu	aiu-notation-usage-examples/aiu-business-future.aiu
 F	kind	default
+F	title	A I U   B U S I N E S S   F U T U R E contract start id: qd2fa77 question: Does the title say what the page is about? contract end answer start for: qd2fa77 asked: Does the title say what the page is about? answer end
+F	place	
 F	lines	2242
 F	bytes	54259
 F	blocks	494
 F	errors	0
 R	file	future-work.aiu	future-work.aiu
 F	kind	default
+F	title	Future work: books, sciences, skills and the todo contract start id: qd2fa77 question: Does the title say what the page is about? contract end answer start for: qd2fa77 asked: Does the title say what the page is about? answer end
+F	place	
 F	lines	1866
 F	bytes	53252
 F	blocks	380
 F	errors	0
 R	file	notation/types/book.aiu	notation/types/book.aiu
 F	kind	book
+F	title	Book page: a chapter on how notes become pages
+F	place	
 F	lines	52
 F	bytes	1188
 F	blocks	13
 F	errors	0
 R	file	notation/types/comment.aiu	notation/types/comment.aiu
 F	kind	default
+F	title	Comments and todo marks on blocks
+F	place	
 F	lines	59
 F	bytes	1564
 F	blocks	16
 F	errors	0
 R	file	notation/types/decision.aiu	notation/types/decision.aiu
 F	kind	decision
+F	title	Decision page: keep every note as a plain text file
+F	place	
 F	lines	83
 F	bytes	2025
 F	blocks	21
 F	errors	0
 R	file	notation/types/default.aiu	notation/types/default.aiu
 F	kind	default
+F	title	Default page: every block in one place
+F	place	
 F	lines	54
 F	bytes	1080
 F	blocks	14
 F	errors	0
 R	file	notation/types/journal.aiu	notation/types/journal.aiu
 F	kind	journal
+F	title	Journal page: a week in the workshop
+F	place	
 F	lines	36
 F	bytes	1043
 F	blocks	9
 F	errors	0
 R	file	notation/types/module.aiu	notation/types/module.aiu
 F	kind	module
+F	title	Module page: a tiny function explained before its code
+F	place	
 F	lines	49
 F	bytes	1141
 F	blocks	12
 F	errors	0
 R	file	notation/types/note.aiu	notation/types/note.aiu
 F	kind	note
+F	title	Note page: one idea, said once
+F	place	
 F	lines	28
 F	bytes	740
 F	blocks	6
 F	errors	0
 R	file	notation/types/plan.aiu	notation/types/plan.aiu
 F	kind	plan
+F	title	Plan page: ship the first public release
+F	place	
 F	lines	84
 F	bytes	1813
 F	blocks	21
 F	errors	0
 R	file	notation/types/research.aiu	notation/types/research.aiu
 F	kind	research
+F	title	Research page: does plain text make notes easier to find
+F	place	
 F	lines	113
 F	bytes	2843
 F	blocks	29
 F	errors	0
 R	file	notation/types/todo.aiu	notation/types/todo.aiu
 F	kind	todo
+F	title	Todo page: tasks with marks, notes and answers
+F	place	
 F	lines	67
 F	bytes	1773
 F	blocks	17
 F	errors	0
 R	file	question-pages-plan.aiu	question-pages-plan.aiu
 F	kind	default
+F	title	Plan: aiu notation contracts
+F	place	
 F	lines	372
 F	bytes	15328
 F	blocks	94
 F	errors	0
 R	file	test-blocks.aiu	test-blocks.aiu
 F	kind	book
+F	title	Step A test contract start id: qf123ae question: Does the title say what this chapter or section covers? contract end answer start for: qf123ae asked: Does the title say what this chapter or section covers? answer end
+F	place	
 F	lines	78
 F	bytes	1299
 F	blocks	15
 F	errors	0
 R	file	test-flow.aiu	test-flow.aiu
 F	kind	book
+F	title	Flow Test contract start id: qf123ae question: Does the title say what this chapter or section covers? contract end answer start for: qf123ae asked: Does the title say what this chapter or section covers? Yes. It names the page as a flow test. answer end
+F	place	
 F	lines	74
 F	bytes	1835
 F	blocks	16
 F	errors	0
 R	file	test-hide.aiu	test-hide.aiu
 F	kind	default
+F	title	Hide test contract start id: qd2fa77 question: Does the title say what the page is about? contract end answer start for: qd2fa77 asked: Does the title say what the page is about? answer end
+F	place	
 F	lines	32
 F	bytes	545
 F	blocks	7
@@ -10443,110 +10666,146 @@ R	name	README.aiu:1714	README.aiu
 F	name	code-notation-render-file
 F	block	code
 F	line	1714
-R	name	README.aiu:1760	README.aiu
+R	name	README.aiu:1777	README.aiu
 F	name	paragraph-reading-mode-the
 F	block	paragraph
-F	line	1760
-R	name	README.aiu:1776	README.aiu
+F	line	1777
+R	name	README.aiu:1793	README.aiu
 F	name	paragraph-the-index-command
 F	block	paragraph
-F	line	1776
-R	name	README.aiu:1791	README.aiu
+F	line	1793
+R	name	README.aiu:1808	README.aiu
 F	name	paragraph-the-server-load
 F	block	paragraph
-F	line	1791
-R	name	README.aiu:1813	README.aiu
-F	name	section-making-a-page
-F	block	chapter
-F	line	1813
-R	name	README.aiu:1815	README.aiu
-F	name	title-making-a-page
-F	block	title
-F	line	1815
+F	line	1808
 R	name	README.aiu:182	README.aiu
 F	name	paragraph-a-page-starts
 F	block	paragraph
 F	line	182
-R	name	README.aiu:1829	README.aiu
-F	name	paragraph-from-nushell-one
+R	name	README.aiu:1827	README.aiu
+F	name	paragraph-the-server-reads
 F	block	paragraph
-F	line	1829
-R	name	README.aiu:1844	README.aiu
-F	name	code-title-startnkind-defaultnnamentitle
-F	block	code
-F	line	1844
-R	name	README.aiu:1887	README.aiu
-F	name	paragraph-opening-runs-fill
+F	line	1827
+R	name	README.aiu:1849	README.aiu
+F	name	paragraph-the-server-reload-git
 F	block	paragraph
-F	line	1887
+F	line	1849
+R	name	README.aiu:1872	README.aiu
+F	name	paragraph-the-server-http
+F	block	paragraph
+F	line	1872
+R	name	README.aiu:1893	README.aiu
+F	name	paragraph-the-server-websocket
+F	block	paragraph
+F	line	1893
 R	name	README.aiu:19	README.aiu
 F	name	paragraph-this-pin-shows
 F	block	paragraph
 F	line	19
-R	name	README.aiu:1905	README.aiu
-F	name	section-planned-not-usable
-F	block	chapter
-F	line	1905
-R	name	README.aiu:1907	README.aiu
-F	name	title-planned-not-usable
-F	block	title
-F	line	1907
-R	name	README.aiu:1921	README.aiu
-F	name	paragraph-links-a-target
+R	name	README.aiu:1915	README.aiu
+F	name	paragraph-the-notation-wasm
 F	block	paragraph
-F	line	1921
+F	line	1915
 R	name	README.aiu:1937	README.aiu
-F	name	paragraph-mark-blocks-rule
+F	name	paragraph-the-website-bridge
 F	block	paragraph
 F	line	1937
-R	name	README.aiu:1954	README.aiu
-F	name	paragraph-idle-autosave-safe
+R	name	README.aiu:1959	README.aiu
+F	name	paragraph-the-website-commands
 F	block	paragraph
-F	line	1954
-R	name	README.aiu:1971	README.aiu
-F	name	section-rules-for-writing
-F	block	chapter
-F	line	1971
-R	name	README.aiu:1973	README.aiu
-F	name	title-rules-for-writing
-F	block	title
-F	line	1973
+F	line	1959
 R	name	README.aiu:198	README.aiu
 F	name	code-title-start-kind
 F	block	code
 F	line	198
-R	name	README.aiu:1987	README.aiu
+R	name	README.aiu:1981	README.aiu
+F	name	paragraph-the-write-commands
+F	block	paragraph
+F	line	1981
+R	name	README.aiu:2006	README.aiu
+F	name	paragraph-the-mindmap-plan
+F	block	paragraph
+F	line	2006
+R	name	README.aiu:2040	README.aiu
+F	name	section-making-a-page
+F	block	chapter
+F	line	2040
+R	name	README.aiu:2042	README.aiu
+F	name	title-making-a-page
+F	block	title
+F	line	2042
+R	name	README.aiu:2056	README.aiu
+F	name	paragraph-from-nushell-one
+F	block	paragraph
+F	line	2056
+R	name	README.aiu:2071	README.aiu
+F	name	code-title-startnkind-defaultnnamentitle
+F	block	code
+F	line	2071
+R	name	README.aiu:2114	README.aiu
+F	name	paragraph-opening-runs-fill
+F	block	paragraph
+F	line	2114
+R	name	README.aiu:2132	README.aiu
+F	name	section-planned-not-usable
+F	block	chapter
+F	line	2132
+R	name	README.aiu:2134	README.aiu
+F	name	title-planned-not-usable
+F	block	title
+F	line	2134
+R	name	README.aiu:2148	README.aiu
+F	name	paragraph-links-a-target
+F	block	paragraph
+F	line	2148
+R	name	README.aiu:2164	README.aiu
+F	name	paragraph-mark-blocks-rule
+F	block	paragraph
+F	line	2164
+R	name	README.aiu:2181	README.aiu
+F	name	paragraph-idle-autosave-safe
+F	block	paragraph
+F	line	2181
+R	name	README.aiu:2198	README.aiu
+F	name	section-rules-for-writing
+F	block	chapter
+F	line	2198
+R	name	README.aiu:2200	README.aiu
+F	name	title-rules-for-writing
+F	block	title
+F	line	2200
+R	name	README.aiu:2214	README.aiu
 F	name	paragraph-start-every-page
 F	block	paragraph
-F	line	1987
-R	name	README.aiu:2002	README.aiu
+F	line	2214
+R	name	README.aiu:2229	README.aiu
 F	name	paragraph-pick-the-kind
 F	block	paragraph
-F	line	2002
-R	name	README.aiu:2017	README.aiu
+F	line	2229
+R	name	README.aiu:2244	README.aiu
 F	name	paragraph-one-idea-per
 F	block	paragraph
-F	line	2017
-R	name	README.aiu:2032	README.aiu
+F	line	2244
+R	name	README.aiu:2259	README.aiu
 F	name	paragraph-never-type-numbers
 F	block	paragraph
-F	line	2032
-R	name	README.aiu:2047	README.aiu
+F	line	2259
+R	name	README.aiu:2274	README.aiu
 F	name	paragraph-never-start-a
 F	block	paragraph
-F	line	2047
-R	name	README.aiu:2061	README.aiu
+F	line	2274
+R	name	README.aiu:2288	README.aiu
 F	name	paragraph-never-write-a
 F	block	paragraph
-F	line	2061
-R	name	README.aiu:2076	README.aiu
+F	line	2288
+R	name	README.aiu:2303	README.aiu
 F	name	paragraph-give-a-name
 F	block	paragraph
-F	line	2076
-R	name	README.aiu:2090	README.aiu
+F	line	2303
+R	name	README.aiu:2317	README.aiu
 F	name	paragraph-after-writing-open
 F	block	paragraph
-F	line	2090
+F	line	2317
 R	name	README.aiu:248	README.aiu
 F	name	paragraph-a-page-without
 F	block	paragraph

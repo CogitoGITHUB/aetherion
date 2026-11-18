@@ -13,7 +13,7 @@
   (and range
        (list (string-join
               (for/list ([l (in-list lines)] [i (in-naturals)])
-                (let ([lit? (or (<= (car range) i (cdr range)) (ormap (lambda (r) (<= (car r) i (cdr r))) (blockview-multi-lit session got ranges)))]) (if (and (getenv "AIU_FOCUS_COLOURS") (not lit?)) (blockview-kind-line got target range i) (string-append (if lit? "\u001b[97m" "\u001b[90m") (blockview-plain l) "\u001b[0m"))))
+                (let ([lit? (or (<= (car range) i (cdr range)) (ormap (lambda (r) (<= (car r) i (cdr r))) (blockview-multi-lit session got ranges)))]) (if (and (getenv "AIU_FOCUS_COLOURS") (not lit?)) (blockview-kind-line got target range i) (if lit? (string-append (theme-sgr "text") l "\u001b[0m") (string-append (theme-sgr "dim") (blockview-plain l) "\u001b[0m")))))
               "\n")
              (the-point session)
              (blockview-place (add1 (car range)) (add1 (cdr range)) (max 1 (- height 1))))))

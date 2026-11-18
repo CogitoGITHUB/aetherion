@@ -164,7 +164,7 @@ impl Boxes {
 
     /// Colour the text with ANSI codes, unless plain.
     fn sgr_todo(&self, codes: &[u32], s: &str) -> String {
-        if self.plain || codes.is_empty() || s.is_empty() {
+        if self.plain || s.is_empty() {
             return s.to_string();
         }
         crate::theme::paint(codes, s)
@@ -172,7 +172,7 @@ impl Boxes {
 
     /// Style the text with ANSI codes and theme roles.
     fn sgr(&self, codes: &[u32], s: &str) -> String {
-        if self.plain || codes.is_empty() || s.is_empty() {
+        if self.plain || s.is_empty() {
             return s.to_string();
         }
         crate::theme::paint(codes, s)

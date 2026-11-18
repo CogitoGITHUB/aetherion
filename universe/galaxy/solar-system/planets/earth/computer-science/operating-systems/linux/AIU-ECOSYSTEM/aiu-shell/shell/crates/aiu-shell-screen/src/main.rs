@@ -88,7 +88,7 @@ fn run_screen() {
             }
             }
         }
-        if aiu_shell_screen::command_runner::take_jump() { let _ = execute!(stdout(), DisableBracketedPaste); ratatui::restore(); let _ = aiu_shell_screen::command_runner::pick_directory(); terminal = ratatui::init(); let _ = execute!(stdout(), EnableBracketedPaste); } if let Some(text) = state.pending_copy.take() {
+        if aiu_shell_screen::command_runner::take_jump() { let _ = execute!(stdout(), DisableBracketedPaste); ratatui::restore(); let _ = aiu_shell_screen::command_runner::pick_directory(); terminal = ratatui::init(); let _ = execute!(stdout(), EnableBracketedPaste); } if aiu_shell_screen::command_runner::take_theme_picker() { let _ = execute!(stdout(), DisableBracketedPaste); ratatui::restore(); aiu_shell_screen::command_runner::pick_theme(); terminal = ratatui::init(); let _ = execute!(stdout(), EnableBracketedPaste); } if let Some(text) = state.pending_copy.take() {
             copy_to_clipboard(&text);
         }
         if state.quit {

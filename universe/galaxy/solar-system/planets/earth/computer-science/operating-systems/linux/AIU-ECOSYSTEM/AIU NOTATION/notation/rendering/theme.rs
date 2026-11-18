@@ -4,6 +4,7 @@ use std::sync::OnceLock;
 
 struct Roles {
     dim: String,
+    text: String,
     error: String,
 }
 
@@ -48,6 +49,7 @@ fn value_code(v: &str) -> Option<String> {
 
 fn load() -> Roles {
     let mut dim = value_code("#6e6e6e").unwrap_or_default();
+    let mut txt = value_code("white").unwrap_or_default();
     let mut error = value_code("red").unwrap_or_default();
     let body = theme_dir().and_then(|d| {
         let name = fs::read_to_string(d.join("active")).ok()?;
@@ -63,6 +65,7 @@ fn load() -> Roles {
                 if let Some(c) = value_code(v.trim()) {
                     match k.trim() {
                         "dim" => dim = c,
+                        "text" => txt = c,
                         "error" => error = c,
                         _ => {}
                     }
@@ -70,13 +73,13 @@ fn load() -> Roles {
             }
         }
     }
-    Roles { dim, error }
+    Roles { dim, error, text: txt }
 }
 
 pub fn paint(codes: &[u32], s: &str) -> String {
     let r = ROLES.get_or_init(load);
     let mut styles: Vec<String> = Vec::new();
-    let mut colour = String::new();
+    let mut colour = r.text.clone();
     for c in codes {
         if *c < 30 {
             styles.push(c.to_string());

@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+dir=${AIU_THEME_DIR:-}
+if [ -z "$dir" ] || [ ! -d "$dir" ]; then
+  f="$HOME/.config/aiu/theme-dir"
+  [ -f "$f" ] && dir=$(tr -d "\n" < "$f")
+fi
+[ -d "$dir" ] || { echo "no theme dir" >&2; exit 1; }
+
+rgb_of() {
+  case "$1" in
+    "#"??????)
+      h=${1#"#"}
+      echo "$((16#${h:0:2})) $((16#${h:2:2})) $((16#${h:4:2}))";;
+    black) echo "0 0 0";;
+    red) echo "220 40 40";;
+    green) echo "40 200 40";;
+    yellow) echo "220 200 40";;
+    blue) echo "60 100 230";;
+    magenta) echo "200 60 200";;
+    cyan) echo "40 200 200";;
+    white) echo "255 255 255";;
+    gray|grey) echo "110 110 110";;
+    *) echo "";;
+  esac
+}
+
+value_of() {
+  grep -E "^$2[[:space:]]*=" "$1" | head -1 \
+   | sed "s/^[^=]*=[[:space:]]*//; s/[[:space:]]*\$//"
+}
+
+preview() {
+  name="$1"
+  file="$dir/$name.theme"
+  [ -f "$file" ] || { echo "no such theme"; return; }
+  act=$(tr -d "[:space:]" < "$dir/active")
+  mark=""
+  [ "$act" = "$name" ] && mark="  (active)"
+  printf "%s%s\n\n" "$name" "$mark"
+  for role in text dim error bg; do
+    v=$(value_of "$file" "$role")
+    printf "%s\n" "$role"
+    if [ -z "$v" ] || [ "$v" = "none" ]; then
+      printf "  none (terminal default)\n\n"
+      continue
+    fi
+    c=$(rgb_of "$v")
+    if [ -z "$c" ]; then
+      printf "  bad value: %s\n\n" "$v"
+      continue
+    fi
+    set -- $c
+    printf "  \033[48;2;%s;%s;%sm            \033[0m\n" "$1" "$2" "$3"
+    printf "  %s\n" "$v"
+    printf "  rgb(%s, %s, %s)\n" "$1" "$2" "$3"
+    if [ "$role" != "bg" ]; then
+      printf "  \033[38;2;%s;%s;%sm%s\033[0m\n" "$1" "$2" "$3" \
+       "The quick brown fox"
+    fi
+    printf "\n"
+  done
+}
+
+setit() {
+  [ -f "$dir/$1.theme" ] || { echo "no theme: $1" >&2; exit 1; }
+  printf "%s\n" "$1" > "$dir/active"
+  echo "active: $1"
+}
+
+case "${1:-pick}" in
+  list) for f in "$dir"/*.theme; do basename "$f" .theme; done;;
+  preview) preview "$2";;
+  set) setit "$2";;
+  pick) exec tv aiu-themes;;
+  *) setit "$1";;
+esac

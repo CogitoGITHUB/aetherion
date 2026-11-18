@@ -67,7 +67,7 @@
   (define body
     (string-join
      (for/list ([line (in-list shown)])
-       (string-append pad (if preformatted? line (fit line width))))
+       (string-append pad (theme-sgr "text") (if preformatted? line (fit line width))))
      "\n"))
   (define foot (footer-string mode-line full))
   (string-append sync-begin (ansi "H") (erase-lines (string-append (make-string offset #\newline) body (if (string=? foot "") "" (string-append "\n" foot))))
