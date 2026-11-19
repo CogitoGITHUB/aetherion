@@ -261,3 +261,13 @@ paragraph end
 2026-11-12 plan: mux DEV MODE in red on the pane top edge, needs per-cell color; the git box comes back as a line later
 2026-11-12 plan: shell bar: remove the trigger SPC, press SPC for keys line
 2026-11-11 plan: optional: move the mode line into the pane bottom edge
+
+paragraph start
+todo: own file manager: delete checks the file is tracked by git; if the box is shown in other files a large popup with red borders and red text lists them and asks yes or no, on yes the shown copies stay as normal blocks; untracked files are refused until the approval word is decided with the design
+Planned.
+paragraph end
+
+paragraph start
+todo: names registry in the database at the ecosystem root: each directory database reports up to it; today names are indexed per loaded folder only
+Planned.
+paragraph end

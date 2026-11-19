@@ -577,4 +577,9 @@ todo: editor server: the editor has its own server and can connect to the shared
 Planned.
 paragraph end
 
+paragraph start
+todo: idle autosave: in write mode, 5 seconds without a key shows a notification, ends write mode and saves the file; the 5 seconds is a setting and counts keystrokes only; every autosave also syncs the shown copies in other files
+Planned.
+paragraph end
+
 chapter end

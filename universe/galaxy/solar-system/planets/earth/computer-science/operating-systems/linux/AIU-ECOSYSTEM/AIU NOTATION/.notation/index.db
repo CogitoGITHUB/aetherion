@@ -1,4 +1,1110 @@
 notation-index	1
+R	block	//tmp/aiu-editor-sync-15590.aiu:1	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	1
+F	end-line	5
+F	depth	0
+F	parent	
+F	declared-name	title-plan-books-sciences
+R	block	//tmp/aiu-editor-sync-15590.aiu:103	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	103
+F	end-line	107
+F	depth	2
+F	parent	chapter
+F	declared-name	paragraph-not-blocks-a
+R	block	//tmp/aiu-editor-sync-15590.aiu:109	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	109
+F	end-line	118
+F	depth	2
+F	parent	chapter
+F	declared-name	paragraph-holes-to-close
+R	block	//tmp/aiu-editor-sync-15590.aiu:122	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	122
+F	end-line	143
+F	depth	1
+F	parent	chapter
+F	declared-name	section-order-of-work
+R	block	//tmp/aiu-editor-sync-15590.aiu:124	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	124
+F	end-line	127
+F	depth	2
+F	parent	chapter
+F	declared-name	title-order-of-work
+R	block	//tmp/aiu-editor-sync-15590.aiu:129	//tmp/aiu-editor-sync-15590.aiu
+F	block	code
+F	line	129
+F	end-line	133
+F	depth	2
+F	parent	chapter
+F	declared-name	code-a-content-list
+R	block	//tmp/aiu-editor-sync-15590.aiu:135	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	135
+F	end-line	141
+F	depth	2
+F	parent	chapter
+F	declared-name	paragraph-every-step-closes
+R	block	//tmp/aiu-editor-sync-15590.aiu:14	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	14
+F	end-line	17
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-read-this-chapter
+R	block	//tmp/aiu-editor-sync-15590.aiu:145	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	145
+F	end-line	166
+F	depth	1
+F	parent	chapter
+F	declared-name	section-where-we-stopped
+R	block	//tmp/aiu-editor-sync-15590.aiu:147	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	147
+F	end-line	150
+F	depth	2
+F	parent	chapter
+F	declared-name	title-where-we-stopped
+R	block	//tmp/aiu-editor-sync-15590.aiu:152	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	152
+F	end-line	155
+F	depth	2
+F	parent	chapter
+F	declared-name	paragraph-nothing-in-steps
+R	block	//tmp/aiu-editor-sync-15590.aiu:157	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	157
+F	end-line	164
+F	depth	2
+F	parent	chapter
+F	declared-name	paragraph-speed-the-editor
+R	block	//tmp/aiu-editor-sync-15590.aiu:170	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	170
+F	end-line	196
+F	depth	0
+F	parent	
+F	declared-name	section-section-1-the
+R	block	//tmp/aiu-editor-sync-15590.aiu:172	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	172
+F	end-line	175
+F	depth	1
+F	parent	chapter
+F	declared-name	title-section-1-the
+R	block	//tmp/aiu-editor-sync-15590.aiu:177	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	177
+F	end-line	180
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-one-source-many
+R	block	//tmp/aiu-editor-sync-15590.aiu:182	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	182
+F	end-line	185
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-everything-works-offline
+R	block	//tmp/aiu-editor-sync-15590.aiu:187	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	187
+F	end-line	190
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-a-field-a
+R	block	//tmp/aiu-editor-sync-15590.aiu:19	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	19
+F	end-line	70
+F	depth	1
+F	parent	chapter
+F	declared-name	section-the-rule
+R	block	//tmp/aiu-editor-sync-15590.aiu:192	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	192
+F	end-line	195
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-everything-stays-computed
+R	block	//tmp/aiu-editor-sync-15590.aiu:198	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	198
+F	end-line	214
+F	depth	0
+F	parent	
+F	declared-name	section-section-2-vocabulary
+R	block	//tmp/aiu-editor-sync-15590.aiu:200	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	200
+F	end-line	203
+F	depth	1
+F	parent	chapter
+F	declared-name	title-section-2-vocabulary
+R	block	//tmp/aiu-editor-sync-15590.aiu:205	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	205
+F	end-line	208
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-chapter-replaces-section
+R	block	//tmp/aiu-editor-sync-15590.aiu:21	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	21
+F	end-line	24
+F	depth	2
+F	parent	chapter
+F	declared-name	title-the-rule
+R	block	//tmp/aiu-editor-sync-15590.aiu:210	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	210
+F	end-line	213
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-book-parts
+R	block	//tmp/aiu-editor-sync-15590.aiu:216	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	216
+F	end-line	237
+F	depth	0
+F	parent	
+F	declared-name	section-section-3-two
+R	block	//tmp/aiu-editor-sync-15590.aiu:218	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	218
+F	end-line	221
+F	depth	1
+F	parent	chapter
+F	declared-name	title-section-3-two
+R	block	//tmp/aiu-editor-sync-15590.aiu:223	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	223
+F	end-line	226
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-writing-mode-every
+R	block	//tmp/aiu-editor-sync-15590.aiu:228	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	228
+F	end-line	231
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-reading-mode-the
+R	block	//tmp/aiu-editor-sync-15590.aiu:233	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	233
+F	end-line	236
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-both-modes-work
+R	block	//tmp/aiu-editor-sync-15590.aiu:239	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	239
+F	end-line	260
+F	depth	0
+F	parent	
+F	declared-name	section-section-4-marks
+R	block	//tmp/aiu-editor-sync-15590.aiu:241	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	241
+F	end-line	244
+F	depth	1
+F	parent	chapter
+F	declared-name	title-section-4-marks
+R	block	//tmp/aiu-editor-sync-15590.aiu:246	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	246
+F	end-line	249
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-author-marks
+R	block	//tmp/aiu-editor-sync-15590.aiu:251	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	251
+F	end-line	254
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-in-writing-mode
+R	block	//tmp/aiu-editor-sync-15590.aiu:256	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	256
+F	end-line	259
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-a-block-can
+R	block	//tmp/aiu-editor-sync-15590.aiu:26	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	26
+F	end-line	32
+F	depth	2
+F	parent	chapter
+F	declared-name	paragraph-decided-one-format
+R	block	//tmp/aiu-editor-sync-15590.aiu:262	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	262
+F	end-line	278
+F	depth	0
+F	parent	
+F	declared-name	section-section-5-views
+R	block	//tmp/aiu-editor-sync-15590.aiu:264	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	264
+F	end-line	267
+F	depth	1
+F	parent	chapter
+F	declared-name	title-section-5-views
+R	block	//tmp/aiu-editor-sync-15590.aiu:269	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	269
+F	end-line	272
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-checklist-the-steps
+R	block	//tmp/aiu-editor-sync-15590.aiu:274	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	274
+F	end-line	277
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-progress-what-is
+R	block	//tmp/aiu-editor-sync-15590.aiu:280	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	280
+F	end-line	296
+F	depth	0
+F	parent	
+F	declared-name	section-section-6-connections
+R	block	//tmp/aiu-editor-sync-15590.aiu:282	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	282
+F	end-line	285
+F	depth	1
+F	parent	chapter
+F	declared-name	title-section-6-connections
+R	block	//tmp/aiu-editor-sync-15590.aiu:287	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	287
+F	end-line	290
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-connections-between-files
+R	block	//tmp/aiu-editor-sync-15590.aiu:292	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	292
+F	end-line	295
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-subdirectories-and-files
+R	block	//tmp/aiu-editor-sync-15590.aiu:298	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	298
+F	end-line	344
+F	depth	0
+F	parent	
+F	declared-name	section-section-7-order
+R	block	//tmp/aiu-editor-sync-15590.aiu:300	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	300
+F	end-line	303
+F	depth	1
+F	parent	chapter
+F	declared-name	title-section-7-order
+R	block	//tmp/aiu-editor-sync-15590.aiu:305	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	305
+F	end-line	308
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-step-1-remove
+R	block	//tmp/aiu-editor-sync-15590.aiu:310	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	310
+F	end-line	313
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-step-2-load
+R	block	//tmp/aiu-editor-sync-15590.aiu:315	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	315
+F	end-line	318
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-step-3-writing
+R	block	//tmp/aiu-editor-sync-15590.aiu:320	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	320
+F	end-line	323
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-step-4-connections
+R	block	//tmp/aiu-editor-sync-15590.aiu:325	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	325
+F	end-line	328
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-step-5-compiled
+R	block	//tmp/aiu-editor-sync-15590.aiu:330	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	330
+F	end-line	333
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-step-6-edition
+R	block	//tmp/aiu-editor-sync-15590.aiu:335	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	335
+F	end-line	338
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-step-7-last
+R	block	//tmp/aiu-editor-sync-15590.aiu:34	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	34
+F	end-line	39
+F	depth	2
+F	parent	chapter
+F	declared-name	paragraph-decided-subject-first
+R	block	//tmp/aiu-editor-sync-15590.aiu:340	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	340
+F	end-line	343
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-rule-of-work
+R	block	//tmp/aiu-editor-sync-15590.aiu:346	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	346
+F	end-line	430
+F	depth	0
+F	parent	
+F	declared-name	section-section-8-holes
+R	block	//tmp/aiu-editor-sync-15590.aiu:348	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	348
+F	end-line	351
+F	depth	1
+F	parent	chapter
+F	declared-name	title-section-8-holes
+R	block	//tmp/aiu-editor-sync-15590.aiu:353	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	353
+F	end-line	356
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-rename-there
+R	block	//tmp/aiu-editor-sync-15590.aiu:358	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	358
+F	end-line	361
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-chapter-chapter
+R	block	//tmp/aiu-editor-sync-15590.aiu:363	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	363
+F	end-line	366
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-marks-a
+R	block	//tmp/aiu-editor-sync-15590.aiu:368	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	368
+F	end-line	371
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-reading-mode
+R	block	//tmp/aiu-editor-sync-15590.aiu:373	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	373
+F	end-line	376
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-progress-identity-if
+R	block	//tmp/aiu-editor-sync-15590.aiu:378	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	378
+F	end-line	381
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-moved-or-deleted
+R	block	//tmp/aiu-editor-sync-15590.aiu:383	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	383
+F	end-line	386
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-order-across-files
+R	block	//tmp/aiu-editor-sync-15590.aiu:388	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	388
+F	end-line	391
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-conflicting-rules-two
+R	block	//tmp/aiu-editor-sync-15590.aiu:393	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	393
+F	end-line	396
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-terminal-width-reading
+R	block	//tmp/aiu-editor-sync-15590.aiu:398	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	398
+F	end-line	401
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-navigation-how-to
+R	block	//tmp/aiu-editor-sync-15590.aiu:403	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	403
+F	end-line	406
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-database-rebuild-how
+R	block	//tmp/aiu-editor-sync-15590.aiu:408	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	408
+F	end-line	411
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-marks-in
+R	block	//tmp/aiu-editor-sync-15590.aiu:41	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	41
+F	end-line	45
+F	depth	2
+F	parent	chapter
+F	declared-name	paragraph-decided-contracts-contracts
+R	block	//tmp/aiu-editor-sync-15590.aiu:413	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	413
+F	end-line	419
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-level-the
+R	block	//tmp/aiu-editor-sync-15590.aiu:420	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	420
+F	end-line	423
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-book-parts
+R	block	//tmp/aiu-editor-sync-15590.aiu:425	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	425
+F	end-line	428
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-edition-page
+R	block	//tmp/aiu-editor-sync-15590.aiu:432	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	432
+F	end-line	483
+F	depth	0
+F	parent	
+F	declared-name	section-section-9-amplifiers
+R	block	//tmp/aiu-editor-sync-15590.aiu:434	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	434
+F	end-line	437
+F	depth	1
+F	parent	chapter
+F	declared-name	title-section-9-amplifiers
+R	block	//tmp/aiu-editor-sync-15590.aiu:439	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	439
+F	end-line	442
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-learning-path-prerequisites
+R	block	//tmp/aiu-editor-sync-15590.aiu:444	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	444
+F	end-line	447
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-spaced-practice-cards
+R	block	//tmp/aiu-editor-sync-15590.aiu:449	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	449
+F	end-line	452
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-coverage-report-which
+R	block	//tmp/aiu-editor-sync-15590.aiu:454	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	454
+F	end-line	457
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-exam-mode-reading
+R	block	//tmp/aiu-editor-sync-15590.aiu:459	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	459
+F	end-line	462
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-glossary-built-from
+R	block	//tmp/aiu-editor-sync-15590.aiu:464	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	464
+F	end-line	467
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-field-templates-a
+R	block	//tmp/aiu-editor-sync-15590.aiu:469	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	469
+F	end-line	472
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-mind-map-view
+R	block	//tmp/aiu-editor-sync-15590.aiu:47	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	47
+F	end-line	53
+F	depth	2
+F	parent	chapter
+F	declared-name	paragraph-decided-physical-goal
+R	block	//tmp/aiu-editor-sync-15590.aiu:474	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	474
+F	end-line	477
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-reading-bookmark-reading
+R	block	//tmp/aiu-editor-sync-15590.aiu:479	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	479
+F	end-line	482
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-routines-with-times
+R	block	//tmp/aiu-editor-sync-15590.aiu:485	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	485
+F	end-line	526
+F	depth	0
+F	parent	
+F	declared-name	section-section-10-mark
+R	block	//tmp/aiu-editor-sync-15590.aiu:487	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	487
+F	end-line	490
+F	depth	1
+F	parent	chapter
+F	declared-name	title-section-10-mark
+R	block	//tmp/aiu-editor-sync-15590.aiu:492	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	492
+F	end-line	495
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-mark-blocks
+R	block	//tmp/aiu-editor-sync-15590.aiu:497	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	497
+F	end-line	500
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-a-routine-is
+R	block	//tmp/aiu-editor-sync-15590.aiu:502	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	502
+F	end-line	505
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-making-a-routine
+R	block	//tmp/aiu-editor-sync-15590.aiu:507	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	507
+F	end-line	510
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-routine-mode-starting
+R	block	//tmp/aiu-editor-sync-15590.aiu:512	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	512
+F	end-line	515
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-pause-the-routine
+R	block	//tmp/aiu-editor-sync-15590.aiu:517	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	517
+F	end-line	520
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-modular-a-block
+R	block	//tmp/aiu-editor-sync-15590.aiu:522	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	522
+F	end-line	525
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-holes-left-the
+R	block	//tmp/aiu-editor-sync-15590.aiu:528	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	528
+F	end-line	554
+F	depth	0
+F	parent	
+F	declared-name	section-section-11-what
+R	block	//tmp/aiu-editor-sync-15590.aiu:530	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	530
+F	end-line	533
+F	depth	1
+F	parent	chapter
+F	declared-name	title-section-11-what
+R	block	//tmp/aiu-editor-sync-15590.aiu:535	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	535
+F	end-line	538
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-visible-in-reading
+R	block	//tmp/aiu-editor-sync-15590.aiu:540	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	540
+F	end-line	543
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-hidden-in-reading
+R	block	//tmp/aiu-editor-sync-15590.aiu:545	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	545
+F	end-line	548
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-questions-and-contracts
+R	block	//tmp/aiu-editor-sync-15590.aiu:55	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	55
+F	end-line	61
+F	depth	2
+F	parent	chapter
+F	declared-name	paragraph-decided-content-blocks
+R	block	//tmp/aiu-editor-sync-15590.aiu:550	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	550
+F	end-line	553
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-holes-left-confirm
+R	block	//tmp/aiu-editor-sync-15590.aiu:556	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	556
+F	end-line	612
+F	depth	0
+F	parent	
+F	declared-name	section-section-12-links
+R	block	//tmp/aiu-editor-sync-15590.aiu:558	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	558
+F	end-line	561
+F	depth	1
+F	parent	chapter
+F	declared-name	title-section-12-links
+R	block	//tmp/aiu-editor-sync-15590.aiu:563	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	563
+F	end-line	566
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-a-link-is
+R	block	//tmp/aiu-editor-sync-15590.aiu:568	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	568
+F	end-line	571
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-example-there-is
+R	block	//tmp/aiu-editor-sync-15590.aiu:573	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	573
+F	end-line	576
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-this-needs-more
+R	block	//tmp/aiu-editor-sync-15590.aiu:578	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	578
+F	end-line	581
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-link-kind
+R	block	//tmp/aiu-editor-sync-15590.aiu:583	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	583
+F	end-line	586
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-backlinks-the
+R	block	//tmp/aiu-editor-sync-15590.aiu:588	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	588
+F	end-line	591
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-jump-trail
+R	block	//tmp/aiu-editor-sync-15590.aiu:593	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	593
+F	end-line	596
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-link-writing
+R	block	//tmp/aiu-editor-sync-15590.aiu:598	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	598
+F	end-line	601
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-link-block
+R	block	//tmp/aiu-editor-sync-15590.aiu:603	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	603
+F	end-line	606
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-link-destination
+R	block	//tmp/aiu-editor-sync-15590.aiu:608	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	608
+F	end-line	611
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-holes-left-whether
+R	block	//tmp/aiu-editor-sync-15590.aiu:614	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	614
+F	end-line	675
+F	depth	0
+F	parent	
+F	declared-name	section-section-13-files
+R	block	//tmp/aiu-editor-sync-15590.aiu:616	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	616
+F	end-line	619
+F	depth	1
+F	parent	chapter
+F	declared-name	title-section-13-files
+R	block	//tmp/aiu-editor-sync-15590.aiu:621	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	621
+F	end-line	624
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-naming-a
+R	block	//tmp/aiu-editor-sync-15590.aiu:626	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	626
+F	end-line	629
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-introduction-every
+R	block	//tmp/aiu-editor-sync-15590.aiu:63	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	63
+F	end-line	68
+F	depth	2
+F	parent	chapter
+F	declared-name	paragraph-decided-parked-marks
+R	block	//tmp/aiu-editor-sync-15590.aiu:631	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	631
+F	end-line	634
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-master-the
+R	block	//tmp/aiu-editor-sync-15590.aiu:636	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	636
+F	end-line	639
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-reading-reading
+R	block	//tmp/aiu-editor-sync-15590.aiu:641	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	641
+F	end-line	644
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-bundle-a
+R	block	//tmp/aiu-editor-sync-15590.aiu:646	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	646
+F	end-line	649
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-order-files
+R	block	//tmp/aiu-editor-sync-15590.aiu:651	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	651
+F	end-line	654
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-no-lost
+R	block	//tmp/aiu-editor-sync-15590.aiu:656	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	656
+F	end-line	659
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-tree-view
+R	block	//tmp/aiu-editor-sync-15590.aiu:661	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	661
+F	end-line	664
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-decided-order-of
+R	block	//tmp/aiu-editor-sync-15590.aiu:666	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	666
+F	end-line	669
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-holes-left-how
+R	block	//tmp/aiu-editor-sync-15590.aiu:671	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	671
+F	end-line	674
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-remaining-numbering-jsonrkt
+R	block	//tmp/aiu-editor-sync-15590.aiu:677	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	677
+F	end-line	830
+F	depth	0
+F	parent	
+F	declared-name	section-future-work-from
+R	block	//tmp/aiu-editor-sync-15590.aiu:679	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	679
+F	end-line	682
+F	depth	1
+F	parent	chapter
+F	declared-name	title-future-work-from
+R	block	//tmp/aiu-editor-sync-15590.aiu:684	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	684
+F	end-line	688
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-planned
+R	block	//tmp/aiu-editor-sync-15590.aiu:690	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	690
+F	end-line	694
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-planned-2
+R	block	//tmp/aiu-editor-sync-15590.aiu:696	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	696
+F	end-line	700
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-planned-3
+R	block	//tmp/aiu-editor-sync-15590.aiu:7	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	7
+F	end-line	168
+F	depth	0
+F	parent	
+F	declared-name	section-current-work-one
+R	block	//tmp/aiu-editor-sync-15590.aiu:702	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	702
+F	end-line	706
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-planned-4
+R	block	//tmp/aiu-editor-sync-15590.aiu:708	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	708
+F	end-line	712
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-planned-5
+R	block	//tmp/aiu-editor-sync-15590.aiu:714	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	714
+F	end-line	718
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-planned-6
+R	block	//tmp/aiu-editor-sync-15590.aiu:72	//tmp/aiu-editor-sync-15590.aiu
+F	block	chapter
+F	line	72
+F	end-line	120
+F	depth	1
+F	parent	chapter
+F	declared-name	section-block-types-to
+R	block	//tmp/aiu-editor-sync-15590.aiu:720	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	720
+F	end-line	727
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-can-do-and
+R	block	//tmp/aiu-editor-sync-15590.aiu:729	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	729
+F	end-line	733
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-planned-7
+R	block	//tmp/aiu-editor-sync-15590.aiu:734	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	734
+F	end-line	739
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-notation-database-exists
+R	block	//tmp/aiu-editor-sync-15590.aiu:74	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	74
+F	end-line	77
+F	depth	2
+F	parent	chapter
+F	declared-name	title-block-types-to
+R	block	//tmp/aiu-editor-sync-15590.aiu:740	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	740
+F	end-line	746
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-editor-links-work
+R	block	//tmp/aiu-editor-sync-15590.aiu:747	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	747
+F	end-line	753
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-reads-the-database
+R	block	//tmp/aiu-editor-sync-15590.aiu:754	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	754
+F	end-line	760
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-checklists-link-to
+R	block	//tmp/aiu-editor-sync-15590.aiu:761	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	761
+F	end-line	766
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-substeps-and-an
+R	block	//tmp/aiu-editor-sync-15590.aiu:767	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	767
+F	end-line	773
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-abstract-only-before
+R	block	//tmp/aiu-editor-sync-15590.aiu:774	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	774
+F	end-line	779
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-at-a-sibling
+R	block	//tmp/aiu-editor-sync-15590.aiu:780	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	780
+F	end-line	785
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-combinations-computed-cells
+R	block	//tmp/aiu-editor-sync-15590.aiu:786	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	786
+F	end-line	792
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-name-or-a
+R	block	//tmp/aiu-editor-sync-15590.aiu:79	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	79
+F	end-line	87
+F	depth	2
+F	parent	chapter
+F	declared-name	paragraph-each-type-is
+R	block	//tmp/aiu-editor-sync-15590.aiu:793	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	793
+F	end-line	798
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-figure-3-and
+R	block	//tmp/aiu-editor-sync-15590.aiu:799	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	799
+F	end-line	806
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-or-chapter-inside
+R	block	//tmp/aiu-editor-sync-15590.aiu:807	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	807
+F	end-line	814
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-original-the-change
+R	block	//tmp/aiu-editor-sync-15590.aiu:815	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	815
+F	end-line	821
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-with-its-from
+R	block	//tmp/aiu-editor-sync-15590.aiu:822	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	822
+F	end-line	829
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-renamed-a-write
+R	block	//tmp/aiu-editor-sync-15590.aiu:832	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	832
+F	end-line	836
+F	depth	0
+F	parent	
+F	declared-name	paragraph-planned-8
+R	block	//tmp/aiu-editor-sync-15590.aiu:838	//tmp/aiu-editor-sync-15590.aiu
+F	block	paragraph
+F	line	838
+F	end-line	842
+F	depth	0
+F	parent	
+F	declared-name	paragraph-planned-9
+R	block	//tmp/aiu-editor-sync-15590.aiu:89	//tmp/aiu-editor-sync-15590.aiu
+F	block	code
+F	line	89
+F	end-line	101
+F	depth	2
+F	parent	chapter
+F	declared-name	code-content-build-first
+R	block	//tmp/aiu-editor-sync-15590.aiu:9	//tmp/aiu-editor-sync-15590.aiu
+F	block	title
+F	line	9
+F	end-line	12
+F	depth	1
+F	parent	chapter
+F	declared-name	title-current-work-one
 R	block	README.aiu:1	README.aiu
 F	block	title
 F	line	1
@@ -15469,6 +16575,14 @@ F	end-line	99
 F	depth	1
 F	parent	chapter
 F	declared-name	
+R	file	//tmp/aiu-editor-sync-15590.aiu	//tmp/aiu-editor-sync-15590.aiu
+F	kind	
+F	title	Future work: books, sciences, skills and the todo
+F	caption	
+F	lines	842
+F	bytes	34598
+F	blocks	158
+F	errors	0
 R	file	README.aiu	README.aiu
 F	kind	default
 F	title	AIU NOTATION: everything it can do
@@ -20593,6 +21707,638 @@ F	target	demo/tools/t03.aiu
 F	line	9
 F	end-line	13
 F	parent	
+R	name	//tmp/aiu-editor-sync-15590.aiu:1	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-plan-books-sciences
+F	block	title
+F	line	1
+R	name	//tmp/aiu-editor-sync-15590.aiu:103	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-not-blocks-a
+F	block	paragraph
+F	line	103
+R	name	//tmp/aiu-editor-sync-15590.aiu:109	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-holes-to-close
+F	block	paragraph
+F	line	109
+R	name	//tmp/aiu-editor-sync-15590.aiu:122	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-order-of-work
+F	block	chapter
+F	line	122
+R	name	//tmp/aiu-editor-sync-15590.aiu:124	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-order-of-work
+F	block	title
+F	line	124
+R	name	//tmp/aiu-editor-sync-15590.aiu:129	//tmp/aiu-editor-sync-15590.aiu
+F	name	code-a-content-list
+F	block	code
+F	line	129
+R	name	//tmp/aiu-editor-sync-15590.aiu:135	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-every-step-closes
+F	block	paragraph
+F	line	135
+R	name	//tmp/aiu-editor-sync-15590.aiu:14	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-read-this-chapter
+F	block	paragraph
+F	line	14
+R	name	//tmp/aiu-editor-sync-15590.aiu:145	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-where-we-stopped
+F	block	chapter
+F	line	145
+R	name	//tmp/aiu-editor-sync-15590.aiu:147	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-where-we-stopped
+F	block	title
+F	line	147
+R	name	//tmp/aiu-editor-sync-15590.aiu:152	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-nothing-in-steps
+F	block	paragraph
+F	line	152
+R	name	//tmp/aiu-editor-sync-15590.aiu:157	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-speed-the-editor
+F	block	paragraph
+F	line	157
+R	name	//tmp/aiu-editor-sync-15590.aiu:170	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-section-1-the
+F	block	chapter
+F	line	170
+R	name	//tmp/aiu-editor-sync-15590.aiu:172	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-section-1-the
+F	block	title
+F	line	172
+R	name	//tmp/aiu-editor-sync-15590.aiu:177	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-one-source-many
+F	block	paragraph
+F	line	177
+R	name	//tmp/aiu-editor-sync-15590.aiu:182	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-everything-works-offline
+F	block	paragraph
+F	line	182
+R	name	//tmp/aiu-editor-sync-15590.aiu:187	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-a-field-a
+F	block	paragraph
+F	line	187
+R	name	//tmp/aiu-editor-sync-15590.aiu:19	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-the-rule
+F	block	chapter
+F	line	19
+R	name	//tmp/aiu-editor-sync-15590.aiu:192	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-everything-stays-computed
+F	block	paragraph
+F	line	192
+R	name	//tmp/aiu-editor-sync-15590.aiu:198	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-section-2-vocabulary
+F	block	chapter
+F	line	198
+R	name	//tmp/aiu-editor-sync-15590.aiu:200	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-section-2-vocabulary
+F	block	title
+F	line	200
+R	name	//tmp/aiu-editor-sync-15590.aiu:205	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-chapter-replaces-section
+F	block	paragraph
+F	line	205
+R	name	//tmp/aiu-editor-sync-15590.aiu:21	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-the-rule
+F	block	title
+F	line	21
+R	name	//tmp/aiu-editor-sync-15590.aiu:210	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-the-book-parts
+F	block	paragraph
+F	line	210
+R	name	//tmp/aiu-editor-sync-15590.aiu:216	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-section-3-two
+F	block	chapter
+F	line	216
+R	name	//tmp/aiu-editor-sync-15590.aiu:218	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-section-3-two
+F	block	title
+F	line	218
+R	name	//tmp/aiu-editor-sync-15590.aiu:223	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-writing-mode-every
+F	block	paragraph
+F	line	223
+R	name	//tmp/aiu-editor-sync-15590.aiu:228	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-reading-mode-the
+F	block	paragraph
+F	line	228
+R	name	//tmp/aiu-editor-sync-15590.aiu:233	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-both-modes-work
+F	block	paragraph
+F	line	233
+R	name	//tmp/aiu-editor-sync-15590.aiu:239	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-section-4-marks
+F	block	chapter
+F	line	239
+R	name	//tmp/aiu-editor-sync-15590.aiu:241	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-section-4-marks
+F	block	title
+F	line	241
+R	name	//tmp/aiu-editor-sync-15590.aiu:246	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-the-author-marks
+F	block	paragraph
+F	line	246
+R	name	//tmp/aiu-editor-sync-15590.aiu:251	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-in-writing-mode
+F	block	paragraph
+F	line	251
+R	name	//tmp/aiu-editor-sync-15590.aiu:256	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-a-block-can
+F	block	paragraph
+F	line	256
+R	name	//tmp/aiu-editor-sync-15590.aiu:26	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-one-format
+F	block	paragraph
+F	line	26
+R	name	//tmp/aiu-editor-sync-15590.aiu:262	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-section-5-views
+F	block	chapter
+F	line	262
+R	name	//tmp/aiu-editor-sync-15590.aiu:264	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-section-5-views
+F	block	title
+F	line	264
+R	name	//tmp/aiu-editor-sync-15590.aiu:269	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-checklist-the-steps
+F	block	paragraph
+F	line	269
+R	name	//tmp/aiu-editor-sync-15590.aiu:274	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-progress-what-is
+F	block	paragraph
+F	line	274
+R	name	//tmp/aiu-editor-sync-15590.aiu:280	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-section-6-connections
+F	block	chapter
+F	line	280
+R	name	//tmp/aiu-editor-sync-15590.aiu:282	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-section-6-connections
+F	block	title
+F	line	282
+R	name	//tmp/aiu-editor-sync-15590.aiu:287	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-connections-between-files
+F	block	paragraph
+F	line	287
+R	name	//tmp/aiu-editor-sync-15590.aiu:292	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-subdirectories-and-files
+F	block	paragraph
+F	line	292
+R	name	//tmp/aiu-editor-sync-15590.aiu:298	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-section-7-order
+F	block	chapter
+F	line	298
+R	name	//tmp/aiu-editor-sync-15590.aiu:300	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-section-7-order
+F	block	title
+F	line	300
+R	name	//tmp/aiu-editor-sync-15590.aiu:305	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-step-1-remove
+F	block	paragraph
+F	line	305
+R	name	//tmp/aiu-editor-sync-15590.aiu:310	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-step-2-load
+F	block	paragraph
+F	line	310
+R	name	//tmp/aiu-editor-sync-15590.aiu:315	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-step-3-writing
+F	block	paragraph
+F	line	315
+R	name	//tmp/aiu-editor-sync-15590.aiu:320	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-step-4-connections
+F	block	paragraph
+F	line	320
+R	name	//tmp/aiu-editor-sync-15590.aiu:325	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-step-5-compiled
+F	block	paragraph
+F	line	325
+R	name	//tmp/aiu-editor-sync-15590.aiu:330	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-step-6-edition
+F	block	paragraph
+F	line	330
+R	name	//tmp/aiu-editor-sync-15590.aiu:335	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-step-7-last
+F	block	paragraph
+F	line	335
+R	name	//tmp/aiu-editor-sync-15590.aiu:34	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-subject-first
+F	block	paragraph
+F	line	34
+R	name	//tmp/aiu-editor-sync-15590.aiu:340	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-rule-of-work
+F	block	paragraph
+F	line	340
+R	name	//tmp/aiu-editor-sync-15590.aiu:346	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-section-8-holes
+F	block	chapter
+F	line	346
+R	name	//tmp/aiu-editor-sync-15590.aiu:348	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-section-8-holes
+F	block	title
+F	line	348
+R	name	//tmp/aiu-editor-sync-15590.aiu:353	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-rename-there
+F	block	paragraph
+F	line	353
+R	name	//tmp/aiu-editor-sync-15590.aiu:358	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-chapter-chapter
+F	block	paragraph
+F	line	358
+R	name	//tmp/aiu-editor-sync-15590.aiu:363	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-marks-a
+F	block	paragraph
+F	line	363
+R	name	//tmp/aiu-editor-sync-15590.aiu:368	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-reading-mode
+F	block	paragraph
+F	line	368
+R	name	//tmp/aiu-editor-sync-15590.aiu:373	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-progress-identity-if
+F	block	paragraph
+F	line	373
+R	name	//tmp/aiu-editor-sync-15590.aiu:378	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-moved-or-deleted
+F	block	paragraph
+F	line	378
+R	name	//tmp/aiu-editor-sync-15590.aiu:383	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-order-across-files
+F	block	paragraph
+F	line	383
+R	name	//tmp/aiu-editor-sync-15590.aiu:388	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-conflicting-rules-two
+F	block	paragraph
+F	line	388
+R	name	//tmp/aiu-editor-sync-15590.aiu:393	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-terminal-width-reading
+F	block	paragraph
+F	line	393
+R	name	//tmp/aiu-editor-sync-15590.aiu:398	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-navigation-how-to
+F	block	paragraph
+F	line	398
+R	name	//tmp/aiu-editor-sync-15590.aiu:403	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-database-rebuild-how
+F	block	paragraph
+F	line	403
+R	name	//tmp/aiu-editor-sync-15590.aiu:408	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-marks-in
+F	block	paragraph
+F	line	408
+R	name	//tmp/aiu-editor-sync-15590.aiu:41	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-contracts-contracts
+F	block	paragraph
+F	line	41
+R	name	//tmp/aiu-editor-sync-15590.aiu:413	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-level-the
+F	block	paragraph
+F	line	413
+R	name	//tmp/aiu-editor-sync-15590.aiu:420	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-book-parts
+F	block	paragraph
+F	line	420
+R	name	//tmp/aiu-editor-sync-15590.aiu:425	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-edition-page
+F	block	paragraph
+F	line	425
+R	name	//tmp/aiu-editor-sync-15590.aiu:432	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-section-9-amplifiers
+F	block	chapter
+F	line	432
+R	name	//tmp/aiu-editor-sync-15590.aiu:434	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-section-9-amplifiers
+F	block	title
+F	line	434
+R	name	//tmp/aiu-editor-sync-15590.aiu:439	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-learning-path-prerequisites
+F	block	paragraph
+F	line	439
+R	name	//tmp/aiu-editor-sync-15590.aiu:444	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-spaced-practice-cards
+F	block	paragraph
+F	line	444
+R	name	//tmp/aiu-editor-sync-15590.aiu:449	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-coverage-report-which
+F	block	paragraph
+F	line	449
+R	name	//tmp/aiu-editor-sync-15590.aiu:454	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-exam-mode-reading
+F	block	paragraph
+F	line	454
+R	name	//tmp/aiu-editor-sync-15590.aiu:459	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-glossary-built-from
+F	block	paragraph
+F	line	459
+R	name	//tmp/aiu-editor-sync-15590.aiu:464	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-field-templates-a
+F	block	paragraph
+F	line	464
+R	name	//tmp/aiu-editor-sync-15590.aiu:469	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-mind-map-view
+F	block	paragraph
+F	line	469
+R	name	//tmp/aiu-editor-sync-15590.aiu:47	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-physical-goal
+F	block	paragraph
+F	line	47
+R	name	//tmp/aiu-editor-sync-15590.aiu:474	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-reading-bookmark-reading
+F	block	paragraph
+F	line	474
+R	name	//tmp/aiu-editor-sync-15590.aiu:479	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-routines-with-times
+F	block	paragraph
+F	line	479
+R	name	//tmp/aiu-editor-sync-15590.aiu:485	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-section-10-mark
+F	block	chapter
+F	line	485
+R	name	//tmp/aiu-editor-sync-15590.aiu:487	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-section-10-mark
+F	block	title
+F	line	487
+R	name	//tmp/aiu-editor-sync-15590.aiu:492	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-the-mark-blocks
+F	block	paragraph
+F	line	492
+R	name	//tmp/aiu-editor-sync-15590.aiu:497	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-a-routine-is
+F	block	paragraph
+F	line	497
+R	name	//tmp/aiu-editor-sync-15590.aiu:502	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-making-a-routine
+F	block	paragraph
+F	line	502
+R	name	//tmp/aiu-editor-sync-15590.aiu:507	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-routine-mode-starting
+F	block	paragraph
+F	line	507
+R	name	//tmp/aiu-editor-sync-15590.aiu:512	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-pause-the-routine
+F	block	paragraph
+F	line	512
+R	name	//tmp/aiu-editor-sync-15590.aiu:517	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-modular-a-block
+F	block	paragraph
+F	line	517
+R	name	//tmp/aiu-editor-sync-15590.aiu:522	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-holes-left-the
+F	block	paragraph
+F	line	522
+R	name	//tmp/aiu-editor-sync-15590.aiu:528	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-section-11-what
+F	block	chapter
+F	line	528
+R	name	//tmp/aiu-editor-sync-15590.aiu:530	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-section-11-what
+F	block	title
+F	line	530
+R	name	//tmp/aiu-editor-sync-15590.aiu:535	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-visible-in-reading
+F	block	paragraph
+F	line	535
+R	name	//tmp/aiu-editor-sync-15590.aiu:540	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-hidden-in-reading
+F	block	paragraph
+F	line	540
+R	name	//tmp/aiu-editor-sync-15590.aiu:545	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-questions-and-contracts
+F	block	paragraph
+F	line	545
+R	name	//tmp/aiu-editor-sync-15590.aiu:55	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-content-blocks
+F	block	paragraph
+F	line	55
+R	name	//tmp/aiu-editor-sync-15590.aiu:550	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-holes-left-confirm
+F	block	paragraph
+F	line	550
+R	name	//tmp/aiu-editor-sync-15590.aiu:556	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-section-12-links
+F	block	chapter
+F	line	556
+R	name	//tmp/aiu-editor-sync-15590.aiu:558	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-section-12-links
+F	block	title
+F	line	558
+R	name	//tmp/aiu-editor-sync-15590.aiu:563	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-a-link-is
+F	block	paragraph
+F	line	563
+R	name	//tmp/aiu-editor-sync-15590.aiu:568	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-example-there-is
+F	block	paragraph
+F	line	568
+R	name	//tmp/aiu-editor-sync-15590.aiu:573	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-this-needs-more
+F	block	paragraph
+F	line	573
+R	name	//tmp/aiu-editor-sync-15590.aiu:578	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-link-kind
+F	block	paragraph
+F	line	578
+R	name	//tmp/aiu-editor-sync-15590.aiu:583	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-backlinks-the
+F	block	paragraph
+F	line	583
+R	name	//tmp/aiu-editor-sync-15590.aiu:588	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-jump-trail
+F	block	paragraph
+F	line	588
+R	name	//tmp/aiu-editor-sync-15590.aiu:593	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-link-writing
+F	block	paragraph
+F	line	593
+R	name	//tmp/aiu-editor-sync-15590.aiu:598	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-link-block
+F	block	paragraph
+F	line	598
+R	name	//tmp/aiu-editor-sync-15590.aiu:603	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-link-destination
+F	block	paragraph
+F	line	603
+R	name	//tmp/aiu-editor-sync-15590.aiu:608	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-holes-left-whether
+F	block	paragraph
+F	line	608
+R	name	//tmp/aiu-editor-sync-15590.aiu:614	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-section-13-files
+F	block	chapter
+F	line	614
+R	name	//tmp/aiu-editor-sync-15590.aiu:616	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-section-13-files
+F	block	title
+F	line	616
+R	name	//tmp/aiu-editor-sync-15590.aiu:621	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-naming-a
+F	block	paragraph
+F	line	621
+R	name	//tmp/aiu-editor-sync-15590.aiu:626	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-introduction-every
+F	block	paragraph
+F	line	626
+R	name	//tmp/aiu-editor-sync-15590.aiu:63	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-parked-marks
+F	block	paragraph
+F	line	63
+R	name	//tmp/aiu-editor-sync-15590.aiu:631	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-master-the
+F	block	paragraph
+F	line	631
+R	name	//tmp/aiu-editor-sync-15590.aiu:636	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-reading-reading
+F	block	paragraph
+F	line	636
+R	name	//tmp/aiu-editor-sync-15590.aiu:641	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-bundle-a
+F	block	paragraph
+F	line	641
+R	name	//tmp/aiu-editor-sync-15590.aiu:646	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-order-files
+F	block	paragraph
+F	line	646
+R	name	//tmp/aiu-editor-sync-15590.aiu:651	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-no-lost
+F	block	paragraph
+F	line	651
+R	name	//tmp/aiu-editor-sync-15590.aiu:656	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-tree-view
+F	block	paragraph
+F	line	656
+R	name	//tmp/aiu-editor-sync-15590.aiu:661	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-decided-order-of
+F	block	paragraph
+F	line	661
+R	name	//tmp/aiu-editor-sync-15590.aiu:666	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-holes-left-how
+F	block	paragraph
+F	line	666
+R	name	//tmp/aiu-editor-sync-15590.aiu:671	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-remaining-numbering-jsonrkt
+F	block	paragraph
+F	line	671
+R	name	//tmp/aiu-editor-sync-15590.aiu:677	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-future-work-from
+F	block	chapter
+F	line	677
+R	name	//tmp/aiu-editor-sync-15590.aiu:679	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-future-work-from
+F	block	title
+F	line	679
+R	name	//tmp/aiu-editor-sync-15590.aiu:684	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-planned
+F	block	paragraph
+F	line	684
+R	name	//tmp/aiu-editor-sync-15590.aiu:690	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-planned-2
+F	block	paragraph
+F	line	690
+R	name	//tmp/aiu-editor-sync-15590.aiu:696	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-planned-3
+F	block	paragraph
+F	line	696
+R	name	//tmp/aiu-editor-sync-15590.aiu:7	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-current-work-one
+F	block	chapter
+F	line	7
+R	name	//tmp/aiu-editor-sync-15590.aiu:702	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-planned-4
+F	block	paragraph
+F	line	702
+R	name	//tmp/aiu-editor-sync-15590.aiu:708	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-planned-5
+F	block	paragraph
+F	line	708
+R	name	//tmp/aiu-editor-sync-15590.aiu:714	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-planned-6
+F	block	paragraph
+F	line	714
+R	name	//tmp/aiu-editor-sync-15590.aiu:72	//tmp/aiu-editor-sync-15590.aiu
+F	name	section-block-types-to
+F	block	chapter
+F	line	72
+R	name	//tmp/aiu-editor-sync-15590.aiu:720	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-can-do-and
+F	block	paragraph
+F	line	720
+R	name	//tmp/aiu-editor-sync-15590.aiu:729	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-planned-7
+F	block	paragraph
+F	line	729
+R	name	//tmp/aiu-editor-sync-15590.aiu:734	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-notation-database-exists
+F	block	paragraph
+F	line	734
+R	name	//tmp/aiu-editor-sync-15590.aiu:74	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-block-types-to
+F	block	title
+F	line	74
+R	name	//tmp/aiu-editor-sync-15590.aiu:740	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-editor-links-work
+F	block	paragraph
+F	line	740
+R	name	//tmp/aiu-editor-sync-15590.aiu:747	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-reads-the-database
+F	block	paragraph
+F	line	747
+R	name	//tmp/aiu-editor-sync-15590.aiu:754	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-checklists-link-to
+F	block	paragraph
+F	line	754
+R	name	//tmp/aiu-editor-sync-15590.aiu:761	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-substeps-and-an
+F	block	paragraph
+F	line	761
+R	name	//tmp/aiu-editor-sync-15590.aiu:767	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-abstract-only-before
+F	block	paragraph
+F	line	767
+R	name	//tmp/aiu-editor-sync-15590.aiu:774	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-at-a-sibling
+F	block	paragraph
+F	line	774
+R	name	//tmp/aiu-editor-sync-15590.aiu:780	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-combinations-computed-cells
+F	block	paragraph
+F	line	780
+R	name	//tmp/aiu-editor-sync-15590.aiu:786	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-name-or-a
+F	block	paragraph
+F	line	786
+R	name	//tmp/aiu-editor-sync-15590.aiu:79	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-each-type-is
+F	block	paragraph
+F	line	79
+R	name	//tmp/aiu-editor-sync-15590.aiu:793	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-figure-3-and
+F	block	paragraph
+F	line	793
+R	name	//tmp/aiu-editor-sync-15590.aiu:799	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-or-chapter-inside
+F	block	paragraph
+F	line	799
+R	name	//tmp/aiu-editor-sync-15590.aiu:807	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-original-the-change
+F	block	paragraph
+F	line	807
+R	name	//tmp/aiu-editor-sync-15590.aiu:815	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-with-its-from
+F	block	paragraph
+F	line	815
+R	name	//tmp/aiu-editor-sync-15590.aiu:822	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-renamed-a-write
+F	block	paragraph
+F	line	822
+R	name	//tmp/aiu-editor-sync-15590.aiu:832	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-planned-8
+F	block	paragraph
+F	line	832
+R	name	//tmp/aiu-editor-sync-15590.aiu:838	//tmp/aiu-editor-sync-15590.aiu
+F	name	paragraph-planned-9
+F	block	paragraph
+F	line	838
+R	name	//tmp/aiu-editor-sync-15590.aiu:89	//tmp/aiu-editor-sync-15590.aiu
+F	name	code-content-build-first
+F	block	code
+F	line	89
+R	name	//tmp/aiu-editor-sync-15590.aiu:9	//tmp/aiu-editor-sync-15590.aiu
+F	name	title-current-work-one
+F	block	title
+F	line	9
 R	name	README.aiu:1	README.aiu
 F	name	title-aiu-notation-everything
 F	block	title
@@ -23937,6 +25683,15 @@ R	name	notation/layouts/layout-settings.aiu:1	notation/layouts/layout-settings.a
 F	name	master-view-settings
 F	block	settings
 F	line	1
+R	tag	//tmp/aiu-editor-sync-15590.aiu:book	//tmp/aiu-editor-sync-15590.aiu
+F	tag	book
+F	line	3
+R	tag	//tmp/aiu-editor-sync-15590.aiu:notation	//tmp/aiu-editor-sync-15590.aiu
+F	tag	notation
+F	line	3
+R	tag	//tmp/aiu-editor-sync-15590.aiu:plan	//tmp/aiu-editor-sync-15590.aiu
+F	tag	plan
+F	line	3
 R	tag	README.aiu:notation	README.aiu
 F	tag	notation
 F	line	4
@@ -24036,6 +25791,78 @@ F	line	3
 R	tag	question-pages-plan.aiu:notation	question-pages-plan.aiu
 F	tag	notation
 F	line	3
+R	todo	//tmp/aiu-editor-sync-15590.aiu:686	//tmp/aiu-editor-sync-15590.aiu
+F	line	686
+F	text	block type drawing: view.rs, boxview.rs, rich.rs, json.rkt, aiu-text.rkt and make-live.rkt still match block names in code; move how each type is drawn into its blocktypes file so a new type needs no code edit.
+R	todo	//tmp/aiu-editor-sync-15590.aiu:692	//tmp/aiu-editor-sync-15590.aiu
+F	line	692
+F	text	the folder index loads block types from the folder nearest to the first file only; load them per file or per folder
+R	todo	//tmp/aiu-editor-sync-15590.aiu:698	//tmp/aiu-editor-sync-15590.aiu
+F	line	698
+F	text	names: a duplicate name inside one page is already a check error (collect.rkt). Left: a name used twice across the ecosystem is only a stderr line in index-folder.rs; make it a check error through the database, with its places
+R	todo	//tmp/aiu-editor-sync-15590.aiu:704	//tmp/aiu-editor-sync-15590.aiu
+F	line	704
+F	text	ecosystem server: the notation database is reachable through the shared ecosystem server so the editor, shell and multiplexer read the same index; plan in ecosystem-server-plan.aiu
+R	todo	//tmp/aiu-editor-sync-15590.aiu:710	//tmp/aiu-editor-sync-15590.aiu
+F	line	710
+F	text	json mapping: to-json and from-json exist in data/json.rkt. Write what is lost (comments, formatting) in the types README and add a round trip test. The shell side is aiu-shell, nothing new
+R	todo	//tmp/aiu-editor-sync-15590.aiu:716	//tmp/aiu-editor-sync-15590.aiu
+F	line	716
+F	text	book plan: the full plan for books, sciences, skills, writing and reading mode, marks on the sides and compiled checklists is in book-plan.aiu. Work it step by step, close the holes of section 8 first, and write every change into that file
+R	todo	//tmp/aiu-editor-sync-15590.aiu:722	//tmp/aiu-editor-sync-15590.aiu
+F	line	722
+F	text	README.aiu: one live page with everything the notation
+R	todo	//tmp/aiu-editor-sync-15590.aiu:731	//tmp/aiu-editor-sync-15590.aiu
+F	line	731
+F	text	lists of figures and tables, computed like contents
+R	todo	//tmp/aiu-editor-sync-15590.aiu:736	//tmp/aiu-editor-sync-15590.aiu
+F	line	736
+F	text	named references and citations, parked until the
+R	todo	//tmp/aiu-editor-sync-15590.aiu:742	//tmp/aiu-editor-sync-15590.aiu
+F	line	742
+F	text	links step 5: the ecosystem server serves the database, then the
+R	todo	//tmp/aiu-editor-sync-15590.aiu:749	//tmp/aiu-editor-sync-15590.aiu
+F	line	749
+F	text	links step 6: mind map website, local first, public later. It
+R	todo	//tmp/aiu-editor-sync-15590.aiu:756	//tmp/aiu-editor-sync-15590.aiu
+F	line	756
+F	text	links holes to decide: prerequisite across files in compiled
+R	todo	//tmp/aiu-editor-sync-15590.aiu:763	//tmp/aiu-editor-sync-15590.aiu
+F	line	763
+F	text	in-page: nested items in list and steps, so a step holds its own
+R	todo	//tmp/aiu-editor-sync-15590.aiu:769	//tmp/aiu-editor-sync-15590.aiu
+F	line	769
+F	text	in-page: page type rules for order, count and parent-child. One
+R	todo	//tmp/aiu-editor-sync-15590.aiu:776	//tmp/aiu-editor-sync-15590.aiu
+F	line	776
+F	text	in-page: evidence belongs to a claim, as a child or by pointing
+R	todo	//tmp/aiu-editor-sync-15590.aiu:782	//tmp/aiu-editor-sync-15590.aiu
+F	line	782
+F	text	in-page: table rules. Unique row-id check, required column
+R	todo	//tmp/aiu-editor-sync-15590.aiu:788	//tmp/aiu-editor-sync-15590.aiu
+F	line	788
+F	text	in-page: inline marks inside a paragraph for a term, a quoted
+R	todo	//tmp/aiu-editor-sync-15590.aiu:795	//tmp/aiu-editor-sync-15590.aiu
+F	line	795
+F	text	in-page: running counters for figures, tables and examples, like
+R	todo	//tmp/aiu-editor-sync-15590.aiu:801	//tmp/aiu-editor-sync-15590.aiu
+F	line	801
+F	text	links embed: a link block with embed: yes draws the target block
+R	todo	//tmp/aiu-editor-sync-15590.aiu:809	//tmp/aiu-editor-sync-15590.aiu
+F	line	809
+F	text	links edit in place: in an embedded box the cursor edits the
+R	todo	//tmp/aiu-editor-sync-15590.aiu:817	//tmp/aiu-editor-sync-15590.aiu
+F	line	817
+F	text	links edit here only: mode copy stores a local copy in this file
+R	todo	//tmp/aiu-editor-sync-15590.aiu:824	//tmp/aiu-editor-sync-15590.aiu
+F	line	824
+F	text	links embed holes: source open in another buffer, target moved or
+R	todo	//tmp/aiu-editor-sync-15590.aiu:834	//tmp/aiu-editor-sync-15590.aiu
+F	line	834
+F	text	LSP style server: suggests names while typing a link and shows errors and warnings in other editors; editor integration first, server later
+R	todo	//tmp/aiu-editor-sync-15590.aiu:840	//tmp/aiu-editor-sync-15590.aiu
+F	line	840
+F	text	contract TUI, only to select and deselect which contracts are used; after the whole ecosystem works
 R	todo	future-work.aiu:1735	future-work.aiu
 F	line	1735
 F	text	block type drawing: view.rs, boxview.rs, rich.rs, json.rkt, aiu-text.rkt and make-live.rkt still match block names in code; move how each type is drawn into its blocktypes file so a new type needs no code edit.

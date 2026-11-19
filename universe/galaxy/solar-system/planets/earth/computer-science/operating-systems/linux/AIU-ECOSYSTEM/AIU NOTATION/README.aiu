@@ -2118,7 +2118,7 @@ connections, and that expanding a box by key comes after the first
 drawing works. Layout files decide where boxes sit. A layout block
 holds card blocks and box blocks, each with a target and a place
 of x y, and a caption for the description. The page reads every
-layout and draws them combined. See layout-plan.aiu.
+layout and draws them combined.
 Far zoom shows only box titles, close zoom shows cards. Why: a
 big map stays readable. The zoomcut setting is the switch.
 Far zoom also shrinks outer boxes to fit their titles. Why: more

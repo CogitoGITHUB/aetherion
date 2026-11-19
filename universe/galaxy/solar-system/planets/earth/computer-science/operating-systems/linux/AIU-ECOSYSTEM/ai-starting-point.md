@@ -16,9 +16,7 @@ no progress and no next steps. The work is in the todo files and the
 plan files. Read ACTIVE WORK below, then go to the files it names.
 
 ## ACTIVE WORK
-Area: layout.
-Plan: AIU NOTATION/layout-plan.aiu.
-Read the whole plan, then do the first step left, in order.
+Area: none. Ask Shape which area is next.
 
 When the area changes, replace only the lines inside this block.
 Never add steps, results or status here. Never write what was done.
@@ -259,8 +257,6 @@ line, aiutd FILE.aiu, never bash -c, it needs the real tty.
   were never indexed. Copy the type there when a block
   kind is ignored. Default set: AIU NOTATION/notation/
   blocktypes (44 files, root had 43, only link was missing).
-- Layout plan: AIU NOTATION/layout-plan.aiu. Layout files
-  replace place. Read it before touching the master view.
 - New block types go in both blocktypes folders: the default
   AIU NOTATION/notation/blocktypes and the root .notation/
   blocktypes. layout, card and box were added this way.
