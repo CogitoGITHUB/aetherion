@@ -2014,15 +2014,20 @@ must be written before any drawing exists. The plan fixes that
 every file is a box with its title, that boxes sit inside boxes,
 that the map always opens on the master view with the links as
 connections, and that expanding a box by key comes after the first
-drawing works. Where a box sits is written in the file: a
-place: x y declaration in its title block, indexed as the place
-field. Why: nothing arranges itself, Shape places every file by
-hand. A file without place is drawn in a wrapped row in index
-order, so no file is hidden. Example: place: 3 4 in a title.
-Replaced. Layout files now decide where boxes sit. A layout block
+drawing works. Layout files decide where boxes sit. A layout block
 holds card blocks and box blocks, each with a target and a place
 of x y, and a caption for the description. The page reads every
 layout and draws them combined. See layout-plan.aiu.
+Far zoom shows only box titles, close zoom shows cards. Why: a
+big map stays readable. The zoomcut setting is the switch.
+Far zoom also shrinks outer boxes to fit their titles. Why: more
+of the map fits on one phone screen.
+Far boxes are sized from their text, columns and rows packed.
+Why: no empty space between boxes at far zoom.
+Zoom eases and near and far layers crossfade.
+Zoom cut, fade band, ease and wheel are settings in the TUI.
+Why: every zoom feel can be tuned without code.
+Why: no sudden jumps when you zoom in or out.
 Drawing: the wasm lays out every box and calls rect, line and
 text, three functions the loader provides, so the browser only
 paints. Why: all logic stays in Rust. Example: scrolling draws

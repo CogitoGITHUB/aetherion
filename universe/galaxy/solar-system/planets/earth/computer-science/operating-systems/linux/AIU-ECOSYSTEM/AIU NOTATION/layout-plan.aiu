@@ -153,3 +153,43 @@ Open, in this order. 1. Settings TUI as a ecosystem command.
 titles, close shows cards. 3. Table view as a second reading of
 the same index. 4. Descriptions for plain files in no layout.
 paragraph end
+
+paragraph start
+name: paragraph-layout-decided-zoom
+Decided. Zoom has two levels. Below the zoomcut setting, a
+percent, the map hides cards and arrows and shows only box
+titles and descriptions. At or above it, cards show. A tap on
+a hidden card does nothing. Far, a box title keeps a constant screen size but never wider than its box, and hides if unreadable. Only boxes with no box inside show a description, and only if it fits. The default is 50.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-far-layout
+Decided. Far zoom has its own layout, sized in screen pixels.
+A box with only cards shrinks to one small box for its title.
+A box with boxes inside sizes its cells from the largest inner
+box, so no empty space is left. Far layout is recomputed in
+zoom steps of 15 percent. Files in no layout are hidden far.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-far-packing
+Decided. Far layout packs tight. Each grid column and row has its
+own size, empty ones are dropped. A leaf box is sized from its
+title and description, not a fixed size.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-smooth-zoom
+Decided. Zoom eases to a target zoom, anchored on the fingers.
+Wheel and pinch are less sensitive. Near and far layouts are two
+layers that crossfade in a band of 30 percent around the cutoff.
+When the far layout re-flows at a zoom step, the old far layer
+fades out while the new one fades in.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-zoom-settings
+Decided. The settings TUI has a zoom box: zoomcut, zoomband,
+zoomease, zoomwheel. The website reads all four. The cursor
+follows the screen order, so zoomcut can be selected.
+paragraph end

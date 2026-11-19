@@ -73,8 +73,11 @@
     ov.appendChild(b);
     document.body.appendChild(ov);
   };
+  let ff = null;
+  const isFar = () => { if (ff !== null) return ff; const c = e.style ? e.style(5) : 0; return z < (c > 0 ? c : 0.5); };
   const tap = (x, y) => {
-    const ok = e.pick(Math.round(innerWidth), ox + x / z, oy + y / z);
+    if (e.set_far) e.set_far(0);
+    const ok = isFar() ? 0 : e.pick(Math.round(innerWidth), ox + x / z, oy + y / z);
     if (ok > 0) {
       const k = str(e.pick_ptr(), e.pick_len());
       if (foc === k) openFile(k); else { foc = k; paint(); }
@@ -152,19 +155,22 @@
       if (ps[i]) ps[i].style.opacity = (fi < 0 || l[4] === fi || l[5] === fi) ? '1' : '0.12';
     });
   };
-  const render = () => {
+  const render1 = () => {
     if (!e || !e.scene) return;
     const w = Math.round(innerWidth);
     if (!wl) {
       wl = mk("div", "position:fixed;left:0;top:0;transform-origin:0 0;pointer-events:none;font:15px/1.4 system-ui,sans-serif");
       document.body.appendChild(wl);
     }
-    const sig = ver + "|" + w + "|" + tsig;
+    const farNow = isFar();
+    const zs = farNow ? Math.pow(1.15, Math.round(Math.log(z) / Math.log(1.15))) : 0;
+    const sig = ver + "|" + w + "|" + tsig + "|" + zs;
     if (sig !== lsig) {
       lsig = sig;
       wl.textContent = "";
       let s = null;
       try {
+        if (e.set_far) e.set_far(zs);
         const n = e.scene(w);
         s = JSON.parse(str(e.scene_ptr(), n));
       } catch (x) { s = null; }
@@ -207,7 +213,85 @@
       }
     }
     applyFocus();
+    if (lastS) {
+      const far = isFar(), ks = wl.children;
+      for (let i = lastS.f.length; i < ks.length; i++) ks[i].style.display = far ? "none" : "";
+      const hd = e.style ? e.style(6) : 20;
+      const F = lastS.f;
+      F.forEach((f, i) => {
+        const n = ks[i], t = n.children[0], dd = n.children[1];
+        t.style.whiteSpace = "nowrap"; t.style.transformOrigin = "0 0"; t.style.transform = "";
+        t.style.display = "";
+        if (dd) { dd.style.transformOrigin = "0 0"; dd.style.transform = ""; dd.style.right = ""; dd.style.width = ""; dd.style.top = ""; dd.style.display = ""; }
+        if (!far) return;
+        const lw = t.offsetWidth || 1, th = t.offsetHeight || 14;
+        const s = Math.min(1 / z, (f.w - 28) / lw);
+        if (s * z * th < 8) { t.style.display = "none"; if (dd) dd.style.display = "none"; return; }
+        t.style.transform = "scale(" + s + ")";
+        if (!dd) return;
+        const leaf = !F.some((o, j) => j !== i && o.x >= f.x && o.y >= f.y && o.x + o.w <= f.x + f.w && o.y + o.h <= f.y + f.h);
+        if (!leaf) { dd.style.display = "none"; return; }
+        dd.style.top = (th * s - 6) + "px"; dd.style.right = "auto";
+        dd.style.width = ((f.w - 32) / s) + "px";
+        dd.style.transform = "scale(" + s + ")";
+        if (th * s - 6 + dd.offsetHeight * s > f.h - 4) dd.style.display = "none";
+      });
+    }
     wl.style.transform = "scale(" + z + ") translate(" + (-ox) + "px," + (-oy) + "px)";
+  };
+  const slots = [
+    { wl: null, ls: "", s: null, zk: null },
+    { wl: null, ls: "", s: null, zk: null },
+  ];
+  const layer = (sl, far) => {
+    const a = wl, b = lsig, c = lastS;
+    wl = sl.wl; lsig = sl.ls; lastS = sl.s; ff = far;
+    try { render1(); } finally {
+      sl.wl = wl; sl.ls = lsig; sl.s = lastS;
+      wl = a; lsig = b; lastS = c; ff = null;
+    }
+  };
+  const ghost = (el) => {
+    const k = el.cloneNode(true);
+    k.style.transition = "opacity 0.3s";
+    k.style.pointerEvents = "none";
+    document.body.appendChild(k);
+    requestAnimationFrame(() => { k.style.opacity = "0"; });
+    setTimeout(() => k.remove(), 350);
+  };
+  const render = () => {
+    if (!e || !e.scene) return;
+    const c0 = e.style ? e.style(5) : 0, c = c0 > 0 ? c0 : 0.5;
+    const bd = e.style && e.style(7) > 0 ? e.style(7) : 0.3; const lo = c * (1 - bd), hi = c * (1 + bd);
+    const t = Math.min(1, Math.max(0, (z - lo) / (hi - lo)));
+    const N = slots[0], F = slots[1];
+    if (t > 0) {
+      layer(N, false);
+      if (N.wl) {
+        N.wl.style.transition = "opacity 0.25s";
+        N.wl.style.display = "";
+        N.wl.style.opacity = String(t);
+      }
+    } else if (N.wl) N.wl.style.display = "none";
+    if (t < 1) {
+      const zk = Math.round(Math.log(z) / Math.log(1.15));
+      let re = false;
+      if (F.wl && F.zk !== null && F.zk !== zk && F.wl.style.display !== "none") {
+        ghost(F.wl); re = true;
+      }
+      layer(F, true);
+      F.zk = zk;
+      if (F.wl) {
+        if (re) {
+          F.wl.style.transition = "none";
+          F.wl.style.opacity = "0";
+          void F.wl.offsetWidth;
+        }
+        F.wl.style.transition = "opacity 0.3s";
+        F.wl.style.display = "";
+        F.wl.style.opacity = String(1 - t);
+      }
+    } else if (F.wl) F.wl.style.display = "none";
   };
   const paint = () => {
     cv.width = innerWidth; cv.height = innerHeight;
@@ -224,10 +308,19 @@
     g.lineWidth = 1.5 / z; g.font = "600 14px system-ui,sans-serif"; g.textBaseline = "top";
     render();
   };
+  let tz = 0, anc = null, raf = 0;
+  const tick = () => {
+    raf = 0;
+    const d = tz - z;
+    if (Math.abs(d) < z * 0.002) z = tz; else z += d * (e.style && e.style(8) > 0 ? e.style(8) : 0.16);
+    if (anc) { ox = anc.wx - anc.nx / z; oy = anc.wy - anc.ny / z; }
+    paint();
+    if (z !== tz) raf = requestAnimationFrame(tick);
+  };
   const zoomAt = (mx, my, nz, nx, ny) => {
-    const k = Math.min(4, Math.max(0.2, nz));
-    const wx = ox + mx / z, wy = oy + my / z;
-    z = k; ox = wx - nx / z; oy = wy - ny / z;
+    tz = Math.min(4, Math.max(0.2, nz));
+    anc = { wx: ox + mx / z, wy: oy + my / z, nx: nx, ny: ny };
+    if (!raf) raf = requestAnimationFrame(tick);
   };
   const load = async () => {
     const d = new Uint8Array(await (await fetch("index.db")).arrayBuffer()), p = put(d);
@@ -256,7 +349,7 @@
       const d1 = Math.hypot(n[0][0] - n[1][0], n[0][1] - n[1][1]);
       const m0x = (pts[0][0] + pts[1][0]) / 2, m0y = (pts[0][1] + pts[1][1]) / 2;
       const m1x = (n[0][0] + n[1][0]) / 2, m1y = (n[0][1] + n[1][1]) / 2;
-      if (d0 > 0) zoomAt(m0x, m0y, z * d1 / d0, m1x, m1y);
+      if (d0 > 0) zoomAt(m0x, m0y, (tz || z) * Math.pow(d1 / d0, 0.7), m1x, m1y);
     }
     pts = n; paint();
   }, { passive: false });
@@ -269,7 +362,7 @@
   addEventListener("wheel", (v) => {
     if (ov) return;
     v.preventDefault();
-    zoomAt(v.clientX, v.clientY, z * Math.exp(-v.deltaY * 0.001), v.clientX, v.clientY);
+    zoomAt(v.clientX, v.clientY, (tz || z) * Math.exp(-v.deltaY * (e.style && e.style(9) > 0 ? e.style(9) : 0.0006)), v.clientX, v.clientY);
     paint();
   }, { passive: false });
   let md = null;

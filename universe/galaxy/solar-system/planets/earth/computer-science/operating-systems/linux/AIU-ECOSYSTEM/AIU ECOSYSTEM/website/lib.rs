@@ -203,8 +203,124 @@ fn build(
     (cards, frames, mw, mh)
 }
 
+fn build_far(
+    name: &str,
+    groups: &HashMap<String, Vec<Item>>,
+    titles: &HashMap<String, String>,
+    placed: &mut HashSet<String>,
+    path: &mut Vec<String>,
+    u: f64,
+) -> (Vec<Boxed>, Vec<Frame>, f64, f64) {
+    let pad = 8.0 * u;
+    let head = 30.0 * u;
+    let gap = 8.0 * u;
+    let cap = desc_get(&format!("l:{}", name));
+    let tpx = name.chars().count() as f64 * 8.0 + 32.0;
+    let mut cards: Vec<Boxed> = Vec::new();
+    let mut kids: Vec<(f64, f64, String, Vec<Boxed>, Vec<Frame>, f64, f64)> = Vec::new();
+    path.push(name.to_string());
+    if let Some(items) = groups.get(name) {
+        for it in items {
+            if it.what == "box" {
+                if path.iter().any(|p| p == &it.target)
+                    || !groups.contains_key(&it.target)
+                {
+                    continue;
+                }
+                desc_set(&format!("l:{}", it.target), &it.caption);
+                let (c, f, w, h) =
+                    build_far(&it.target, groups, titles, placed, path, u);
+                let (px, py) = it.place.unwrap_or((0.0, 0.0));
+                kids.push((px, py, it.target.clone(), c, f, w, h));
+            } else if let Some(k) = resolve(&it.target, titles) {
+                if placed.contains(&k) {
+                    continue;
+                }
+                placed.insert(k.clone());
+                desc_set(&format!("k:{}", k), &it.caption);
+                let title = titles.get(&k).cloned().unwrap_or_default();
+                cards.push(Boxed { key: k, title, x: pad, y: head });
+            }
+        }
+    }
+    path.pop();
+    let mut frames: Vec<Frame> = Vec::new();
+    if kids.is_empty() {
+        let clen = cap.chars().count() as f64;
+        let wpx = if clen > 0.0 { tpx.max(200.0) } else { tpx.max(110.0) };
+        let lines = if clen > 0.0 {
+            (clen * 6.5 / (wpx - 32.0)).ceil().min(6.0)
+        } else {
+            0.0
+        };
+        let extra = if lines > 0.0 { lines * 16.0 + 6.0 } else { 0.0 };
+        let hpx = (30.0 + extra + 8.0).max(44.0);
+        return (cards, frames, wpx * u, hpx * u);
+    }
+    let mut cells: Vec<(i64, i64, String, Vec<Boxed>, Vec<Frame>, f64, f64)> = Vec::new();
+    let mut taken: HashSet<(i64, i64)> = HashSet::new();
+    for (px, py, t, c, f, w, h) in kids {
+        let mut gx = (px.round() as i64).max(0);
+        let gy = (py.round() as i64).max(0);
+        let mut guard = 0;
+        while taken.contains(&(gx, gy)) && guard < 1000 {
+            gx += 1;
+            guard += 1;
+        }
+        taken.insert((gx, gy));
+        cells.push((gx, gy, t, c, f, w, h));
+    }
+    let mut xs: Vec<i64> = cells.iter().map(|k| k.0).collect();
+    xs.sort();
+    xs.dedup();
+    let mut ys: Vec<i64> = cells.iter().map(|k| k.1).collect();
+    ys.sort();
+    ys.dedup();
+    let mut cw = vec![0.0_f64; xs.len()];
+    let mut rh = vec![0.0_f64; ys.len()];
+    for k in &cells {
+        let i = xs.iter().position(|v| *v == k.0).unwrap_or(0);
+        let j = ys.iter().position(|v| *v == k.1).unwrap_or(0);
+        cw[i] = cw[i].max(k.5);
+        rh[j] = rh[j].max(k.6);
+    }
+    let mut cx: Vec<f64> = Vec::new();
+    let mut a = pad;
+    for w in &cw {
+        cx.push(a);
+        a += w + gap;
+    }
+    let tot_w = a - gap + pad;
+    let mut cy: Vec<f64> = Vec::new();
+    let mut b = head;
+    for h in &rh {
+        cy.push(b);
+        b += h + gap;
+    }
+    let tot_h = b - gap + pad;
+    for (gx, gy, t, c, f, w, h) in cells {
+        let i = xs.iter().position(|v| *v == gx).unwrap_or(0);
+        let j = ys.iter().position(|v| *v == gy).unwrap_or(0);
+        let x = cx[i];
+        let y = cy[j];
+        frames.push(Frame { title: t, x, y, w, h });
+        for mut bb in c {
+            bb.x += x;
+            bb.y += y;
+            cards.push(bb);
+        }
+        for mut g in f {
+            g.x += x;
+            g.y += y;
+            frames.push(g);
+        }
+    }
+    (cards, frames, tot_w.max(tpx * u), tot_h)
+}
+
 fn arrange(store: &Store, width: f64) -> (Vec<Boxed>, Vec<Frame>) {
     set_cfg(store);
+    let width = if far_z() > 0.0 { width / far_z() } else { width };
     *DESC.lock().unwrap_or_else(|e| e.into_inner()) = None;
     let files = store.of_kind("file");
     let mut titles: HashMap<String, String> = HashMap::new();
@@ -261,7 +377,11 @@ fn arrange(store: &Store, width: f64) -> (Vec<Boxed>, Vec<Frame>) {
             continue;
         }
         let mut path: Vec<String> = Vec::new();
-        let (c, f, w, h) = build(name, &groups, &titles, &mut placed, &mut path);
+        let (c, f, w, h) = if far_z() > 0.0 {
+            build_far(name, &groups, &titles, &mut placed, &mut path, 1.0 / far_z())
+        } else {
+            build(name, &groups, &titles, &mut placed, &mut path)
+        };
         if sx > cfg().gap && sx + w > width {
             sx = cfg().gap;
             sy += rowh + cfg().gap;
@@ -647,6 +767,10 @@ struct Cfg {
     ts: f64,
     ds: f64,
     ls: f64,
+    zc: f64,
+    zb: f64,
+    ze: f64,
+    zw: f64,
 }
 
 static CFG: Mutex<Option<Cfg>> = Mutex::new(None);
@@ -667,10 +791,34 @@ fn cfg_default() -> Cfg {
         ts: 15.0,
         ds: 12.0,
         ls: 13.0,
+        zc: 50.0,
+        zb: 30.0,
+        ze: 16.0,
+        zw: 6.0,
     }
 }
 
+static FAR: Mutex<f64> = Mutex::new(0.0);
+
+fn far_z() -> f64 {
+    *FAR.lock().unwrap_or_else(|e| e.into_inner())
+}
+
+#[no_mangle]
+pub extern "C" fn set_far(z: f64) {
+    *FAR.lock().unwrap_or_else(|e| e.into_inner()) = z;
+}
+
 fn cfg() -> Cfg {
+    let mut c = cfg_base();
+    let z = far_z();
+    if z > 0.0 {
+        c.gap = 10.0 / z;
+    }
+    c
+}
+
+fn cfg_base() -> Cfg {
     let g = CFG.lock().unwrap_or_else(|e| e.into_inner());
     match *g {
         Some(c) => c,
@@ -713,6 +861,10 @@ fn set_cfg(store: &Store) {
         if let Some(v) = num("titlesize") { c.ts = v; }
         if let Some(v) = num("descsize") { c.ds = v; }
         if let Some(v) = num("labelsize") { c.ls = v; }
+        if let Some(v) = num("zoomcut") { if v <= 100.0 { c.zc = v; } }
+        if let Some(v) = num("zoomband") { if v >= 5.0 && v <= 90.0 { c.zb = v; } }
+        if let Some(v) = num("zoomease") { if v >= 2.0 && v <= 100.0 { c.ze = v; } }
+        if let Some(v) = num("zoomwheel") { if v >= 1.0 && v <= 100.0 { c.zw = v; } }
         let sc = r.field("scope").unwrap_or("").trim();
         if sc == "all" {
             scope = String::new();
@@ -741,6 +893,11 @@ pub extern "C" fn style(i: i32) -> f64 {
         2 => c.ts,
         3 => c.ds,
         4 => c.ls,
+        5 => c.zc / 100.0,
+        6 => c.head,
+        7 => c.zb / 100.0,
+        8 => c.ze / 100.0,
+        9 => c.zw / 10000.0,
         _ => 0.0,
     }
 }

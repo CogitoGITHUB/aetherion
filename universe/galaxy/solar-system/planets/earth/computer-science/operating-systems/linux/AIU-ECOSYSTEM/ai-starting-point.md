@@ -319,3 +319,6 @@ line, aiutd FILE.aiu, never bash -c, it needs the real tty.
   (command_runner.rs toggle_settings). The TUI sends the same
   signal to hide. It is hidden, never killed. Keys: h t n s,
   enter, e. The mux handles it in pane-grid.rkt and mux.rkt.
+- Settings float prestart: mux.rkt opens float 4 after the startup fit-panes!, hidden.
+- In bash -c with double quotes nushell accepts only backslash-quote and backslash-dollar. Put patterns in single quotes.
+- JOB FILE: write each script as a nushell file (raw string, save) to /tmp/aiu/NAME.nu, then run it: ^($nu.current-exe) /tmp/aiu/run.nu NAME. Success deletes it, failure keeps it and prints the error. Fix with a small edit, never rewrite. Use bash only for tools that need it.

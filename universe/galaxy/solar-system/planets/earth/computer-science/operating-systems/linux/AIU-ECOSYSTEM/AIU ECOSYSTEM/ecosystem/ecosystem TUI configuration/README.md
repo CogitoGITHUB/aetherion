@@ -79,6 +79,7 @@ text
 - titlesize  8-40     step 1    default 15   card title font
 - descsize   8-30     step 1    default 12   description font
 - labelsize  8-30     step 1    default 13   box label font
+- zoomcut    10-100   step 5    default 50   percent, cards hide below
 
 scope
 - scope      text     default demo/  folder shown, or all
@@ -147,3 +148,12 @@ The TUI itself needs no other change: save writes any known key.
   kind. It now opens and hides the settings.
 - Theme rule: this program never configures a theme. It only
   reads the theme engine.
+
+## Zoom group
+Own box with zoom cut, fade band, ease and wheel. Cut is the zoom
+percent below which cards hide. Band is the crossfade width as a
+percent of the cut. Ease is the zoom speed per frame, low is slow.
+Wheel is the zoom speed of the mouse wheel. The cursor follows the
+order on screen, so every row can be selected.
+- The settings float starts hidden at mux launch, key e only shows it.
+- The TUI reloads layout-settings.aiu when its modify time changes, checked every second while waiting for a key.
