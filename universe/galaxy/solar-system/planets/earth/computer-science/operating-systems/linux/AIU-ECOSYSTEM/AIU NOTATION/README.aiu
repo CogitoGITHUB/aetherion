@@ -243,6 +243,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -307,6 +311,10 @@ paragraph start
 Brake early and smoothly.
 paragraph end
 chapter end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -503,6 +511,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 table start
@@ -575,6 +587,10 @@ formula  |  an equation, text the parser does not read  |  yes
 callout  |  a boxed remark, first line is note, warning or tip  |  no
 pin  |  keeps its blocks on screen, first line is top or bottom, then write or read, then hide  |  no
 link  |  a link to a block or file, with face and target  |  no
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -726,6 +742,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -800,6 +820,10 @@ cell: 9.99
 cell:
 row end
 table end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -937,6 +961,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -1032,6 +1060,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -1076,6 +1108,10 @@ asked: Does the paragraph make one point?
 Yes. One point: braking.
 answer end
 paragraph end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -1244,6 +1280,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -1340,6 +1380,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -1370,6 +1414,10 @@ paragraph end
 reference start
 Highway Code, 2024
 reference end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -1557,22 +1605,67 @@ paragraph end
 paragraph start
 name: paragraph-the-edition-paper
 The edition command takes --paper a6, a5, a4 or letter, which sets the page width and the lines per page, and --margin N, which keeps N blank columns on the left and right of every page. Why: a book on paper needs a known page size and room for the thumb. An explicit --width or --lines always wins over the paper, in any order. An unknown paper name stops with an error, so a typo never prints the wrong size.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 paragraph start
 name: paragraph-research-blocks
 The blocks claim, evidence, hypothesis and remark are for research. The first line is the name, as with example and exercise, and the rest is the body. They are numbered in their chapter like every content block. Why: research is claims and the support for them, so each part gets its own box and its own number. The quote block is a quotation, and its last line is the attribution, drawn after a dash. Why: a quote in the middle of a chapter needs its speaker, and an epigraph only works at the front of a book.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 paragraph start
 name: paragraph-the-aside
 The aside block is a small note drawn directly under the block it belongs to, indented so it reads as a note on that block. Write it right after its block. Why: everything is a box, so a side column is not needed, and the note stays next to the text it explains.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 paragraph start
 name: paragraph-the-break
 Any block takes a break declaration. The value before starts that block on a new page in the edition. The value keep never splits the block over two pages: when it does not fit the rest of the page, it moves whole to the next page. Why: a chapter should open on a fresh page, and an exercise with its space should stay in one piece on paper. The declaration changes only the edition, never the screen view. A block taller than one page is cut as before.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 paragraph start
 name: paragraph-the-contracts-command
 The contracts command is run as notation contracts FILE. It adds every missing contract and answer slot, writes them into the file, and prints only the open questions: the contract id, the block type and name it sits in, and the question. Why: a new page no longer has to be opened in the editor to get its contracts, and the printed list can be handed back to be answered. Answered questions are not listed, unless the flag --all is added: then every contract is listed and the answered ones are marked answered. The launcher aiu-contracts FILE runs the same command from any folder. Running it twice changes nothing.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 paragraph start
 name: paragraph-a-pinned-block
@@ -1623,6 +1716,10 @@ definition end
 space start
 12
 space end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -1747,6 +1844,10 @@ aiutd test --level N  |  run tests; --only NAME for one
 aiutd record NAME KEYS  |  record a test from a real run
 aiutd record-module NAME PATH EXPR  |  record a module test
 aiutd docs  |  write the tutorial from the notation files
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 contract start
 id: qaf213d
 question: Does the code do what the text around it says?
@@ -2121,6 +2222,10 @@ contract start
 id: qaf213d
 question: Does the code do what the text around it says?
 contract end
+contract start
+id: qaf213d
+question: Does the code do what the text around it says?
+contract end
 code end
 
 paragraph start
@@ -2358,6 +2463,15 @@ and files in no layout wrap in a row. The page draws only files
 under the scope key of the settings block, now demo/. Why: the demo must show
 alone, and the maps live beside block types so deleting demo never
 loses them. To see all files, set scope: all in layout-settings.aiu.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
@@ -2367,6 +2481,15 @@ card size, spacing, margin, header height and arrow curve. Why:
 the look changes by editing notation, never code. Example: curve:
 0.3 bends the arrows less than 0.5. Card text padding and font sizes are keys too: padv, padh, titlesize, descsize, labelsize. Colors and corners come only
 from the theme.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
@@ -2376,6 +2499,15 @@ tap it again to open the file, tap empty space to clear. Why: in
 a big map you must see what a page connects to before opening it.
 Phones send a fake mouse click after a touch, so mouse taps within
 800 ms of a touch are ignored.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
@@ -2383,6 +2515,15 @@ name: paragraph-master-view-demo
 Master view demo. demo has 5 folders of 24 pages with random
 links, and layout-demo-world nests the 5 folders. Why: to test
 zoom, focus on tap and arrows on a map of about 125 pages.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
 
 paragraph start
@@ -2392,4 +2533,31 @@ Up and down pick a setting, left and right change it, enter types
 an exact value, q quits. Every change is saved to
 layout-settings.aiu and the page reloads live. Why: the look must
 be changed without touching code. Colors come from the theme.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
+paragraph end
+
+paragraph start
+name: paragraph-master-view-plain-caption
+Plain file captions. A file in no layout can carry a caption: line
+in its own title block. The map shows it under the title, like the
+caption of a card. A caption written in a layout wins. Why: files
+in no layout get a description without being placed in a layout.
+Example: AIU NOTATION/demo/plain-note.aiu.
+contract start
+id: q94fc72
+question: Does the paragraph make one point?
+contract end
+answer start
+for: q94fc72
+asked: Does the paragraph make one point?
+
+answer end
 paragraph end
