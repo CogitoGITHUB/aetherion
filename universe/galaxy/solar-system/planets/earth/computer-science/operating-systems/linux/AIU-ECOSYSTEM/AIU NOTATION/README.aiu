@@ -2561,3 +2561,12 @@ asked: Does the paragraph make one point?
 
 answer end
 paragraph end
+
+paragraph start
+name: paragraph-master-view-card-height
+Card height. A card is as tall as its title and caption need.
+Title and caption wrap, nothing is cut. The height is estimated from
+the text length and the card width, never below the height setting.
+Row spacing, arrows and tap picking use each card height. Why: a
+caption is useless if it is cut. Example: demo/plain-note.aiu.
+paragraph end

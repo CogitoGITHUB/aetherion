@@ -12,6 +12,7 @@ card end
 card start
 target: demo/people/p03.aiu
 place: 2 0
+caption: A medium caption that needs two or three lines inside this card to be read in full.
 card end
 card start
 target: demo/people/p04.aiu
@@ -24,10 +25,12 @@ card end
 card start
 target: demo/people/p06.aiu
 place: 0 1
+caption: A medium caption that needs two or three lines inside this card to be read in full.
 card end
 card start
 target: demo/people/p07.aiu
 place: 1 1
+caption: A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
 card end
 card start
 target: demo/people/p08.aiu
@@ -36,6 +39,7 @@ card end
 card start
 target: demo/people/p09.aiu
 place: 3 1
+caption: A medium caption that needs two or three lines inside this card to be read in full.
 card end
 card start
 target: demo/people/p10.aiu
@@ -48,6 +52,7 @@ card end
 card start
 target: demo/people/p12.aiu
 place: 1 2
+caption: A medium caption that needs two or three lines inside this card to be read in full.
 card end
 card start
 target: demo/people/p13.aiu
@@ -56,10 +61,12 @@ card end
 card start
 target: demo/people/p14.aiu
 place: 3 2
+caption: A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
 card end
 card start
 target: demo/people/p15.aiu
 place: 4 2
+caption: A medium caption that needs two or three lines inside this card to be read in full.
 card end
 card start
 target: demo/people/p16.aiu
@@ -72,6 +79,7 @@ card end
 card start
 target: demo/people/p18.aiu
 place: 2 3
+caption: A medium caption that needs two or three lines inside this card to be read in full.
 card end
 card start
 target: demo/people/p19.aiu
@@ -84,6 +92,7 @@ card end
 card start
 target: demo/people/p21.aiu
 place: 0 4
+caption: A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
 card end
 card start
 target: demo/people/p22.aiu
@@ -96,5 +105,6 @@ card end
 card start
 target: demo/people/p24.aiu
 place: 3 4
+caption: A medium caption that needs two or three lines inside this card to be read in full.
 card end
 layout end

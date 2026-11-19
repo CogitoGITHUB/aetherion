@@ -141,6 +141,19 @@ fn build(
     let mut taken: HashSet<(i64, i64)> = HashSet::new();
     let mut mw = cfg().pad + cfg().bw + cfg().pad;
     let mut mh = cfg().head + cfg().bh + cfg().pad;
+    let mut rowx: Vec<(i64, f64)> = Vec::new();
+    if let Some(its) = groups.get(name) {
+        for it in its {
+            if it.what == "box" {
+                continue;
+            }
+            if let Some(k) = resolve(&it.target, titles) {
+                let t = titles.get(&k).cloned().unwrap_or_default();
+                let r = it.place.unwrap_or((0.0, 0.0)).1.round() as i64;
+                rowx.push((r, card_h_text(&k, &t, &it.caption)));
+            }
+        }
+    }
     path.push(name.to_string());
     if let Some(items) = groups.get(name) {
         for it in items {
@@ -172,14 +185,15 @@ fn build(
             }
             taken.insert((px.round() as i64, py.round() as i64));
             let x = cfg().pad + px * cfg().sx;
-            let y = cfg().head + py * cfg().sy;
+            let y = cfg().head + py * cfg().sy + extra_before(&rowx, py);
             if let Some(k) = file {
                 placed.insert(k.clone());
                 desc_set(&format!("k:{}", k), &it.caption);
                 let title = titles.get(&k).cloned().unwrap_or_default();
+                let hh = card_h(&k, &title);
                 cards.push(Boxed { key: k, title, x, y });
                 mw = mw.max(x + cfg().bw + cfg().pad);
-                mh = mh.max(y + cfg().bh + cfg().pad);
+                mh = mh.max(y + hh + cfg().pad);
             } else {
                 let (c, f, w, h) =
                     { desc_set(&format!("l:{}", it.target), &it.caption); build(&it.target, groups, titles, placed, path) };
@@ -426,10 +440,15 @@ fn plain(
             continue;
         }
         let title = r.field("title").unwrap_or("").to_string();
+let ck = format!("k:{}", r.key);
+if desc_get(&ck).is_empty() {
+desc_set(&ck, r.field("caption").unwrap_or("").trim());
+}
         loose.push((r.key.clone(), title));
     }
     let cols = (((width - cfg().gap) / cfg().sx) as usize).max(1);
     let first = 0.0_f64;
+    let hs: Vec<f64> = loose.iter().map(|p| card_h(&p.0, &p.1)).collect();
     for (i, (key, title)) in loose.into_iter().enumerate() {
         let col = (i % cols) as f64;
         let row = first + (i / cols) as f64;
@@ -437,7 +456,7 @@ fn plain(
             key,
             title,
             x: cfg().gap + col * cfg().sx,
-            y: cfg().gap + row * cfg().sy + top,
+            y: cfg().gap + row * cfg().sy + top + extra_rows(&hs, cols, i / cols),
         });
     }
     out
@@ -514,11 +533,11 @@ pub extern "C" fn scene(width: f64) -> usize {
             b.title.clone()
         };
         o.push_str(&format!(
-            "{{\"k\":{},\"t\":{},\"d\":{},\"x\":{},\"y\":{}}}",
+            "{{\"k\":{},\"t\":{},\"d\":{},\"x\":{},\"y\":{},\"h\":{}}}",
             jq(&b.key),
             jq(&t),
             jq(&desc_get(&format!("k:{}", b.key))),
-            b.x, b.y
+            b.x, b.y, card_h(&b.key, &b.title)
         ));
     }
     o.push_str("],\"l\":[");
@@ -649,7 +668,7 @@ pub extern "C" fn pick(width: f64, wx: f64, wy: f64) -> i32 {
     };
     for b in layout(store, width).iter().rev() {
         if wx >= b.x && wx <= b.x + cfg().bw
-            && wy >= b.y && wy <= b.y + cfg().bh
+            && wy >= b.y && wy <= b.y + card_h(&b.key, &b.title)
         {
             *PICK.lock().unwrap_or_else(|e| e.into_inner()) = b.key.clone();
             return 1;
@@ -668,21 +687,6 @@ pub extern "C" fn pick_len() -> usize {
     PICK.lock().unwrap_or_else(|e| e.into_inner()).len()
 }
 
-fn anchors(a: &Boxed, b: &Boxed) -> (f64, f64, f64, f64) {
-    let dx = b.x - a.x;
-    let dy = b.y - a.y;
-    if dx.abs() >= dy.abs() {
-        if dx >= 0.0 {
-            (a.x + cfg().bw, a.y + cfg().bh / 2.0, b.x, b.y + cfg().bh / 2.0)
-        } else {
-            (a.x, a.y + cfg().bh / 2.0, b.x + cfg().bw, b.y + cfg().bh / 2.0)
-        }
-    } else if dy >= 0.0 {
-        (a.x + cfg().bw / 2.0, a.y + cfg().bh, b.x + cfg().bw / 2.0, b.y)
-    } else {
-        (a.x + cfg().bw / 2.0, a.y, b.x + cfg().bw / 2.0, b.y + cfg().bh)
-    }
-}
 
 #[no_mangle]
 pub extern "C" fn draw(width: f64, height: f64, sx: f64, sy: f64) -> i32 {
@@ -899,5 +903,81 @@ pub extern "C" fn style(i: i32) -> f64 {
         8 => c.ze / 100.0,
         9 => c.zw / 10000.0,
         _ => 0.0,
+    }
+}
+
+fn card_h_text(key: &str, title: &str, cap: &str) -> f64 {
+    let c = cfg();
+    let dv = |v: f64, d: f64| if v > 0.0 { v } else { d };
+    let ts = dv(c.ts, 15.0);
+    let ds = dv(c.ds, 12.0);
+    let pv = dv(c.pv, 10.0);
+    let ph = dv(c.ph, 12.0);
+    let base = if title.is_empty() {
+        key.rsplit("/").next().unwrap_or(key)
+    } else {
+        title
+    };
+    let inner = (c.bw - 2.0 * ph - 2.0).max(10.0);
+    let nl = |s: &str, fs: f64, k: f64| -> f64 {
+        let cpl = (inner / (fs * k)).floor().max(1.0);
+        ((s.chars().count() as f64) / cpl).ceil().max(1.0)
+    };
+    let mut h = 2.0 * pv + 2.0 + nl(base, ts, 0.7) * ts * 1.4;
+    let cap = cap.trim();
+    if !cap.is_empty() {
+        h += 3.0 + nl(cap, ds, 0.62) * ds * 1.4;
+    }
+    h.max(c.bh)
+}
+
+fn card_h(key: &str, title: &str) -> f64 {
+    card_h_text(key, title, &desc_get(&format!("k:{}", key)))
+}
+
+fn extra_before(rows: &[(i64, f64)], py: f64) -> f64 {
+    let bh = cfg().bh;
+    let p = (py.round() as i64).min(1000);
+    let mut tot = 0.0;
+    let mut r = 0;
+    while r < p {
+        let m = rows.iter().filter(|x| x.0 == r).map(|x| x.1).fold(bh, f64::max);
+        tot += m - bh;
+        r += 1;
+    }
+    tot
+}
+
+fn extra_rows(hs: &[f64], cols: usize, row: usize) -> f64 {
+    let bh = cfg().bh;
+    let mut tot = 0.0;
+    for r in 0..row {
+        let a = r * cols;
+        let b = ((r + 1) * cols).min(hs.len());
+        if a >= b {
+            break;
+        }
+        let m = hs[a..b].iter().cloned().fold(bh, f64::max);
+        tot += m - bh;
+    }
+    tot
+}
+
+fn anchors(a: &Boxed, b: &Boxed) -> (f64, f64, f64, f64) {
+    let ha = card_h(&a.key, &a.title);
+    let hb = card_h(&b.key, &b.title);
+    let w = cfg().bw;
+    let dx = b.x - a.x;
+    let dy = b.y - a.y;
+    if dx.abs() >= dy.abs() {
+        if dx >= 0.0 {
+            (a.x + w, a.y + ha / 2.0, b.x, b.y + hb / 2.0)
+        } else {
+            (a.x, a.y + ha / 2.0, b.x + w, b.y + hb / 2.0)
+        }
+    } else if dy >= 0.0 {
+        (a.x + w / 2.0, a.y + ha, b.x + w / 2.0, b.y)
+    } else {
+        (a.x + w / 2.0, a.y, b.x + w / 2.0, b.y + hb)
     }
 }

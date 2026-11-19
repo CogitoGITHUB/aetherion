@@ -14,7 +14,7 @@ card end
 card start
 target: demo/gamma.aiu
 place: 2 0
-caption: Third page. Links to delta and alpha.
+caption: A medium caption that needs two or three lines inside this card to be read in full.
 card end
 box start
 target: demo-inner

@@ -56,12 +56,28 @@ fn declared_title(buffer: &Buffer, nodes: &[Node]) -> String {
     String::new()
 }
 
+fn declared_caption(nodes: &[Node]) -> String {
+for node in nodes {
+if let Node::Block(block) = node {
+if block.name == "title" {
+for d in &block.declarations {
+if d.keyword == "caption" {
+return d.value.trim().to_string();
+}
+}
+}
+}
+}
+String::new()
+}
+
 pub fn file_record(source: &str, text: &str) -> Record {
     let buffer = Buffer::from_text(text);
     let tree = parse(&buffer);
     Record::new(KIND, source, source)
         .with_field("kind", &declared_kind(&tree.nodes))
         .with_field("title", &declared_title(&buffer, &tree.nodes))
+        .with_field("caption", &declared_caption(&tree.nodes))
         .with_field("lines", &buffer.line_count().to_string())
         .with_field("bytes", &buffer.len().to_string())
         .with_field("blocks", &count_blocks(&tree.nodes).to_string())

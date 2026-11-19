@@ -205,9 +205,9 @@
         wl.appendChild(sv);
         lastS = s;
         s.c.forEach((c) => {
-          const d = mk("div", `position:absolute;box-sizing:border-box;left:${c.x}px;top:${c.y}px;width:${s.bw}px;height:${s.bh}px;padding:${sp(0, 10)}px ${sp(1, 12)}px;overflow:hidden;background:${fill};border:1px solid ${dim};border-radius:${rad}px`);
-          d.appendChild(mk("div", `font-size:${sp(2, 15)}px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:${fg}`, c.t));
-          if (c.d) d.appendChild(mk("div", `margin-top:3px;font-size:${sp(3, 12)}px;line-height:1.35;color:${dim};display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden`, c.d));
+          const d = mk("div", `position:absolute;box-sizing:border-box;left:${c.x}px;top:${c.y}px;width:${s.bw}px;height:${c.h || s.bh}px;padding:${sp(0, 10)}px ${sp(1, 12)}px;overflow:visible;overflow-wrap:anywhere;background:${fill};border:1px solid ${dim};border-radius:${rad}px`);
+          d.appendChild(mk("div", `font-size:${sp(2, 15)}px;font-weight:600;overflow-wrap:anywhere;color:${fg}`, c.t));
+          if (c.d) d.appendChild(mk("div", `margin-top:3px;font-size:${sp(3, 12)}px;line-height:1.35;color:${dim};overflow-wrap:anywhere`, c.d));
           wl.appendChild(d);
         });
       }

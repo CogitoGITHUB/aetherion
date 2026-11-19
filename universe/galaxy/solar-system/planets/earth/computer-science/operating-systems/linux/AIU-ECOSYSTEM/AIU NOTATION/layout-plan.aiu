@@ -146,13 +146,6 @@ engine only. One box per group: cards, arrows, spacing, text,
 scope.
 paragraph end
 
-paragraph start
-name: paragraph-layout-open
-Open, in this order. 1. Settings TUI as a ecosystem command.
-2. Zoom levels: far shows box
-titles, close shows cards. 3. Table view as a second reading of
-the same index. 4. Descriptions for plain files in no layout.
-paragraph end
 
 paragraph start
 name: paragraph-layout-decided-zoom
@@ -192,4 +185,18 @@ name: paragraph-layout-decided-zoom-settings
 Decided. The settings TUI has a zoom box: zoomcut, zoomband,
 zoomease, zoomwheel. The website reads all four. The cursor
 follows the screen order, so zoomcut can be selected.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-plain-caption
+Decided. A plain file takes its description from a caption: line
+in its own title block. The index file record holds it. A caption
+in a layout wins.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-card-height
+Decided. The height setting is the minimum card height. A card grows
+to hold its full title and caption. Rows below move down by the
+growth of the tallest card in the row above.
 paragraph end

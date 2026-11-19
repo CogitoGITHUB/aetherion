@@ -20,27 +20,34 @@ F	end-line	114
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-aiu-notation-is
-R	block	README.aiu:1037	README.aiu
+R	block	README.aiu:1005	README.aiu
 F	block	paragraph
-F	line	1037
-F	end-line	1051
+F	line	1005
+F	end-line	1020
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-the-star-means
-R	block	README.aiu:1042	README.aiu
+F	declared-name	paragraph-contracts-remind-the
+R	block	README.aiu:1011	README.aiu
 F	block	contract
-F	line	1042
-F	end-line	1045
+F	line	1011
+F	end-line	1014
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1046	README.aiu
+R	block	README.aiu:1015	README.aiu
 F	block	answer
-F	line	1046
-F	end-line	1050
+F	line	1015
+F	end-line	1019
 F	depth	2
 F	parent	paragraph
 F	declared-name	
+R	block	README.aiu:1022	README.aiu
+F	block	code
+F	line	1022
+F	end-line	1067
+F	depth	1
+F	parent	chapter
+F	declared-name	code-question-paragraph-does
 R	block	README.aiu:105	README.aiu
 F	block	contract
 F	line	105
@@ -48,34 +55,41 @@ F	end-line	108
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1053	README.aiu
+R	block	README.aiu:1069	README.aiu
 F	block	paragraph
-F	line	1053
-F	end-line	1066
+F	line	1069
+F	end-line	1083
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-star-means
+R	block	README.aiu:1074	README.aiu
+F	block	contract
+F	line	1074
+F	end-line	1077
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1078	README.aiu
+F	block	answer
+F	line	1078
+F	end-line	1082
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1085	README.aiu
+F	block	paragraph
+F	line	1085
+F	end-line	1098
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-a-question-shows
-R	block	README.aiu:1057	README.aiu
+R	block	README.aiu:1089	README.aiu
 F	block	contract
-F	line	1057
-F	end-line	1060
+F	line	1089
+F	end-line	1092
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1061	README.aiu
-F	block	answer
-F	line	1061
-F	end-line	1065
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1068	README.aiu
-F	block	code
-F	line	1068
-F	end-line	1115
-F	depth	1
-F	parent	chapter
-F	declared-name	code-paragraph-start-brake
 R	block	README.aiu:109	README.aiu
 F	block	answer
 F	line	109
@@ -83,69 +97,27 @@ F	end-line	113
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1117	README.aiu
-F	block	paragraph
-F	line	1117
-F	end-line	1133
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-opening-a-page
-R	block	README.aiu:1124	README.aiu
-F	block	contract
-F	line	1124
-F	end-line	1127
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1128	README.aiu
+R	block	README.aiu:1093	README.aiu
 F	block	answer
-F	line	1128
-F	end-line	1132
+F	line	1093
+F	end-line	1097
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1137	README.aiu
-F	block	chapter
-F	line	1137
-F	end-line	1266
-F	depth	0
-F	parent	
-F	declared-name	section-numbering
-R	block	README.aiu:1139	README.aiu
-F	block	title
-F	line	1139
+R	block	README.aiu:1100	README.aiu
+F	block	code
+F	line	1100
 F	end-line	1151
 F	depth	1
 F	parent	chapter
-F	declared-name	title-numbering
-R	block	README.aiu:1142	README.aiu
-F	block	contract
-F	line	1142
-F	end-line	1145
-F	depth	2
-F	parent	title
-F	declared-name	
-R	block	README.aiu:1146	README.aiu
-F	block	answer
-F	line	1146
-F	end-line	1150
-F	depth	2
-F	parent	title
-F	declared-name	
+F	declared-name	code-paragraph-start-brake
 R	block	README.aiu:1153	README.aiu
 F	block	paragraph
 F	line	1153
-F	end-line	1166
+F	end-line	1169
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-numbers-are-computed
-R	block	README.aiu:1157	README.aiu
-F	block	contract
-F	line	1157
-F	end-line	1160
-F	depth	2
-F	parent	paragraph
-F	declared-name	
+F	declared-name	paragraph-opening-a-page
 R	block	README.aiu:116	README.aiu
 F	block	paragraph
 F	line	116
@@ -153,76 +125,90 @@ F	end-line	131
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-two-programs-read
-R	block	README.aiu:1161	README.aiu
-F	block	answer
-F	line	1161
-F	end-line	1165
+R	block	README.aiu:1160	README.aiu
+F	block	contract
+F	line	1160
+F	end-line	1163
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1168	README.aiu
+R	block	README.aiu:1164	README.aiu
+F	block	answer
+F	line	1164
+F	end-line	1168
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1173	README.aiu
+F	block	chapter
+F	line	1173
+F	end-line	1306
+F	depth	0
+F	parent	
+F	declared-name	section-numbering
+R	block	README.aiu:1175	README.aiu
+F	block	title
+F	line	1175
+F	end-line	1187
+F	depth	1
+F	parent	chapter
+F	declared-name	title-numbering
+R	block	README.aiu:1178	README.aiu
+F	block	contract
+F	line	1178
+F	end-line	1181
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:1182	README.aiu
+F	block	answer
+F	line	1182
+F	end-line	1186
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:1189	README.aiu
 F	block	paragraph
-F	line	1168
-F	end-line	1184
+F	line	1189
+F	end-line	1202
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-numbers-are-computed
+R	block	README.aiu:1193	README.aiu
+F	block	contract
+F	line	1193
+F	end-line	1196
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1197	README.aiu
+F	block	answer
+F	line	1197
+F	end-line	1201
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1204	README.aiu
+F	block	paragraph
+F	line	1204
+F	end-line	1220
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-every-other-block
-R	block	README.aiu:1175	README.aiu
+R	block	README.aiu:1211	README.aiu
 F	block	contract
-F	line	1175
-F	end-line	1178
+F	line	1211
+F	end-line	1214
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1179	README.aiu
+R	block	README.aiu:1215	README.aiu
 F	block	answer
-F	line	1179
-F	end-line	1183
+F	line	1215
+F	end-line	1219
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1186	README.aiu
-F	block	table
-F	line	1186
-F	end-line	1211
-F	depth	1
-F	parent	chapter
-F	declared-name	table-4
-R	block	README.aiu:1191	README.aiu
-F	block	header
-F	line	1191
-F	end-line	1195
-F	depth	2
-F	parent	table
-F	declared-name	header-4
-R	block	README.aiu:1196	README.aiu
-F	block	row
-F	line	1196
-F	end-line	1200
-F	depth	2
-F	parent	table
-F	declared-name	row-53
-R	block	README.aiu:1201	README.aiu
-F	block	row
-F	line	1201
-F	end-line	1205
-F	depth	2
-F	parent	table
-F	declared-name	row-54
-R	block	README.aiu:1206	README.aiu
-F	block	row
-F	line	1206
-F	end-line	1210
-F	depth	2
-F	parent	table
-F	declared-name	row-55
-R	block	README.aiu:1213	README.aiu
-F	block	code
-F	line	1213
-F	end-line	1247
-F	depth	1
-F	parent	chapter
-F	declared-name	code-chapter-1-2nd
 R	block	README.aiu:122	README.aiu
 F	block	contract
 F	line	122
@@ -230,27 +216,48 @@ F	end-line	125
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1249	README.aiu
-F	block	paragraph
-F	line	1249
-F	end-line	1264
+R	block	README.aiu:1222	README.aiu
+F	block	table
+F	line	1222
+F	end-line	1247
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-not-numbered-title
-R	block	README.aiu:1255	README.aiu
-F	block	contract
-F	line	1255
-F	end-line	1258
+F	declared-name	table-4
+R	block	README.aiu:1227	README.aiu
+F	block	header
+F	line	1227
+F	end-line	1231
 F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1259	README.aiu
-F	block	answer
-F	line	1259
-F	end-line	1263
+F	parent	table
+F	declared-name	header-4
+R	block	README.aiu:1232	README.aiu
+F	block	row
+F	line	1232
+F	end-line	1236
 F	depth	2
-F	parent	paragraph
-F	declared-name	
+F	parent	table
+F	declared-name	row-53
+R	block	README.aiu:1237	README.aiu
+F	block	row
+F	line	1237
+F	end-line	1241
+F	depth	2
+F	parent	table
+F	declared-name	row-54
+R	block	README.aiu:1242	README.aiu
+F	block	row
+F	line	1242
+F	end-line	1246
+F	depth	2
+F	parent	table
+F	declared-name	row-55
+R	block	README.aiu:1249	README.aiu
+F	block	code
+F	line	1249
+F	end-line	1287
+F	depth	1
+F	parent	chapter
+F	declared-name	code-chapter-1-2nd
 R	block	README.aiu:126	README.aiu
 F	block	answer
 F	line	126
@@ -258,62 +265,62 @@ F	end-line	130
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1268	README.aiu
+R	block	README.aiu:1289	README.aiu
+F	block	paragraph
+F	line	1289
+F	end-line	1304
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-not-numbered-title
+R	block	README.aiu:1295	README.aiu
+F	block	contract
+F	line	1295
+F	end-line	1298
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1299	README.aiu
+F	block	answer
+F	line	1299
+F	end-line	1303
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1308	README.aiu
 F	block	chapter
-F	line	1268
-F	end-line	1653
+F	line	1308
+F	end-line	1750
 F	depth	0
 F	parent	
 F	declared-name	section-book-parts-index
-R	block	README.aiu:1270	README.aiu
+R	block	README.aiu:1310	README.aiu
 F	block	title
-F	line	1270
-F	end-line	1282
+F	line	1310
+F	end-line	1322
 F	depth	1
 F	parent	chapter
 F	declared-name	title-book-parts-index
-R	block	README.aiu:1273	README.aiu
+R	block	README.aiu:1313	README.aiu
 F	block	contract
-F	line	1273
-F	end-line	1276
+F	line	1313
+F	end-line	1316
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:1277	README.aiu
+R	block	README.aiu:1317	README.aiu
 F	block	answer
-F	line	1277
-F	end-line	1281
+F	line	1317
+F	end-line	1321
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:1284	README.aiu
+R	block	README.aiu:1324	README.aiu
 F	block	paragraph
-F	line	1284
-F	end-line	1300
+F	line	1324
+F	end-line	1340
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-book-pages-allow
-R	block	README.aiu:1291	README.aiu
-F	block	contract
-F	line	1291
-F	end-line	1294
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1295	README.aiu
-F	block	answer
-F	line	1295
-F	end-line	1299
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1302	README.aiu
-F	block	code
-F	line	1302
-F	end-line	1343
-F	depth	1
-F	parent	chapter
-F	declared-name	code-contents-start-contents
 R	block	README.aiu:133	README.aiu
 F	block	paragraph
 F	line	133
@@ -321,34 +328,27 @@ F	end-line	147
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-whatever-can-be
-R	block	README.aiu:1345	README.aiu
-F	block	paragraph
-F	line	1345
-F	end-line	1360
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-the-index-lists
-R	block	README.aiu:1351	README.aiu
+R	block	README.aiu:1331	README.aiu
 F	block	contract
-F	line	1351
-F	end-line	1354
+F	line	1331
+F	end-line	1334
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1355	README.aiu
+R	block	README.aiu:1335	README.aiu
 F	block	answer
-F	line	1355
-F	end-line	1359
+F	line	1335
+F	end-line	1339
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1362	README.aiu
+R	block	README.aiu:1342	README.aiu
 F	block	code
-F	line	1362
-F	end-line	1409
+F	line	1342
+F	end-line	1387
 F	depth	1
 F	parent	chapter
-F	declared-name	code-paragraph-start-term
+F	declared-name	code-contents-start-contents
 R	block	README.aiu:138	README.aiu
 F	block	contract
 F	line	138
@@ -356,20 +356,34 @@ F	end-line	141
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1411	README.aiu
+R	block	README.aiu:1389	README.aiu
 F	block	paragraph
-F	line	1411
-F	end-line	1427
+F	line	1389
+F	end-line	1404
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-the-edition-command
-R	block	README.aiu:1418	README.aiu
+F	declared-name	paragraph-the-index-lists
+R	block	README.aiu:1395	README.aiu
 F	block	contract
-F	line	1418
-F	end-line	1421
+F	line	1395
+F	end-line	1398
 F	depth	2
 F	parent	paragraph
 F	declared-name	
+R	block	README.aiu:1399	README.aiu
+F	block	answer
+F	line	1399
+F	end-line	1403
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1406	README.aiu
+F	block	code
+F	line	1406
+F	end-line	1457
+F	depth	1
+F	parent	chapter
+F	declared-name	code-paragraph-start-term
 R	block	README.aiu:142	README.aiu
 F	block	answer
 F	line	142
@@ -377,83 +391,34 @@ F	end-line	146
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1422	README.aiu
-F	block	answer
-F	line	1422
-F	end-line	1426
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1429	README.aiu
+R	block	README.aiu:1459	README.aiu
 F	block	paragraph
-F	line	1429
-F	end-line	1443
+F	line	1459
+F	end-line	1475
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-a-figure-shows
-R	block	README.aiu:1434	README.aiu
+F	declared-name	paragraph-the-edition-command
+R	block	README.aiu:1466	README.aiu
 F	block	contract
-F	line	1434
-F	end-line	1437
+F	line	1466
+F	end-line	1469
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1438	README.aiu
+R	block	README.aiu:1470	README.aiu
 F	block	answer
-F	line	1438
-F	end-line	1442
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1444	README.aiu
-F	block	paragraph
-F	line	1444
-F	end-line	1459
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-content-blocks-are
-R	block	README.aiu:1450	README.aiu
-F	block	contract
-F	line	1450
-F	end-line	1453
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1454	README.aiu
-F	block	answer
-F	line	1454
-F	end-line	1458
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1461	README.aiu
-F	block	paragraph
-F	line	1461
+F	line	1470
 F	end-line	1474
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-list-and-steps
-R	block	README.aiu:1465	README.aiu
-F	block	contract
-F	line	1465
-F	end-line	1468
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1469	README.aiu
-F	block	answer
-F	line	1469
-F	end-line	1473
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1476	README.aiu
+R	block	README.aiu:1477	README.aiu
 F	block	paragraph
-F	line	1476
+F	line	1477
 F	end-line	1491
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-definition-example-exercise
+F	declared-name	paragraph-a-figure-shows
 R	block	README.aiu:1482	README.aiu
 F	block	contract
 F	line	1482
@@ -478,45 +443,52 @@ F	declared-name	paragraph-this-page-is
 R	block	README.aiu:1492	README.aiu
 F	block	paragraph
 F	line	1492
-F	end-line	1511
+F	end-line	1507
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-the-pin-block
+F	declared-name	paragraph-content-blocks-are
+R	block	README.aiu:1498	README.aiu
+F	block	contract
+F	line	1498
+F	end-line	1501
+F	depth	2
+F	parent	paragraph
+F	declared-name	
 R	block	README.aiu:1502	README.aiu
-F	block	contract
-F	line	1502
-F	end-line	1505
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1506	README.aiu
 F	block	answer
-F	line	1506
-F	end-line	1510
+F	line	1502
+F	end-line	1506
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1512	README.aiu
+R	block	README.aiu:1509	README.aiu
 F	block	paragraph
-F	line	1512
-F	end-line	1530
+F	line	1509
+F	end-line	1522
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-the-hide-word
-R	block	README.aiu:1521	README.aiu
+F	declared-name	paragraph-list-and-steps
+R	block	README.aiu:1513	README.aiu
 F	block	contract
-F	line	1521
-F	end-line	1524
+F	line	1513
+F	end-line	1516
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1525	README.aiu
+R	block	README.aiu:1517	README.aiu
 F	block	answer
-F	line	1525
-F	end-line	1529
+F	line	1517
+F	end-line	1521
 F	depth	2
 F	parent	paragraph
 F	declared-name	
+R	block	README.aiu:1524	README.aiu
+F	block	paragraph
+F	line	1524
+F	end-line	1539
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-definition-example-exercise
 R	block	README.aiu:153	README.aiu
 F	block	contract
 F	line	153
@@ -524,76 +496,55 @@ F	end-line	156
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1531	README.aiu
-F	block	paragraph
-F	line	1531
-F	end-line	1543
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-the-book-structure
+R	block	README.aiu:1530	README.aiu
+F	block	contract
+F	line	1530
+F	end-line	1533
+F	depth	2
+F	parent	paragraph
+F	declared-name	
 R	block	README.aiu:1534	README.aiu
-F	block	contract
+F	block	answer
 F	line	1534
-F	end-line	1537
+F	end-line	1538
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1538	README.aiu
-F	block	answer
-F	line	1538
-F	end-line	1542
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1544	README.aiu
+R	block	README.aiu:1540	README.aiu
 F	block	paragraph
-F	line	1544
-F	end-line	1556
+F	line	1540
+F	end-line	1559
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-the-edition-numbers
-R	block	README.aiu:1547	README.aiu
+F	declared-name	paragraph-the-pin-block
+R	block	README.aiu:1550	README.aiu
 F	block	contract
-F	line	1547
-F	end-line	1550
+F	line	1550
+F	end-line	1553
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1551	README.aiu
+R	block	README.aiu:1554	README.aiu
 F	block	answer
-F	line	1551
-F	end-line	1555
+F	line	1554
+F	end-line	1558
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1557	README.aiu
+R	block	README.aiu:1560	README.aiu
 F	block	paragraph
-F	line	1557
-F	end-line	1560
+F	line	1560
+F	end-line	1578
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-the-edition-paper
-R	block	README.aiu:1561	README.aiu
-F	block	paragraph
-F	line	1561
-F	end-line	1564
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-research-blocks
-R	block	README.aiu:1565	README.aiu
-F	block	paragraph
-F	line	1565
-F	end-line	1568
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-the-aside
+F	declared-name	paragraph-the-hide-word
 R	block	README.aiu:1569	README.aiu
-F	block	paragraph
+F	block	contract
 F	line	1569
 F	end-line	1572
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-the-break
+F	depth	2
+F	parent	paragraph
+F	declared-name	
 R	block	README.aiu:157	README.aiu
 F	block	answer
 F	line	157
@@ -602,40 +553,54 @@ F	depth	2
 F	parent	paragraph
 F	declared-name	
 R	block	README.aiu:1573	README.aiu
-F	block	paragraph
-F	line	1573
-F	end-line	1576
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-the-contracts-command
-R	block	README.aiu:1577	README.aiu
-F	block	paragraph
-F	line	1577
-F	end-line	1593
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-a-pinned-block
-R	block	README.aiu:1584	README.aiu
-F	block	contract
-F	line	1584
-F	end-line	1587
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1588	README.aiu
 F	block	answer
-F	line	1588
-F	end-line	1592
+F	line	1573
+F	end-line	1577
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1595	README.aiu
+R	block	README.aiu:1579	README.aiu
 F	block	paragraph
-F	line	1595
-F	end-line	1610
+F	line	1579
+F	end-line	1591
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-a-formula-is
+F	declared-name	paragraph-the-book-structure
+R	block	README.aiu:1582	README.aiu
+F	block	contract
+F	line	1582
+F	end-line	1585
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1586	README.aiu
+F	block	answer
+F	line	1586
+F	end-line	1590
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1592	README.aiu
+F	block	paragraph
+F	line	1592
+F	end-line	1604
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-edition-numbers
+R	block	README.aiu:1595	README.aiu
+F	block	contract
+F	line	1595
+F	end-line	1598
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1599	README.aiu
+F	block	answer
+F	line	1599
+F	end-line	1603
+F	depth	2
+F	parent	paragraph
+F	declared-name	
 R	block	README.aiu:16	README.aiu
 F	block	pin
 F	line	16
@@ -643,45 +608,101 @@ F	end-line	36
 F	depth	0
 F	parent	
 F	declared-name	pin-top
-R	block	README.aiu:1601	README.aiu
-F	block	contract
-F	line	1601
-F	end-line	1604
-F	depth	2
-F	parent	paragraph
-F	declared-name	
 R	block	README.aiu:1605	README.aiu
-F	block	answer
+F	block	paragraph
 F	line	1605
-F	end-line	1609
+F	end-line	1617
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-edition-paper
+R	block	README.aiu:1608	README.aiu
+F	block	contract
+F	line	1608
+F	end-line	1611
 F	depth	2
 F	parent	paragraph
 F	declared-name	
 R	block	README.aiu:1612	README.aiu
-F	block	code
+F	block	answer
 F	line	1612
-F	end-line	1650
+F	end-line	1616
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1618	README.aiu
+F	block	paragraph
+F	line	1618
+F	end-line	1630
 F	depth	1
 F	parent	chapter
-F	declared-name	code-steps-start-open
-R	block	README.aiu:1655	README.aiu
-F	block	chapter
-F	line	1655
-F	end-line	2050
-F	depth	0
-F	parent	
-F	declared-name	section-views-and-commands
+F	declared-name	paragraph-research-blocks
+R	block	README.aiu:1621	README.aiu
+F	block	contract
+F	line	1621
+F	end-line	1624
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1625	README.aiu
+F	block	answer
+F	line	1625
+F	end-line	1629
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1631	README.aiu
+F	block	paragraph
+F	line	1631
+F	end-line	1643
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-aside
+R	block	README.aiu:1634	README.aiu
+F	block	contract
+F	line	1634
+F	end-line	1637
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1638	README.aiu
+F	block	answer
+F	line	1638
+F	end-line	1642
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1644	README.aiu
+F	block	paragraph
+F	line	1644
+F	end-line	1656
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-break
+R	block	README.aiu:1647	README.aiu
+F	block	contract
+F	line	1647
+F	end-line	1650
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1651	README.aiu
+F	block	answer
+F	line	1651
+F	end-line	1655
+F	depth	2
+F	parent	paragraph
+F	declared-name	
 R	block	README.aiu:1657	README.aiu
-F	block	title
+F	block	paragraph
 F	line	1657
 F	end-line	1669
 F	depth	1
 F	parent	chapter
-F	declared-name	title-views-and-commands
+F	declared-name	paragraph-the-contracts-command
 R	block	README.aiu:166	README.aiu
 F	block	chapter
 F	line	166
-F	end-line	264
+F	end-line	268
 F	depth	0
 F	parent	
 F	declared-name	section-a-page
@@ -690,26 +711,26 @@ F	block	contract
 F	line	1660
 F	end-line	1663
 F	depth	2
-F	parent	title
+F	parent	paragraph
 F	declared-name	
 R	block	README.aiu:1664	README.aiu
 F	block	answer
 F	line	1664
 F	end-line	1668
 F	depth	2
-F	parent	title
+F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1671	README.aiu
+R	block	README.aiu:1670	README.aiu
 F	block	paragraph
-F	line	1671
-F	end-line	1685
+F	line	1670
+F	end-line	1686
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-the-notation-binary
-R	block	README.aiu:1676	README.aiu
+F	declared-name	paragraph-a-pinned-block
+R	block	README.aiu:1677	README.aiu
 F	block	contract
-F	line	1676
-F	end-line	1679
+F	line	1677
+F	end-line	1680
 F	depth	2
 F	parent	paragraph
 F	declared-name	
@@ -720,48 +741,41 @@ F	end-line	180
 F	depth	1
 F	parent	chapter
 F	declared-name	title-a-page
-R	block	README.aiu:1680	README.aiu
+R	block	README.aiu:1681	README.aiu
 F	block	answer
-F	line	1680
-F	end-line	1684
+F	line	1681
+F	end-line	1685
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1687	README.aiu
-F	block	table
-F	line	1687
-F	end-line	1712
+R	block	README.aiu:1688	README.aiu
+F	block	paragraph
+F	line	1688
+F	end-line	1703
 F	depth	1
 F	parent	chapter
-F	declared-name	table-5
-R	block	README.aiu:1692	README.aiu
-F	block	header
-F	line	1692
-F	end-line	1696
+F	declared-name	paragraph-a-formula-is
+R	block	README.aiu:1694	README.aiu
+F	block	contract
+F	line	1694
+F	end-line	1697
 F	depth	2
-F	parent	table
-F	declared-name	header-5
-R	block	README.aiu:1697	README.aiu
-F	block	row
-F	line	1697
-F	end-line	1701
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1698	README.aiu
+F	block	answer
+F	line	1698
+F	end-line	1702
 F	depth	2
-F	parent	table
-F	declared-name	row-59
-R	block	README.aiu:1702	README.aiu
-F	block	row
-F	line	1702
-F	end-line	1706
-F	depth	2
-F	parent	table
-F	declared-name	row-60
-R	block	README.aiu:1707	README.aiu
-F	block	row
-F	line	1707
-F	end-line	1711
-F	depth	2
-F	parent	table
-F	declared-name	row-61
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1705	README.aiu
+F	block	code
+F	line	1705
+F	end-line	1747
+F	depth	1
+F	parent	chapter
+F	declared-name	code-steps-start-open
 R	block	README.aiu:171	README.aiu
 F	block	contract
 F	line	171
@@ -769,13 +783,6 @@ F	end-line	174
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:1714	README.aiu
-F	block	code
-F	line	1714
-F	end-line	1778
-F	depth	1
-F	parent	chapter
-F	declared-name	code-notation-render-file
 R	block	README.aiu:175	README.aiu
 F	block	answer
 F	line	175
@@ -783,62 +790,97 @@ F	end-line	179
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:1780	README.aiu
-F	block	paragraph
-F	line	1780
-F	end-line	1794
+R	block	README.aiu:1752	README.aiu
+F	block	chapter
+F	line	1752
+F	end-line	2151
+F	depth	0
+F	parent	
+F	declared-name	section-views-and-commands
+R	block	README.aiu:1754	README.aiu
+F	block	title
+F	line	1754
+F	end-line	1766
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-reading-mode-the
-R	block	README.aiu:1785	README.aiu
+F	declared-name	title-views-and-commands
+R	block	README.aiu:1757	README.aiu
 F	block	contract
-F	line	1785
-F	end-line	1788
+F	line	1757
+F	end-line	1760
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:1761	README.aiu
+F	block	answer
+F	line	1761
+F	end-line	1765
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:1768	README.aiu
+F	block	paragraph
+F	line	1768
+F	end-line	1782
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-notation-binary
+R	block	README.aiu:1773	README.aiu
+F	block	contract
+F	line	1773
+F	end-line	1776
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1789	README.aiu
+R	block	README.aiu:1777	README.aiu
 F	block	answer
+F	line	1777
+F	end-line	1781
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1784	README.aiu
+F	block	table
+F	line	1784
+F	end-line	1809
+F	depth	1
+F	parent	chapter
+F	declared-name	table-5
+R	block	README.aiu:1789	README.aiu
+F	block	header
 F	line	1789
 F	end-line	1793
 F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1796	README.aiu
-F	block	paragraph
-F	line	1796
-F	end-line	1810
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-the-index-command
-R	block	README.aiu:1801	README.aiu
-F	block	contract
-F	line	1801
-F	end-line	1804
+F	parent	table
+F	declared-name	header-5
+R	block	README.aiu:1794	README.aiu
+F	block	row
+F	line	1794
+F	end-line	1798
 F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1805	README.aiu
-F	block	answer
-F	line	1805
-F	end-line	1809
+F	parent	table
+F	declared-name	row-59
+R	block	README.aiu:1799	README.aiu
+F	block	row
+F	line	1799
+F	end-line	1803
 F	depth	2
-F	parent	paragraph
-F	declared-name	
+F	parent	table
+F	declared-name	row-60
+R	block	README.aiu:1804	README.aiu
+F	block	row
+F	line	1804
+F	end-line	1808
+F	depth	2
+F	parent	table
+F	declared-name	row-61
 R	block	README.aiu:1811	README.aiu
-F	block	paragraph
+F	block	code
 F	line	1811
-F	end-line	1828
+F	end-line	1879
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-the-server-load
-R	block	README.aiu:1819	README.aiu
-F	block	contract
-F	line	1819
-F	end-line	1822
-F	depth	2
-F	parent	paragraph
-F	declared-name	
+F	declared-name	code-notation-render-file
 R	block	README.aiu:182	README.aiu
 F	block	paragraph
 F	line	182
@@ -846,55 +888,6 @@ F	end-line	196
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-a-page-starts
-R	block	README.aiu:1823	README.aiu
-F	block	answer
-F	line	1823
-F	end-line	1827
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1830	README.aiu
-F	block	paragraph
-F	line	1830
-F	end-line	1850
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-the-server-reads
-R	block	README.aiu:1841	README.aiu
-F	block	contract
-F	line	1841
-F	end-line	1844
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1845	README.aiu
-F	block	answer
-F	line	1845
-F	end-line	1849
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1852	README.aiu
-F	block	paragraph
-F	line	1852
-F	end-line	1873
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-the-server-reload-git
-R	block	README.aiu:1864	README.aiu
-F	block	contract
-F	line	1864
-F	end-line	1867
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1868	README.aiu
-F	block	answer
-F	line	1868
-F	end-line	1872
-F	depth	2
-F	parent	paragraph
-F	declared-name	
 R	block	README.aiu:187	README.aiu
 F	block	contract
 F	line	187
@@ -902,13 +895,13 @@ F	end-line	190
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1875	README.aiu
+R	block	README.aiu:1881	README.aiu
 F	block	paragraph
-F	line	1875
+F	line	1881
 F	end-line	1895
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-the-server-http
+F	declared-name	paragraph-reading-mode-the
 R	block	README.aiu:1886	README.aiu
 F	block	contract
 F	line	1886
@@ -923,13 +916,13 @@ F	end-line	1894
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1896	README.aiu
+R	block	README.aiu:1897	README.aiu
 F	block	paragraph
-F	line	1896
-F	end-line	1916
+F	line	1897
+F	end-line	1911
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-the-server-websocket
+F	declared-name	paragraph-the-index-command
 R	block	README.aiu:19	README.aiu
 F	block	paragraph
 F	line	19
@@ -937,9 +930,16 @@ F	end-line	35
 F	depth	1
 F	parent	pin
 F	declared-name	paragraph-this-pin-shows
-R	block	README.aiu:1907	README.aiu
+R	block	README.aiu:1902	README.aiu
 F	block	contract
-F	line	1907
+F	line	1902
+F	end-line	1905
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:1906	README.aiu
+F	block	answer
+F	line	1906
 F	end-line	1910
 F	depth	2
 F	parent	paragraph
@@ -951,542 +951,731 @@ F	end-line	195
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1911	README.aiu
-F	block	answer
-F	line	1911
-F	end-line	1915
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:1918	README.aiu
+R	block	README.aiu:1912	README.aiu
 F	block	paragraph
-F	line	1918
-F	end-line	1938
+F	line	1912
+F	end-line	1929
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-the-notation-wasm
-R	block	README.aiu:1929	README.aiu
+F	declared-name	paragraph-the-server-load
+R	block	README.aiu:1920	README.aiu
 F	block	contract
-F	line	1929
-F	end-line	1932
+F	line	1920
+F	end-line	1923
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1933	README.aiu
+R	block	README.aiu:1924	README.aiu
 F	block	answer
-F	line	1933
-F	end-line	1937
+F	line	1924
+F	end-line	1928
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1940	README.aiu
+R	block	README.aiu:1931	README.aiu
 F	block	paragraph
-F	line	1940
-F	end-line	1960
+F	line	1931
+F	end-line	1951
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-the-website-bridge
-R	block	README.aiu:1951	README.aiu
+F	declared-name	paragraph-the-server-reads
+R	block	README.aiu:1942	README.aiu
 F	block	contract
-F	line	1951
-F	end-line	1954
+F	line	1942
+F	end-line	1945
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1955	README.aiu
+R	block	README.aiu:1946	README.aiu
 F	block	answer
-F	line	1955
-F	end-line	1959
+F	line	1946
+F	end-line	1950
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1962	README.aiu
+R	block	README.aiu:1953	README.aiu
 F	block	paragraph
-F	line	1962
-F	end-line	1982
+F	line	1953
+F	end-line	1974
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-the-website-commands
-R	block	README.aiu:1973	README.aiu
+F	declared-name	paragraph-the-server-reload-git
+R	block	README.aiu:1965	README.aiu
 F	block	contract
-F	line	1973
-F	end-line	1976
+F	line	1965
+F	end-line	1968
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:1977	README.aiu
+R	block	README.aiu:1969	README.aiu
 F	block	answer
-F	line	1977
-F	end-line	1981
+F	line	1969
+F	end-line	1973
 F	depth	2
 F	parent	paragraph
 F	declared-name	
+R	block	README.aiu:1976	README.aiu
+F	block	paragraph
+F	line	1976
+F	end-line	1996
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-server-http
 R	block	README.aiu:198	README.aiu
 F	block	code
 F	line	198
-F	end-line	246
+F	end-line	250
 F	depth	1
 F	parent	chapter
 F	declared-name	code-title-start-kind
-R	block	README.aiu:1984	README.aiu
-F	block	paragraph
-F	line	1984
-F	end-line	2007
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-the-write-commands
-R	block	README.aiu:1998	README.aiu
+R	block	README.aiu:1987	README.aiu
 F	block	contract
-F	line	1998
-F	end-line	2001
+F	line	1987
+F	end-line	1990
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2002	README.aiu
+R	block	README.aiu:1991	README.aiu
 F	block	answer
-F	line	2002
-F	end-line	2006
+F	line	1991
+F	end-line	1995
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2009	README.aiu
+R	block	README.aiu:1997	README.aiu
 F	block	paragraph
-F	line	2009
-F	end-line	2044
+F	line	1997
+F	end-line	2017
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-the-mindmap-plan
-R	block	README.aiu:2035	README.aiu
+F	declared-name	paragraph-the-server-websocket
+R	block	README.aiu:2008	README.aiu
 F	block	contract
-F	line	2035
+F	line	2008
+F	end-line	2011
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2012	README.aiu
+F	block	answer
+F	line	2012
+F	end-line	2016
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2019	README.aiu
+F	block	paragraph
+F	line	2019
+F	end-line	2039
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-notation-wasm
+R	block	README.aiu:2030	README.aiu
+F	block	contract
+F	line	2030
+F	end-line	2033
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2034	README.aiu
+F	block	answer
+F	line	2034
 F	end-line	2038
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2039	README.aiu
-F	block	answer
-F	line	2039
-F	end-line	2043
+R	block	README.aiu:2041	README.aiu
+F	block	paragraph
+F	line	2041
+F	end-line	2061
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-website-bridge
+R	block	README.aiu:2052	README.aiu
+F	block	contract
+F	line	2052
+F	end-line	2055
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2052	README.aiu
-F	block	chapter
-F	line	2052
-F	end-line	2142
-F	depth	0
-F	parent	
-F	declared-name	section-making-a-page
-R	block	README.aiu:2054	README.aiu
-F	block	title
-F	line	2054
-F	end-line	2066
-F	depth	1
-F	parent	chapter
-F	declared-name	title-making-a-page
-R	block	README.aiu:2057	README.aiu
-F	block	contract
-F	line	2057
+R	block	README.aiu:2056	README.aiu
+F	block	answer
+F	line	2056
 F	end-line	2060
 F	depth	2
-F	parent	title
+F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2061	README.aiu
-F	block	answer
-F	line	2061
-F	end-line	2065
-F	depth	2
-F	parent	title
-F	declared-name	
-R	block	README.aiu:2068	README.aiu
+R	block	README.aiu:2063	README.aiu
 F	block	paragraph
-F	line	2068
-F	end-line	2081
+F	line	2063
+F	end-line	2083
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-from-nushell-one
-R	block	README.aiu:2072	README.aiu
+F	declared-name	paragraph-the-website-commands
+R	block	README.aiu:2074	README.aiu
 F	block	contract
-F	line	2072
-F	end-line	2075
+F	line	2074
+F	end-line	2077
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2076	README.aiu
+R	block	README.aiu:2078	README.aiu
 F	block	answer
-F	line	2076
-F	end-line	2080
+F	line	2078
+F	end-line	2082
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2083	README.aiu
-F	block	code
-F	line	2083
-F	end-line	2124
-F	depth	1
-F	parent	chapter
-F	declared-name	code-title-startnkind-defaultnnamentitle
-R	block	README.aiu:2126	README.aiu
+R	block	README.aiu:2085	README.aiu
 F	block	paragraph
-F	line	2126
-F	end-line	2140
+F	line	2085
+F	end-line	2108
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-opening-runs-fill
-R	block	README.aiu:2131	README.aiu
+F	declared-name	paragraph-the-write-commands
+R	block	README.aiu:2099	README.aiu
 F	block	contract
-F	line	2131
-F	end-line	2134
+F	line	2099
+F	end-line	2102
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2135	README.aiu
+R	block	README.aiu:2103	README.aiu
 F	block	answer
-F	line	2135
+F	line	2103
+F	end-line	2107
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2110	README.aiu
+F	block	paragraph
+F	line	2110
+F	end-line	2145
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-mindmap-plan
+R	block	README.aiu:2136	README.aiu
+F	block	contract
+F	line	2136
 F	end-line	2139
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2144	README.aiu
-F	block	chapter
-F	line	2144
-F	end-line	2208
-F	depth	0
-F	parent	
-F	declared-name	section-planned-not-usable
-R	block	README.aiu:2146	README.aiu
-F	block	title
-F	line	2146
-F	end-line	2158
-F	depth	1
-F	parent	chapter
-F	declared-name	title-planned-not-usable
-R	block	README.aiu:2149	README.aiu
-F	block	contract
-F	line	2149
-F	end-line	2152
+R	block	README.aiu:2140	README.aiu
+F	block	answer
+F	line	2140
+F	end-line	2144
 F	depth	2
-F	parent	title
+F	parent	paragraph
 F	declared-name	
 R	block	README.aiu:2153	README.aiu
-F	block	answer
-F	line	2153
-F	end-line	2157
-F	depth	2
-F	parent	title
-F	declared-name	
-R	block	README.aiu:2160	README.aiu
-F	block	paragraph
-F	line	2160
-F	end-line	2174
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-links-a-target
-R	block	README.aiu:2165	README.aiu
-F	block	contract
-F	line	2165
-F	end-line	2168
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:2169	README.aiu
-F	block	answer
-F	line	2169
-F	end-line	2173
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:2176	README.aiu
-F	block	paragraph
-F	line	2176
-F	end-line	2191
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-mark-blocks-rule
-R	block	README.aiu:2182	README.aiu
-F	block	contract
-F	line	2182
-F	end-line	2185
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:2186	README.aiu
-F	block	answer
-F	line	2186
-F	end-line	2190
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:2193	README.aiu
-F	block	paragraph
-F	line	2193
-F	end-line	2206
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-idle-autosave-safe
-R	block	README.aiu:2197	README.aiu
-F	block	contract
-F	line	2197
-F	end-line	2200
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:2201	README.aiu
-F	block	answer
-F	line	2201
-F	end-line	2205
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:2210	README.aiu
 F	block	chapter
-F	line	2210
-F	end-line	2344
+F	line	2153
+F	end-line	2247
 F	depth	0
 F	parent	
-F	declared-name	section-rules-for-writing
-R	block	README.aiu:2212	README.aiu
+F	declared-name	section-making-a-page
+R	block	README.aiu:2155	README.aiu
 F	block	title
-F	line	2212
-F	end-line	2224
+F	line	2155
+F	end-line	2167
 F	depth	1
 F	parent	chapter
-F	declared-name	title-rules-for-writing
-R	block	README.aiu:2215	README.aiu
+F	declared-name	title-making-a-page
+R	block	README.aiu:2158	README.aiu
 F	block	contract
-F	line	2215
-F	end-line	2218
+F	line	2158
+F	end-line	2161
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:2219	README.aiu
+R	block	README.aiu:2162	README.aiu
 F	block	answer
-F	line	2219
-F	end-line	2223
+F	line	2162
+F	end-line	2166
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:2226	README.aiu
+R	block	README.aiu:2169	README.aiu
 F	block	paragraph
-F	line	2226
+F	line	2169
+F	end-line	2182
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-from-nushell-one
+R	block	README.aiu:2173	README.aiu
+F	block	contract
+F	line	2173
+F	end-line	2176
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2177	README.aiu
+F	block	answer
+F	line	2177
+F	end-line	2181
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2184	README.aiu
+F	block	code
+F	line	2184
+F	end-line	2229
+F	depth	1
+F	parent	chapter
+F	declared-name	code-title-startnkind-defaultnnamentitle
+R	block	README.aiu:2231	README.aiu
+F	block	paragraph
+F	line	2231
+F	end-line	2245
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-opening-runs-fill
+R	block	README.aiu:2236	README.aiu
+F	block	contract
+F	line	2236
 F	end-line	2239
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-start-every-page
-R	block	README.aiu:2230	README.aiu
-F	block	contract
-F	line	2230
-F	end-line	2233
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2234	README.aiu
+R	block	README.aiu:2240	README.aiu
 F	block	answer
-F	line	2234
-F	end-line	2238
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:2241	README.aiu
-F	block	paragraph
-F	line	2241
-F	end-line	2254
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-pick-the-kind
-R	block	README.aiu:2245	README.aiu
-F	block	contract
-F	line	2245
-F	end-line	2248
+F	line	2240
+F	end-line	2244
 F	depth	2
 F	parent	paragraph
 F	declared-name	
 R	block	README.aiu:2249	README.aiu
-F	block	answer
+F	block	chapter
 F	line	2249
-F	end-line	2253
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:2256	README.aiu
-F	block	paragraph
-F	line	2256
-F	end-line	2269
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-one-idea-per
-R	block	README.aiu:2260	README.aiu
-F	block	contract
-F	line	2260
+F	end-line	2313
+F	depth	0
+F	parent	
+F	declared-name	section-planned-not-usable
+R	block	README.aiu:2251	README.aiu
+F	block	title
+F	line	2251
 F	end-line	2263
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:2264	README.aiu
-F	block	answer
-F	line	2264
-F	end-line	2268
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:2271	README.aiu
-F	block	paragraph
-F	line	2271
-F	end-line	2284
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-never-type-numbers
-R	block	README.aiu:2275	README.aiu
+F	declared-name	title-planned-not-usable
+R	block	README.aiu:2254	README.aiu
 F	block	contract
-F	line	2275
+F	line	2254
+F	end-line	2257
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:2258	README.aiu
+F	block	answer
+F	line	2258
+F	end-line	2262
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:2265	README.aiu
+F	block	paragraph
+F	line	2265
+F	end-line	2279
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-links-a-target
+R	block	README.aiu:2270	README.aiu
+F	block	contract
+F	line	2270
+F	end-line	2273
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2274	README.aiu
+F	block	answer
+F	line	2274
 F	end-line	2278
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2279	README.aiu
-F	block	answer
-F	line	2279
-F	end-line	2283
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:2286	README.aiu
+R	block	README.aiu:2281	README.aiu
 F	block	paragraph
-F	line	2286
-F	end-line	2298
+F	line	2281
+F	end-line	2296
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-never-start-a
-R	block	README.aiu:2289	README.aiu
+F	declared-name	paragraph-mark-blocks-rule
+R	block	README.aiu:2287	README.aiu
 F	block	contract
-F	line	2289
-F	end-line	2292
+F	line	2287
+F	end-line	2290
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2293	README.aiu
+R	block	README.aiu:2291	README.aiu
 F	block	answer
-F	line	2293
-F	end-line	2297
+F	line	2291
+F	end-line	2295
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2300	README.aiu
+R	block	README.aiu:2298	README.aiu
 F	block	paragraph
-F	line	2300
-F	end-line	2313
+F	line	2298
+F	end-line	2311
 F	depth	1
 F	parent	chapter
-F	declared-name	paragraph-never-write-a
-R	block	README.aiu:2304	README.aiu
+F	declared-name	paragraph-idle-autosave-safe
+R	block	README.aiu:2302	README.aiu
 F	block	contract
-F	line	2304
-F	end-line	2307
+F	line	2302
+F	end-line	2305
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2308	README.aiu
+R	block	README.aiu:2306	README.aiu
 F	block	answer
-F	line	2308
-F	end-line	2312
+F	line	2306
+F	end-line	2310
 F	depth	2
 F	parent	paragraph
 F	declared-name	
 R	block	README.aiu:2315	README.aiu
-F	block	paragraph
+F	block	chapter
 F	line	2315
-F	end-line	2327
+F	end-line	2449
+F	depth	0
+F	parent	
+F	declared-name	section-rules-for-writing
+R	block	README.aiu:2317	README.aiu
+F	block	title
+F	line	2317
+F	end-line	2329
+F	depth	1
+F	parent	chapter
+F	declared-name	title-rules-for-writing
+R	block	README.aiu:2320	README.aiu
+F	block	contract
+F	line	2320
+F	end-line	2323
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:2324	README.aiu
+F	block	answer
+F	line	2324
+F	end-line	2328
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:2331	README.aiu
+F	block	paragraph
+F	line	2331
+F	end-line	2344
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-start-every-page
+R	block	README.aiu:2335	README.aiu
+F	block	contract
+F	line	2335
+F	end-line	2338
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2339	README.aiu
+F	block	answer
+F	line	2339
+F	end-line	2343
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2346	README.aiu
+F	block	paragraph
+F	line	2346
+F	end-line	2359
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-pick-the-kind
+R	block	README.aiu:2350	README.aiu
+F	block	contract
+F	line	2350
+F	end-line	2353
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2354	README.aiu
+F	block	answer
+F	line	2354
+F	end-line	2358
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2361	README.aiu
+F	block	paragraph
+F	line	2361
+F	end-line	2374
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-one-idea-per
+R	block	README.aiu:2365	README.aiu
+F	block	contract
+F	line	2365
+F	end-line	2368
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2369	README.aiu
+F	block	answer
+F	line	2369
+F	end-line	2373
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2376	README.aiu
+F	block	paragraph
+F	line	2376
+F	end-line	2389
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-never-type-numbers
+R	block	README.aiu:2380	README.aiu
+F	block	contract
+F	line	2380
+F	end-line	2383
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2384	README.aiu
+F	block	answer
+F	line	2384
+F	end-line	2388
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2391	README.aiu
+F	block	paragraph
+F	line	2391
+F	end-line	2403
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-never-start-a
+R	block	README.aiu:2394	README.aiu
+F	block	contract
+F	line	2394
+F	end-line	2397
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2398	README.aiu
+F	block	answer
+F	line	2398
+F	end-line	2402
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2405	README.aiu
+F	block	paragraph
+F	line	2405
+F	end-line	2418
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-never-write-a
+R	block	README.aiu:2409	README.aiu
+F	block	contract
+F	line	2409
+F	end-line	2412
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2413	README.aiu
+F	block	answer
+F	line	2413
+F	end-line	2417
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2420	README.aiu
+F	block	paragraph
+F	line	2420
+F	end-line	2432
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-give-a-name
-R	block	README.aiu:2318	README.aiu
+R	block	README.aiu:2423	README.aiu
 F	block	contract
-F	line	2318
-F	end-line	2321
+F	line	2423
+F	end-line	2426
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2322	README.aiu
+R	block	README.aiu:2427	README.aiu
 F	block	answer
-F	line	2322
-F	end-line	2326
+F	line	2427
+F	end-line	2431
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2329	README.aiu
+R	block	README.aiu:2434	README.aiu
 F	block	paragraph
-F	line	2329
-F	end-line	2342
+F	line	2434
+F	end-line	2447
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-after-writing-open
-R	block	README.aiu:2333	README.aiu
+R	block	README.aiu:2438	README.aiu
 F	block	contract
-F	line	2333
-F	end-line	2336
+F	line	2438
+F	end-line	2441
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2337	README.aiu
+R	block	README.aiu:2442	README.aiu
 F	block	answer
-F	line	2337
-F	end-line	2341
+F	line	2442
+F	end-line	2446
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:2353	README.aiu
+R	block	README.aiu:2458	README.aiu
 F	block	paragraph
-F	line	2353
-F	end-line	2361
+F	line	2458
+F	end-line	2475
 F	depth	0
 F	parent	
 F	declared-name	paragraph-master-view-map
-R	block	README.aiu:2363	README.aiu
+R	block	README.aiu:2466	README.aiu
+F	block	contract
+F	line	2466
+F	end-line	2469
+F	depth	1
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2470	README.aiu
+F	block	answer
+F	line	2470
+F	end-line	2474
+F	depth	1
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2477	README.aiu
 F	block	paragraph
-F	line	2363
-F	end-line	2370
+F	line	2477
+F	end-line	2493
 F	depth	0
 F	parent	
 F	declared-name	paragraph-master-view-look
-R	block	README.aiu:2372	README.aiu
+R	block	README.aiu:2484	README.aiu
+F	block	contract
+F	line	2484
+F	end-line	2487
+F	depth	1
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2488	README.aiu
+F	block	answer
+F	line	2488
+F	end-line	2492
+F	depth	1
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2495	README.aiu
 F	block	paragraph
-F	line	2372
-F	end-line	2379
+F	line	2495
+F	end-line	2511
 F	depth	0
 F	parent	
 F	declared-name	paragraph-master-view-tap
-R	block	README.aiu:2381	README.aiu
+R	block	README.aiu:2502	README.aiu
+F	block	contract
+F	line	2502
+F	end-line	2505
+F	depth	1
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2506	README.aiu
+F	block	answer
+F	line	2506
+F	end-line	2510
+F	depth	1
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2513	README.aiu
 F	block	paragraph
-F	line	2381
-F	end-line	2386
+F	line	2513
+F	end-line	2527
 F	depth	0
 F	parent	
 F	declared-name	paragraph-master-view-demo
-R	block	README.aiu:2388	README.aiu
+R	block	README.aiu:2518	README.aiu
+F	block	contract
+F	line	2518
+F	end-line	2521
+F	depth	1
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:252	README.aiu
 F	block	paragraph
-F	line	2388
-F	end-line	2395
-F	depth	0
-F	parent	
-F	declared-name	paragraph-master-view-settings-tui
-R	block	README.aiu:248	README.aiu
-F	block	paragraph
-F	line	248
-F	end-line	262
+F	line	252
+F	end-line	266
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-a-page-without
-R	block	README.aiu:253	README.aiu
-F	block	contract
-F	line	253
-F	end-line	256
-F	depth	2
+R	block	README.aiu:2522	README.aiu
+F	block	answer
+F	line	2522
+F	end-line	2526
+F	depth	1
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:257	README.aiu
+R	block	README.aiu:2529	README.aiu
+F	block	paragraph
+F	line	2529
+F	end-line	2545
+F	depth	0
+F	parent	
+F	declared-name	paragraph-master-view-settings-tui
+R	block	README.aiu:2536	README.aiu
+F	block	contract
+F	line	2536
+F	end-line	2539
+F	depth	1
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2540	README.aiu
 F	block	answer
+F	line	2540
+F	end-line	2544
+F	depth	1
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2547	README.aiu
+F	block	paragraph
+F	line	2547
+F	end-line	2563
+F	depth	0
+F	parent	
+F	declared-name	paragraph-master-view-plain-caption
+R	block	README.aiu:2554	README.aiu
+F	block	contract
+F	line	2554
+F	end-line	2557
+F	depth	1
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2558	README.aiu
+F	block	answer
+F	line	2558
+F	end-line	2562
+F	depth	1
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:2565	README.aiu
+F	block	paragraph
+F	line	2565
+F	end-line	2572
+F	depth	0
+F	parent	
+F	declared-name	paragraph-master-view-card-height
+R	block	README.aiu:257	README.aiu
+F	block	contract
 F	line	257
-F	end-line	261
+F	end-line	260
 F	depth	2
 F	parent	paragraph
 F	declared-name	
@@ -1497,62 +1686,62 @@ F	end-line	29
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:266	README.aiu
+R	block	README.aiu:261	README.aiu
+F	block	answer
+F	line	261
+F	end-line	265
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:270	README.aiu
 F	block	chapter
-F	line	266
-F	end-line	430
+F	line	270
+F	end-line	438
 F	depth	0
 F	parent	
 F	declared-name	section-blocks-and-syntax
-R	block	README.aiu:268	README.aiu
+R	block	README.aiu:272	README.aiu
 F	block	title
-F	line	268
-F	end-line	280
+F	line	272
+F	end-line	284
 F	depth	1
 F	parent	chapter
 F	declared-name	title-blocks-and-syntax
-R	block	README.aiu:271	README.aiu
-F	block	contract
-F	line	271
-F	end-line	274
-F	depth	2
-F	parent	title
-F	declared-name	
 R	block	README.aiu:275	README.aiu
-F	block	answer
+F	block	contract
 F	line	275
-F	end-line	279
+F	end-line	278
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:282	README.aiu
+R	block	README.aiu:279	README.aiu
+F	block	answer
+F	line	279
+F	end-line	283
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:286	README.aiu
 F	block	paragraph
-F	line	282
-F	end-line	296
+F	line	286
+F	end-line	300
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-a-block-opens
-R	block	README.aiu:287	README.aiu
-F	block	contract
-F	line	287
-F	end-line	290
-F	depth	2
-F	parent	paragraph
-F	declared-name	
 R	block	README.aiu:291	README.aiu
-F	block	answer
+F	block	contract
 F	line	291
-F	end-line	295
+F	end-line	294
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:298	README.aiu
-F	block	code
-F	line	298
-F	end-line	346
-F	depth	1
-F	parent	chapter
-F	declared-name	code-chapter-start-title
+R	block	README.aiu:295	README.aiu
+F	block	answer
+F	line	295
+F	end-line	299
+F	depth	2
+F	parent	paragraph
+F	declared-name	
 R	block	README.aiu:30	README.aiu
 F	block	answer
 F	line	30
@@ -1560,38 +1749,31 @@ F	end-line	34
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:348	README.aiu
+R	block	README.aiu:302	README.aiu
+F	block	code
+F	line	302
+F	end-line	354
+F	depth	1
+F	parent	chapter
+F	declared-name	code-chapter-start-title
+R	block	README.aiu:356	README.aiu
 F	block	paragraph
-F	line	348
-F	end-line	363
+F	line	356
+F	end-line	371
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-a-line-made
-R	block	README.aiu:354	README.aiu
+R	block	README.aiu:362	README.aiu
 F	block	contract
-F	line	354
-F	end-line	357
+F	line	362
+F	end-line	365
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:358	README.aiu
+R	block	README.aiu:366	README.aiu
 F	block	answer
-F	line	358
-F	end-line	362
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:365	README.aiu
-F	block	paragraph
-F	line	365
-F	end-line	378
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-a-blank-line
-R	block	README.aiu:369	README.aiu
-F	block	contract
-F	line	369
-F	end-line	372
+F	line	366
+F	end-line	370
 F	depth	2
 F	parent	paragraph
 F	declared-name	
@@ -1603,40 +1785,47 @@ F	depth	0
 F	parent	
 F	declared-name	pin-top-write
 R	block	README.aiu:373	README.aiu
-F	block	answer
+F	block	paragraph
 F	line	373
-F	end-line	377
+F	end-line	386
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-a-blank-line
+R	block	README.aiu:377	README.aiu
+F	block	contract
+F	line	377
+F	end-line	380
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:380	README.aiu
+R	block	README.aiu:381	README.aiu
+F	block	answer
+F	line	381
+F	end-line	385
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:388	README.aiu
 F	block	paragraph
-F	line	380
-F	end-line	394
+F	line	388
+F	end-line	402
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-code-blocks-are
-R	block	README.aiu:385	README.aiu
+R	block	README.aiu:393	README.aiu
 F	block	contract
-F	line	385
-F	end-line	388
+F	line	393
+F	end-line	396
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:389	README.aiu
+R	block	README.aiu:397	README.aiu
 F	block	answer
-F	line	389
-F	end-line	393
+F	line	397
+F	end-line	401
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:396	README.aiu
-F	block	paragraph
-F	line	396
-F	end-line	412
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-the-parser-reports
 R	block	README.aiu:40	README.aiu
 F	block	paragraph
 F	line	40
@@ -1644,97 +1833,97 @@ F	end-line	56
 F	depth	1
 F	parent	pin
 F	declared-name	paragraph-this-pin-shows-2
-R	block	README.aiu:403	README.aiu
-F	block	contract
-F	line	403
-F	end-line	406
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:407	README.aiu
-F	block	answer
-F	line	407
-F	end-line	411
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:414	README.aiu
+R	block	README.aiu:404	README.aiu
 F	block	paragraph
-F	line	414
-F	end-line	428
+F	line	404
+F	end-line	420
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-the-parser-reports
+R	block	README.aiu:411	README.aiu
+F	block	contract
+F	line	411
+F	end-line	414
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:415	README.aiu
+F	block	answer
+F	line	415
+F	end-line	419
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:422	README.aiu
+F	block	paragraph
+F	line	422
+F	end-line	436
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-the-check-also
-R	block	README.aiu:419	README.aiu
+R	block	README.aiu:427	README.aiu
 F	block	contract
-F	line	419
-F	end-line	422
+F	line	427
+F	end-line	430
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:423	README.aiu
+R	block	README.aiu:431	README.aiu
 F	block	answer
-F	line	423
-F	end-line	427
+F	line	431
+F	end-line	435
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:432	README.aiu
+R	block	README.aiu:440	README.aiu
 F	block	chapter
-F	line	432
-F	end-line	625
+F	line	440
+F	end-line	641
 F	depth	0
 F	parent	
 F	declared-name	section-block-types
-R	block	README.aiu:434	README.aiu
+R	block	README.aiu:442	README.aiu
 F	block	title
-F	line	434
-F	end-line	446
+F	line	442
+F	end-line	454
 F	depth	1
 F	parent	chapter
 F	declared-name	title-block-types
-R	block	README.aiu:437	README.aiu
+R	block	README.aiu:445	README.aiu
 F	block	contract
-F	line	437
-F	end-line	440
+F	line	445
+F	end-line	448
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:441	README.aiu
+R	block	README.aiu:449	README.aiu
 F	block	answer
-F	line	441
-F	end-line	445
+F	line	449
+F	end-line	453
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:448	README.aiu
+R	block	README.aiu:456	README.aiu
 F	block	paragraph
-F	line	448
-F	end-line	463
+F	line	456
+F	end-line	471
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-block-types-are
-R	block	README.aiu:454	README.aiu
+R	block	README.aiu:462	README.aiu
 F	block	contract
-F	line	454
-F	end-line	457
+F	line	462
+F	end-line	465
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:458	README.aiu
+R	block	README.aiu:466	README.aiu
 F	block	answer
-F	line	458
-F	end-line	462
+F	line	466
+F	end-line	470
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:465	README.aiu
-F	block	code
-F	line	465
-F	end-line	506
-F	depth	1
-F	parent	chapter
-F	declared-name	figure
 R	block	README.aiu:47	README.aiu
 F	block	contract
 F	line	47
@@ -1742,13 +1931,13 @@ F	end-line	50
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:508	README.aiu
-F	block	table
-F	line	508
-F	end-line	538
+R	block	README.aiu:473	README.aiu
+F	block	code
+F	line	473
+F	end-line	518
 F	depth	1
 F	parent	chapter
-F	declared-name	table
+F	declared-name	figure
 R	block	README.aiu:51	README.aiu
 F	block	answer
 F	line	51
@@ -1756,38 +1945,45 @@ F	end-line	55
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:514	README.aiu
-F	block	header
-F	line	514
-F	end-line	519
-F	depth	2
-F	parent	table
-F	declared-name	header
 R	block	README.aiu:520	README.aiu
-F	block	row
+F	block	table
 F	line	520
-F	end-line	525
-F	depth	2
-F	parent	table
-F	declared-name	row
+F	end-line	550
+F	depth	1
+F	parent	chapter
+F	declared-name	table
 R	block	README.aiu:526	README.aiu
-F	block	row
+F	block	header
 F	line	526
 F	end-line	531
 F	depth	2
 F	parent	table
-F	declared-name	row-2
+F	declared-name	header
 R	block	README.aiu:532	README.aiu
 F	block	row
 F	line	532
 F	end-line	537
 F	depth	2
 F	parent	table
+F	declared-name	row
+R	block	README.aiu:538	README.aiu
+F	block	row
+F	line	538
+F	end-line	543
+F	depth	2
+F	parent	table
+F	declared-name	row-2
+R	block	README.aiu:544	README.aiu
+F	block	row
+F	line	544
+F	end-line	549
+F	depth	2
+F	parent	table
 F	declared-name	row-3
-R	block	README.aiu:540	README.aiu
+R	block	README.aiu:552	README.aiu
 F	block	code
-F	line	540
-F	end-line	606
+F	line	552
+F	end-line	622
 F	depth	1
 F	parent	chapter
 F	declared-name	code-code-text-the
@@ -1805,13 +2001,6 @@ F	end-line	9
 F	depth	1
 F	parent	title
 F	declared-name	
-R	block	README.aiu:608	README.aiu
-F	block	paragraph
-F	line	608
-F	end-line	623
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-a-chapter-holds
 R	block	README.aiu:61	README.aiu
 F	block	paragraph
 F	line	61
@@ -1819,90 +2008,83 @@ F	end-line	77
 F	depth	1
 F	parent	pin
 F	declared-name	paragraph-this-pin-shows-3
-R	block	README.aiu:614	README.aiu
+R	block	README.aiu:624	README.aiu
+F	block	paragraph
+F	line	624
+F	end-line	639
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-a-chapter-holds
+R	block	README.aiu:630	README.aiu
 F	block	contract
-F	line	614
-F	end-line	617
+F	line	630
+F	end-line	633
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:618	README.aiu
+R	block	README.aiu:634	README.aiu
 F	block	answer
-F	line	618
-F	end-line	622
+F	line	634
+F	end-line	638
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:627	README.aiu
+R	block	README.aiu:643	README.aiu
 F	block	chapter
-F	line	627
-F	end-line	749
+F	line	643
+F	end-line	769
 F	depth	0
 F	parent	
 F	declared-name	section-declarations
-R	block	README.aiu:629	README.aiu
+R	block	README.aiu:645	README.aiu
 F	block	title
-F	line	629
-F	end-line	641
+F	line	645
+F	end-line	657
 F	depth	1
 F	parent	chapter
 F	declared-name	title-declarations
-R	block	README.aiu:632	README.aiu
+R	block	README.aiu:648	README.aiu
 F	block	contract
-F	line	632
-F	end-line	635
+F	line	648
+F	end-line	651
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:636	README.aiu
+R	block	README.aiu:652	README.aiu
 F	block	answer
-F	line	636
-F	end-line	640
+F	line	652
+F	end-line	656
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:643	README.aiu
+R	block	README.aiu:659	README.aiu
 F	block	table
-F	line	643
-F	end-line	673
+F	line	659
+F	end-line	689
 F	depth	1
 F	parent	chapter
 F	declared-name	table-2
-R	block	README.aiu:649	README.aiu
+R	block	README.aiu:665	README.aiu
 F	block	header
-F	line	649
-F	end-line	654
+F	line	665
+F	end-line	670
 F	depth	2
 F	parent	table
 F	declared-name	header-2
-R	block	README.aiu:655	README.aiu
+R	block	README.aiu:671	README.aiu
 F	block	row
-F	line	655
-F	end-line	660
+F	line	671
+F	end-line	676
 F	depth	2
 F	parent	table
 F	declared-name	row-22
-R	block	README.aiu:661	README.aiu
+R	block	README.aiu:677	README.aiu
 F	block	row
-F	line	661
-F	end-line	666
+F	line	677
+F	end-line	682
 F	depth	2
 F	parent	table
 F	declared-name	row-23
-R	block	README.aiu:667	README.aiu
-F	block	row
-F	line	667
-F	end-line	672
-F	depth	2
-F	parent	table
-F	declared-name	row-24
-R	block	README.aiu:675	README.aiu
-F	block	code
-F	line	675
-F	end-line	729
-F	depth	1
-F	parent	chapter
-F	declared-name	code-style-any-block
 R	block	README.aiu:68	README.aiu
 F	block	contract
 F	line	68
@@ -1910,6 +2092,20 @@ F	end-line	71
 F	depth	2
 F	parent	paragraph
 F	declared-name	
+R	block	README.aiu:683	README.aiu
+F	block	row
+F	line	683
+F	end-line	688
+F	depth	2
+F	parent	table
+F	declared-name	row-24
+R	block	README.aiu:691	README.aiu
+F	block	code
+F	line	691
+F	end-line	749
+F	depth	1
+F	parent	chapter
+F	declared-name	code-style-any-block
 R	block	README.aiu:72	README.aiu
 F	block	answer
 F	line	72
@@ -1917,83 +2113,76 @@ F	end-line	76
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:731	README.aiu
+R	block	README.aiu:751	README.aiu
 F	block	paragraph
-F	line	731
-F	end-line	747
+F	line	751
+F	end-line	767
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-rust-and-racket
-R	block	README.aiu:738	README.aiu
+R	block	README.aiu:758	README.aiu
 F	block	contract
-F	line	738
-F	end-line	741
+F	line	758
+F	end-line	761
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:742	README.aiu
+R	block	README.aiu:762	README.aiu
 F	block	answer
-F	line	742
-F	end-line	746
+F	line	762
+F	end-line	766
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:751	README.aiu
+R	block	README.aiu:771	README.aiu
 F	block	chapter
-F	line	751
-F	end-line	858
+F	line	771
+F	end-line	882
 F	depth	0
 F	parent	
 F	declared-name	section-tables
-R	block	README.aiu:753	README.aiu
+R	block	README.aiu:773	README.aiu
 F	block	title
-F	line	753
-F	end-line	765
+F	line	773
+F	end-line	785
 F	depth	1
 F	parent	chapter
 F	declared-name	title-tables
-R	block	README.aiu:756	README.aiu
+R	block	README.aiu:776	README.aiu
 F	block	contract
-F	line	756
-F	end-line	759
+F	line	776
+F	end-line	779
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:760	README.aiu
+R	block	README.aiu:780	README.aiu
 F	block	answer
-F	line	760
-F	end-line	764
+F	line	780
+F	end-line	784
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:767	README.aiu
+R	block	README.aiu:787	README.aiu
 F	block	paragraph
-F	line	767
-F	end-line	781
+F	line	787
+F	end-line	801
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-a-table-is
-R	block	README.aiu:772	README.aiu
+R	block	README.aiu:792	README.aiu
 F	block	contract
-F	line	772
-F	end-line	775
+F	line	792
+F	end-line	795
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:776	README.aiu
+R	block	README.aiu:796	README.aiu
 F	block	answer
-F	line	776
-F	end-line	780
+F	line	796
+F	end-line	800
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:783	README.aiu
-F	block	code
-F	line	783
-F	end-line	839
-F	depth	1
-F	parent	chapter
-F	declared-name	code-table-start-caption
 R	block	README.aiu:80	README.aiu
 F	block	contents
 F	line	80
@@ -2001,6 +2190,13 @@ F	end-line	82
 F	depth	0
 F	parent	
 F	declared-name	contents
+R	block	README.aiu:803	README.aiu
+F	block	code
+F	line	803
+F	end-line	863
+F	depth	1
+F	parent	chapter
+F	declared-name	code-table-start-caption
 R	block	README.aiu:84	README.aiu
 F	block	chapter
 F	line	84
@@ -2008,27 +2204,6 @@ F	end-line	164
 F	depth	0
 F	parent	
 F	declared-name	section-what-this-is
-R	block	README.aiu:841	README.aiu
-F	block	paragraph
-F	line	841
-F	end-line	856
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-a-cell-with
-R	block	README.aiu:847	README.aiu
-F	block	contract
-F	line	847
-F	end-line	850
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:851	README.aiu
-F	block	answer
-F	line	851
-F	end-line	855
-F	depth	2
-F	parent	paragraph
-F	declared-name	
 R	block	README.aiu:86	README.aiu
 F	block	title
 F	line	86
@@ -2036,55 +2211,48 @@ F	end-line	98
 F	depth	1
 F	parent	chapter
 F	declared-name	title-what-this-is
-R	block	README.aiu:860	README.aiu
+R	block	README.aiu:865	README.aiu
+F	block	paragraph
+F	line	865
+F	end-line	880
+F	depth	1
+F	parent	chapter
+F	declared-name	paragraph-a-cell-with
+R	block	README.aiu:871	README.aiu
+F	block	contract
+F	line	871
+F	end-line	874
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:875	README.aiu
+F	block	answer
+F	line	875
+F	end-line	879
+F	depth	2
+F	parent	paragraph
+F	declared-name	
+R	block	README.aiu:884	README.aiu
 F	block	chapter
-F	line	860
-F	end-line	959
+F	line	884
+F	end-line	987
 F	depth	0
 F	parent	
 F	declared-name	section-page-types
-R	block	README.aiu:862	README.aiu
+R	block	README.aiu:886	README.aiu
 F	block	title
-F	line	862
-F	end-line	874
+F	line	886
+F	end-line	898
 F	depth	1
 F	parent	chapter
 F	declared-name	title-page-types
-R	block	README.aiu:865	README.aiu
+R	block	README.aiu:889	README.aiu
 F	block	contract
-F	line	865
-F	end-line	868
+F	line	889
+F	end-line	892
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:869	README.aiu
-F	block	answer
-F	line	869
-F	end-line	873
-F	depth	2
-F	parent	title
-F	declared-name	
-R	block	README.aiu:876	README.aiu
-F	block	table
-F	line	876
-F	end-line	901
-F	depth	1
-F	parent	chapter
-F	declared-name	table-3
-R	block	README.aiu:881	README.aiu
-F	block	header
-F	line	881
-F	end-line	885
-F	depth	2
-F	parent	table
-F	declared-name	header-3
-R	block	README.aiu:886	README.aiu
-F	block	row
-F	line	886
-F	end-line	890
-F	depth	2
-F	parent	table
-F	declared-name	row-44
 R	block	README.aiu:89	README.aiu
 F	block	contract
 F	line	89
@@ -2092,24 +2260,52 @@ F	end-line	92
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:891	README.aiu
+R	block	README.aiu:893	README.aiu
+F	block	answer
+F	line	893
+F	end-line	897
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:900	README.aiu
+F	block	table
+F	line	900
+F	end-line	925
+F	depth	1
+F	parent	chapter
+F	declared-name	table-3
+R	block	README.aiu:905	README.aiu
+F	block	header
+F	line	905
+F	end-line	909
+F	depth	2
+F	parent	table
+F	declared-name	header-3
+R	block	README.aiu:910	README.aiu
 F	block	row
-F	line	891
-F	end-line	895
+F	line	910
+F	end-line	914
+F	depth	2
+F	parent	table
+F	declared-name	row-44
+R	block	README.aiu:915	README.aiu
+F	block	row
+F	line	915
+F	end-line	919
 F	depth	2
 F	parent	table
 F	declared-name	row-45
-R	block	README.aiu:896	README.aiu
+R	block	README.aiu:920	README.aiu
 F	block	row
-F	line	896
-F	end-line	900
+F	line	920
+F	end-line	924
 F	depth	2
 F	parent	table
 F	declared-name	row-46
-R	block	README.aiu:903	README.aiu
+R	block	README.aiu:927	README.aiu
 F	block	code
-F	line	903
-F	end-line	940
+F	line	927
+F	end-line	968
 F	depth	1
 F	parent	chapter
 F	declared-name	code-todo-tasks-one
@@ -2120,83 +2316,55 @@ F	end-line	97
 F	depth	2
 F	parent	title
 F	declared-name	
-R	block	README.aiu:942	README.aiu
+R	block	README.aiu:970	README.aiu
 F	block	paragraph
-F	line	942
-F	end-line	957
+F	line	970
+F	end-line	985
 F	depth	1
 F	parent	chapter
 F	declared-name	paragraph-a-page-picks
-R	block	README.aiu:948	README.aiu
+R	block	README.aiu:976	README.aiu
 F	block	contract
-F	line	948
-F	end-line	951
+F	line	976
+F	end-line	979
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:952	README.aiu
+R	block	README.aiu:980	README.aiu
 F	block	answer
-F	line	952
-F	end-line	956
+F	line	980
+F	end-line	984
 F	depth	2
 F	parent	paragraph
 F	declared-name	
-R	block	README.aiu:961	README.aiu
+R	block	README.aiu:989	README.aiu
 F	block	chapter
-F	line	961
-F	end-line	1135
+F	line	989
+F	end-line	1171
 F	depth	0
 F	parent	
 F	declared-name	section-questions-answers-and
-R	block	README.aiu:963	README.aiu
+R	block	README.aiu:991	README.aiu
 F	block	title
-F	line	963
-F	end-line	975
+F	line	991
+F	end-line	1003
 F	depth	1
 F	parent	chapter
 F	declared-name	title-questions-answers-and
-R	block	README.aiu:966	README.aiu
-F	block	contract
-F	line	966
-F	end-line	969
-F	depth	2
-F	parent	title
-F	declared-name	
-R	block	README.aiu:970	README.aiu
-F	block	answer
-F	line	970
-F	end-line	974
-F	depth	2
-F	parent	title
-F	declared-name	
-R	block	README.aiu:977	README.aiu
-F	block	paragraph
-F	line	977
-F	end-line	992
-F	depth	1
-F	parent	chapter
-F	declared-name	paragraph-contracts-remind-the
-R	block	README.aiu:983	README.aiu
-F	block	contract
-F	line	983
-F	end-line	986
-F	depth	2
-F	parent	paragraph
-F	declared-name	
-R	block	README.aiu:987	README.aiu
-F	block	answer
-F	line	987
-F	end-line	991
-F	depth	2
-F	parent	paragraph
-F	declared-name	
 R	block	README.aiu:994	README.aiu
-F	block	code
+F	block	contract
 F	line	994
-F	end-line	1035
-F	depth	1
-F	parent	chapter
-F	declared-name	code-question-paragraph-does
+F	end-line	997
+F	depth	2
+F	parent	title
+F	declared-name	
+R	block	README.aiu:998	README.aiu
+F	block	answer
+F	line	998
+F	end-line	1002
+F	depth	2
+F	parent	title
+F	declared-name	
 R	block	aiu-notation-usage-examples/aiu-business-future.aiu:1	aiu-notation-usage-examples/aiu-business-future.aiu
 F	block	title
 F	line	1
@@ -8959,6 +9127,48 @@ F	end-line	13
 F	depth	0
 F	parent	
 F	declared-name	l1-l24
+R	block	demo/plain-note.aiu:1	demo/plain-note.aiu
+F	block	title
+F	line	1
+F	end-line	15
+F	depth	0
+F	parent	
+F	declared-name	title-plain-note-caption
+R	block	demo/plain-note.aiu:10	demo/plain-note.aiu
+F	block	answer
+F	line	10
+F	end-line	14
+F	depth	1
+F	parent	title
+F	declared-name	
+R	block	demo/plain-note.aiu:17	demo/plain-note.aiu
+F	block	paragraph
+F	line	17
+F	end-line	29
+F	depth	0
+F	parent	
+F	declared-name	plain-note-body
+R	block	demo/plain-note.aiu:20	demo/plain-note.aiu
+F	block	contract
+F	line	20
+F	end-line	23
+F	depth	1
+F	parent	paragraph
+F	declared-name	
+R	block	demo/plain-note.aiu:24	demo/plain-note.aiu
+F	block	answer
+F	line	24
+F	end-line	28
+F	depth	1
+F	parent	paragraph
+F	declared-name	
+R	block	demo/plain-note.aiu:6	demo/plain-note.aiu
+F	block	contract
+F	line	6
+F	end-line	9
+F	depth	1
+F	parent	title
+F	declared-name	
 R	block	demo/tools/t01.aiu:1	demo/tools/t01.aiu
 F	block	title
 F	line	1
@@ -12392,45 +12602,59 @@ F	declared-name	paragraph-layout-decided-rules
 R	block	layout-plan.aiu:149	layout-plan.aiu
 F	block	paragraph
 F	line	149
-F	end-line	155
+F	end-line	153
 F	depth	0
 F	parent	
 F	declared-name	paragraph-layout-open
-R	block	layout-plan.aiu:157	layout-plan.aiu
+R	block	layout-plan.aiu:155	layout-plan.aiu
 F	block	paragraph
-F	line	157
-F	end-line	163
+F	line	155
+F	end-line	161
 F	depth	0
 F	parent	
 F	declared-name	paragraph-layout-decided-zoom
-R	block	layout-plan.aiu:165	layout-plan.aiu
+R	block	layout-plan.aiu:163	layout-plan.aiu
 F	block	paragraph
-F	line	165
-F	end-line	172
+F	line	163
+F	end-line	170
 F	depth	0
 F	parent	
 F	declared-name	paragraph-layout-decided-far-layout
-R	block	layout-plan.aiu:174	layout-plan.aiu
+R	block	layout-plan.aiu:172	layout-plan.aiu
 F	block	paragraph
-F	line	174
-F	end-line	179
+F	line	172
+F	end-line	177
 F	depth	0
 F	parent	
 F	declared-name	paragraph-layout-decided-far-packing
-R	block	layout-plan.aiu:181	layout-plan.aiu
+R	block	layout-plan.aiu:179	layout-plan.aiu
 F	block	paragraph
-F	line	181
-F	end-line	188
+F	line	179
+F	end-line	186
 F	depth	0
 F	parent	
 F	declared-name	paragraph-layout-decided-smooth-zoom
-R	block	layout-plan.aiu:190	layout-plan.aiu
+R	block	layout-plan.aiu:188	layout-plan.aiu
 F	block	paragraph
-F	line	190
-F	end-line	195
+F	line	188
+F	end-line	193
 F	depth	0
 F	parent	
 F	declared-name	paragraph-layout-decided-zoom-settings
+R	block	layout-plan.aiu:195	layout-plan.aiu
+F	block	paragraph
+F	line	195
+F	end-line	200
+F	depth	0
+F	parent	
+F	declared-name	paragraph-layout-decided-plain-caption
+R	block	layout-plan.aiu:202	layout-plan.aiu
+F	block	paragraph
+F	line	202
+F	end-line	207
+F	depth	0
+F	parent	
+F	declared-name	paragraph-layout-decided-card-height
 R	block	layout-plan.aiu:22	layout-plan.aiu
 F	block	paragraph
 F	line	22
@@ -12504,56 +12728,70 @@ F	declared-name	paragraph-layout-decided-home-scope
 R	block	notation/layouts/layout-demo-events.aiu:1	notation/layouts/layout-demo-events.aiu
 F	block	layout
 F	line	1
-F	end-line	100
+F	end-line	110
 F	depth	0
 F	parent	
 F	declared-name	demo-events
+R	block	notation/layouts/layout-demo-events.aiu:101	notation/layouts/layout-demo-events.aiu
+F	block	card
+F	line	101
+F	end-line	104
+F	depth	1
+F	parent	layout
+F	declared-name	
+R	block	notation/layouts/layout-demo-events.aiu:105	notation/layouts/layout-demo-events.aiu
+F	block	card
+F	line	105
+F	end-line	109
+F	depth	1
+F	parent	layout
+F	declared-name	
 R	block	notation/layouts/layout-demo-events.aiu:12	notation/layouts/layout-demo-events.aiu
 F	block	card
 F	line	12
-F	end-line	15
+F	end-line	16
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-events.aiu:16	notation/layouts/layout-demo-events.aiu
+R	block	notation/layouts/layout-demo-events.aiu:17	notation/layouts/layout-demo-events.aiu
 F	block	card
-F	line	16
-F	end-line	19
+F	line	17
+F	end-line	20
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-events.aiu:20	notation/layouts/layout-demo-events.aiu
+R	block	notation/layouts/layout-demo-events.aiu:21	notation/layouts/layout-demo-events.aiu
 F	block	card
-F	line	20
-F	end-line	23
+F	line	21
+F	end-line	24
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-events.aiu:24	notation/layouts/layout-demo-events.aiu
+R	block	notation/layouts/layout-demo-events.aiu:25	notation/layouts/layout-demo-events.aiu
 F	block	card
-F	line	24
-F	end-line	27
+F	line	25
+F	end-line	29
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-events.aiu:28	notation/layouts/layout-demo-events.aiu
+R	block	notation/layouts/layout-demo-events.aiu:30	notation/layouts/layout-demo-events.aiu
 F	block	card
-F	line	28
-F	end-line	31
+F	line	30
+F	end-line	34
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-events.aiu:32	notation/layouts/layout-demo-events.aiu
+R	block	notation/layouts/layout-demo-events.aiu:35	notation/layouts/layout-demo-events.aiu
 F	block	card
-F	line	32
-F	end-line	35
+F	line	35
+F	end-line	38
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-events.aiu:36	notation/layouts/layout-demo-events.aiu
+R	block	notation/layouts/layout-demo-events.aiu:39	notation/layouts/layout-demo-events.aiu
 F	block	card
-F	line	36
-F	end-line	39
+F	line	39
+F	end-line	43
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -12561,13 +12799,6 @@ R	block	notation/layouts/layout-demo-events.aiu:4	notation/layouts/layout-demo-e
 F	block	card
 F	line	4
 F	end-line	7
-F	depth	1
-F	parent	layout
-F	declared-name	
-R	block	notation/layouts/layout-demo-events.aiu:40	notation/layouts/layout-demo-events.aiu
-F	block	card
-F	line	40
-F	end-line	43
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -12588,49 +12819,49 @@ F	declared-name
 R	block	notation/layouts/layout-demo-events.aiu:52	notation/layouts/layout-demo-events.aiu
 F	block	card
 F	line	52
-F	end-line	55
+F	end-line	56
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-events.aiu:56	notation/layouts/layout-demo-events.aiu
+R	block	notation/layouts/layout-demo-events.aiu:57	notation/layouts/layout-demo-events.aiu
 F	block	card
-F	line	56
-F	end-line	59
+F	line	57
+F	end-line	60
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-events.aiu:60	notation/layouts/layout-demo-events.aiu
+R	block	notation/layouts/layout-demo-events.aiu:61	notation/layouts/layout-demo-events.aiu
 F	block	card
-F	line	60
-F	end-line	63
+F	line	61
+F	end-line	65
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-events.aiu:64	notation/layouts/layout-demo-events.aiu
+R	block	notation/layouts/layout-demo-events.aiu:66	notation/layouts/layout-demo-events.aiu
 F	block	card
-F	line	64
-F	end-line	67
+F	line	66
+F	end-line	70
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-events.aiu:68	notation/layouts/layout-demo-events.aiu
+R	block	notation/layouts/layout-demo-events.aiu:71	notation/layouts/layout-demo-events.aiu
 F	block	card
-F	line	68
-F	end-line	71
+F	line	71
+F	end-line	74
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-events.aiu:72	notation/layouts/layout-demo-events.aiu
+R	block	notation/layouts/layout-demo-events.aiu:75	notation/layouts/layout-demo-events.aiu
 F	block	card
-F	line	72
-F	end-line	75
+F	line	75
+F	end-line	78
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-events.aiu:76	notation/layouts/layout-demo-events.aiu
+R	block	notation/layouts/layout-demo-events.aiu:79	notation/layouts/layout-demo-events.aiu
 F	block	card
-F	line	76
-F	end-line	79
+F	line	79
+F	end-line	83
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -12638,13 +12869,6 @@ R	block	notation/layouts/layout-demo-events.aiu:8	notation/layouts/layout-demo-e
 F	block	card
 F	line	8
 F	end-line	11
-F	depth	1
-F	parent	layout
-F	declared-name	
-R	block	notation/layouts/layout-demo-events.aiu:80	notation/layouts/layout-demo-events.aiu
-F	block	card
-F	line	80
-F	end-line	83
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -12665,70 +12889,84 @@ F	declared-name
 R	block	notation/layouts/layout-demo-events.aiu:92	notation/layouts/layout-demo-events.aiu
 F	block	card
 F	line	92
-F	end-line	95
+F	end-line	96
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-events.aiu:96	notation/layouts/layout-demo-events.aiu
+R	block	notation/layouts/layout-demo-events.aiu:97	notation/layouts/layout-demo-events.aiu
 F	block	card
-F	line	96
-F	end-line	99
+F	line	97
+F	end-line	100
 F	depth	1
 F	parent	layout
 F	declared-name	
 R	block	notation/layouts/layout-demo-ideas.aiu:1	notation/layouts/layout-demo-ideas.aiu
 F	block	layout
 F	line	1
-F	end-line	100
+F	end-line	110
 F	depth	0
 F	parent	
 F	declared-name	demo-ideas
+R	block	notation/layouts/layout-demo-ideas.aiu:101	notation/layouts/layout-demo-ideas.aiu
+F	block	card
+F	line	101
+F	end-line	104
+F	depth	1
+F	parent	layout
+F	declared-name	
+R	block	notation/layouts/layout-demo-ideas.aiu:105	notation/layouts/layout-demo-ideas.aiu
+F	block	card
+F	line	105
+F	end-line	109
+F	depth	1
+F	parent	layout
+F	declared-name	
 R	block	notation/layouts/layout-demo-ideas.aiu:12	notation/layouts/layout-demo-ideas.aiu
 F	block	card
 F	line	12
-F	end-line	15
+F	end-line	16
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-ideas.aiu:16	notation/layouts/layout-demo-ideas.aiu
+R	block	notation/layouts/layout-demo-ideas.aiu:17	notation/layouts/layout-demo-ideas.aiu
 F	block	card
-F	line	16
-F	end-line	19
+F	line	17
+F	end-line	20
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-ideas.aiu:20	notation/layouts/layout-demo-ideas.aiu
+R	block	notation/layouts/layout-demo-ideas.aiu:21	notation/layouts/layout-demo-ideas.aiu
 F	block	card
-F	line	20
-F	end-line	23
+F	line	21
+F	end-line	24
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-ideas.aiu:24	notation/layouts/layout-demo-ideas.aiu
+R	block	notation/layouts/layout-demo-ideas.aiu:25	notation/layouts/layout-demo-ideas.aiu
 F	block	card
-F	line	24
-F	end-line	27
+F	line	25
+F	end-line	29
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-ideas.aiu:28	notation/layouts/layout-demo-ideas.aiu
+R	block	notation/layouts/layout-demo-ideas.aiu:30	notation/layouts/layout-demo-ideas.aiu
 F	block	card
-F	line	28
-F	end-line	31
+F	line	30
+F	end-line	34
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-ideas.aiu:32	notation/layouts/layout-demo-ideas.aiu
+R	block	notation/layouts/layout-demo-ideas.aiu:35	notation/layouts/layout-demo-ideas.aiu
 F	block	card
-F	line	32
-F	end-line	35
+F	line	35
+F	end-line	38
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-ideas.aiu:36	notation/layouts/layout-demo-ideas.aiu
+R	block	notation/layouts/layout-demo-ideas.aiu:39	notation/layouts/layout-demo-ideas.aiu
 F	block	card
-F	line	36
-F	end-line	39
+F	line	39
+F	end-line	43
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -12736,13 +12974,6 @@ R	block	notation/layouts/layout-demo-ideas.aiu:4	notation/layouts/layout-demo-id
 F	block	card
 F	line	4
 F	end-line	7
-F	depth	1
-F	parent	layout
-F	declared-name	
-R	block	notation/layouts/layout-demo-ideas.aiu:40	notation/layouts/layout-demo-ideas.aiu
-F	block	card
-F	line	40
-F	end-line	43
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -12763,49 +12994,49 @@ F	declared-name
 R	block	notation/layouts/layout-demo-ideas.aiu:52	notation/layouts/layout-demo-ideas.aiu
 F	block	card
 F	line	52
-F	end-line	55
+F	end-line	56
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-ideas.aiu:56	notation/layouts/layout-demo-ideas.aiu
+R	block	notation/layouts/layout-demo-ideas.aiu:57	notation/layouts/layout-demo-ideas.aiu
 F	block	card
-F	line	56
-F	end-line	59
+F	line	57
+F	end-line	60
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-ideas.aiu:60	notation/layouts/layout-demo-ideas.aiu
+R	block	notation/layouts/layout-demo-ideas.aiu:61	notation/layouts/layout-demo-ideas.aiu
 F	block	card
-F	line	60
-F	end-line	63
+F	line	61
+F	end-line	65
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-ideas.aiu:64	notation/layouts/layout-demo-ideas.aiu
+R	block	notation/layouts/layout-demo-ideas.aiu:66	notation/layouts/layout-demo-ideas.aiu
 F	block	card
-F	line	64
-F	end-line	67
+F	line	66
+F	end-line	70
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-ideas.aiu:68	notation/layouts/layout-demo-ideas.aiu
+R	block	notation/layouts/layout-demo-ideas.aiu:71	notation/layouts/layout-demo-ideas.aiu
 F	block	card
-F	line	68
-F	end-line	71
+F	line	71
+F	end-line	74
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-ideas.aiu:72	notation/layouts/layout-demo-ideas.aiu
+R	block	notation/layouts/layout-demo-ideas.aiu:75	notation/layouts/layout-demo-ideas.aiu
 F	block	card
-F	line	72
-F	end-line	75
+F	line	75
+F	end-line	78
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-ideas.aiu:76	notation/layouts/layout-demo-ideas.aiu
+R	block	notation/layouts/layout-demo-ideas.aiu:79	notation/layouts/layout-demo-ideas.aiu
 F	block	card
-F	line	76
-F	end-line	79
+F	line	79
+F	end-line	83
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -12813,13 +13044,6 @@ R	block	notation/layouts/layout-demo-ideas.aiu:8	notation/layouts/layout-demo-id
 F	block	card
 F	line	8
 F	end-line	11
-F	depth	1
-F	parent	layout
-F	declared-name	
-R	block	notation/layouts/layout-demo-ideas.aiu:80	notation/layouts/layout-demo-ideas.aiu
-F	block	card
-F	line	80
-F	end-line	83
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -12840,70 +13064,84 @@ F	declared-name
 R	block	notation/layouts/layout-demo-ideas.aiu:92	notation/layouts/layout-demo-ideas.aiu
 F	block	card
 F	line	92
-F	end-line	95
+F	end-line	96
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-ideas.aiu:96	notation/layouts/layout-demo-ideas.aiu
+R	block	notation/layouts/layout-demo-ideas.aiu:97	notation/layouts/layout-demo-ideas.aiu
 F	block	card
-F	line	96
-F	end-line	99
+F	line	97
+F	end-line	100
 F	depth	1
 F	parent	layout
 F	declared-name	
 R	block	notation/layouts/layout-demo-people.aiu:1	notation/layouts/layout-demo-people.aiu
 F	block	layout
 F	line	1
-F	end-line	100
+F	end-line	110
 F	depth	0
 F	parent	
 F	declared-name	demo-people
+R	block	notation/layouts/layout-demo-people.aiu:101	notation/layouts/layout-demo-people.aiu
+F	block	card
+F	line	101
+F	end-line	104
+F	depth	1
+F	parent	layout
+F	declared-name	
+R	block	notation/layouts/layout-demo-people.aiu:105	notation/layouts/layout-demo-people.aiu
+F	block	card
+F	line	105
+F	end-line	109
+F	depth	1
+F	parent	layout
+F	declared-name	
 R	block	notation/layouts/layout-demo-people.aiu:12	notation/layouts/layout-demo-people.aiu
 F	block	card
 F	line	12
-F	end-line	15
+F	end-line	16
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-people.aiu:16	notation/layouts/layout-demo-people.aiu
+R	block	notation/layouts/layout-demo-people.aiu:17	notation/layouts/layout-demo-people.aiu
 F	block	card
-F	line	16
-F	end-line	19
+F	line	17
+F	end-line	20
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-people.aiu:20	notation/layouts/layout-demo-people.aiu
+R	block	notation/layouts/layout-demo-people.aiu:21	notation/layouts/layout-demo-people.aiu
 F	block	card
-F	line	20
-F	end-line	23
+F	line	21
+F	end-line	24
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-people.aiu:24	notation/layouts/layout-demo-people.aiu
+R	block	notation/layouts/layout-demo-people.aiu:25	notation/layouts/layout-demo-people.aiu
 F	block	card
-F	line	24
-F	end-line	27
+F	line	25
+F	end-line	29
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-people.aiu:28	notation/layouts/layout-demo-people.aiu
+R	block	notation/layouts/layout-demo-people.aiu:30	notation/layouts/layout-demo-people.aiu
 F	block	card
-F	line	28
-F	end-line	31
+F	line	30
+F	end-line	34
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-people.aiu:32	notation/layouts/layout-demo-people.aiu
+R	block	notation/layouts/layout-demo-people.aiu:35	notation/layouts/layout-demo-people.aiu
 F	block	card
-F	line	32
-F	end-line	35
+F	line	35
+F	end-line	38
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-people.aiu:36	notation/layouts/layout-demo-people.aiu
+R	block	notation/layouts/layout-demo-people.aiu:39	notation/layouts/layout-demo-people.aiu
 F	block	card
-F	line	36
-F	end-line	39
+F	line	39
+F	end-line	43
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -12911,13 +13149,6 @@ R	block	notation/layouts/layout-demo-people.aiu:4	notation/layouts/layout-demo-p
 F	block	card
 F	line	4
 F	end-line	7
-F	depth	1
-F	parent	layout
-F	declared-name	
-R	block	notation/layouts/layout-demo-people.aiu:40	notation/layouts/layout-demo-people.aiu
-F	block	card
-F	line	40
-F	end-line	43
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -12938,49 +13169,49 @@ F	declared-name
 R	block	notation/layouts/layout-demo-people.aiu:52	notation/layouts/layout-demo-people.aiu
 F	block	card
 F	line	52
-F	end-line	55
+F	end-line	56
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-people.aiu:56	notation/layouts/layout-demo-people.aiu
+R	block	notation/layouts/layout-demo-people.aiu:57	notation/layouts/layout-demo-people.aiu
 F	block	card
-F	line	56
-F	end-line	59
+F	line	57
+F	end-line	60
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-people.aiu:60	notation/layouts/layout-demo-people.aiu
+R	block	notation/layouts/layout-demo-people.aiu:61	notation/layouts/layout-demo-people.aiu
 F	block	card
-F	line	60
-F	end-line	63
+F	line	61
+F	end-line	65
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-people.aiu:64	notation/layouts/layout-demo-people.aiu
+R	block	notation/layouts/layout-demo-people.aiu:66	notation/layouts/layout-demo-people.aiu
 F	block	card
-F	line	64
-F	end-line	67
+F	line	66
+F	end-line	70
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-people.aiu:68	notation/layouts/layout-demo-people.aiu
+R	block	notation/layouts/layout-demo-people.aiu:71	notation/layouts/layout-demo-people.aiu
 F	block	card
-F	line	68
-F	end-line	71
+F	line	71
+F	end-line	74
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-people.aiu:72	notation/layouts/layout-demo-people.aiu
+R	block	notation/layouts/layout-demo-people.aiu:75	notation/layouts/layout-demo-people.aiu
 F	block	card
-F	line	72
-F	end-line	75
+F	line	75
+F	end-line	78
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-people.aiu:76	notation/layouts/layout-demo-people.aiu
+R	block	notation/layouts/layout-demo-people.aiu:79	notation/layouts/layout-demo-people.aiu
 F	block	card
-F	line	76
-F	end-line	79
+F	line	79
+F	end-line	83
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -12988,13 +13219,6 @@ R	block	notation/layouts/layout-demo-people.aiu:8	notation/layouts/layout-demo-p
 F	block	card
 F	line	8
 F	end-line	11
-F	depth	1
-F	parent	layout
-F	declared-name	
-R	block	notation/layouts/layout-demo-people.aiu:80	notation/layouts/layout-demo-people.aiu
-F	block	card
-F	line	80
-F	end-line	83
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -13015,70 +13239,84 @@ F	declared-name
 R	block	notation/layouts/layout-demo-people.aiu:92	notation/layouts/layout-demo-people.aiu
 F	block	card
 F	line	92
-F	end-line	95
+F	end-line	96
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-people.aiu:96	notation/layouts/layout-demo-people.aiu
+R	block	notation/layouts/layout-demo-people.aiu:97	notation/layouts/layout-demo-people.aiu
 F	block	card
-F	line	96
-F	end-line	99
+F	line	97
+F	end-line	100
 F	depth	1
 F	parent	layout
 F	declared-name	
 R	block	notation/layouts/layout-demo-places.aiu:1	notation/layouts/layout-demo-places.aiu
 F	block	layout
 F	line	1
-F	end-line	100
+F	end-line	110
 F	depth	0
 F	parent	
 F	declared-name	demo-places
+R	block	notation/layouts/layout-demo-places.aiu:101	notation/layouts/layout-demo-places.aiu
+F	block	card
+F	line	101
+F	end-line	104
+F	depth	1
+F	parent	layout
+F	declared-name	
+R	block	notation/layouts/layout-demo-places.aiu:105	notation/layouts/layout-demo-places.aiu
+F	block	card
+F	line	105
+F	end-line	109
+F	depth	1
+F	parent	layout
+F	declared-name	
 R	block	notation/layouts/layout-demo-places.aiu:12	notation/layouts/layout-demo-places.aiu
 F	block	card
 F	line	12
-F	end-line	15
+F	end-line	16
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-places.aiu:16	notation/layouts/layout-demo-places.aiu
+R	block	notation/layouts/layout-demo-places.aiu:17	notation/layouts/layout-demo-places.aiu
 F	block	card
-F	line	16
-F	end-line	19
+F	line	17
+F	end-line	20
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-places.aiu:20	notation/layouts/layout-demo-places.aiu
+R	block	notation/layouts/layout-demo-places.aiu:21	notation/layouts/layout-demo-places.aiu
 F	block	card
-F	line	20
-F	end-line	23
+F	line	21
+F	end-line	24
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-places.aiu:24	notation/layouts/layout-demo-places.aiu
+R	block	notation/layouts/layout-demo-places.aiu:25	notation/layouts/layout-demo-places.aiu
 F	block	card
-F	line	24
-F	end-line	27
+F	line	25
+F	end-line	29
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-places.aiu:28	notation/layouts/layout-demo-places.aiu
+R	block	notation/layouts/layout-demo-places.aiu:30	notation/layouts/layout-demo-places.aiu
 F	block	card
-F	line	28
-F	end-line	31
+F	line	30
+F	end-line	34
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-places.aiu:32	notation/layouts/layout-demo-places.aiu
+R	block	notation/layouts/layout-demo-places.aiu:35	notation/layouts/layout-demo-places.aiu
 F	block	card
-F	line	32
-F	end-line	35
+F	line	35
+F	end-line	38
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-places.aiu:36	notation/layouts/layout-demo-places.aiu
+R	block	notation/layouts/layout-demo-places.aiu:39	notation/layouts/layout-demo-places.aiu
 F	block	card
-F	line	36
-F	end-line	39
+F	line	39
+F	end-line	43
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -13086,13 +13324,6 @@ R	block	notation/layouts/layout-demo-places.aiu:4	notation/layouts/layout-demo-p
 F	block	card
 F	line	4
 F	end-line	7
-F	depth	1
-F	parent	layout
-F	declared-name	
-R	block	notation/layouts/layout-demo-places.aiu:40	notation/layouts/layout-demo-places.aiu
-F	block	card
-F	line	40
-F	end-line	43
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -13113,49 +13344,49 @@ F	declared-name
 R	block	notation/layouts/layout-demo-places.aiu:52	notation/layouts/layout-demo-places.aiu
 F	block	card
 F	line	52
-F	end-line	55
+F	end-line	56
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-places.aiu:56	notation/layouts/layout-demo-places.aiu
+R	block	notation/layouts/layout-demo-places.aiu:57	notation/layouts/layout-demo-places.aiu
 F	block	card
-F	line	56
-F	end-line	59
+F	line	57
+F	end-line	60
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-places.aiu:60	notation/layouts/layout-demo-places.aiu
+R	block	notation/layouts/layout-demo-places.aiu:61	notation/layouts/layout-demo-places.aiu
 F	block	card
-F	line	60
-F	end-line	63
+F	line	61
+F	end-line	65
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-places.aiu:64	notation/layouts/layout-demo-places.aiu
+R	block	notation/layouts/layout-demo-places.aiu:66	notation/layouts/layout-demo-places.aiu
 F	block	card
-F	line	64
-F	end-line	67
+F	line	66
+F	end-line	70
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-places.aiu:68	notation/layouts/layout-demo-places.aiu
+R	block	notation/layouts/layout-demo-places.aiu:71	notation/layouts/layout-demo-places.aiu
 F	block	card
-F	line	68
-F	end-line	71
+F	line	71
+F	end-line	74
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-places.aiu:72	notation/layouts/layout-demo-places.aiu
+R	block	notation/layouts/layout-demo-places.aiu:75	notation/layouts/layout-demo-places.aiu
 F	block	card
-F	line	72
-F	end-line	75
+F	line	75
+F	end-line	78
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-places.aiu:76	notation/layouts/layout-demo-places.aiu
+R	block	notation/layouts/layout-demo-places.aiu:79	notation/layouts/layout-demo-places.aiu
 F	block	card
-F	line	76
-F	end-line	79
+F	line	79
+F	end-line	83
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -13163,13 +13394,6 @@ R	block	notation/layouts/layout-demo-places.aiu:8	notation/layouts/layout-demo-p
 F	block	card
 F	line	8
 F	end-line	11
-F	depth	1
-F	parent	layout
-F	declared-name	
-R	block	notation/layouts/layout-demo-places.aiu:80	notation/layouts/layout-demo-places.aiu
-F	block	card
-F	line	80
-F	end-line	83
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -13190,70 +13414,84 @@ F	declared-name
 R	block	notation/layouts/layout-demo-places.aiu:92	notation/layouts/layout-demo-places.aiu
 F	block	card
 F	line	92
-F	end-line	95
+F	end-line	96
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-places.aiu:96	notation/layouts/layout-demo-places.aiu
+R	block	notation/layouts/layout-demo-places.aiu:97	notation/layouts/layout-demo-places.aiu
 F	block	card
-F	line	96
-F	end-line	99
+F	line	97
+F	end-line	100
 F	depth	1
 F	parent	layout
 F	declared-name	
 R	block	notation/layouts/layout-demo-tools.aiu:1	notation/layouts/layout-demo-tools.aiu
 F	block	layout
 F	line	1
-F	end-line	100
+F	end-line	110
 F	depth	0
 F	parent	
 F	declared-name	demo-tools
+R	block	notation/layouts/layout-demo-tools.aiu:101	notation/layouts/layout-demo-tools.aiu
+F	block	card
+F	line	101
+F	end-line	104
+F	depth	1
+F	parent	layout
+F	declared-name	
+R	block	notation/layouts/layout-demo-tools.aiu:105	notation/layouts/layout-demo-tools.aiu
+F	block	card
+F	line	105
+F	end-line	109
+F	depth	1
+F	parent	layout
+F	declared-name	
 R	block	notation/layouts/layout-demo-tools.aiu:12	notation/layouts/layout-demo-tools.aiu
 F	block	card
 F	line	12
-F	end-line	15
+F	end-line	16
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-tools.aiu:16	notation/layouts/layout-demo-tools.aiu
+R	block	notation/layouts/layout-demo-tools.aiu:17	notation/layouts/layout-demo-tools.aiu
 F	block	card
-F	line	16
-F	end-line	19
+F	line	17
+F	end-line	20
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-tools.aiu:20	notation/layouts/layout-demo-tools.aiu
+R	block	notation/layouts/layout-demo-tools.aiu:21	notation/layouts/layout-demo-tools.aiu
 F	block	card
-F	line	20
-F	end-line	23
+F	line	21
+F	end-line	24
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-tools.aiu:24	notation/layouts/layout-demo-tools.aiu
+R	block	notation/layouts/layout-demo-tools.aiu:25	notation/layouts/layout-demo-tools.aiu
 F	block	card
-F	line	24
-F	end-line	27
+F	line	25
+F	end-line	29
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-tools.aiu:28	notation/layouts/layout-demo-tools.aiu
+R	block	notation/layouts/layout-demo-tools.aiu:30	notation/layouts/layout-demo-tools.aiu
 F	block	card
-F	line	28
-F	end-line	31
+F	line	30
+F	end-line	34
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-tools.aiu:32	notation/layouts/layout-demo-tools.aiu
+R	block	notation/layouts/layout-demo-tools.aiu:35	notation/layouts/layout-demo-tools.aiu
 F	block	card
-F	line	32
-F	end-line	35
+F	line	35
+F	end-line	38
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-tools.aiu:36	notation/layouts/layout-demo-tools.aiu
+R	block	notation/layouts/layout-demo-tools.aiu:39	notation/layouts/layout-demo-tools.aiu
 F	block	card
-F	line	36
-F	end-line	39
+F	line	39
+F	end-line	43
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -13261,13 +13499,6 @@ R	block	notation/layouts/layout-demo-tools.aiu:4	notation/layouts/layout-demo-to
 F	block	card
 F	line	4
 F	end-line	7
-F	depth	1
-F	parent	layout
-F	declared-name	
-R	block	notation/layouts/layout-demo-tools.aiu:40	notation/layouts/layout-demo-tools.aiu
-F	block	card
-F	line	40
-F	end-line	43
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -13288,49 +13519,49 @@ F	declared-name
 R	block	notation/layouts/layout-demo-tools.aiu:52	notation/layouts/layout-demo-tools.aiu
 F	block	card
 F	line	52
-F	end-line	55
+F	end-line	56
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-tools.aiu:56	notation/layouts/layout-demo-tools.aiu
+R	block	notation/layouts/layout-demo-tools.aiu:57	notation/layouts/layout-demo-tools.aiu
 F	block	card
-F	line	56
-F	end-line	59
+F	line	57
+F	end-line	60
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-tools.aiu:60	notation/layouts/layout-demo-tools.aiu
+R	block	notation/layouts/layout-demo-tools.aiu:61	notation/layouts/layout-demo-tools.aiu
 F	block	card
-F	line	60
-F	end-line	63
+F	line	61
+F	end-line	65
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-tools.aiu:64	notation/layouts/layout-demo-tools.aiu
+R	block	notation/layouts/layout-demo-tools.aiu:66	notation/layouts/layout-demo-tools.aiu
 F	block	card
-F	line	64
-F	end-line	67
+F	line	66
+F	end-line	70
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-tools.aiu:68	notation/layouts/layout-demo-tools.aiu
+R	block	notation/layouts/layout-demo-tools.aiu:71	notation/layouts/layout-demo-tools.aiu
 F	block	card
-F	line	68
-F	end-line	71
+F	line	71
+F	end-line	74
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-tools.aiu:72	notation/layouts/layout-demo-tools.aiu
+R	block	notation/layouts/layout-demo-tools.aiu:75	notation/layouts/layout-demo-tools.aiu
 F	block	card
-F	line	72
-F	end-line	75
+F	line	75
+F	end-line	78
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-tools.aiu:76	notation/layouts/layout-demo-tools.aiu
+R	block	notation/layouts/layout-demo-tools.aiu:79	notation/layouts/layout-demo-tools.aiu
 F	block	card
-F	line	76
-F	end-line	79
+F	line	79
+F	end-line	83
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -13338,13 +13569,6 @@ R	block	notation/layouts/layout-demo-tools.aiu:8	notation/layouts/layout-demo-to
 F	block	card
 F	line	8
 F	end-line	11
-F	depth	1
-F	parent	layout
-F	declared-name	
-R	block	notation/layouts/layout-demo-tools.aiu:80	notation/layouts/layout-demo-tools.aiu
-F	block	card
-F	line	80
-F	end-line	83
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -13365,14 +13589,14 @@ F	declared-name
 R	block	notation/layouts/layout-demo-tools.aiu:92	notation/layouts/layout-demo-tools.aiu
 F	block	card
 F	line	92
-F	end-line	95
+F	end-line	96
 F	depth	1
 F	parent	layout
 F	declared-name	
-R	block	notation/layouts/layout-demo-tools.aiu:96	notation/layouts/layout-demo-tools.aiu
+R	block	notation/layouts/layout-demo-tools.aiu:97	notation/layouts/layout-demo-tools.aiu
 F	block	card
-F	line	96
-F	end-line	99
+F	line	97
+F	end-line	100
 F	depth	1
 F	parent	layout
 F	declared-name	
@@ -15248,15 +15472,15 @@ F	declared-name
 R	file	README.aiu	README.aiu
 F	kind	default
 F	title	AIU NOTATION: everything it can do
-F	place	
-F	lines	2395
-F	bytes	66772
-F	blocks	314
+F	caption	
+F	lines	2572
+F	bytes	70821
+F	blocks	338
 F	errors	0
 R	file	aiu-notation-usage-examples/aiu-business-future.aiu	aiu-notation-usage-examples/aiu-business-future.aiu
 F	kind	default
 F	title	A I U   B U S I N E S S   F U T U R E
-F	place	
+F	caption	
 F	lines	2242
 F	bytes	54259
 F	blocks	494
@@ -15264,7 +15488,7 @@ F	errors	0
 R	file	demo/alpha.aiu	demo/alpha.aiu
 F	kind	
 F	title	Demo Alpha
-F	place	
+F	caption	
 F	lines	19
 F	bytes	220
 F	blocks	4
@@ -15272,7 +15496,7 @@ F	errors	0
 R	file	demo/beta.aiu	demo/beta.aiu
 F	kind	
 F	title	Demo Beta
-F	place	
+F	caption	
 F	lines	19
 F	bytes	219
 F	blocks	4
@@ -15280,7 +15504,7 @@ F	errors	0
 R	file	demo/delta.aiu	demo/delta.aiu
 F	kind	
 F	title	Demo Delta
-F	place	
+F	caption	
 F	lines	19
 F	bytes	224
 F	blocks	4
@@ -15288,7 +15512,7 @@ F	errors	0
 R	file	demo/epsilon.aiu	demo/epsilon.aiu
 F	kind	
 F	title	Demo Epsilon
-F	place	
+F	caption	
 F	lines	19
 F	bytes	226
 F	blocks	4
@@ -15296,7 +15520,7 @@ F	errors	0
 R	file	demo/events/e01.aiu	demo/events/e01.aiu
 F	kind	
 F	title	Demo events 01
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15304,7 +15528,7 @@ F	errors	0
 R	file	demo/events/e02.aiu	demo/events/e02.aiu
 F	kind	
 F	title	Demo events 02
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15312,7 +15536,7 @@ F	errors	0
 R	file	demo/events/e03.aiu	demo/events/e03.aiu
 F	kind	
 F	title	Demo events 03
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15320,7 +15544,7 @@ F	errors	0
 R	file	demo/events/e04.aiu	demo/events/e04.aiu
 F	kind	
 F	title	Demo events 04
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15328,7 +15552,7 @@ F	errors	0
 R	file	demo/events/e05.aiu	demo/events/e05.aiu
 F	kind	
 F	title	Demo events 05
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -15336,7 +15560,7 @@ F	errors	0
 R	file	demo/events/e06.aiu	demo/events/e06.aiu
 F	kind	
 F	title	Demo events 06
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15344,7 +15568,7 @@ F	errors	0
 R	file	demo/events/e07.aiu	demo/events/e07.aiu
 F	kind	
 F	title	Demo events 07
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15352,7 +15576,7 @@ F	errors	0
 R	file	demo/events/e08.aiu	demo/events/e08.aiu
 F	kind	
 F	title	Demo events 08
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -15360,7 +15584,7 @@ F	errors	0
 R	file	demo/events/e09.aiu	demo/events/e09.aiu
 F	kind	
 F	title	Demo events 09
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -15368,7 +15592,7 @@ F	errors	0
 R	file	demo/events/e10.aiu	demo/events/e10.aiu
 F	kind	
 F	title	Demo events 10
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15376,7 +15600,7 @@ F	errors	0
 R	file	demo/events/e11.aiu	demo/events/e11.aiu
 F	kind	
 F	title	Demo events 11
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15384,7 +15608,7 @@ F	errors	0
 R	file	demo/events/e12.aiu	demo/events/e12.aiu
 F	kind	
 F	title	Demo events 12
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -15392,7 +15616,7 @@ F	errors	0
 R	file	demo/events/e13.aiu	demo/events/e13.aiu
 F	kind	
 F	title	Demo events 13
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15400,7 +15624,7 @@ F	errors	0
 R	file	demo/events/e14.aiu	demo/events/e14.aiu
 F	kind	
 F	title	Demo events 14
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15408,7 +15632,7 @@ F	errors	0
 R	file	demo/events/e15.aiu	demo/events/e15.aiu
 F	kind	
 F	title	Demo events 15
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -15416,7 +15640,7 @@ F	errors	0
 R	file	demo/events/e16.aiu	demo/events/e16.aiu
 F	kind	
 F	title	Demo events 16
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15424,7 +15648,7 @@ F	errors	0
 R	file	demo/events/e17.aiu	demo/events/e17.aiu
 F	kind	
 F	title	Demo events 17
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -15432,7 +15656,7 @@ F	errors	0
 R	file	demo/events/e18.aiu	demo/events/e18.aiu
 F	kind	
 F	title	Demo events 18
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15440,7 +15664,7 @@ F	errors	0
 R	file	demo/events/e19.aiu	demo/events/e19.aiu
 F	kind	
 F	title	Demo events 19
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15448,7 +15672,7 @@ F	errors	0
 R	file	demo/events/e20.aiu	demo/events/e20.aiu
 F	kind	
 F	title	Demo events 20
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15456,7 +15680,7 @@ F	errors	0
 R	file	demo/events/e21.aiu	demo/events/e21.aiu
 F	kind	
 F	title	Demo events 21
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15464,7 +15688,7 @@ F	errors	0
 R	file	demo/events/e22.aiu	demo/events/e22.aiu
 F	kind	
 F	title	Demo events 22
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15472,7 +15696,7 @@ F	errors	0
 R	file	demo/events/e23.aiu	demo/events/e23.aiu
 F	kind	
 F	title	Demo events 23
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -15480,7 +15704,7 @@ F	errors	0
 R	file	demo/events/e24.aiu	demo/events/e24.aiu
 F	kind	
 F	title	Demo events 24
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15488,7 +15712,7 @@ F	errors	0
 R	file	demo/gamma.aiu	demo/gamma.aiu
 F	kind	
 F	title	Demo Gamma
-F	place	
+F	caption	
 F	lines	19
 F	bytes	221
 F	blocks	4
@@ -15496,7 +15720,7 @@ F	errors	0
 R	file	demo/ideas/i01.aiu	demo/ideas/i01.aiu
 F	kind	
 F	title	Demo ideas 01
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -15504,7 +15728,7 @@ F	errors	0
 R	file	demo/ideas/i02.aiu	demo/ideas/i02.aiu
 F	kind	
 F	title	Demo ideas 02
-F	place	
+F	caption	
 F	lines	26
 F	bytes	299
 F	blocks	5
@@ -15512,7 +15736,7 @@ F	errors	0
 R	file	demo/ideas/i03.aiu	demo/ideas/i03.aiu
 F	kind	
 F	title	Demo ideas 03
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -15520,7 +15744,7 @@ F	errors	0
 R	file	demo/ideas/i04.aiu	demo/ideas/i04.aiu
 F	kind	
 F	title	Demo ideas 04
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -15528,7 +15752,7 @@ F	errors	0
 R	file	demo/ideas/i05.aiu	demo/ideas/i05.aiu
 F	kind	
 F	title	Demo ideas 05
-F	place	
+F	caption	
 F	lines	26
 F	bytes	299
 F	blocks	5
@@ -15536,7 +15760,7 @@ F	errors	0
 R	file	demo/ideas/i06.aiu	demo/ideas/i06.aiu
 F	kind	
 F	title	Demo ideas 06
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -15544,7 +15768,7 @@ F	errors	0
 R	file	demo/ideas/i07.aiu	demo/ideas/i07.aiu
 F	kind	
 F	title	Demo ideas 07
-F	place	
+F	caption	
 F	lines	26
 F	bytes	299
 F	blocks	5
@@ -15552,7 +15776,7 @@ F	errors	0
 R	file	demo/ideas/i08.aiu	demo/ideas/i08.aiu
 F	kind	
 F	title	Demo ideas 08
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -15560,7 +15784,7 @@ F	errors	0
 R	file	demo/ideas/i09.aiu	demo/ideas/i09.aiu
 F	kind	
 F	title	Demo ideas 09
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -15568,7 +15792,7 @@ F	errors	0
 R	file	demo/ideas/i10.aiu	demo/ideas/i10.aiu
 F	kind	
 F	title	Demo ideas 10
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -15576,7 +15800,7 @@ F	errors	0
 R	file	demo/ideas/i11.aiu	demo/ideas/i11.aiu
 F	kind	
 F	title	Demo ideas 11
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -15584,7 +15808,7 @@ F	errors	0
 R	file	demo/ideas/i12.aiu	demo/ideas/i12.aiu
 F	kind	
 F	title	Demo ideas 12
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -15592,7 +15816,7 @@ F	errors	0
 R	file	demo/ideas/i13.aiu	demo/ideas/i13.aiu
 F	kind	
 F	title	Demo ideas 13
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -15600,7 +15824,7 @@ F	errors	0
 R	file	demo/ideas/i14.aiu	demo/ideas/i14.aiu
 F	kind	
 F	title	Demo ideas 14
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -15608,7 +15832,7 @@ F	errors	0
 R	file	demo/ideas/i15.aiu	demo/ideas/i15.aiu
 F	kind	
 F	title	Demo ideas 15
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -15616,7 +15840,7 @@ F	errors	0
 R	file	demo/ideas/i16.aiu	demo/ideas/i16.aiu
 F	kind	
 F	title	Demo ideas 16
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -15624,7 +15848,7 @@ F	errors	0
 R	file	demo/ideas/i17.aiu	demo/ideas/i17.aiu
 F	kind	
 F	title	Demo ideas 17
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -15632,7 +15856,7 @@ F	errors	0
 R	file	demo/ideas/i18.aiu	demo/ideas/i18.aiu
 F	kind	
 F	title	Demo ideas 18
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -15640,7 +15864,7 @@ F	errors	0
 R	file	demo/ideas/i19.aiu	demo/ideas/i19.aiu
 F	kind	
 F	title	Demo ideas 19
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -15648,7 +15872,7 @@ F	errors	0
 R	file	demo/ideas/i20.aiu	demo/ideas/i20.aiu
 F	kind	
 F	title	Demo ideas 20
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -15656,7 +15880,7 @@ F	errors	0
 R	file	demo/ideas/i21.aiu	demo/ideas/i21.aiu
 F	kind	
 F	title	Demo ideas 21
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -15664,7 +15888,7 @@ F	errors	0
 R	file	demo/ideas/i22.aiu	demo/ideas/i22.aiu
 F	kind	
 F	title	Demo ideas 22
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -15672,7 +15896,7 @@ F	errors	0
 R	file	demo/ideas/i23.aiu	demo/ideas/i23.aiu
 F	kind	
 F	title	Demo ideas 23
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -15680,7 +15904,7 @@ F	errors	0
 R	file	demo/ideas/i24.aiu	demo/ideas/i24.aiu
 F	kind	
 F	title	Demo ideas 24
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -15688,7 +15912,7 @@ F	errors	0
 R	file	demo/live-link.aiu	demo/live-link.aiu
 F	kind	
 F	title	
-F	place	
+F	caption	
 F	lines	6
 F	bytes	78
 F	blocks	1
@@ -15696,7 +15920,7 @@ F	errors	1
 R	file	demo/live-src.aiu	demo/live-src.aiu
 F	kind	
 F	title	
-F	place	
+F	caption	
 F	lines	4
 F	bytes	57
 F	blocks	1
@@ -15704,7 +15928,7 @@ F	errors	1
 R	file	demo/people/p01.aiu	demo/people/p01.aiu
 F	kind	
 F	title	Demo people 01
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15712,7 +15936,7 @@ F	errors	0
 R	file	demo/people/p02.aiu	demo/people/p02.aiu
 F	kind	
 F	title	Demo people 02
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15720,7 +15944,7 @@ F	errors	0
 R	file	demo/people/p03.aiu	demo/people/p03.aiu
 F	kind	
 F	title	Demo people 03
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15728,7 +15952,7 @@ F	errors	0
 R	file	demo/people/p04.aiu	demo/people/p04.aiu
 F	kind	
 F	title	Demo people 04
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -15736,7 +15960,7 @@ F	errors	0
 R	file	demo/people/p05.aiu	demo/people/p05.aiu
 F	kind	
 F	title	Demo people 05
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -15744,7 +15968,7 @@ F	errors	0
 R	file	demo/people/p06.aiu	demo/people/p06.aiu
 F	kind	
 F	title	Demo people 06
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -15752,7 +15976,7 @@ F	errors	0
 R	file	demo/people/p07.aiu	demo/people/p07.aiu
 F	kind	
 F	title	Demo people 07
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15760,7 +15984,7 @@ F	errors	0
 R	file	demo/people/p08.aiu	demo/people/p08.aiu
 F	kind	
 F	title	Demo people 08
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -15768,7 +15992,7 @@ F	errors	0
 R	file	demo/people/p09.aiu	demo/people/p09.aiu
 F	kind	
 F	title	Demo people 09
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15776,7 +16000,7 @@ F	errors	0
 R	file	demo/people/p10.aiu	demo/people/p10.aiu
 F	kind	
 F	title	Demo people 10
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -15784,7 +16008,7 @@ F	errors	0
 R	file	demo/people/p11.aiu	demo/people/p11.aiu
 F	kind	
 F	title	Demo people 11
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15792,7 +16016,7 @@ F	errors	0
 R	file	demo/people/p12.aiu	demo/people/p12.aiu
 F	kind	
 F	title	Demo people 12
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15800,7 +16024,7 @@ F	errors	0
 R	file	demo/people/p13.aiu	demo/people/p13.aiu
 F	kind	
 F	title	Demo people 13
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15808,7 +16032,7 @@ F	errors	0
 R	file	demo/people/p14.aiu	demo/people/p14.aiu
 F	kind	
 F	title	Demo people 14
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15816,7 +16040,7 @@ F	errors	0
 R	file	demo/people/p15.aiu	demo/people/p15.aiu
 F	kind	
 F	title	Demo people 15
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15824,7 +16048,7 @@ F	errors	0
 R	file	demo/people/p16.aiu	demo/people/p16.aiu
 F	kind	
 F	title	Demo people 16
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15832,7 +16056,7 @@ F	errors	0
 R	file	demo/people/p17.aiu	demo/people/p17.aiu
 F	kind	
 F	title	Demo people 17
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15840,7 +16064,7 @@ F	errors	0
 R	file	demo/people/p18.aiu	demo/people/p18.aiu
 F	kind	
 F	title	Demo people 18
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15848,7 +16072,7 @@ F	errors	0
 R	file	demo/people/p19.aiu	demo/people/p19.aiu
 F	kind	
 F	title	Demo people 19
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15856,7 +16080,7 @@ F	errors	0
 R	file	demo/people/p20.aiu	demo/people/p20.aiu
 F	kind	
 F	title	Demo people 20
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15864,7 +16088,7 @@ F	errors	0
 R	file	demo/people/p21.aiu	demo/people/p21.aiu
 F	kind	
 F	title	Demo people 21
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15872,7 +16096,7 @@ F	errors	0
 R	file	demo/people/p22.aiu	demo/people/p22.aiu
 F	kind	
 F	title	Demo people 22
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -15880,7 +16104,7 @@ F	errors	0
 R	file	demo/people/p23.aiu	demo/people/p23.aiu
 F	kind	
 F	title	Demo people 23
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15888,7 +16112,7 @@ F	errors	0
 R	file	demo/people/p24.aiu	demo/people/p24.aiu
 F	kind	
 F	title	Demo people 24
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15896,7 +16120,7 @@ F	errors	0
 R	file	demo/places/l01.aiu	demo/places/l01.aiu
 F	kind	
 F	title	Demo places 01
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15904,7 +16128,7 @@ F	errors	0
 R	file	demo/places/l02.aiu	demo/places/l02.aiu
 F	kind	
 F	title	Demo places 02
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15912,7 +16136,7 @@ F	errors	0
 R	file	demo/places/l03.aiu	demo/places/l03.aiu
 F	kind	
 F	title	Demo places 03
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15920,7 +16144,7 @@ F	errors	0
 R	file	demo/places/l04.aiu	demo/places/l04.aiu
 F	kind	
 F	title	Demo places 04
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -15928,7 +16152,7 @@ F	errors	0
 R	file	demo/places/l05.aiu	demo/places/l05.aiu
 F	kind	
 F	title	Demo places 05
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15936,7 +16160,7 @@ F	errors	0
 R	file	demo/places/l06.aiu	demo/places/l06.aiu
 F	kind	
 F	title	Demo places 06
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15944,7 +16168,7 @@ F	errors	0
 R	file	demo/places/l07.aiu	demo/places/l07.aiu
 F	kind	
 F	title	Demo places 07
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15952,7 +16176,7 @@ F	errors	0
 R	file	demo/places/l08.aiu	demo/places/l08.aiu
 F	kind	
 F	title	Demo places 08
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15960,7 +16184,7 @@ F	errors	0
 R	file	demo/places/l09.aiu	demo/places/l09.aiu
 F	kind	
 F	title	Demo places 09
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15968,7 +16192,7 @@ F	errors	0
 R	file	demo/places/l10.aiu	demo/places/l10.aiu
 F	kind	
 F	title	Demo places 10
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -15976,7 +16200,7 @@ F	errors	0
 R	file	demo/places/l11.aiu	demo/places/l11.aiu
 F	kind	
 F	title	Demo places 11
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -15984,7 +16208,7 @@ F	errors	0
 R	file	demo/places/l12.aiu	demo/places/l12.aiu
 F	kind	
 F	title	Demo places 12
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -15992,7 +16216,7 @@ F	errors	0
 R	file	demo/places/l13.aiu	demo/places/l13.aiu
 F	kind	
 F	title	Demo places 13
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
@@ -16000,7 +16224,7 @@ F	errors	0
 R	file	demo/places/l14.aiu	demo/places/l14.aiu
 F	kind	
 F	title	Demo places 14
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -16008,7 +16232,7 @@ F	errors	0
 R	file	demo/places/l15.aiu	demo/places/l15.aiu
 F	kind	
 F	title	Demo places 15
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -16016,7 +16240,7 @@ F	errors	0
 R	file	demo/places/l16.aiu	demo/places/l16.aiu
 F	kind	
 F	title	Demo places 16
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -16024,7 +16248,7 @@ F	errors	0
 R	file	demo/places/l17.aiu	demo/places/l17.aiu
 F	kind	
 F	title	Demo places 17
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -16032,7 +16256,7 @@ F	errors	0
 R	file	demo/places/l18.aiu	demo/places/l18.aiu
 F	kind	
 F	title	Demo places 18
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -16040,7 +16264,7 @@ F	errors	0
 R	file	demo/places/l19.aiu	demo/places/l19.aiu
 F	kind	
 F	title	Demo places 19
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -16048,7 +16272,7 @@ F	errors	0
 R	file	demo/places/l20.aiu	demo/places/l20.aiu
 F	kind	
 F	title	Demo places 20
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -16056,7 +16280,7 @@ F	errors	0
 R	file	demo/places/l21.aiu	demo/places/l21.aiu
 F	kind	
 F	title	Demo places 21
-F	place	
+F	caption	
 F	lines	26
 F	bytes	303
 F	blocks	5
@@ -16064,7 +16288,7 @@ F	errors	0
 R	file	demo/places/l22.aiu	demo/places/l22.aiu
 F	kind	
 F	title	Demo places 22
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -16072,7 +16296,7 @@ F	errors	0
 R	file	demo/places/l23.aiu	demo/places/l23.aiu
 F	kind	
 F	title	Demo places 23
-F	place	
+F	caption	
 F	lines	20
 F	bytes	232
 F	blocks	4
@@ -16080,15 +16304,23 @@ F	errors	0
 R	file	demo/places/l24.aiu	demo/places/l24.aiu
 F	kind	
 F	title	Demo places 24
-F	place	
+F	caption	
 F	lines	26
 F	bytes	304
 F	blocks	5
 F	errors	0
+R	file	demo/plain-note.aiu	demo/plain-note.aiu
+F	kind	note
+F	title	Plain note caption: A file in no layout. Its description is its own caption.
+F	caption	
+F	lines	29
+F	bytes	583
+F	blocks	6
+F	errors	0
 R	file	demo/tools/t01.aiu	demo/tools/t01.aiu
 F	kind	
 F	title	Demo tools 01
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16096,7 +16328,7 @@ F	errors	0
 R	file	demo/tools/t02.aiu	demo/tools/t02.aiu
 F	kind	
 F	title	Demo tools 02
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16104,7 +16336,7 @@ F	errors	0
 R	file	demo/tools/t03.aiu	demo/tools/t03.aiu
 F	kind	
 F	title	Demo tools 03
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16112,7 +16344,7 @@ F	errors	0
 R	file	demo/tools/t04.aiu	demo/tools/t04.aiu
 F	kind	
 F	title	Demo tools 04
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16120,7 +16352,7 @@ F	errors	0
 R	file	demo/tools/t05.aiu	demo/tools/t05.aiu
 F	kind	
 F	title	Demo tools 05
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16128,7 +16360,7 @@ F	errors	0
 R	file	demo/tools/t06.aiu	demo/tools/t06.aiu
 F	kind	
 F	title	Demo tools 06
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16136,7 +16368,7 @@ F	errors	0
 R	file	demo/tools/t07.aiu	demo/tools/t07.aiu
 F	kind	
 F	title	Demo tools 07
-F	place	
+F	caption	
 F	lines	26
 F	bytes	299
 F	blocks	5
@@ -16144,7 +16376,7 @@ F	errors	0
 R	file	demo/tools/t08.aiu	demo/tools/t08.aiu
 F	kind	
 F	title	Demo tools 08
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -16152,7 +16384,7 @@ F	errors	0
 R	file	demo/tools/t09.aiu	demo/tools/t09.aiu
 F	kind	
 F	title	Demo tools 09
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16160,7 +16392,7 @@ F	errors	0
 R	file	demo/tools/t10.aiu	demo/tools/t10.aiu
 F	kind	
 F	title	Demo tools 10
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16168,7 +16400,7 @@ F	errors	0
 R	file	demo/tools/t11.aiu	demo/tools/t11.aiu
 F	kind	
 F	title	Demo tools 11
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -16176,7 +16408,7 @@ F	errors	0
 R	file	demo/tools/t12.aiu	demo/tools/t12.aiu
 F	kind	
 F	title	Demo tools 12
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16184,7 +16416,7 @@ F	errors	0
 R	file	demo/tools/t13.aiu	demo/tools/t13.aiu
 F	kind	
 F	title	Demo tools 13
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16192,7 +16424,7 @@ F	errors	0
 R	file	demo/tools/t14.aiu	demo/tools/t14.aiu
 F	kind	
 F	title	Demo tools 14
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16200,7 +16432,7 @@ F	errors	0
 R	file	demo/tools/t15.aiu	demo/tools/t15.aiu
 F	kind	
 F	title	Demo tools 15
-F	place	
+F	caption	
 F	lines	26
 F	bytes	299
 F	blocks	5
@@ -16208,7 +16440,7 @@ F	errors	0
 R	file	demo/tools/t16.aiu	demo/tools/t16.aiu
 F	kind	
 F	title	Demo tools 16
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -16216,7 +16448,7 @@ F	errors	0
 R	file	demo/tools/t17.aiu	demo/tools/t17.aiu
 F	kind	
 F	title	Demo tools 17
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16224,7 +16456,7 @@ F	errors	0
 R	file	demo/tools/t18.aiu	demo/tools/t18.aiu
 F	kind	
 F	title	Demo tools 18
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16232,7 +16464,7 @@ F	errors	0
 R	file	demo/tools/t19.aiu	demo/tools/t19.aiu
 F	kind	
 F	title	Demo tools 19
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16240,7 +16472,7 @@ F	errors	0
 R	file	demo/tools/t20.aiu	demo/tools/t20.aiu
 F	kind	
 F	title	Demo tools 20
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -16248,7 +16480,7 @@ F	errors	0
 R	file	demo/tools/t21.aiu	demo/tools/t21.aiu
 F	kind	
 F	title	Demo tools 21
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16256,7 +16488,7 @@ F	errors	0
 R	file	demo/tools/t22.aiu	demo/tools/t22.aiu
 F	kind	
 F	title	Demo tools 22
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16264,7 +16496,7 @@ F	errors	0
 R	file	demo/tools/t23.aiu	demo/tools/t23.aiu
 F	kind	
 F	title	Demo tools 23
-F	place	
+F	caption	
 F	lines	20
 F	bytes	228
 F	blocks	4
@@ -16272,7 +16504,7 @@ F	errors	0
 R	file	demo/tools/t24.aiu	demo/tools/t24.aiu
 F	kind	
 F	title	Demo tools 24
-F	place	
+F	caption	
 F	lines	26
 F	bytes	300
 F	blocks	5
@@ -16280,7 +16512,7 @@ F	errors	0
 R	file	future-work.aiu	future-work.aiu
 F	kind	default
 F	title	Future work: books, sciences, skills and the todo
-F	place	
+F	caption	
 F	lines	1866
 F	bytes	53252
 F	blocks	380
@@ -16288,55 +16520,55 @@ F	errors	0
 R	file	layout-plan.aiu	layout-plan.aiu
 F	kind	
 F	title	Layout plan
-F	place	
-F	lines	195
-F	bytes	7147
-F	blocks	23
+F	caption	
+F	lines	207
+F	bytes	7474
+F	blocks	25
 F	errors	0
 R	file	notation/layouts/layout-demo-events.aiu	notation/layouts/layout-demo-events.aiu
 F	kind	
 F	title	
-F	place	
-F	lines	100
-F	bytes	1503
+F	caption	
+F	lines	110
+F	bytes	2850
 F	blocks	25
 F	errors	1
 R	file	notation/layouts/layout-demo-ideas.aiu	notation/layouts/layout-demo-ideas.aiu
 F	kind	
 F	title	
-F	place	
-F	lines	100
-F	bytes	1477
+F	caption	
+F	lines	110
+F	bytes	2824
 F	blocks	25
 F	errors	1
 R	file	notation/layouts/layout-demo-people.aiu	notation/layouts/layout-demo-people.aiu
 F	kind	
 F	title	
-F	place	
-F	lines	100
-F	bytes	1503
+F	caption	
+F	lines	110
+F	bytes	2850
 F	blocks	25
 F	errors	1
 R	file	notation/layouts/layout-demo-places.aiu	notation/layouts/layout-demo-places.aiu
 F	kind	
 F	title	
-F	place	
-F	lines	100
-F	bytes	1503
+F	caption	
+F	lines	110
+F	bytes	2850
 F	blocks	25
 F	errors	1
 R	file	notation/layouts/layout-demo-tools.aiu	notation/layouts/layout-demo-tools.aiu
 F	kind	
 F	title	
-F	place	
-F	lines	100
-F	bytes	1477
+F	caption	
+F	lines	110
+F	bytes	2824
 F	blocks	25
 F	errors	1
 R	file	notation/layouts/layout-demo-world.aiu	notation/layouts/layout-demo-world.aiu
 F	kind	
 F	title	
-F	place	
+F	caption	
 F	lines	24
 F	bytes	335
 F	blocks	6
@@ -16344,7 +16576,7 @@ F	errors	1
 R	file	notation/layouts/layout-inner.aiu	notation/layouts/layout-inner.aiu
 F	kind	
 F	title	
-F	place	
+F	caption	
 F	lines	14
 F	bytes	304
 F	blocks	3
@@ -16352,15 +16584,15 @@ F	errors	1
 R	file	notation/layouts/layout-main.aiu	notation/layouts/layout-main.aiu
 F	kind	
 F	title	
-F	place	
+F	caption	
 F	lines	23
-F	bytes	462
+F	bytes	508
 F	blocks	5
 F	errors	1
 R	file	notation/layouts/layout-settings.aiu	notation/layouts/layout-settings.aiu
 F	kind	
 F	title	
-F	place	
+F	caption	
 F	lines	18
 F	bytes	210
 F	blocks	1
@@ -16368,7 +16600,7 @@ F	errors	1
 R	file	notation/types/book.aiu	notation/types/book.aiu
 F	kind	book
 F	title	Book page: a chapter on how notes become pages
-F	place	
+F	caption	
 F	lines	52
 F	bytes	1188
 F	blocks	13
@@ -16376,7 +16608,7 @@ F	errors	0
 R	file	notation/types/comment.aiu	notation/types/comment.aiu
 F	kind	default
 F	title	Comments and todo marks on blocks
-F	place	
+F	caption	
 F	lines	59
 F	bytes	1564
 F	blocks	16
@@ -16384,7 +16616,7 @@ F	errors	0
 R	file	notation/types/decision.aiu	notation/types/decision.aiu
 F	kind	decision
 F	title	Decision page: keep every note as a plain text file
-F	place	
+F	caption	
 F	lines	83
 F	bytes	2025
 F	blocks	21
@@ -16392,7 +16624,7 @@ F	errors	0
 R	file	notation/types/default.aiu	notation/types/default.aiu
 F	kind	default
 F	title	Default page: every block in one place
-F	place	
+F	caption	
 F	lines	54
 F	bytes	1080
 F	blocks	14
@@ -16400,7 +16632,7 @@ F	errors	0
 R	file	notation/types/journal.aiu	notation/types/journal.aiu
 F	kind	journal
 F	title	Journal page: a week in the workshop
-F	place	
+F	caption	
 F	lines	36
 F	bytes	1043
 F	blocks	9
@@ -16408,7 +16640,7 @@ F	errors	0
 R	file	notation/types/module.aiu	notation/types/module.aiu
 F	kind	module
 F	title	Module page: a tiny function explained before its code
-F	place	
+F	caption	
 F	lines	49
 F	bytes	1141
 F	blocks	12
@@ -16416,7 +16648,7 @@ F	errors	0
 R	file	notation/types/note.aiu	notation/types/note.aiu
 F	kind	note
 F	title	Note page: one idea, said once
-F	place	
+F	caption	
 F	lines	28
 F	bytes	740
 F	blocks	6
@@ -16424,7 +16656,7 @@ F	errors	0
 R	file	notation/types/plan.aiu	notation/types/plan.aiu
 F	kind	plan
 F	title	Plan page: ship the first public release
-F	place	
+F	caption	
 F	lines	84
 F	bytes	1813
 F	blocks	21
@@ -16432,7 +16664,7 @@ F	errors	0
 R	file	notation/types/research.aiu	notation/types/research.aiu
 F	kind	research
 F	title	Research page: does plain text make notes easier to find
-F	place	
+F	caption	
 F	lines	113
 F	bytes	2843
 F	blocks	29
@@ -16440,7 +16672,7 @@ F	errors	0
 R	file	notation/types/todo.aiu	notation/types/todo.aiu
 F	kind	todo
 F	title	Todo page: tasks with marks, notes and answers
-F	place	
+F	caption	
 F	lines	67
 F	bytes	1773
 F	blocks	17
@@ -16448,7 +16680,7 @@ F	errors	0
 R	file	question-pages-plan.aiu	question-pages-plan.aiu
 F	kind	default
 F	title	Plan: aiu notation contracts
-F	place	
+F	caption	
 F	lines	372
 F	bytes	15328
 F	blocks	94
@@ -16460,55 +16692,69 @@ F	place
 F	layout	demo-events
 F	caption	Folder events with 24 linked pages.
 F	line	1
+R	layout-item	notation/layouts/layout-demo-events.aiu:101	notation/layouts/layout-demo-events.aiu
+F	what	card
+F	target	demo/events/e23.aiu
+F	place	2 4
+F	layout	demo-events
+F	caption	
+F	line	101
+R	layout-item	notation/layouts/layout-demo-events.aiu:105	notation/layouts/layout-demo-events.aiu
+F	what	card
+F	target	demo/events/e24.aiu
+F	place	3 4
+F	layout	demo-events
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	105
 R	layout-item	notation/layouts/layout-demo-events.aiu:12	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e03.aiu
 F	place	2 0
 F	layout	demo-events
-F	caption	
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
 F	line	12
-R	layout-item	notation/layouts/layout-demo-events.aiu:16	notation/layouts/layout-demo-events.aiu
+R	layout-item	notation/layouts/layout-demo-events.aiu:17	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e04.aiu
 F	place	3 0
 F	layout	demo-events
 F	caption	
-F	line	16
-R	layout-item	notation/layouts/layout-demo-events.aiu:20	notation/layouts/layout-demo-events.aiu
+F	line	17
+R	layout-item	notation/layouts/layout-demo-events.aiu:21	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e05.aiu
 F	place	4 0
 F	layout	demo-events
 F	caption	
-F	line	20
-R	layout-item	notation/layouts/layout-demo-events.aiu:24	notation/layouts/layout-demo-events.aiu
+F	line	21
+R	layout-item	notation/layouts/layout-demo-events.aiu:25	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e06.aiu
 F	place	0 1
 F	layout	demo-events
-F	caption	
-F	line	24
-R	layout-item	notation/layouts/layout-demo-events.aiu:28	notation/layouts/layout-demo-events.aiu
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	25
+R	layout-item	notation/layouts/layout-demo-events.aiu:30	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e07.aiu
 F	place	1 1
 F	layout	demo-events
-F	caption	
-F	line	28
-R	layout-item	notation/layouts/layout-demo-events.aiu:32	notation/layouts/layout-demo-events.aiu
+F	caption	A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
+F	line	30
+R	layout-item	notation/layouts/layout-demo-events.aiu:35	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e08.aiu
 F	place	2 1
 F	layout	demo-events
 F	caption	
-F	line	32
-R	layout-item	notation/layouts/layout-demo-events.aiu:36	notation/layouts/layout-demo-events.aiu
+F	line	35
+R	layout-item	notation/layouts/layout-demo-events.aiu:39	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e09.aiu
 F	place	3 1
 F	layout	demo-events
-F	caption	
-F	line	36
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	39
 R	layout-item	notation/layouts/layout-demo-events.aiu:4	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e01.aiu
@@ -16516,76 +16762,69 @@ F	place	0 0
 F	layout	demo-events
 F	caption	
 F	line	4
-R	layout-item	notation/layouts/layout-demo-events.aiu:40	notation/layouts/layout-demo-events.aiu
+R	layout-item	notation/layouts/layout-demo-events.aiu:44	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e10.aiu
 F	place	4 1
 F	layout	demo-events
 F	caption	
-F	line	40
-R	layout-item	notation/layouts/layout-demo-events.aiu:44	notation/layouts/layout-demo-events.aiu
+F	line	44
+R	layout-item	notation/layouts/layout-demo-events.aiu:48	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e11.aiu
 F	place	0 2
 F	layout	demo-events
 F	caption	
-F	line	44
-R	layout-item	notation/layouts/layout-demo-events.aiu:48	notation/layouts/layout-demo-events.aiu
+F	line	48
+R	layout-item	notation/layouts/layout-demo-events.aiu:52	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e12.aiu
 F	place	1 2
 F	layout	demo-events
-F	caption	
-F	line	48
-R	layout-item	notation/layouts/layout-demo-events.aiu:52	notation/layouts/layout-demo-events.aiu
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	52
+R	layout-item	notation/layouts/layout-demo-events.aiu:57	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e13.aiu
 F	place	2 2
 F	layout	demo-events
 F	caption	
-F	line	52
-R	layout-item	notation/layouts/layout-demo-events.aiu:56	notation/layouts/layout-demo-events.aiu
+F	line	57
+R	layout-item	notation/layouts/layout-demo-events.aiu:61	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e14.aiu
 F	place	3 2
 F	layout	demo-events
-F	caption	
-F	line	56
-R	layout-item	notation/layouts/layout-demo-events.aiu:60	notation/layouts/layout-demo-events.aiu
+F	caption	A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
+F	line	61
+R	layout-item	notation/layouts/layout-demo-events.aiu:66	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e15.aiu
 F	place	4 2
 F	layout	demo-events
-F	caption	
-F	line	60
-R	layout-item	notation/layouts/layout-demo-events.aiu:64	notation/layouts/layout-demo-events.aiu
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	66
+R	layout-item	notation/layouts/layout-demo-events.aiu:71	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e16.aiu
 F	place	0 3
 F	layout	demo-events
 F	caption	
-F	line	64
-R	layout-item	notation/layouts/layout-demo-events.aiu:68	notation/layouts/layout-demo-events.aiu
+F	line	71
+R	layout-item	notation/layouts/layout-demo-events.aiu:75	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e17.aiu
 F	place	1 3
 F	layout	demo-events
 F	caption	
-F	line	68
-R	layout-item	notation/layouts/layout-demo-events.aiu:72	notation/layouts/layout-demo-events.aiu
+F	line	75
+R	layout-item	notation/layouts/layout-demo-events.aiu:79	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e18.aiu
 F	place	2 3
 F	layout	demo-events
-F	caption	
-F	line	72
-R	layout-item	notation/layouts/layout-demo-events.aiu:76	notation/layouts/layout-demo-events.aiu
-F	what	card
-F	target	demo/events/e19.aiu
-F	place	3 3
-F	layout	demo-events
-F	caption	
-F	line	76
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	79
 R	layout-item	notation/layouts/layout-demo-events.aiu:8	notation/layouts/layout-demo-events.aiu
 F	what	card
 F	target	demo/events/e02.aiu
@@ -16593,41 +16832,34 @@ F	place	1 0
 F	layout	demo-events
 F	caption	
 F	line	8
-R	layout-item	notation/layouts/layout-demo-events.aiu:80	notation/layouts/layout-demo-events.aiu
-F	what	card
-F	target	demo/events/e20.aiu
-F	place	4 3
-F	layout	demo-events
-F	caption	
-F	line	80
 R	layout-item	notation/layouts/layout-demo-events.aiu:84	notation/layouts/layout-demo-events.aiu
 F	what	card
-F	target	demo/events/e21.aiu
-F	place	0 4
+F	target	demo/events/e19.aiu
+F	place	3 3
 F	layout	demo-events
 F	caption	
 F	line	84
 R	layout-item	notation/layouts/layout-demo-events.aiu:88	notation/layouts/layout-demo-events.aiu
 F	what	card
-F	target	demo/events/e22.aiu
-F	place	1 4
+F	target	demo/events/e20.aiu
+F	place	4 3
 F	layout	demo-events
 F	caption	
 F	line	88
 R	layout-item	notation/layouts/layout-demo-events.aiu:92	notation/layouts/layout-demo-events.aiu
 F	what	card
-F	target	demo/events/e23.aiu
-F	place	2 4
+F	target	demo/events/e21.aiu
+F	place	0 4
 F	layout	demo-events
-F	caption	
+F	caption	A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
 F	line	92
-R	layout-item	notation/layouts/layout-demo-events.aiu:96	notation/layouts/layout-demo-events.aiu
+R	layout-item	notation/layouts/layout-demo-events.aiu:97	notation/layouts/layout-demo-events.aiu
 F	what	card
-F	target	demo/events/e24.aiu
-F	place	3 4
+F	target	demo/events/e22.aiu
+F	place	1 4
 F	layout	demo-events
 F	caption	
-F	line	96
+F	line	97
 R	layout-item	notation/layouts/layout-demo-ideas.aiu:1	notation/layouts/layout-demo-ideas.aiu
 F	what	layout
 F	target	
@@ -16635,55 +16867,69 @@ F	place
 F	layout	demo-ideas
 F	caption	Folder ideas with 24 linked pages.
 F	line	1
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:101	notation/layouts/layout-demo-ideas.aiu
+F	what	card
+F	target	demo/ideas/i23.aiu
+F	place	2 4
+F	layout	demo-ideas
+F	caption	
+F	line	101
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:105	notation/layouts/layout-demo-ideas.aiu
+F	what	card
+F	target	demo/ideas/i24.aiu
+F	place	3 4
+F	layout	demo-ideas
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	105
 R	layout-item	notation/layouts/layout-demo-ideas.aiu:12	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i03.aiu
 F	place	2 0
 F	layout	demo-ideas
-F	caption	
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
 F	line	12
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:16	notation/layouts/layout-demo-ideas.aiu
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:17	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i04.aiu
 F	place	3 0
 F	layout	demo-ideas
 F	caption	
-F	line	16
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:20	notation/layouts/layout-demo-ideas.aiu
+F	line	17
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:21	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i05.aiu
 F	place	4 0
 F	layout	demo-ideas
 F	caption	
-F	line	20
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:24	notation/layouts/layout-demo-ideas.aiu
+F	line	21
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:25	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i06.aiu
 F	place	0 1
 F	layout	demo-ideas
-F	caption	
-F	line	24
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:28	notation/layouts/layout-demo-ideas.aiu
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	25
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:30	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i07.aiu
 F	place	1 1
 F	layout	demo-ideas
-F	caption	
-F	line	28
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:32	notation/layouts/layout-demo-ideas.aiu
+F	caption	A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
+F	line	30
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:35	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i08.aiu
 F	place	2 1
 F	layout	demo-ideas
 F	caption	
-F	line	32
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:36	notation/layouts/layout-demo-ideas.aiu
+F	line	35
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:39	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i09.aiu
 F	place	3 1
 F	layout	demo-ideas
-F	caption	
-F	line	36
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	39
 R	layout-item	notation/layouts/layout-demo-ideas.aiu:4	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i01.aiu
@@ -16691,76 +16937,69 @@ F	place	0 0
 F	layout	demo-ideas
 F	caption	
 F	line	4
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:40	notation/layouts/layout-demo-ideas.aiu
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:44	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i10.aiu
 F	place	4 1
 F	layout	demo-ideas
 F	caption	
-F	line	40
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:44	notation/layouts/layout-demo-ideas.aiu
+F	line	44
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:48	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i11.aiu
 F	place	0 2
 F	layout	demo-ideas
 F	caption	
-F	line	44
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:48	notation/layouts/layout-demo-ideas.aiu
+F	line	48
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:52	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i12.aiu
 F	place	1 2
 F	layout	demo-ideas
-F	caption	
-F	line	48
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:52	notation/layouts/layout-demo-ideas.aiu
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	52
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:57	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i13.aiu
 F	place	2 2
 F	layout	demo-ideas
 F	caption	
-F	line	52
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:56	notation/layouts/layout-demo-ideas.aiu
+F	line	57
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:61	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i14.aiu
 F	place	3 2
 F	layout	demo-ideas
-F	caption	
-F	line	56
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:60	notation/layouts/layout-demo-ideas.aiu
+F	caption	A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
+F	line	61
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:66	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i15.aiu
 F	place	4 2
 F	layout	demo-ideas
-F	caption	
-F	line	60
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:64	notation/layouts/layout-demo-ideas.aiu
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	66
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:71	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i16.aiu
 F	place	0 3
 F	layout	demo-ideas
 F	caption	
-F	line	64
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:68	notation/layouts/layout-demo-ideas.aiu
+F	line	71
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:75	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i17.aiu
 F	place	1 3
 F	layout	demo-ideas
 F	caption	
-F	line	68
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:72	notation/layouts/layout-demo-ideas.aiu
+F	line	75
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:79	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i18.aiu
 F	place	2 3
 F	layout	demo-ideas
-F	caption	
-F	line	72
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:76	notation/layouts/layout-demo-ideas.aiu
-F	what	card
-F	target	demo/ideas/i19.aiu
-F	place	3 3
-F	layout	demo-ideas
-F	caption	
-F	line	76
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	79
 R	layout-item	notation/layouts/layout-demo-ideas.aiu:8	notation/layouts/layout-demo-ideas.aiu
 F	what	card
 F	target	demo/ideas/i02.aiu
@@ -16768,41 +17007,34 @@ F	place	1 0
 F	layout	demo-ideas
 F	caption	
 F	line	8
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:80	notation/layouts/layout-demo-ideas.aiu
-F	what	card
-F	target	demo/ideas/i20.aiu
-F	place	4 3
-F	layout	demo-ideas
-F	caption	
-F	line	80
 R	layout-item	notation/layouts/layout-demo-ideas.aiu:84	notation/layouts/layout-demo-ideas.aiu
 F	what	card
-F	target	demo/ideas/i21.aiu
-F	place	0 4
+F	target	demo/ideas/i19.aiu
+F	place	3 3
 F	layout	demo-ideas
 F	caption	
 F	line	84
 R	layout-item	notation/layouts/layout-demo-ideas.aiu:88	notation/layouts/layout-demo-ideas.aiu
 F	what	card
-F	target	demo/ideas/i22.aiu
-F	place	1 4
+F	target	demo/ideas/i20.aiu
+F	place	4 3
 F	layout	demo-ideas
 F	caption	
 F	line	88
 R	layout-item	notation/layouts/layout-demo-ideas.aiu:92	notation/layouts/layout-demo-ideas.aiu
 F	what	card
-F	target	demo/ideas/i23.aiu
-F	place	2 4
+F	target	demo/ideas/i21.aiu
+F	place	0 4
 F	layout	demo-ideas
-F	caption	
+F	caption	A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
 F	line	92
-R	layout-item	notation/layouts/layout-demo-ideas.aiu:96	notation/layouts/layout-demo-ideas.aiu
+R	layout-item	notation/layouts/layout-demo-ideas.aiu:97	notation/layouts/layout-demo-ideas.aiu
 F	what	card
-F	target	demo/ideas/i24.aiu
-F	place	3 4
+F	target	demo/ideas/i22.aiu
+F	place	1 4
 F	layout	demo-ideas
 F	caption	
-F	line	96
+F	line	97
 R	layout-item	notation/layouts/layout-demo-people.aiu:1	notation/layouts/layout-demo-people.aiu
 F	what	layout
 F	target	
@@ -16810,55 +17042,69 @@ F	place
 F	layout	demo-people
 F	caption	Folder people with 24 linked pages.
 F	line	1
+R	layout-item	notation/layouts/layout-demo-people.aiu:101	notation/layouts/layout-demo-people.aiu
+F	what	card
+F	target	demo/people/p23.aiu
+F	place	2 4
+F	layout	demo-people
+F	caption	
+F	line	101
+R	layout-item	notation/layouts/layout-demo-people.aiu:105	notation/layouts/layout-demo-people.aiu
+F	what	card
+F	target	demo/people/p24.aiu
+F	place	3 4
+F	layout	demo-people
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	105
 R	layout-item	notation/layouts/layout-demo-people.aiu:12	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p03.aiu
 F	place	2 0
 F	layout	demo-people
-F	caption	
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
 F	line	12
-R	layout-item	notation/layouts/layout-demo-people.aiu:16	notation/layouts/layout-demo-people.aiu
+R	layout-item	notation/layouts/layout-demo-people.aiu:17	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p04.aiu
 F	place	3 0
 F	layout	demo-people
 F	caption	
-F	line	16
-R	layout-item	notation/layouts/layout-demo-people.aiu:20	notation/layouts/layout-demo-people.aiu
+F	line	17
+R	layout-item	notation/layouts/layout-demo-people.aiu:21	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p05.aiu
 F	place	4 0
 F	layout	demo-people
 F	caption	
-F	line	20
-R	layout-item	notation/layouts/layout-demo-people.aiu:24	notation/layouts/layout-demo-people.aiu
+F	line	21
+R	layout-item	notation/layouts/layout-demo-people.aiu:25	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p06.aiu
 F	place	0 1
 F	layout	demo-people
-F	caption	
-F	line	24
-R	layout-item	notation/layouts/layout-demo-people.aiu:28	notation/layouts/layout-demo-people.aiu
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	25
+R	layout-item	notation/layouts/layout-demo-people.aiu:30	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p07.aiu
 F	place	1 1
 F	layout	demo-people
-F	caption	
-F	line	28
-R	layout-item	notation/layouts/layout-demo-people.aiu:32	notation/layouts/layout-demo-people.aiu
+F	caption	A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
+F	line	30
+R	layout-item	notation/layouts/layout-demo-people.aiu:35	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p08.aiu
 F	place	2 1
 F	layout	demo-people
 F	caption	
-F	line	32
-R	layout-item	notation/layouts/layout-demo-people.aiu:36	notation/layouts/layout-demo-people.aiu
+F	line	35
+R	layout-item	notation/layouts/layout-demo-people.aiu:39	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p09.aiu
 F	place	3 1
 F	layout	demo-people
-F	caption	
-F	line	36
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	39
 R	layout-item	notation/layouts/layout-demo-people.aiu:4	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p01.aiu
@@ -16866,76 +17112,69 @@ F	place	0 0
 F	layout	demo-people
 F	caption	
 F	line	4
-R	layout-item	notation/layouts/layout-demo-people.aiu:40	notation/layouts/layout-demo-people.aiu
+R	layout-item	notation/layouts/layout-demo-people.aiu:44	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p10.aiu
 F	place	4 1
 F	layout	demo-people
 F	caption	
-F	line	40
-R	layout-item	notation/layouts/layout-demo-people.aiu:44	notation/layouts/layout-demo-people.aiu
+F	line	44
+R	layout-item	notation/layouts/layout-demo-people.aiu:48	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p11.aiu
 F	place	0 2
 F	layout	demo-people
 F	caption	
-F	line	44
-R	layout-item	notation/layouts/layout-demo-people.aiu:48	notation/layouts/layout-demo-people.aiu
+F	line	48
+R	layout-item	notation/layouts/layout-demo-people.aiu:52	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p12.aiu
 F	place	1 2
 F	layout	demo-people
-F	caption	
-F	line	48
-R	layout-item	notation/layouts/layout-demo-people.aiu:52	notation/layouts/layout-demo-people.aiu
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	52
+R	layout-item	notation/layouts/layout-demo-people.aiu:57	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p13.aiu
 F	place	2 2
 F	layout	demo-people
 F	caption	
-F	line	52
-R	layout-item	notation/layouts/layout-demo-people.aiu:56	notation/layouts/layout-demo-people.aiu
+F	line	57
+R	layout-item	notation/layouts/layout-demo-people.aiu:61	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p14.aiu
 F	place	3 2
 F	layout	demo-people
-F	caption	
-F	line	56
-R	layout-item	notation/layouts/layout-demo-people.aiu:60	notation/layouts/layout-demo-people.aiu
+F	caption	A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
+F	line	61
+R	layout-item	notation/layouts/layout-demo-people.aiu:66	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p15.aiu
 F	place	4 2
 F	layout	demo-people
-F	caption	
-F	line	60
-R	layout-item	notation/layouts/layout-demo-people.aiu:64	notation/layouts/layout-demo-people.aiu
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	66
+R	layout-item	notation/layouts/layout-demo-people.aiu:71	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p16.aiu
 F	place	0 3
 F	layout	demo-people
 F	caption	
-F	line	64
-R	layout-item	notation/layouts/layout-demo-people.aiu:68	notation/layouts/layout-demo-people.aiu
+F	line	71
+R	layout-item	notation/layouts/layout-demo-people.aiu:75	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p17.aiu
 F	place	1 3
 F	layout	demo-people
 F	caption	
-F	line	68
-R	layout-item	notation/layouts/layout-demo-people.aiu:72	notation/layouts/layout-demo-people.aiu
+F	line	75
+R	layout-item	notation/layouts/layout-demo-people.aiu:79	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p18.aiu
 F	place	2 3
 F	layout	demo-people
-F	caption	
-F	line	72
-R	layout-item	notation/layouts/layout-demo-people.aiu:76	notation/layouts/layout-demo-people.aiu
-F	what	card
-F	target	demo/people/p19.aiu
-F	place	3 3
-F	layout	demo-people
-F	caption	
-F	line	76
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	79
 R	layout-item	notation/layouts/layout-demo-people.aiu:8	notation/layouts/layout-demo-people.aiu
 F	what	card
 F	target	demo/people/p02.aiu
@@ -16943,41 +17182,34 @@ F	place	1 0
 F	layout	demo-people
 F	caption	
 F	line	8
-R	layout-item	notation/layouts/layout-demo-people.aiu:80	notation/layouts/layout-demo-people.aiu
-F	what	card
-F	target	demo/people/p20.aiu
-F	place	4 3
-F	layout	demo-people
-F	caption	
-F	line	80
 R	layout-item	notation/layouts/layout-demo-people.aiu:84	notation/layouts/layout-demo-people.aiu
 F	what	card
-F	target	demo/people/p21.aiu
-F	place	0 4
+F	target	demo/people/p19.aiu
+F	place	3 3
 F	layout	demo-people
 F	caption	
 F	line	84
 R	layout-item	notation/layouts/layout-demo-people.aiu:88	notation/layouts/layout-demo-people.aiu
 F	what	card
-F	target	demo/people/p22.aiu
-F	place	1 4
+F	target	demo/people/p20.aiu
+F	place	4 3
 F	layout	demo-people
 F	caption	
 F	line	88
 R	layout-item	notation/layouts/layout-demo-people.aiu:92	notation/layouts/layout-demo-people.aiu
 F	what	card
-F	target	demo/people/p23.aiu
-F	place	2 4
+F	target	demo/people/p21.aiu
+F	place	0 4
 F	layout	demo-people
-F	caption	
+F	caption	A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
 F	line	92
-R	layout-item	notation/layouts/layout-demo-people.aiu:96	notation/layouts/layout-demo-people.aiu
+R	layout-item	notation/layouts/layout-demo-people.aiu:97	notation/layouts/layout-demo-people.aiu
 F	what	card
-F	target	demo/people/p24.aiu
-F	place	3 4
+F	target	demo/people/p22.aiu
+F	place	1 4
 F	layout	demo-people
 F	caption	
-F	line	96
+F	line	97
 R	layout-item	notation/layouts/layout-demo-places.aiu:1	notation/layouts/layout-demo-places.aiu
 F	what	layout
 F	target	
@@ -16985,55 +17217,69 @@ F	place
 F	layout	demo-places
 F	caption	Folder places with 24 linked pages.
 F	line	1
+R	layout-item	notation/layouts/layout-demo-places.aiu:101	notation/layouts/layout-demo-places.aiu
+F	what	card
+F	target	demo/places/l23.aiu
+F	place	2 4
+F	layout	demo-places
+F	caption	
+F	line	101
+R	layout-item	notation/layouts/layout-demo-places.aiu:105	notation/layouts/layout-demo-places.aiu
+F	what	card
+F	target	demo/places/l24.aiu
+F	place	3 4
+F	layout	demo-places
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	105
 R	layout-item	notation/layouts/layout-demo-places.aiu:12	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l03.aiu
 F	place	2 0
 F	layout	demo-places
-F	caption	
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
 F	line	12
-R	layout-item	notation/layouts/layout-demo-places.aiu:16	notation/layouts/layout-demo-places.aiu
+R	layout-item	notation/layouts/layout-demo-places.aiu:17	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l04.aiu
 F	place	3 0
 F	layout	demo-places
 F	caption	
-F	line	16
-R	layout-item	notation/layouts/layout-demo-places.aiu:20	notation/layouts/layout-demo-places.aiu
+F	line	17
+R	layout-item	notation/layouts/layout-demo-places.aiu:21	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l05.aiu
 F	place	4 0
 F	layout	demo-places
 F	caption	
-F	line	20
-R	layout-item	notation/layouts/layout-demo-places.aiu:24	notation/layouts/layout-demo-places.aiu
+F	line	21
+R	layout-item	notation/layouts/layout-demo-places.aiu:25	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l06.aiu
 F	place	0 1
 F	layout	demo-places
-F	caption	
-F	line	24
-R	layout-item	notation/layouts/layout-demo-places.aiu:28	notation/layouts/layout-demo-places.aiu
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	25
+R	layout-item	notation/layouts/layout-demo-places.aiu:30	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l07.aiu
 F	place	1 1
 F	layout	demo-places
-F	caption	
-F	line	28
-R	layout-item	notation/layouts/layout-demo-places.aiu:32	notation/layouts/layout-demo-places.aiu
+F	caption	A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
+F	line	30
+R	layout-item	notation/layouts/layout-demo-places.aiu:35	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l08.aiu
 F	place	2 1
 F	layout	demo-places
 F	caption	
-F	line	32
-R	layout-item	notation/layouts/layout-demo-places.aiu:36	notation/layouts/layout-demo-places.aiu
+F	line	35
+R	layout-item	notation/layouts/layout-demo-places.aiu:39	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l09.aiu
 F	place	3 1
 F	layout	demo-places
-F	caption	
-F	line	36
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	39
 R	layout-item	notation/layouts/layout-demo-places.aiu:4	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l01.aiu
@@ -17041,76 +17287,69 @@ F	place	0 0
 F	layout	demo-places
 F	caption	
 F	line	4
-R	layout-item	notation/layouts/layout-demo-places.aiu:40	notation/layouts/layout-demo-places.aiu
+R	layout-item	notation/layouts/layout-demo-places.aiu:44	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l10.aiu
 F	place	4 1
 F	layout	demo-places
 F	caption	
-F	line	40
-R	layout-item	notation/layouts/layout-demo-places.aiu:44	notation/layouts/layout-demo-places.aiu
+F	line	44
+R	layout-item	notation/layouts/layout-demo-places.aiu:48	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l11.aiu
 F	place	0 2
 F	layout	demo-places
 F	caption	
-F	line	44
-R	layout-item	notation/layouts/layout-demo-places.aiu:48	notation/layouts/layout-demo-places.aiu
+F	line	48
+R	layout-item	notation/layouts/layout-demo-places.aiu:52	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l12.aiu
 F	place	1 2
 F	layout	demo-places
-F	caption	
-F	line	48
-R	layout-item	notation/layouts/layout-demo-places.aiu:52	notation/layouts/layout-demo-places.aiu
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	52
+R	layout-item	notation/layouts/layout-demo-places.aiu:57	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l13.aiu
 F	place	2 2
 F	layout	demo-places
 F	caption	
-F	line	52
-R	layout-item	notation/layouts/layout-demo-places.aiu:56	notation/layouts/layout-demo-places.aiu
+F	line	57
+R	layout-item	notation/layouts/layout-demo-places.aiu:61	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l14.aiu
 F	place	3 2
 F	layout	demo-places
-F	caption	
-F	line	56
-R	layout-item	notation/layouts/layout-demo-places.aiu:60	notation/layouts/layout-demo-places.aiu
+F	caption	A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
+F	line	61
+R	layout-item	notation/layouts/layout-demo-places.aiu:66	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l15.aiu
 F	place	4 2
 F	layout	demo-places
-F	caption	
-F	line	60
-R	layout-item	notation/layouts/layout-demo-places.aiu:64	notation/layouts/layout-demo-places.aiu
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	66
+R	layout-item	notation/layouts/layout-demo-places.aiu:71	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l16.aiu
 F	place	0 3
 F	layout	demo-places
 F	caption	
-F	line	64
-R	layout-item	notation/layouts/layout-demo-places.aiu:68	notation/layouts/layout-demo-places.aiu
+F	line	71
+R	layout-item	notation/layouts/layout-demo-places.aiu:75	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l17.aiu
 F	place	1 3
 F	layout	demo-places
 F	caption	
-F	line	68
-R	layout-item	notation/layouts/layout-demo-places.aiu:72	notation/layouts/layout-demo-places.aiu
+F	line	75
+R	layout-item	notation/layouts/layout-demo-places.aiu:79	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l18.aiu
 F	place	2 3
 F	layout	demo-places
-F	caption	
-F	line	72
-R	layout-item	notation/layouts/layout-demo-places.aiu:76	notation/layouts/layout-demo-places.aiu
-F	what	card
-F	target	demo/places/l19.aiu
-F	place	3 3
-F	layout	demo-places
-F	caption	
-F	line	76
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	79
 R	layout-item	notation/layouts/layout-demo-places.aiu:8	notation/layouts/layout-demo-places.aiu
 F	what	card
 F	target	demo/places/l02.aiu
@@ -17118,41 +17357,34 @@ F	place	1 0
 F	layout	demo-places
 F	caption	
 F	line	8
-R	layout-item	notation/layouts/layout-demo-places.aiu:80	notation/layouts/layout-demo-places.aiu
-F	what	card
-F	target	demo/places/l20.aiu
-F	place	4 3
-F	layout	demo-places
-F	caption	
-F	line	80
 R	layout-item	notation/layouts/layout-demo-places.aiu:84	notation/layouts/layout-demo-places.aiu
 F	what	card
-F	target	demo/places/l21.aiu
-F	place	0 4
+F	target	demo/places/l19.aiu
+F	place	3 3
 F	layout	demo-places
 F	caption	
 F	line	84
 R	layout-item	notation/layouts/layout-demo-places.aiu:88	notation/layouts/layout-demo-places.aiu
 F	what	card
-F	target	demo/places/l22.aiu
-F	place	1 4
+F	target	demo/places/l20.aiu
+F	place	4 3
 F	layout	demo-places
 F	caption	
 F	line	88
 R	layout-item	notation/layouts/layout-demo-places.aiu:92	notation/layouts/layout-demo-places.aiu
 F	what	card
-F	target	demo/places/l23.aiu
-F	place	2 4
+F	target	demo/places/l21.aiu
+F	place	0 4
 F	layout	demo-places
-F	caption	
+F	caption	A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
 F	line	92
-R	layout-item	notation/layouts/layout-demo-places.aiu:96	notation/layouts/layout-demo-places.aiu
+R	layout-item	notation/layouts/layout-demo-places.aiu:97	notation/layouts/layout-demo-places.aiu
 F	what	card
-F	target	demo/places/l24.aiu
-F	place	3 4
+F	target	demo/places/l22.aiu
+F	place	1 4
 F	layout	demo-places
 F	caption	
-F	line	96
+F	line	97
 R	layout-item	notation/layouts/layout-demo-tools.aiu:1	notation/layouts/layout-demo-tools.aiu
 F	what	layout
 F	target	
@@ -17160,55 +17392,69 @@ F	place
 F	layout	demo-tools
 F	caption	Folder tools with 24 linked pages.
 F	line	1
+R	layout-item	notation/layouts/layout-demo-tools.aiu:101	notation/layouts/layout-demo-tools.aiu
+F	what	card
+F	target	demo/tools/t23.aiu
+F	place	2 4
+F	layout	demo-tools
+F	caption	
+F	line	101
+R	layout-item	notation/layouts/layout-demo-tools.aiu:105	notation/layouts/layout-demo-tools.aiu
+F	what	card
+F	target	demo/tools/t24.aiu
+F	place	3 4
+F	layout	demo-tools
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	105
 R	layout-item	notation/layouts/layout-demo-tools.aiu:12	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t03.aiu
 F	place	2 0
 F	layout	demo-tools
-F	caption	
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
 F	line	12
-R	layout-item	notation/layouts/layout-demo-tools.aiu:16	notation/layouts/layout-demo-tools.aiu
+R	layout-item	notation/layouts/layout-demo-tools.aiu:17	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t04.aiu
 F	place	3 0
 F	layout	demo-tools
 F	caption	
-F	line	16
-R	layout-item	notation/layouts/layout-demo-tools.aiu:20	notation/layouts/layout-demo-tools.aiu
+F	line	17
+R	layout-item	notation/layouts/layout-demo-tools.aiu:21	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t05.aiu
 F	place	4 0
 F	layout	demo-tools
 F	caption	
-F	line	20
-R	layout-item	notation/layouts/layout-demo-tools.aiu:24	notation/layouts/layout-demo-tools.aiu
+F	line	21
+R	layout-item	notation/layouts/layout-demo-tools.aiu:25	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t06.aiu
 F	place	0 1
 F	layout	demo-tools
-F	caption	
-F	line	24
-R	layout-item	notation/layouts/layout-demo-tools.aiu:28	notation/layouts/layout-demo-tools.aiu
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	25
+R	layout-item	notation/layouts/layout-demo-tools.aiu:30	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t07.aiu
 F	place	1 1
 F	layout	demo-tools
-F	caption	
-F	line	28
-R	layout-item	notation/layouts/layout-demo-tools.aiu:32	notation/layouts/layout-demo-tools.aiu
+F	caption	A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
+F	line	30
+R	layout-item	notation/layouts/layout-demo-tools.aiu:35	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t08.aiu
 F	place	2 1
 F	layout	demo-tools
 F	caption	
-F	line	32
-R	layout-item	notation/layouts/layout-demo-tools.aiu:36	notation/layouts/layout-demo-tools.aiu
+F	line	35
+R	layout-item	notation/layouts/layout-demo-tools.aiu:39	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t09.aiu
 F	place	3 1
 F	layout	demo-tools
-F	caption	
-F	line	36
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	39
 R	layout-item	notation/layouts/layout-demo-tools.aiu:4	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t01.aiu
@@ -17216,76 +17462,69 @@ F	place	0 0
 F	layout	demo-tools
 F	caption	
 F	line	4
-R	layout-item	notation/layouts/layout-demo-tools.aiu:40	notation/layouts/layout-demo-tools.aiu
+R	layout-item	notation/layouts/layout-demo-tools.aiu:44	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t10.aiu
 F	place	4 1
 F	layout	demo-tools
 F	caption	
-F	line	40
-R	layout-item	notation/layouts/layout-demo-tools.aiu:44	notation/layouts/layout-demo-tools.aiu
+F	line	44
+R	layout-item	notation/layouts/layout-demo-tools.aiu:48	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t11.aiu
 F	place	0 2
 F	layout	demo-tools
 F	caption	
-F	line	44
-R	layout-item	notation/layouts/layout-demo-tools.aiu:48	notation/layouts/layout-demo-tools.aiu
+F	line	48
+R	layout-item	notation/layouts/layout-demo-tools.aiu:52	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t12.aiu
 F	place	1 2
 F	layout	demo-tools
-F	caption	
-F	line	48
-R	layout-item	notation/layouts/layout-demo-tools.aiu:52	notation/layouts/layout-demo-tools.aiu
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	52
+R	layout-item	notation/layouts/layout-demo-tools.aiu:57	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t13.aiu
 F	place	2 2
 F	layout	demo-tools
 F	caption	
-F	line	52
-R	layout-item	notation/layouts/layout-demo-tools.aiu:56	notation/layouts/layout-demo-tools.aiu
+F	line	57
+R	layout-item	notation/layouts/layout-demo-tools.aiu:61	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t14.aiu
 F	place	3 2
 F	layout	demo-tools
-F	caption	
-F	line	56
-R	layout-item	notation/layouts/layout-demo-tools.aiu:60	notation/layouts/layout-demo-tools.aiu
+F	caption	A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
+F	line	61
+R	layout-item	notation/layouts/layout-demo-tools.aiu:66	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t15.aiu
 F	place	4 2
 F	layout	demo-tools
-F	caption	
-F	line	60
-R	layout-item	notation/layouts/layout-demo-tools.aiu:64	notation/layouts/layout-demo-tools.aiu
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	66
+R	layout-item	notation/layouts/layout-demo-tools.aiu:71	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t16.aiu
 F	place	0 3
 F	layout	demo-tools
 F	caption	
-F	line	64
-R	layout-item	notation/layouts/layout-demo-tools.aiu:68	notation/layouts/layout-demo-tools.aiu
+F	line	71
+R	layout-item	notation/layouts/layout-demo-tools.aiu:75	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t17.aiu
 F	place	1 3
 F	layout	demo-tools
 F	caption	
-F	line	68
-R	layout-item	notation/layouts/layout-demo-tools.aiu:72	notation/layouts/layout-demo-tools.aiu
+F	line	75
+R	layout-item	notation/layouts/layout-demo-tools.aiu:79	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t18.aiu
 F	place	2 3
 F	layout	demo-tools
-F	caption	
-F	line	72
-R	layout-item	notation/layouts/layout-demo-tools.aiu:76	notation/layouts/layout-demo-tools.aiu
-F	what	card
-F	target	demo/tools/t19.aiu
-F	place	3 3
-F	layout	demo-tools
-F	caption	
-F	line	76
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
+F	line	79
 R	layout-item	notation/layouts/layout-demo-tools.aiu:8	notation/layouts/layout-demo-tools.aiu
 F	what	card
 F	target	demo/tools/t02.aiu
@@ -17293,41 +17532,34 @@ F	place	1 0
 F	layout	demo-tools
 F	caption	
 F	line	8
-R	layout-item	notation/layouts/layout-demo-tools.aiu:80	notation/layouts/layout-demo-tools.aiu
-F	what	card
-F	target	demo/tools/t20.aiu
-F	place	4 3
-F	layout	demo-tools
-F	caption	
-F	line	80
 R	layout-item	notation/layouts/layout-demo-tools.aiu:84	notation/layouts/layout-demo-tools.aiu
 F	what	card
-F	target	demo/tools/t21.aiu
-F	place	0 4
+F	target	demo/tools/t19.aiu
+F	place	3 3
 F	layout	demo-tools
 F	caption	
 F	line	84
 R	layout-item	notation/layouts/layout-demo-tools.aiu:88	notation/layouts/layout-demo-tools.aiu
 F	what	card
-F	target	demo/tools/t22.aiu
-F	place	1 4
+F	target	demo/tools/t20.aiu
+F	place	4 3
 F	layout	demo-tools
 F	caption	
 F	line	88
 R	layout-item	notation/layouts/layout-demo-tools.aiu:92	notation/layouts/layout-demo-tools.aiu
 F	what	card
-F	target	demo/tools/t23.aiu
-F	place	2 4
+F	target	demo/tools/t21.aiu
+F	place	0 4
 F	layout	demo-tools
-F	caption	
+F	caption	A very long caption written only to test the card height. It keeps going across many lines so the box has to grow a lot, the row below has to move down, and the arrows still have to hit the middle of every card on the map.
 F	line	92
-R	layout-item	notation/layouts/layout-demo-tools.aiu:96	notation/layouts/layout-demo-tools.aiu
+R	layout-item	notation/layouts/layout-demo-tools.aiu:97	notation/layouts/layout-demo-tools.aiu
 F	what	card
-F	target	demo/tools/t24.aiu
-F	place	3 4
+F	target	demo/tools/t22.aiu
+F	place	1 4
 F	layout	demo-tools
 F	caption	
-F	line	96
+F	line	97
 R	layout-item	notation/layouts/layout-demo-world.aiu:1	notation/layouts/layout-demo-world.aiu
 F	what	layout
 F	target	
@@ -17403,7 +17635,7 @@ F	what	card
 F	target	demo/gamma.aiu
 F	place	2 0
 F	layout	demo-main
-F	caption	Third page. Links to delta and alpha.
+F	caption	A medium caption that needs two or three lines inside this card to be read in full.
 F	line	14
 R	layout-item	notation/layouts/layout-main.aiu:19	notation/layouts/layout-main.aiu
 F	what	box
@@ -20369,598 +20601,606 @@ R	name	README.aiu:100	README.aiu
 F	name	paragraph-aiu-notation-is
 F	block	paragraph
 F	line	100
-R	name	README.aiu:1037	README.aiu
+R	name	README.aiu:1005	README.aiu
+F	name	paragraph-contracts-remind-the
+F	block	paragraph
+F	line	1005
+R	name	README.aiu:1022	README.aiu
+F	name	code-question-paragraph-does
+F	block	code
+F	line	1022
+R	name	README.aiu:1069	README.aiu
 F	name	paragraph-the-star-means
 F	block	paragraph
-F	line	1037
-R	name	README.aiu:1053	README.aiu
+F	line	1069
+R	name	README.aiu:1085	README.aiu
 F	name	paragraph-a-question-shows
 F	block	paragraph
-F	line	1053
-R	name	README.aiu:1068	README.aiu
+F	line	1085
+R	name	README.aiu:1100	README.aiu
 F	name	code-paragraph-start-brake
 F	block	code
-F	line	1068
-R	name	README.aiu:1117	README.aiu
-F	name	paragraph-opening-a-page
-F	block	paragraph
-F	line	1117
-R	name	README.aiu:1137	README.aiu
-F	name	section-numbering
-F	block	chapter
-F	line	1137
-R	name	README.aiu:1139	README.aiu
-F	name	title-numbering
-F	block	title
-F	line	1139
+F	line	1100
 R	name	README.aiu:1153	README.aiu
-F	name	paragraph-numbers-are-computed
+F	name	paragraph-opening-a-page
 F	block	paragraph
 F	line	1153
 R	name	README.aiu:116	README.aiu
 F	name	paragraph-two-programs-read
 F	block	paragraph
 F	line	116
-R	name	README.aiu:1168	README.aiu
+R	name	README.aiu:1173	README.aiu
+F	name	section-numbering
+F	block	chapter
+F	line	1173
+R	name	README.aiu:1175	README.aiu
+F	name	title-numbering
+F	block	title
+F	line	1175
+R	name	README.aiu:1189	README.aiu
+F	name	paragraph-numbers-are-computed
+F	block	paragraph
+F	line	1189
+R	name	README.aiu:1204	README.aiu
 F	name	paragraph-every-other-block
 F	block	paragraph
-F	line	1168
-R	name	README.aiu:1186	README.aiu
+F	line	1204
+R	name	README.aiu:1222	README.aiu
 F	name	table-4
 F	block	table
-F	line	1186
-R	name	README.aiu:1191	README.aiu
+F	line	1222
+R	name	README.aiu:1227	README.aiu
 F	name	header-4
 F	block	header
-F	line	1191
-R	name	README.aiu:1196	README.aiu
+F	line	1227
+R	name	README.aiu:1232	README.aiu
 F	name	row-53
 F	block	row
-F	line	1196
-R	name	README.aiu:1201	README.aiu
+F	line	1232
+R	name	README.aiu:1237	README.aiu
 F	name	row-54
 F	block	row
-F	line	1201
-R	name	README.aiu:1206	README.aiu
+F	line	1237
+R	name	README.aiu:1242	README.aiu
 F	name	row-55
 F	block	row
-F	line	1206
-R	name	README.aiu:1213	README.aiu
+F	line	1242
+R	name	README.aiu:1249	README.aiu
 F	name	code-chapter-1-2nd
 F	block	code
-F	line	1213
-R	name	README.aiu:1249	README.aiu
+F	line	1249
+R	name	README.aiu:1289	README.aiu
 F	name	paragraph-not-numbered-title
 F	block	paragraph
-F	line	1249
-R	name	README.aiu:1268	README.aiu
+F	line	1289
+R	name	README.aiu:1308	README.aiu
 F	name	section-book-parts-index
 F	block	chapter
-F	line	1268
-R	name	README.aiu:1270	README.aiu
+F	line	1308
+R	name	README.aiu:1310	README.aiu
 F	name	title-book-parts-index
 F	block	title
-F	line	1270
-R	name	README.aiu:1284	README.aiu
+F	line	1310
+R	name	README.aiu:1324	README.aiu
 F	name	paragraph-book-pages-allow
 F	block	paragraph
-F	line	1284
-R	name	README.aiu:1302	README.aiu
-F	name	code-contents-start-contents
-F	block	code
-F	line	1302
+F	line	1324
 R	name	README.aiu:133	README.aiu
 F	name	paragraph-whatever-can-be
 F	block	paragraph
 F	line	133
-R	name	README.aiu:1345	README.aiu
+R	name	README.aiu:1342	README.aiu
+F	name	code-contents-start-contents
+F	block	code
+F	line	1342
+R	name	README.aiu:1389	README.aiu
 F	name	paragraph-the-index-lists
 F	block	paragraph
-F	line	1345
-R	name	README.aiu:1362	README.aiu
+F	line	1389
+R	name	README.aiu:1406	README.aiu
 F	name	code-paragraph-start-term
 F	block	code
-F	line	1362
-R	name	README.aiu:1411	README.aiu
+F	line	1406
+R	name	README.aiu:1459	README.aiu
 F	name	paragraph-the-edition-command
 F	block	paragraph
-F	line	1411
-R	name	README.aiu:1429	README.aiu
+F	line	1459
+R	name	README.aiu:1477	README.aiu
 F	name	paragraph-a-figure-shows
 F	block	paragraph
-F	line	1429
-R	name	README.aiu:1444	README.aiu
-F	name	paragraph-content-blocks-are
-F	block	paragraph
-F	line	1444
-R	name	README.aiu:1461	README.aiu
-F	name	paragraph-list-and-steps
-F	block	paragraph
-F	line	1461
-R	name	README.aiu:1476	README.aiu
-F	name	paragraph-definition-example-exercise
-F	block	paragraph
-F	line	1476
+F	line	1477
 R	name	README.aiu:149	README.aiu
 F	name	paragraph-this-page-is
 F	block	paragraph
 F	line	149
 R	name	README.aiu:1492	README.aiu
-F	name	paragraph-the-pin-block
+F	name	paragraph-content-blocks-are
 F	block	paragraph
 F	line	1492
-R	name	README.aiu:1512	README.aiu
+R	name	README.aiu:1509	README.aiu
+F	name	paragraph-list-and-steps
+F	block	paragraph
+F	line	1509
+R	name	README.aiu:1524	README.aiu
+F	name	paragraph-definition-example-exercise
+F	block	paragraph
+F	line	1524
+R	name	README.aiu:1540	README.aiu
+F	name	paragraph-the-pin-block
+F	block	paragraph
+F	line	1540
+R	name	README.aiu:1560	README.aiu
 F	name	paragraph-the-hide-word
 F	block	paragraph
-F	line	1512
-R	name	README.aiu:1531	README.aiu
+F	line	1560
+R	name	README.aiu:1579	README.aiu
 F	name	paragraph-the-book-structure
 F	block	paragraph
-F	line	1531
-R	name	README.aiu:1544	README.aiu
+F	line	1579
+R	name	README.aiu:1592	README.aiu
 F	name	paragraph-the-edition-numbers
 F	block	paragraph
-F	line	1544
-R	name	README.aiu:1557	README.aiu
-F	name	paragraph-the-edition-paper
-F	block	paragraph
-F	line	1557
-R	name	README.aiu:1561	README.aiu
-F	name	paragraph-research-blocks
-F	block	paragraph
-F	line	1561
-R	name	README.aiu:1565	README.aiu
-F	name	paragraph-the-aside
-F	block	paragraph
-F	line	1565
-R	name	README.aiu:1569	README.aiu
-F	name	paragraph-the-break
-F	block	paragraph
-F	line	1569
-R	name	README.aiu:1573	README.aiu
-F	name	paragraph-the-contracts-command
-F	block	paragraph
-F	line	1573
-R	name	README.aiu:1577	README.aiu
-F	name	paragraph-a-pinned-block
-F	block	paragraph
-F	line	1577
-R	name	README.aiu:1595	README.aiu
-F	name	paragraph-a-formula-is
-F	block	paragraph
-F	line	1595
+F	line	1592
 R	name	README.aiu:16	README.aiu
 F	name	pin-top
 F	block	pin
 F	line	16
-R	name	README.aiu:1612	README.aiu
-F	name	code-steps-start-open
-F	block	code
-F	line	1612
-R	name	README.aiu:1655	README.aiu
-F	name	section-views-and-commands
-F	block	chapter
-F	line	1655
+R	name	README.aiu:1605	README.aiu
+F	name	paragraph-the-edition-paper
+F	block	paragraph
+F	line	1605
+R	name	README.aiu:1618	README.aiu
+F	name	paragraph-research-blocks
+F	block	paragraph
+F	line	1618
+R	name	README.aiu:1631	README.aiu
+F	name	paragraph-the-aside
+F	block	paragraph
+F	line	1631
+R	name	README.aiu:1644	README.aiu
+F	name	paragraph-the-break
+F	block	paragraph
+F	line	1644
 R	name	README.aiu:1657	README.aiu
-F	name	title-views-and-commands
-F	block	title
+F	name	paragraph-the-contracts-command
+F	block	paragraph
 F	line	1657
 R	name	README.aiu:166	README.aiu
 F	name	section-a-page
 F	block	chapter
 F	line	166
-R	name	README.aiu:1671	README.aiu
-F	name	paragraph-the-notation-binary
+R	name	README.aiu:1670	README.aiu
+F	name	paragraph-a-pinned-block
 F	block	paragraph
-F	line	1671
+F	line	1670
 R	name	README.aiu:168	README.aiu
 F	name	title-a-page
 F	block	title
 F	line	168
-R	name	README.aiu:1687	README.aiu
+R	name	README.aiu:1688	README.aiu
+F	name	paragraph-a-formula-is
+F	block	paragraph
+F	line	1688
+R	name	README.aiu:1705	README.aiu
+F	name	code-steps-start-open
+F	block	code
+F	line	1705
+R	name	README.aiu:1752	README.aiu
+F	name	section-views-and-commands
+F	block	chapter
+F	line	1752
+R	name	README.aiu:1754	README.aiu
+F	name	title-views-and-commands
+F	block	title
+F	line	1754
+R	name	README.aiu:1768	README.aiu
+F	name	paragraph-the-notation-binary
+F	block	paragraph
+F	line	1768
+R	name	README.aiu:1784	README.aiu
 F	name	table-5
 F	block	table
-F	line	1687
-R	name	README.aiu:1692	README.aiu
+F	line	1784
+R	name	README.aiu:1789	README.aiu
 F	name	header-5
 F	block	header
-F	line	1692
-R	name	README.aiu:1697	README.aiu
+F	line	1789
+R	name	README.aiu:1794	README.aiu
 F	name	row-59
 F	block	row
-F	line	1697
-R	name	README.aiu:1702	README.aiu
+F	line	1794
+R	name	README.aiu:1799	README.aiu
 F	name	row-60
 F	block	row
-F	line	1702
-R	name	README.aiu:1707	README.aiu
+F	line	1799
+R	name	README.aiu:1804	README.aiu
 F	name	row-61
 F	block	row
-F	line	1707
-R	name	README.aiu:1714	README.aiu
+F	line	1804
+R	name	README.aiu:1811	README.aiu
 F	name	code-notation-render-file
 F	block	code
-F	line	1714
-R	name	README.aiu:1780	README.aiu
-F	name	paragraph-reading-mode-the
-F	block	paragraph
-F	line	1780
-R	name	README.aiu:1796	README.aiu
-F	name	paragraph-the-index-command
-F	block	paragraph
-F	line	1796
-R	name	README.aiu:1811	README.aiu
-F	name	paragraph-the-server-load
-F	block	paragraph
 F	line	1811
 R	name	README.aiu:182	README.aiu
 F	name	paragraph-a-page-starts
 F	block	paragraph
 F	line	182
-R	name	README.aiu:1830	README.aiu
-F	name	paragraph-the-server-reads
+R	name	README.aiu:1881	README.aiu
+F	name	paragraph-reading-mode-the
 F	block	paragraph
-F	line	1830
-R	name	README.aiu:1852	README.aiu
-F	name	paragraph-the-server-reload-git
+F	line	1881
+R	name	README.aiu:1897	README.aiu
+F	name	paragraph-the-index-command
 F	block	paragraph
-F	line	1852
-R	name	README.aiu:1875	README.aiu
-F	name	paragraph-the-server-http
-F	block	paragraph
-F	line	1875
-R	name	README.aiu:1896	README.aiu
-F	name	paragraph-the-server-websocket
-F	block	paragraph
-F	line	1896
+F	line	1897
 R	name	README.aiu:19	README.aiu
 F	name	paragraph-this-pin-shows
 F	block	paragraph
 F	line	19
-R	name	README.aiu:1918	README.aiu
-F	name	paragraph-the-notation-wasm
+R	name	README.aiu:1912	README.aiu
+F	name	paragraph-the-server-load
 F	block	paragraph
-F	line	1918
-R	name	README.aiu:1940	README.aiu
-F	name	paragraph-the-website-bridge
+F	line	1912
+R	name	README.aiu:1931	README.aiu
+F	name	paragraph-the-server-reads
 F	block	paragraph
-F	line	1940
-R	name	README.aiu:1962	README.aiu
-F	name	paragraph-the-website-commands
+F	line	1931
+R	name	README.aiu:1953	README.aiu
+F	name	paragraph-the-server-reload-git
 F	block	paragraph
-F	line	1962
+F	line	1953
+R	name	README.aiu:1976	README.aiu
+F	name	paragraph-the-server-http
+F	block	paragraph
+F	line	1976
 R	name	README.aiu:198	README.aiu
 F	name	code-title-start-kind
 F	block	code
 F	line	198
-R	name	README.aiu:1984	README.aiu
+R	name	README.aiu:1997	README.aiu
+F	name	paragraph-the-server-websocket
+F	block	paragraph
+F	line	1997
+R	name	README.aiu:2019	README.aiu
+F	name	paragraph-the-notation-wasm
+F	block	paragraph
+F	line	2019
+R	name	README.aiu:2041	README.aiu
+F	name	paragraph-the-website-bridge
+F	block	paragraph
+F	line	2041
+R	name	README.aiu:2063	README.aiu
+F	name	paragraph-the-website-commands
+F	block	paragraph
+F	line	2063
+R	name	README.aiu:2085	README.aiu
 F	name	paragraph-the-write-commands
 F	block	paragraph
-F	line	1984
-R	name	README.aiu:2009	README.aiu
+F	line	2085
+R	name	README.aiu:2110	README.aiu
 F	name	paragraph-the-mindmap-plan
 F	block	paragraph
-F	line	2009
-R	name	README.aiu:2052	README.aiu
+F	line	2110
+R	name	README.aiu:2153	README.aiu
 F	name	section-making-a-page
 F	block	chapter
-F	line	2052
-R	name	README.aiu:2054	README.aiu
+F	line	2153
+R	name	README.aiu:2155	README.aiu
 F	name	title-making-a-page
 F	block	title
-F	line	2054
-R	name	README.aiu:2068	README.aiu
+F	line	2155
+R	name	README.aiu:2169	README.aiu
 F	name	paragraph-from-nushell-one
 F	block	paragraph
-F	line	2068
-R	name	README.aiu:2083	README.aiu
+F	line	2169
+R	name	README.aiu:2184	README.aiu
 F	name	code-title-startnkind-defaultnnamentitle
 F	block	code
-F	line	2083
-R	name	README.aiu:2126	README.aiu
+F	line	2184
+R	name	README.aiu:2231	README.aiu
 F	name	paragraph-opening-runs-fill
 F	block	paragraph
-F	line	2126
-R	name	README.aiu:2144	README.aiu
+F	line	2231
+R	name	README.aiu:2249	README.aiu
 F	name	section-planned-not-usable
 F	block	chapter
-F	line	2144
-R	name	README.aiu:2146	README.aiu
+F	line	2249
+R	name	README.aiu:2251	README.aiu
 F	name	title-planned-not-usable
 F	block	title
-F	line	2146
-R	name	README.aiu:2160	README.aiu
+F	line	2251
+R	name	README.aiu:2265	README.aiu
 F	name	paragraph-links-a-target
 F	block	paragraph
-F	line	2160
-R	name	README.aiu:2176	README.aiu
+F	line	2265
+R	name	README.aiu:2281	README.aiu
 F	name	paragraph-mark-blocks-rule
 F	block	paragraph
-F	line	2176
-R	name	README.aiu:2193	README.aiu
+F	line	2281
+R	name	README.aiu:2298	README.aiu
 F	name	paragraph-idle-autosave-safe
 F	block	paragraph
-F	line	2193
-R	name	README.aiu:2210	README.aiu
+F	line	2298
+R	name	README.aiu:2315	README.aiu
 F	name	section-rules-for-writing
 F	block	chapter
-F	line	2210
-R	name	README.aiu:2212	README.aiu
+F	line	2315
+R	name	README.aiu:2317	README.aiu
 F	name	title-rules-for-writing
 F	block	title
-F	line	2212
-R	name	README.aiu:2226	README.aiu
+F	line	2317
+R	name	README.aiu:2331	README.aiu
 F	name	paragraph-start-every-page
 F	block	paragraph
-F	line	2226
-R	name	README.aiu:2241	README.aiu
+F	line	2331
+R	name	README.aiu:2346	README.aiu
 F	name	paragraph-pick-the-kind
 F	block	paragraph
-F	line	2241
-R	name	README.aiu:2256	README.aiu
+F	line	2346
+R	name	README.aiu:2361	README.aiu
 F	name	paragraph-one-idea-per
 F	block	paragraph
-F	line	2256
-R	name	README.aiu:2271	README.aiu
+F	line	2361
+R	name	README.aiu:2376	README.aiu
 F	name	paragraph-never-type-numbers
 F	block	paragraph
-F	line	2271
-R	name	README.aiu:2286	README.aiu
+F	line	2376
+R	name	README.aiu:2391	README.aiu
 F	name	paragraph-never-start-a
 F	block	paragraph
-F	line	2286
-R	name	README.aiu:2300	README.aiu
+F	line	2391
+R	name	README.aiu:2405	README.aiu
 F	name	paragraph-never-write-a
 F	block	paragraph
-F	line	2300
-R	name	README.aiu:2315	README.aiu
+F	line	2405
+R	name	README.aiu:2420	README.aiu
 F	name	paragraph-give-a-name
 F	block	paragraph
-F	line	2315
-R	name	README.aiu:2329	README.aiu
+F	line	2420
+R	name	README.aiu:2434	README.aiu
 F	name	paragraph-after-writing-open
 F	block	paragraph
-F	line	2329
-R	name	README.aiu:2353	README.aiu
+F	line	2434
+R	name	README.aiu:2458	README.aiu
 F	name	paragraph-master-view-map
 F	block	paragraph
-F	line	2353
-R	name	README.aiu:2363	README.aiu
+F	line	2458
+R	name	README.aiu:2477	README.aiu
 F	name	paragraph-master-view-look
 F	block	paragraph
-F	line	2363
-R	name	README.aiu:2372	README.aiu
+F	line	2477
+R	name	README.aiu:2495	README.aiu
 F	name	paragraph-master-view-tap
 F	block	paragraph
-F	line	2372
-R	name	README.aiu:2381	README.aiu
+F	line	2495
+R	name	README.aiu:2513	README.aiu
 F	name	paragraph-master-view-demo
 F	block	paragraph
-F	line	2381
-R	name	README.aiu:2388	README.aiu
-F	name	paragraph-master-view-settings-tui
-F	block	paragraph
-F	line	2388
-R	name	README.aiu:248	README.aiu
+F	line	2513
+R	name	README.aiu:252	README.aiu
 F	name	paragraph-a-page-without
 F	block	paragraph
-F	line	248
-R	name	README.aiu:266	README.aiu
+F	line	252
+R	name	README.aiu:2529	README.aiu
+F	name	paragraph-master-view-settings-tui
+F	block	paragraph
+F	line	2529
+R	name	README.aiu:2547	README.aiu
+F	name	paragraph-master-view-plain-caption
+F	block	paragraph
+F	line	2547
+R	name	README.aiu:2565	README.aiu
+F	name	paragraph-master-view-card-height
+F	block	paragraph
+F	line	2565
+R	name	README.aiu:270	README.aiu
 F	name	section-blocks-and-syntax
 F	block	chapter
-F	line	266
-R	name	README.aiu:268	README.aiu
+F	line	270
+R	name	README.aiu:272	README.aiu
 F	name	title-blocks-and-syntax
 F	block	title
-F	line	268
-R	name	README.aiu:282	README.aiu
+F	line	272
+R	name	README.aiu:286	README.aiu
 F	name	paragraph-a-block-opens
 F	block	paragraph
-F	line	282
-R	name	README.aiu:298	README.aiu
+F	line	286
+R	name	README.aiu:302	README.aiu
 F	name	code-chapter-start-title
 F	block	code
-F	line	298
-R	name	README.aiu:348	README.aiu
+F	line	302
+R	name	README.aiu:356	README.aiu
 F	name	paragraph-a-line-made
 F	block	paragraph
-F	line	348
-R	name	README.aiu:365	README.aiu
-F	name	paragraph-a-blank-line
-F	block	paragraph
-F	line	365
+F	line	356
 R	name	README.aiu:37	README.aiu
 F	name	pin-top-write
 F	block	pin
 F	line	37
-R	name	README.aiu:380	README.aiu
+R	name	README.aiu:373	README.aiu
+F	name	paragraph-a-blank-line
+F	block	paragraph
+F	line	373
+R	name	README.aiu:388	README.aiu
 F	name	paragraph-code-blocks-are
 F	block	paragraph
-F	line	380
-R	name	README.aiu:396	README.aiu
-F	name	paragraph-the-parser-reports
-F	block	paragraph
-F	line	396
+F	line	388
 R	name	README.aiu:40	README.aiu
 F	name	paragraph-this-pin-shows-2
 F	block	paragraph
 F	line	40
-R	name	README.aiu:414	README.aiu
+R	name	README.aiu:404	README.aiu
+F	name	paragraph-the-parser-reports
+F	block	paragraph
+F	line	404
+R	name	README.aiu:422	README.aiu
 F	name	paragraph-the-check-also
 F	block	paragraph
-F	line	414
-R	name	README.aiu:432	README.aiu
+F	line	422
+R	name	README.aiu:440	README.aiu
 F	name	section-block-types
 F	block	chapter
-F	line	432
-R	name	README.aiu:434	README.aiu
+F	line	440
+R	name	README.aiu:442	README.aiu
 F	name	title-block-types
 F	block	title
-F	line	434
-R	name	README.aiu:448	README.aiu
+F	line	442
+R	name	README.aiu:456	README.aiu
 F	name	paragraph-block-types-are
 F	block	paragraph
-F	line	448
-R	name	README.aiu:465	README.aiu
+F	line	456
+R	name	README.aiu:473	README.aiu
 F	name	figure
 F	block	code
-F	line	465
-R	name	README.aiu:508	README.aiu
+F	line	473
+R	name	README.aiu:520	README.aiu
 F	name	table
 F	block	table
-F	line	508
-R	name	README.aiu:514	README.aiu
-F	name	header
-F	block	header
-F	line	514
-R	name	README.aiu:520	README.aiu
-F	name	row
-F	block	row
 F	line	520
 R	name	README.aiu:526	README.aiu
-F	name	row-2
-F	block	row
+F	name	header
+F	block	header
 F	line	526
 R	name	README.aiu:532	README.aiu
-F	name	row-3
+F	name	row
 F	block	row
 F	line	532
-R	name	README.aiu:540	README.aiu
+R	name	README.aiu:538	README.aiu
+F	name	row-2
+F	block	row
+F	line	538
+R	name	README.aiu:544	README.aiu
+F	name	row-3
+F	block	row
+F	line	544
+R	name	README.aiu:552	README.aiu
 F	name	code-code-text-the
 F	block	code
-F	line	540
+F	line	552
 R	name	README.aiu:58	README.aiu
 F	name	pin-bottom-read
 F	block	pin
 F	line	58
-R	name	README.aiu:608	README.aiu
-F	name	paragraph-a-chapter-holds
-F	block	paragraph
-F	line	608
 R	name	README.aiu:61	README.aiu
 F	name	paragraph-this-pin-shows-3
 F	block	paragraph
 F	line	61
-R	name	README.aiu:627	README.aiu
+R	name	README.aiu:624	README.aiu
+F	name	paragraph-a-chapter-holds
+F	block	paragraph
+F	line	624
+R	name	README.aiu:643	README.aiu
 F	name	section-declarations
 F	block	chapter
-F	line	627
-R	name	README.aiu:629	README.aiu
+F	line	643
+R	name	README.aiu:645	README.aiu
 F	name	title-declarations
 F	block	title
-F	line	629
-R	name	README.aiu:643	README.aiu
+F	line	645
+R	name	README.aiu:659	README.aiu
 F	name	table-2
 F	block	table
-F	line	643
-R	name	README.aiu:649	README.aiu
+F	line	659
+R	name	README.aiu:665	README.aiu
 F	name	header-2
 F	block	header
-F	line	649
-R	name	README.aiu:655	README.aiu
+F	line	665
+R	name	README.aiu:671	README.aiu
 F	name	row-22
 F	block	row
-F	line	655
-R	name	README.aiu:661	README.aiu
+F	line	671
+R	name	README.aiu:677	README.aiu
 F	name	row-23
 F	block	row
-F	line	661
-R	name	README.aiu:667	README.aiu
+F	line	677
+R	name	README.aiu:683	README.aiu
 F	name	row-24
 F	block	row
-F	line	667
-R	name	README.aiu:675	README.aiu
+F	line	683
+R	name	README.aiu:691	README.aiu
 F	name	code-style-any-block
 F	block	code
-F	line	675
-R	name	README.aiu:731	README.aiu
+F	line	691
+R	name	README.aiu:751	README.aiu
 F	name	paragraph-rust-and-racket
 F	block	paragraph
-F	line	731
-R	name	README.aiu:751	README.aiu
+F	line	751
+R	name	README.aiu:771	README.aiu
 F	name	section-tables
 F	block	chapter
-F	line	751
-R	name	README.aiu:753	README.aiu
+F	line	771
+R	name	README.aiu:773	README.aiu
 F	name	title-tables
 F	block	title
-F	line	753
-R	name	README.aiu:767	README.aiu
+F	line	773
+R	name	README.aiu:787	README.aiu
 F	name	paragraph-a-table-is
 F	block	paragraph
-F	line	767
-R	name	README.aiu:783	README.aiu
-F	name	code-table-start-caption
-F	block	code
-F	line	783
+F	line	787
 R	name	README.aiu:80	README.aiu
 F	name	contents
 F	block	contents
 F	line	80
+R	name	README.aiu:803	README.aiu
+F	name	code-table-start-caption
+F	block	code
+F	line	803
 R	name	README.aiu:84	README.aiu
 F	name	section-what-this-is
 F	block	chapter
 F	line	84
-R	name	README.aiu:841	README.aiu
-F	name	paragraph-a-cell-with
-F	block	paragraph
-F	line	841
 R	name	README.aiu:86	README.aiu
 F	name	title-what-this-is
 F	block	title
 F	line	86
-R	name	README.aiu:860	README.aiu
+R	name	README.aiu:865	README.aiu
+F	name	paragraph-a-cell-with
+F	block	paragraph
+F	line	865
+R	name	README.aiu:884	README.aiu
 F	name	section-page-types
 F	block	chapter
-F	line	860
-R	name	README.aiu:862	README.aiu
+F	line	884
+R	name	README.aiu:886	README.aiu
 F	name	title-page-types
 F	block	title
-F	line	862
-R	name	README.aiu:876	README.aiu
+F	line	886
+R	name	README.aiu:900	README.aiu
 F	name	table-3
 F	block	table
-F	line	876
-R	name	README.aiu:881	README.aiu
+F	line	900
+R	name	README.aiu:905	README.aiu
 F	name	header-3
 F	block	header
-F	line	881
-R	name	README.aiu:886	README.aiu
+F	line	905
+R	name	README.aiu:910	README.aiu
 F	name	row-44
 F	block	row
-F	line	886
-R	name	README.aiu:891	README.aiu
+F	line	910
+R	name	README.aiu:915	README.aiu
 F	name	row-45
 F	block	row
-F	line	891
-R	name	README.aiu:896	README.aiu
+F	line	915
+R	name	README.aiu:920	README.aiu
 F	name	row-46
 F	block	row
-F	line	896
-R	name	README.aiu:903	README.aiu
+F	line	920
+R	name	README.aiu:927	README.aiu
 F	name	code-todo-tasks-one
 F	block	code
-F	line	903
-R	name	README.aiu:942	README.aiu
+F	line	927
+R	name	README.aiu:970	README.aiu
 F	name	paragraph-a-page-picks
 F	block	paragraph
-F	line	942
-R	name	README.aiu:961	README.aiu
+F	line	970
+R	name	README.aiu:989	README.aiu
 F	name	section-questions-answers-and
 F	block	chapter
-F	line	961
-R	name	README.aiu:963	README.aiu
+F	line	989
+R	name	README.aiu:991	README.aiu
 F	name	title-questions-answers-and
 F	block	title
-F	line	963
-R	name	README.aiu:977	README.aiu
-F	name	paragraph-contracts-remind-the
-F	block	paragraph
-F	line	977
-R	name	README.aiu:994	README.aiu
-F	name	code-question-paragraph-does
-F	block	code
-F	line	994
+F	line	991
 R	name	aiu-notation-usage-examples/aiu-business-future.aiu:1	aiu-notation-usage-examples/aiu-business-future.aiu
 F	name	title-a-i-u
 F	block	title
@@ -22809,6 +23049,14 @@ R	name	demo/places/l24.aiu:9	demo/places/l24.aiu
 F	name	l1-l24
 F	block	link
 F	line	9
+R	name	demo/plain-note.aiu:1	demo/plain-note.aiu
+F	name	title-plain-note-caption
+F	block	title
+F	line	1
+R	name	demo/plain-note.aiu:17	demo/plain-note.aiu
+F	name	plain-note-body
+F	block	paragraph
+F	line	17
 R	name	demo/tools/t01.aiu:15	demo/tools/t01.aiu
 F	name	l2-t01
 F	block	link
@@ -23585,26 +23833,34 @@ R	name	layout-plan.aiu:149	layout-plan.aiu
 F	name	paragraph-layout-open
 F	block	paragraph
 F	line	149
-R	name	layout-plan.aiu:157	layout-plan.aiu
+R	name	layout-plan.aiu:155	layout-plan.aiu
 F	name	paragraph-layout-decided-zoom
 F	block	paragraph
-F	line	157
-R	name	layout-plan.aiu:165	layout-plan.aiu
+F	line	155
+R	name	layout-plan.aiu:163	layout-plan.aiu
 F	name	paragraph-layout-decided-far-layout
 F	block	paragraph
-F	line	165
-R	name	layout-plan.aiu:174	layout-plan.aiu
+F	line	163
+R	name	layout-plan.aiu:172	layout-plan.aiu
 F	name	paragraph-layout-decided-far-packing
 F	block	paragraph
-F	line	174
-R	name	layout-plan.aiu:181	layout-plan.aiu
+F	line	172
+R	name	layout-plan.aiu:179	layout-plan.aiu
 F	name	paragraph-layout-decided-smooth-zoom
 F	block	paragraph
-F	line	181
-R	name	layout-plan.aiu:190	layout-plan.aiu
+F	line	179
+R	name	layout-plan.aiu:188	layout-plan.aiu
 F	name	paragraph-layout-decided-zoom-settings
 F	block	paragraph
-F	line	190
+F	line	188
+R	name	layout-plan.aiu:195	layout-plan.aiu
+F	name	paragraph-layout-decided-plain-caption
+F	block	paragraph
+F	line	195
+R	name	layout-plan.aiu:202	layout-plan.aiu
+F	name	paragraph-layout-decided-card-height
+F	block	paragraph
+F	line	202
 R	name	layout-plan.aiu:22	layout-plan.aiu
 F	name	paragraph-layout-decided-modular
 F	block	paragraph
