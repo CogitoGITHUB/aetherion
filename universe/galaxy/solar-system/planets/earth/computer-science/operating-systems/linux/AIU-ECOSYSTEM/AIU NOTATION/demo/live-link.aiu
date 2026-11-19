@@ -1,0 +1,6 @@
+link start
+name: live-test
+target: live-target
+mode: live
+new text
+link end
