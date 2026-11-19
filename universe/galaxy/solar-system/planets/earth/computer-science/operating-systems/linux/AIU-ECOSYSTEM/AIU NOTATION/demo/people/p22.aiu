@@ -1,0 +1,26 @@
+title start
+Demo people 22
+title end
+
+paragraph start
+Page 22 of people.
+paragraph end
+
+link start
+name: l1-p22
+target: demo/people/p09.aiu
+face: ref
+link end
+
+link start
+name: l2-p22
+target: demo/people/p04.aiu
+face: ref
+link end
+
+link start
+name: l3-p22
+target: demo/ideas/i14.aiu
+face: far
+link end
+

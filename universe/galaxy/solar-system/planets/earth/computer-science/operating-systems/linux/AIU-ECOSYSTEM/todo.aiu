@@ -10,6 +10,21 @@ Open holes
 title end
 
 paragraph start
+todo: AIU jump (the custom zoxide in the shell) on the TUI pattern: server loaded, floating full screen pane, key shows and hides it, never closed. See ecosystem TUI configuration/tui-plan.aiu.
+Planned.
+paragraph end
+
+paragraph start
+todo: theme settings on the same pattern: server loaded, floating full screen pane, key shows and hides it, never closed.
+Planned.
+paragraph end
+
+paragraph start
+todo: settings TUI as a floating pane with a Visual mode key (free keys r u v), data held by the server, instant show and hide.
+Planned.
+paragraph end
+
+paragraph start
 todo: Ctrl-c must kill the running process; today it sends the job to the background and it keeps running
 Planned.
 paragraph end

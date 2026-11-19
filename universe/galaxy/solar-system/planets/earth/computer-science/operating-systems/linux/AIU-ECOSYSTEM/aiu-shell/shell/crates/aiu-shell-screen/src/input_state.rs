@@ -555,7 +555,8 @@ impl InputState {
                 }
                 if let KeyCode::Char(c) = key.code {
                     match c.to_string().as_str() {
-                        "t" | "h" | "n" | "e" | "s" | "c" | "p" | "a" => self.move_in_boxes(c.to_string().as_str()),
+                        "e" => crate::command_runner::toggle_settings(),
+                        "t" | "h" | "n" | "s" | "c" | "p" | "a" => self.move_in_boxes(c.to_string().as_str()),
                         "i" => {
                             crate::bar_view::close_menu();
                             self.mode = Mode::Insert;

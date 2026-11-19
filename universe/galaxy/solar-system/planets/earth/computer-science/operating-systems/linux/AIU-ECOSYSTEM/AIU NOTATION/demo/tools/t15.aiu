@@ -1,0 +1,26 @@
+title start
+Demo tools 15
+title end
+
+paragraph start
+Page 15 of tools.
+paragraph end
+
+link start
+name: l1-t15
+target: demo/tools/t13.aiu
+face: ref
+link end
+
+link start
+name: l2-t15
+target: demo/tools/t12.aiu
+face: ref
+link end
+
+link start
+name: l3-t15
+target: demo/ideas/i04.aiu
+face: far
+link end
+

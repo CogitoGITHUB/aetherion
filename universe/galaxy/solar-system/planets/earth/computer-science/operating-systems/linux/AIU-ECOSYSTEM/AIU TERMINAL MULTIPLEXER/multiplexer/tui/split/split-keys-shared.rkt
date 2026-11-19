@@ -12,6 +12,7 @@
         (list "1" "float-todo")
         (list "2" "float-journal")
         (list "3" "float-notes")
+        (list "e" "float-settings")
         (list "z" "float-size")
         (list "g" "float-grow")
         (list "k" "float-shrink")

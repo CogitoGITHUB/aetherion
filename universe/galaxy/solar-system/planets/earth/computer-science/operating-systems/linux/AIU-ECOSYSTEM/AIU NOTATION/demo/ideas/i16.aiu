@@ -1,0 +1,26 @@
+title start
+Demo ideas 16
+title end
+
+paragraph start
+Page 16 of ideas.
+paragraph end
+
+link start
+name: l1-i16
+target: demo/ideas/i14.aiu
+face: ref
+link end
+
+link start
+name: l2-i16
+target: demo/ideas/i06.aiu
+face: ref
+link end
+
+link start
+name: l3-i16
+target: demo/places/l02.aiu
+face: far
+link end
+

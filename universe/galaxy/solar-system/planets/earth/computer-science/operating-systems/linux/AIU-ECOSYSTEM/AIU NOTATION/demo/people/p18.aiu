@@ -1,0 +1,26 @@
+title start
+Demo people 18
+title end
+
+paragraph start
+Page 18 of people.
+paragraph end
+
+link start
+name: l1-p18
+target: demo/people/p01.aiu
+face: ref
+link end
+
+link start
+name: l2-p18
+target: demo/people/p22.aiu
+face: ref
+link end
+
+link start
+name: l3-p18
+target: demo/events/e05.aiu
+face: far
+link end
+

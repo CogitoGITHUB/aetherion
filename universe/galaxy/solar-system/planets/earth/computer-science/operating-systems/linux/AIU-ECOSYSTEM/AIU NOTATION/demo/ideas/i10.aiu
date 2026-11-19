@@ -1,0 +1,20 @@
+title start
+Demo ideas 10
+title end
+
+paragraph start
+Page 10 of ideas.
+paragraph end
+
+link start
+name: l1-i10
+target: demo/ideas/i21.aiu
+face: ref
+link end
+
+link start
+name: l2-i10
+target: demo/ideas/i22.aiu
+face: ref
+link end
+

@@ -33,6 +33,7 @@ const RICH_DEFAULT_WIDTH: usize = 40;
 /// Say how to call the binary: the five commands and the one file path they take.
 fn usage() {
     eprintln!("usage: notation <parse|render|render-rich|roundtrip|todos> <file>  or  notation index <folder>");
+    eprintln!("       notation <load|reload|links|backlinks|broken|names> [args]  or  notation new FILE (text on stdin)");
 }
 // main reads the command and the file, and hands the work to the one
 // command that knows it.
@@ -46,11 +47,104 @@ fn page_anchor(path: &str) -> std::path::PathBuf {
 }
 
 
+fn ask_server(cmd: &str) -> Result<String, String> {
+    use std::io::{Read, Write};
+    use std::net::{SocketAddr, TcpStream};
+    use std::time::Duration;
+    let port = std::env::var("AIU_SERVER_PORT").unwrap_or_else(|_| String::from("8080"));
+    let addr: SocketAddr = format!("127.0.0.1:{}", port).parse().map_err(|_| String::from("bad port"))?;
+    let mut s = TcpStream::connect_timeout(&addr, Duration::from_millis(500)).map_err(|e| e.to_string())?;
+    let _ = s.set_read_timeout(Some(Duration::from_secs(60)));
+    let req = format!(
+        "POST /cmd HTTP/1.1\r\nHost: 127.0.0.1\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+        cmd.len(),
+        cmd
+    );
+    s.write_all(req.as_bytes()).map_err(|e| e.to_string())?;
+    let mut out = String::new();
+    s.read_to_string(&mut out).map_err(|e| e.to_string())?;
+    match out.split_once("\r\n\r\n") {
+        Some((_, body)) => Ok(body.to_string()),
+        None => Err(String::from("no answer")),
+    }
+}
+
+fn write_file(path: &str, text: &str) -> Result<(), String> {
+    let p = std::path::Path::new(path);
+    let abs = match std::fs::canonicalize(p) {
+        Ok(a) => a,
+        Err(_) => {
+            let dir = match p.parent() {
+                Some(d) if !d.as_os_str().is_empty() => d.to_path_buf(),
+                _ => std::path::PathBuf::from("."),
+            };
+            let d = std::fs::canonicalize(dir).map_err(|e| e.to_string())?;
+            match p.file_name() {
+                Some(n) => d.join(n),
+                None => return Err(String::from("bad path")),
+            }
+        }
+    };
+    let cmd = format!("write {}\n{}", abs.to_string_lossy(), text);
+    match ask_server(&cmd) {
+        Ok(a) if !a.contains("no folder loaded") => Ok(()),
+        _ => {
+            std::fs::write(path, text).map_err(|e| e.to_string())?;
+            eprintln!("notation: no server used, file written directly");
+            Ok(())
+        }
+    }
+}
+
 fn main() {
     let args: Vec<String> = std::env::args().collect();
+    let server_cmds = ["load", "reload", "links", "backlinks", "broken", "names"];
+    if args.len() >= 2 && server_cmds.contains(&args[1].as_str()) {
+        let mut parts: Vec<String> = args[1..].to_vec();
+        if args[1] == "load" && parts.len() > 1 {
+            if let Ok(p) = std::fs::canonicalize(&parts[1]) {
+                parts[1] = p.to_string_lossy().to_string();
+            }
+        }
+        match ask_server(&parts.join(" ")) {
+            Ok(a) => {
+                println!("{}", a.trim_end());
+                return;
+            }
+            Err(e) => {
+                eprintln!("notation: no server ({}), start it with: ecosystem serve", e);
+                std::process::exit(1);
+            }
+        }
+    }
     if args.len() < 3 {
         usage();
         std::process::exit(2);
+    }
+    if args.len() >= 3 && args[1] == "new" {
+        if std::path::Path::new(&args[2]).exists() {
+            eprintln!("notation: {} exists", args[2]);
+            std::process::exit(2);
+        }
+        let mut body = String::new();
+        {
+            use std::io::Read;
+            let _ = std::io::stdin().read_to_string(&mut body);
+        }
+        if body.trim().is_empty() {
+            eprintln!("notation: no page text on stdin");
+            std::process::exit(2);
+        }
+        match write_file(&args[2], &body) {
+            Ok(()) => {
+                println!("created {}", args[2]);
+                return;
+            }
+            Err(e) => {
+                eprintln!("notation: {}", e);
+                std::process::exit(1);
+            }
+        }
     }
     if args[1] == "index" {
         match notation::database_index_folder::index_folder(std::path::Path::new(&args[2])) {
@@ -98,7 +192,7 @@ fn main() {
             let text = match boxview::fill_page(&text) {
                 Ok((new, _)) => {
                     if new != text {
-                        if let Err(e) = std::fs::write(&path, &new) {
+                        if let Err(e) = write_file(&path, &new) {
                             eprintln!("notation: cannot write {}: {}", path, e);
                             std::process::exit(2);
                         }
@@ -175,7 +269,7 @@ fn main() {
             match boxview::fill_page(&text) {
                 Ok((new, report)) => {
                     if new != text {
-                        if let Err(e) = std::fs::write(&path, new) {
+                        if let Err(e) = write_file(&path, &new) {
                             eprintln!("notation: cannot write {}: {}", path, e);
                             std::process::exit(2);
                         }

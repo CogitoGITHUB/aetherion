@@ -1,0 +1,20 @@
+title start
+Demo places 09
+title end
+
+paragraph start
+Page 09 of places.
+paragraph end
+
+link start
+name: l1-l09
+target: demo/places/l21.aiu
+face: ref
+link end
+
+link start
+name: l2-l09
+target: demo/places/l12.aiu
+face: ref
+link end
+

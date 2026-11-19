@@ -1,0 +1,20 @@
+title start
+Demo people 07
+title end
+
+paragraph start
+Page 07 of people.
+paragraph end
+
+link start
+name: l1-p07
+target: demo/people/p17.aiu
+face: ref
+link end
+
+link start
+name: l2-p07
+target: demo/people/p18.aiu
+face: ref
+link end
+

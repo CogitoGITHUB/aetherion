@@ -10,13 +10,6 @@ files. Shape builds every layout by hand. Nothing arranges
 itself.
 paragraph end
 
-paragraph start
-name: paragraph-layout-decided-replace
-Decided. Layout files replace the place declaration in the title
-block. A file that is in no layout is still drawn in a wrapped
-row, so no file is hidden. Files in no layout still read the old
-place declaration until Shape removes it.
-paragraph end
 
 paragraph start
 name: paragraph-layout-decided-rules
@@ -76,25 +69,7 @@ layout-item record per layout, card and box. Nested boxes are
 drawn from them, with files in no layout in a row below.
 paragraph end
 
-paragraph start
-name: paragraph-layout-written
-Written, not yet confirmed on screen. The master view is real
-HTML now. The wasm gives the page a scene with boxes, cards and
-arrow endpoints. The page draws rounded boxes, descriptions and
-curved SVG arrows with colors and corners from the theme only.
-Layout width no longer changes with zoom. Demo layouts in
-AIU NOTATION/demo carry captions.
-paragraph end
 
-paragraph start
-name: paragraph-layout-open
-Open. Card and box sizes, spacing and the arrow curve still live
-in lib.rs and the page and must move to notation settings.
-Remove the old place fallback. Zoom levels: far shows box
-titles, close shows cards. Focus on tap: light a card and its
-linked files. Table view as a second reading of the same index.
-Descriptions for plain files that are in no layout.
-paragraph end
 
 paragraph start
 name: paragraph-layout-inspiration
@@ -104,21 +79,77 @@ clusters: nested containers written in text. Maps of content:
 one note that only lists and arranges others.
 paragraph end
 
+
+
+
+
+
+
 paragraph start
-name: paragraph-layout-decided-scope
-Decided. The master view has a folder scope, set in lib.rs as
-SCOPE. Now it is demo/. Files outside the scope are not drawn,
-but they stay in the index and are never deleted. Files inside
-the scope that are in no layout still wrap in a row below.
-Open: move SCOPE into notation settings.
+name: paragraph-layout-decided-fallback
+Decided. A file in no layout is still drawn in a wrapped row, so
+no file is hidden.
 paragraph end
 
 paragraph start
-name: paragraph-layout-decided-one-place
-Decided. Layout files live in AIU NOTATION/notation/layouts, beside
-blocktypes and types, never in demo and never in .notation. This
-replaces any earlier note that named .notation/layouts. Deleting
-demo never loses them. The master view has a folder scope, SCOPE
-in website/lib.rs, now demo/. Files outside it stay in the index.
-Open: move SCOPE into notation settings.
+name: paragraph-layout-decided-home-scope
+Decided. Layout files and the settings file live in AIU NOTATION/
+notation/layouts, beside blocktypes and types. Never in demo and
+never in a .notation folder. The master view has a folder scope,
+the scope key of the settings block, now demo/. Files outside it stay in the
+index and are never deleted.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-settings
+Decided. Sizes, spacing and the arrow curve live in a settings
+block in notation/layouts/layout-settings.aiu. Keys: width,
+height, gap, stepx, stepy, margin, pad, head, curve, scope, padv, padh, titlesize, descsize, labelsize. Curve is 0
+to 1, 0.5 is the old look. Settings blocks merge in file and line
+order, later wins. Missing or bad keys keep the old defaults.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-tap
+Decided. First tap on a card lights it and the cards it links to
+and dims the rest. A second tap on the lit card opens the file. A
+tap on empty space clears the focus. Phones send a fake mouse
+click after a touch, so the page ignores mouse taps within 800 ms
+of a touch tap.
+paragraph end
+
+paragraph start
+name: paragraph-layout-decided-big-demo
+Decided. The demo folder holds 5 folders (ideas, people, places,
+tools, events) of 24 pages each, with 2 to 3 links per page, some
+across folders. One layout per folder, and layout-demo-world
+holds the 5 boxes. Generated once, then edited by hand.
+paragraph end
+
+paragraph start
+name: paragraph-layout-state
+State. Confirmed on screen: boxes, descriptions and arrows look
+right. Written, not yet confirmed on screen: settings read from
+notation, focus on tap with the double tap guard, and the big
+demo.
+paragraph end
+
+
+
+paragraph start
+name: paragraph-layout-decided-settings-tui
+Decided. Settings are edited in a TUI, never by hand in code. The
+file is AIU ECOSYSTEM/ecosystem/ecosystem TUI configuration/settings-tui.rkt. It reads
+and writes notation/layouts/layout-settings.aiu, tells the server
+to reload after every change, and takes every color from the theme
+engine only. One box per group: cards, arrows, spacing, text,
+scope.
+paragraph end
+
+paragraph start
+name: paragraph-layout-open
+Open, in this order. 1. Settings TUI as a ecosystem command.
+2. Zoom levels: far shows box
+titles, close shows cards. 3. Table view as a second reading of
+the same index. 4. Descriptions for plain files in no layout.
 paragraph end

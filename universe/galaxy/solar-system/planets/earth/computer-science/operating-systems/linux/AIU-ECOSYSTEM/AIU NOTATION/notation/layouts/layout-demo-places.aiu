@@ -1,0 +1,100 @@
+layout start
+name: demo-places
+caption: Folder places with 24 linked pages.
+card start
+target: demo/places/l01.aiu
+place: 0 0
+card end
+card start
+target: demo/places/l02.aiu
+place: 1 0
+card end
+card start
+target: demo/places/l03.aiu
+place: 2 0
+card end
+card start
+target: demo/places/l04.aiu
+place: 3 0
+card end
+card start
+target: demo/places/l05.aiu
+place: 4 0
+card end
+card start
+target: demo/places/l06.aiu
+place: 0 1
+card end
+card start
+target: demo/places/l07.aiu
+place: 1 1
+card end
+card start
+target: demo/places/l08.aiu
+place: 2 1
+card end
+card start
+target: demo/places/l09.aiu
+place: 3 1
+card end
+card start
+target: demo/places/l10.aiu
+place: 4 1
+card end
+card start
+target: demo/places/l11.aiu
+place: 0 2
+card end
+card start
+target: demo/places/l12.aiu
+place: 1 2
+card end
+card start
+target: demo/places/l13.aiu
+place: 2 2
+card end
+card start
+target: demo/places/l14.aiu
+place: 3 2
+card end
+card start
+target: demo/places/l15.aiu
+place: 4 2
+card end
+card start
+target: demo/places/l16.aiu
+place: 0 3
+card end
+card start
+target: demo/places/l17.aiu
+place: 1 3
+card end
+card start
+target: demo/places/l18.aiu
+place: 2 3
+card end
+card start
+target: demo/places/l19.aiu
+place: 3 3
+card end
+card start
+target: demo/places/l20.aiu
+place: 4 3
+card end
+card start
+target: demo/places/l21.aiu
+place: 0 4
+card end
+card start
+target: demo/places/l22.aiu
+place: 1 4
+card end
+card start
+target: demo/places/l23.aiu
+place: 2 4
+card end
+card start
+target: demo/places/l24.aiu
+place: 3 4
+card end
+layout end

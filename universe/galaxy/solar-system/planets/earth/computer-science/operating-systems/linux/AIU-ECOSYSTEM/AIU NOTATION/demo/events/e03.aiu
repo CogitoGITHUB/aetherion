@@ -1,0 +1,26 @@
+title start
+Demo events 03
+title end
+
+paragraph start
+Page 03 of events.
+paragraph end
+
+link start
+name: l1-e03
+target: demo/events/e02.aiu
+face: ref
+link end
+
+link start
+name: l2-e03
+target: demo/events/e08.aiu
+face: ref
+link end
+
+link start
+name: l3-e03
+target: demo/places/l12.aiu
+face: far
+link end
+

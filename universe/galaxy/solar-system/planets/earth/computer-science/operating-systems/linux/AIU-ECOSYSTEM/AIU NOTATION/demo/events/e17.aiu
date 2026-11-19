@@ -1,0 +1,26 @@
+title start
+Demo events 17
+title end
+
+paragraph start
+Page 17 of events.
+paragraph end
+
+link start
+name: l1-e17
+target: demo/events/e16.aiu
+face: ref
+link end
+
+link start
+name: l2-e17
+target: demo/events/e18.aiu
+face: ref
+link end
+
+link start
+name: l3-e17
+target: demo/tools/t18.aiu
+face: far
+link end
+

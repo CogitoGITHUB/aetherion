@@ -1,0 +1,24 @@
+layout start
+name: demo-world
+caption: Five folders of pages with random links.
+box start
+target: demo-ideas
+place: 0 0
+box end
+box start
+target: demo-people
+place: 6 0
+box end
+box start
+target: demo-places
+place: 0 6
+box end
+box start
+target: demo-tools
+place: 6 6
+box end
+box start
+target: demo-events
+place: 3 12
+box end
+layout end

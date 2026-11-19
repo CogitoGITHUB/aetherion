@@ -1,0 +1,26 @@
+title start
+Demo people 06
+title end
+
+paragraph start
+Page 06 of people.
+paragraph end
+
+link start
+name: l1-p06
+target: demo/people/p10.aiu
+face: ref
+link end
+
+link start
+name: l2-p06
+target: demo/people/p21.aiu
+face: ref
+link end
+
+link start
+name: l3-p06
+target: demo/ideas/i20.aiu
+face: far
+link end
+

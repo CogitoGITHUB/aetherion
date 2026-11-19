@@ -35,6 +35,30 @@ fn collect(
                         .with_field("line", &block.line.to_string()),
                 );
             }
+            if block.name == "settings" {
+                let key = format!("{}:{}", source, block.line);
+                out.push(
+                    Record::new(KIND, &key, source)
+                        .with_field("what", "settings")
+                        .with_field("layout", parent)
+                        .with_field("line", &block.line.to_string())
+                        .with_field("width", &get("width"))
+                        .with_field("height", &get("height"))
+                        .with_field("gap", &get("gap"))
+                        .with_field("stepx", &get("stepx"))
+                        .with_field("stepy", &get("stepy"))
+                        .with_field("margin", &get("margin"))
+                        .with_field("pad", &get("pad"))
+                        .with_field("head", &get("head"))
+                        .with_field("curve", &get("curve"))
+                        .with_field("scope", &get("scope"))
+                        .with_field("padv", &get("padv"))
+                        .with_field("padh", &get("padh"))
+                        .with_field("titlesize", &get("titlesize"))
+                        .with_field("descsize", &get("descsize"))
+                        .with_field("labelsize", &get("labelsize")),
+                );
+            }
             if block.name == "card" || block.name == "box" {
                 let key = format!("{}:{}", source, block.line);
                 out.push(

@@ -21,6 +21,7 @@
            [(49) (quote float-todo)]
            [(50) (quote float-journal)]
            [(51) (quote float-notes)]
+           [(101) (quote float-settings)]
            [(122) (quote float-size)]
            [(103) (quote float-grow)]
            [(107) (quote float-shrink)]

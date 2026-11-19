@@ -4,6 +4,7 @@
   let e, ox = 0, oy = 0, z = 1, pts = [];
   let T = {}, tsig = "", pend = null;
   let ver = 0, lsig = "", wl = null;
+  let foc = '', lastS = null, lt = 0;
   let ov = null, st = null, mv = false;
   const mk = (tag, css, txt) => {
     const e = document.createElement(tag);
@@ -74,7 +75,10 @@
   };
   const tap = (x, y) => {
     const ok = e.pick(Math.round(innerWidth), ox + x / z, oy + y / z);
-    if (ok > 0) openFile(str(e.pick_ptr(), e.pick_len()));
+    if (ok > 0) {
+      const k = str(e.pick_ptr(), e.pick_len());
+      if (foc === k) openFile(k); else { foc = k; paint(); }
+    } else if (foc) { foc = ''; paint(); }
   };
   addEventListener("keydown", (v) => { if (v.key === "Escape") closeFile(); });
   const frame = (q, lx, lw) => {
@@ -127,6 +131,27 @@
     text: (p, n, x, y) => { g.fillStyle = ink("text"); g.fillText(str(p, n), x, y); },
   } });
   e = w.instance.exports;
+  const applyFocus = () => {
+    if (!lastS || !wl) return;
+    const ks = wl.children, base = lastS.f.length + 1;
+    const fi = lastS.c.findIndex((c) => c.k === foc);
+    const lit = new Set();
+    if (fi >= 0) {
+      lit.add(fi);
+      lastS.l.forEach((l) => {
+        if (l[4] === fi) lit.add(l[5]);
+        if (l[5] === fi) lit.add(l[4]);
+      });
+    }
+    lastS.c.forEach((c, i) => {
+      const n = ks[base + i];
+      if (n) n.style.opacity = (fi < 0 || lit.has(i)) ? '1' : '0.25';
+    });
+    const ps = wl.querySelectorAll('svg > path');
+    lastS.l.forEach((l, i) => {
+      if (ps[i]) ps[i].style.opacity = (fi < 0 || l[4] === fi || l[5] === fi) ? '1' : '0.12';
+    });
+  };
   const render = () => {
     if (!e || !e.scene) return;
     const w = Math.round(innerWidth);
@@ -148,10 +173,11 @@
         const bg = T.bg && T.bg !== "none" ? T.bg : "Canvas";
         const fill = T.fill && T.fill !== "none" ? T.fill : bg;
         const rad = T.corner === "square" ? 0 : 12;
+        const sp = (k, d) => { const v = e.style ? e.style(k) : 0; return v > 0 ? v : d; };
         s.f.forEach((f) => {
           const d = mk("div", `position:absolute;box-sizing:border-box;left:${f.x}px;top:${f.y}px;width:${f.w}px;height:${f.h}px;border:1px solid ${dim};border-radius:${rad}px`);
-          d.appendChild(mk("span", `position:absolute;top:-10px;left:14px;padding:0 8px;font-size:13px;font-weight:600;background:${bg};color:${fg}`, f.t));
-          if (f.d) d.appendChild(mk("div", `position:absolute;left:16px;right:16px;top:14px;font-size:12px;line-height:1.35;color:${dim};display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden`, f.d));
+          d.appendChild(mk("span", `position:absolute;top:-10px;left:14px;padding:0 8px;font-size:${sp(4, 13)}px;font-weight:600;background:${bg};color:${fg}`, f.t));
+          if (f.d) d.appendChild(mk("div", `position:absolute;left:16px;right:16px;top:14px;font-size:${sp(3, 12)}px;line-height:1.35;color:${dim};display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden`, f.d));
           wl.appendChild(d);
         });
         const sv = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -162,7 +188,8 @@
         if (head) h += `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" fill="${dim}"/></marker></defs>`;
         s.l.forEach((l) => {
           const x1 = l[0], y1 = l[1], x2 = l[2], y2 = l[3];
-          const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+          const kk = e.curve ? e.curve() : 0.5;
+          const mx = x1 + (x2 - x1) * kk, my = y1 + (y2 - y1) * kk;
           const d = Math.abs(x2 - x1) >= Math.abs(y2 - y1)
             ? `M${x1} ${y1}C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}`
             : `M${x1} ${y1}C${x1} ${my} ${x2} ${my} ${x2} ${y2}`;
@@ -170,14 +197,16 @@
         });
         sv.innerHTML = h;
         wl.appendChild(sv);
+        lastS = s;
         s.c.forEach((c) => {
-          const d = mk("div", `position:absolute;box-sizing:border-box;left:${c.x}px;top:${c.y}px;width:${s.bw}px;height:${s.bh}px;padding:10px 12px;overflow:hidden;background:${fill};border:1px solid ${dim};border-radius:${rad}px`);
-          d.appendChild(mk("div", `font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:${fg}`, c.t));
-          if (c.d) d.appendChild(mk("div", `margin-top:3px;font-size:12px;line-height:1.35;color:${dim};display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden`, c.d));
+          const d = mk("div", `position:absolute;box-sizing:border-box;left:${c.x}px;top:${c.y}px;width:${s.bw}px;height:${s.bh}px;padding:${sp(0, 10)}px ${sp(1, 12)}px;overflow:hidden;background:${fill};border:1px solid ${dim};border-radius:${rad}px`);
+          d.appendChild(mk("div", `font-size:${sp(2, 15)}px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:${fg}`, c.t));
+          if (c.d) d.appendChild(mk("div", `margin-top:3px;font-size:${sp(3, 12)}px;line-height:1.35;color:${dim};display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden`, c.d));
           wl.appendChild(d);
         });
       }
     }
+    applyFocus();
     wl.style.transform = "scale(" + z + ") translate(" + (-ox) + "px," + (-oy) + "px)";
   };
   const paint = () => {
@@ -234,7 +263,7 @@
   addEventListener("touchend", (v) => {
     const t = v.changedTouches[0], s = st;
     pts = grab(v.touches);
-    if (!ov && s && !mv && v.touches.length === 0 && t) tap(t.clientX, t.clientY);
+    if (!ov && s && !mv && v.touches.length === 0 && t) { lt = Date.now(); tap(t.clientX, t.clientY); }
     if (v.touches.length === 0) st = null;
   });
   addEventListener("wheel", (v) => {
@@ -249,7 +278,7 @@
     md = [v.clientX, v.clientY]; st = [v.clientX, v.clientY]; mv = false;
   });
   addEventListener("mouseup", (v) => {
-    if (!ov && st && !mv) tap(v.clientX, v.clientY);
+    if (!ov && st && !mv && Date.now() - lt > 800) tap(v.clientX, v.clientY);
     st = null; md = null;
   });
   addEventListener("mousemove", (v) => {

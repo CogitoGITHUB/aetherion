@@ -632,3 +632,13 @@ pub fn try_theme(line: &str) -> Option<String> {
     crate::theme::reload();
     Some(format!("theme {}", name))
 }
+
+pub fn toggle_settings() {
+    use std::io::Write;
+    if std::env::var_os("AIU_IN_MULTIPLEXER").is_none() {
+        return;
+    }
+    let mut out = std::io::stdout();
+    let _ = out.write_all(b"\x1b]7704;e\x07");
+    let _ = out.flush();
+}

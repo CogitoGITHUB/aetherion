@@ -345,10 +345,15 @@
 
 (define pane-grid-quit-hook (box void))
 (provide pane-grid-quit-hook)
+(define pane-grid-settings-hook (box void))
+(provide pane-grid-settings-hook)
 (define (osc-quit-check! body)
   (when (and (> (string-length body) 5)
              (string=? (substring body 0 5) "7702;"))
-    ((unbox pane-grid-quit-hook))))
+    ((unbox pane-grid-quit-hook)))
+  (when (and (> (string-length body) 5)
+             (string=? (substring body 0 5) "7704;"))
+    ((unbox pane-grid-settings-hook))))
 
 (define pane-grid-run-flag (box #f))
 (provide pane-grid-run-flag)

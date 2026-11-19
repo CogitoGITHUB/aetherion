@@ -882,6 +882,169 @@ fn file_move(from: &str, to: Option<&str>) -> String {
     format!("moved {} to {} {}", from, to, commit_for(&a, &[&a, &b], &msg))
 }
 
+struct Bk {
+    kind: String,
+    decls: Vec<(String, String)>,
+    bs: usize,
+    be: usize,
+}
+
+fn body_bounds(b: &notation::parser::Block, t: &str) -> (usize, usize) {
+    let n = t.len();
+    let s0 = b.span.start.min(n);
+    let mut p = match t[s0..].find("\n") {
+        Some(i) => s0 + i + 1,
+        None => n,
+    };
+    for d in &b.declarations {
+        let e = d.span.end.min(n);
+        let q = if e > 0 && t.as_bytes()[e - 1] == 10u8 {
+            e
+        } else {
+            match t[e..].find("\n") {
+                Some(i) => e + i + 1,
+                None => n,
+            }
+        };
+        if q > p {
+            p = q;
+        }
+    }
+    let e = b.span.end.min(n);
+    let head = t[..e].trim_end_matches("\n");
+    let last = match head.rfind("\n") {
+        Some(i) => i + 1,
+        None => 0,
+    };
+    (p.min(n), last.max(p).min(n))
+}
+
+fn walk(nodes: &[notation::parser::Node], t: &str, out: &mut Vec<Bk>) {
+    for n in nodes {
+        if let notation::parser::Node::Block(b) = n {
+            let (bs, be) = body_bounds(b, t);
+            let decls = b
+                .declarations
+                .iter()
+                .map(|d| (d.keyword.clone(), d.value.trim().to_string()))
+                .collect();
+            out.push(Bk { kind: b.name.clone(), decls, bs, be });
+            walk(&b.children, t, out);
+        }
+    }
+}
+
+fn blocks_of(t: &str) -> Vec<Bk> {
+    let buf = notation::buffer::Buffer::from_text(t);
+    let tree = notation::parser::parse(&buf);
+    let mut out: Vec<Bk> = Vec::new();
+    walk(&tree.nodes, t, &mut out);
+    out
+}
+
+fn decl_of(b: &Bk, k: &str) -> String {
+    match b.decls.iter().find(|d| d.0 == k) {
+        Some(d) => d.1.clone(),
+        None => String::new(),
+    }
+}
+
+fn reindex(db: &Db, path: &std::path::Path) -> String {
+    let root = match ROOT.lock().unwrap_or_else(|e| e.into_inner()).clone() {
+        Some(r) => r,
+        None => return String::new(),
+    };
+    let mut g = db.lock().unwrap_or_else(|e| e.into_inner());
+    match g.as_mut() {
+        Some(store) => {
+            let r = std::path::Path::new(&root);
+            match notation::database_index_folder::index_one(r, path, store) {
+                Ok(_) => {
+                    ws::broadcast("changed");
+                    String::new()
+                }
+                Err(e) => format!("reindex error {}", e),
+            }
+        }
+        None => String::new(),
+    }
+}
+
+fn writeback(written: &str, text: &str, db: &Db) -> String {
+    let root = match ROOT.lock().unwrap_or_else(|e| e.into_inner()).clone() {
+        Some(r) => r,
+        None => return String::new(),
+    };
+    let full_written = abs_path(written);
+    let mut notes: Vec<String> = Vec::new();
+    for l in blocks_of(text).iter().filter(|b| b.kind == "link") {
+        let mode = decl_of(l, "mode");
+        if mode != "live" && mode != "copy" {
+            continue;
+        }
+        let target = decl_of(l, "target");
+        let found = {
+            let g = db.lock().unwrap_or_else(|e| e.into_inner());
+            match g.as_ref() {
+                Some(s) => s
+                    .of_kind("name")
+                    .iter()
+                    .find(|r| r.field("name") == Some(target.as_str()))
+                    .map(|r| r.source.clone()),
+                None => None,
+            }
+        };
+        let v = match found {
+            Some(v) => v,
+            None => {
+                notes.push(format!("no target {}", target));
+                continue;
+            }
+        };
+        let src = match v.rsplit_once(":") {
+            Some((a, n)) if n.chars().all(|c| c.is_ascii_digit()) => a.to_string(),
+            _ => v,
+        };
+        let full = PathBuf::from(&root).join(&src);
+        if full == full_written {
+            notes.push(format!("skip same file {}", target));
+            continue;
+        }
+        let old = match fs::read_to_string(&full) {
+            Ok(t) => t,
+            Err(e) => {
+                notes.push(format!("error {}", e));
+                continue;
+            }
+        };
+        let theirs = blocks_of(&old);
+        let t = match theirs.iter().find(|b| decl_of(b, "name") == target) {
+            Some(b) => b,
+            None => {
+                notes.push(format!("target {} not in {}", target, src));
+                continue;
+            }
+        };
+        let body = &text[l.bs..l.be];
+        if &old[t.bs..t.be] == body {
+            continue;
+        }
+        let new = format!("{}{}{}", &old[..t.bs], body, &old[t.be..]);
+        if let Err(e) = fs::write(&full, &new) {
+            notes.push(format!("error {}", e));
+            continue;
+        }
+        let ri = reindex(db, &full);
+        if !ri.is_empty() {
+            notes.push(ri);
+        }
+        let m = format!("writeback {} from {}", target, written);
+        let c = commit_for(&full, &[&full], &m);
+        notes.push(format!("writeback {} {}", target, c));
+    }
+    notes.join("; ")
+}
+
 fn handle_raw(text: &str, programs: &mut BTreeMap<String, String>, started: u64, dev: &Arc<Mutex<DevState>>, db: &Db) -> (String, bool) {
     let (first, rest) = match text.split_once("\n") {
         Some((a, b)) => (a.trim_end_matches("\r"), Some(b)),
@@ -889,7 +1052,21 @@ fn handle_raw(text: &str, programs: &mut BTreeMap<String, String>, started: u64,
     };
     let words: Vec<&str> = first.split_whitespace().collect();
     match words.as_slice() {
-        ["write", p @ ..] if !p.is_empty() => (file_write(&p.join(" "), rest), false),
+        ["write", p @ ..] if !p.is_empty() => {
+            let path = p.join(" ");
+            let mut ans = file_write(&path, rest);
+            if ans.starts_with("written") {
+                if let Some(c) = rest {
+                    let r0 = reindex(db, &abs_path(&path));
+                    let n0 = writeback(&path, c, db);
+                    let n = [r0, n0].iter().filter(|s| !s.is_empty()).cloned().collect::<Vec<String>>().join("; ");
+                    if !n.is_empty() {
+                        ans = format!("{} {}", ans, n);
+                    }
+                }
+            }
+            (ans, false)
+        }
         ["delete", p @ ..] if !p.is_empty() => (file_delete(&p.join(" ")), false),
         ["move", p @ ..] if !p.is_empty() => (file_move(&p.join(" "), rest), false),
         _ => handle(&words, programs, started, dev, db),

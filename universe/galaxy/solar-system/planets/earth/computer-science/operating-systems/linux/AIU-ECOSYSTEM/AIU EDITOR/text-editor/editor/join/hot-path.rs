@@ -202,6 +202,7 @@ fn answer_for(request: &wire_json::Request) -> (bool, Vec<(String, String)>) {
                     ],
                 );
             }
+            notify_server(&file, &text);
             journal::archive(&journal_path, &before);
             journal::clear(&journal_path);
             let state = buffer::new_buffer(&text);
@@ -520,4 +521,29 @@ fn notation_view(text: &str, width: usize, file: &str, read: &str) -> Result<Str
         ));
     }
     Ok(String::from_utf8_lossy(&output.stdout).to_string())
+}
+
+fn notify_server(file: &str, text: &str) {
+    use std::net::{SocketAddr, TcpStream};
+    use std::time::Duration;
+    let path = match fs::canonicalize(file) {
+        Ok(p) => p.to_string_lossy().to_string(),
+        Err(_) => return,
+    };
+    let port = env::var("AIU_SERVER_PORT").unwrap_or_else(|_| String::from("8080"));
+    let addr: SocketAddr = match format!("127.0.0.1:{}", port).parse() {
+        Ok(a) => a,
+        Err(_) => return,
+    };
+    let body = format!("write {}\n{}", path, text);
+    let req = format!(
+        "POST /cmd HTTP/1.1\r\nHost: 127.0.0.1\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+        body.len(),
+        body
+    );
+    if let Ok(mut s) = TcpStream::connect_timeout(&addr, Duration::from_millis(300)) {
+        let _ = s.set_write_timeout(Some(Duration::from_secs(2)));
+        let _ = s.write_all(req.as_bytes());
+        let _ = s.flush();
+    }
 }

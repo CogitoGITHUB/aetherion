@@ -258,7 +258,7 @@
   (define (tile-count) (length (filter (lambda (id) (>= id 0)) (hash-keys panes))))
   (define (open-float-pane! id columns rows)
     (void)
-    (define unit (if (= id (float-pane-id-of 3)) (pane-unit-open-program id columns rows (string-append (or (getenv "HOME") "") "/.local/share/aiu-pm/prefix/aiu-splash/live/bin/aiu-splash") (list "watch")) (pane-unit-open id columns rows (unbox shell-cwd))))
+    (define unit (if (>= (- -1 id) 3) (if (= id (float-pane-id-of 4)) (pane-unit-open-program id columns rows "/usr/bin/bash" (list (string-append (call-with-input-file (string-append (or (getenv "HOME") "") "/.local/state/aiu-ecosystem/root") read-line) "/AIU ECOSYSTEM/ecosystem/ecosystem TUI configuration/settings-pane.sh"))) (pane-unit-open-program id columns rows (string-append (or (getenv "HOME") "") "/.local/share/aiu-pm/prefix/aiu-splash/live/bin/aiu-splash") (list "watch"))) (pane-unit-open id columns rows (unbox shell-cwd))))
     (hash-set! panes id unit)
     (start-output-thread! unit))
   (define (fit-float!)
@@ -523,6 +523,7 @@
       [(float-todo) (show-float! 0)]
       [(float-journal) (show-float! 1)]
       [(float-notes) (show-float! 2)]
+      [(float-settings) (if (and (unbox float-shown) (= (unbox float-index) 4)) (set-box! float-shown #f) (begin (set-box! float-preset 100) (show-float! 4)))]
       [(float-size) (set-box! float-preset (float-next-share (unbox float-preset)))]
       [(float-grow) (set-box! float-preset (float-grow-share (unbox float-preset)))]
       [(float-shrink) (set-box! float-preset (float-shrink-share (unbox float-preset)))]
@@ -600,6 +601,14 @@
 
   (define startup-splash (box #f))
   (define paste-active (box #f))
+  (set-box! pane-grid-settings-hook
+            (lambda ()
+              (thread
+               (lambda ()
+                 (call-with-semaphore state-lock
+                   (lambda () (apply-pane-command! (quote float-settings))))
+                 (fit-panes!)
+                 (set-box! dirty #t)))))
   (define (key-loop)
     (define buffer (make-bytes 4096))
     (let loop ()

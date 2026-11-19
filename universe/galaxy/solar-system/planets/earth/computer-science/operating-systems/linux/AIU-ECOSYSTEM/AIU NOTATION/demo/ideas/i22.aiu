@@ -1,0 +1,26 @@
+title start
+Demo ideas 22
+title end
+
+paragraph start
+Page 22 of ideas.
+paragraph end
+
+link start
+name: l1-i22
+target: demo/ideas/i23.aiu
+face: ref
+link end
+
+link start
+name: l2-i22
+target: demo/ideas/i16.aiu
+face: ref
+link end
+
+link start
+name: l3-i22
+target: demo/events/e03.aiu
+face: far
+link end
+

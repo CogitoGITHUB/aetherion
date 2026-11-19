@@ -1,0 +1,100 @@
+layout start
+name: demo-ideas
+caption: Folder ideas with 24 linked pages.
+card start
+target: demo/ideas/i01.aiu
+place: 0 0
+card end
+card start
+target: demo/ideas/i02.aiu
+place: 1 0
+card end
+card start
+target: demo/ideas/i03.aiu
+place: 2 0
+card end
+card start
+target: demo/ideas/i04.aiu
+place: 3 0
+card end
+card start
+target: demo/ideas/i05.aiu
+place: 4 0
+card end
+card start
+target: demo/ideas/i06.aiu
+place: 0 1
+card end
+card start
+target: demo/ideas/i07.aiu
+place: 1 1
+card end
+card start
+target: demo/ideas/i08.aiu
+place: 2 1
+card end
+card start
+target: demo/ideas/i09.aiu
+place: 3 1
+card end
+card start
+target: demo/ideas/i10.aiu
+place: 4 1
+card end
+card start
+target: demo/ideas/i11.aiu
+place: 0 2
+card end
+card start
+target: demo/ideas/i12.aiu
+place: 1 2
+card end
+card start
+target: demo/ideas/i13.aiu
+place: 2 2
+card end
+card start
+target: demo/ideas/i14.aiu
+place: 3 2
+card end
+card start
+target: demo/ideas/i15.aiu
+place: 4 2
+card end
+card start
+target: demo/ideas/i16.aiu
+place: 0 3
+card end
+card start
+target: demo/ideas/i17.aiu
+place: 1 3
+card end
+card start
+target: demo/ideas/i18.aiu
+place: 2 3
+card end
+card start
+target: demo/ideas/i19.aiu
+place: 3 3
+card end
+card start
+target: demo/ideas/i20.aiu
+place: 4 3
+card end
+card start
+target: demo/ideas/i21.aiu
+place: 0 4
+card end
+card start
+target: demo/ideas/i22.aiu
+place: 1 4
+card end
+card start
+target: demo/ideas/i23.aiu
+place: 2 4
+card end
+card start
+target: demo/ideas/i24.aiu
+place: 3 4
+card end
+layout end

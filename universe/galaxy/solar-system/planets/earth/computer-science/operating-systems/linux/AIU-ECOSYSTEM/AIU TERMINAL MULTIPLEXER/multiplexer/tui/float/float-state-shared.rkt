@@ -2,7 +2,7 @@
 (require racket/string racket/file)
 (provide float-names float-preset-names float-rect float-next-preset float-next-share float-grow-share float-shrink-share float-pane-id-of float-tabs-text float-file-path)
 
-(define float-names (quote ("todo" "journal" "notes" "splash")))
+(define float-names (quote ("todo" "journal" "notes" "splash" "settings")))
 (define float-preset-names (quote ("small" "medium" "large" "full")))
 (define float-preset-shares (quote (40 60 80 100)))
 

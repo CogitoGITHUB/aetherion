@@ -1,0 +1,20 @@
+title start
+Demo people 14
+title end
+
+paragraph start
+Page 14 of people.
+paragraph end
+
+link start
+name: l1-p14
+target: demo/people/p05.aiu
+face: ref
+link end
+
+link start
+name: l2-p14
+target: demo/people/p11.aiu
+face: ref
+link end
+

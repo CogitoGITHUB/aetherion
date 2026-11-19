@@ -1,0 +1,20 @@
+title start
+Demo ideas 18
+title end
+
+paragraph start
+Page 18 of ideas.
+paragraph end
+
+link start
+name: l1-i18
+target: demo/ideas/i03.aiu
+face: ref
+link end
+
+link start
+name: l2-i18
+target: demo/ideas/i04.aiu
+face: ref
+link end
+

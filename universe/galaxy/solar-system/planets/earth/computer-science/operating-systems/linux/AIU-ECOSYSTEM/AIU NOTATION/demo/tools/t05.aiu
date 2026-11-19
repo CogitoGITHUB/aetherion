@@ -1,0 +1,20 @@
+title start
+Demo tools 05
+title end
+
+paragraph start
+Page 05 of tools.
+paragraph end
+
+link start
+name: l1-t05
+target: demo/tools/t09.aiu
+face: ref
+link end
+
+link start
+name: l2-t05
+target: demo/tools/t10.aiu
+face: ref
+link end
+

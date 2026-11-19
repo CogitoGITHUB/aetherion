@@ -1,0 +1,26 @@
+title start
+Demo ideas 02
+title end
+
+paragraph start
+Page 02 of ideas.
+paragraph end
+
+link start
+name: l1-i02
+target: demo/ideas/i19.aiu
+face: ref
+link end
+
+link start
+name: l2-i02
+target: demo/ideas/i22.aiu
+face: ref
+link end
+
+link start
+name: l3-i02
+target: demo/tools/t06.aiu
+face: far
+link end
+

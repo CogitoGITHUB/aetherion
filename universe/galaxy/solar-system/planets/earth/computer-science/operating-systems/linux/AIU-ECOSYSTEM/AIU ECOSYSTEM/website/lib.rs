@@ -139,8 +139,8 @@ fn build(
     let mut cards: Vec<Boxed> = Vec::new();
     let mut frames: Vec<Frame> = Vec::new();
     let mut taken: HashSet<(i64, i64)> = HashSet::new();
-    let mut mw = PAD + BOX_W + PAD;
-    let mut mh = HEAD + BOX_H + PAD;
+    let mut mw = cfg().pad + cfg().bw + cfg().pad;
+    let mut mh = cfg().head + cfg().bh + cfg().pad;
     path.push(name.to_string());
     if let Some(items) = groups.get(name) {
         for it in items {
@@ -171,15 +171,15 @@ fn build(
                 guard += 1;
             }
             taken.insert((px.round() as i64, py.round() as i64));
-            let x = PAD + px * STEP_X;
-            let y = HEAD + py * STEP_Y;
+            let x = cfg().pad + px * cfg().sx;
+            let y = cfg().head + py * cfg().sy;
             if let Some(k) = file {
                 placed.insert(k.clone());
                 desc_set(&format!("k:{}", k), &it.caption);
                 let title = titles.get(&k).cloned().unwrap_or_default();
                 cards.push(Boxed { key: k, title, x, y });
-                mw = mw.max(x + BOX_W + PAD);
-                mh = mh.max(y + BOX_H + PAD);
+                mw = mw.max(x + cfg().bw + cfg().pad);
+                mh = mh.max(y + cfg().bh + cfg().pad);
             } else {
                 let (c, f, w, h) =
                     { desc_set(&format!("l:{}", it.target), &it.caption); build(&it.target, groups, titles, placed, path) };
@@ -194,8 +194,8 @@ fn build(
                     g.y += y;
                     frames.push(g);
                 }
-                mw = mw.max(x + w + PAD);
-                mh = mh.max(y + h + PAD);
+                mw = mw.max(x + w + cfg().pad);
+                mh = mh.max(y + h + cfg().pad);
             }
         }
     }
@@ -204,6 +204,7 @@ fn build(
 }
 
 fn arrange(store: &Store, width: f64) -> (Vec<Boxed>, Vec<Frame>) {
+    set_cfg(store);
     *DESC.lock().unwrap_or_else(|e| e.into_inner()) = None;
     let files = store.of_kind("file");
     let mut titles: HashMap<String, String> = HashMap::new();
@@ -251,8 +252,8 @@ fn arrange(store: &Store, width: f64) -> (Vec<Boxed>, Vec<Frame>) {
     let mut placed: HashSet<String> = HashSet::new();
     let mut cards: Vec<Boxed> = Vec::new();
     let mut frames: Vec<Frame> = Vec::new();
-    let mut sx = GAP;
-    let mut sy = GAP;
+    let mut sx = cfg().gap;
+    let mut sy = cfg().gap;
     let mut rowh: f64 = 0.0;
     let mut any = false;
     for name in &names {
@@ -261,9 +262,9 @@ fn arrange(store: &Store, width: f64) -> (Vec<Boxed>, Vec<Frame>) {
         }
         let mut path: Vec<String> = Vec::new();
         let (c, f, w, h) = build(name, &groups, &titles, &mut placed, &mut path);
-        if sx > GAP && sx + w > width {
-            sx = GAP;
-            sy += rowh + GAP;
+        if sx > cfg().gap && sx + w > width {
+            sx = cfg().gap;
+            sy += rowh + cfg().gap;
             rowh = 0.0;
         }
         frames.push(Frame { title: name.clone(), x: sx, y: sy, w, h });
@@ -277,7 +278,7 @@ fn arrange(store: &Store, width: f64) -> (Vec<Boxed>, Vec<Frame>) {
             g.y += sy;
             frames.push(g);
         }
-        sx += w + GAP;
+        sx += w + cfg().gap;
         rowh = rowh.max(h);
         any = true;
     }
@@ -300,43 +301,34 @@ fn plain(
     let files = store.of_kind("file");
     let mut out: Vec<Boxed> = Vec::new();
     let mut loose: Vec<(String, String)> = Vec::new();
-    let mut last_row: f64 = -1.0;
     for r in &files {
-        if skip.contains(&r.key) || !r.key.starts_with(SCOPE) {
+        if skip.contains(&r.key) || !r.key.starts_with(scope_get().as_str()) {
             continue;
         }
         let title = r.field("title").unwrap_or("").to_string();
-        match r.field("place").and_then(parse_place) {
-            Some((px, py)) => {
-                if py > last_row {
-                    last_row = py;
-                }
-                out.push(Boxed {
-                    key: r.key.clone(),
-                    title,
-                    x: GAP + px * STEP_X,
-                    y: GAP + py * STEP_Y + top,
-                });
-            }
-            None => loose.push((r.key.clone(), title)),
-        }
+        loose.push((r.key.clone(), title));
     }
-    let cols = (((width - GAP) / STEP_X) as usize).max(1);
-    let first = last_row.floor() + 1.0;
+    let cols = (((width - cfg().gap) / cfg().sx) as usize).max(1);
+    let first = 0.0_f64;
     for (i, (key, title)) in loose.into_iter().enumerate() {
         let col = (i % cols) as f64;
         let row = first + (i / cols) as f64;
         out.push(Boxed {
             key,
             title,
-            x: GAP + col * STEP_X,
-            y: GAP + row * STEP_Y + top,
+            x: cfg().gap + col * cfg().sx,
+            y: cfg().gap + row * cfg().sy + top,
         });
     }
     out
 }
 
-const SCOPE: &str = "demo/";
+const SCOPE_DEFAULT: &str = "demo/";
+static SCOPE_V: Mutex<String> = Mutex::new(String::new());
+
+fn scope_get() -> String {
+    SCOPE_V.lock().unwrap_or_else(|e| e.into_inner()).clone()
+}
 static SCENE: Mutex<String> = Mutex::new(String::new());
 static DESC: Mutex<Option<HashMap<String, String>>> = Mutex::new(None);
 
@@ -379,7 +371,7 @@ pub extern "C" fn scene(width: f64) -> usize {
         None => return 0,
     };
     let (boxes, frames) = arrange(store, width);
-    let mut o = format!("{{\"bw\":{},\"bh\":{},\"f\":[", BOX_W, BOX_H);
+    let mut o = format!("{{\"bw\":{},\"bh\":{},\"f\":[", cfg().bw, cfg().bh);
     for (i, f) in frames.iter().enumerate() {
         if i > 0 {
             o.push_str(",");
@@ -434,7 +426,7 @@ pub extern "C" fn scene(width: f64) -> usize {
             o.push_str(",");
         }
         first = false;
-        o.push_str(&format!("[{},{},{},{}]", ax, ay, bx, by));
+        o.push_str(&format!("[{},{},{},{},{},{}]", ax, ay, bx, by, from, to));
     }
     o.push_str("]}");
     let n = o.len();
@@ -536,8 +528,8 @@ pub extern "C" fn pick(width: f64, wx: f64, wy: f64) -> i32 {
         None => return -1,
     };
     for b in layout(store, width).iter().rev() {
-        if wx >= b.x && wx <= b.x + BOX_W
-            && wy >= b.y && wy <= b.y + BOX_H
+        if wx >= b.x && wx <= b.x + cfg().bw
+            && wy >= b.y && wy <= b.y + cfg().bh
         {
             *PICK.lock().unwrap_or_else(|e| e.into_inner()) = b.key.clone();
             return 1;
@@ -561,14 +553,14 @@ fn anchors(a: &Boxed, b: &Boxed) -> (f64, f64, f64, f64) {
     let dy = b.y - a.y;
     if dx.abs() >= dy.abs() {
         if dx >= 0.0 {
-            (a.x + BOX_W, a.y + BOX_H / 2.0, b.x, b.y + BOX_H / 2.0)
+            (a.x + cfg().bw, a.y + cfg().bh / 2.0, b.x, b.y + cfg().bh / 2.0)
         } else {
-            (a.x, a.y + BOX_H / 2.0, b.x + BOX_W, b.y + BOX_H / 2.0)
+            (a.x, a.y + cfg().bh / 2.0, b.x + cfg().bw, b.y + cfg().bh / 2.0)
         }
     } else if dy >= 0.0 {
-        (a.x + BOX_W / 2.0, a.y + BOX_H, b.x + BOX_W / 2.0, b.y)
+        (a.x + cfg().bw / 2.0, a.y + cfg().bh, b.x + cfg().bw / 2.0, b.y)
     } else {
-        (a.x + BOX_W / 2.0, a.y, b.x + BOX_W / 2.0, b.y + BOX_H)
+        (a.x + cfg().bw / 2.0, a.y, b.x + cfg().bw / 2.0, b.y + cfg().bh)
     }
 }
 
@@ -594,7 +586,7 @@ pub extern "C" fn draw(width: f64, height: f64, sx: f64, sy: f64) -> i32 {
         .collect();
     let names = name_map(store);
     let seen = |x: f64, y: f64, w: f64, h: f64| -> bool {
-        x + w >= sx - MARGIN && x <= sx + width + MARGIN && y + h >= sy - MARGIN && y <= sy + height + MARGIN
+        x + w >= sx - cfg().margin && x <= sx + width + cfg().margin && y + h >= sy - cfg().margin && y <= sy + height + cfg().margin
     };
     let mut drawn: i32 = 0;
     unsafe {
@@ -619,8 +611,8 @@ pub extern "C" fn draw(width: f64, height: f64, sx: f64, sy: f64) -> i32 {
             }
         }
         for b in &boxes {
-            if seen(b.x, b.y, BOX_W, BOX_H) {
-                rect(b.x - sx, b.y - sy, BOX_W, BOX_H);
+            if seen(b.x, b.y, cfg().bw, cfg().bh) {
+                rect(b.x - sx, b.y - sy, cfg().bw, cfg().bh);
                 let t = fit(&b.title, &b.key);
                 let _ = &t;
                 let full = if b.title.is_empty() {
@@ -637,4 +629,118 @@ pub extern "C" fn draw(width: f64, height: f64, sx: f64, sy: f64) -> i32 {
         }
     }
     drawn
+}
+
+#[derive(Clone, Copy)]
+struct Cfg {
+    bw: f64,
+    bh: f64,
+    gap: f64,
+    sx: f64,
+    sy: f64,
+    margin: f64,
+    pad: f64,
+    head: f64,
+    curve: f64,
+    pv: f64,
+    ph: f64,
+    ts: f64,
+    ds: f64,
+    ls: f64,
+}
+
+static CFG: Mutex<Option<Cfg>> = Mutex::new(None);
+
+fn cfg_default() -> Cfg {
+    Cfg {
+        bw: BOX_W,
+        bh: BOX_H,
+        gap: GAP,
+        sx: STEP_X,
+        sy: STEP_Y,
+        margin: MARGIN,
+        pad: PAD,
+        head: HEAD,
+        curve: 0.5,
+        pv: 10.0,
+        ph: 12.0,
+        ts: 15.0,
+        ds: 12.0,
+        ls: 13.0,
+    }
+}
+
+fn cfg() -> Cfg {
+    let g = CFG.lock().unwrap_or_else(|e| e.into_inner());
+    match *g {
+        Some(c) => c,
+        None => cfg_default(),
+    }
+}
+
+fn set_cfg(store: &Store) {
+    let mut c = cfg_default();
+    let recs = store.of_kind("layout-item");
+    let mut scope = String::from(SCOPE_DEFAULT);
+    let mut ord: Vec<(String, i64, usize)> = Vec::new();
+    for (i, r) in recs.iter().enumerate() {
+        if r.field("what") == Some("settings") {
+            let ln = r
+                .field("line")
+                .and_then(|s| s.parse::<i64>().ok())
+                .unwrap_or(0);
+            ord.push((r.source.clone(), ln, i));
+        }
+    }
+    ord.sort();
+    for (_, _, i) in ord {
+        let r = &recs[i];
+        let num = |k: &str| {
+            r.field(k)
+                .and_then(|s| s.trim().parse::<f64>().ok())
+                .filter(|v| *v > 0.0)
+        };
+        if let Some(v) = num("width") { c.bw = v; }
+        if let Some(v) = num("height") { c.bh = v; }
+        if let Some(v) = num("gap") { c.gap = v; }
+        if let Some(v) = num("stepx") { c.sx = v; }
+        if let Some(v) = num("stepy") { c.sy = v; }
+        if let Some(v) = num("margin") { c.margin = v; }
+        if let Some(v) = num("pad") { c.pad = v; }
+        if let Some(v) = num("head") { c.head = v; }
+        if let Some(v) = num("padv") { c.pv = v; }
+        if let Some(v) = num("padh") { c.ph = v; }
+        if let Some(v) = num("titlesize") { c.ts = v; }
+        if let Some(v) = num("descsize") { c.ds = v; }
+        if let Some(v) = num("labelsize") { c.ls = v; }
+        let sc = r.field("scope").unwrap_or("").trim();
+        if sc == "all" {
+            scope = String::new();
+        } else if !sc.is_empty() {
+            scope = sc.to_string();
+        }
+        if let Some(v) = num("curve") {
+            if v <= 1.0 { c.curve = v; }
+        }
+    }
+    *SCOPE_V.lock().unwrap_or_else(|e| e.into_inner()) = scope;
+    *CFG.lock().unwrap_or_else(|e| e.into_inner()) = Some(c);
+}
+
+#[no_mangle]
+pub extern "C" fn curve() -> f64 {
+    cfg().curve
+}
+
+#[no_mangle]
+pub extern "C" fn style(i: i32) -> f64 {
+    let c = cfg();
+    match i {
+        0 => c.pv,
+        1 => c.ph,
+        2 => c.ts,
+        3 => c.ds,
+        4 => c.ls,
+        _ => 0.0,
+    }
 }

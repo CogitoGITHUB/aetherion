@@ -45,6 +45,25 @@ fn source_name(root: &Path, path: &Path) -> String {
     parts.join("/")
 }
 
+pub fn index_one(root: &Path, path: &Path, store: &mut Store) -> Result<(), String> {
+    let name = path.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default();
+    if !name.ends_with(".aiu") {
+        return Ok(());
+    }
+    let source = source_name(root, path);
+    let text = fs::read_to_string(path)
+        .map_err(|e| format!("cannot read {}: {}", path.display(), e))?;
+    index_file(store, &source, &text)?;
+    index_blocks(store, &source, &text)?;
+    index_tags(store, &source, &text)?;
+    index_todos(store, &source, &text)?;
+    index_links(store, &source, &text)?;
+    index_layouts(store, &source, &text)?;
+    index_names(store, &source, &text)?;
+    let database = root.join(".notation").join("index.db");
+    save(store, &database).map_err(|e| format!("cannot save {}: {}", database.display(), e))
+}
+
 pub fn index_folder(root: &Path) -> Result<String, String> {
     let mut files: Vec<PathBuf> = Vec::new();
     collect_aiu_files(root, &mut files)?;

@@ -1,0 +1,100 @@
+layout start
+name: demo-tools
+caption: Folder tools with 24 linked pages.
+card start
+target: demo/tools/t01.aiu
+place: 0 0
+card end
+card start
+target: demo/tools/t02.aiu
+place: 1 0
+card end
+card start
+target: demo/tools/t03.aiu
+place: 2 0
+card end
+card start
+target: demo/tools/t04.aiu
+place: 3 0
+card end
+card start
+target: demo/tools/t05.aiu
+place: 4 0
+card end
+card start
+target: demo/tools/t06.aiu
+place: 0 1
+card end
+card start
+target: demo/tools/t07.aiu
+place: 1 1
+card end
+card start
+target: demo/tools/t08.aiu
+place: 2 1
+card end
+card start
+target: demo/tools/t09.aiu
+place: 3 1
+card end
+card start
+target: demo/tools/t10.aiu
+place: 4 1
+card end
+card start
+target: demo/tools/t11.aiu
+place: 0 2
+card end
+card start
+target: demo/tools/t12.aiu
+place: 1 2
+card end
+card start
+target: demo/tools/t13.aiu
+place: 2 2
+card end
+card start
+target: demo/tools/t14.aiu
+place: 3 2
+card end
+card start
+target: demo/tools/t15.aiu
+place: 4 2
+card end
+card start
+target: demo/tools/t16.aiu
+place: 0 3
+card end
+card start
+target: demo/tools/t17.aiu
+place: 1 3
+card end
+card start
+target: demo/tools/t18.aiu
+place: 2 3
+card end
+card start
+target: demo/tools/t19.aiu
+place: 3 3
+card end
+card start
+target: demo/tools/t20.aiu
+place: 4 3
+card end
+card start
+target: demo/tools/t21.aiu
+place: 0 4
+card end
+card start
+target: demo/tools/t22.aiu
+place: 1 4
+card end
+card start
+target: demo/tools/t23.aiu
+place: 2 4
+card end
+card start
+target: demo/tools/t24.aiu
+place: 3 4
+card end
+layout end

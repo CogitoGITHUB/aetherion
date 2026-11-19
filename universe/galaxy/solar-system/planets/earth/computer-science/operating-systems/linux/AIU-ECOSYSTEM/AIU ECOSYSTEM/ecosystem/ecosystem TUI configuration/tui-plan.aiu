@@ -1,0 +1,78 @@
+title start
+name: title-ecosystem-tui-configuration
+kind: plan
+tags: ecosystem tui configuration plan
+Ecosystem TUI configuration plan
+title end
+
+paragraph start
+name: paragraph-tui-goal
+Goal. One TUI configurator for the whole ecosystem, in the same
+interface for every part. People never edit configuration files
+by hand, which skips a whole class of problems. Colors come only
+from the theme engine.
+paragraph end
+
+paragraph start
+name: paragraph-tui-state
+State. Only the website part exists: settings-tui.rkt in this
+folder edits notation/layouts/layout-settings.aiu and reloads the
+page. Nothing else is configured yet, on purpose. The interface
+is built once here so other parts do not need a new one.
+paragraph end
+
+
+paragraph start
+name: paragraph-tui-decided-floating
+Decided. Each configurator is a floating full screen pane in the
+multiplexer. It is never opened and never closed. It is only shown
+and hidden by a key, so nothing loads when the key is pressed.
+paragraph end
+
+paragraph start
+name: paragraph-tui-decided-server
+Decided. The server loads the settings data once and keeps it. It
+changes only when a setting changes, otherwise it does no work.
+The pane already has the data and is real time, so it appears
+instantly. This is light for the server.
+paragraph end
+
+
+paragraph start
+name: paragraph-tui-decided-order
+Decided. First make the website configurator a first class part:
+the key, the floating pane and the server data. Only then move
+forward. No other part is configured before that.
+paragraph end
+
+paragraph start
+name: paragraph-tui-decided-same-pattern
+Decided. The same pattern, server loaded, floating full screen
+pane, key to show and hide, is wanted for the AIU jump, which is
+the custom zoxide inside the shell, and for the theme settings.
+The pane is built once and reused for all of them.
+paragraph end
+
+
+paragraph start
+name: paragraph-tui-decided-key
+Decided. Key e in the multiplexer Visual mode shows and hides the
+settings float, beside 1 2 3 for the editor floats. Hiding never
+closes it.
+paragraph end
+
+paragraph start
+name: paragraph-tui-state-pane
+State. The settings pane is the fifth float of the multiplexer,
+named settings, full size. It runs settings-pane.sh in this
+folder, which starts the TUI once. Written, not yet confirmed on
+screen. The TUI no longer runs stty size on every redraw.
+paragraph end
+
+paragraph start
+name: paragraph-tui-open
+Open, in this order. 1. Confirm key 4 on screen. 2. Server holds
+the settings data and pushes changes, so the pane never loads. 3.
+AIU jump on the same pattern. 4. Theme settings on the same
+pattern. 5. The full feature plan for the other parts.
+paragraph end

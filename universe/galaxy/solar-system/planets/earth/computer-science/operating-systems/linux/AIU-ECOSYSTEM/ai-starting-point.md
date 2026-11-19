@@ -16,8 +16,8 @@ no progress and no next steps. The work is in the todo files and the
 plan files. Read ACTIVE WORK below, then go to the files it names.
 
 ## ACTIVE WORK
-Area: themes for every package. Database plan paused.
-Plan: ecosystem-theme-plan.aiu.
+Area: layout.
+Plan: AIU NOTATION/layout-plan.aiu.
 Read the whole plan, then do the first step left, in order.
 
 When the area changes, replace only the lines inside this block.
@@ -223,6 +223,28 @@ line, aiutd FILE.aiu, never bash -c, it needs the real tty.
   the ecosystem root is stale (11-06).
 - After a build: ecosystem stop, then ecosystem serve.
 
+## Server commands (built, verified)
+- Send: curl -s --data-binary "CMD" http://127.0.0.1:8080/cmd
+  or one text message on /ws. Answer is one line.
+- Read: ping status load FOLDER reload links FILE backlinks NAME
+  broken names git FILE. stop works only from the socket.
+- CLI: notation load reload links backlinks broken names go to the
+  server over /cmd. notation new FILE (text on stdin) creates a page
+  through the server. contracts and fill write through it too. No
+  server: reads exit 1, writes go straight to the file.
+- Write: write PATH (content on the next lines), delete PATH,
+  move FROM (target on the next line). Paths are relative to the
+  loaded folder. Each is a local git commit, about 11 s a write.
+- A write reindexes that file, writes the body of every live or
+  copy link block into its target block file, reindexes that file
+  too, then pushes the text changed to every /ws client.
+- After ecosystem serve send load with the absolute path of AIU
+  NOTATION first, else the answer is no folder loaded and a
+  write lands in the wrong folder.
+- The editor save (space s) writes the file, then sends the same
+  write to the server (notify_server in hot-path.rs). Without a
+  server it only writes the file.
+
 ## Key w (shell input bar, Visual mode)
 - w opens the website (http://127.0.0.1:8080) in the phone
   browser via termux-open-url. Code: open_website in
@@ -263,5 +285,37 @@ line, aiutd FILE.aiu, never bash -c, it needs the real tty.
   or moving files, ask where the same kind already lives.
 - Layout files: AIU NOTATION/notation/layouts. Indexed by the
   normal walk, no indexer change.
-- Master view scope: SCOPE in website/lib.rs, now demo/. Files
-  outside stay in the index.
+- Master view settings: AIU NOTATION/notation/layouts/layout-
+  settings.aiu, block settings. Keys width height gap stepx stepy
+  margin pad head curve. Indexed by index-layouts.rs (what=settings)
+  and read by set_cfg in website/lib.rs. Never hard code sizes.
+- Master view focus: loader.js foc and applyFocus. Scene link rows
+  are [x1,y1,x2,y2,from,to], from and to index into the card list.
+- Temp files of a script go in their own folder under /tmp, never
+  loose names like /tmp/b2: those can already be folders.
+- loader.js tap: phones send a fake mouse click after touchend.
+  lt holds the last touch tap time, mouseup skips within 800 ms.
+- Master view scope is the scope key in notation/layouts/layout-
+  settings.aiu (scope: all shows every file). Read by set_cfg in
+  website/lib.rs. Files outside the scope stay in the index.
+- Card text padding and font sizes are settings keys (padv padh
+  titlesize descsize labelsize). lib.rs style(i) gives them to
+  loader.js as sp(i, default).
+- Settings TUI: AIU ECOSYSTEM/ecosystem/ecosystem TUI configuration/settings-tui.rkt,
+  run from the root with the racket line. check argument tests it.
+- Scripts inside bash -c: never a bare double quote or a dollar
+  sign in patch text. Write them escaped, or use a placeholder
+  like DOLLAR that p.rkt turns into the sign.
+- Settings pane: fifth float of the multiplexer, key e in the shell Visual
+  mode. Launcher AIU ECOSYSTEM/ecosystem/ecosystem TUI
+  configuration/settings-pane.sh reads the root from the state
+  file root. New floats: add the name in float-state-shared.rkt,
+  keys in split-keys-shared.rkt and pane-split-keys.rkt, command
+  and launch in mux.rkt.
+- Settings TUI docs: AIU ECOSYSTEM/ecosystem/ecosystem TUI
+  configuration/README.md. After any change to the settings TUI
+  (keys, rows, float, signal) update it in the same script.
+- Settings float: key e in the shell Visual mode sends OSC 7704
+  (command_runner.rs toggle_settings). The TUI sends the same
+  signal to hide. It is hidden, never killed. Keys: h t n s,
+  enter, e. The mux handles it in pane-grid.rkt and mux.rkt.

@@ -1,0 +1,26 @@
+title start
+Demo places 15
+title end
+
+paragraph start
+Page 15 of places.
+paragraph end
+
+link start
+name: l1-l15
+target: demo/places/l08.aiu
+face: ref
+link end
+
+link start
+name: l2-l15
+target: demo/places/l11.aiu
+face: ref
+link end
+
+link start
+name: l3-l15
+target: demo/tools/t11.aiu
+face: far
+link end
+

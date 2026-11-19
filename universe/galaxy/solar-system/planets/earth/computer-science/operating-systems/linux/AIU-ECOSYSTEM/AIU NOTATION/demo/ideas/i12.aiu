@@ -1,0 +1,26 @@
+title start
+Demo ideas 12
+title end
+
+paragraph start
+Page 12 of ideas.
+paragraph end
+
+link start
+name: l1-i12
+target: demo/ideas/i07.aiu
+face: ref
+link end
+
+link start
+name: l2-i12
+target: demo/ideas/i23.aiu
+face: ref
+link end
+
+link start
+name: l3-i12
+target: demo/people/p24.aiu
+face: far
+link end
+

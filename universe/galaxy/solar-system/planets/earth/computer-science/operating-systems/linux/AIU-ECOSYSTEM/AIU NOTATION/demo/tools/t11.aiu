@@ -1,0 +1,26 @@
+title start
+Demo tools 11
+title end
+
+paragraph start
+Page 11 of tools.
+paragraph end
+
+link start
+name: l1-t11
+target: demo/tools/t12.aiu
+face: ref
+link end
+
+link start
+name: l2-t11
+target: demo/tools/t13.aiu
+face: ref
+link end
+
+link start
+name: l3-t11
+target: demo/places/l24.aiu
+face: far
+link end
+
