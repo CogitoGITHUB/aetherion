@@ -1,6 +1,6 @@
 link start
-name: live-test
+name: live-test-2
 target: live-target
 mode: live
-new text
+text three
 link end
