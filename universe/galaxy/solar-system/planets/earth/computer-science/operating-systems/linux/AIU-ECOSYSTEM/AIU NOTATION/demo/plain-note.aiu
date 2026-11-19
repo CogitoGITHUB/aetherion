@@ -1,0 +1,29 @@
+title start
+name: title-plain-note-caption
+kind: note
+Plain note
+caption: A file in no layout. Its description is its own caption.
+contract start
+id: q87b175
+question: Does the title name the idea?
+contract end
+answer start
+for: q87b175
+asked: Does the title name the idea?
+
+answer end
+title end
+
+paragraph start
+name: plain-note-body
+This page is in no layout. Its caption shows on the map.
+contract start
+id: q1deb06
+question: Is this one idea a reader could restate?
+contract end
+answer start
+for: q1deb06
+asked: Is this one idea a reader could restate?
+
+answer end
+paragraph end
