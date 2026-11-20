@@ -1,0 +1,91 @@
+use phf::{
+    Set,
+    phf_set,
+};
+
+/// a short list of extensions that shouldn't be searched
+///  by content
+///
+/// If you feel this list should maybe be changed, contact
+/// me on miaou or raise an issue.
+static BINARY_EXTENSIONS: Set<&'static str> = phf_set! {
+    "a",
+    "aif", "AIF",
+    "ap_",
+    "apk",
+    "bin", "BIN",
+    "bmp", "BMP",
+    "bzip", "BZIP",
+    "bzip2", "BZIP2",
+    "cab", "CAB",
+    "class",
+    "com", "COM",
+    "crx",
+    "dat", "DAT",
+    "db",  "DB",
+    "dbf", "DBF",
+    "deb",
+    "doc", "DOC",
+    "docx", "DOCX",
+    "eps", "EPS",
+    "exe", "EXE",
+    "dll", "DLL",
+    "gif", "GIF",
+    "gz",
+    "gzip",
+    "ico", "ICO",
+    "iso", "ISO",
+    "jar", "JAR",
+    "jpg", "JPG",
+    "jpeg", "JPEG",
+    "lz4", "LZ4",
+    "mdb", "MDB",
+    "mp3", "MP3",
+    "mp4", "MP4",
+    "mpa", "MPa",
+    "mpg", "MPG",
+    "mpeg", "MPEG",
+    "msi", "MSI",
+    "o",
+    "odf", "ODF",
+    "odp", "ODP",
+    "ods", "ODS",
+    "odt", "ODT",
+    "ogg", "OGG",
+    "pdb",
+    "pdf", "PDF",
+    "pkg", "PKG",
+    "png", "PNG",
+    "ppt", "PPT",
+    "pptx", "PPTX",
+    "psd", "PSD",
+    "ps", "PS",
+    "rar", "RAR",
+    "rpm", "RPM",
+    "rsrc",
+    "rtf",
+    "so",
+    "tar",
+    "tar.gz",
+    "ttf", "TTF",
+    "tgz", "TGZ",
+    "xls", "XLS",
+    "xlsx", "XLSX",
+    "vob", "VOB",
+    "vsd", "VSD",
+    "vsdx", "VSDX",
+    "war", "WAR",
+    "wasm",
+    "wav", "WAV",
+    "woff", "WOFF",
+    "woff2", "WOFF2",
+    "zip", "ZIP",
+    "z", "Z",
+};
+
+/// tells whether the file extension is one of a file format
+/// which shouldn't be searched as text
+#[must_use]
+pub fn is_known_binary(ext: &str) -> bool {
+    BINARY_EXTENSIONS.contains(ext)
+}

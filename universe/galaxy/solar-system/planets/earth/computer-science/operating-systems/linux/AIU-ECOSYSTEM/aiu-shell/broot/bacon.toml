@@ -1,0 +1,118 @@
+# This is a configuration file for the bacon tool
+# More info at https://github.com/Canop/bacon
+
+default_job = "check"
+env.CARGO_TERM_COLOR = "always"
+
+[jobs]
+
+[jobs.check-all]
+command = ["cargo", "check", "--all-targets"]
+need_stdout = false
+watch = ["tests", "benches", "examples"]
+
+[jobs.bacon-ls]
+command = [ "cargo", "check", "--message-format", "json-diagnostic-rendered-ansi" ]
+analyzer = "cargo_json"
+need_stdout = true
+
+[exports.cargo-json-spans]
+auto = true
+exporter = "analyzer"
+line_format = "{diagnostic.level}:{span.file_name}:{span.line_start}:{span.line_end}:{diagnostic.message}"
+path = "bacon-analyzzzer.json"
+
+[jobs.check]
+command = [
+	"cargo", "check",
+	"--features", "clipboard kitty-csi-check",
+]
+need_stdout = false
+watch = ["benches"]
+
+[jobs.android]
+command = [
+	"cargo", "ndk", "check",
+	"-t", "x86_64",
+	"--features", "clipboard",
+]
+need_stdout = false
+
+[jobs.miri]
+command = ["cargo", "+nightly", "miri", "run"]
+need_stdout = true
+
+[jobs.windows]
+command = [
+	"cross", "build",
+	"--target", "x86_64-pc-windows-gnu",
+	"--features", "clipboard"
+]
+
+[jobs.netbsd]
+command = [
+	"cross", "build",
+	"--target", "x86_64-unknown-netbsd",
+	"--release",
+	"--features", "clipboard"
+]
+
+[jobs.light]
+command = ["cargo", "check"]
+need_stdout = false
+
+[jobs.clippy]
+command = [
+	"cargo", "clippy",
+	"--",
+	"-W", "clippy::explicit_iter_loop",
+	"-A", "clippy::bool_to_int_with_if",
+	"-A", "clippy::collapsible_else_if",
+	"-A", "clippy::collapsible_if",
+	"-A", "clippy::derive_partial_eq_without_eq",
+	"-A", "clippy::if_same_then_else",
+	"-A", "clippy::len_without_is_empty",
+	"-A", "clippy::manual_clamp",
+	"-A", "clippy::manual_range_contains",
+	"-A", "clippy::manual_unwrap_or",
+	"-A", "clippy::match_like_matches_macro",
+	"-A", "clippy::module_inception",
+	"-A", "clippy::needless_bool",
+	"-A", "clippy::needless_range_loop",
+	"-A", "clippy::neg_multiply",
+	"-A", "clippy::uninlined_format_args",
+	"-A", "clippy::unnecessary_map_or",
+	"-A", "clippy::vec_init_then_push",
+]
+need_stdout = false
+
+[jobs.pedantic]
+command = [
+	"cargo", "clippy",
+	"--",
+	"-W", "clippy::pedantic",
+	"-A", "clippy::bool_to_int_with_if",
+	"-A", "clippy::map_unwrap_or",
+	"-A", "clippy::match_like_matches_macro",
+	"-A", "clippy::missing_errors_doc",
+	"-A", "clippy::module_inception",
+	"-A", "clippy::similar_names",
+	"-A", "clippy::struct_excessive_bools",
+	"-A", "clippy::too_many_lines",
+	"-A", "clippy::unnecessary_debug_formatting",
+	"-A", "clippy::unreadable_literal",
+	"-A", "clippy::wildcard_imports",
+]
+need_stdout = false
+
+[jobs.test]
+command = ["cargo", "test"]
+need_stdout = true
+
+[keybindings]
+a = "job:check-all"
+i = "job:initial"
+c = "job:clippy"
+d = "job:doc-open"
+t = "job:test"
+r = "job:check-all"

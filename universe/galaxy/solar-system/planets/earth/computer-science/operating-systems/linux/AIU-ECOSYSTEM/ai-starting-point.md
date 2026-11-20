@@ -16,7 +16,9 @@ no progress and no next steps. The work is in the todo files and the
 plan files. Read ACTIVE WORK below, then go to the files it names.
 
 ## ACTIVE WORK
-Area: none. Ask Shape which area is next.
+Area: broot first class in the shell.
+Plan: todo.aiu, the paragraphs starting todo: broot step.
+Read them all, then do the first step left, in order.
 
 When the area changes, replace only the lines inside this block.
 Never add steps, results or status here. Never write what was done.
@@ -54,6 +56,8 @@ times. He may hand you only this file.
 - ecosystem is not on PATH in bash -c: run the racket line from
   HOW-TO-USE.md with PLTCOMPILEDROOTS. Read /tmp/eco-live.log.
 - Do not touch the mux z key.
+- broot fork: aiu-shell/broot, shallow clone of v1.55.0, no .git. The broot entry in aiu-shell/upstream-version.txt holds url, commit, version. Never run git inside it. My files (managed) change only through the server via aiu-shell/aiu-files; every other file works normally.
+- READ ROOT-WARNING.md in this folder before touching file locks, permissions, the server write path or broot. This system has no real root.
 - OPEN THE EDITOR IN THE SAME CODE BLOCK, ONLY FOR NOTATION FILES. Open only .aiu files, with aiutd FILE.aiu, after the bash -c block inside the SAME code block, and only when the change touches notation or the editor and a .aiu test page shows it. NEVER open .md, .rkt, .rs, .test or any other file, and never after a read-only step or an edit of a non-notation file. Never a second block. If no test page fits a notation change, make a small one in the same block.
 - ALL CHANGES IN TMP FIRST. Every script copies each file it will change to /tmp, edits ONLY the /tmp copies, validates them (anchor counts, racket load, line counts), and only if EVERY step passed does it cp them over the real files, all at the end together. Any failure at any step: delete the tmp copies, touch no real file, print what failed. Never patch a real file in place and restore later: a half-applied change is the worst case. Builds run only after the copy-over, and a failed build restores from the saved originals.
 - DOCS PAUSED: never run aiutd docs and never touch AIU EDITOR/

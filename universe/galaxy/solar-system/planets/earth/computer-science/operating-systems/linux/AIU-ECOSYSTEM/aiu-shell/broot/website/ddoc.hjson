@@ -1,0 +1,97 @@
+# This is a configuration file for the ddoc static site generator.
+# For details and instruction, see https://dystroy.org/ddoc/
+
+title: "broot"
+description: "Broot, a tree oriented file manager"
+favicon: "img/favicon.ico"
+ddoc-vesion: "0.16" // minimal version of ddoc
+
+site-map: {
+    "Why": index.md
+    "Install": {
+        "Install broot": install.md
+        "Install br": install-br.md
+        "Common Problems": common-problems.md
+    }
+    "Usage": {
+        "Launch": launch.md
+        "Search and Navigate": navigation.md
+        "Tree View": tree_view.md
+        "Help screen": help.md
+        "Verbs & Commands": verbs.md
+        "Panels": panels.md
+        "Staging Area": staging-area.md
+        "Trash": trash.md
+        "Tree export": export.md
+        "Tips & tricks": tricks.md
+        "Common file operations": file-operations.md
+        "Client - Server": remote.md
+        "Reference - The input": input.md
+    }
+    "Conf": {
+        "Config files": conf_file.md
+        "Verbs and shortcuts": conf_verbs.md
+        "Skins": skins.md
+        "Icons": icons.md
+        "Modal Mode": modal.md
+    }
+    "Community": community.md
+}
+
+body: {
+    header: {
+        nav.before-menu: {
+            ddoc-link.external-nav-link: {
+                img: img/dystroy-rust-white.svg
+                href: https://dystroy.org
+                alt: dystroy.org homepage
+            }
+            ddoc-link.broot-nav-logo: {
+                img: img/vache-blanche.svg
+                label: Broot
+                href: /index.md
+                alt: broot homepage
+            }
+        }
+        ddoc-menu: {
+            hamburger-checkbox: true
+        }
+        nav.after-menu: {
+            ddoc-link.search-opener: {
+                img: img/ddoc-search.svg
+                href: --search
+                alt: Search
+            }
+            ddoc-link.external-nav-link: {
+                img: img/github-mark-white.svg
+                alt: GitHub
+                href: https://github.com/Canop/broot
+            }
+        }
+    }
+    article: {
+        aside.page-nav: {
+            ddoc-toc: {
+                activate-visible-item: true
+            }
+        }
+        div.main-content: {
+            ddoc-main: {}
+            nav.prev-next: {
+                ddoc-link.previous-page-link: {
+                    inline: img/ddoc-left-arrow.svg
+                    href: --previous
+                    alt: Previous Page
+                    label: --previous-page-title
+                }
+                ddoc-link.next-page-link: {
+                    label: --next-page-title
+                    inline: img/ddoc-right-arrow.svg
+                    href: --next
+                    alt: Next Page
+                }
+            }
+        }
+    }
+}
+

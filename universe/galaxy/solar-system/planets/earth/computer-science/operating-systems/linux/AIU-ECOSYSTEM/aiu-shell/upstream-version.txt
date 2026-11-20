@@ -19,3 +19,8 @@ version = "0.52.1"
 cloned 2026-11-07 depth 1
 aiu-shell/atuin: no history copy of https://github.com/atuinsh/atuin tag v18.17.1 commit 6245cc003a01380da6f62284e38cfcc5695e881d (MIT, LICENSE kept)
 aiu-shell/jump (renamed aiu-shell-jump, was zoxide): no history copy of https://github.com/ajeetdsouza/zoxide tag v0.10.0 commit f84f9a3e1d16fabf3e34b199ec7d552993b41f29 (MIT, LICENSE kept)
+
+broot https://github.com/Canop/broot
+commit f718d9d762a0de478bbab1f29e7f89a4c2b2d0cd
+version = "1.55.0"
+cloned 2026-11-20 depth 1

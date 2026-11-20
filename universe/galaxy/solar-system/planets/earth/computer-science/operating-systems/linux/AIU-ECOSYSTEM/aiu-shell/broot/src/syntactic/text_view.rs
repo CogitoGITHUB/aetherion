@@ -1,0 +1,699 @@
+use {
+    super::*,
+    crate::{
+        app::{
+            AppContext,
+            LineNumber,
+        },
+        command::{
+            ScrollCommand,
+            move_sel,
+        },
+        display::{
+            Screen,
+            W,
+        },
+        errors::*,
+        pattern::{
+            InputPattern,
+            NameMatch,
+        },
+        skin::PanelSkin,
+        task_sync::Dam,
+    },
+    crokey::crossterm::{
+        QueueableCommand,
+        cursor,
+        style::{
+            Color,
+            Print,
+            SetBackgroundColor,
+            SetForegroundColor,
+        },
+    },
+    memmap2::Mmap,
+    once_cell::sync::Lazy,
+    std::{
+        borrow::Cow,
+        fs::File,
+        io::{
+            BufRead,
+            BufReader,
+        },
+        path::{
+            Path,
+            PathBuf,
+        },
+        str,
+    },
+    syntect::highlighting::Style,
+    termimad::{
+        Area,
+        CropWriter,
+        Filling,
+        SPACE_FILLING,
+    },
+};
+
+pub static SEPARATOR_FILLING: Lazy<Filling> = Lazy::new(|| Filling::from_char('─'));
+
+/// Homogeneously colored piece of a line
+#[derive(Debug)]
+pub struct Region {
+    pub fg: Color,
+    pub string: String,
+}
+
+/// when the file is bigger, we don't style it and we don't keep
+/// it in memory: we just keep the offsets of the lines in the file.
+const MAX_SIZE_FOR_STYLING: u64 = 2_000_000;
+
+/// Size of what's initially loaded (rest is loaded when user in background)
+/// Must be greater than MAX_SIZE_FOR_STYLING
+const INITIAL_LOAD: usize = 4_000_000;
+
+impl Region {
+    pub fn from_syntect(region: &(Style, &str)) -> Self {
+        let fg = Color::Rgb {
+            r: region.0.foreground.r,
+            g: region.0.foreground.g,
+            b: region.0.foreground.b,
+        };
+        let string = region.1.to_string();
+        Self { fg, string }
+    }
+}
+
+#[derive(Debug)]
+pub enum DisplayLine {
+    Content(Line),
+    Separator,
+}
+
+#[derive(Debug)]
+pub struct Line {
+    pub number: LineNumber,   // starting at 1
+    pub start: usize,         // offset in the file, in bytes
+    pub len: usize,           // len in bytes
+    pub regions: Vec<Region>, // not always computed
+    pub name_match: Option<NameMatch>,
+}
+
+/// A text viewer, which can display a text file with syntax coloring if it's not too big.
+///
+/// In some cases, only the beginning of the file is read at first, and the rest is read
+/// in background.
+pub struct TextView {
+    pub path: PathBuf,
+    pub pattern: InputPattern,
+    lines: Vec<DisplayLine>,
+    scroll: usize,
+    page_height: usize,
+    selection_idx: Option<usize>, // index in lines of the selection, if any
+    content_lines_count: usize,   // number of lines excluding separators
+    total_lines_count: usize,     // including lines not filtered out
+    partial: bool,
+}
+
+impl DisplayLine {
+    pub fn line_number(&self) -> Option<LineNumber> {
+        match self {
+            DisplayLine::Content(line) => Some(line.number),
+            DisplayLine::Separator => None,
+        }
+    }
+    pub fn is_match(&self) -> bool {
+        match self {
+            DisplayLine::Content(line) => line.name_match.is_some(),
+            DisplayLine::Separator => false,
+        }
+    }
+}
+
+impl TextView {
+    /// Return a prepared text view with syntax coloring if possible.
+    /// May return Ok(None) only when a pattern is given and there
+    /// was an event before the end of filtering.
+    pub fn new(
+        path: &Path,
+        pattern: InputPattern,
+        dam: &mut Dam,
+        con: &AppContext,
+        no_style: bool,
+    ) -> Result<Option<Self>, ProgramError> {
+        let allow_partial = pattern.is_none();
+        let mut sv = Self {
+            path: path.to_path_buf(),
+            pattern,
+            lines: Vec::new(),
+            scroll: 0,
+            page_height: 0,
+            selection_idx: None,
+            content_lines_count: 0,
+            total_lines_count: 0,
+            partial: false,
+        };
+        if sv.read_lines(dam, con, no_style, allow_partial)? {
+            sv.select_first();
+            Ok(Some(sv))
+        } else {
+            Ok(None)
+        }
+    }
+
+    pub fn is_partial(&self) -> bool {
+        self.partial
+    }
+    /// If the load was partial, complete it now
+    pub fn complete_loading(
+        &mut self,
+        con: &AppContext,
+        dam: &mut Dam,
+    ) -> Result<(), ProgramError> {
+        if self.partial {
+            self.partial = false;
+            self.read_lines(dam, con, true, false)?;
+        }
+        Ok(())
+    }
+
+    /// Return true when there was no interruption
+    fn read_lines(
+        &mut self,
+        dam: &mut Dam,
+        con: &AppContext,
+        no_style: bool,
+        initial_load: bool,
+    ) -> Result<bool, ProgramError> {
+        let f = File::open(&self.path)?;
+        {
+            // if we detect the file isn't mappable, we'll
+            // let the ZeroLenFilePreview try to read it
+            let mmap = unsafe { Mmap::map(&f) };
+            if mmap.is_err() {
+                return Err(ProgramError::UnmappableFile);
+            }
+        }
+        let md = f.metadata()?;
+        if md.len() == 0 {
+            return Err(ProgramError::ZeroLenFile);
+        }
+        let with_style = !no_style && md.len() < MAX_SIZE_FOR_STYLING;
+        let mut reader = BufReader::new(f);
+        let mut content_lines = Vec::new();
+        let mut line = String::new();
+        self.total_lines_count = 0;
+        let mut offset = 0;
+        let mut number = 0;
+        static SYNTAXER: Lazy<Syntaxer> = Lazy::new(Syntaxer::default);
+        let mut highlighter = if with_style {
+            SYNTAXER.highlighter_for(&self.path, con)
+        } else {
+            None
+        };
+        let pattern = &self.pattern.pattern;
+        while reader.read_line(&mut line)? > 0 {
+            number += 1;
+            self.total_lines_count += 1;
+            let start = offset;
+            offset += line.len();
+            // We clean the line to prevent TTY rendering from being broken.
+            // We don't remove '\n' or '\r' at this point because some syntax sets
+            // need them for correct detection of comments. See #477
+            // Those chars are removed on printing, later on.
+            let clean_line = printable_line(&line);
+            let name_match = pattern.search_string(&clean_line);
+            let regions = if let Some(highlighter) = highlighter.as_mut() {
+                highlighter
+                    .highlight_line(&clean_line, &SYNTAXER.syntax_set)
+                    .map_err(|e| ProgramError::SyntectCrashed {
+                        details: e.to_string(),
+                    })?
+                    .iter()
+                    .map(Region::from_syntect)
+                    .collect()
+            } else {
+                Vec::new()
+            };
+            content_lines.push(Line {
+                regions,
+                start,
+                len: clean_line.len(),
+                name_match,
+                number,
+            });
+            line.clear();
+            if dam.has_event() {
+                info!("event interrupted preview filtering");
+                self.partial = true;
+                return Ok(false);
+            }
+            if initial_load && offset > INITIAL_LOAD {
+                info!("partial load");
+                self.partial = true;
+                break;
+            }
+        }
+        let mut must_add_separators = false;
+        if !pattern.is_empty() {
+            let lines_before = con.lines_before_match_in_preview;
+            let lines_after = con.lines_after_match_in_preview;
+            if lines_before + lines_after > 0 {
+                let mut kept = vec![false; content_lines.len()];
+                for (i, line) in content_lines.iter().enumerate() {
+                    if line.name_match.is_some() {
+                        for j in i.saturating_sub(lines_before)
+                            ..(i + lines_after + 1).min(content_lines.len())
+                        {
+                            kept[j] = true;
+                        }
+                    }
+                }
+                for i in 1..kept.len() - 1 {
+                    if !kept[i] && kept[i - 1] && kept[i + 1] {
+                        kept[i] = true;
+                    }
+                }
+                content_lines.retain(|line| kept[line.number - 1]);
+                must_add_separators = true;
+            } else {
+                content_lines.retain(|line| line.name_match.is_some());
+            }
+        }
+        self.lines.clear();
+        self.content_lines_count = content_lines.len();
+        for line in content_lines {
+            if must_add_separators {
+                if let Some(last_number) = self.lines.last().and_then(|l| l.line_number()) {
+                    if line.number > last_number + 1 {
+                        self.lines.push(DisplayLine::Separator);
+                    }
+                }
+            }
+            self.lines.push(DisplayLine::Content(line));
+        }
+        Ok(true)
+    }
+
+    /// Give the count of lines which can be seen when scrolling,
+    /// total count including filtered ones
+    pub fn line_counts(&self) -> (usize, usize) {
+        (self.lines.len(), self.total_lines_count)
+    }
+
+    fn ensure_selection_is_visible(&mut self) {
+        if self.page_height >= self.lines.len() {
+            self.scroll = 0;
+        } else if let Some(idx) = self.selection_idx {
+            let padding = self.padding();
+            if idx < self.scroll + padding || idx + padding > self.scroll + self.page_height {
+                if idx <= padding {
+                    self.scroll = 0;
+                } else if idx + padding > self.lines.len() {
+                    self.scroll = self.lines.len() - self.page_height;
+                } else if idx < self.scroll + self.page_height / 2 {
+                    self.scroll = idx - padding;
+                } else {
+                    self.scroll = idx + padding - self.page_height;
+                }
+            }
+        }
+    }
+
+    fn padding(&self) -> usize {
+        (self.page_height / 4).min(4)
+    }
+
+    pub fn get_selected_line(&self) -> Option<String> {
+        self.selection_idx
+            .and_then(|idx| self.lines.get(idx))
+            .and_then(|line| match line {
+                DisplayLine::Content(line) => Some(line),
+                DisplayLine::Separator => None,
+            })
+            .and_then(|line| {
+                File::open(&self.path)
+                    .and_then(|file| unsafe { Mmap::map(&file) })
+                    .ok()
+                    .filter(|mmap| mmap.len() >= line.start + line.len)
+                    .and_then(|mmap| {
+                        String::from_utf8((mmap[line.start..line.start + line.len]).to_vec()).ok()
+                    })
+            })
+    }
+
+    pub fn get_selected_line_number(&self) -> Option<LineNumber> {
+        self.selection_idx
+            .and_then(|idx| self.lines[idx].line_number())
+    }
+    pub fn unselect(&mut self) {
+        self.selection_idx = None;
+    }
+    pub fn try_select_y(
+        &mut self,
+        y: u16,
+    ) -> bool {
+        let idx = y as usize + self.scroll;
+        if idx < self.lines.len() {
+            self.selection_idx = Some(idx);
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn select_first(&mut self) {
+        if !self.lines.is_empty() {
+            self.selection_idx = Some(0);
+            self.scroll = 0;
+        }
+    }
+    pub fn select_last(&mut self) {
+        self.selection_idx = Some(self.lines.len() - 1);
+        if self.page_height < self.lines.len() {
+            self.scroll = self.lines.len() - self.page_height;
+        }
+    }
+
+    pub fn try_select_line_number(
+        &mut self,
+        number: LineNumber,
+    ) -> bool {
+        // this could obviously be optimized
+        for (idx, line) in self.lines.iter().enumerate() {
+            if line.line_number() == Some(number) {
+                self.selection_idx = Some(idx);
+                self.ensure_selection_is_visible();
+                return true;
+            }
+        }
+        false
+    }
+
+    pub fn move_selection(
+        &mut self,
+        dy: i32,
+        cycle: bool,
+    ) {
+        if let Some(idx) = self.selection_idx {
+            self.selection_idx = Some(move_sel(idx, self.lines.len(), dy, cycle));
+        } else if !self.lines.is_empty() {
+            self.selection_idx = Some(0)
+        }
+        self.ensure_selection_is_visible();
+    }
+
+    pub fn previous_match(&mut self) {
+        let s = self.selection_idx.unwrap_or(0);
+        for d in 1..self.lines.len() {
+            let idx = (self.lines.len() + s - d) % self.lines.len();
+            if self.lines[idx].is_match() {
+                self.selection_idx = Some(idx);
+                self.ensure_selection_is_visible();
+                return;
+            }
+        }
+    }
+    pub fn next_match(&mut self) {
+        let s = self.selection_idx.unwrap_or(0);
+        for d in 1..self.lines.len() {
+            let idx = (s + d) % self.lines.len();
+            if self.lines[idx].is_match() {
+                self.selection_idx = Some(idx);
+                self.ensure_selection_is_visible();
+                return;
+            }
+        }
+    }
+
+    pub fn try_scroll(
+        &mut self,
+        cmd: ScrollCommand,
+    ) -> bool {
+        let old_scroll = self.scroll;
+        self.scroll = cmd.apply(self.scroll, self.lines.len(), self.page_height);
+        if let Some(idx) = self.selection_idx {
+            if self.scroll == old_scroll {
+                let old_selection = self.selection_idx;
+                if cmd.is_up() {
+                    self.selection_idx = Some(0);
+                } else {
+                    self.selection_idx = Some(self.lines.len() - 1);
+                }
+                return self.selection_idx == old_selection;
+            } else if idx >= old_scroll && idx < old_scroll + self.page_height {
+                if idx + self.scroll < old_scroll {
+                    self.selection_idx = Some(0);
+                } else if idx + self.scroll - old_scroll >= self.lines.len() {
+                    self.selection_idx = Some(self.lines.len() - 1);
+                } else {
+                    self.selection_idx = Some(idx + self.scroll - old_scroll);
+                }
+            }
+        }
+        self.scroll != old_scroll
+    }
+
+    pub fn max_line_number(&self) -> Option<LineNumber> {
+        for line in self.lines.iter().rev() {
+            if let Some(n) = line.line_number() {
+                return Some(n);
+            }
+        }
+        None
+    }
+
+    pub fn get_content_line(
+        &self,
+        idx: usize,
+    ) -> Option<&Line> {
+        self.lines.get(idx).and_then(|line| match line {
+            DisplayLine::Content(line) => Some(line),
+            DisplayLine::Separator => None,
+        })
+    }
+
+    pub fn display(
+        &mut self,
+        w: &mut W,
+        _screen: Screen,
+        panel_skin: &PanelSkin,
+        area: &Area,
+        con: &AppContext,
+    ) -> Result<(), ProgramError> {
+        if area.height as usize != self.page_height {
+            self.page_height = area.height as usize;
+            self.ensure_selection_is_visible();
+        }
+        let max_number_len = self.max_line_number().unwrap_or(0).to_string().len();
+        let show_line_number = area.width > 55 || (self.pattern.is_some() && area.width > 8);
+        let line_count = area.height as usize;
+        let styles = &panel_skin.styles;
+        let normal_fg = styles
+            .preview
+            .get_fg()
+            .or_else(|| styles.default.get_fg())
+            .unwrap_or(Color::Reset);
+        let normal_bg = styles
+            .preview
+            .get_bg()
+            .or_else(|| styles.default.get_bg())
+            .unwrap_or(Color::Reset);
+        let selection_bg = styles
+            .selected_line
+            .get_bg()
+            .unwrap_or(Color::AnsiValue(240));
+        let match_bg = styles
+            .preview_match
+            .get_bg()
+            .unwrap_or(Color::AnsiValue(28));
+        let code_width = area.width as usize - 1; // 1 char left for scrollbar
+        let scrollbar = area.scrollbar(self.scroll, self.lines.len());
+        let scrollbar_fg = styles
+            .scrollbar_thumb
+            .get_fg()
+            .or_else(|| styles.preview.get_fg())
+            .unwrap_or(Color::White);
+        for y in 0..line_count {
+            w.queue(cursor::MoveTo(area.left, y as u16 + area.top))?;
+            let mut cw = CropWriter::new(w, code_width);
+            let line_idx = self.scroll + y;
+            let selected = self.selection_idx == Some(line_idx);
+            let bg = if selected { selection_bg } else { normal_bg };
+            let mut op_mmap: Option<Mmap> = None;
+            match self.lines.get(line_idx) {
+                Some(DisplayLine::Separator) => {
+                    cw.w.queue(SetBackgroundColor(bg))?;
+                    cw.queue_unstyled_str(" ")?;
+                    cw.fill(&styles.preview_separator, &SEPARATOR_FILLING)?;
+                }
+                Some(DisplayLine::Content(line)) => {
+                    let mut regions = &line.regions;
+                    let regions_ur;
+                    if regions.is_empty() && line.len > 0 {
+                        if op_mmap.is_none() {
+                            let file = File::open(&self.path)?;
+                            let mmap = unsafe { Mmap::map(&file)? };
+                            op_mmap = Some(mmap);
+                        }
+                        if op_mmap.as_ref().unwrap().len() < line.start + line.len {
+                            warn!("file truncated since parsing");
+                        } else {
+                            // an UTF8 error can only happen if file modified during display
+                            let string = String::from_utf8(
+                                // we copy the memmap slice, as it's not immutable
+                                (op_mmap.unwrap()[line.start..line.start + line.len]).to_vec(),
+                            )
+                            .unwrap_or_else(|_| "Bad UTF8".to_string());
+                            regions_ur = vec![Region {
+                                fg: normal_fg,
+                                string,
+                            }];
+                            regions = &regions_ur;
+                        }
+                    }
+                    cw.w.queue(SetBackgroundColor(bg))?;
+                    if show_line_number {
+                        cw.queue_g_string(
+                            &styles.preview_line_number,
+                            format!(" {:w$} ", line.number, w = max_number_len),
+                        )?;
+                    } else {
+                        cw.queue_unstyled_str(" ")?;
+                    }
+                    cw.w.queue(SetBackgroundColor(bg))?;
+                    if con.show_selection_mark {
+                        cw.queue_unstyled_char(if selected { '▶' } else { ' ' })?;
+                    }
+                    if let Some(nm) = &line.name_match {
+                        let mut dec = 0;
+                        let pos = &nm.pos;
+                        let mut pos_idx: usize = 0;
+                        for content in regions {
+                            let s = content.string.trim_end_matches(is_char_end_of_line);
+                            cw.w.queue(SetForegroundColor(content.fg))?;
+                            if pos_idx < pos.len() {
+                                for (cand_idx, cand_char) in s.chars().enumerate() {
+                                    if pos_idx < pos.len() && pos[pos_idx] == cand_idx + dec {
+                                        cw.w.queue(SetBackgroundColor(match_bg))?;
+                                        cw.queue_unstyled_char(cand_char)?;
+                                        cw.w.queue(SetBackgroundColor(bg))?;
+                                        pos_idx += 1;
+                                    } else {
+                                        cw.queue_unstyled_char(cand_char)?;
+                                    }
+                                }
+                                dec += s.chars().count();
+                            } else {
+                                cw.queue_unstyled_str(s)?;
+                            }
+                        }
+                    } else {
+                        for content in regions {
+                            cw.w.queue(SetForegroundColor(content.fg))?;
+                            cw.queue_unstyled_str(
+                                content.string.trim_end_matches(is_char_end_of_line),
+                            )?;
+                        }
+                    }
+                }
+                None => {}
+            }
+            cw.fill(
+                if selected {
+                    &styles.selected_line
+                } else {
+                    &styles.preview
+                },
+                &SPACE_FILLING,
+            )?;
+            w.queue(SetBackgroundColor(bg))?;
+            if is_thumb(y + area.top as usize, scrollbar) {
+                w.queue(SetForegroundColor(scrollbar_fg))?;
+                w.queue(Print('▐'))?;
+            } else {
+                w.queue(Print(' '))?;
+            }
+        }
+        Ok(())
+    }
+
+    fn info(
+        &self,
+        width: usize,
+    ) -> String {
+        if self.is_partial() {
+            let s = "loading...";
+            let s  = if s.len() > width {
+                ""
+            } else {
+                s
+            };
+            return s.to_string();
+        }
+        let mut s = if self.pattern.is_some() {
+            format!("{}/{}", self.content_lines_count, self.total_lines_count)
+        } else {
+            format!("{}", self.total_lines_count)
+        };
+        if s.len() > width {
+            return "".to_string();
+        }
+        if s.len() + "lines: ".len() < width {
+            s = format!("lines: {s}");
+        }
+        s
+    }
+
+    pub fn display_info(
+        &mut self,
+        w: &mut W,
+        _screen: Screen,
+        panel_skin: &PanelSkin,
+        area: &Area,
+    ) -> Result<(), ProgramError> {
+        let width = area.width as usize;
+        let s = self.info(width);
+        w.queue(cursor::MoveTo(
+            area.left + area.width - s.len() as u16,
+            area.top,
+        ))?;
+        panel_skin.styles.default.queue(w, s)?;
+        Ok(())
+    }
+}
+
+fn is_thumb(
+    y: usize,
+    scrollbar: Option<(u16, u16)>,
+) -> bool {
+    scrollbar.map_or(false, |(sctop, scbottom)| {
+        let y = y as u16;
+        sctop <= y && y <= scbottom
+    })
+}
+
+/// Tell whether the character must be replaced to prevent rendering from being broken
+fn is_char_unprintable(c: char) -> bool {
+    match c {
+        '\u{8}' => true, // backspace
+        '\u{b}'..='\u{e}' => true,
+        '\u{84}'..='\u{85}' => true,
+        '\u{1a}'..'\u{1c}' => true,
+        '\u{89}'..='\u{9f}' => true,
+        _ => false,
+    }
+}
+
+fn printable_line(line: &str) -> Cow<'_, str> {
+    if line.chars().any(is_char_unprintable) {
+        let replacement = line.replace(is_char_unprintable, "�");
+        Cow::Owned(replacement)
+    } else {
+        Cow::Borrowed(line)
+    }
+}
+
+fn is_char_end_of_line(c: char) -> bool {
+    c == '\n' || c == '\r'
+}

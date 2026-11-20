@@ -271,3 +271,251 @@ paragraph start
 todo: names registry in the database at the ecosystem root: each directory database reports up to it; today names are indexed per loaded folder only
 Planned.
 paragraph end
+
+paragraph start
+todo: broot first class: the broot fork becomes the tree view and file manager of the ecosystem, adapted to work for it; all file management items below belong here
+Planned.
+paragraph end
+
+paragraph start
+todo: broot and file management: Decided, bundle: a bundle groups several files or dirs on the same subject, for example driving law, driving skill and driving school. It is a file with an ordered list of links, so the order gives the learning path.
+Planned.
+paragraph end
+
+paragraph start
+todo: broot and file management: Decided, order: files and dirs are never numbered by hand and their names carry no numbers. The order is held by the introduction of each dir as an ordered list of its children. Numbers are computed from position. The order is changed in a tree view, like a tree file manager, by moving an entry up, down, in or out, and the tree view rewrites the lists. The lists stay plain text, so the files stay the truth.
+Planned.
+paragraph end
+
+paragraph start
+todo: broot and file management: Decided, no lost file: in the tree view nothing can be lost, every file and dir has a place. The master introduction holds all categories and each category holds its own subcategories, so the whole system opens as one mind map style view. The database indexes this tree and is rebuilt from the introductions.
+Planned.
+paragraph end
+
+paragraph start
+todo: broot and file management: Decided, tree view: the tree view is a fork of broot, 1.55.0 source is cloned into aiu-shell/broot, changed directly, the same way the shell was forked, instead of configuring it. Every move, create and rename goes through the ecosystem and the database, so nothing is ever outside it. Active now: see the broot step paragraphs below.
+Planned.
+paragraph end
+
+paragraph start
+todo: broot and file management: Holes left: how a move changes the dir on disk and both parent lists without a half done state. A file or dir on disk that is not in its parent list is proposed to show in an unplaced group and be reported by the check. Whether a bundle can hold other bundles. Rename the word book in sections 1 to 12 and the existing book file type to the new words. Whether the old heading todo wording needs changing.
+Planned.
+paragraph end
+
+
+
+
+
+
+
+
+
+
+paragraph start
+todo: broot step 0: rules, read first. Only managed files (my
+files) get the safety net. Every other file works as in plain
+broot and the plain shell: no server, no git, nothing blocked.
+Managed (proposed, Shape confirms): any .aiu file, and any dir
+inside the loaded notation folder. The server decides with a new
+command, managed PATH, answering yes or no. If the server is not
+reachable, managed means a .aiu file only.
+A change to a managed path never falls back to plain file calls.
+If the server is down it is refused with a clear message.
+One crate, aiu-shell/aiu-files, is the only code allowed to change
+files. Broot and the shell use it by path dependency. It is std
+only: a small HTTP client for 127.0.0.1:8080/cmd. The build fails
+if any other code changes files (step 5).
+Limit: an outside tool or ^rm can still change files. The git
+facts watcher of the server can report those.
+Planned.
+paragraph end
+
+paragraph start
+todo: broot step 1: list of file changing places. Read so far.
+Managed file changes to replace: browser_state.rs:680
+trash::delete, stage_state.rs:467 trash::delete_all, verbs.hjson
+line 76 cp -r (lines 46, 105, 152, 157 are commented out), and
+launchable.rs:195 plus verb/external_execution.rs which run any
+external command from a verb, also from user config.
+Appends to a path the user names: verb/write.rs:25,
+app/selection.rs:88, verb/external_execution.rs:123.
+Broot own files, allowed, never routed: conf/default.rs:32,36,
+shell_install/*.rs, kitty/image_renderer.rs:498,569,
+net/server.rs:33,95, preview/preview_transformer.rs:214-263.
+Trash view only handles the system trash: trash/*.rs,
+app/panel_state.rs. It stays for unmanaged files.
+Broot has no internal verb to create, rename, copy or move a file:
+only trash, delete_trashed_file, restore_trashed_file, purge_trash.
+Those come from verbs.hjson as external commands.
+Left: read verbs.hjson lines 36 to 80 and list resources/ in one
+read, then write the final list here.
+Planned.
+paragraph end
+
+paragraph start
+todo: broot step 2: server first. Verified in AIU ECOSYSTEM/
+server/main.rs: commands write, delete, move are in the table near
+line 1055. file_delete and file_move refuse anything that is not
+a file, call save_first before, and commit_for makes one git
+commit per call, about 11 s. move creates parent dirs. write takes
+text only, so a binary copy cannot be sent as text.
+Add as server commands, each one commit whatever the file count:
+managed PATH (yes or no), mkdir DIR, copy FROM (target on the next
+line, copied inside the server), delete DIR and move DIR (refuse if
+any file in it is untracked by git).
+After a move or delete the answer lists broken links and layout
+card targets, because a layout target may be a full path.
+Read first: abs_path (what happens with a path outside the loaded
+folder), save_first (the untracked rule and the approval word),
+commit_for (can it commit a whole dir at once).
+Planned.
+paragraph end
+
+paragraph start
+todo: broot step 3: crate aiu-shell/aiu-files. Functions: managed,
+delete, move_to, copy, mkdir, write, each taking a path. Managed
+path: send the server command and return its answer as the result.
+Unmanaged path: plain std call, same result type. Server down on a
+managed path: refuse. Timeouts, no dependencies, one small file per
+concern. Unit tests with a fake server on a local port.
+Planned.
+paragraph end
+
+paragraph start
+todo: broot step 4: patch broot, with aiu-files as a path
+dependency. browser_state.rs:680 and stage_state.rs:467: managed
+paths go to aiu-files delete, the rest keep trash::delete.
+verb/write.rs, selection.rs, external_execution.rs appends: refuse
+when the target is managed. Remove the cp -r verb at line 76 of the
+default verbs.hjson. launchable.rs:195: refuse when an argument is
+a managed path and the program is rm, mv, cp, mkdir, touch, ln, dd,
+tee, truncate, shred, install or chmod. Add internal verbs for new
+file, new dir, rename, copy and move that call aiu-files, so no
+external command is needed for them.
+Planned.
+paragraph end
+
+paragraph start
+todo: broot step 5: guard in the build. A build.rs in broot and in
+every shell crate that step 8 lists scans src for fs::remove,
+rename, create_dir, copy, write, set_permissions, File::create,
+OpenOptions, trash::, symlink and Command::new. Any hit outside the
+allow list fails the build with file and line. The allow list is one
+data file, each entry a path and a count, and only Shape adds to
+it. Builds run only through the PM, so nobody can skip it.
+Prove it by adding a forbidden call and watching the build fail.
+Planned.
+paragraph end
+
+paragraph start
+todo: broot step 6: colors only from the theme engine (RULE 0).
+Verified format in aiu-shell/television/television/config/themes/
+aiu.rs: dir from AIU_THEME_DIR or the path in ~/.config/aiu/
+theme-dir, file active holds the name, NAME.theme holds key=value
+lines. The same small module in broot builds the skin from the
+roles. No skin config is read.
+Planned.
+paragraph end
+
+paragraph start
+todo: broot step 7: manifest ecosystem-manifest/aiu-broot.rktd,
+copied from aiu-television.rktd. Verified pattern: source local
+.../aiu-shell, build nice -n 19 cargo build --release -j 2
+--config profile.release.lto=false --target-dir target-broot
+--manifest-path broot/Cargo.toml --bin broot, install bin
+target-broot/release/broot to bin/aiu-broot. That manifest has no
+--offline, so the first build needs the network. Find where
+aiu-television is registered and register broot the same way.
+Build only with ecosystem live aiu-broot.
+Planned.
+paragraph end
+
+paragraph start
+todo: broot step 8: shell side, forced by code. Five locks. Only
+my files (managed, step 0) are forced, other paths keep the plain
+behaviour inside the same command. Classified from the code, inline
+test code excluded.
+GATE, managed paths go through aiu-files, each at the command entry
+(all under aiu-shell/shell/crates): aiu-shell-command/src/filesystem
+rm.rs (fn rm at 122, removal helpers 474 to 490), save.rs (opens
+files 451 to 466), umkdir.rs (create_dir at 144), umv.rs (uu_mv::mv
+at 251), ucp.rs (uu_cp), utouch.rs (uu_touch::touch at 268).
+Redirection: aiu-shell-engine/src/eval_ir.rs fn open_file near 2389.
+Polars save: arrow, avro, csv, ndjson, parquet, one call each.
+EXTERNAL, lock 2: aiu-shell-command/src/system/run_external.rs
+(Command::new at 175, spawn at 297 and 305) and exec.rs (75, 114).
+aiu-shell-screen/src/command_runner.rs: Command::new at 88 and 194
+runs the shell binary itself, so the child has the same locks. But
+219 and 229 run lines with sh, and run_fullscreen at 305 runs a
+line in the real terminal: gate the words of the line before they
+run. foreground.rs, process/child.rs and jobs.rs are libraries
+below: confirm with grep that every caller is gated.
+ALLOWED, shell own state, never routed: command_runner.rs 331 and
+629, engine_state.rs 783, history_import.rs 307, config_reset.rs
+59 to 96, cmd-extra/build.rs, the example plugin second_custom_
+value.rs.
+TO READ before classifying: path.rs 980, history_.rs 100, cmd-
+plugin util.rs 98 to 109, plugin-core communication_mode 205 to 288,
+explore app.rs 341, command_runner.rs lines 215 to 235.
+TESTS, ignore: glob_from.rs, dc_glob, repl.rs from 2054, tree.rs
+from 360, interruptible_unix.rs, gstat from 479.
+Workspace: aiu-shell/shell/Cargo.toml, [workspace.dependencies] at
+line 93: add aiu-files = { path = "../aiu-files" }.
+Lock 1, builtins: the GATE list above calls aiu-files for a managed
+path. Others keep their code.
+Lock 2, external programs: refuse rm, rmdir, unlink, mv, cp, mkdir,
+touch, ln, dd, tee, truncate, shred, install, rsync, chmod, chown
+when any argument resolves to a managed path, naming the shell
+command to use. One shared function, called from each place above.
+Lock 3, redirection and save: the file opening checks managed first.
+Lock 4, build guard: the scan of step 5 covers these crates with an
+allow list of path and count made once from this classified list.
+Only Shape adds to it afterwards.
+Lock 5, read-only bits. TESTED 2026-11-20 as user shape, uid 10349,
+no real root: in a 555 dir a 444 file denied append, mv and rm, so
+the lock works here. READ ROOT-WARNING.md in the ecosystem root
+first: with real root (uid 0) read-only bits stop nothing, silently.
+The server checks at start: uid is not 0, and a test file in a 555
+dir denies append, mv and rm. If not, it says NOT LOCKED loudly and
+locks 1 to 4 stay in force. Step 10 repeats this test.
+If it holds: managed files and dirs are
+read-only, the server flips the bit only inside one operation, and
+the editor must send its save to the server only: hot-path.rs
+writes the file itself at line 195 before notify_server at 205, and
+lines 455, 468, 503 write other files. A deliberate chmod still
+works. Git by hand then needs a chmod first.
+Limit without lock 5: a program started from the shell (editor,
+script, python) can still write any file. The git facts watcher of
+the server reports those. Done only when the proof of step 10
+passes for each builtin, each blocked external name, redirection
+and save.
+Planned.
+paragraph end
+
+paragraph start
+todo: broot step 9: open broot in the shell on the settings float
+pattern: add the name in float-state-shared.rkt, keys in
+split-keys-shared.rkt and pane-split-keys.rkt, command and launch in
+mux.rkt, one OSC like 7704 to show and hide. Visual mode key from
+the free ones r u v, never the z key. Read those files first. This
+avoids the open todo about running every TUI with the real terminal.
+Planned.
+paragraph end
+
+paragraph start
+todo: broot step 10: proof. A script in /tmp runs each operation
+(delete, move, copy, mkdir, write, rename) on a managed temp dir
+with the server up and down, and on an unmanaged dir. Expected:
+managed with server up gives a git commit, managed with server down
+is refused, unmanaged works untouched. Run once, show the output to
+Shape.
+Planned.
+paragraph end
+
+paragraph start
+todo: broot step 11: docs. aiu-shell/broot/AIU.md (the upstream
+README stays untouched): why, the managed rule, how it talks to the
+server, the guard, how to update from upstream. The broot entry is
+already in aiu-shell/upstream-version.txt. State the limit.
+Planned.
+paragraph end

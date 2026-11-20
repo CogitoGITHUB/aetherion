@@ -11,10 +11,6 @@ name: title-current-work-one
 Current work: one book for everything
 title end
 
-paragraph start
-name: paragraph-read-this-chapter
-Nothing here is active. The book format and its syntax are done. Everything in this file is future work, parked until he says so.
-paragraph end
 
 chapter start
 name: section-the-rule
@@ -149,10 +145,6 @@ name: title-where-we-stopped
 Where we stopped
 title end
 
-paragraph start
-name: paragraph-nothing-in-steps
-Done and seen on screen: the content blocks, the research blocks, quote, aside, break, margins and paper sizes, and the contracts command. Not updated for the new blocks: json.rkt, aiu-text.rkt, make-live.rkt, rich.rs. The notation view still starts a process per draw in hot-path.rs; the real fix is moving view, boxview and contract_files into lib.rs. Inline bold, italic and code, and a style file for a folder, are parked. PDF export is parked.
-paragraph end
 
 paragraph start
 name: paragraph-speed-the-editor
@@ -638,35 +630,15 @@ name: paragraph-decided-reading-reading
 Decided, reading: reading a dir in reading mode walks through its introduction, then its files and dirs in order. A link shows the full path in the parentheses and stores only the name, so moving or renaming never breaks a link.
 paragraph end
 
-paragraph start
-name: paragraph-decided-bundle-a
-Decided, bundle: a bundle groups several files or dirs on the same subject, for example driving law, driving skill and driving school. It is a file with an ordered list of links, so the order gives the learning path.
-paragraph end
 
-paragraph start
-name: paragraph-decided-order-files
-Decided, order: files and dirs are never numbered by hand and their names carry no numbers. The order is held by the introduction of each dir as an ordered list of its children. Numbers are computed from position. The order is changed in a tree view, like a tree file manager, by moving an entry up, down, in or out, and the tree view rewrites the lists. The lists stay plain text, so the files stay the truth.
-paragraph end
 
-paragraph start
-name: paragraph-decided-no-lost
-Decided, no lost file: in the tree view nothing can be lost, every file and dir has a place. The master introduction holds all categories and each category holds its own subcategories, so the whole system opens as one mind map style view. The database indexes this tree and is rebuilt from the introductions.
-paragraph end
 
-paragraph start
-name: paragraph-decided-tree-view
-Decided, tree view: the tree view is a fork of broot, 1.55.0 is installed, with its source changed directly, the same way the shell was forked, instead of configuring it. Every move, create and rename goes through the ecosystem and the database, so nothing is ever outside it. This is a later step: it comes only after the writing system works, because writing the files comes first.
-paragraph end
 
 paragraph start
 name: paragraph-decided-order-of
 Decided, order of work: first the writing system (chapter rename, numbering, marks, links, reading mode), then the tree view fork. Until then dirs and files are made by hand.
 paragraph end
 
-paragraph start
-name: paragraph-holes-left-how
-Holes left: how a move changes the dir on disk and both parent lists without a half done state. A file or dir on disk that is not in its parent list is proposed to show in an unplaced group and be reported by the check. Whether a bundle can hold other bundles. Rename the word book in sections 1 to 12 and the existing book file type to the new words. Whether the old heading todo wording needs changing.
-paragraph end
 
 paragraph start
 name: paragraph-remaining-numbering-jsonrkt
@@ -687,11 +659,6 @@ todo: block type drawing: view.rs, boxview.rs, rich.rs, json.rkt, aiu-text.rkt a
 Planned.
 paragraph end
 
-paragraph start
-name: paragraph-planned-2
-todo: the folder index loads block types from the folder nearest to the first file only; load them per file or per folder
-Planned.
-paragraph end
 
 paragraph start
 name: paragraph-planned-3
@@ -699,11 +666,6 @@ todo: names: a duplicate name inside one page is already a check error (collect.
 Planned.
 paragraph end
 
-paragraph start
-name: paragraph-planned-4
-todo: ecosystem server: the notation database is reachable through the shared ecosystem server so the editor, shell and multiplexer read the same index; plan in ecosystem-server-plan.aiu
-Planned.
-paragraph end
 
 paragraph start
 name: paragraph-planned-5
@@ -711,20 +673,7 @@ todo: json mapping: to-json and from-json exist in data/json.rkt. Write what is 
 Planned.
 paragraph end
 
-paragraph start
-name: paragraph-planned-6
-todo: book plan: the full plan for books, sciences, skills, writing and reading mode, marks on the sides and compiled checklists is in book-plan.aiu. Work it step by step, close the holes of section 8 first, and write every change into that file
-Planned.
-paragraph end
 
-paragraph start
-name: paragraph-can-do-and
-todo: README.aiu: one live page with everything the notation
-can do and an example of each, built from the code and files
-where possible, updated on every feature change, and read first
-in every AI session that makes pages with the notation
-Planned.
-paragraph end
 
 paragraph start
 name: paragraph-planned-7
@@ -735,13 +684,6 @@ paragraph start
 name: paragraph-notation-database-exists
 todo: named references and citations, parked until the
 notation database exists
-Planned.
-paragraph end
-paragraph start
-name: paragraph-editor-links-work
-todo: links step 5: the ecosystem server serves the database, then the
-editor links work: completion, backlinks, jump trail. See the
-editor todo chapter on links.
 Planned.
 paragraph end
 paragraph start
