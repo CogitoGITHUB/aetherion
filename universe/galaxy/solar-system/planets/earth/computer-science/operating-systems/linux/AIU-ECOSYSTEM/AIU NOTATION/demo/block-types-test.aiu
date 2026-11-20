@@ -1,0 +1,77 @@
+title start
+name: title-block-types-test
+kind: note
+tags: notation test blocktypes
+All eight new block types on one page
+contract start
+id: q87b175
+question: Does the title name the idea?
+contract end
+answer start
+for: q87b175
+asked: Does the title name the idea?
+
+answer end
+title end
+
+paragraph start
+name: paragraph-test-intro
+Test page for the eight new block types. Each one shows below.
+contract start
+id: q1deb06
+question: Is this one idea a reader could restate?
+contract end
+answer start
+for: q1deb06
+asked: Is this one idea a reader could restate?
+
+answer end
+paragraph end
+
+list start
+name: list-test
+first item
+second item
+third item
+list end
+
+steps start
+name: steps-test
+open the page
+read the first step
+close the page
+steps end
+
+definition start
+name: definition-test
+block type
+A named kind of block, defined by one file in notation/blocktypes.
+definition end
+
+example start
+name: example-test
+Adding two numbers
+Take 2 and 3. Add them. The result is 5.
+example end
+
+exercise start
+name: exercise-test
+Add four numbers
+Add 1, 2, 3 and 4. Write the result below.
+exercise end
+
+space start
+name: space-test
+6
+space end
+
+formula start
+name: formula-test
+a squared plus b squared equals c squared
+formula end
+
+callout start
+name: callout-test
+tip
+A callout shows a boxed remark.
+callout end
