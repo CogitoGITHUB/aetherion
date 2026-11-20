@@ -455,8 +455,8 @@ title end
 
 paragraph start
 name: paragraph-block-types-are
-Block types are .blocktype files in .notation/blocktypes, found
-from the nearest .notation folder up the tree. The parser needs
+Block types are .blocktype files. The default folder
+notation/blocktypes loads first, the nearest one adds. The parser needs
 only the file to accept a new type. Drawing a type still lives
 in code.
 contract start

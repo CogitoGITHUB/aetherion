@@ -53,8 +53,13 @@ times. He may hand you only this file.
   LANG=C.UTF-8 LC_ALL=C.UTF-8 PLTCOMPILEDROOTS=$HOME/aiu-compiled
 - Builds only through the PM, as in AIU-OS/AIU-PM/HOW-TO-USE.md
   (ecosystem live, dev, update, devmode). No cargo or raco by hand.
-- ecosystem is not on PATH in bash -c: run the racket line from
-  HOW-TO-USE.md with PLTCOMPILEDROOTS. Read /tmp/eco-live.log.
+- BUILD (ecosystem is not on PATH in bash -c). From this folder:
+  LANG=C.UTF-8 LC_ALL=C.UTF-8 PLTCOMPILEDROOTS=$HOME/aiu-compiled
+  $HOME/opt/racket-full/bin/racket
+  "AIU ECOSYSTEM/ecosystem/entry/ecosystem.rkt" live NAME
+  > /tmp/eco-live.log 2>&1 ; tail -c 400 /tmp/eco-live.log
+  Join the lines. NAME = package. A notation change needs
+  aiu-notation, then aiu-editor. Never read HOW-TO-USE.md for it.
 - Do not touch the mux z key.
 - broot fork: aiu-shell/broot, shallow clone of v1.55.0, no .git. The broot entry in aiu-shell/upstream-version.txt holds url, commit, version. Never run git inside it. My files (managed) change only through the server via aiu-shell/aiu-files; every other file works normally.
 - READ ROOT-WARNING.md in this folder before touching file locks, permissions, the server write path or broot. This system has no real root.

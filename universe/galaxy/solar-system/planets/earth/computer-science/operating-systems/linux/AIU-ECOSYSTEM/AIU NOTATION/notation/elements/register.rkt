@@ -37,10 +37,17 @@
        (build-path dir ".notation" "blocktypes")]
       [else (let-values ([(base name must-be-dir) (split-path dir)]) (loop base))])))
 
+(define (merged found)
+  (append found
+          (filter (lambda (e)
+                    (not (memq (element-name e)
+                               (map element-name found))))
+                  (elements-in default-dir))))
+
 (define (load-blocktypes-near! file)
   (define folder (and file (folder-near file)))
   (define found (and folder (elements-in folder)))
-  (set-box! active (and found (pair? found) found))
+  (set-box! active (and found (pair? found) (merged found)))
   folder)
 
 (define (register)

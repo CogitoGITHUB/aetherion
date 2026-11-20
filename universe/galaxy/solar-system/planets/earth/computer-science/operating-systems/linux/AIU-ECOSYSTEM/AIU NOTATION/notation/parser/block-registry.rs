@@ -21,6 +21,14 @@ fn with_active<T>(read: impl Fn(&Active) -> T) -> T {
     read(fallback)
 }
 
+fn default_active() -> &'static Active {
+    DEFAULT_ACTIVE.get_or_init(|| {
+        read_folder(&Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("blocktypes"))
+            .expect("default blocktypes missing")
+    })
+}
+
 pub fn is_registered(name: &str) -> bool {
     with_active(|a| a.names.iter().any(|n| n == name))
 }
@@ -75,7 +83,15 @@ pub fn load_near(file: &Path) -> Option<String> {
     while let Some(d) = dir {
         let folder = d.join(".notation").join("blocktypes");
         if folder.is_dir() {
-            if let Some(active) = read_folder(&folder) {
+            if let Some(mut active) = read_folder(&folder) {
+                for n in &default_active().names {
+                    if !active.names.contains(n) {
+                        active.names.push(n.clone());
+                        if default_active().opaque.contains(n) {
+                            active.opaque.push(n.clone());
+                        }
+                    }
+                }
                 *ACTIVE.write().unwrap() = Some(active);
                 return Some(folder.display().to_string());
             }

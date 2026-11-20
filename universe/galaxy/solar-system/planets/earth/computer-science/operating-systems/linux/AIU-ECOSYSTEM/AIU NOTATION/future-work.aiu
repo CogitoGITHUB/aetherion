@@ -65,55 +65,6 @@ paragraph end
 
 chapter end
 
-chapter start
-name: section-block-types-to
-title start
-name: title-block-types-to
-Block types to build first
-title end
-
-paragraph start
-name: paragraph-each-type-is
-Each type is a .blocktype file in .notation/blocktypes with a
-copy in AIU NOTATION/notation/blocktypes. The parser accepts a
-type from the file alone. Drawing lives in code: view.rs,
-boxview.rs, rich.rs, json.rkt, aiu-text.rkt, make-live.rkt and
-the Racket register file. A type is done only when it shows in
-aiutd-tutorial.aiu and has a recorded test.
-paragraph end
-
-code start
-name: code-content-build-first
-language: text
-Content, build first
-list         items, bullets or numbered
-steps        ordered actions of a tutorial or technique
-definition   a term and its meaning
-example      a worked example
-exercise     a task for the reader
-space        blank room, printed for hand work
-formula      an equation, opaque text
-callout      a boxed remark: note, warning, tip
-code end
-
-paragraph start
-name: paragraph-not-blocks-a
-Not blocks: a chapter-end summary or key points is a chapter. A
-foreword is a preface.
-paragraph end
-
-paragraph start
-name: paragraph-holes-to-close
-Holes to close while building: steps may just be a list with an
-order declaration, decide before building both. How the kind of
-a callout is written. How the length of a space is written: a new
-declaration is registered in parser.rs, properties.rkt and the
-README. Formula as plain text or LaTeX text. Inline bold, italic
-and code inside a sentence do not exist, style works on a whole
-block only: parked by decision.
-paragraph end
-
-chapter end
 
 chapter start
 name: section-order-of-work
@@ -301,7 +252,8 @@ paragraph end
 
 paragraph start
 name: paragraph-step-2-load
-Step 2: load block types per file (already a todo), then the book parts and the marked block types: rule, step, fact, routine, card.
+Step 2: load block types per file (done), then the book parts.
+Marks, routines and tracks are planned in tracks-plan.aiu.
 paragraph end
 
 paragraph start
@@ -474,48 +426,6 @@ Routines with times: a routine step can carry how often it repeats.
 paragraph end
 chapter end
 
-chapter start
-name: section-section-10-mark
-title start
-name: title-section-10-mark
-Section 10: mark blocks and routines
-title end
-
-paragraph start
-name: paragraph-the-mark-blocks
-The mark blocks are rule, step, fact, routine and card. Each one is a block of its own and each one is a .blocktype file. Marks sit inside a block or wrap several blocks.
-paragraph end
-
-paragraph start
-name: paragraph-a-routine-is
-A routine is a wrapper. It wraps step blocks, because a routine is made of steps.
-paragraph end
-
-paragraph start
-name: paragraph-making-a-routine
-Making a routine creates a file for it, to learn or practice something. The file refers to the marked blocks in the original files by their names. Its numbering is automatic. The order is changed by moving the blocks in that file, and the original files are not changed.
-paragraph end
-
-paragraph start
-name: paragraph-routine-mode-starting
-Routine mode: starting a routine walks through the original files and shows the specific part of each step, one after the other.
-paragraph end
-
-paragraph start
-name: paragraph-pause-the-routine
-Pause: the routine can be paused at any step and the file can be read as normal, so the reader can look around in the book and then go on. The place where it stopped is progress, kept in the progress file and not in the page.
-paragraph end
-
-paragraph start
-name: paragraph-modular-a-block
-Modular: a block can be in several routines, a routine file can be moved or copied alone, and the original files never know which routines use them.
-paragraph end
-
-paragraph start
-name: paragraph-holes-left-the
-Holes left: the name of the routine mode and its keys. What the check reports when a routine step points at a block that was moved or deleted. How the routine file is written, one reference block per step. Whether a routine can hold another routine.
-paragraph end
-chapter end
 
 chapter start
 name: section-section-11-what
